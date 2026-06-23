@@ -1,0 +1,151 @@
+# M0 switch to RAPTOR
+2026-06-23T19:12:19+00:00
+COMMAND=python3 scripts/m0_set_raptor_mode.py --master udp:127.0.0.1:14540 --mode-id 23
+SEND_DO_SET_MODE target=1/0 base=1 main=4 sub=11 mode_id=23
+COMMAND_ACK result=0
+HEARTBEAT custom_mode=184811520 main=4 sub=11
+RAPTOR_MODE_CONFIRMED_BY_HEARTBEAT=1
+
+
+## PX4 console excerpt after RAPTOR switch
+pxh> [2Kpxh> s[2Kpxh> sl[2Kpxh> sle[2Kpxh> slee[2Kpxh> sleep[2Kpxh> sleep [2Kpxh> sleep 4[2Kpxh> sleep 40
+Sleeping for 40 s; (40000000 us).
+INFO  [mavlink] partner IP: 127.0.0.1
+INFO  [mc_raptor] Resetting Inference Executor (Recurrent State)
+WARN  [mc_raptor] trajectory_setpoint turned stale at: -0.012027 -0.014570 -2.368713, yaw: 0.031103 4000 / 200000 us
+pxh> [2Kpxh> c[2Kpxh> co[2Kpxh> com[2Kpxh> comm[2Kpxh> comma[2Kpxh> comman[2Kpxh> command[2Kpxh> commande[2Kpxh> commander[2Kpxh> commander [2Kpxh> commander s[2Kpxh> commander st[2Kpxh> commander sta[2Kpxh> commander stat[2Kpxh> commander statu[2Kpxh> commander status
+INFO  [commander] Armed
+INFO  [commander] prearm safety: Off
+INFO  [commander] navigation mode: External 1
+INFO  [commander] user intended navigation mode: External 1
+INFO  [commander] in failsafe: no
+INFO  [commander] External Mode 1: nav_state: 23, name: RAPTOR
+commander: cycle: 6252 events, 0us elapsed, 0.00us avg, min 0us max 0us 0.000us rms
+commander: preflight check: 698 events, 0us elapsed, 0.00us avg, min 0us max 0us 0.000us rms
+pxh> [2Kpxh> l[2Kpxh> li[2Kpxh> lis[2Kpxh> list[2Kpxh> liste[2Kpxh> listen[2Kpxh> listene[2Kpxh> listener[2Kpxh> listener [2Kpxh> listener v[2Kpxh> listener ve[2Kpxh> listener veh[2Kpxh> listener vehi[2Kpxh> listener vehic[2Kpxh> listener vehicl[2Kpxh> listener vehicle[2Kpxh> listener vehicle_[2Kpxh> listener vehicle_s[2Kpxh> listener vehicle_st[2Kpxh> listener vehicle_sta[2Kpxh> listener vehicle_stat[2Kpxh> listener vehicle_statu[2Kpxh> listener vehicle_status[2Kpxh> listener vehicle_status [2Kpxh> listener vehicle_status 1
+
+TOPIC: vehicle_status
+ vehicle_status
+    timestamp: 74988000 (0.308000 seconds ago)
+    armed_time: 10296000
+    takeoff_time: 11856000
+    nav_state_timestamp: 42228000
+    valid_nav_states_mask: 2147411455
+    can_set_nav_states_mask: 16696831
+    arming_state: 2
+    latest_arming_reason: 3
+    latest_disarming_reason: 0
+    nav_state_user_intention: 23
+    nav_state: 23
+    executor_in_charge: 0
+    nav_state_display: 23
+    accepts_offboard_setpoints: True
+    hil_state: 0
+    vehicle_type: 1
+    failsafe: False
+    failsafe_and_user_took_over: False
+    failsafe_defer_state: 0
+    gcs_connection_lost: True
+    gcs_connection_lost_counter: 0
+    high_latency_data_link_lost: False
+    is_vtol: False
+    is_vtol_tailsitter: False
+    in_transition_mode: False
+    in_transition_to_fw: False
+    system_type: 2
+    system_id: 1
+    component_id: 1
+    safety_button_available: True
+    safety_off: True
+    power_input_valid: True
+    usb_connected: False
+    open_drone_id_system_present: False
+    open_drone_id_system_healthy: False
+    parachute_system_present: False
+    parachute_system_healthy: False
+    traffic_avoidance_system_present: False
+    rc_calibration_in_progress: False
+    calibration_enabled: False
+    pre_flight_checks_pass: True
+
+pxh> [2Kpxh> l[2Kpxh> li[2Kpxh> lis[2Kpxh> list[2Kpxh> liste[2Kpxh> listen[2Kpxh> listene[2Kpxh> listener[2Kpxh> listener [2Kpxh> listener v[2Kpxh> listener ve[2Kpxh> listener veh[2Kpxh> listener vehi[2Kpxh> listener vehic[2Kpxh> listener vehicl[2Kpxh> listener vehicle[2Kpxh> listener vehicle_[2Kpxh> listener vehicle_l[2Kpxh> listener vehicle_lo[2Kpxh> listener vehicle_loc[2Kpxh> listener vehicle_loca[2Kpxh> listener vehicle_local[2Kpxh> listener vehicle_local_[2Kpxh> listener vehicle_local_p[2Kpxh> listener vehicle_local_po[2Kpxh> listener vehicle_local_pos[2Kpxh> listener vehicle_local_posi[2Kpxh> listener vehicle_local_posit[2Kpxh> listener vehicle_local_positi[2Kpxh> listener vehicle_local_positio[2Kpxh> listener vehicle_local_position[2Kpxh> listener vehicle_local_position [2Kpxh> listener vehicle_local_position 1
+
+TOPIC: vehicle_local_position
+ vehicle_local_position
+    timestamp: 75292000 (0.004000 seconds ago)
+    timestamp_sample: 75292000 (0 us before timestamp)
+    ref_timestamp: 764000
+    ref_lat: 47.397744
+    ref_lon: 8.545594
+    x: -0.24668
+    y: 0.30829
+    z: -2.60529
+    delta_xy: [0.00000, 0.00000]
+    delta_z: -489.35593
+    vx: 0.10457
+    vy: -0.12203
+    vz: 0.08981
+    z_deriv: 0.04467
+    delta_vxy: [0.00276, 0.00462]
+    delta_vz: -0.00013
+    ax: -0.12018
+    ay: -0.75443
+    az: 2.01204
+    heading: 0.02926
+    heading_var: 0.00143
+    unaided_heading: -0.02567
+    delta_heading: -0.01260
+    tilt_var: 0.00042
+    ref_alt: 489.35800
+    dist_bottom: 2.81879
+    dist_bottom_var: 0.00098
+    delta_dist_bottom: -489.35593
+    eph: 0.28426
+    epv: 0.03280
+    evh: 0.12894
+    evv: 0.03578
+    vxy_max: inf
+    vz_max: inf
+    hagl_min: inf
+    hagl_max_z: inf
+    hagl_max_xy: inf
+    xy_valid: True
+    z_valid: True
+    v_xy_valid: True
+    v_z_valid: True
+    xy_reset_counter: 4
+    z_reset_counter: 2
+    vxy_reset_counter: 3
+    vz_reset_counter: 1
+    heading_reset_counter: 1
+    heading_good_for_control: True
+    xy_global: True
+    z_global: True
+    dist_bottom_valid: True
+    dist_bottom_reset_counter: 2
+    dist_bottom_sensor_bitfield: 1
+    dead_reckoning: False
+pxh> [2Kpxh> l[2Kpxh> li[2Kpxh> lis[2Kpxh> list[2Kpxh> liste[2Kpxh> listen[2Kpxh> listene[2Kpxh> listener[2Kpxh> listener [2Kpxh> listener v[2Kpxh> listener ve[2Kpxh> listener veh[2Kpxh> listener vehi[2Kpxh> listener vehic[2Kpxh> listener vehicl[2Kpxh> listener vehicle[2Kpxh> listener vehicle_[2Kpxh> listener vehicle_a[2Kpxh> listener vehicle_an[2Kpxh> listener vehicle_ang[2Kpxh> listener vehicle_angu[2Kpxh> listener vehicle_angul[2Kpxh> listener vehicle_angula[2Kpxh> listener vehicle_angular[2Kpxh> listener vehicle_angular_[2Kpxh> listener vehicle_angular_v[2Kpxh> listener vehicle_angular_ve[2Kpxh> listener vehicle_angular_vel[2Kpxh> listener vehicle_angular_velo[2Kpxh> listener vehicle_angular_veloc[2Kpxh> listener vehicle_angular_veloci[2Kpxh> listener vehicle_angular_velocit[2Kpxh> listener vehicle_angular_velocity[2Kpxh> listener vehicle_angular_velocity [2Kpxh> listener vehicle_angular_velocity 1
+
+TOPIC: vehicle_angular_velocity
+ vehicle_angular_velocity
+    timestamp: 75296000 (0.000000 seconds ago)
+    timestamp_sample: 75296000 (0 us before timestamp)
+    xyz: [0.11781, -0.02645, -0.00589]
+    xyz_derivative: [7.41305, 0.38602, -0.00503]
+pxh> [2Kpxh> l[2Kpxh> lo[2Kpxh> log[2Kpxh> logg[2Kpxh> logge[2Kpxh> logger[2Kpxh> logger [2Kpxh> logger s[2Kpxh> logger st[2Kpxh> logger sta[2Kpxh> logger stat[2Kpxh> logger statu[2Kpxh> logger status
+INFO  [logger] Running in mode: all
+INFO  [logger] Number of subscriptions: 255 (8160 bytes)
+
+## ULOG switch sanity
+VEHICLE_STATUS_NAV_STATES=4,17,23
+RAPTOR_NAV_STATE_23_FIRST_US=42228000
+RAPTOR_NAV_STATE_23_FIRST_S=41.960
+ARMING_STATES_AFTER_RAPTOR=2
+DISARMED_AFTER_RAPTOR=false
+LOCAL_POSITION_AFTER_RAPTOR_X_LAST=-0.247
+LOCAL_POSITION_AFTER_RAPTOR_Y_LAST=0.309
+LOCAL_POSITION_AFTER_RAPTOR_Z_MIN=-2.765
+LOCAL_POSITION_AFTER_RAPTOR_Z_MAX=-2.351
+ANGULAR_VELOCITY_AFTER_RAPTOR_MAX_ABS_RAD_S=0.343
+ATTITUDE_QUATERNION_AFTER_RAPTOR_FINITE=true

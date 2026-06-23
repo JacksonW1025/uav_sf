@@ -1,0 +1,162 @@
+# M0 ULOG info
+2026-06-23T19:12:53+00:00
+SOURCE_ULOG=/workspace/external/PX4-Autopilot/build/px4_sitl_raptor_sih/log/2026-06-23/19_11_37.ulg
+COPIED_ULOG=/workspace/docs/m0_run.ulg
+
+Logging start time: 0:00:00, duration: 0:01:15
+No Dropouts
+SW Version: v1.18.0 (alpha)
+Info Messages:
+ boot_time_utc_us: 1782241897292257
+ metadata_events_sha256: d5b8e0308715b4bf1acd293b30b0b210404595b9afdd1b052e4457472d19c145
+ sys_name: PX4
+ sys_os_name: Linux
+ sys_os_ver_release: 84907263
+ sys_toolchain: GNU GCC
+ sys_toolchain_ver: 13.3.0
+ time_ref_utc: 0
+ ver_data_format: 2
+ ver_hw: PX4_SITL
+ ver_sw: 3042f906abaab7ab59ae838ad5a530a9ef3df9a6
+ ver_sw_branch: main
+ ver_sw_release: 17956928
+ ver_vendor_sw_release: 64
+Info Multiple Messages: [excluded_optional_topics: 40], [metadata_events: 1], [perf_counter_preflight: 1]
+
+Name (multi id, message size in bytes)    number of data points, total bytes
+ actuator_armed (0, 15)                       154       2310
+ actuator_motors (0, 66)                    18104    1194864
+ actuator_outputs (0, 76)                     752      57152
+ battery_status (0, 166)                      376      62416
+ config_overrides (0, 15)                     148       2220
+ control_allocator_status (0, 55)             376      20680
+ cpuload (0, 16)                              149       2384
+ distance_sensor (0, 56)                     3753     210168
+ distance_sensor_mode_change_request (0, 9)       1          9
+ ekf2_timestamps (0, 22)                    18760     412720
+ esc_status (0, 496)                          752     372992
+ estimator_aid_src_baro_hgt (0, 59)          1499      88441
+ estimator_aid_src_gnss_hgt (0, 59)           596      35164
+ estimator_aid_src_gnss_pos (0, 95)           601      57095
+ estimator_aid_src_gnss_vel (0, 115)          601      69115
+ estimator_aid_src_gravity (0, 115)          7500     862500
+ estimator_aid_src_mag (0, 115)              1057     121555
+ estimator_aid_src_rng_hgt (0, 59)           3707     218713
+ estimator_baro_bias (0, 40)                 1477      59080
+ estimator_event_flags (0, 37)                 78       2886
+ estimator_gnss_hgt_bias (0, 40)              590      23600
+ estimator_gps_status (0, 40)                 601      24040
+ estimator_innovation_test_ratios (0, 140)    7500    1050000
+ estimator_innovation_variances (0, 140)     7500    1050000
+ estimator_innovations (0, 140)              7500    1050000
+ estimator_sensor_bias (0, 118)              1290     152220
+ estimator_states (0, 213)                   7500    1597500
+ estimator_status (0, 129)                   7500     967500
+ estimator_status_flags (0, 85)                88       7480
+ event (0, 40)                                 32       1280
+ failsafe_flags (0, 95)                       144      13680
+ failure_detector_status (0, 24)              154       3696
+ gripper (0, 9)                                 1          9
+ home_position (0, 60)                        208      12480
+ hover_thrust_estimate (0, 41)                594      24354
+ logger_status (0, 36)                         75       2700
+ manual_control_setpoint (0, 65)                1         65
+ mission_result (0, 38)                         3        114
+ navigator_status (0, 10)                     150       1500
+ parameter_update (0, 34)                       2         68
+ position_setpoint_triplet (0, 272)            55      14960
+ ranging_beacon (0, 58)                       150       8700
+ raptor_input (0, 85)                       16720    1421200
+ raptor_status (0, 84)                      16472    1383648
+ rate_ctrl_status (0, 20)                     376       7520
+ rtl_status (0, 16)                            37        592
+ rtl_time_estimate (0, 17)                     37        629
+ sensor_accel (0, 44)                          75       3300
+ sensor_baro (0, 32)                           75       2400
+ sensor_combined (0, 48)                    18760     900480
+ sensor_gps (0, 159)                           75      11925
+ sensor_gyro (0, 44)                           75       3300
+ sensor_gyro_fft (0, 100)                      19       1900
+ sensor_mag (0, 40)                            75       3000
+ sensor_selection (0, 16)                       1         16
+ sensors_status_imu (0, 96)                   376      36096
+ system_power (0, 42)                         150       6300
+ takeoff_status (0, 13)                         9        117
+ telemetry_status (0, 85)                      75       6375
+ telemetry_status (1, 85)                      75       6375
+ telemetry_status (2, 85)                      75       6375
+ telemetry_status (3, 85)                      75       6375
+ timesync_status (0, 37)                       75       2775
+ trajectory_setpoint (0, 64)                 2088     133632
+ transponder_report (0, 78)                     1         78
+ vehicle_acceleration (0, 28)                1502      42056
+ vehicle_air_data (0, 38)                    1501      57038
+ vehicle_angular_velocity (0, 40)           18550     742000
+ vehicle_angular_velocity_groundtruth (0, 40)    7505     300200
+ vehicle_attitude (0, 49)                   18430     903070
+ vehicle_attitude_groundtruth (0, 49)        7505     367745
+ vehicle_attitude_setpoint (0, 40)           1498      59920
+ vehicle_command (0, 55)                        4        220
+ vehicle_command_ack (0, 22)                    5        110
+ vehicle_constraints (0, 17)                   43        731
+ vehicle_control_mode (0, 23)                 154       3542
+ vehicle_global_position (0, 67)             8957     600119
+ vehicle_global_position_groundtruth (0, 67)     752      50384
+ vehicle_gps_position (0, 159)                601      95559
+ vehicle_imu (0, 60)                          150       9000
+ vehicle_imu_status (0, 132)                   75       9900
+ vehicle_land_detected (0, 20)                 80       1600
+ vehicle_local_position (0, 192)             9374    1799808
+ vehicle_local_position_groundtruth (0, 192)    3753     720576
+ vehicle_local_position_setpoint (0, 64)      749      47936
+ vehicle_magnetometer (0, 33)                1059      34947
+ vehicle_rates_setpoint (0, 33)              3687     121671
+ vehicle_status (0, 75)                       154      11550
+ vehicle_thrust_setpoint (0, 28)             3753     105084
+ vehicle_torque_setpoint (0, 28)             3753     105084
+ yaw_estimator_status (0, 105)               7909     830445
+
+## ulog_messages head
+0:00:00 WARNING: Failsafe warning:
+0:00:00 INFO: logging: opening log file 2026-6-23/19_11_37.ulg
+0:00:00 INFO: [logger] Opened full log file: ./log/2026-06-23/19_11_37.ulg
+0:00:00 INFO: [mavlink] MAVLink only on localhost (set param MAV_{i}_BROADCAST = 1 to enable network)
+0:00:00 INFO: [mavlink] MAVLink only on localhost (set param MAV_{i}_BROADCAST = 1 to enable network)
+0:00:00 INFO: [mavlink] MAVLink only on localhost (set param MAV_{i}_BROADCAST = 1 to enable network)
+0:00:00 INFO: [px4] Startup script returned successfully
+0:00:02 WARNING: [health_and_arming_checks] Preflight Fail: no heading reference
+0:00:03 INFO: [commander] [32mReady for takeoff![0m
+0:00:06 INFO: [uxrce_dds_client] synchronized with time offset 1782241897413648us
+0:00:06 INFO: [uxrce_dds_client] successfully created rt/fmu/out/register_ext_component_reply_v1 data writer, topic id: 219
+0:00:06 INFO: [uxrce_dds_client] successfully created rt/fmu/out/position_setpoint_triplet data writer, topic id: 202
+0:00:06 INFO: [uxrce_dds_client] successfully created rt/fmu/out/vehicle_global_position data writer, topic id: 288
+0:00:06 INFO: [uxrce_dds_client] successfully created rt/fmu/out/wind data writer, topic id: 326
+0:00:06 INFO: [uxrce_dds_client] successfully created rt/fmu/out/gimbal_device_attitude_status data writer, topic id: 118
+0:00:06 INFO: [uxrce_dds_client] successfully created rt/fmu/out/vtx data writer, topic id: 324
+0:00:06 INFO: [uxrce_dds_client] successfully created rt/fmu/out/input_rc data writer, topic id: 138
+0:00:06 WARNING: [mc_raptor] IMU_GYRO_RATEMAX=250 Hz is not a multiple of the training frequency (100 Hz)
+0:00:06 INFO: [mc_raptor] IMU_GYRO_RATEMAX=250 Hz
+0:00:06 INFO: [mc_raptor] POLICY_CONTROL_FREQUENCY_TRAINING=100 Hz
+0:00:06 INFO: [mc_raptor] Setting force_sync_native = 250 Hz / 100 Hz = 2
+0:00:06 INFO: [mc_raptor] Raptor mode registration successful, arming_check_id: 0, mode_id: 23
+0:00:06 INFO: [mc_raptor] Raptor mode configuration sent
+0:00:10 INFO: [logger] Full File Logging Running:
+0:00:10 INFO: [logger] Log file: ./log/2026-06-23/19_11_37.ulg
+0:00:10 INFO: [logger] Wrote 2.54 MiB (avg 260.11 KiB/s)
+0:00:10 INFO: [logger] Since last status: dropouts: 0 (max len: 0.000 s), max used buffer: 48331 / 1024000 B
+0:00:10 INFO: Armed by internal command
+0:00:10 INFO: Using default takeoff altitude: 2.50 m
+0:00:10 INFO: [tone_alarm] arming warning
+0:00:10 WARNING: [mc_raptor] trajectory_setpoint turned stale at: -0.030118 0.026827 -0.015472, yaw: -0.005592 204000 / 200000 us
+0:00:11 INFO: Takeoff detected
+0:00:17 WARNING: [mc_raptor] trajectory_setpoint turned non-stale at: -0.039801 -0.586800 -1.978027
+0:00:35 INFO: [commander] navigation mode: Hold
+0:00:35 INFO: [commander] user intended navigation mode: Hold
+0:00:35 INFO: [commander] in failsafe: no
+0:00:35 INFO: [commander] External Mode 1: nav_state: 23, name: RAPTOR
+0:00:42 INFO: [mavlink] partner IP: 127.0.0.1
+0:00:42 INFO: [mc_raptor] Resetting Inference Executor (Recurrent State)
+0:00:42 WARNING: [mc_raptor] trajectory_setpoint turned stale at: -0.012027 -0.014570 -2.368713, yaw: 0.031103 4000 / 200000 us
+0:01:15 INFO: [commander] navigation mode: External 1
+0:01:15 INFO: [logger] Full File Logging Running:
+0:01:15 INFO: [logger] Log file: ./log/2026-06-23/19_11_37.ulg
