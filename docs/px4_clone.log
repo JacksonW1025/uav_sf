@@ -1,0 +1,73 @@
+# PX4 clone
+2026-06-23T10:07:28-07:00
+PX4_REPO=https://github.com/PX4/PX4-Autopilot.git
+PX4_REF=main
+PX4_DIR=/home/car/uav_sf/external/PX4-Autopilot
+PX4_SUBMODULE_MODE=required
+M	Tools/simulation/flightgear/flightgear_bridge
+M	Tools/simulation/gazebo-classic/sitl_gazebo-classic
+M	Tools/simulation/gz
+M	Tools/simulation/jmavsim/jMAVSim
+M	Tools/simulation/jsbsim/jsbsim_bridge
+M	boards/modalai/voxl2/libfc-sensor-api
+M	boards/modalai/voxl2/src/lib/mpa/libmodal-json
+M	boards/modalai/voxl2/src/lib/mpa/libmodal-pipe
+M	platforms/nuttx/NuttX/apps
+M	src/drivers/actuators/vertiq_io/iq-module-communication-cpp
+M	src/drivers/cyphal/legacy_data_types
+M	src/drivers/cyphal/libcanard
+M	src/drivers/cyphal/public_regulated_data_types
+M	src/drivers/gps/devices
+M	src/drivers/ins/microstrain/mip_sdk
+M	src/drivers/ins/sbgecom/sbgECom
+M	src/drivers/uavcan/libdronecan/dsdl
+M	src/drivers/uavcan/libdronecan/libuavcan/dsdl_compiler/pydronecan
+D	src/lib/crypto/libtommath
+M	src/lib/crypto/monocypher
+M	src/lib/events/libevents
+M	src/lib/heatshrink/heatshrink
+M	src/lib/rl_tools/rl_tools
+M	src/modules/mavlink/mavlink
+M	src/modules/mc_raptor/blob
+M	src/modules/simulation/gz_plugins/optical_flow/PX4-OpticalFlow
+M	src/modules/uxrce_dds_client/Micro-XRCE-DDS-Client
+M	src/modules/uxrce_dds_client/Micro-XRCE-DDS-Client-v3
+M	src/modules/zenoh/zenoh-pico
+M	test/fuzztest
+Your branch is up to date with 'origin/main'.
+Submodule path 'src/lib/crypto/libtommath': checked out 'fd73d7630b9d3ed5a79d613ff680a549e9780de7'
+Submodule path 'src/lib/events/libevents': checked out '9ef591c447fe0386d698bf6fb9a6d27e43988ee4'
+Submodule path 'src/lib/rl_tools/rl_tools': checked out '15940da2a8334d7532c4a5650ee4e09526206414'
+Submodule path 'src/modules/mavlink/mavlink': checked out 'fff66d7aa0775a3dde2f0d7ec0464e46a42d9b49'
+Submodule path 'src/modules/mavlink/mavlink/pymavlink': checked out '5977f44504f01715a44bed44a4601e6c12cef92d'
+Submodule path 'src/modules/mc_raptor/blob': checked out 'bc6683a9a2cff29bede2add18c0d7e3ac0cc9c27'
+Submodule path 'src/modules/simulation/gz_plugins/optical_flow/PX4-OpticalFlow': checked out '090b90d9f9c155eca5dc65460f0a647bfd413841'
+Submodule path 'src/modules/simulation/gz_plugins/optical_flow/PX4-OpticalFlow/external/klt_feature_tracker': checked out 'a2733b54f17b571dd958be498b57479a4104d8cd'
+Submodule path 'src/modules/uxrce_dds_client/Micro-XRCE-DDS-Client': checked out '711aef423edd1820347b866d1e4164832df35d04'
+Submodule path 'src/modules/uxrce_dds_client/Micro-XRCE-DDS-Client-v3': checked out 'c88fb537e89a1095c49a6a535a55378d4c14cf2c'
+PX4_SHA=3042f906abaab7ab59ae838ad5a530a9ef3df9a6
+v1.18.0-alpha1-374-g3042f906ab-dirty
+RAPTOR_MODULE=present
+RAPTOR_POLICY=/home/car/uav_sf/external/PX4-Autopilot/src/modules/mc_raptor/blob/policy.tar
+136192 /home/car/uav_sf/external/PX4-Autopilot/src/modules/mc_raptor/blob/policy.tar
+/home/car/uav_sf/external/PX4-Autopilot/src/modules/mc_raptor/blob/policy.tar: POSIX tar archive
+actor/meta
+actor/layers/0/weights/parameters/meta
+actor/layers/0/weights/parameters/data
+actor/layers/0/biases/parameters/meta
+actor/layers/0/biases/parameters/data
+actor/layers/0/meta
+actor/layers/1/weights_input/parameters/meta
+actor/layers/1/weights_input/parameters/data
+actor/layers/1/biases_input/parameters/meta
+actor/layers/1/biases_input/parameters/data
+actor/layers/1/weights_hidden/parameters/meta
+actor/layers/1/weights_hidden/parameters/data
+actor/layers/1/biases_hidden/parameters/meta
+actor/layers/1/biases_hidden/parameters/data
+actor/layers/1/initial_hidden_state/parameters/meta
+actor/layers/1/initial_hidden_state/parameters/data
+actor/layers/1/meta
+actor/layers/2/weights/parameters/meta
+actor/layers/2/weights/parameters/data
+actor/layers/2/biases/parameters/meta

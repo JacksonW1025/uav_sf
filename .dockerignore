@@ -1,0 +1,11 @@
+.git
+external
+ros2_ws
+build
+install
+log
+docs/*.log
+docs/phase1_*.log
+**/.ccache
+**/__pycache__
+**/*.pyc
