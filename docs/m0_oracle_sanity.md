@@ -4,15 +4,25 @@
 
 - Simulator: `px4_sitl_raptor_sih` with `sihsim_quadx`.
 - RAPTOR mode: external mode `mode_id 23`, selected via MAVLink `MAV_CMD_DO_SET_MODE`.
+- Offboard replacement: `MC_RAPTOR_OFFB=0`.
 - Internal reference: `MC_RAPTOR_INTREF=0`.
 - No ROS 2 offboard task node or external setpoint stream was used.
 - ULOG: `docs/m0_run.ulg`.
 
 ## Expected Behavior
 
-Guarded RAPTOR treats a stale or missing `trajectory_setpoint` as a hold command after the setpoint timeout. The expected result for the literal missing-setpoint sanity check is therefore hover/hold, not NaN.
+Current RAPTOR has a stale/missing setpoint guard. The literal missing-setpoint sanity check is therefore expected to exercise the hold fallback, not to create NaN policy inputs.
 
 If a learning controller emits NaN on an active motor command, PX4's direct actuator path maps that to disarmed output. The observable oracle signal is active `actuator_motors` NaN together with an unexpected disarm.
+
+## Source-Level Chain
+
+The naive missing-setpoint trigger is cut off before it can reach the policy as NaN:
+
+1. `MC_RAPTOR_OFFB=0` keeps RAPTOR as a separate external mode instead of replacing Offboard. The module parameter text says this mode holds position without requiring external setpoints, and `mc_raptor.cpp` wires this through `enable_replace_internal_mode = _param_mc_raptor_offboard.get()`.
+2. Incoming `trajectory_setpoint` updates pass a finiteness gate. RAPTOR only accepts a setpoint when position, yaw, velocity, and yawspeed are all finite; invalid updates increment a counter and do not overwrite the stored `_trajectory_setpoint`.
+3. When the setpoint is missing or stale, the stale branch synthesizes a hold setpoint from the current local position and current yaw, with zero velocity and zero yawspeed. `observe()` then builds finite hover-error inputs for the policy rather than NaN inputs.
+4. RAPTOR publishes four active motor controls from the policy output. Channels above `EXECUTOR_CONFIG::OUTPUT_DIM` are deliberately filled with `NAN`; on the quadrotor these are unused `control[4]` through `control[11]`, not active motor failures.
 
 ## Observed
 
@@ -47,6 +57,6 @@ ATTITUDE_QUATERNION_AFTER_RAPTOR_FINITE=true
 
 ## Conclusion
 
-The literal "missing setpoint to NaN" oracle did not reproduce on guarded RAPTOR. The run observed stale setpoint handling, continued armed flight, no active motor NaNs, and no disarm.
+The literal "missing setpoint to NaN" oracle did not reproduce because RAPTOR has a stale/missing setpoint guard. In this M0 configuration, naive setpoint starvation is converted into hold fallback before it can become a NaN policy input. The run observed stale setpoint handling, continued armed flight, no active motor NaNs, and no disarm.
 
-This is a useful M0 finding: simple setpoint starvation is not enough to expose the NaN/disarm failure path in current RAPTOR. NaN or instability cases will need later search-guided scenario generation; that belongs to M2+, not this M0 run.
+This is a useful M0 finding for RQ2: simple setpoint starvation is a negative control for the failure oracle, not a trigger. NaN or instability cases will need stronger M1/M2 perturbations, such as bad-but-finite setpoints, timing and mode-transition edge cases, estimator/state anomalies, extreme trajectories, or search-guided scenario generation.
