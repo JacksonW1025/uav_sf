@@ -2,15 +2,16 @@
 
 This repository captures the Phase 1 environment for PX4 SITL with RAPTOR on Jetson AGX Orin arm64. The reproducible build runs in an `ubuntu:24.04` container and keeps PX4 source outside the image under `external/PX4-Autopilot`.
 
-Phase 1 scope was environment only: build and headless smoke-test PX4 SITL with `mc_raptor`, stage the RAPTOR policy blob for module loading, and verify the ROS 2 / uXRCE-DDS topic path.
+Phase 1 starts with the reproducible environment: build and headless smoke-test PX4 SITL with `mc_raptor`, stage the RAPTOR policy blob for module loading, and verify the ROS 2 / uXRCE-DDS topic path.
 
-M0 is now also captured in this repository: a real SIH SITL run with classical takeoff to Hold, in-flight switch to RAPTOR external mode, ULOG capture, and the missing-setpoint oracle sanity check. Failure injection, offboard task generation, metrics pipelines, divergence classification, and search remain out of scope until M1+.
+M0 is now also captured in this repository: a real SIH SITL run with classical takeoff to Hold, in-flight switch to RAPTOR external mode, ULOG capture, and the missing-setpoint oracle sanity check. M1 work adds the oracle MVP: fixed parameterized offboard tasks, ULOG metrics, and classical-vs-RAPTOR four-quadrant classification. Search and optimization remain out of scope.
 
 ## Status
 
 - P0 complete: Docker is usable, the `uav_sf:phase1` image builds, PX4 `main` with RAPTOR builds, `make px4_sitl_raptor gz_x500` starts headless, and `mc_raptor` parameters plus external mode registration are present.
 - P1 complete: ROS 2 Jazzy, `px4_msgs`, and Micro-XRCE-DDS-Agent are built; `ros2 topic list` sees `/fmu/out/*`.
 - M0 complete: `px4_sitl_raptor_sih` builds and SIH direct-launch runs the full classical takeoff to RAPTOR switch experiment with ULOG capture.
+- M1 complete as an oracle MVP pipeline: tracked SIH-X500 airframe, parameterized fixed-theta offboard task, ULOG metrics, and classical-vs-RAPTOR four-quadrant runner. The manually tried anchors did not produce a primary-bug quadrant; see `docs/M1.md`.
 - P2 partial: Gazebo Harmonic is installed and used headless; graphical display passthrough and extra later-phase Python tools beyond PX4 essentials were not validated.
 
 ## M0 Status
@@ -86,6 +87,32 @@ docs/m0_ulog_sanity.log
 docs/m0_oracle_sanity.md
 ```
 
+## Reproduce M1
+
+Build the RAPTOR SIH target with the tracked SIH-X500 v2 airframe:
+
+```bash
+cd /mnt/nvme/uav_sf
+
+sg docker -c 'cd /mnt/nvme/uav_sf && CONTAINER_NAME=uav_sf_m1_build ./docker/run.sh bash -lc "cd /workspace && ./scripts/build_px4_raptor_sih.sh"'
+```
+
+Run one fixed theta through classical and RAPTOR and emit the four-quadrant result:
+
+```bash
+sg docker -c 'cd /mnt/nvme/uav_sf && CONTAINER_NAME=uav_sf_m1_sine ./docker/run.sh bash -lc "cd /workspace && python3 -m pip install --break-system-packages pymavlink pyulog numpy -q && source /opt/ros/jazzy/setup.bash && source ros2_ws/install/setup.bash && ./scripts/m1_diff_runner.py --theta config/m1_anchor_sine_5hz.json --skip-build"'
+```
+
+The runner writes:
+
+```text
+docs/m1_<tag>_classical.ulg
+docs/m1_<tag>_raptor.ulg
+docs/m1_<tag>_<controller>_metrics.json
+docs/m1_diff_<tag>.json
+docs/m1_diff_<tag>_summary.md
+```
+
 ## Evidence
 
 Verification artifacts are kept under `docs/`:
@@ -106,6 +133,12 @@ Verification artifacts are kept under `docs/`:
 - `docs/m0_ulog_info.log`: `ulog_info` plus `ulog_messages` excerpt.
 - `docs/m0_ulog_sanity.log`: required topic, mode switch, active motor NaN, and disarm sanity.
 - `docs/m0_oracle_sanity.md`: missing-setpoint oracle conclusion.
+- `docs/M1.md`: M1 oracle MVP summary, reproduction commands, fixed-theta results, determinism check, failure-injection status, and stop point.
+- `docs/m1_diff_anchor_sine_5hz.json`: representative both-safe fixed-theta diff result.
+- `docs/m1_diff_anchor_heavy_338_step.json`: near-boundary heavy-mass diff result.
+- `docs/m1_diff_anchor_heavy_max_step.json`: too-hard diff result.
+- `docs/m1_diff_anchor_intref_lissajous.json`: manual RAPTOR internal-reference backup-anchor result.
+- `docs/m1_determinism_anchor_sine_5hz_classical.log`: same-theta/same-controller repeat check.
 
 Important observed lines:
 
@@ -126,7 +159,9 @@ DDS_TOPICS_FOUND=1
 - `MicroXRCEAgent` is built under `external/Micro-XRCE-DDS-Agent/build`; `scripts/smoke_dds_topics.sh` uses that persistent binary and sets `LD_LIBRARY_PATH` for the built libraries.
 - M0 SIH direct launch requires passing rootfs `.` to PX4: `PX4_SIMULATOR=sihsim PX4_SIM_MODEL=sihsim_quadx ./bin/px4 .`.
 - The inherited RAPTOR SITL config logs a non-blocking `vision_target_estimator` / `landing_target_estimator` conflict; the same warning was already visible in Phase 1 smoke output.
+- M1 ROS output topics are versioned in this PX4/px4_msgs combination; `scripts/m1_offboard_task.py` expects `/fmu/out/vehicle_status_v4` and `/fmu/out/vehicle_local_position_v1`.
+- The first finite bad-setpoint anchors did not produce a primary-bug quadrant because RAPTOR clips position/velocity error before policy inference; this is documented in `docs/M1.md`.
 
 ## Next Step
 
-M1 starts after this state: parameterized offboard tasks, MAVSDK failure injection, ULOG metric extraction, and classical-vs-RAPTOR divergence/four-quadrant classification. Those are intentionally not part of M0.
+M2 starts after this state: use the existing M1 fixed-theta runner and metrics as the oracle backend, then add controlled theta-space search/optimization in a separate change. No M2 search code is present here.

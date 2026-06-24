@@ -1,0 +1,2 @@
+$ /usr/bin/python3 /workspace/scripts/m1_metrics.py --ulog /workspace/docs/m1_anchor_step_10m_raptor.ulg --theta /workspace/config/m1_anchor_step.json --task-json /workspace/docs/m1_anchor_step_10m_raptor_task.json --controller raptor --output /workspace/docs/m1_anchor_step_10m_raptor_metrics.json
+{"output": "/workspace/docs/m1_anchor_step_10m_raptor_metrics.json", "safe": false, "safe_reasons": ["missing_position_or_setpoint_window"]}

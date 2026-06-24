@@ -1,0 +1,65 @@
+{
+  "controller": "classical",
+  "controller_active_us": 1782272584388850,
+  "events": [
+    {
+      "detail": {
+        "source": "first_px4_topic"
+      },
+      "elapsed_s": 0.0,
+      "name": "clock_origin",
+      "timestamp_us": 1782272566334874
+    },
+    {
+      "detail": {
+        "controller": "classical",
+        "main": 6
+      },
+      "elapsed_s": 18.017976,
+      "name": "mode_command",
+      "timestamp_us": 1782272584352850
+    },
+    {
+      "detail": {
+        "nav_state": 14
+      },
+      "elapsed_s": 18.053976,
+      "name": "controller_active",
+      "timestamp_us": 1782272584388850
+    },
+    {
+      "detail": {
+        "type": "step"
+      },
+      "elapsed_s": 24.018284,
+      "name": "trajectory_start",
+      "timestamp_us": 1782272590353158
+    },
+    {
+      "detail": {
+        "setpoint_ned": [
+          1.0,
+          0.0,
+          -2.5
+        ]
+      },
+      "elapsed_s": 42.002247,
+      "name": "mission_end",
+      "timestamp_us": 1782272608337121
+    }
+  ],
+  "exit_code": 0,
+  "last_nav_state": 14,
+  "last_position_ned": {
+    "x": 0.9091911315917969,
+    "y": 0.039403025060892105,
+    "z": -2.257171630859375
+  },
+  "mission_end_us": 1782272608337121,
+  "mode_confirmed": true,
+  "origin_us": 1782272566334874,
+  "raptor_internal_reference_max": null,
+  "raptor_internal_reference_min": null,
+  "tag": "anchor_heavy_338_step",
+  "trajectory_start_us": 1782272590353158
+}

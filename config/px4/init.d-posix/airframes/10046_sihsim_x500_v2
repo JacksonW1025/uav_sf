@@ -1,0 +1,77 @@
+#!/bin/sh
+#
+# @name SIH X500 v2
+#
+# @type Quadrotor
+#
+# Simulation-in-hardware X500 v2 approximation for the M1 oracle runs.
+# Physical constants come from Tools/simulation/gz/models/x500_base/model.sdf
+# and actuator geometry from ROMFS/.../4001_gz_x500. MC rate tuning follows
+# ROMFS/px4fmu_common/init.d/airframes/4019_x500_v2.
+#
+
+. ${R}etc/init.d/rc.mc_defaults
+
+PX4_SIMULATOR=${PX4_SIMULATOR:=sihsim}
+PX4_SIM_MODEL=${PX4_SIM_MODEL:=x500_v2}
+
+param set-default SENS_EN_GPSSIM 1
+param set-default SENS_EN_BAROSIM 1
+param set-default SENS_EN_MAGSIM 1
+
+# RAPTOR policy was trained at 100 Hz. Keep the gyro publication rate an
+# integer multiple so force_sync_native is integral.
+param set-default IMU_GYRO_RATEMAX 400
+param set-default IMU_GYRO_CUTOFF 30
+
+# Holybro X500 v2 classical rate tuning from the PX4 real-airframe config.
+param set-default MC_ROLLRATE_P 0.14
+param set-default MC_PITCHRATE_P 0.14
+param set-default MC_ROLLRATE_I 0.3
+param set-default MC_PITCHRATE_I 0.3
+param set-default MC_ROLLRATE_D 0.004
+param set-default MC_PITCHRATE_D 0.004
+
+# Gazebo x500 mass/inertia.
+param set-default SIH_MASS 2.0
+param set-default SIH_IXX 0.0216667
+param set-default SIH_IYY 0.0216667
+param set-default SIH_IZZ 0.0400000
+param set-default SIH_IXY 0
+param set-default SIH_IXZ 0
+param set-default SIH_IYZ 0
+
+# Gazebo x500 motor model: 8.54858e-06 * 1000^2 N maximum thrust.
+param set-default SIH_T_MAX 8.54858
+param set-default SIH_Q_MAX 0.136777
+param set-default SIH_L_ROLL 0.21
+param set-default SIH_L_PITCH 0.13
+param set-default SIH_KDV 1.0
+param set-default SIH_KDW 0.025
+param set-default SIH_T_TAU 0.02
+param set-default MPC_THR_HOVER 0.60
+
+# Gazebo x500 Quad-X control allocation geometry.
+param set-default CA_AIRFRAME 0
+param set-default CA_ROTOR_COUNT 4
+param set-default CA_ROTOR0_PX 0.13
+param set-default CA_ROTOR0_PY 0.22
+param set-default CA_ROTOR0_KM 0.05
+param set-default CA_ROTOR1_PX -0.13
+param set-default CA_ROTOR1_PY -0.20
+param set-default CA_ROTOR1_KM 0.05
+param set-default CA_ROTOR2_PX 0.13
+param set-default CA_ROTOR2_PY -0.22
+param set-default CA_ROTOR2_KM -0.05
+param set-default CA_ROTOR3_PX -0.13
+param set-default CA_ROTOR3_PY 0.20
+param set-default CA_ROTOR3_KM -0.05
+
+param set-default PWM_MAIN_FUNC1 101
+param set-default PWM_MAIN_FUNC2 102
+param set-default PWM_MAIN_FUNC3 103
+param set-default PWM_MAIN_FUNC4 104
+
+param set-default SENS_GPS0_DELAY 0
+param set-default SENS_GPS1_DELAY 0
+param set SIH_VEHICLE_TYPE 0

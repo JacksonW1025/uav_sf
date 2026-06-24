@@ -1,0 +1,7 @@
+[INFO] [1782272371.892019037] [m1_offboard_task]: M1 task started controller=classical tag=anchor_heavy_max_step rate_hz=100.0
+{"detail": {"source": "first_px4_topic"}, "elapsed_s": 0.0, "name": "clock_origin", "timestamp_us": 1782272371809665}
+{"detail": {"controller": "classical", "main": 6}, "elapsed_s": 18.007734, "name": "mode_command", "timestamp_us": 1782272389817399}
+{"detail": {"nav_state": 14}, "elapsed_s": 18.183986, "name": "controller_active", "timestamp_us": 1782272389993651}
+{"detail": {"type": "step"}, "elapsed_s": 24.008293, "name": "trajectory_start", "timestamp_us": 1782272395817958}
+{"detail": {"setpoint_ned": [1.0, 0.0, -2.5]}, "elapsed_s": 42.008624, "name": "mission_end", "timestamp_us": 1782272413818289}
+[INFO] [1782272414.029922488] [m1_offboard_task]: M1 task finished exit_code=0

@@ -4,7 +4,7 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PX4_DIR="${PX4_DIR:-${REPO_ROOT}/external/PX4-Autopilot}"
 LOG_DIR="${REPO_ROOT}/docs"
-LOG_FILE="${LOG_DIR}/m0_raptor_sih_build.log"
+LOG_FILE="${PX4_RAPTOR_SIH_BUILD_LOG:-${LOG_DIR}/m0_raptor_sih_build.log}"
 
 mkdir -p "${LOG_DIR}"
 
@@ -15,6 +15,7 @@ mkdir -p "${LOG_DIR}"
   echo "PX4_SHA=$(git -C "${PX4_DIR}" rev-parse HEAD)"
 
   "${REPO_ROOT}/scripts/install_raptor_sih_board.sh"
+  "${REPO_ROOT}/scripts/install_m1_sih_x500.sh"
 
   cd "${PX4_DIR}"
   HEADLESS=1 make px4_sitl_raptor_sih
