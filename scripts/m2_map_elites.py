@@ -52,7 +52,7 @@ BASE_PX4_PARAMS = {
     "CA_FAILURE_MODE": 1,
 }
 
-FAMILIES = ["A_physical", "A_wind", "B_timing", "C_setpoint"]
+FAMILIES = ["A_estimator", "A_physical", "A_wind", "B_timing", "C_setpoint"]
 CONFIRM_SEEDS = [202601, 202602, 202603]
 
 
@@ -123,11 +123,13 @@ def clamp(value: float, lo: float, hi: float) -> float:
 
 def choose_family(rng: random.Random) -> str:
     roll = rng.random()
-    if roll < 0.65:
+    if roll < 0.35:
+        return "A_estimator"
+    if roll < 0.70:
         return "A_physical"
-    if roll < 0.80:
+    if roll < 0.83:
         return "A_wind"
-    if roll < 0.95:
+    if roll < 0.96:
         return "B_timing"
     return "C_setpoint"
 
@@ -152,6 +154,16 @@ def random_genome(rng: random.Random, family: str | None = None) -> dict[str, An
         "thrust_tau_s": rng.uniform(0.015, 0.08),
         "wind_n": rng.uniform(-2.0, 2.0),
         "wind_e": rng.uniform(-2.0, 2.0),
+        "gps_delay_ms": rng.uniform(0.0, 180.0),
+        "gps_position_noise_m": rng.uniform(0.25, 2.0),
+        "gps_velocity_noise_m_s": rng.uniform(0.12, 1.5),
+        "gps_position_gate_sd": rng.uniform(2.0, 8.0),
+        "gps_velocity_gate_sd": rng.uniform(2.0, 8.0),
+        "ekf_tau_vel_s": rng.uniform(0.15, 0.75),
+        "ekf_tau_pos_s": rng.uniform(0.15, 0.75),
+        "imu_pos_x_m": rng.uniform(-0.05, 0.05),
+        "imu_pos_y_m": rng.uniform(-0.05, 0.05),
+        "imu_pos_z_m": rng.uniform(-0.04, 0.04),
         "switch_s": rng.uniform(16.0, 22.0),
         "setpoint_rate_hz": rng.choice([30.0, 50.0, 75.0, 100.0]),
         "setpoint_type": rng.choice(["step", "sine"]),
@@ -161,7 +173,22 @@ def random_genome(rng: random.Random, family: str | None = None) -> dict[str, An
         "sine_frequency_hz": rng.uniform(0.8, 5.5),
     }
 
-    if family == "A_physical":
+    if family == "A_estimator":
+        genome["gps_delay_ms"] = rng.uniform(60.0, 260.0)
+        genome["gps_position_noise_m"] = rng.uniform(0.05, 1.5)
+        genome["gps_velocity_noise_m_s"] = rng.uniform(0.03, 1.0)
+        genome["gps_position_gate_sd"] = rng.uniform(1.0, 10.0)
+        genome["gps_velocity_gate_sd"] = rng.uniform(1.0, 10.0)
+        genome["ekf_tau_vel_s"] = rng.uniform(0.1, 1.0)
+        genome["ekf_tau_pos_s"] = rng.uniform(0.1, 1.0)
+        genome["imu_pos_x_m"] = rng.uniform(-0.18, 0.18)
+        genome["imu_pos_y_m"] = rng.uniform(-0.18, 0.18)
+        genome["imu_pos_z_m"] = rng.uniform(-0.12, 0.12)
+        genome["setpoint_type"] = "sine"
+        genome["sine_amplitude_m"] = rng.uniform(0.2, 0.5)
+        genome["sine_frequency_hz"] = rng.uniform(2.0, 6.0)
+        genome["setpoint_rate_hz"] = rng.choice([50.0, 75.0, 100.0])
+    elif family == "A_physical":
         genome["mass_scale"] = rng.uniform(0.85, 1.38)
         genome["thrust_scale"] = rng.uniform(0.72, 1.05)
         genome["inertia_roll_scale"] = rng.uniform(0.55, 2.15)
@@ -203,6 +230,16 @@ def nominal_genome() -> dict[str, Any]:
             "thrust_tau_s": NOMINAL["t_tau"],
             "wind_n": 0.0,
             "wind_e": 0.0,
+            "gps_delay_ms": 0.0,
+            "gps_position_noise_m": 0.5,
+            "gps_velocity_noise_m_s": 0.3,
+            "gps_position_gate_sd": 5.0,
+            "gps_velocity_gate_sd": 5.0,
+            "ekf_tau_vel_s": 0.25,
+            "ekf_tau_pos_s": 0.25,
+            "imu_pos_x_m": 0.0,
+            "imu_pos_y_m": 0.0,
+            "imu_pos_z_m": 0.0,
             "switch_s": 18.0,
             "setpoint_rate_hz": 100.0,
             "setpoint_type": "step",
@@ -222,6 +259,32 @@ def seed_bank() -> list[dict[str, Any]]:
         genome.update(updates)
         seeds.append(normalize_genome(genome))
 
+    add(
+        family_hint="A_estimator",
+        gps_delay_ms=120.0,
+        gps_position_noise_m=0.25,
+        gps_velocity_noise_m_s=0.08,
+        ekf_tau_vel_s=0.25,
+        ekf_tau_pos_s=0.25,
+        setpoint_type="sine",
+        sine_amplitude_m=0.35,
+        sine_frequency_hz=4.0,
+        setpoint_rate_hz=100.0,
+    )
+    add(
+        family_hint="A_estimator",
+        gps_delay_ms=220.0,
+        gps_position_noise_m=0.1,
+        gps_velocity_noise_m_s=0.05,
+        gps_position_gate_sd=8.0,
+        gps_velocity_gate_sd=8.0,
+        ekf_tau_vel_s=0.55,
+        ekf_tau_pos_s=0.55,
+        setpoint_type="sine",
+        sine_amplitude_m=0.3,
+        sine_frequency_hz=5.0,
+        setpoint_rate_hz=100.0,
+    )
     add(
         family_hint="A_physical",
         mass_scale=1.0,
@@ -345,6 +408,16 @@ def mutate_genome(parent: dict[str, Any], rng: random.Random) -> dict[str, Any]:
         "thrust_tau_s": 0.015,
         "wind_n": 1.2,
         "wind_e": 1.2,
+        "gps_delay_ms": 35.0,
+        "gps_position_noise_m": 0.2,
+        "gps_velocity_noise_m_s": 0.08,
+        "gps_position_gate_sd": 1.0,
+        "gps_velocity_gate_sd": 1.0,
+        "ekf_tau_vel_s": 0.12,
+        "ekf_tau_pos_s": 0.12,
+        "imu_pos_x_m": 0.04,
+        "imu_pos_y_m": 0.04,
+        "imu_pos_z_m": 0.03,
         "switch_s": 1.0,
         "step_m": 0.08,
         "sine_amplitude_m": 0.08,
@@ -382,6 +455,16 @@ def normalize_genome(genome: dict[str, Any]) -> dict[str, Any]:
         "thrust_tau_s": (0.01, 0.14),
         "wind_n": (-6.0, 6.0),
         "wind_e": (-6.0, 6.0),
+        "gps_delay_ms": (0.0, 300.0),
+        "gps_position_noise_m": (0.01, 10.0),
+        "gps_velocity_noise_m_s": (0.01, 5.0),
+        "gps_position_gate_sd": (1.0, 12.0),
+        "gps_velocity_gate_sd": (1.0, 12.0),
+        "ekf_tau_vel_s": (0.1, 1.0),
+        "ekf_tau_pos_s": (0.1, 1.0),
+        "imu_pos_x_m": (-0.25, 0.25),
+        "imu_pos_y_m": (-0.25, 0.25),
+        "imu_pos_z_m": (-0.20, 0.20),
         "switch_s": (14.0, 24.0),
         "step_m": (0.0, 0.5),
         "sine_amplitude_m": (0.0, 0.5),
@@ -437,7 +520,36 @@ def physical_params(genome: dict[str, Any]) -> dict[str, float]:
     }
 
 
+def estimator_params(genome: dict[str, Any]) -> dict[str, float | int]:
+    gps_delay_ms = int(round(float(genome["gps_delay_ms"])))
+    return {
+        "SENS_GPS0_DELAY": gps_delay_ms,
+        "SENS_GPS1_DELAY": gps_delay_ms,
+        "EKF2_DELAY_MAX": max(200, gps_delay_ms),
+        "EKF2_GPS_P_NOISE": round(float(genome["gps_position_noise_m"]), 4),
+        "EKF2_GPS_V_NOISE": round(float(genome["gps_velocity_noise_m_s"]), 4),
+        "EKF2_GPS_P_GATE": round(float(genome["gps_position_gate_sd"]), 4),
+        "EKF2_GPS_V_GATE": round(float(genome["gps_velocity_gate_sd"]), 4),
+        "EKF2_TAU_VEL": round(float(genome["ekf_tau_vel_s"]), 4),
+        "EKF2_TAU_POS": round(float(genome["ekf_tau_pos_s"]), 4),
+        "EKF2_IMU_POS_X": round(float(genome["imu_pos_x_m"]), 4),
+        "EKF2_IMU_POS_Y": round(float(genome["imu_pos_y_m"]), 4),
+        "EKF2_IMU_POS_Z": round(float(genome["imu_pos_z_m"]), 4),
+    }
+
+
 def genome_severity(genome: dict[str, Any]) -> dict[str, float]:
+    estimator = max(
+        abs(float(genome["gps_delay_ms"])) / 300.0,
+        abs(float(genome["gps_position_noise_m"]) - 0.5) / 9.5,
+        abs(float(genome["gps_velocity_noise_m_s"]) - 0.3) / 4.7,
+        abs(float(genome["gps_position_gate_sd"]) - 5.0) / 7.0,
+        abs(float(genome["gps_velocity_gate_sd"]) - 5.0) / 7.0,
+        abs(float(genome["ekf_tau_vel_s"]) - 0.25) / 0.75,
+        abs(float(genome["ekf_tau_pos_s"]) - 0.25) / 0.75,
+        math.hypot(float(genome["imu_pos_x_m"]), float(genome["imu_pos_y_m"])) / 0.25,
+        abs(float(genome["imu_pos_z_m"])) / 0.2,
+    )
     physical = max(
         abs(float(genome["mass_scale"]) - 1.0) / 0.45,
         abs(float(genome["thrust_scale"]) - 1.0) / 0.32,
@@ -457,6 +569,7 @@ def genome_severity(genome: dict[str, Any]) -> dict[str, float]:
         max(0.0, float(genome["sine_frequency_hz"]) - 4.0) / 4.0,
     )
     return {
+        "A_estimator": clamp(estimator, 0.0, 1.5),
         "A_physical": clamp(physical, 0.0, 1.5),
         "A_wind": clamp(wind, 0.0, 1.5),
         "B_timing": clamp(timing, 0.0, 1.5),
@@ -466,7 +579,11 @@ def genome_severity(genome: dict[str, Any]) -> dict[str, float]:
 
 def feature_bin(genome: dict[str, Any]) -> tuple[str, float, str]:
     severities = genome_severity(genome)
-    family = max(FAMILIES, key=lambda key: severities[key])
+    hint = str(genome.get("family_hint", ""))
+    if hint in FAMILIES and severities.get(hint, 0.0) > 0.05:
+        family = hint
+    else:
+        family = max(FAMILIES, key=lambda key: severities[key])
     severity = severities[family]
     if severity < 0.35:
         bucket = "low"
@@ -480,6 +597,8 @@ def feature_bin(genome: dict[str, Any]) -> tuple[str, float, str]:
 def theta_from_genome(genome: dict[str, Any], tag: str, seed: int) -> dict[str, Any]:
     params = dict(BASE_PX4_PARAMS)
     params.update({key: round(value, 8) for key, value in physical_params(genome).items()})
+    est_params = estimator_params(genome)
+    params.update(est_params)
     switch_s = float(genome["switch_s"])
     trajectory_start_s = max(switch_s + 4.0, 22.0)
     mission_end_s = trajectory_start_s + 16.0
@@ -516,6 +635,7 @@ def theta_from_genome(genome: dict[str, Any], tag: str, seed: int) -> dict[str, 
                 "frequency_hz": round(float(genome["sine_frequency_hz"]), 4),
             },
         },
+        "boot_px4_params": est_params,
         "px4_params": params,
         "environment": {
             "sih_wind_n": round(float(genome["wind_n"]), 4),
@@ -527,9 +647,33 @@ def theta_from_genome(genome: dict[str, Any], tag: str, seed: int) -> dict[str, 
             "thrust_scale_effective": round(params["SIH_T_MAX"] / NOMINAL["t_max"], 4),
             "torque_scale": round(float(genome["torque_scale"]), 4),
             "thrust_tau_s": round(float(genome["thrust_tau_s"]), 4),
+            "estimator_pollution": {
+                "sih_ok": True,
+                "shared_estimate": True,
+                "gps_delay_ms": int(round(float(genome["gps_delay_ms"]))),
+                "gps_position_noise_m": round(float(genome["gps_position_noise_m"]), 4),
+                "gps_velocity_noise_m_s": round(float(genome["gps_velocity_noise_m_s"]), 4),
+                "gps_position_gate_sd": round(float(genome["gps_position_gate_sd"]), 4),
+                "gps_velocity_gate_sd": round(float(genome["gps_velocity_gate_sd"]), 4),
+                "ekf_tau_vel_s": round(float(genome["ekf_tau_vel_s"]), 4),
+                "ekf_tau_pos_s": round(float(genome["ekf_tau_pos_s"]), 4),
+                "imu_pos_m": [
+                    round(float(genome["imu_pos_x_m"]), 4),
+                    round(float(genome["imu_pos_y_m"]), 4),
+                    round(float(genome["imu_pos_z_m"]), 4),
+                ],
+                "px4_params": est_params,
+            },
         },
         "faults": [],
-        "sensor_perturbations": [],
+        "sensor_perturbations": [
+            {
+                "type": "shared_ekf_estimate_pollution",
+                "simulator": "sih",
+                "mechanism": "PX4 EKF/GNSS delay-noise-gate-tau-imu-position parameters",
+                "params": est_params,
+            }
+        ],
         "divergence_thresholds": {
             "position_divergence_m": 1.0,
         },

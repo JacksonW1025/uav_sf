@@ -1,0 +1,68 @@
+{
+  "controller": "classical",
+  "controller_active_us": 1782285839269808,
+  "events": [
+    {
+      "detail": {
+        "source": "first_px4_topic"
+      },
+      "elapsed_s": 0.0,
+      "name": "clock_origin",
+      "timestamp_us": 1782285821237725
+    },
+    {
+      "detail": {
+        "controller": "classical",
+        "main": 6
+      },
+      "elapsed_s": 18.000083,
+      "name": "mode_command",
+      "timestamp_us": 1782285839237808
+    },
+    {
+      "detail": {
+        "nav_state": 14
+      },
+      "elapsed_s": 18.032083,
+      "name": "controller_active",
+      "timestamp_us": 1782285839269808
+    },
+    {
+      "detail": {
+        "type": "step"
+      },
+      "elapsed_s": 22.000083,
+      "name": "trajectory_start",
+      "timestamp_us": 1782285843237808
+    },
+    {
+      "detail": {
+        "setpoint_ned": [
+          0.25,
+          0.0,
+          -2.5
+        ]
+      },
+      "elapsed_s": 38.00856,
+      "name": "mission_end",
+      "timestamp_us": 1782285859246285
+    }
+  ],
+  "exit_code": 0,
+  "last_nav_state": 14,
+  "last_position_ned": {
+    "x": 0.38866665959358215,
+    "y": -0.1281130015850067,
+    "z": -2.549346923828125
+  },
+  "mission_end_us": 1782285859246285,
+  "mode_confirmed": true,
+  "origin_us": 1782285821237725,
+  "raptor_internal_reference_max": null,
+  "raptor_internal_reference_min": null,
+  "setpoint_rate_hz": 100.0,
+  "sim_speed_factor": 1.0,
+  "tag": "m2_5_speed_nominal_step",
+  "trajectory_start_us": 1782285843237808,
+  "wall_timer_hz": 100.0
+}

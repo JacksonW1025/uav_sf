@@ -1,0 +1,210 @@
+{
+  "airframe": {
+    "model": "sihsim_x500_v2",
+    "sim": "sih",
+    "sys_autostart": 10046
+  },
+  "boot_px4_params": {
+    "EKF2_DELAY_MAX": 200,
+    "EKF2_GPS_P_GATE": 8.0,
+    "EKF2_GPS_P_NOISE": 0.1,
+    "EKF2_GPS_V_GATE": 8.0,
+    "EKF2_GPS_V_NOISE": 0.05,
+    "EKF2_IMU_POS_X": 0.0,
+    "EKF2_IMU_POS_Y": 0.0,
+    "EKF2_IMU_POS_Z": 0.0,
+    "EKF2_TAU_POS": 0.25,
+    "EKF2_TAU_VEL": 0.25,
+    "SENS_GPS0_DELAY": 60,
+    "SENS_GPS1_DELAY": 60
+  },
+  "description": "M2.5 targeted shared EKF estimate pollution probe: GNSS timestamp delay mismatch with low GPS noise and a finite sine setpoint to excite velocity-estimate phase error.",
+  "divergence_thresholds": {
+    "position_divergence_m": 1.0
+  },
+  "environment": {
+    "estimator_pollution": {
+      "ekf_tau_pos_s": 0.25,
+      "ekf_tau_vel_s": 0.25,
+      "gps_delay_ms": 60,
+      "gps_position_gate_sd": 8.0,
+      "gps_position_noise_m": 0.1,
+      "gps_velocity_gate_sd": 8.0,
+      "gps_velocity_noise_m_s": 0.05,
+      "imu_pos_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "px4_params": {
+        "EKF2_DELAY_MAX": 200,
+        "EKF2_GPS_P_GATE": 8.0,
+        "EKF2_GPS_P_NOISE": 0.1,
+        "EKF2_GPS_V_GATE": 8.0,
+        "EKF2_GPS_V_NOISE": 0.05,
+        "EKF2_IMU_POS_X": 0.0,
+        "EKF2_IMU_POS_Y": 0.0,
+        "EKF2_IMU_POS_Z": 0.0,
+        "EKF2_TAU_POS": 0.25,
+        "EKF2_TAU_VEL": 0.25,
+        "SENS_GPS0_DELAY": 60,
+        "SENS_GPS1_DELAY": 60
+      },
+      "shared_estimate": true,
+      "sih_ok": true
+    },
+    "inertia_pitch_scale": 1.0,
+    "inertia_roll_scale": 1.0,
+    "inertia_yaw_scale": 1.0,
+    "mass_scale": 1.0,
+    "sih_wind_e": 0.0,
+    "sih_wind_n": 0.0,
+    "thrust_scale_effective": 1.0,
+    "thrust_tau_s": 0.02,
+    "torque_scale": 1.0
+  },
+  "faults": [],
+  "m2": {
+    "feature_bin": "C_setpoint:mid",
+    "feature_family": "C_setpoint",
+    "feature_severity": 0.7,
+    "generator": "scripts/m2_map_elites.py",
+    "genome": {
+      "angular_damper_scale": 1.0,
+      "cross_xy": 0.0,
+      "cross_xz": 0.0,
+      "cross_yz": 0.0,
+      "drag_scale": 1.0,
+      "ekf_tau_pos_s": 0.25,
+      "ekf_tau_vel_s": 0.25,
+      "family_hint": "A_estimator",
+      "gps_delay_ms": 60.0,
+      "gps_position_gate_sd": 8.0,
+      "gps_position_noise_m": 0.1,
+      "gps_velocity_gate_sd": 8.0,
+      "gps_velocity_noise_m_s": 0.05,
+      "imu_pos_x_m": 0.0,
+      "imu_pos_y_m": 0.0,
+      "imu_pos_z_m": 0.0,
+      "inertia_pitch_scale": 1.0,
+      "inertia_roll_scale": 1.0,
+      "inertia_yaw_scale": 1.0,
+      "mass_scale": 1.0,
+      "pitch_arm_scale": 1.0,
+      "roll_arm_scale": 1.0,
+      "setpoint_axis": "x",
+      "setpoint_rate_hz": 100.0,
+      "setpoint_type": "sine",
+      "sine_amplitude_m": 0.35,
+      "sine_frequency_hz": 4.0,
+      "step_m": 0.35,
+      "switch_s": 18.0,
+      "thrust_scale": 1.0,
+      "thrust_tau_s": 0.02,
+      "torque_scale": 1.0,
+      "wind_e": 0.0,
+      "wind_n": 0.0
+    },
+    "safety_config": "config/m2_safety_envelope.json"
+  },
+  "m2_5": {
+    "fairness": "boot_px4_params and px4_params are identical for classical and RAPTOR runs",
+    "pollution_path": "SENS_GPS0_DELAY/SENS_GPS1_DELAY -> vehicle_gps_position timestamp_sample -> EKF2 -> vehicle_local_position",
+    "purpose": "targeted EKF/GPS delay gradient, not a full M2 rerun"
+  },
+  "px4_params": {
+    "CA_FAILURE_MODE": 1,
+    "COM_DISARM_LAND": -1,
+    "COM_OF_LOSS_T": 5.0,
+    "COM_RCL_EXCEPT": 8,
+    "COM_RC_IN_MODE": 4,
+    "EKF2_DELAY_MAX": 200,
+    "EKF2_GPS_P_GATE": 8.0,
+    "EKF2_GPS_P_NOISE": 0.1,
+    "EKF2_GPS_V_GATE": 8.0,
+    "EKF2_GPS_V_NOISE": 0.05,
+    "EKF2_IMU_POS_X": 0.0,
+    "EKF2_IMU_POS_Y": 0.0,
+    "EKF2_IMU_POS_Z": 0.0,
+    "EKF2_TAU_POS": 0.25,
+    "EKF2_TAU_VEL": 0.25,
+    "IMU_GYRO_RATEMAX": 400,
+    "MC_RAPTOR_ENABLE": 1,
+    "MC_RAPTOR_INTREF": 0,
+    "MC_RAPTOR_OFFB": 0,
+    "MPC_THR_HOVER": 0.57358357,
+    "NAV_DLL_ACT": 0,
+    "SENS_GPS0_DELAY": 60,
+    "SENS_GPS1_DELAY": 60,
+    "SIH_IXX": 0.0216667,
+    "SIH_IXY": 0.0,
+    "SIH_IXZ": 0.0,
+    "SIH_IYY": 0.0216667,
+    "SIH_IYZ": 0.0,
+    "SIH_IZZ": 0.04,
+    "SIH_KDV": 1.0,
+    "SIH_KDW": 0.025,
+    "SIH_L_PITCH": 0.13,
+    "SIH_L_ROLL": 0.21,
+    "SIH_MASS": 2.0,
+    "SIH_Q_MAX": 0.136777,
+    "SIH_T_MAX": 8.54858,
+    "SIH_T_TAU": 0.02,
+    "SIH_WIND_E": 0.0,
+    "SIH_WIND_N": 0.0,
+    "SYS_FAILURE_EN": 1
+  },
+  "seed": 202626,
+  "sensor_perturbations": [
+    {
+      "mechanism": "PX4 EKF/GNSS delay-noise-gate-tau-imu-position parameters",
+      "params": {
+        "EKF2_DELAY_MAX": 200,
+        "EKF2_GPS_P_GATE": 8.0,
+        "EKF2_GPS_P_NOISE": 0.1,
+        "EKF2_GPS_V_GATE": 8.0,
+        "EKF2_GPS_V_NOISE": 0.05,
+        "EKF2_IMU_POS_X": 0.0,
+        "EKF2_IMU_POS_Y": 0.0,
+        "EKF2_IMU_POS_Z": 0.0,
+        "EKF2_TAU_POS": 0.25,
+        "EKF2_TAU_VEL": 0.25,
+        "SENS_GPS0_DELAY": 60,
+        "SENS_GPS1_DELAY": 60
+      },
+      "simulator": "sih",
+      "type": "shared_ekf_estimate_pollution"
+    }
+  ],
+  "setpoint": {
+    "hover_ned": [
+      0.0,
+      0.0,
+      -2.5
+    ],
+    "rate_hz": 100.0,
+    "sine": {
+      "amplitude_m": 0.35,
+      "axis": "x",
+      "frequency_hz": 4.0
+    },
+    "step": {
+      "delta_ned": [
+        0.35,
+        0.0,
+        0.0
+      ]
+    },
+    "type": "sine",
+    "yaw_rad": 0.0
+  },
+  "tag": "m2_5_estimator_delay_scan_1x_20260624_gpsdelay_060ms",
+  "timing": {
+    "controller_switch_s": 18.0,
+    "mission_end_s": 38.0,
+    "mode_command_repeat_s": 0.5,
+    "mode_command_timeout_s": 6.0,
+    "px4_shutdown_wall_slack_s": 22.0,
+    "trajectory_start_s": 22.0
+  }
+}

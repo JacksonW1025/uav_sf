@@ -5,7 +5,7 @@
   "seed": 20260624,
   "default_budget": 18,
   "bootstrap_evals": 8,
-  "bootstrap_seed_bank": "First nine evaluations are fixed A/B/C tier MAP-Elites bootstrap seeds, weighted toward A-tier physical mismatch and wind. Seed 0 is a thrust-lag-only A-physical probe derived from the first unconfirmed primary candidate.",
+  "bootstrap_seed_bank": "First eleven evaluations are fixed A/B/C tier MAP-Elites bootstrap seeds, now led by two A_estimator EKF/GPS delay probes and then weighted toward A-tier physical mismatch and wind.",
   "sim_speed_factor": 1.0,
   "run_timeout_s": 130,
   "eval_timeout_s": 260,
@@ -15,6 +15,7 @@
     "axis_0": "dominant disturbance family",
     "axis_1": "severity bucket",
     "families": [
+      "A_estimator",
       "A_physical",
       "A_wind",
       "B_timing",
@@ -27,10 +28,11 @@
     ]
   },
   "budget_weights": {
-    "A_physical": 0.65,
-    "A_wind": 0.15,
-    "B_timing": 0.15,
-    "C_setpoint": 0.05
+    "A_estimator": 0.35,
+    "A_physical": 0.35,
+    "A_wind": 0.13,
+    "B_timing": 0.13,
+    "C_setpoint": 0.04
   },
   "scope_note": "Random initialization is MAP-Elites bootstrap only. It is not the M3 random/grid baseline comparison."
 }

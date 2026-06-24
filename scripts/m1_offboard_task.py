@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -80,6 +81,11 @@ class M1OffboardTask(Node):
         self.mode_repeat_s = float(timing.get("mode_command_repeat_s", 0.5))
         self.mode_timeout_s = float(timing.get("mode_command_timeout_s", 6.0))
         self.rate_hz = float(setpoint.get("rate_hz", 50.0))
+        self.sim_speed_factor = max(1.0, float(os.environ.get("PX4_SIM_SPEED_FACTOR", "1") or 1.0))
+        self.wall_timer_hz = self.rate_hz * self.sim_speed_factor
+        max_wall_timer_hz = float(setpoint.get("max_wall_timer_hz", 800.0))
+        if max_wall_timer_hz > 0:
+            self.wall_timer_hz = min(self.wall_timer_hz, max_wall_timer_hz)
         self.hover_ned = finite_triplet(setpoint["hover_ned"])
         self.yaw_rad = float(setpoint.get("yaw_rad", 0.0))
         self.setpoint_type = str(setpoint.get("type", "step"))
@@ -128,9 +134,11 @@ class M1OffboardTask(Node):
         )
         self.create_subscription(RaptorStatus, "/fmu/out/raptor_status", self.raptor_status_cb, qos_sub)
 
-        self.timer = self.create_timer(1.0 / self.rate_hz, self.tick)
+        self.timer = self.create_timer(1.0 / self.wall_timer_hz, self.tick)
         self.get_logger().info(
-            f"M1 task started controller={controller} tag={theta.get('tag')} rate_hz={self.rate_hz}"
+            f"M1 task started controller={controller} tag={theta.get('tag')} "
+            f"rate_hz={self.rate_hz} wall_timer_hz={self.wall_timer_hz} "
+            f"PX4_SIM_SPEED_FACTOR={self.sim_speed_factor}"
         )
 
     def status_cb(self, msg: VehicleStatus) -> None:
@@ -338,6 +346,9 @@ class M1OffboardTask(Node):
                 "tag": self.theta.get("tag"),
                 "controller": self.controller,
                 "exit_code": exit_code,
+                "sim_speed_factor": self.sim_speed_factor,
+                "setpoint_rate_hz": self.rate_hz,
+                "wall_timer_hz": self.wall_timer_hz,
                 "origin_us": self.origin_us,
                 "controller_active_us": self.controller_active_us,
                 "trajectory_start_us": self.trajectory_start_us,

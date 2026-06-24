@@ -1,0 +1,7 @@
+[INFO] [1782285462.533988361] [m1_offboard_task]: M1 task started controller=classical tag=m2_5_estimator_smoke1x_20260624_gpsdelay_120ms rate_hz=100.0 wall_timer_hz=100.0 PX4_SIM_SPEED_FACTOR=1.0
+{"detail": {"source": "first_px4_topic"}, "elapsed_s": 0.0, "name": "clock_origin", "timestamp_us": 1782285462592079}
+{"detail": {"controller": "classical", "main": 6}, "elapsed_s": 18.018152, "name": "mode_command", "timestamp_us": 1782285480610231}
+{"detail": {"nav_state": 14}, "elapsed_s": 18.042152, "name": "controller_active", "timestamp_us": 1782285480634231}
+{"detail": {"type": "sine"}, "elapsed_s": 22.839983, "name": "trajectory_start", "timestamp_us": 1782285485432062}
+{"detail": {"setpoint_ned": [0.09753706850599284, 0.0, -2.5]}, "elapsed_s": 38.011237, "name": "mission_end", "timestamp_us": 1782285500603316}
+[INFO] [1782285500.620125634] [m1_offboard_task]: M1 task finished exit_code=0

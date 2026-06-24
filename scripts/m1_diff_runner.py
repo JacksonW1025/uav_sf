@@ -5,7 +5,9 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
+import re
 import shutil
 import signal
 import subprocess
@@ -21,14 +23,20 @@ REQUIRED_LOGGER_TOPICS = [
     "raptor_input 0",
     "trajectory_setpoint 0",
     "vehicle_local_position 0",
+    "vehicle_local_position_groundtruth 0",
     "vehicle_angular_velocity 0",
+    "vehicle_angular_velocity_groundtruth 0",
     "vehicle_attitude 0",
+    "vehicle_attitude_groundtruth 0",
     "vehicle_status 0",
+    "estimator_status 0",
+    "estimator_status_flags 0",
     "failsafe_flags 0",
     "actuator_motors 0",
     "actuator_outputs 0",
     "failure_detector_status 0",
 ]
+PARAM_NAME_RE = re.compile(r"^[A-Z0-9_]+$")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -122,13 +130,62 @@ def write_logger_topics(run_root: Path) -> None:
     (logging_dir / "logger_topics.txt").write_text("\n".join(REQUIRED_LOGGER_TOPICS) + "\n", encoding="utf-8")
 
 
-def px4_command_script(theta: dict[str, Any]) -> str:
+def format_px4_param_command(name: str, value: Any) -> str:
+    if not PARAM_NAME_RE.fullmatch(name):
+        raise ValueError(f"invalid PX4 parameter name: {name!r}")
+    if isinstance(value, bool):
+        value_text = "1" if value else "0"
+    elif isinstance(value, (int, float)):
+        value_text = str(value)
+    else:
+        value_text = str(value)
+        float(value_text)
+    return f"param set {name} {value_text}"
+
+
+def boot_px4_params(theta: dict[str, Any]) -> dict[str, Any]:
+    params = theta.get("boot_px4_params", {})
+    if not isinstance(params, dict):
+        raise ValueError("theta.boot_px4_params must be an object when present")
+    return dict(params)
+
+
+def px4_params(theta: dict[str, Any]) -> dict[str, Any]:
     params = theta.get("px4_params", {})
+    if not isinstance(params, dict):
+        raise ValueError("theta.px4_params must be an object when present")
+    return dict(params)
+
+
+def prepare_run_airframe(repo: Path, run_root: Path, theta: dict[str, Any]) -> Path | None:
+    params = boot_px4_params(theta)
+    airframe = theta.get("airframe", {})
+    sys_autostart = int(airframe.get("sys_autostart", 10046)) if isinstance(airframe, dict) else 10046
+    src = repo / "config/px4/init.d-posix/airframes" / f"{sys_autostart}_sihsim_x500_v2"
+    dst = run_root / "etc/init.d-posix/airframes" / src.name
+    if not src.exists() or not dst.parent.exists():
+        return None
+    text = src.read_text(encoding="utf-8")
+    if params:
+        lines = [
+            "",
+            "# M2.5 per-theta boot parameters.",
+            f"# tag={theta.get('tag')}",
+        ]
+        for name, value in sorted(params.items()):
+            lines.append(format_px4_param_command(name, value))
+        text = text.rstrip() + "\n" + "\n".join(lines) + "\n"
+    dst.write_text(text, encoding="utf-8")
+    return dst
+
+
+def px4_command_script(theta: dict[str, Any], sim_speed_factor: float) -> str:
+    params = px4_params(theta)
     lines = [
         "sleep 4",
     ]
     for name, value in params.items():
-        lines.append(f"param set {name} {value}")
+        lines.append(format_px4_param_command(name, value))
     lines.append("mc_raptor start")
     intref = theta.get("raptor_internal_reference", {})
     lissajous = intref.get("lissajous") if isinstance(intref, dict) else None
@@ -152,7 +209,11 @@ def px4_command_script(theta: dict[str, Any]) -> str:
             "commander takeoff",
         ]
     )
-    sleep_after_takeoff = int(float(theta["timing"]["mission_end_s"]) + 18.0)
+    timing = theta["timing"]
+    mission_end_s = float(timing["mission_end_s"])
+    shutdown_margin_s = float(timing.get("px4_shutdown_margin_s", 6.0))
+    shutdown_wall_slack_s = float(timing.get("px4_shutdown_wall_slack_s", 22.0))
+    sleep_after_takeoff = int(math.ceil(mission_end_s + shutdown_margin_s + shutdown_wall_slack_s * sim_speed_factor))
     lines.extend(
         [
             f"sleep {sleep_after_takeoff}",
@@ -203,6 +264,7 @@ def run_one(
         raise FileNotFoundError(f"PX4 binary missing: {build_dir / 'bin/px4'}")
 
     write_logger_topics(run_root)
+    boot_airframe = prepare_run_airframe(repo, run_root, theta)
     (run_root / "raptor").mkdir(exist_ok=True)
     shutil.copy2(px4_dir / "src/modules/mc_raptor/blob/policy.tar", run_root / "raptor/policy.tar")
     if log_root.exists():
@@ -228,6 +290,7 @@ def run_one(
             "PX4_SIM_SPEED_FACTOR": os.environ.get("PX4_SIM_SPEED_FACTOR", "1"),
         }
     )
+    sim_speed_factor = max(1.0, float(px4_env["PX4_SIM_SPEED_FACTOR"]))
 
     agent = None
     px4 = None
@@ -246,7 +309,7 @@ def run_one(
             time.sleep(2.0)
 
         cmd_tmp = tempfile.NamedTemporaryFile("w", delete=False, encoding="utf-8")
-        cmd_tmp.write(px4_command_script(theta))
+        cmd_tmp.write(px4_command_script(theta, sim_speed_factor))
         cmd_tmp.close()
 
         with console_log.open("w", encoding="utf-8") as console_handle, open(cmd_tmp.name, "r", encoding="utf-8") as stdin:
@@ -256,6 +319,12 @@ def run_one(
             console_handle.write(f"PX4_SYS_AUTOSTART={px4_env['PX4_SYS_AUTOSTART']}\n")
             console_handle.write(f"PX4_SIM_SPEED_FACTOR={px4_env['PX4_SIM_SPEED_FACTOR']}\n")
             console_handle.write(f"THETA={theta_path}\n\n")
+            console_handle.write(f"BOOT_AIRFRAME={boot_airframe}\n")
+            console_handle.write(f"BOOT_PX4_PARAMS={json.dumps(boot_px4_params(theta), sort_keys=True)}\n")
+            console_handle.write(
+                "PX4_SHUTDOWN_SLEEP_SIM_S="
+                f"{int(math.ceil(float(theta['timing']['mission_end_s']) + float(theta['timing'].get('px4_shutdown_margin_s', 6.0)) + float(theta['timing'].get('px4_shutdown_wall_slack_s', 22.0)) * sim_speed_factor))}\n\n"
+            )
             console_handle.flush()
             px4 = subprocess.Popen(
                 ["timeout", str(run_timeout_s), "./bin/px4", "."],

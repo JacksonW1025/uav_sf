@@ -1,0 +1,123 @@
+{
+  "tag": "m2_5_estimator_harsh_300ms_sine8hz",
+  "description": "M2.5 targeted harsh shared EKF pollution probe: maximum GPS delay, low GPS noise, wide gates, slow EKF output predictor, and 8 Hz finite sine.",
+  "seed": 202628,
+  "airframe": {
+    "sim": "sih",
+    "model": "sihsim_x500_v2",
+    "sys_autostart": 10046
+  },
+  "timing": {
+    "controller_switch_s": 18.0,
+    "trajectory_start_s": 22.0,
+    "mission_end_s": 38.0,
+    "mode_command_repeat_s": 0.5,
+    "mode_command_timeout_s": 6.0,
+    "px4_shutdown_margin_s": 6.0,
+    "px4_shutdown_wall_slack_s": 22.0
+  },
+  "setpoint": {
+    "rate_hz": 100.0,
+    "max_wall_timer_hz": 100.0,
+    "hover_ned": [
+      0.0,
+      0.0,
+      -2.5
+    ],
+    "yaw_rad": 0.0,
+    "type": "sine",
+    "step": {
+      "delta_ned": [
+        0.5,
+        0.0,
+        0.0
+      ]
+    },
+    "sine": {
+      "axis": "x",
+      "amplitude_m": 0.5,
+      "frequency_hz": 8.0
+    }
+  },
+  "boot_px4_params": {
+    "SENS_GPS0_DELAY": 300,
+    "SENS_GPS1_DELAY": 300,
+    "EKF2_DELAY_MAX": 300,
+    "EKF2_GPS_P_NOISE": 0.01,
+    "EKF2_GPS_V_NOISE": 0.01,
+    "EKF2_GPS_P_GATE": 12.0,
+    "EKF2_GPS_V_GATE": 12.0,
+    "EKF2_TAU_VEL": 1.0,
+    "EKF2_TAU_POS": 1.0,
+    "EKF2_IMU_POS_X": 0.0,
+    "EKF2_IMU_POS_Y": 0.0,
+    "EKF2_IMU_POS_Z": 0.0
+  },
+  "px4_params": {
+    "NAV_DLL_ACT": 0,
+    "COM_DISARM_LAND": -1,
+    "COM_OF_LOSS_T": 5.0,
+    "IMU_GYRO_RATEMAX": 400,
+    "COM_RC_IN_MODE": 4,
+    "COM_RCL_EXCEPT": 8,
+    "MC_RAPTOR_ENABLE": 1,
+    "MC_RAPTOR_OFFB": 0,
+    "MC_RAPTOR_INTREF": 0,
+    "SYS_FAILURE_EN": 1,
+    "CA_FAILURE_MODE": 1,
+    "SENS_GPS0_DELAY": 300,
+    "SENS_GPS1_DELAY": 300,
+    "EKF2_DELAY_MAX": 300,
+    "EKF2_GPS_P_NOISE": 0.01,
+    "EKF2_GPS_V_NOISE": 0.01,
+    "EKF2_GPS_P_GATE": 12.0,
+    "EKF2_GPS_V_GATE": 12.0,
+    "EKF2_TAU_VEL": 1.0,
+    "EKF2_TAU_POS": 1.0,
+    "EKF2_IMU_POS_X": 0.0,
+    "EKF2_IMU_POS_Y": 0.0,
+    "EKF2_IMU_POS_Z": 0.0
+  },
+  "environment": {
+    "sih_wind_n": 0.0,
+    "sih_wind_e": 0.0,
+    "mass_scale": 1.0,
+    "inertia_scale": 1.0,
+    "estimator_pollution": {
+      "sih_ok": true,
+      "shared_estimate": true,
+      "gps_delay_ms": 300,
+      "gps_position_noise_m": 0.01,
+      "gps_velocity_noise_m_s": 0.01,
+      "gps_position_gate_sd": 12.0,
+      "gps_velocity_gate_sd": 12.0,
+      "ekf_tau_vel_s": 1.0,
+      "ekf_tau_pos_s": 1.0
+    }
+  },
+  "faults": [],
+  "sensor_perturbations": [
+    {
+      "type": "shared_ekf_estimate_pollution",
+      "simulator": "sih",
+      "mechanism": "PX4 EKF/GNSS delay-noise-gate-tau parameters",
+      "params": {
+        "SENS_GPS0_DELAY": 300,
+        "SENS_GPS1_DELAY": 300,
+        "EKF2_DELAY_MAX": 300,
+        "EKF2_GPS_P_NOISE": 0.01,
+        "EKF2_GPS_V_NOISE": 0.01,
+        "EKF2_GPS_P_GATE": 12.0,
+        "EKF2_GPS_V_GATE": 12.0,
+        "EKF2_TAU_VEL": 1.0,
+        "EKF2_TAU_POS": 1.0
+      }
+    }
+  ],
+  "divergence_thresholds": {
+    "position_divergence_m": 1.0
+  },
+  "m2_5": {
+    "purpose": "single harsh follow-up after the pure delay gradient stayed both-safe"
+  }
+}

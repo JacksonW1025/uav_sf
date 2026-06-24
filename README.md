@@ -4,7 +4,7 @@ This repository captures the Phase 1 environment for PX4 SITL with RAPTOR on Jet
 
 Phase 1 starts with the reproducible environment: build and headless smoke-test PX4 SITL with `mc_raptor`, stage the RAPTOR policy blob for module loading, and verify the ROS 2 / uXRCE-DDS topic path.
 
-M0 is now also captured in this repository: a real SIH SITL run with classical takeoff to Hold, in-flight switch to RAPTOR external mode, ULOG capture, and the missing-setpoint oracle sanity check. M1 work adds the oracle MVP: fixed parameterized offboard tasks, ULOG metrics, and classical-vs-RAPTOR four-quadrant classification. M2 adds the first guided MAP-Elites search wrapper around the M1 runner.
+M0 is now also captured in this repository: a real SIH SITL run with classical takeoff to Hold, in-flight switch to RAPTOR external mode, ULOG capture, and the missing-setpoint oracle sanity check. M1 work adds the oracle MVP: fixed parameterized offboard tasks, ULOG metrics, and classical-vs-RAPTOR four-quadrant classification. M2 adds the first guided MAP-Elites search wrapper around the M1 runner. M2.5 adds shared EKF/GNSS estimator-pollution knobs and fixes the 4x early-shutdown failure, but the targeted delay scan did not produce a confirmed primary bug.
 
 ## Status
 
@@ -13,6 +13,7 @@ M0 is now also captured in this repository: a real SIH SITL run with classical t
 - M0 complete: `px4_sitl_raptor_sih` builds and SIH direct-launch runs the full classical takeoff to RAPTOR switch experiment with ULOG capture.
 - M1 complete as an oracle MVP pipeline: tracked SIH-X500 airframe, parameterized fixed-theta offboard task, ULOG metrics, and classical-vs-RAPTOR four-quadrant runner. The manually tried anchors did not produce a primary-bug quadrant; see `docs/M1.md`.
 - M2 complete as a guided-search first pass: fixed safety envelope, classical baseline decontamination, theta controllability matrix, MAP-Elites searcher, archive output, and confirmation protocol. The first search found one raw primary candidate, but it did not pass confirmation; confirmed primary batch is empty. See `docs/M2.md`.
+- M2.5 complete as a blocker-unlock pass: shared EKF/GNSS estimator-pollution θ dimensions are implemented with ULOG fairness evidence, and `PX4_SIM_SPEED_FACTOR=4` now reaches `mission_end`. The 1x delay gradient and one harsh estimator-pollution probe were both-safe, so no confirmed primary bug was produced. Strict 1x-vs-4x metric invariance did not pass the existing M2 noise floor; see `docs/M2_5.md`.
 - P2 partial: Gazebo Harmonic is installed and used headless; graphical display passthrough and extra later-phase Python tools beyond PX4 essentials were not validated.
 
 ## M0 Status
@@ -132,6 +133,20 @@ docs/m2_map_elites_20260624/confirmations.jsonl
 docs/m2_map_elites_20260624/summary.md
 ```
 
+## Reproduce M2.5
+
+Run the targeted 1x EKF/GPS delay gradient:
+
+```bash
+sg docker -c 'cd /mnt/nvme/uav_sf && CONTAINER_NAME=uav_sf_m25_scan ./docker/run.sh bash -lc "cd /workspace && python3 -m pip install --break-system-packages pymavlink pyulog numpy -q && source /opt/ros/jazzy/setup.bash && source ros2_ws/install/setup.bash && ./scripts/m2_5_estimator_scan.py --run --run-id m2_5_estimator_delay_scan_1x_20260624 --delays-ms 0 60 180 240 300 --sim-speed-factor 1 --run-timeout 180 --eval-timeout 480 --confirm-repeats 0"'
+```
+
+Run the speed-factor hover smoke:
+
+```bash
+sg docker -c 'cd /mnt/nvme/uav_sf && CONTAINER_NAME=uav_sf_m25_hover4x ./docker/run.sh bash -lc "cd /workspace && python3 -m pip install --break-system-packages pymavlink pyulog numpy -q && source /opt/ros/jazzy/setup.bash && source ros2_ws/install/setup.bash && PX4_SIM_SPEED_FACTOR=4 ./scripts/m1_diff_runner.py --theta config/m2_5_speed_hover.json --skip-build --run-timeout 150 --docs-dir docs/m2_5_speed_hover_4x_20260624 --safety-config config/m2_safety_envelope.json"'
+```
+
 ## Evidence
 
 Verification artifacts are kept under `docs/`:
@@ -154,6 +169,7 @@ Verification artifacts are kept under `docs/`:
 - `docs/m0_oracle_sanity.md`: missing-setpoint oracle conclusion.
 - `docs/M1.md`: M1 oracle MVP summary, reproduction commands, fixed-theta results, determinism check, failure-injection status, and stop point.
 - `docs/M2.md`: M2 guided search design, safety envelope, controllability matrix, MAP-Elites run results, unconfirmed primary candidate, and stop point.
+- `docs/M2_5.md`: M2.5 shared-estimator-pollution implementation, fairness evidence, targeted delay scan, speed-factor smoke results, and stop point.
 - `docs/m1_diff_anchor_sine_5hz.json`: representative both-safe fixed-theta diff result.
 - `docs/m1_diff_anchor_heavy_338_step.json`: near-boundary heavy-mass diff result.
 - `docs/m1_diff_anchor_heavy_max_step.json`: too-hard diff result.
@@ -181,8 +197,8 @@ DDS_TOPICS_FOUND=1
 - The inherited RAPTOR SITL config logs a non-blocking `vision_target_estimator` / `landing_target_estimator` conflict; the same warning was already visible in Phase 1 smoke output.
 - M1 ROS output topics are versioned in this PX4/px4_msgs combination; `scripts/m1_offboard_task.py` expects `/fmu/out/vehicle_status_v4` and `/fmu/out/vehicle_local_position_v1`.
 - The first finite bad-setpoint anchors did not produce a primary-bug quadrant because RAPTOR clips position/velocity error before policy inference; this is documented in `docs/M1.md`.
-- M2 uses `PX4_SIM_SPEED_FACTOR=1` for reliability. A 4x smoke run made PX4 finish but left the ROS task waiting for `mission_end`, so speedup/parallelism is left as P1.
+- M2.5 fixes the original 4x early-shutdown failure: 4x runs now reach `mission_end`. However, 1x-vs-4x metric invariance did not pass the existing M2 noise floor, so use 4x for smoke/triage only and keep primary-bug confirmation at 1x until this is root-caused.
 
 ## Next Step
 
-M3 starts after this state, but should not be mixed into M2: random/grid baseline comparison, no-feedback ablation, systematic failure taxonomy, and large repeat campaigns are still out of scope for this commit.
+M2b can start after this state as a full guided rerun that includes `A_estimator`, but primary confirmation should stay at 1x unless speed-factor invariance is resolved. M3 remains out of scope: random/grid baseline comparison, no-feedback ablation, systematic failure taxonomy, and large repeat campaigns are still not part of this commit.
