@@ -4,7 +4,7 @@ This repository captures the Phase 1 environment for PX4 SITL with RAPTOR on Jet
 
 Phase 1 starts with the reproducible environment: build and headless smoke-test PX4 SITL with `mc_raptor`, stage the RAPTOR policy blob for module loading, and verify the ROS 2 / uXRCE-DDS topic path.
 
-M0 is now also captured in this repository: a real SIH SITL run with classical takeoff to Hold, in-flight switch to RAPTOR external mode, ULOG capture, and the missing-setpoint oracle sanity check. M1 work adds the oracle MVP: fixed parameterized offboard tasks, ULOG metrics, and classical-vs-RAPTOR four-quadrant classification. Search and optimization remain out of scope.
+M0 is now also captured in this repository: a real SIH SITL run with classical takeoff to Hold, in-flight switch to RAPTOR external mode, ULOG capture, and the missing-setpoint oracle sanity check. M1 work adds the oracle MVP: fixed parameterized offboard tasks, ULOG metrics, and classical-vs-RAPTOR four-quadrant classification. M2 adds the first guided MAP-Elites search wrapper around the M1 runner.
 
 ## Status
 
@@ -12,6 +12,7 @@ M0 is now also captured in this repository: a real SIH SITL run with classical t
 - P1 complete: ROS 2 Jazzy, `px4_msgs`, and Micro-XRCE-DDS-Agent are built; `ros2 topic list` sees `/fmu/out/*`.
 - M0 complete: `px4_sitl_raptor_sih` builds and SIH direct-launch runs the full classical takeoff to RAPTOR switch experiment with ULOG capture.
 - M1 complete as an oracle MVP pipeline: tracked SIH-X500 airframe, parameterized fixed-theta offboard task, ULOG metrics, and classical-vs-RAPTOR four-quadrant runner. The manually tried anchors did not produce a primary-bug quadrant; see `docs/M1.md`.
+- M2 complete as a guided-search first pass: fixed safety envelope, classical baseline decontamination, theta controllability matrix, MAP-Elites searcher, archive output, and confirmation protocol. The first search found one raw primary candidate, but it did not pass confirmation; confirmed primary batch is empty. See `docs/M2.md`.
 - P2 partial: Gazebo Harmonic is installed and used headless; graphical display passthrough and extra later-phase Python tools beyond PX4 essentials were not validated.
 
 ## M0 Status
@@ -113,6 +114,24 @@ docs/m1_diff_<tag>.json
 docs/m1_diff_<tag>_summary.md
 ```
 
+## Reproduce M2
+
+Run the guided MAP-Elites first pass around the M1 evaluator:
+
+```bash
+sg docker -c 'cd /mnt/nvme/uav_sf && CONTAINER_NAME=uav_sf_m2_search ./docker/run.sh bash -lc "cd /workspace && python3 -m pip install --break-system-packages pymavlink pyulog numpy -q && source /opt/ros/jazzy/setup.bash && source ros2_ws/install/setup.bash && ./scripts/m2_map_elites.py --budget 8 --bootstrap 8 --seed 20260624 --run-id m2_map_elites_20260624 --run-timeout 150 --eval-timeout 420 --sim-speed-factor 1 --confirm-repeats 3 --max-confirm-candidates 3"'
+```
+
+The main M2 run writes:
+
+```text
+docs/m2_map_elites_20260624/archive.json
+docs/m2_map_elites_20260624/evals.jsonl
+docs/m2_map_elites_20260624/primary_candidates.json
+docs/m2_map_elites_20260624/confirmations.jsonl
+docs/m2_map_elites_20260624/summary.md
+```
+
 ## Evidence
 
 Verification artifacts are kept under `docs/`:
@@ -134,6 +153,7 @@ Verification artifacts are kept under `docs/`:
 - `docs/m0_ulog_sanity.log`: required topic, mode switch, active motor NaN, and disarm sanity.
 - `docs/m0_oracle_sanity.md`: missing-setpoint oracle conclusion.
 - `docs/M1.md`: M1 oracle MVP summary, reproduction commands, fixed-theta results, determinism check, failure-injection status, and stop point.
+- `docs/M2.md`: M2 guided search design, safety envelope, controllability matrix, MAP-Elites run results, unconfirmed primary candidate, and stop point.
 - `docs/m1_diff_anchor_sine_5hz.json`: representative both-safe fixed-theta diff result.
 - `docs/m1_diff_anchor_heavy_338_step.json`: near-boundary heavy-mass diff result.
 - `docs/m1_diff_anchor_heavy_max_step.json`: too-hard diff result.
@@ -161,7 +181,8 @@ DDS_TOPICS_FOUND=1
 - The inherited RAPTOR SITL config logs a non-blocking `vision_target_estimator` / `landing_target_estimator` conflict; the same warning was already visible in Phase 1 smoke output.
 - M1 ROS output topics are versioned in this PX4/px4_msgs combination; `scripts/m1_offboard_task.py` expects `/fmu/out/vehicle_status_v4` and `/fmu/out/vehicle_local_position_v1`.
 - The first finite bad-setpoint anchors did not produce a primary-bug quadrant because RAPTOR clips position/velocity error before policy inference; this is documented in `docs/M1.md`.
+- M2 uses `PX4_SIM_SPEED_FACTOR=1` for reliability. A 4x smoke run made PX4 finish but left the ROS task waiting for `mission_end`, so speedup/parallelism is left as P1.
 
 ## Next Step
 
-M2 starts after this state: use the existing M1 fixed-theta runner and metrics as the oracle backend, then add controlled theta-space search/optimization in a separate change. No M2 search code is present here.
+M3 starts after this state, but should not be mixed into M2: random/grid baseline comparison, no-feedback ablation, systematic failure taxonomy, and large repeat campaigns are still out of scope for this commit.

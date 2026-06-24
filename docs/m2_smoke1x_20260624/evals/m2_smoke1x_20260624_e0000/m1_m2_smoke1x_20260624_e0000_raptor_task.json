@@ -1,0 +1,67 @@
+{
+  "controller": "raptor",
+  "controller_active_us": 1782280993088611,
+  "events": [
+    {
+      "detail": {
+        "source": "first_px4_topic"
+      },
+      "elapsed_s": 0.0,
+      "name": "clock_origin",
+      "timestamp_us": 1782280974822783
+    },
+    {
+      "detail": {
+        "controller": "raptor",
+        "main": 4,
+        "mode_id": 23,
+        "sub": 11
+      },
+      "elapsed_s": 18.233828,
+      "name": "mode_command",
+      "timestamp_us": 1782280993056611
+    },
+    {
+      "detail": {
+        "nav_state": 23
+      },
+      "elapsed_s": 18.265828,
+      "name": "controller_active",
+      "timestamp_us": 1782280993088611
+    },
+    {
+      "detail": {
+        "type": "step"
+      },
+      "elapsed_s": 22.233828,
+      "name": "trajectory_start",
+      "timestamp_us": 1782280997056611
+    },
+    {
+      "detail": {
+        "setpoint_ned": [
+          0.1219,
+          0.0,
+          -2.5
+        ]
+      },
+      "elapsed_s": 38.243131,
+      "name": "mission_end",
+      "timestamp_us": 1782281013065914
+    }
+  ],
+  "exit_code": 0,
+  "last_nav_state": 23,
+  "last_position_ned": {
+    "x": 0.12817895412445068,
+    "y": -0.6175686120986938,
+    "z": -2.49267578125
+  },
+  "mission_end_us": 1782281013065914,
+  "mode_confirmed": true,
+  "origin_us": 1782280974822783,
+  "raptor_internal_reference_max": null,
+  "raptor_internal_reference_min": null,
+  "tag": "m2_smoke1x_20260624_e0000",
+  "trajectory_start_us": 1782280997056611
+}

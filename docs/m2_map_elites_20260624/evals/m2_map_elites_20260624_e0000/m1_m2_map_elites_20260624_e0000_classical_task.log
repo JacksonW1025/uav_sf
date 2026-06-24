@@ -1,0 +1,7 @@
+[INFO] [1782281123.569138154] [m1_offboard_task]: M1 task started controller=classical tag=m2_map_elites_20260624_e0000 rate_hz=50.0
+{"detail": {"source": "first_px4_topic"}, "elapsed_s": 0.0, "name": "clock_origin", "timestamp_us": 1782281123358303}
+{"detail": {"controller": "classical", "main": 6}, "elapsed_s": 18.002808, "name": "mode_command", "timestamp_us": 1782281141361111}
+{"detail": {"nav_state": 14}, "elapsed_s": 18.046808, "name": "controller_active", "timestamp_us": 1782281141405111}
+{"detail": {"type": "sine"}, "elapsed_s": 22.002808, "name": "trajectory_start", "timestamp_us": 1782281145361111}
+{"detail": {"setpoint_ned": [-0.13939132319187778, 0.0, -2.5]}, "elapsed_s": 38.639393, "name": "mission_end", "timestamp_us": 1782281161997696}
+[INFO] [1782281162.015468261] [m1_offboard_task]: M1 task finished exit_code=0

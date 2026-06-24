@@ -20,11 +20,11 @@
 | Phase 1 环境 | ✅ | `62d0383` | Docker + `ubuntu:24.04` 容器 + RAPTOR SITL build |
 | M0 bring-up | ✅ | `b1be614` | 经典起飞→切 RAPTOR→ulog；stale-setpoint guard 发现 |
 | M1 Oracle MVP | ✅ | `6c944b9` | X500 v2、offboard 任务、指标、四象限 runner、锚点 θ |
-| M2 搜索 | ⬜ 下一步 | — | NSGA-II / MAP-Elites（**未开始**） |
+| M2 搜索 | ✅ | — | MAP-Elites 搜索器 + 统一包络；本轮 raw primary 1 个、确认通过 0 个 |
 | M3 评估 | ⬜ | — | baseline / 消融 / 失败分类 / 重复 |
 
 **范围纪律（每轮严格遵守）**：
-- **只做当前里程碑，做完即止**，不要顺手开始下一个。M1 完成后**不要**自己开 M2 搜索器。
+- **只做当前里程碑，做完即止**，不要顺手开始下一个。M2 完成后**不要**自己开 M3 baseline/消融/分类。
 - 任务边界由分配你的 prompt 定义；不确定就停下问，不要扩张 scope。
 - 部分完成也要**固化、提交、写清现状与阻塞点**，不要把半成品留在未跟踪状态。
 
@@ -82,7 +82,7 @@ uav_sf/
 └─ docs/                          # M0.md / M1.md / *.ulg / *.json / *.log 证据
 ```
 
-关键脚本：`build_px4_raptor_sih.sh`、`install_raptor_sih_board.sh`、`install_m1_sih_x500.sh`、`m0_set_raptor_mode.py`、`m0_ulog_sanity.py`、`m1_offboard_task.py`、`m1_metrics.py`、`m1_compare.py`、`m1_diff_runner.py`、`m1_inject_failure.py`。
+关键脚本：`build_px4_raptor_sih.sh`、`install_raptor_sih_board.sh`、`install_m1_sih_x500.sh`、`m0_set_raptor_mode.py`、`m0_ulog_sanity.py`、`m1_offboard_task.py`、`m1_metrics.py`、`m1_compare.py`、`m1_diff_runner.py`、`m1_inject_failure.py`、`m2_map_elites.py`。
 
 **铁律 — 可再生成资产的入库方式**：`external/PX4-Autopilot` 与 `ros2_ws` 被 `.gitignore`。任何对它们的改动（板级配置、airframe、PX4 源码补丁）**必须以 tracked 文件 + installer 脚本**形式入库（见 `boards/`+`install_raptor_sih_board.sh`、`config/`+`install_m1_sih_x500.sh`），**不要**依赖未跟踪文件，否则复现会丢。
 

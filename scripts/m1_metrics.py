@@ -15,6 +15,28 @@ from pyulog import ULog
 
 NAV_STATE_BY_CONTROLLER = {"classical": 14, "raptor": 23}
 ACTIVE_MOTORS = 4
+REPO_ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_SAFETY_CONFIG = REPO_ROOT / "config/m2_safety_envelope.json"
+CONTROL_LEVEL_REASONS = {
+    "missing_required_topics",
+    "controller_mode_not_confirmed",
+    "unexpected_disarm",
+    "failsafe",
+    "tracking_error_max",
+    "tracking_error_rms",
+    "task_not_complete",
+    "ground_contact",
+    "attitude_quaternion_nonfinite",
+    "attitude_diverged",
+    "angular_rate_diverged",
+    "active_motor_nan",
+    "motor_saturation",
+    "missing_position_or_setpoint_window",
+}
+INFRASTRUCTURE_REASONS = {
+    "offboard_control_signal_lost",
+    "classical_nav_state_exit",
+}
 
 
 def load_json(path: Path | None) -> dict[str, Any]:
@@ -22,6 +44,29 @@ def load_json(path: Path | None) -> dict[str, Any]:
         return {}
     with path.open("r", encoding="utf-8") as handle:
         return json.load(handle)
+
+
+def load_safety_config(path: Path | None) -> dict[str, Any]:
+    if path is None:
+        path = DEFAULT_SAFETY_CONFIG
+    if not path.exists():
+        return {}
+    return load_json(path)
+
+
+def safety_thresholds(theta: dict[str, Any], safety_config: dict[str, Any]) -> dict[str, Any]:
+    thresholds = dict(safety_config.get("safe_thresholds", {}))
+    legacy = theta.get("safe_thresholds", {})
+    if legacy and not thresholds:
+        thresholds.update(legacy)
+    return thresholds
+
+
+def threshold(thresholds: dict[str, Any], name: str) -> float:
+    value = thresholds.get(name)
+    if value is None:
+        raise KeyError(f"missing safety threshold {name}; define it in config/m2_safety_envelope.json")
+    return float(value)
 
 
 def first_dataset(ulog: ULog, name: str):
@@ -135,11 +180,19 @@ def task_event_elapsed_us(task: dict[str, Any], name: str) -> int | None:
     return None
 
 
-def extract_metrics(ulog_path: Path, theta: dict[str, Any], task: dict[str, Any], controller: str) -> dict[str, Any]:
+def extract_metrics(
+    ulog_path: Path,
+    theta: dict[str, Any],
+    task: dict[str, Any],
+    controller: str,
+    safety_config: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    safety_config = safety_config or {}
     ulog = ULog(str(ulog_path))
     topic_names = sorted({dataset.name for dataset in ulog.data_list})
 
     status = first_dataset(ulog, "vehicle_status")
+    failsafe_flags = first_dataset(ulog, "failsafe_flags")
     lpos = first_dataset(ulog, "vehicle_local_position")
     att = first_dataset(ulog, "vehicle_attitude")
     rates = first_dataset(ulog, "vehicle_angular_velocity")
@@ -184,7 +237,7 @@ def extract_metrics(ulog_path: Path, theta: dict[str, Any], task: dict[str, Any]
         mission_end_us = int(task["mission_end_us"])
     else:
         mission_end_us = None
-    thresholds = theta.get("safe_thresholds", {})
+    thresholds = safety_thresholds(theta, safety_config)
 
     metrics: dict[str, Any] = {
         "tag": theta.get("tag"),
@@ -212,9 +265,12 @@ def extract_metrics(ulog_path: Path, theta: dict[str, Any], task: dict[str, Any]
         "mission_end_us": mission_end_us,
         "task_to_ulog_origin_us": origin_us,
         "safe_thresholds": thresholds,
+        "safety_config": str(safety_config.get("_path", DEFAULT_SAFETY_CONFIG)),
+        "noise_floor": safety_config.get("noise_floor", {}),
     }
 
     safe_reasons: list[str] = []
+    infrastructure_reasons: list[str] = []
     if metrics["required_topics_missing"]:
         safe_reasons.append("missing_required_topics")
     if not mode_confirmed:
@@ -229,15 +285,35 @@ def extract_metrics(ulog_path: Path, theta: dict[str, Any], task: dict[str, Any]
         if np.any(smask):
             arming_state = status.data["arming_state"].astype(int)[smask]
             failsafe = status.data["failsafe"].astype(bool)[smask]
+            nav_window = nav_values[smask]
             metrics["disarmed_in_window"] = bool(np.any(arming_state != 2))
             metrics["failsafe_in_window"] = bool(np.any(failsafe))
+            metrics["nav_states_in_window"] = sorted({int(v) for v in nav_window.tolist()})
+            metrics["target_nav_state_fraction"] = finite_float(float(np.mean(nav_window == target_nav)))
             if metrics["disarmed_in_window"]:
                 safe_reasons.append("unexpected_disarm")
             if metrics["failsafe_in_window"]:
                 safe_reasons.append("failsafe")
+            target_fraction = metrics["target_nav_state_fraction"]
+            if controller == "classical" and target_fraction is not None and target_fraction < 0.98:
+                infrastructure_reasons.append("classical_nav_state_exit")
         else:
             metrics["disarmed_in_window"] = None
             metrics["failsafe_in_window"] = None
+            metrics["nav_states_in_window"] = []
+            metrics["target_nav_state_fraction"] = None
+
+    if failsafe_flags is not None:
+        fts = failsafe_flags.data["timestamp"].astype(np.int64)
+        fmask = mask_window(fts, active_us, mission_end_us)
+        for field in ["offboard_control_signal_lost", "mode_req_offboard_signal"]:
+            if field in failsafe_flags.data and np.any(fmask):
+                active = bool(np.any(failsafe_flags.data[field].astype(bool)[fmask]))
+                metrics[f"{field}_in_window"] = active
+                if controller == "classical" and field == "offboard_control_signal_lost" and active:
+                    infrastructure_reasons.append(field)
+            else:
+                metrics[f"{field}_in_window"] = None
 
     # Position tracking against the logged commanded trajectory_setpoint.
     if lpos is not None and setpoint is not None:
@@ -264,20 +340,20 @@ def extract_metrics(ulog_path: Path, theta: dict[str, Any], task: dict[str, Any]
             metrics["commanded_setpoint_span_m"] = finite_float(
                 np.nanmax(np.linalg.norm(sp_interp - sp_interp[0], axis=1))
             )
-            if metrics["tracking_error_max_m"] is not None and metrics["tracking_error_max_m"] > float(
-                thresholds.get("tracking_error_max_m", math.inf)
+            if metrics["tracking_error_max_m"] is not None and metrics["tracking_error_max_m"] > threshold(
+                thresholds, "tracking_error_max_m"
             ):
                 safe_reasons.append("tracking_error_max")
-            if metrics["tracking_error_rms_m"] is not None and metrics["tracking_error_rms_m"] > float(
-                thresholds.get("tracking_error_rms_m", math.inf)
+            if metrics["tracking_error_rms_m"] is not None and metrics["tracking_error_rms_m"] > threshold(
+                thresholds, "tracking_error_rms_m"
             ):
                 safe_reasons.append("tracking_error_rms")
-            if metrics["final_error_m"] is not None and metrics["final_error_m"] > float(
-                thresholds.get("final_error_m", math.inf)
+            if metrics["final_error_m"] is not None and metrics["final_error_m"] > threshold(
+                thresholds, "final_error_m"
             ):
                 safe_reasons.append("task_not_complete")
-            if metrics["min_altitude_agl_m"] is not None and metrics["min_altitude_agl_m"] < float(
-                thresholds.get("min_altitude_agl_m", -math.inf)
+            if metrics["min_altitude_agl_m"] is not None and metrics["min_altitude_agl_m"] < threshold(
+                thresholds, "min_altitude_agl_m"
             ):
                 safe_reasons.append("ground_contact")
         else:
@@ -297,8 +373,8 @@ def extract_metrics(ulog_path: Path, theta: dict[str, Any], task: dict[str, Any]
             metrics["roll_pitch_std_deg"] = finite_float(np.rad2deg(np.nanstd(roll_pitch_abs)))
             if not metrics["attitude_quaternion_finite"]:
                 safe_reasons.append("attitude_quaternion_nonfinite")
-            if metrics["roll_pitch_max_deg"] is not None and metrics["roll_pitch_max_deg"] > float(
-                thresholds.get("roll_pitch_max_deg", math.inf)
+            if metrics["roll_pitch_max_deg"] is not None and metrics["roll_pitch_max_deg"] > threshold(
+                thresholds, "roll_pitch_max_deg"
             ):
                 safe_reasons.append("attitude_diverged")
 
@@ -311,8 +387,8 @@ def extract_metrics(ulog_path: Path, theta: dict[str, Any], task: dict[str, Any]
             omega_norm = np.linalg.norm(omega, axis=1)
             metrics["angular_rate_max_rad_s"] = finite_float(np.nanmax(omega_norm))
             metrics["angular_rate_std_rad_s"] = finite_float(np.nanstd(omega_norm))
-            if metrics["angular_rate_max_rad_s"] is not None and metrics["angular_rate_max_rad_s"] > float(
-                thresholds.get("angular_rate_max_rad_s", math.inf)
+            if metrics["angular_rate_max_rad_s"] is not None and metrics["angular_rate_max_rad_s"] > threshold(
+                thresholds, "angular_rate_max_rad_s"
             ):
                 safe_reasons.append("angular_rate_diverged")
 
@@ -346,8 +422,8 @@ def extract_metrics(ulog_path: Path, theta: dict[str, Any], task: dict[str, Any]
                 sat = finite & ((controls <= 0.02) | (controls >= 0.98) | (np.abs(controls) >= 0.98))
                 metrics["motor_saturation_ratio"] = finite_float(float(np.count_nonzero(sat)) / float(finite_count))
                 metrics["motor_saturation_count"] = int(np.count_nonzero(sat))
-                if metrics["motor_saturation_ratio"] is not None and metrics["motor_saturation_ratio"] > float(
-                    thresholds.get("motor_saturation_ratio_max", math.inf)
+                if metrics["motor_saturation_ratio"] is not None and metrics["motor_saturation_ratio"] > threshold(
+                    thresholds, "motor_saturation_ratio_max"
                 ):
                     safe_reasons.append("motor_saturation")
 
@@ -374,6 +450,9 @@ def extract_metrics(ulog_path: Path, theta: dict[str, Any], task: dict[str, Any]
                 pass
 
     metrics["safe_reasons"] = sorted(set(safe_reasons))
+    metrics["control_level_unsafe_reasons"] = sorted(set(safe_reasons) & CONTROL_LEVEL_REASONS)
+    metrics["infrastructure_reasons"] = sorted(set(infrastructure_reasons) & INFRASTRUCTURE_REASONS)
+    metrics["infrastructure_limited"] = bool(metrics["infrastructure_reasons"])
     metrics["safe"] = len(metrics["safe_reasons"]) == 0
     return metrics
 
@@ -385,11 +464,14 @@ def main() -> int:
     parser.add_argument("--task-json", type=Path)
     parser.add_argument("--controller", choices=["classical", "raptor"], required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--safety-config", type=Path, default=DEFAULT_SAFETY_CONFIG)
     args = parser.parse_args()
 
     theta = load_json(args.theta)
     task = load_json(args.task_json)
-    metrics = extract_metrics(args.ulog, theta, task, args.controller)
+    safety_config = load_safety_config(args.safety_config)
+    safety_config["_path"] = str(args.safety_config)
+    metrics = extract_metrics(args.ulog, theta, task, args.controller, safety_config)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open("w", encoding="utf-8") as handle:
         json.dump(metrics, handle, indent=2, sort_keys=True)

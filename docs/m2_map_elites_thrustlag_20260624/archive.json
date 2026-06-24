@@ -1,0 +1,51 @@
+{
+  "A_physical:high": {
+    "compare_path": "/workspace/docs/m2_map_elites_thrustlag_20260624/evals/m2_map_elites_thrustlag_20260624_e0000/m1_diff_m2_map_elites_thrustlag_20260624_e0000.json",
+    "genome": {
+      "angular_damper_scale": 1.0,
+      "cross_xy": 0.0,
+      "cross_xz": 0.0,
+      "cross_yz": 0.0,
+      "drag_scale": 1.0,
+      "family_hint": "A_physical",
+      "inertia_pitch_scale": 1.0,
+      "inertia_roll_scale": 1.0,
+      "inertia_yaw_scale": 1.0,
+      "mass_scale": 1.0,
+      "pitch_arm_scale": 1.0,
+      "roll_arm_scale": 1.0,
+      "setpoint_axis": "x",
+      "setpoint_rate_hz": 100.0,
+      "setpoint_type": "step",
+      "sine_amplitude_m": 0.25,
+      "sine_frequency_hz": 2.0,
+      "step_m": 0.4,
+      "switch_s": 18.0,
+      "thrust_scale": 0.72,
+      "thrust_tau_s": 0.14,
+      "torque_scale": 1.0,
+      "wind_e": 0.0,
+      "wind_n": 0.0
+    },
+    "result": {
+      "classical_safe": true,
+      "classical_usable": true,
+      "compare_path": "/workspace/docs/m2_map_elites_thrustlag_20260624/evals/m2_map_elites_thrustlag_20260624_e0000/m1_diff_m2_map_elites_thrustlag_20260624_e0000.json",
+      "docs_dir": "/workspace/docs/m2_map_elites_thrustlag_20260624/evals/m2_map_elites_thrustlag_20260624_e0000",
+      "elapsed_wall_s": 144.5794498580508,
+      "error": null,
+      "feature_bin": "A_physical:high",
+      "index": 0,
+      "infrastructure_limited": false,
+      "primary_bug": false,
+      "quadrant": "boring_both_safe",
+      "quality": 0.07992746550591587,
+      "raptor_safe": true,
+      "returncode": 0,
+      "severity": 1.0000000000000002,
+      "tag": "m2_map_elites_thrustlag_20260624_e0000",
+      "theta_path": "/workspace/docs/m2_map_elites_thrustlag_20260624/theta/m2_map_elites_thrustlag_20260624_e0000.json"
+    },
+    "theta_path": "/workspace/docs/m2_map_elites_thrustlag_20260624/theta/m2_map_elites_thrustlag_20260624_e0000.json"
+  }
+}

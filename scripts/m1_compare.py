@@ -12,6 +12,18 @@ from typing import Any
 import numpy as np
 
 
+NOISE_FLOOR_DEFAULT = {
+    "tracking_error_max_m": 0.05,
+    "tracking_error_rms_m": 0.04,
+    "final_error_m": 0.05,
+    "roll_pitch_max_deg": 1.0,
+    "roll_pitch_std_deg": 0.5,
+    "angular_rate_max_rad_s": 0.02,
+    "angular_rate_std_rad_s": 0.02,
+    "motor_saturation_ratio": 0.01,
+}
+
+
 def load_json(path: Path) -> dict[str, Any]:
     with path.open("r", encoding="utf-8") as handle:
         return json.load(handle)
@@ -61,8 +73,64 @@ def quadrant(classical_safe: bool, raptor_safe: bool) -> str:
     return "too_hard_not_bug"
 
 
+def noise_floor(theta: dict[str, Any], classical: dict[str, Any], raptor: dict[str, Any]) -> dict[str, float]:
+    floor = dict(NOISE_FLOOR_DEFAULT)
+    for source in [theta.get("noise_floor", {}), classical.get("noise_floor", {}), raptor.get("noise_floor", {})]:
+        if isinstance(source, dict):
+            for key, value in source.items():
+                if isinstance(value, (int, float)):
+                    floor[key] = float(value)
+    return floor
+
+
+def effective_deltas(deltas: dict[str, float | None], floor: dict[str, float]) -> dict[str, float | None]:
+    effective: dict[str, float | None] = {}
+    for key, value in deltas.items():
+        if value is None:
+            effective[key] = None
+            continue
+        effective[key] = max(0.0, float(value) - float(floor.get(key, 0.0)))
+    return effective
+
+
+def divergence_quality(
+    effective: dict[str, float | None],
+    time_to_divergence_s: float | None,
+    classical: dict[str, Any],
+    raptor: dict[str, Any],
+) -> float:
+    weights = {
+        "tracking_error_max_m": 1.0,
+        "tracking_error_rms_m": 3.0,
+        "final_error_m": 1.5,
+        "roll_pitch_max_deg": 0.08,
+        "roll_pitch_std_deg": 0.12,
+        "angular_rate_max_rad_s": 0.6,
+        "angular_rate_std_rad_s": 0.8,
+        "motor_saturation_ratio": 6.0,
+    }
+    score = 0.0
+    for key, weight in weights.items():
+        value = effective.get(key)
+        if value is not None:
+            score += weight * max(0.0, float(value))
+    if time_to_divergence_s is not None:
+        score += 2.0 / (1.0 + max(0.0, float(time_to_divergence_s)))
+    thresholds = raptor.get("safe_thresholds", {}) or classical.get("safe_thresholds", {})
+    for key in ["tracking_error_max_m", "roll_pitch_max_deg", "angular_rate_max_rad_s", "motor_saturation_ratio"]:
+        rvalue = raptor.get(key)
+        limit_key = "motor_saturation_ratio_max" if key == "motor_saturation_ratio" else key
+        limit = thresholds.get(limit_key)
+        if rvalue is not None and limit:
+            score += 0.5 * max(0.0, float(rvalue) / float(limit) - 0.75)
+    if not bool(raptor.get("safe")):
+        score += 20.0
+    return float(score)
+
+
 def compare(theta: dict[str, Any], classical: dict[str, Any], raptor: dict[str, Any]) -> dict[str, Any]:
     div_threshold = float(theta.get("divergence_thresholds", {}).get("position_divergence_m", 2.0))
+    ttd = time_to_divergence(classical, raptor, div_threshold)
     deltas = {
         "tracking_error_max_m": metric_delta(raptor, classical, "tracking_error_max_m"),
         "tracking_error_rms_m": metric_delta(raptor, classical, "tracking_error_rms_m"),
@@ -73,17 +141,25 @@ def compare(theta: dict[str, Any], classical: dict[str, Any], raptor: dict[str, 
         "angular_rate_std_rad_s": metric_delta(raptor, classical, "angular_rate_std_rad_s"),
         "motor_saturation_ratio": metric_delta(raptor, classical, "motor_saturation_ratio"),
     }
+    floor = noise_floor(theta, classical, raptor)
+    effective = effective_deltas(deltas, floor)
+    classical_usable = bool(classical.get("safe")) and not bool(classical.get("infrastructure_limited"))
+    raptor_safe = bool(raptor.get("safe"))
     return {
         "tag": theta.get("tag"),
         "theta": theta,
         "classical": classical,
         "raptor": raptor,
-        "quadrant": quadrant(bool(classical.get("safe")), bool(raptor.get("safe"))),
-        "primary_bug": bool(classical.get("safe")) and not bool(raptor.get("safe")),
+        "quadrant": quadrant(classical_usable, raptor_safe),
+        "classical_usable_for_primary": classical_usable,
+        "primary_bug": classical_usable and not raptor_safe and divergence_quality(effective, ttd, classical, raptor) > 0.0,
         "divergence": {
             "deltas_raptor_minus_classical": deltas,
+            "effective_deltas_above_noise_floor": effective,
+            "noise_floor": floor,
+            "quality": divergence_quality(effective, ttd, classical, raptor) if classical_usable else 0.0,
             "position_divergence_threshold_m": div_threshold,
-            "time_to_divergence_s": time_to_divergence(classical, raptor, div_threshold),
+            "time_to_divergence_s": ttd,
             "stability_margin_proxy": {
                 "classical_angular_rate_peak_rad_s": classical.get("angular_rate_max_rad_s"),
                 "raptor_angular_rate_peak_rad_s": raptor.get("angular_rate_max_rad_s"),

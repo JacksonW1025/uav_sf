@@ -1,0 +1,118 @@
+{
+  "airframe": {
+    "model": "sihsim_x500_v2",
+    "sim": "sih",
+    "sys_autostart": 10046
+  },
+  "description": "M2 MAP-Elites generated theta; M1 differential runner is the evaluator.",
+  "divergence_thresholds": {
+    "position_divergence_m": 1.0
+  },
+  "environment": {
+    "inertia_pitch_scale": 1.0893,
+    "inertia_roll_scale": 1.0591,
+    "inertia_yaw_scale": 1.4409,
+    "mass_scale": 1.3668,
+    "sih_wind_e": -1.1779,
+    "sih_wind_n": -0.3827,
+    "thrust_scale_effective": 0.8909,
+    "thrust_tau_s": 0.1086,
+    "torque_scale": 1.3296
+  },
+  "faults": [],
+  "m2": {
+    "feature_bin": "C_setpoint:high",
+    "feature_family": "C_setpoint",
+    "feature_severity": 0.8843637904048285,
+    "generator": "scripts/m2_map_elites.py",
+    "genome": {
+      "angular_damper_scale": 0.9559699613471407,
+      "cross_xy": 0.0697270616234108,
+      "cross_xz": 0.012522583090332245,
+      "cross_yz": 0.03150118409088844,
+      "drag_scale": 1.7076091591537095,
+      "family_hint": "A_physical",
+      "inertia_pitch_scale": 1.0893162498474669,
+      "inertia_roll_scale": 1.0591491534982387,
+      "inertia_yaw_scale": 1.4409257161581992,
+      "mass_scale": 1.3668306665300023,
+      "pitch_arm_scale": 1.2098813718526638,
+      "roll_arm_scale": 0.9623514616628827,
+      "setpoint_axis": "y",
+      "setpoint_rate_hz": 30.0,
+      "setpoint_type": "sine",
+      "sine_amplitude_m": 0.09431504200105408,
+      "sine_frequency_hz": 4.096293016222656,
+      "step_m": 0.44218189520241424,
+      "switch_s": 21.310695746832586,
+      "thrust_scale": 0.742760326645857,
+      "thrust_tau_s": 0.10862329393753647,
+      "torque_scale": 1.3295864378051154,
+      "wind_e": -1.1778928561177557,
+      "wind_n": -0.3826826517507289
+    },
+    "safety_config": "config/m2_safety_envelope.json"
+  },
+  "px4_params": {
+    "CA_FAILURE_MODE": 1,
+    "COM_DISARM_LAND": -1,
+    "COM_OF_LOSS_T": 5.0,
+    "COM_RCL_EXCEPT": 8,
+    "COM_RC_IN_MODE": 4,
+    "IMU_GYRO_RATEMAX": 400,
+    "MC_RAPTOR_ENABLE": 1,
+    "MC_RAPTOR_INTREF": 0,
+    "MC_RAPTOR_OFFB": 0,
+    "MPC_THR_HOVER": 0.88,
+    "NAV_DLL_ACT": 0,
+    "SIH_IXX": 0.0313664,
+    "SIH_IXY": 0.00221801,
+    "SIH_IXZ": 0.00062249,
+    "SIH_IYY": 0.03225978,
+    "SIH_IYZ": 0.00158806,
+    "SIH_IZZ": 0.07878006,
+    "SIH_KDV": 1.70760916,
+    "SIH_KDW": 0.02389925,
+    "SIH_L_PITCH": 0.15728458,
+    "SIH_L_ROLL": 0.20209381,
+    "SIH_MASS": 2.73366133,
+    "SIH_Q_MAX": 0.18185684,
+    "SIH_T_MAX": 7.61592611,
+    "SIH_T_TAU": 0.10862329,
+    "SIH_WIND_E": -1.17789286,
+    "SIH_WIND_N": -0.38268265,
+    "SYS_FAILURE_EN": 1
+  },
+  "seed": 20260624,
+  "sensor_perturbations": [],
+  "setpoint": {
+    "hover_ned": [
+      0.0,
+      0.0,
+      -2.5
+    ],
+    "rate_hz": 30.0,
+    "sine": {
+      "amplitude_m": 0.0943,
+      "axis": "y",
+      "frequency_hz": 4.0963
+    },
+    "step": {
+      "delta_ned": [
+        0.0,
+        0.4422,
+        0.0
+      ]
+    },
+    "type": "sine",
+    "yaw_rad": 0.0
+  },
+  "tag": "m2_smoke_20260624_e0000",
+  "timing": {
+    "controller_switch_s": 21.311,
+    "mission_end_s": 41.311,
+    "mode_command_repeat_s": 0.5,
+    "mode_command_timeout_s": 6.0,
+    "trajectory_start_s": 25.311
+  }
+}

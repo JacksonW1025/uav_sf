@@ -24,6 +24,7 @@ REQUIRED_LOGGER_TOPICS = [
     "vehicle_angular_velocity 0",
     "vehicle_attitude 0",
     "vehicle_status 0",
+    "failsafe_flags 0",
     "actuator_motors 0",
     "actuator_outputs 0",
     "failure_detector_status 0",
@@ -179,6 +180,7 @@ def run_one(
     docs: Path,
     env: dict[str, str],
     run_timeout_s: int,
+    safety_config: Path | None,
 ) -> dict[str, Path]:
     tag = theta["tag"]
     px4_dir = repo / "external/PX4-Autopilot"
@@ -306,21 +308,24 @@ def run_one(
             raise RuntimeError(f"No ULOG found under {log_root}")
         shutil.copy2(ulog, copied_ulog)
 
+        metrics_cmd = [
+            sys.executable,
+            str(repo / "scripts/m1_metrics.py"),
+            "--ulog",
+            str(copied_ulog),
+            "--theta",
+            str(theta_path),
+            "--task-json",
+            str(task_json),
+            "--controller",
+            controller,
+            "--output",
+            str(metrics_json),
+        ]
+        if safety_config is not None:
+            metrics_cmd.extend(["--safety-config", str(safety_config)])
         run_checked(
-            [
-                sys.executable,
-                str(repo / "scripts/m1_metrics.py"),
-                "--ulog",
-                str(copied_ulog),
-                "--theta",
-                str(theta_path),
-                "--task-json",
-                str(task_json),
-                "--controller",
-                controller,
-                "--output",
-                str(metrics_json),
-            ],
+            metrics_cmd,
             cwd=repo,
             log=docs / f"m1_{tag}_{controller}_metrics.log",
             env=env,
@@ -357,6 +362,7 @@ def write_summary(compare_json: Path, summary_md: Path) -> None:
         "",
         "## safe",
         f"classical_safe: {str(classical.get('safe')).lower()} reasons={classical.get('safe_reasons')}",
+        f"classical_usable_for_primary: {str(result.get('classical_usable_for_primary')).lower()} infrastructure={classical.get('infrastructure_reasons')}",
         f"raptor_safe: {str(raptor.get('safe')).lower()} reasons={raptor.get('safe_reasons')}",
         "",
         "## key metrics",
@@ -366,6 +372,7 @@ def write_summary(compare_json: Path, summary_md: Path) -> None:
         f"raptor roll_pitch_max_deg: {raptor.get('roll_pitch_max_deg')}",
         f"classical angular_rate_max_rad_s: {classical.get('angular_rate_max_rad_s')}",
         f"raptor angular_rate_max_rad_s: {raptor.get('angular_rate_max_rad_s')}",
+        f"divergence_quality: {div.get('quality')}",
         f"time_to_divergence_s: {div.get('time_to_divergence_s')}",
     ]
     summary_md.write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -376,11 +383,13 @@ def main() -> int:
     parser.add_argument("--theta", type=Path, default=repo_root() / "config/m1_anchor_step.json")
     parser.add_argument("--run-timeout", type=int, default=140)
     parser.add_argument("--skip-build", action="store_true")
+    parser.add_argument("--docs-dir", type=Path, default=repo_root() / "docs")
+    parser.add_argument("--safety-config", type=Path, default=repo_root() / "config/m2_safety_envelope.json")
     args = parser.parse_args()
 
     repo = repo_root()
-    docs = repo / "docs"
-    docs.mkdir(exist_ok=True)
+    docs = args.docs_dir.resolve()
+    docs.mkdir(parents=True, exist_ok=True)
     theta_path = args.theta.resolve()
     theta = load_json(theta_path)
     tag = theta["tag"]
@@ -397,7 +406,7 @@ def main() -> int:
     outputs = {}
     for controller in ["classical", "raptor"]:
         print(f"RUN_CONTROLLER={controller}", flush=True)
-        outputs[controller] = run_one(repo, theta_path, theta, controller, docs, env, args.run_timeout)
+        outputs[controller] = run_one(repo, theta_path, theta, controller, docs, env, args.run_timeout, args.safety_config)
 
     compare_json = docs / f"m1_diff_{tag}.json"
     run_checked(
