@@ -1,0 +1,89 @@
+{
+  "activation_flight_quadrant": "boring_both_flight_safe",
+  "activation_primary_bug": false,
+  "case": {
+    "approach": true,
+    "frequency_hz": 0.32,
+    "radius_m": 2.5,
+    "tag": "circle_45deg_wind",
+    "wind_e": 0.0,
+    "wind_n": 3.0
+  },
+  "classical_angular_rate_max_rad_s": 2.884290190953177,
+  "classical_flight_safe": true,
+  "classical_roll_pitch_max_deg": 35.84323652563348,
+  "classical_safe": false,
+  "classical_safe_reasons": [
+    "tracking_error_max",
+    "tracking_error_rms"
+  ],
+  "classical_tracking_error_max_m": 4.105487099532541,
+  "expected_tilt_deg": 45.862617186020266,
+  "outputs": {
+    "classical": {
+      "agent": "/workspace/docs/raptor_closeout_activation_20260625/circle_45deg_wind/m1_raptor_closeout_activation_20260625_circle_45deg_wind_classical_agent.log",
+      "console": "/workspace/docs/raptor_closeout_activation_20260625/circle_45deg_wind/m1_raptor_closeout_activation_20260625_circle_45deg_wind_classical_px4_console.log",
+      "metrics": "/workspace/docs/raptor_closeout_activation_20260625/circle_45deg_wind/m1_raptor_closeout_activation_20260625_circle_45deg_wind_classical_metrics.json",
+      "task": "/workspace/docs/raptor_closeout_activation_20260625/circle_45deg_wind/m1_raptor_closeout_activation_20260625_circle_45deg_wind_classical_task.json",
+      "topics": "/workspace/docs/raptor_closeout_activation_20260625/circle_45deg_wind/m1_raptor_closeout_activation_20260625_circle_45deg_wind_classical_topics.log",
+      "ulog": "/workspace/docs/raptor_closeout_activation_20260625/circle_45deg_wind/m1_raptor_closeout_activation_20260625_circle_45deg_wind_classical.ulg"
+    },
+    "raptor": {
+      "agent": "/workspace/docs/raptor_closeout_activation_20260625/circle_45deg_wind/m1_raptor_closeout_activation_20260625_circle_45deg_wind_raptor_agent.log",
+      "console": "/workspace/docs/raptor_closeout_activation_20260625/circle_45deg_wind/m1_raptor_closeout_activation_20260625_circle_45deg_wind_raptor_px4_console.log",
+      "metrics": "/workspace/docs/raptor_closeout_activation_20260625/circle_45deg_wind/m1_raptor_closeout_activation_20260625_circle_45deg_wind_raptor_metrics.json",
+      "task": "/workspace/docs/raptor_closeout_activation_20260625/circle_45deg_wind/m1_raptor_closeout_activation_20260625_circle_45deg_wind_raptor_task.json",
+      "topics": "/workspace/docs/raptor_closeout_activation_20260625/circle_45deg_wind/m1_raptor_closeout_activation_20260625_circle_45deg_wind_raptor_topics.log",
+      "ulog": "/workspace/docs/raptor_closeout_activation_20260625/circle_45deg_wind/m1_raptor_closeout_activation_20260625_circle_45deg_wind_raptor.ulg"
+    }
+  },
+  "primary_bug": false,
+  "quadrant": "too_hard_not_bug",
+  "raptor_angular_rate_max_rad_s": 2.846053584307356,
+  "raptor_flight_safe": true,
+  "raptor_roll_pitch_max_deg": 32.25450469776148,
+  "raptor_safe": false,
+  "raptor_safe_reasons": [
+    "task_not_complete",
+    "tracking_error_max",
+    "tracking_error_rms"
+  ],
+  "raptor_tracking_error_max_m": 4.146452016323388,
+  "switch_context": {
+    "classical": {
+      "angular_rate_samples": 117,
+      "attitude_samples": 125,
+      "pre_switch_angular_rate_max_rad_s": 1.0293630525891915,
+      "pre_switch_angular_rate_mean_rad_s": 0.883890868168958,
+      "pre_switch_angular_rate_x_max_abs_rad_s": 0.9423650503158569,
+      "pre_switch_angular_rate_y_max_abs_rad_s": 0.8746886253356934,
+      "pre_switch_angular_rate_z_max_abs_rad_s": 0.3660494089126587,
+      "pre_switch_roll_pitch_max_deg": 29.65795993254798,
+      "pre_switch_roll_pitch_mean_deg": 25.359939080497234,
+      "pre_window_s": 0.5,
+      "switch_us": 37293392,
+      "task_origin_us": 1782373700481795,
+      "ulog_origin_us": 7293392,
+      "window_end_us": 37293392,
+      "window_start_us": 36793392
+    },
+    "raptor": {
+      "angular_rate_samples": 115,
+      "attitude_samples": 125,
+      "pre_switch_angular_rate_max_rad_s": 1.184375653063578,
+      "pre_switch_angular_rate_mean_rad_s": 0.8877626673985264,
+      "pre_switch_angular_rate_x_max_abs_rad_s": 1.0081866979599,
+      "pre_switch_angular_rate_y_max_abs_rad_s": 0.6995304226875305,
+      "pre_switch_angular_rate_z_max_abs_rad_s": 0.2876417636871338,
+      "pre_switch_roll_pitch_max_deg": 19.27707978601826,
+      "pre_switch_roll_pitch_mean_deg": 17.124230459969542,
+      "pre_window_s": 0.5,
+      "switch_us": 35800063,
+      "task_origin_us": 1782373783494052,
+      "ulog_origin_us": 5800063,
+      "window_end_us": 35800063,
+      "window_start_us": 35300063
+    }
+  },
+  "tag": "raptor_closeout_activation_20260625_circle_45deg_wind"
+}

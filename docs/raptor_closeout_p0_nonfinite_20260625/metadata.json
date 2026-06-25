@@ -1,0 +1,19 @@
+{
+  "channels": [
+    "velocity",
+    "angular_velocity",
+    "attitude"
+  ],
+  "created_utc": "2026-06-25T06:37:12.206446+00:00",
+  "end_s": 24.5,
+  "profiles": [
+    "nan",
+    "inf"
+  ],
+  "px4_commit": "3042f906abaab7ab59ae838ad5a530a9ef3df9a6",
+  "run_id": "raptor_closeout_p0_nonfinite_20260625",
+  "scope_note": "M2b-1 input-robustness probe. NaN/Inf injection is not a realistic differential flight scenario by itself.",
+  "shim_patch": "patches/px4/m2b_state_shim.patch",
+  "sim_speed_factor": 4.0,
+  "start_s": 24.0
+}

@@ -30,6 +30,7 @@ def run(args: argparse.Namespace) -> Path:
         "profiles": args.profiles,
         "start_s": args.start_s,
         "end_s": args.end_s,
+        "timebase_note": "M2B_START/M2B_END are PX4 boot-time seconds. Defaults target the observed RAPTOR-active window of the M1 runner, not task elapsed time.",
         "sim_speed_factor": args.sim_speed_factor,
         "shim_patch": "patches/px4/m2b_state_shim.patch",
     }
@@ -110,8 +111,11 @@ def write_summary(run_dir: Path, records: list[dict[str, Any]]) -> None:
             f"raptor_nan_rpm_defect={item.get('raptor_nan_rpm_defect')} "
             f"raptor_active_motor_nan_count={item.get('raptor_active_motor_nan_count')} "
             f"fair_state={item.get('fair_shared_state_shim_pollution')} "
+            f"delivery_valid={item.get('state_shim_delivery_valid')} "
             f"theta=`{Path(item['theta_path']).relative_to(REPO_ROOT)}` fairness=`{item.get('fairness_path')}`"
         )
+        if item.get("state_shim_delivery_failures"):
+            lines.append(f"  delivery_failures={item.get('state_shim_delivery_failures')}")
     (run_dir / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
@@ -125,8 +129,8 @@ def main() -> int:
     parser.add_argument("--axis", choices=["x", "y", "z"], default="x")
     parser.add_argument("--sine-amplitude-m", type=float, default=0.15)
     parser.add_argument("--sine-frequency-hz", type=float, default=1.0)
-    parser.add_argument("--start-s", type=float, default=24.0)
-    parser.add_argument("--end-s", type=float, default=24.5)
+    parser.add_argument("--start-s", type=float, default=80.0)
+    parser.add_argument("--end-s", type=float, default=80.5)
     parser.add_argument("--sim-speed-factor", type=float, default=4.0)
     parser.add_argument("--run-timeout", type=int, default=180)
     parser.add_argument("--eval-timeout", type=int, default=480)

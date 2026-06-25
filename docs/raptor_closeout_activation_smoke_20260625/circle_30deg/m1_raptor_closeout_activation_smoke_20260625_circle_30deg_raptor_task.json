@@ -1,0 +1,92 @@
+{
+  "approach_active_us": 1782372999951430,
+  "approach_mode_confirmed": true,
+  "approach_start_s": 14.0,
+  "controller": "raptor",
+  "controller_active_us": 1782373015931023,
+  "events": [
+    {
+      "detail": {
+        "source": "first_px4_topic"
+      },
+      "elapsed_s": 0.0,
+      "name": "clock_origin",
+      "timestamp_us": 1782372985888502
+    },
+    {
+      "detail": {
+        "controller": "classical",
+        "main": 6,
+        "phase": "approach"
+      },
+      "elapsed_s": 14.018928,
+      "name": "mode_command",
+      "timestamp_us": 1782372999907430
+    },
+    {
+      "detail": {
+        "nav_state": 14
+      },
+      "elapsed_s": 14.062928,
+      "name": "approach_active",
+      "timestamp_us": 1782372999951430
+    },
+    {
+      "detail": {
+        "type": "circle"
+      },
+      "elapsed_s": 18.014928,
+      "name": "trajectory_start",
+      "timestamp_us": 1782373003903430
+    },
+    {
+      "detail": {
+        "controller": "raptor",
+        "main": 4,
+        "mode_id": 23,
+        "phase": "final",
+        "sub": 11
+      },
+      "elapsed_s": 30.002521,
+      "name": "mode_command",
+      "timestamp_us": 1782373015891023
+    },
+    {
+      "detail": {
+        "nav_state": 23
+      },
+      "elapsed_s": 30.042521,
+      "name": "controller_active",
+      "timestamp_us": 1782373015931023
+    },
+    {
+      "detail": {
+        "setpoint_ned": [
+          0.026783288073157007,
+          1.7998007266028067,
+          -2.5
+        ]
+      },
+      "elapsed_s": 46.009473,
+      "name": "mission_end",
+      "timestamp_us": 1782373031897975
+    }
+  ],
+  "exit_code": 0,
+  "last_nav_state": 23,
+  "last_position_ned": {
+    "x": -1.2527098655700684,
+    "y": -0.5184310674667358,
+    "z": -2.228057861328125
+  },
+  "mission_end_us": 1782373031897975,
+  "mode_confirmed": true,
+  "origin_us": 1782372985888502,
+  "raptor_internal_reference_max": null,
+  "raptor_internal_reference_min": null,
+  "setpoint_rate_hz": 50.0,
+  "sim_speed_factor": 1.0,
+  "tag": "raptor_closeout_activation_smoke_20260625_circle_30deg",
+  "trajectory_start_us": 1782373003903430,
+  "wall_timer_hz": 50.0
+}

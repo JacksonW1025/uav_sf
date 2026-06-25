@@ -1,0 +1,54 @@
+[
+  {
+    "case": {
+      "kind": "motor",
+      "tag": "motor0_080",
+      "value": 0.8
+    },
+    "classical_angular_rate_max_rad_s": 0.4154378898896713,
+    "classical_roll_pitch_max_deg": 10.333455950942817,
+    "classical_safe": true,
+    "classical_safe_reasons": [],
+    "classical_tracking_error_max_m": 1.5870110238052837,
+    "divergence_quality": 0.0018294216178111554,
+    "outputs": {
+      "classical": {
+        "agent": "/workspace/docs/raptor_closeout_gz_asym_smoke_20260625/eval_00_motor0_080/gz_raptor_closeout_gz_asym_smoke_20260625_motor0_080_classical_agent.log",
+        "console": "/workspace/docs/raptor_closeout_gz_asym_smoke_20260625/eval_00_motor0_080/gz_raptor_closeout_gz_asym_smoke_20260625_motor0_080_classical_px4_console.log",
+        "metrics": "/workspace/docs/raptor_closeout_gz_asym_smoke_20260625/eval_00_motor0_080/gz_raptor_closeout_gz_asym_smoke_20260625_motor0_080_classical_metrics.json",
+        "px4_returncode": 124,
+        "task": "/workspace/docs/raptor_closeout_gz_asym_smoke_20260625/eval_00_motor0_080/gz_raptor_closeout_gz_asym_smoke_20260625_motor0_080_classical_task.json",
+        "task_returncode": 0,
+        "topics": "/workspace/docs/raptor_closeout_gz_asym_smoke_20260625/eval_00_motor0_080/gz_raptor_closeout_gz_asym_smoke_20260625_motor0_080_classical_topics.log",
+        "ulog": "/workspace/docs/raptor_closeout_gz_asym_smoke_20260625/eval_00_motor0_080/gz_raptor_closeout_gz_asym_smoke_20260625_motor0_080_classical.ulg"
+      },
+      "raptor": {
+        "agent": "/workspace/docs/raptor_closeout_gz_asym_smoke_20260625/eval_00_motor0_080/gz_raptor_closeout_gz_asym_smoke_20260625_motor0_080_raptor_agent.log",
+        "console": "/workspace/docs/raptor_closeout_gz_asym_smoke_20260625/eval_00_motor0_080/gz_raptor_closeout_gz_asym_smoke_20260625_motor0_080_raptor_px4_console.log",
+        "metrics": "/workspace/docs/raptor_closeout_gz_asym_smoke_20260625/eval_00_motor0_080/gz_raptor_closeout_gz_asym_smoke_20260625_motor0_080_raptor_metrics.json",
+        "px4_returncode": 124,
+        "task": "/workspace/docs/raptor_closeout_gz_asym_smoke_20260625/eval_00_motor0_080/gz_raptor_closeout_gz_asym_smoke_20260625_motor0_080_raptor_task.json",
+        "task_returncode": 0,
+        "topics": "/workspace/docs/raptor_closeout_gz_asym_smoke_20260625/eval_00_motor0_080/gz_raptor_closeout_gz_asym_smoke_20260625_motor0_080_raptor_topics.log",
+        "ulog": "/workspace/docs/raptor_closeout_gz_asym_smoke_20260625/eval_00_motor0_080/gz_raptor_closeout_gz_asym_smoke_20260625_motor0_080_raptor.ulg"
+      }
+    },
+    "plant_change": {
+      "after": 6.8388640000000006e-06,
+      "before": 8.54858e-06,
+      "factor": 0.8,
+      "motor_number": 0,
+      "sdf": "/workspace/external/PX4-Autopilot/Tools/simulation/gz/models/x500/model.sdf",
+      "type": "motor_constant"
+    },
+    "primary_bug": false,
+    "quadrant": "boring_both_safe",
+    "raptor_angular_rate_max_rad_s": 0.5215741995147917,
+    "raptor_roll_pitch_max_deg": 10.508942114165896,
+    "raptor_safe": true,
+    "raptor_safe_reasons": [],
+    "raptor_tracking_error_max_m": 1.4534352644962363,
+    "tag": "raptor_closeout_gz_asym_smoke_20260625_motor0_080",
+    "time_to_divergence_s": null
+  }
+]

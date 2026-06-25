@@ -163,6 +163,16 @@ def nonfinite_count(values: np.ndarray) -> int:
     return int(np.count_nonzero(~np.isfinite(np.asarray(values, dtype=float))))
 
 
+def nonfinite_breakdown(values: np.ndarray) -> dict[str, int]:
+    values = np.asarray(values, dtype=float)
+    return {
+        "nan": int(np.count_nonzero(np.isnan(values))),
+        "posinf": int(np.count_nonzero(np.isposinf(values))),
+        "neginf": int(np.count_nonzero(np.isneginf(values))),
+        "nonfinite": int(np.count_nonzero(~np.isfinite(values))),
+    }
+
+
 def vector_norm(values: np.ndarray) -> np.ndarray:
     return np.linalg.norm(np.asarray(values, dtype=float), axis=1)
 
@@ -254,11 +264,17 @@ def local_vs_groundtruth(ulog: ULog, window: dict[str, int | None]) -> dict[str,
     tts = truth.data["timestamp"].astype(np.int64)
     lmask = mask_window(lts, window["trajectory_start_us"], window["mission_end_us"])
     tmask = mask_window(tts, window["trajectory_start_us"], window["mission_end_us"])
+    all_vel = np.column_stack([lpos.data["vx"], lpos.data["vy"], lpos.data["vz"]]).astype(float)
     if not np.any(lmask) or not np.any(tmask):
-        return {"present": True, "window_samples": 0}
+        return {
+            "present": True,
+            "window_samples": 0,
+            "velocity_estimate_nonfinite_count_all": nonfinite_count(all_vel),
+            "velocity_estimate_nonfinite_breakdown_all": nonfinite_breakdown(all_vel),
+        }
     ts = lts[lmask]
     pos = np.column_stack([lpos.data["x"], lpos.data["y"], lpos.data["z"]]).astype(float)[lmask]
-    vel = np.column_stack([lpos.data["vx"], lpos.data["vy"], lpos.data["vz"]]).astype(float)[lmask]
+    vel = all_vel[lmask]
     truth_pos = np.column_stack([truth.data["x"], truth.data["y"], truth.data["z"]]).astype(float)[tmask]
     truth_vel = np.column_stack([truth.data["vx"], truth.data["vy"], truth.data["vz"]]).astype(float)[tmask]
     truth_pos_i = interp_columns(tts[tmask], truth_pos, ts)
@@ -276,6 +292,9 @@ def local_vs_groundtruth(ulog: ULog, window: dict[str, int | None]) -> dict[str,
         "velocity_error_max_m_s": finite_max(vel_err),
         "velocity_error_axis_rms_m_s": [finite_rms(vel_delta[:, axis]) for axis in range(3)],
         "velocity_estimate_nonfinite_count": nonfinite_count(vel),
+        "velocity_estimate_nonfinite_breakdown": nonfinite_breakdown(vel),
+        "velocity_estimate_nonfinite_count_all": nonfinite_count(all_vel),
+        "velocity_estimate_nonfinite_breakdown_all": nonfinite_breakdown(all_vel),
         "position_error_final_m": finite(pos_err[-1]) if len(pos_err) else None,
         "velocity_error_final_m_s": finite(vel_err[-1]) if len(vel_err) else None,
     }
@@ -290,9 +309,15 @@ def attitude_vs_groundtruth(ulog: ULog, window: dict[str, int | None]) -> dict[s
     tts = truth.data["timestamp"].astype(np.int64)
     amask = mask_window(ats, window["trajectory_start_us"], window["mission_end_us"])
     tmask = mask_window(tts, window["trajectory_start_us"], window["mission_end_us"])
+    all_q = quaternion(att.data)
     if not np.any(amask) or not np.any(tmask):
-        return {"present": True, "window_samples": 0}
-    q = quaternion(att.data)[amask]
+        return {
+            "present": True,
+            "window_samples": 0,
+            "attitude_quaternion_nonfinite_count_all": nonfinite_count(all_q),
+            "attitude_quaternion_nonfinite_breakdown_all": nonfinite_breakdown(all_q),
+        }
+    q = all_q[amask]
     truth_q = quaternion(truth.data)[tmask]
     truth_q_i = interp_columns(tts[tmask], truth_q, ats[amask])
     err_deg = quat_error_deg(q, truth_q_i)
@@ -302,6 +327,9 @@ def attitude_vs_groundtruth(ulog: ULog, window: dict[str, int | None]) -> dict[s
         "quaternion_error_rms_deg": finite_rms(err_deg),
         "quaternion_error_max_deg": finite_max(err_deg),
         "attitude_quaternion_nonfinite_count": nonfinite_count(q),
+        "attitude_quaternion_nonfinite_breakdown": nonfinite_breakdown(q),
+        "attitude_quaternion_nonfinite_count_all": nonfinite_count(all_q),
+        "attitude_quaternion_nonfinite_breakdown_all": nonfinite_breakdown(all_q),
         "quaternion_error_final_deg": finite(err_deg[-1]) if len(err_deg) else None,
     }
 
@@ -315,9 +343,15 @@ def angular_velocity_vs_groundtruth(ulog: ULog, window: dict[str, int | None]) -
     tts = truth.data["timestamp"].astype(np.int64)
     rmask = mask_window(rts, window["trajectory_start_us"], window["mission_end_us"])
     tmask = mask_window(tts, window["trajectory_start_us"], window["mission_end_us"])
+    all_omega = vector3(rates.data, "xyz")
     if not np.any(rmask) or not np.any(tmask):
-        return {"present": True, "window_samples": 0}
-    omega = vector3(rates.data, "xyz")[rmask]
+        return {
+            "present": True,
+            "window_samples": 0,
+            "estimate_nonfinite_count_all": nonfinite_count(all_omega),
+            "estimate_nonfinite_breakdown_all": nonfinite_breakdown(all_omega),
+        }
+    omega = all_omega[rmask]
     truth_omega = vector3(truth.data, "xyz")[tmask]
     truth_omega_i = interp_columns(tts[tmask], truth_omega, rts[rmask])
     delta = omega - truth_omega_i
@@ -329,6 +363,9 @@ def angular_velocity_vs_groundtruth(ulog: ULog, window: dict[str, int | None]) -
         "error_max_rad_s": finite_max(err),
         "error_axis_rms_rad_s": [finite_rms(delta[:, axis]) for axis in range(3)],
         "estimate_nonfinite_count": nonfinite_count(omega),
+        "estimate_nonfinite_breakdown": nonfinite_breakdown(omega),
+        "estimate_nonfinite_count_all": nonfinite_count(all_omega),
+        "estimate_nonfinite_breakdown_all": nonfinite_breakdown(all_omega),
         "error_final_rad_s": finite(err[-1]) if len(err) else None,
         "estimate_norm_rms_rad_s": finite_rms(vector_norm(omega)),
         "truth_norm_rms_rad_s": finite_rms(vector_norm(truth_omega_i)),
@@ -469,7 +506,7 @@ def route_orientation_from_shared_topics(ulog: ULog, input_ts: np.ndarray, input
     }
 
 
-def raptor_input_summary(ulog: ULog, window: dict[str, int | None]) -> dict[str, Any]:
+def raptor_input_summary(ulog: ULog, window: dict[str, int | None], state_params: dict[str, Any] | None = None) -> dict[str, Any]:
     raptor_input = first_dataset(ulog, "raptor_input")
     if raptor_input is None:
         return {"present": False}
@@ -482,6 +519,8 @@ def raptor_input_summary(ulog: ULog, window: dict[str, int | None]) -> dict[str,
     linear_velocity = vector3(raptor_input.data, "linear_velocity")[mask]
     angular_velocity = vector3(raptor_input.data, "angular_velocity")[mask]
     position = vector3(raptor_input.data, "position")[mask]
+    all_linear_velocity = vector3(raptor_input.data, "linear_velocity")
+    all_angular_velocity = vector3(raptor_input.data, "angular_velocity")
     orientation = np.column_stack(
         [
             field(raptor_input.data, "orientation[0]", "orientation_0"),
@@ -490,24 +529,65 @@ def raptor_input_summary(ulog: ULog, window: dict[str, int | None]) -> dict[str,
             field(raptor_input.data, "orientation[3]", "orientation_3"),
         ]
     ).astype(float)[mask]
+    all_orientation = np.column_stack(
+        [
+            field(raptor_input.data, "orientation[0]", "orientation_0"),
+            field(raptor_input.data, "orientation[1]", "orientation_1"),
+            field(raptor_input.data, "orientation[2]", "orientation_2"),
+            field(raptor_input.data, "orientation[3]", "orientation_3"),
+        ]
+    ).astype(float)
     summary = {
         "present": True,
         "active_samples": int(np.count_nonzero(mask)),
         "position_norm_rms_m": finite_rms(vector_norm(position)),
         "position_norm_max_m": finite_max(vector_norm(position)),
         "position_nonfinite_count": nonfinite_count(position),
+        "position_nonfinite_breakdown": nonfinite_breakdown(position),
         "position_all_finite": bool(np.all(np.isfinite(position))),
         "linear_velocity_norm_rms_m_s": finite_rms(vector_norm(linear_velocity)),
         "linear_velocity_norm_max_m_s": finite_max(vector_norm(linear_velocity)),
+        "linear_velocity_axis_abs_max_m_s": [finite_max(np.abs(linear_velocity[:, axis])) for axis in range(3)],
         "linear_velocity_nonfinite_count": nonfinite_count(linear_velocity),
+        "linear_velocity_nonfinite_breakdown": nonfinite_breakdown(linear_velocity),
         "linear_velocity_all_finite": bool(np.all(np.isfinite(linear_velocity))),
         "angular_velocity_norm_rms_rad_s": finite_rms(vector_norm(angular_velocity)),
         "angular_velocity_norm_max_rad_s": finite_max(vector_norm(angular_velocity)),
+        "angular_velocity_axis_abs_max_rad_s": [finite_max(np.abs(angular_velocity[:, axis])) for axis in range(3)],
         "angular_velocity_nonfinite_count": nonfinite_count(angular_velocity),
+        "angular_velocity_nonfinite_breakdown": nonfinite_breakdown(angular_velocity),
         "angular_velocity_all_finite": bool(np.all(np.isfinite(angular_velocity))),
         "orientation_nonfinite_count": nonfinite_count(orientation),
+        "orientation_nonfinite_breakdown": nonfinite_breakdown(orientation),
         "orientation_all_finite": bool(np.all(np.isfinite(orientation))),
     }
+    if state_params:
+        start_s = float(state_params.get("M2B_START", 0.0) or 0.0)
+        end_s = float(state_params.get("M2B_END", 0.0) or 0.0)
+        m2b_start_us = int(round(start_s * 1e6))
+        m2b_end_us = int(round(end_s * 1e6)) if end_s > 0.0 else None
+        m2b_mask = mask_window(ts, m2b_start_us, m2b_end_us)
+        if "active" in raptor_input.data:
+            m2b_mask &= raptor_input.data["active"].astype(bool)
+        summary.update(
+            {
+                "m2b_window_start_us": m2b_start_us,
+                "m2b_window_end_us": m2b_end_us,
+                "m2b_window_active_samples": int(np.count_nonzero(m2b_mask)),
+                "linear_velocity_m2b_window_nonfinite_count": nonfinite_count(all_linear_velocity[m2b_mask]),
+                "linear_velocity_m2b_window_nonfinite_breakdown": nonfinite_breakdown(all_linear_velocity[m2b_mask]),
+                "linear_velocity_m2b_window_axis_abs_max_m_s": [
+                    finite_max(np.abs(all_linear_velocity[m2b_mask, axis])) for axis in range(3)
+                ],
+                "angular_velocity_m2b_window_nonfinite_count": nonfinite_count(all_angular_velocity[m2b_mask]),
+                "angular_velocity_m2b_window_nonfinite_breakdown": nonfinite_breakdown(all_angular_velocity[m2b_mask]),
+                "angular_velocity_m2b_window_axis_abs_max_rad_s": [
+                    finite_max(np.abs(all_angular_velocity[m2b_mask, axis])) for axis in range(3)
+                ],
+                "orientation_m2b_window_nonfinite_count": nonfinite_count(all_orientation[m2b_mask]),
+                "orientation_m2b_window_nonfinite_breakdown": nonfinite_breakdown(all_orientation[m2b_mask]),
+            }
+        )
     summary.update(route_linear_velocity_from_shared_topics(ulog, ts[mask], linear_velocity, window))
     summary.update(route_orientation_from_shared_topics(ulog, ts[mask], orientation, window))
     rates = first_dataset(ulog, "vehicle_angular_velocity")
@@ -537,6 +617,7 @@ def summarize_one(ulog_path: Path, task_path: Path | None, controller: str) -> d
     ulog = ULog(str(ulog_path))
     task = load_json(task_path)
     window = analysis_window(ulog, task, controller)
+    state_params = effective_params(ulog, STATE_SHIM_PARAM_NAMES)
     return {
         "ulog": str(ulog_path),
         "controller": controller,
@@ -544,13 +625,13 @@ def summarize_one(ulog_path: Path, task_path: Path | None, controller: str) -> d
         "window": window,
         "effective_estimator_params": effective_params(ulog, ESTIMATOR_PARAM_NAMES),
         "effective_unshielded_params": effective_params(ulog, UNSHIELDED_PARAM_NAMES),
-        "effective_state_shim_params": effective_params(ulog, STATE_SHIM_PARAM_NAMES),
+        "effective_state_shim_params": state_params,
         "effective_shared_params": effective_params(ulog, SHARED_PARAM_NAMES),
         "local_position_vs_groundtruth": local_vs_groundtruth(ulog, window),
         "attitude_vs_groundtruth": attitude_vs_groundtruth(ulog, window),
         "angular_velocity_vs_groundtruth": angular_velocity_vs_groundtruth(ulog, window),
         "estimator_status": estimator_status_summary(ulog, window),
-        "raptor_input": raptor_input_summary(ulog, window),
+        "raptor_input": raptor_input_summary(ulog, window, state_params),
     }
 
 
@@ -615,7 +696,56 @@ def fairness(theta: dict[str, Any], classical: dict[str, Any], raptor: dict[str,
         if profile > 0:
             state_channels.append({"channel": channel, "profile": profile_names.get(profile, str(profile)), "profile_id": profile})
 
-    def channel_topic_observed(summary: dict[str, Any], channel: str) -> bool:
+    def selected_axes(channel: str) -> list[int]:
+        if channel == "velocity":
+            values = [state_expected.get(name, 0.0) for name in ["M2B_V_X", "M2B_V_Y", "M2B_V_Z"]]
+        elif channel == "angular_velocity":
+            values = [state_expected.get(name, 0.0) for name in ["M2B_G_X", "M2B_G_Y", "M2B_G_Z"]]
+        elif channel == "attitude":
+            values = [state_expected.get(name, 0.0) for name in ["M2B_A_R", "M2B_A_P", "M2B_A_Y"]]
+        else:
+            return []
+        any_axis = any(abs(float(value or 0.0)) > 1e-6 for value in values)
+        return [idx for idx, value in enumerate(values) if (not any_axis or abs(float(value or 0.0)) > 1e-6)]
+
+    def topic_nonfinite_count(summary: dict[str, Any], channel: str) -> int:
+        if channel == "velocity":
+            return int(summary["local_position_vs_groundtruth"].get("velocity_estimate_nonfinite_count_all") or 0)
+        if channel == "angular_velocity":
+            return int(summary["angular_velocity_vs_groundtruth"].get("estimate_nonfinite_count_all") or 0)
+        if channel == "attitude":
+            return int(summary["attitude_vs_groundtruth"].get("attitude_quaternion_nonfinite_count_all") or 0)
+        return 0
+
+    def raptor_input_nonfinite_count(channel: str) -> int:
+        rin = raptor["raptor_input"]
+        if channel == "velocity":
+            return int(rin.get("linear_velocity_m2b_window_nonfinite_count") or rin.get("linear_velocity_nonfinite_count") or 0)
+        if channel == "angular_velocity":
+            return int(rin.get("angular_velocity_m2b_window_nonfinite_count") or rin.get("angular_velocity_nonfinite_count") or 0)
+        if channel == "attitude":
+            return int(rin.get("orientation_m2b_window_nonfinite_count") or rin.get("orientation_nonfinite_count") or 0)
+        return 0
+
+    def velocity_inf_input_saturated(channel: str) -> bool:
+        if channel != "velocity":
+            return False
+        axis_abs = (
+            raptor["raptor_input"].get("linear_velocity_m2b_window_axis_abs_max_m_s")
+            or raptor["raptor_input"].get("linear_velocity_axis_abs_max_m_s")
+            or []
+        )
+        axes = selected_axes(channel)
+        return any(
+            axis < len(axis_abs)
+            and axis_abs[axis] is not None
+            and float(axis_abs[axis]) >= 0.99
+            for axis in axes
+        )
+
+    def channel_topic_observed(summary: dict[str, Any], channel: str, profile_id: int) -> bool:
+        if profile_id in {4, 5}:
+            return topic_nonfinite_count(summary, channel) > 0
         if channel == "velocity":
             local = summary["local_position_vs_groundtruth"]
             return bool(
@@ -645,8 +775,12 @@ def fairness(theta: dict[str, Any], classical: dict[str, Any], raptor: dict[str,
             )
         return False
 
-    def raptor_touch_observed(channel: str) -> bool:
+    def raptor_touch_observed(channel: str, profile_id: int) -> bool:
         rin = raptor["raptor_input"]
+        if profile_id == 5 and channel == "velocity":
+            return raptor_input_nonfinite_count(channel) > 0 or velocity_inf_input_saturated(channel)
+        if profile_id in {4, 5}:
+            return raptor_input_nonfinite_count(channel) > 0
         if channel == "velocity":
             return bool(raptor_velocity_routed or int(rin.get("linear_velocity_nonfinite_count") or 0) > 0)
         if channel == "angular_velocity":
@@ -658,9 +792,16 @@ def fairness(theta: dict[str, Any], classical: dict[str, Any], raptor: dict[str,
     state_topic_checks = [
         {
             "channel": item["channel"],
-            "classical_topic_polluted": channel_topic_observed(classical, item["channel"]),
-            "raptor_topic_polluted": channel_topic_observed(raptor, item["channel"]),
-            "raptor_input_touch_verified": raptor_touch_observed(item["channel"]),
+            "profile": item["profile"],
+            "profile_id": item["profile_id"],
+            "selected_axes": selected_axes(item["channel"]),
+            "classical_topic_nonfinite_count": topic_nonfinite_count(classical, item["channel"]),
+            "raptor_topic_nonfinite_count": topic_nonfinite_count(raptor, item["channel"]),
+            "raptor_input_nonfinite_count": raptor_input_nonfinite_count(item["channel"]),
+            "raptor_input_velocity_inf_saturated": velocity_inf_input_saturated(item["channel"]),
+            "classical_topic_polluted": channel_topic_observed(classical, item["channel"], item["profile_id"]),
+            "raptor_topic_polluted": channel_topic_observed(raptor, item["channel"], item["profile_id"]),
+            "raptor_input_touch_verified": raptor_touch_observed(item["channel"], item["profile_id"]),
         }
         for item in state_channels
     ]
@@ -668,6 +809,15 @@ def fairness(theta: dict[str, Any], classical: dict[str, Any], raptor: dict[str,
         item["classical_topic_polluted"] and item["raptor_topic_polluted"] for item in state_topic_checks
     )
     state_raptor_touch = bool(state_topic_checks) and all(item["raptor_input_touch_verified"] for item in state_topic_checks)
+    state_delivery_failures: list[str] = []
+    for item in state_topic_checks:
+        if item["profile_id"] in {4, 5}:
+            if not item["classical_topic_polluted"]:
+                state_delivery_failures.append(f"{item['channel']}/{item['profile']}: classical shared topic has no nonfinite samples")
+            if not item["raptor_topic_polluted"]:
+                state_delivery_failures.append(f"{item['channel']}/{item['profile']}: RAPTOR shared topic has no nonfinite samples")
+            if not item["raptor_input_touch_verified"]:
+                state_delivery_failures.append(f"{item['channel']}/{item['profile']}: RAPTOR input touch not verified")
     return {
         "same_effective_estimator_params": same_params,
         "theta_estimator_params_applied": expected_applied,
@@ -679,6 +829,8 @@ def fairness(theta: dict[str, Any], classical: dict[str, Any], raptor: dict[str,
         "state_shim_topic_checks": state_topic_checks,
         "state_shim_topic_polluted_both_runs": state_topic_polluted_both,
         "state_shim_raptor_input_touch_verified": state_raptor_touch,
+        "state_shim_delivery_failures": state_delivery_failures,
+        "state_shim_delivery_valid": not state_delivery_failures,
         "shared_estimator_topics_present": shared_estimator_topics,
         "shared_unshielded_topics_present": shared_unshielded_topics,
         "raptor_input_active": raptor_consumed,
@@ -719,6 +871,7 @@ def main() -> int:
     parser.add_argument("--classical-task-json", type=Path)
     parser.add_argument("--raptor-task-json", type=Path)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--require-state-shim-delivery", action="store_true")
     args = parser.parse_args()
 
     theta = load_json(args.theta)
@@ -745,10 +898,14 @@ def main() -> int:
                 "fair_shared_estimator_pollution": result["fairness"]["fair_shared_estimator_pollution"],
                 "fair_shared_unshielded_pollution": result["fairness"]["fair_shared_unshielded_pollution"],
                 "fair_shared_state_shim_pollution": result["fairness"]["fair_shared_state_shim_pollution"],
+                "state_shim_delivery_valid": result["fairness"]["state_shim_delivery_valid"],
+                "state_shim_delivery_failures": result["fairness"]["state_shim_delivery_failures"],
             },
             sort_keys=True,
         )
     )
+    if args.require_state_shim_delivery and result["fairness"]["state_shim_delivery_failures"]:
+        return 2
     return 0
 
 

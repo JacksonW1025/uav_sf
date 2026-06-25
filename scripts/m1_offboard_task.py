@@ -76,6 +76,8 @@ class M1OffboardTask(Node):
         timing = theta["timing"]
         setpoint = theta["setpoint"]
         self.switch_s = float(timing["controller_switch_s"])
+        self.approach_start_s = float(timing.get("approach_start_s", self.switch_s))
+        self.has_approach_stage = self.approach_start_s < self.switch_s - 1e-6
         self.trajectory_start_s = float(timing["trajectory_start_s"])
         self.mission_end_s = float(timing["mission_end_s"])
         self.mode_repeat_s = float(timing.get("mode_command_repeat_s", 0.5))
@@ -93,6 +95,12 @@ class M1OffboardTask(Node):
         self.sine_axis = str(setpoint.get("sine", {}).get("axis", "x"))
         self.sine_amplitude_m = float(setpoint.get("sine", {}).get("amplitude_m", 0.0))
         self.sine_frequency_hz = float(setpoint.get("sine", {}).get("frequency_hz", 0.0))
+        circle = setpoint.get("circle", {})
+        self.circle_radius_m = float(circle.get("radius_m", 0.0))
+        self.circle_frequency_hz = float(circle.get("frequency_hz", 0.0))
+        self.circle_phase_rad = float(circle.get("phase_rad", 0.0))
+        self.circle_z_amplitude_m = float(circle.get("z_amplitude_m", 0.0))
+        self.circle_z_frequency_hz = float(circle.get("z_frequency_hz", self.circle_frequency_hz))
 
         self.origin_us: int | None = None
         self.now_us: int | None = None
@@ -100,8 +108,10 @@ class M1OffboardTask(Node):
         self.last_local_position: VehicleLocalPosition | None = None
         self.last_raptor_status: RaptorStatus | None = None
         self.commanded_mode = False
+        self.approach_mode_confirmed = False
         self.mode_confirmed = False
         self.last_mode_command_us = 0
+        self.approach_active_us: int | None = None
         self.controller_active_us: int | None = None
         self.trajectory_start_us: int | None = None
         self.mission_end_us: int | None = None
@@ -208,6 +218,16 @@ class M1OffboardTask(Node):
             sp[axis_index] += self.sine_amplitude_m * math.sin(2.0 * math.pi * self.sine_frequency_hz * t)
             return sp
 
+        if self.setpoint_type == "circle":
+            omega_t = 2.0 * math.pi * self.circle_frequency_hz * t + self.circle_phase_rad
+            sp[0] += self.circle_radius_m * math.sin(omega_t)
+            sp[1] += self.circle_radius_m * math.cos(omega_t)
+            if self.circle_z_amplitude_m:
+                sp[2] += self.circle_z_amplitude_m * math.sin(
+                    2.0 * math.pi * self.circle_z_frequency_hz * t + self.circle_phase_rad
+                )
+            return sp
+
         raise ValueError(f"unsupported setpoint type {self.setpoint_type}")
 
     def publish_offboard_control_mode(self) -> None:
@@ -267,13 +287,18 @@ class M1OffboardTask(Node):
         msg.from_external = True
         self.command_pub.publish(msg)
 
-    def command_controller_mode(self) -> None:
-        target_nav = NAV_STATE_OFFBOARD if self.controller == "classical" else NAV_STATE_RAPTOR_EXTERNAL1
+    def command_controller_mode(self, target_controller: str | None = None, *, final: bool = True) -> None:
+        target_controller = target_controller or self.controller
+        target_nav = NAV_STATE_OFFBOARD if target_controller == "classical" else NAV_STATE_RAPTOR_EXTERNAL1
         if self.last_status and int(self.last_status.nav_state) == target_nav:
-            if not self.mode_confirmed:
+            if final and not self.mode_confirmed:
                 self.mode_confirmed = True
                 self.controller_active_us = self.now_us
                 self.record_event("controller_active", {"nav_state": target_nav})
+            elif not final and not self.approach_mode_confirmed:
+                self.approach_mode_confirmed = True
+                self.approach_active_us = self.now_us
+                self.record_event("approach_active", {"nav_state": target_nav})
             return
 
         if self.now_us is None:
@@ -283,14 +308,18 @@ class M1OffboardTask(Node):
 
         self.last_mode_command_us = self.now_us
         self.commanded_mode = True
-        if self.controller == "classical":
+        phase = "final" if final else "approach"
+        if target_controller == "classical":
             self.publish_vehicle_command(
                 VehicleCommand.VEHICLE_CMD_DO_SET_MODE,
                 MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
                 PX4_CUSTOM_MAIN_MODE_OFFBOARD,
                 0.0,
             )
-            self.record_event("mode_command", {"controller": self.controller, "main": PX4_CUSTOM_MAIN_MODE_OFFBOARD})
+            self.record_event(
+                "mode_command",
+                {"controller": target_controller, "phase": phase, "main": PX4_CUSTOM_MAIN_MODE_OFFBOARD},
+            )
         else:
             self.publish_vehicle_command(
                 VehicleCommand.VEHICLE_CMD_DO_SET_MODE,
@@ -301,7 +330,8 @@ class M1OffboardTask(Node):
             self.record_event(
                 "mode_command",
                 {
-                    "controller": self.controller,
+                    "controller": target_controller,
+                    "phase": phase,
                     "main": PX4_CUSTOM_MAIN_MODE_AUTO,
                     "sub": PX4_CUSTOM_SUB_MODE_EXTERNAL1,
                     "mode_id": NAV_STATE_RAPTOR_EXTERNAL1,
@@ -320,8 +350,26 @@ class M1OffboardTask(Node):
         self.publish_offboard_control_mode()
         self.publish_trajectory_setpoint(sp)
 
+        if self.has_approach_stage and elapsed >= self.approach_start_s and not self.approach_mode_confirmed:
+            self.command_controller_mode("classical", final=(self.controller == "classical"))
+
         if elapsed >= self.switch_s and not self.mode_confirmed:
-            self.command_controller_mode()
+            self.command_controller_mode(self.controller, final=True)
+
+        if (
+            self.has_approach_stage
+            and elapsed >= self.approach_start_s + self.mode_timeout_s
+            and not self.approach_mode_confirmed
+            and not (self.controller == "classical" and self.mode_confirmed)
+        ):
+            self.record_event(
+                "approach_mode_timeout",
+                {
+                    "last_nav_state": int(self.last_status.nav_state) if self.last_status else None,
+                },
+            )
+            self.finish(exit_code=2)
+            return
 
         if elapsed >= self.switch_s + self.mode_timeout_s and not self.mode_confirmed:
             self.record_event(
@@ -350,6 +398,9 @@ class M1OffboardTask(Node):
                 "setpoint_rate_hz": self.rate_hz,
                 "wall_timer_hz": self.wall_timer_hz,
                 "origin_us": self.origin_us,
+                "approach_start_s": self.approach_start_s,
+                "approach_active_us": self.approach_active_us,
+                "approach_mode_confirmed": self.approach_mode_confirmed,
                 "controller_active_us": self.controller_active_us,
                 "trajectory_start_us": self.trajectory_start_us,
                 "mission_end_us": self.mission_end_us,

@@ -1,0 +1,82 @@
+{
+  "activation_flight_quadrant": "boring_both_flight_safe",
+  "activation_primary_bug": false,
+  "case": {
+    "approach": false,
+    "frequency_hz": 0.0,
+    "radius_m": 0.0,
+    "tag": "hover_activation",
+    "wind_e": 0.0,
+    "wind_n": 0.0
+  },
+  "classical_angular_rate_max_rad_s": 0.35123618682045527,
+  "classical_flight_safe": true,
+  "classical_roll_pitch_max_deg": 4.85025968711153,
+  "classical_safe": true,
+  "classical_safe_reasons": [],
+  "classical_tracking_error_max_m": 0.8365463042916949,
+  "expected_tilt_deg": 0.0,
+  "outputs": {
+    "classical": {
+      "agent": "/workspace/docs/raptor_closeout_activation_20260625/hover_activation/m1_raptor_closeout_activation_20260625_hover_activation_classical_agent.log",
+      "console": "/workspace/docs/raptor_closeout_activation_20260625/hover_activation/m1_raptor_closeout_activation_20260625_hover_activation_classical_px4_console.log",
+      "metrics": "/workspace/docs/raptor_closeout_activation_20260625/hover_activation/m1_raptor_closeout_activation_20260625_hover_activation_classical_metrics.json",
+      "task": "/workspace/docs/raptor_closeout_activation_20260625/hover_activation/m1_raptor_closeout_activation_20260625_hover_activation_classical_task.json",
+      "topics": "/workspace/docs/raptor_closeout_activation_20260625/hover_activation/m1_raptor_closeout_activation_20260625_hover_activation_classical_topics.log",
+      "ulog": "/workspace/docs/raptor_closeout_activation_20260625/hover_activation/m1_raptor_closeout_activation_20260625_hover_activation_classical.ulg"
+    },
+    "raptor": {
+      "agent": "/workspace/docs/raptor_closeout_activation_20260625/hover_activation/m1_raptor_closeout_activation_20260625_hover_activation_raptor_agent.log",
+      "console": "/workspace/docs/raptor_closeout_activation_20260625/hover_activation/m1_raptor_closeout_activation_20260625_hover_activation_raptor_px4_console.log",
+      "metrics": "/workspace/docs/raptor_closeout_activation_20260625/hover_activation/m1_raptor_closeout_activation_20260625_hover_activation_raptor_metrics.json",
+      "task": "/workspace/docs/raptor_closeout_activation_20260625/hover_activation/m1_raptor_closeout_activation_20260625_hover_activation_raptor_task.json",
+      "topics": "/workspace/docs/raptor_closeout_activation_20260625/hover_activation/m1_raptor_closeout_activation_20260625_hover_activation_raptor_topics.log",
+      "ulog": "/workspace/docs/raptor_closeout_activation_20260625/hover_activation/m1_raptor_closeout_activation_20260625_hover_activation_raptor.ulg"
+    }
+  },
+  "primary_bug": false,
+  "quadrant": "boring_both_safe",
+  "raptor_angular_rate_max_rad_s": 0.39196944517579657,
+  "raptor_flight_safe": true,
+  "raptor_roll_pitch_max_deg": 5.4552368518858,
+  "raptor_safe": true,
+  "raptor_safe_reasons": [],
+  "raptor_tracking_error_max_m": 0.7877954351314556,
+  "switch_context": {
+    "classical": {
+      "angular_rate_samples": 116,
+      "attitude_samples": 125,
+      "pre_switch_angular_rate_max_rad_s": 0.3094739017563441,
+      "pre_switch_angular_rate_mean_rad_s": 0.09824589353915611,
+      "pre_switch_angular_rate_x_max_abs_rad_s": 0.3026156723499298,
+      "pre_switch_angular_rate_y_max_abs_rad_s": 0.0952676311135292,
+      "pre_switch_angular_rate_z_max_abs_rad_s": 0.07391398400068283,
+      "pre_switch_roll_pitch_max_deg": 1.755406854114465,
+      "pre_switch_roll_pitch_mean_deg": 1.5322045804361926,
+      "pre_window_s": 0.5,
+      "switch_us": 24801383,
+      "task_origin_us": 1782373203167075,
+      "ulog_origin_us": 6801383,
+      "window_end_us": 24801383,
+      "window_start_us": 24301383
+    },
+    "raptor": {
+      "angular_rate_samples": 122,
+      "attitude_samples": 125,
+      "pre_switch_angular_rate_max_rad_s": 0.20151181414539895,
+      "pre_switch_angular_rate_mean_rad_s": 0.08528681691551217,
+      "pre_switch_angular_rate_x_max_abs_rad_s": 0.18648746609687805,
+      "pre_switch_angular_rate_y_max_abs_rad_s": 0.08628753572702408,
+      "pre_switch_angular_rate_z_max_abs_rad_s": 0.06167130544781685,
+      "pre_switch_roll_pitch_max_deg": 2.33034035750011,
+      "pre_switch_roll_pitch_mean_deg": 2.0289882671715556,
+      "pre_window_s": 0.5,
+      "switch_us": 24757047,
+      "task_origin_us": 1782373282093728,
+      "ulog_origin_us": 6757047,
+      "window_end_us": 24757047,
+      "window_start_us": 24257047
+    }
+  },
+  "tag": "raptor_closeout_activation_20260625_hover_activation"
+}

@@ -1,0 +1,82 @@
+{
+  "airframe": {
+    "model": "gz_x500",
+    "sim": "gz",
+    "sys_autostart": 4001
+  },
+  "description": "RAPTOR closeout Gazebo plant asymmetry probe: com_x=0.02",
+  "divergence_thresholds": {
+    "position_divergence_m": 2.0
+  },
+  "environment": {
+    "gazebo_model": "x500",
+    "plant_case": {
+      "kind": "com_x",
+      "tag": "com_x_002",
+      "value": 0.02
+    }
+  },
+  "faults": [],
+  "plant_change": {
+    "after": "0.02 0 0 0 0 0",
+    "before": "0 0 0 0 0 0",
+    "sdf": "/workspace/external/PX4-Autopilot/Tools/simulation/gz/models/x500_base/model.sdf",
+    "type": "base_link_inertial_pose",
+    "x_offset_m": 0.02
+  },
+  "px4_params": {
+    "CA_FAILURE_MODE": 1,
+    "COM_DISARM_LAND": -1,
+    "COM_OF_LOSS_T": 5.0,
+    "COM_RCL_EXCEPT": 8,
+    "COM_RC_IN_MODE": 4,
+    "MC_RAPTOR_ENABLE": 1,
+    "MC_RAPTOR_INTREF": 0,
+    "MC_RAPTOR_OFFB": 0,
+    "NAV_DLL_ACT": 0,
+    "SYS_FAILURE_EN": 1
+  },
+  "safe_thresholds": {
+    "angular_rate_max_rad_s": 8.0,
+    "final_error_m": 1.5,
+    "min_altitude_agl_m": 0.25,
+    "motor_saturation_ratio_max": 0.99,
+    "roll_pitch_max_deg": 75.0,
+    "tracking_error_max_m": 4.0,
+    "tracking_error_rms_m": 2.0
+  },
+  "seed": 20260625,
+  "sensor_perturbations": [],
+  "setpoint": {
+    "hover_ned": [
+      0.0,
+      0.0,
+      -2.5
+    ],
+    "rate_hz": 50.0,
+    "sine": {
+      "amplitude_m": 1.0,
+      "axis": "x",
+      "frequency_hz": 0.2
+    },
+    "step": {
+      "delta_ned": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "type": "sine",
+    "yaw_rad": 0.0
+  },
+  "tag": "raptor_closeout_gz_asym_20260625_com_x_002",
+  "timing": {
+    "controller_switch_s": 16.0,
+    "mission_end_s": 42.0,
+    "mode_command_repeat_s": 0.5,
+    "mode_command_timeout_s": 8.0,
+    "px4_shutdown_margin_s": 5.0,
+    "px4_shutdown_wall_slack_s": 16.0,
+    "trajectory_start_s": 22.0
+  }
+}

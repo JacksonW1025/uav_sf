@@ -192,6 +192,7 @@ def base_state_theta(
                 "values": [round(float(v), 8) for v in values],
                 "start_s": round(float(start_s), 4),
                 "end_s": round(float(end_s), 4),
+                "timebase": "PX4 boot-time seconds, not m1_offboard_task elapsed seconds",
                 "physical_credibility": "Topic-level transport delay/bias/noise is applied to both controllers; NaN/Inf profiles are marked as input-robustness probes.",
             }
         ],
@@ -205,6 +206,7 @@ def base_state_theta(
             "values": [round(float(v), 8) for v in values],
             "start_s": round(float(start_s), 4),
             "end_s": round(float(end_s), 4),
+            "timebase": "PX4 boot-time seconds",
             "thrust_to_weight_ratio": round(float(twr), 4),
             "mitigation": mitigation,
             "safety_config": str(SAFETY_CONFIG.relative_to(REPO_ROOT)),
@@ -213,13 +215,13 @@ def base_state_theta(
     return theta
 
 
-def run_fairness(theta_path: Path, docs_dir: Path, *, prefix: str = "m2b_1") -> Path | None:
+def run_fairness(theta_path: Path, docs_dir: Path, *, prefix: str = "m2b_1") -> tuple[Path | None, int | None]:
     theta = load_json(theta_path)
     tag = theta["tag"]
     classical_ulog = docs_dir / f"m1_{tag}_classical.ulg"
     raptor_ulog = docs_dir / f"m1_{tag}_raptor.ulg"
     if not classical_ulog.exists() or not raptor_ulog.exists():
-        return None
+        return None, None
     output = docs_dir / f"{prefix}_fairness_{tag}.json"
     cmd = [
         sys.executable,
@@ -236,12 +238,13 @@ def run_fairness(theta_path: Path, docs_dir: Path, *, prefix: str = "m2b_1") -> 
         str(docs_dir / f"m1_{tag}_raptor_task.json"),
         "--output",
         str(output),
+        "--require-state-shim-delivery",
     ]
     with (docs_dir / f"{prefix}_fairness_{tag}.log").open("w", encoding="utf-8") as handle:
         handle.write("$ " + " ".join(cmd) + "\n")
         handle.flush()
-        subprocess.run(cmd, cwd=str(REPO_ROOT), stdout=handle, stderr=subprocess.STDOUT, check=True)
-    return output
+        proc = subprocess.run(cmd, cwd=str(REPO_ROOT), stdout=handle, stderr=subprocess.STDOUT, check=False)
+    return output, int(proc.returncode)
 
 
 def summarize_compare(compare_path: str | None) -> dict[str, Any]:
@@ -295,10 +298,18 @@ def evaluate_theta_record(
     record = result.as_dict()
     record["elapsed_wall_s_outer"] = time.monotonic() - start
     record.update(summarize_compare(result.compare_path))
-    fairness_path = run_fairness(theta_path, docs_dir) if result.returncode == 0 else None
+    fairness_path: Path | None = None
+    fairness_returncode: int | None = None
+    if result.returncode == 0:
+        fairness_path, fairness_returncode = run_fairness(theta_path, docs_dir)
     record["fairness_path"] = str(fairness_path) if fairness_path else None
+    record["fairness_returncode"] = fairness_returncode
     if fairness_path:
         fairness = load_json(fairness_path).get("fairness", {})
         record["fair_shared_state_shim_pollution"] = bool(fairness.get("fair_shared_state_shim_pollution"))
         record["state_shim_topic_checks"] = fairness.get("state_shim_topic_checks")
+        record["state_shim_delivery_valid"] = bool(fairness.get("state_shim_delivery_valid"))
+        record["state_shim_delivery_failures"] = fairness.get("state_shim_delivery_failures", [])
+        if fairness_returncode:
+            record["invalid_reason"] = "state_shim_delivery_failed"
     return record
