@@ -96,6 +96,9 @@ class M1OffboardTask(Node):
         self.yaw_rad = float(setpoint.get("yaw_rad", 0.0))
         self.setpoint_type = str(setpoint.get("type", "step"))
         self.step_delta = finite_triplet(setpoint.get("step", {}).get("delta_ned", [0.0, 0.0, 0.0]))
+        ramp = setpoint.get("ramp", {})
+        self.ramp_delta = finite_triplet(ramp.get("delta_ned", [0.0, 0.0, 0.0]))
+        self.ramp_duration_s = float(ramp.get("duration_s", 1.0))
         self.sine_axis = str(setpoint.get("sine", {}).get("axis", "x"))
         self.sine_amplitude_m = float(setpoint.get("sine", {}).get("amplitude_m", 0.0))
         self.sine_frequency_hz = float(setpoint.get("sine", {}).get("frequency_hz", 0.0))
@@ -214,6 +217,12 @@ class M1OffboardTask(Node):
         t = elapsed_s - self.trajectory_start_s
         if self.setpoint_type == "step":
             return [sp[i] + self.step_delta[i] for i in range(3)]
+
+        if self.setpoint_type == "ramp":
+            if self.ramp_duration_s <= 0.0:
+                return [sp[i] + self.ramp_delta[i] for i in range(3)]
+            alpha = min(1.0, max(0.0, t / self.ramp_duration_s))
+            return [sp[i] + self.ramp_delta[i] * alpha for i in range(3)]
 
         if self.setpoint_type == "sine":
             axis_index = {"x": 0, "y": 1, "z": 2}.get(self.sine_axis)
