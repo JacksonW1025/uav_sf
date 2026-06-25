@@ -38,6 +38,16 @@
 - **arm64 警告**：很多教程默认 x86_64；选镜像/装 apt 包/装 ROS 2 时确认 arm64 可用。
 - 工作区：`/mnt/nvme/uav_sf`。当前 shell 可能未继承 docker 组：用 `sg docker -c '...'`。
 
+### 3.1 Docker / ROS 2 已踩坑（新会话先看）
+
+- **不要在宿主直接跑 PX4 binary**：PX4 是在 `uav_sf:phase1` / Ubuntu 24.04 容器里构建的；宿主是 Ubuntu 22.04/L4T。宿主直接运行 `external/PX4-Autopilot/build/.../bin/px4` 会出现 `GLIBC_2.38` / `GLIBCXX_3.4.32` / `libm.so.6: GLIBC_2.38 not found` 这类错误。所有 SITL run 都进容器。
+- **不要依赖非交互 sudo 跑 Docker**：当前用户直接 `docker ps` 可能报 `permission denied while trying to connect to the docker API`；`./docker/run.sh` 的 sudo fallback 在非交互环境会报 `sudo: a terminal is required to read the password`。标准入口是 `sg docker -c 'cd /mnt/nvme/uav_sf && CONTAINER_NAME=<name> ./docker/run.sh ...'`。
+- **不要把 sudo 密码写进仓库文档或脚本**。如果某轮确实需要交互 sudo，先停下向用户确认；本项目常规构建/仿真不需要 sudo 密码，使用 `sg docker -c` 即可。
+- **容器内 `bash -lc` 不保证 source ROS 2**：虽然 Dockerfile 把 ROS setup 追加到了 `.bashrc`，非交互命令里 `ros2` 仍可能不在 `PATH`，导致 harness 报 `DDS topics did not appear` 或 `FileNotFoundError(2, 'No such file or directory')`。每个仿真命令显式加：
+  `source /opt/ros/jazzy/setup.bash && source ros2_ws/install/setup.bash && <cmd>`。
+- **有效 FUZZ / M1 / M2 命令模板**：
+  `sg docker -c 'cd /mnt/nvme/uav_sf && CONTAINER_NAME=<name> ./docker/run.sh bash -lc "source /opt/ros/jazzy/setup.bash && source ros2_ws/install/setup.bash && <cmd>"'`
+
 ---
 
 ## 4. 软件栈与已固定版本
