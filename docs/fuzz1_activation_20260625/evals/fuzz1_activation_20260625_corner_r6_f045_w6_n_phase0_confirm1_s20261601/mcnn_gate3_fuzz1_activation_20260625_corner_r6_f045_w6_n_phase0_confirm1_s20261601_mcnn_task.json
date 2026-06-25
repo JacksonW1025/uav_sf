@@ -1,0 +1,102 @@
+{
+  "approach_active_us": 1782402742577757,
+  "approach_mode_confirmed": true,
+  "approach_start_s": 12.0,
+  "controller": "mcnn",
+  "controller_active_us": 1782402759587328,
+  "events": [
+    {
+      "detail": {
+        "source": "first_px4_topic"
+      },
+      "elapsed_s": 0.0,
+      "name": "clock_origin",
+      "timestamp_us": 1782402730539603
+    },
+    {
+      "detail": {
+        "controller": "classical",
+        "main": 6,
+        "phase": "approach"
+      },
+      "elapsed_s": 12.002154,
+      "name": "mode_command",
+      "timestamp_us": 1782402742541757
+    },
+    {
+      "detail": {
+        "nav_state": 14
+      },
+      "elapsed_s": 12.038154,
+      "name": "approach_active",
+      "timestamp_us": 1782402742577757
+    },
+    {
+      "detail": {
+        "type": "circle"
+      },
+      "elapsed_s": 16.001025,
+      "name": "trajectory_start",
+      "timestamp_us": 1782402746540628
+    },
+    {
+      "detail": {
+        "type": "hover"
+      },
+      "elapsed_s": 29.007725,
+      "name": "post_switch_setpoint",
+      "timestamp_us": 1782402759547328
+    },
+    {
+      "detail": {
+        "controller": "mcnn",
+        "main": 4,
+        "mode_id": 23,
+        "phase": "final",
+        "sub": 11
+      },
+      "elapsed_s": 29.007725,
+      "name": "mode_command",
+      "timestamp_us": 1782402759547328
+    },
+    {
+      "detail": {
+        "nav_state": 23
+      },
+      "elapsed_s": 29.047725,
+      "name": "controller_active",
+      "timestamp_us": 1782402759587328
+    },
+    {
+      "detail": {
+        "setpoint_ned": [
+          0.0,
+          0.0,
+          -2.5
+        ]
+      },
+      "elapsed_s": 43.014507,
+      "name": "mission_end",
+      "timestamp_us": 1782402773554110
+    }
+  ],
+  "exit_code": 0,
+  "external_mode_id": 23,
+  "external_sub_mode": 11,
+  "last_nav_state": 23,
+  "last_position_ned": {
+    "x": -27.642074584960938,
+    "y": 14.704188346862793,
+    "z": -0.446502685546875
+  },
+  "mission_end_us": 1782402773554110,
+  "mode_confirmed": true,
+  "origin_us": 1782402730539603,
+  "raptor_internal_reference_max": null,
+  "raptor_internal_reference_min": null,
+  "setpoint_rate_hz": 80.0,
+  "sim_speed_factor": 1.0,
+  "tag": "fuzz1_activation_20260625_corner_r6_f045_w6_n_phase0_confirm1_s20261601",
+  "trajectory_start_us": 1782402746540628,
+  "wall_timer_hz": 80.0
+}

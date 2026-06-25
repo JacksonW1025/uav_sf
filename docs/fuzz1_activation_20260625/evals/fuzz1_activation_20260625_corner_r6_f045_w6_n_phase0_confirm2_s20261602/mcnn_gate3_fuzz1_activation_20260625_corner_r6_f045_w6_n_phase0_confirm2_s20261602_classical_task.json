@@ -1,0 +1,82 @@
+{
+  "approach_active_us": null,
+  "approach_mode_confirmed": false,
+  "approach_start_s": 12.0,
+  "controller": "classical",
+  "controller_active_us": 1782403016130696,
+  "events": [
+    {
+      "detail": {
+        "source": "first_px4_topic"
+      },
+      "elapsed_s": 0.0,
+      "name": "clock_origin",
+      "timestamp_us": 1782403004076515
+    },
+    {
+      "detail": {
+        "controller": "classical",
+        "main": 6,
+        "phase": "final"
+      },
+      "elapsed_s": 12.014181,
+      "name": "mode_command",
+      "timestamp_us": 1782403016090696
+    },
+    {
+      "detail": {
+        "nav_state": 14
+      },
+      "elapsed_s": 12.054181,
+      "name": "controller_active",
+      "timestamp_us": 1782403016130696
+    },
+    {
+      "detail": {
+        "type": "circle"
+      },
+      "elapsed_s": 16.015033,
+      "name": "trajectory_start",
+      "timestamp_us": 1782403020091548
+    },
+    {
+      "detail": {
+        "type": "hover"
+      },
+      "elapsed_s": 29.006489,
+      "name": "post_switch_setpoint",
+      "timestamp_us": 1782403033083004
+    },
+    {
+      "detail": {
+        "setpoint_ned": [
+          0.0,
+          0.0,
+          -2.5
+        ]
+      },
+      "elapsed_s": 43.005324,
+      "name": "mission_end",
+      "timestamp_us": 1782403047081839
+    }
+  ],
+  "exit_code": 0,
+  "external_mode_id": 23,
+  "external_sub_mode": 11,
+  "last_nav_state": 14,
+  "last_position_ned": {
+    "x": -0.9838597178459167,
+    "y": -0.1040661558508873,
+    "z": -2.49395751953125
+  },
+  "mission_end_us": 1782403047081839,
+  "mode_confirmed": true,
+  "origin_us": 1782403004076515,
+  "raptor_internal_reference_max": null,
+  "raptor_internal_reference_min": null,
+  "setpoint_rate_hz": 80.0,
+  "sim_speed_factor": 1.0,
+  "tag": "fuzz1_activation_20260625_corner_r6_f045_w6_n_phase0_confirm2_s20261602",
+  "trajectory_start_us": 1782403020091548,
+  "wall_timer_hz": 80.0
+}

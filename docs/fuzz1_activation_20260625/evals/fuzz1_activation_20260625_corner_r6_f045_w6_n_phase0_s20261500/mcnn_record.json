@@ -1,0 +1,255 @@
+{
+  "case": {
+    "feedforward": true,
+    "frequency_hz": 0.45,
+    "mission_end_s": 43.0,
+    "phase_rad": 0.0,
+    "radius_m": 6.0,
+    "setup_profile": "relaxed_limits",
+    "stage": "phase1_extreme_corner",
+    "switch_s": 29.0,
+    "tag": "corner_r6_f045_w6_n_phase0",
+    "trajectory_start_s": 16.0,
+    "wind_e": 0.0,
+    "wind_n": 6.0
+  },
+  "controller": "mcnn",
+  "detector": {
+    "active_motor_nonfinite": {
+      "first_nonfinite": null,
+      "nan_count": 0,
+      "neginf_count": 0,
+      "nonfinite_count": 0,
+      "posinf_count": 0,
+      "samples": 3289
+    },
+    "active_motor_saturation_count": 13115,
+    "active_motor_saturation_ratio": 0.9968835512313773,
+    "console": {
+      "fault": false,
+      "matches": [],
+      "px4_timeout_rc": false
+    },
+    "controller": "mcnn",
+    "hit": true,
+    "hit_reasons": [
+      "angular_rate_loss_of_control",
+      "attitude_loss_of_control",
+      "ground_contact_post_switch",
+      "motor_saturation"
+    ],
+    "network_output_nonfinite": {
+      "first_nonfinite": null,
+      "nan_count": 0,
+      "neginf_count": 0,
+      "nonfinite_count": 0,
+      "posinf_count": 0,
+      "samples": 3085
+    },
+    "neural_control_samples": 3085,
+    "observation_nonfinite": {
+      "first_nonfinite": null,
+      "nan_count": 0,
+      "neginf_count": 0,
+      "nonfinite_count": 0,
+      "posinf_count": 0,
+      "samples": 3085
+    },
+    "post_switch_disarmed": false,
+    "post_switch_failsafe": false,
+    "severity": 3,
+    "severity_label": "high",
+    "source_map": {
+      "actuator_motors": "mc_nn_control.cpp PublishOutput() writes active actuator_motors.control[0..3].",
+      "network_output": "mc_nn_control.cpp RescaleActions() mutates output tensor before neural_control.network_output publish.",
+      "observation": "mc_nn_control.cpp PopulateInputTensor() fills _input_data; neural_control.cpp publish loop copies it."
+    },
+    "tracking_only_reasons_ignored": [
+      "task_not_complete",
+      "tracking_error_max",
+      "tracking_error_rms"
+    ]
+  },
+  "metrics": {
+    "active_motor_nan_count": 0,
+    "angular_rate_max_rad_s": 24.443441723173084,
+    "control_level_unsafe_reasons": [
+      "angular_rate_diverged",
+      "attitude_diverged",
+      "ground_contact",
+      "motor_saturation",
+      "task_not_complete",
+      "tracking_error_max",
+      "tracking_error_rms"
+    ],
+    "disarmed_in_window": false,
+    "failsafe_in_window": false,
+    "final_error_m": 30.24384972723731,
+    "infrastructure_limited": false,
+    "infrastructure_reasons": [],
+    "min_altitude_agl_m": -2.310760498046875,
+    "mode_confirmed": true,
+    "motor_saturation_count": 13115,
+    "motor_saturation_ratio": 0.9968835512313773,
+    "nav_states_in_window": [
+      23
+    ],
+    "roll_pitch_max_deg": 179.998383376429,
+    "safe": false,
+    "safe_reasons": [
+      "angular_rate_diverged",
+      "attitude_diverged",
+      "ground_contact",
+      "motor_saturation",
+      "task_not_complete",
+      "tracking_error_max",
+      "tracking_error_rms"
+    ],
+    "target_nav_state_fraction": 1.0,
+    "tracking_error_max_m": 32.391772271367316,
+    "tracking_error_rms_m": 25.283445615109166
+  },
+  "outputs": {
+    "agent": "/workspace/docs/fuzz1_activation_20260625/evals/fuzz1_activation_20260625_corner_r6_f045_w6_n_phase0_s20261500/mcnn_gate3_fuzz1_activation_20260625_corner_r6_f045_w6_n_phase0_s20261500_mcnn_agent.log",
+    "console": "/workspace/docs/fuzz1_activation_20260625/evals/fuzz1_activation_20260625_corner_r6_f045_w6_n_phase0_s20261500/mcnn_gate3_fuzz1_activation_20260625_corner_r6_f045_w6_n_phase0_s20261500_mcnn_px4_console.log",
+    "metrics": "/workspace/docs/fuzz1_activation_20260625/evals/fuzz1_activation_20260625_corner_r6_f045_w6_n_phase0_s20261500/mcnn_gate3_fuzz1_activation_20260625_corner_r6_f045_w6_n_phase0_s20261500_mcnn_metrics.json",
+    "task": "/workspace/docs/fuzz1_activation_20260625/evals/fuzz1_activation_20260625_corner_r6_f045_w6_n_phase0_s20261500/mcnn_gate3_fuzz1_activation_20260625_corner_r6_f045_w6_n_phase0_s20261500_mcnn_task.json",
+    "topics": "/workspace/docs/fuzz1_activation_20260625/evals/fuzz1_activation_20260625_corner_r6_f045_w6_n_phase0_s20261500/mcnn_gate3_fuzz1_activation_20260625_corner_r6_f045_w6_n_phase0_s20261500_mcnn_topics.log",
+    "ulog": "/workspace/docs/fuzz1_activation_20260625/evals/fuzz1_activation_20260625_corner_r6_f045_w6_n_phase0_s20261500/mcnn_gate3_fuzz1_activation_20260625_corner_r6_f045_w6_n_phase0_s20261500_mcnn.ulg"
+  },
+  "run_error": null,
+  "safety_config": "/workspace/config/m2_safety_envelope.json",
+  "seed": 20261500,
+  "switch_context": {
+    "controller_active_us": 35000000,
+    "mission_end_us": 48958358,
+    "post_switch_angular_rate_max_rad_s": 24.443441723173084,
+    "post_switch_min_altitude_agl_m": -2.310760498046875,
+    "post_switch_position_samples": 1750,
+    "post_switch_roll_pitch_max_deg": 179.998383376429,
+    "pre_switch_angular_rate_max_rad_s": 2.601540069336632,
+    "pre_switch_angular_rate_mean_rad_s": 2.1679667824716966,
+    "pre_switch_angular_rate_samples": 118,
+    "pre_switch_angular_rate_x_max_abs_rad_s": 2.376009941101074,
+    "pre_switch_angular_rate_y_max_abs_rad_s": 1.3524112701416016,
+    "pre_switch_angular_rate_z_max_abs_rad_s": 1.557270884513855,
+    "pre_switch_attitude_samples": 126,
+    "pre_switch_roll_pitch_max_deg": 50.4036077632262,
+    "pre_switch_roll_pitch_mean_deg": 46.51605295771279,
+    "pre_window_s": 0.5,
+    "switch_us": 34960000
+  },
+  "tag": "fuzz1_activation_20260625_corner_r6_f045_w6_n_phase0_s20261500",
+  "theta": {
+    "airframe": {
+      "model": "sihsim_x500_v2",
+      "sim": "sih",
+      "sys_autostart": 10046
+    },
+    "boot_px4_params": {
+      "MC_NN_EN": 0,
+      "MC_NN_MANL_CTRL": 0,
+      "SIH_WIND_E": 0.0,
+      "SIH_WIND_N": 6.0
+    },
+    "description": "FUZZ-1 mc_nn_control violent activation: classical Offboard circle approach, wind disturbance, switch to controller mode 23, then restore hover.",
+    "divergence_thresholds": {
+      "position_divergence_m": 2.0
+    },
+    "environment": {
+      "case": {
+        "feedforward": true,
+        "frequency_hz": 0.45,
+        "mission_end_s": 43.0,
+        "phase_rad": 0.0,
+        "radius_m": 6.0,
+        "setup_profile": "relaxed_limits",
+        "stage": "phase1_extreme_corner",
+        "switch_s": 29.0,
+        "tag": "corner_r6_f045_w6_n_phase0",
+        "trajectory_start_s": 16.0,
+        "wind_e": 0.0,
+        "wind_n": 6.0
+      },
+      "expected_lateral_accel_m_s2": 47.96627738929428,
+      "expected_tilt_deg": 78.44518234763486,
+      "fuzz_family": "violent_activation",
+      "reachability": "Classical Offboard setup with SIH wind. setup_profile records whether PX4 approach limits were relaxed only to create the initial condition; the post-switch judgment is on mc_nn_control.",
+      "uses_state_shim": false
+    },
+    "faults": [],
+    "px4_params": {
+      "CA_FAILURE_MODE": 1,
+      "COM_DISARM_LAND": -1,
+      "COM_OF_LOSS_T": 5.0,
+      "COM_RCL_EXCEPT": 8,
+      "COM_RC_IN_MODE": 4,
+      "IMU_GYRO_RATEMAX": 400,
+      "MC_NN_MANL_CTRL": 0,
+      "MC_PITCHRATE_MAX": 1200.0,
+      "MC_ROLLRATE_MAX": 1200.0,
+      "MC_YAWRATE_MAX": 720.0,
+      "MPC_ACC_HOR": 15.0,
+      "MPC_ACC_HOR_MAX": 15.0,
+      "MPC_JERK_AUTO": 80.0,
+      "MPC_JERK_MAX": 500.0,
+      "MPC_TILTMAX_AIR": 89.0,
+      "MPC_TILTMAX_LND": 45.0,
+      "MPC_XY_CRUISE": 20.0,
+      "MPC_XY_ERR_MAX": 10.0,
+      "MPC_XY_TRAJ_P": 1.0,
+      "MPC_XY_VEL_MAX": 20.0,
+      "NAV_DLL_ACT": 0,
+      "SYS_FAILURE_EN": 1
+    },
+    "safe_thresholds": {
+      "angular_rate_max_rad_s": 8.0,
+      "final_error_m": 4.0,
+      "min_altitude_agl_m": 0.25,
+      "motor_saturation_ratio_max": 0.99,
+      "roll_pitch_max_deg": 75.0,
+      "tracking_error_max_m": 8.0,
+      "tracking_error_rms_m": 4.0
+    },
+    "seed": 20261500,
+    "sensor_perturbations": [],
+    "setpoint": {
+      "circle": {
+        "frequency_hz": 0.45,
+        "phase_rad": 0.0,
+        "radius_m": 6.0,
+        "z_amplitude_m": 0.0
+      },
+      "feedforward": true,
+      "hover_ned": [
+        0.0,
+        0.0,
+        -2.5
+      ],
+      "max_wall_timer_hz": 800.0,
+      "post_switch": {
+        "hover_ned": [
+          0.0,
+          0.0,
+          -2.5
+        ],
+        "type": "hover"
+      },
+      "rate_hz": 80.0,
+      "type": "circle",
+      "yaw_rad": 0.0
+    },
+    "tag": "fuzz1_activation_20260625_corner_r6_f045_w6_n_phase0_s20261500",
+    "timing": {
+      "approach_start_s": 12.0,
+      "controller_switch_s": 29.0,
+      "external_mode_id": 23,
+      "mission_end_s": 43.0,
+      "mode_command_repeat_s": 0.5,
+      "mode_command_timeout_s": 8.0,
+      "px4_shutdown_margin_s": 8.0,
+      "px4_shutdown_wall_slack_s": 22.0,
+      "trajectory_start_s": 16.0
+    }
+  }
+}

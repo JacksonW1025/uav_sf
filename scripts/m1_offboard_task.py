@@ -108,6 +108,14 @@ class M1OffboardTask(Node):
         self.circle_phase_rad = float(circle.get("phase_rad", 0.0))
         self.circle_z_amplitude_m = float(circle.get("z_amplitude_m", 0.0))
         self.circle_z_frequency_hz = float(circle.get("z_frequency_hz", self.circle_frequency_hz))
+        self.feedforward = bool(setpoint.get("feedforward", False))
+        post_switch = setpoint.get("post_switch", {})
+        if post_switch is None:
+            post_switch = {}
+        self.post_switch_type = str(post_switch.get("type", "")).lower()
+        self.post_switch_enabled = bool(post_switch) and self.post_switch_type not in {"", "none"}
+        self.post_switch_hover_ned = finite_triplet(post_switch.get("hover_ned", self.hover_ned))
+        self.post_switch_recorded = False
 
         self.origin_us: int | None = None
         self.now_us: int | None = None
@@ -206,9 +214,20 @@ class M1OffboardTask(Node):
         print(json.dumps(event.as_dict(), sort_keys=True), flush=True)
 
     def current_setpoint(self, elapsed_s: float) -> list[float]:
+        return self.current_trajectory(elapsed_s)[0]
+
+    def current_trajectory(self, elapsed_s: float) -> tuple[list[float], list[float], list[float]]:
+        if self.post_switch_enabled and elapsed_s >= self.switch_s:
+            if not self.post_switch_recorded:
+                self.post_switch_recorded = True
+                self.record_event("post_switch_setpoint", {"type": self.post_switch_type})
+            if self.post_switch_type == "hover":
+                return self.post_switch_hover_ned.copy(), [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]
+            raise ValueError(f"unsupported post_switch type {self.post_switch_type}")
+
         sp = self.hover_ned.copy()
         if elapsed_s < self.trajectory_start_s:
-            return sp
+            return sp, [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]
 
         if self.trajectory_start_us is None and self.now_us is not None:
             self.trajectory_start_us = self.now_us
@@ -216,30 +235,50 @@ class M1OffboardTask(Node):
 
         t = elapsed_s - self.trajectory_start_s
         if self.setpoint_type == "step":
-            return [sp[i] + self.step_delta[i] for i in range(3)]
+            return [sp[i] + self.step_delta[i] for i in range(3)], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]
 
         if self.setpoint_type == "ramp":
             if self.ramp_duration_s <= 0.0:
-                return [sp[i] + self.ramp_delta[i] for i in range(3)]
+                return [sp[i] + self.ramp_delta[i] for i in range(3)], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]
             alpha = min(1.0, max(0.0, t / self.ramp_duration_s))
-            return [sp[i] + self.ramp_delta[i] * alpha for i in range(3)]
+            velocity = [0.0, 0.0, 0.0]
+            if self.feedforward and 0.0 <= t <= self.ramp_duration_s:
+                velocity = [self.ramp_delta[i] / self.ramp_duration_s for i in range(3)]
+            return [sp[i] + self.ramp_delta[i] * alpha for i in range(3)], velocity, [0.0, 0.0, 0.0]
 
         if self.setpoint_type == "sine":
             axis_index = {"x": 0, "y": 1, "z": 2}.get(self.sine_axis)
             if axis_index is None:
                 raise ValueError(f"unsupported sine axis {self.sine_axis}")
-            sp[axis_index] += self.sine_amplitude_m * math.sin(2.0 * math.pi * self.sine_frequency_hz * t)
-            return sp
+            omega = 2.0 * math.pi * self.sine_frequency_hz
+            sp[axis_index] += self.sine_amplitude_m * math.sin(omega * t)
+            velocity = [0.0, 0.0, 0.0]
+            acceleration = [0.0, 0.0, 0.0]
+            if self.feedforward:
+                velocity[axis_index] = self.sine_amplitude_m * omega * math.cos(omega * t)
+                acceleration[axis_index] = -self.sine_amplitude_m * omega * omega * math.sin(omega * t)
+            return sp, velocity, acceleration
 
         if self.setpoint_type == "circle":
-            omega_t = 2.0 * math.pi * self.circle_frequency_hz * t + self.circle_phase_rad
+            omega = 2.0 * math.pi * self.circle_frequency_hz
+            omega_t = omega * t + self.circle_phase_rad
             sp[0] += self.circle_radius_m * math.sin(omega_t)
             sp[1] += self.circle_radius_m * math.cos(omega_t)
+            velocity = [0.0, 0.0, 0.0]
+            acceleration = [0.0, 0.0, 0.0]
+            if self.feedforward:
+                velocity[0] = self.circle_radius_m * omega * math.cos(omega_t)
+                velocity[1] = -self.circle_radius_m * omega * math.sin(omega_t)
+                acceleration[0] = -self.circle_radius_m * omega * omega * math.sin(omega_t)
+                acceleration[1] = -self.circle_radius_m * omega * omega * math.cos(omega_t)
             if self.circle_z_amplitude_m:
-                sp[2] += self.circle_z_amplitude_m * math.sin(
-                    2.0 * math.pi * self.circle_z_frequency_hz * t + self.circle_phase_rad
-                )
-            return sp
+                z_omega = 2.0 * math.pi * self.circle_z_frequency_hz
+                z_phase = z_omega * t + self.circle_phase_rad
+                sp[2] += self.circle_z_amplitude_m * math.sin(z_phase)
+                if self.feedforward:
+                    velocity[2] = self.circle_z_amplitude_m * z_omega * math.cos(z_phase)
+                    acceleration[2] = -self.circle_z_amplitude_m * z_omega * z_omega * math.sin(z_phase)
+            return sp, velocity, acceleration
 
         raise ValueError(f"unsupported setpoint type {self.setpoint_type}")
 
@@ -257,14 +296,21 @@ class M1OffboardTask(Node):
         msg.direct_actuator = False
         self.offboard_pub.publish(msg)
 
-    def publish_trajectory_setpoint(self, sp: list[float]) -> None:
+    def publish_trajectory_setpoint(
+        self,
+        sp: list[float],
+        velocity: list[float] | None = None,
+        acceleration: list[float] | None = None,
+    ) -> None:
         if self.now_us is None:
             return
         msg = TrajectorySetpoint()
         msg.timestamp = self.now_us
         msg.position = [float(sp[0]), float(sp[1]), float(sp[2])]
-        msg.velocity = [0.0, 0.0, 0.0]
-        msg.acceleration = [0.0, 0.0, 0.0]
+        velocity = velocity or [0.0, 0.0, 0.0]
+        acceleration = acceleration or [0.0, 0.0, 0.0]
+        msg.velocity = [float(velocity[0]), float(velocity[1]), float(velocity[2])]
+        msg.acceleration = [float(acceleration[0]), float(acceleration[1]), float(acceleration[2])]
         msg.jerk = [0.0, 0.0, 0.0]
         msg.yaw = self.yaw_rad
         msg.yawspeed = 0.0
@@ -358,10 +404,10 @@ class M1OffboardTask(Node):
             return
 
         elapsed = self.elapsed_s()
-        sp = self.current_setpoint(elapsed)
+        sp, velocity, acceleration = self.current_trajectory(elapsed)
 
         self.publish_offboard_control_mode()
-        self.publish_trajectory_setpoint(sp)
+        self.publish_trajectory_setpoint(sp, velocity, acceleration)
 
         if self.has_approach_stage and elapsed >= self.approach_start_s and not self.approach_mode_confirmed:
             self.command_controller_mode("classical", final=(self.controller == "classical"))
