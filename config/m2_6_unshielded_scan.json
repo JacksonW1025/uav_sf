@@ -1,0 +1,35 @@
+{
+  "name": "m2_6_unshielded_gyro_rate_targeted_scan",
+  "scope": "M2.6 targeted scan only; not full M2b MAP-Elites and not M3.",
+  "mechanism": {
+    "shared_quantity": "vehicle_angular_velocity",
+    "px4_params": [
+      "IMU_GYRO_CUTOFF",
+      "IMU_GYRO_RATEMAX",
+      "SIH_T_MAX",
+      "SIH_Q_MAX",
+      "SIH_MASS",
+      "MPC_THR_HOVER"
+    ],
+    "fairness_requirement": "The same boot_px4_params and px4_params are applied to classical and RAPTOR runs; ULOG fairness must verify the shared vehicle_angular_velocity topic is present and routed into raptor_input.angular_velocity."
+  },
+  "nominal_gyro_cutoff_hz": 30.0,
+  "cutoffs_hz": [
+    30.0,
+    12.0,
+    8.0,
+    5.0
+  ],
+  "thrust_to_weight_ratios": [
+    1.743,
+    2.1,
+    2.3
+  ],
+  "sine_amplitude_m": 0.45,
+  "sine_frequency_hz": 6.0,
+  "axis": "x",
+  "physical_credibility": {
+    "gyro_filter": "Cutoffs below the X500 v2 nominal 30 Hz emulate abnormal but realistic gyro filtering phase lag on the shared controller-rate topic; they are parameter faults, not RAPTOR-only observation edits.",
+    "twr": "TWR is changed through SIH_T_MAX/SIH_Q_MAX with MPC_THR_HOVER compensation so both controllers fly the same high-authority plant."
+  }
+}

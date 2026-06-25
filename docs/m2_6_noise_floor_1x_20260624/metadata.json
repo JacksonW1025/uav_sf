@@ -1,0 +1,19 @@
+{
+  "created_utc": "2026-06-24T08:31:50.940674+00:00",
+  "cutoff_hz": 30.0,
+  "px4_commit": "3042f906abaab7ab59ae838ad5a530a9ef3df9a6",
+  "run_id": "m2_6_noise_floor_1x_20260624",
+  "safety_config": "config/m2_safety_envelope.json",
+  "scope_note": "M2.6 1x same-theta run-to-run noise-floor remeasurement; not M3.",
+  "seeds": [
+    202661,
+    202662,
+    202663,
+    202664,
+    202665
+  ],
+  "sim_speed_factor": 1.0,
+  "sine_amplitude_m": 0.45,
+  "sine_frequency_hz": 6.0,
+  "thrust_to_weight_ratio": 1.743
+}

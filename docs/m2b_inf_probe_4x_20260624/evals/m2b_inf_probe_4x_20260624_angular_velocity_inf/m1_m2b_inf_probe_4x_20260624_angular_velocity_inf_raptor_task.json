@@ -1,0 +1,180 @@
+{
+  "controller": "raptor",
+  "controller_active_us": null,
+  "events": [
+    {
+      "detail": {
+        "source": "first_px4_topic"
+      },
+      "elapsed_s": 0.0,
+      "name": "clock_origin",
+      "timestamp_us": 1782301547047133
+    },
+    {
+      "detail": {
+        "controller": "raptor",
+        "main": 4,
+        "mode_id": 23,
+        "sub": 11
+      },
+      "elapsed_s": 18.007216,
+      "name": "mode_command",
+      "timestamp_us": 1782301565054349
+    },
+    {
+      "detail": {
+        "controller": "raptor",
+        "main": 4,
+        "mode_id": 23,
+        "sub": 11
+      },
+      "elapsed_s": 18.543216,
+      "name": "mode_command",
+      "timestamp_us": 1782301565590349
+    },
+    {
+      "detail": {
+        "controller": "raptor",
+        "main": 4,
+        "mode_id": 23,
+        "sub": 11
+      },
+      "elapsed_s": 19.071216,
+      "name": "mode_command",
+      "timestamp_us": 1782301566118349
+    },
+    {
+      "detail": {
+        "controller": "raptor",
+        "main": 4,
+        "mode_id": 23,
+        "sub": 11
+      },
+      "elapsed_s": 19.587216,
+      "name": "mode_command",
+      "timestamp_us": 1782301566634349
+    },
+    {
+      "detail": {
+        "controller": "raptor",
+        "main": 4,
+        "mode_id": 23,
+        "sub": 11
+      },
+      "elapsed_s": 20.115216,
+      "name": "mode_command",
+      "timestamp_us": 1782301567162349
+    },
+    {
+      "detail": {
+        "controller": "raptor",
+        "main": 4,
+        "mode_id": 23,
+        "sub": 11
+      },
+      "elapsed_s": 20.627459,
+      "name": "mode_command",
+      "timestamp_us": 1782301567674592
+    },
+    {
+      "detail": {
+        "controller": "raptor",
+        "main": 4,
+        "mode_id": 23,
+        "sub": 11
+      },
+      "elapsed_s": 21.155459,
+      "name": "mode_command",
+      "timestamp_us": 1782301568202592
+    },
+    {
+      "detail": {
+        "controller": "raptor",
+        "main": 4,
+        "mode_id": 23,
+        "sub": 11
+      },
+      "elapsed_s": 21.679459,
+      "name": "mode_command",
+      "timestamp_us": 1782301568726592
+    },
+    {
+      "detail": {
+        "type": "sine"
+      },
+      "elapsed_s": 22.027459,
+      "name": "trajectory_start",
+      "timestamp_us": 1782301569074592
+    },
+    {
+      "detail": {
+        "controller": "raptor",
+        "main": 4,
+        "mode_id": 23,
+        "sub": 11
+      },
+      "elapsed_s": 22.211459,
+      "name": "mode_command",
+      "timestamp_us": 1782301569258592
+    },
+    {
+      "detail": {
+        "controller": "raptor",
+        "main": 4,
+        "mode_id": 23,
+        "sub": 11
+      },
+      "elapsed_s": 22.731459,
+      "name": "mode_command",
+      "timestamp_us": 1782301569778592
+    },
+    {
+      "detail": {
+        "controller": "raptor",
+        "main": 4,
+        "mode_id": 23,
+        "sub": 11
+      },
+      "elapsed_s": 23.251459,
+      "name": "mode_command",
+      "timestamp_us": 1782301570298592
+    },
+    {
+      "detail": {
+        "controller": "raptor",
+        "main": 4,
+        "mode_id": 23,
+        "sub": 11
+      },
+      "elapsed_s": 23.785034,
+      "name": "mode_command",
+      "timestamp_us": 1782301570832167
+    },
+    {
+      "detail": {
+        "controller": "raptor",
+        "last_nav_state": 13
+      },
+      "elapsed_s": 24.001034,
+      "name": "controller_mode_timeout",
+      "timestamp_us": 1782301571048167
+    }
+  ],
+  "exit_code": 2,
+  "last_nav_state": 13,
+  "last_position_ned": {
+    "x": -11.090782165527344,
+    "y": -45.11101531982422,
+    "z": -0.176177978515625
+  },
+  "mission_end_us": null,
+  "mode_confirmed": false,
+  "origin_us": 1782301547047133,
+  "raptor_internal_reference_max": null,
+  "raptor_internal_reference_min": null,
+  "setpoint_rate_hz": 100.0,
+  "sim_speed_factor": 4.0,
+  "tag": "m2b_inf_probe_4x_20260624_angular_velocity_inf",
+  "trajectory_start_us": 1782301569074592,
+  "wall_timer_hz": 100.0
+}

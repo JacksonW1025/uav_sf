@@ -1,0 +1,10 @@
+# M2b-1 Velocity Delay Verification
+
+run_dir: `docs/m2b_velocity_delay_verify_4x_20260624`
+mitigation_switch_found: false
+mitigation_note: PX4 mc_raptor at 3042f906 has no vehicle_acceleration/sensor_accel subscription and no S2 accelerometer-IIR parameter or code path; this run measures the default no-IIR module.
+
+## results
+- delay=0ms quadrant=boring_both_safe primary=False quality=0.0 fair_state=False classical_rms=0.6154969814814878 raptor_rms=0.393642450898631 theta=`docs/m2b_velocity_delay_verify_4x_20260624/theta/m2b_velocity_delay_verify_4x_20260624_vdelay_000ms.json` fairness=`/workspace/docs/m2b_velocity_delay_verify_4x_20260624/evals/m2b_velocity_delay_verify_4x_20260624_vdelay_000ms/m2b_1_fairness_m2b_velocity_delay_verify_4x_20260624_vdelay_000ms.json`
+- delay=10ms quadrant=boring_both_safe primary=False quality=0.0 fair_state=True classical_rms=0.5122074432775525 raptor_rms=0.3158616077183577 theta=`docs/m2b_velocity_delay_verify_4x_20260624/theta/m2b_velocity_delay_verify_4x_20260624_vdelay_010ms.json` fairness=`/workspace/docs/m2b_velocity_delay_verify_4x_20260624/evals/m2b_velocity_delay_verify_4x_20260624_vdelay_010ms/m2b_1_fairness_m2b_velocity_delay_verify_4x_20260624_vdelay_010ms.json`
+- delay=30ms quadrant=boring_both_safe primary=False quality=0.1825684976334989 fair_state=True classical_rms=0.5242843689498723 raptor_rms=0.5814629303419864 theta=`docs/m2b_velocity_delay_verify_4x_20260624/theta/m2b_velocity_delay_verify_4x_20260624_vdelay_030ms.json` fairness=`/workspace/docs/m2b_velocity_delay_verify_4x_20260624/evals/m2b_velocity_delay_verify_4x_20260624_vdelay_030ms/m2b_1_fairness_m2b_velocity_delay_verify_4x_20260624_vdelay_030ms.json`

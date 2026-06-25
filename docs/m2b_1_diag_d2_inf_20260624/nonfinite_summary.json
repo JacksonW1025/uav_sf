@@ -1,0 +1,322 @@
+[
+  {
+    "channel": "velocity",
+    "controller": "classical",
+    "nonfinite_summary": {
+      "raptor_input": {
+        "linear_velocity[0]": {
+          "count": 30978,
+          "finite": 30978,
+          "first_nonfinite_index": null,
+          "nan": 0,
+          "neginf": 0,
+          "posinf": 0
+        },
+        "linear_velocity[1]": {
+          "count": 30978,
+          "finite": 30978,
+          "first_nonfinite_index": null,
+          "nan": 0,
+          "neginf": 0,
+          "posinf": 0
+        },
+        "linear_velocity[2]": {
+          "count": 30978,
+          "finite": 30978,
+          "first_nonfinite_index": null,
+          "nan": 0,
+          "neginf": 0,
+          "posinf": 0
+        }
+      },
+      "vehicle_local_position": {
+        "vx": {
+          "count": 17382,
+          "finite": 17382,
+          "first_nonfinite_index": null,
+          "nan": 0,
+          "neginf": 0,
+          "posinf": 0
+        },
+        "vy": {
+          "count": 17382,
+          "finite": 17382,
+          "first_nonfinite_index": null,
+          "nan": 0,
+          "neginf": 0,
+          "posinf": 0
+        },
+        "vz": {
+          "count": 17382,
+          "finite": 17382,
+          "first_nonfinite_index": null,
+          "nan": 0,
+          "neginf": 0,
+          "posinf": 0
+        }
+      }
+    },
+    "params": {
+      "M2B_A_PROF": 0,
+      "M2B_EN": 1,
+      "M2B_END": 24.5,
+      "M2B_G_PROF": 0,
+      "M2B_START": 24.0,
+      "M2B_V_PROF": 5
+    },
+    "px4_alive_at_timeout": null,
+    "px4_returncode": 0,
+    "tag": "m2b_1_diag_d2_inf_20260624_velocity_inf_classical",
+    "task_returncode": 0,
+    "timeout_observed": false,
+    "ulog": "/workspace/docs/m2b_1_diag_d2_inf_20260624/evals/m2b_1_diag_d2_inf_20260624_velocity_inf_classical/m2b_1_diag_m2b_1_diag_d2_inf_20260624_velocity_inf_classical_classical.ulg"
+  },
+  {
+    "channel": "velocity",
+    "controller": "raptor",
+    "nonfinite_summary": {
+      "raptor_input": {
+        "linear_velocity[0]": {
+          "count": 30844,
+          "finite": 30844,
+          "first_nonfinite_index": null,
+          "nan": 0,
+          "neginf": 0,
+          "posinf": 0
+        },
+        "linear_velocity[1]": {
+          "count": 30844,
+          "finite": 30844,
+          "first_nonfinite_index": null,
+          "nan": 0,
+          "neginf": 0,
+          "posinf": 0
+        },
+        "linear_velocity[2]": {
+          "count": 30844,
+          "finite": 30844,
+          "first_nonfinite_index": null,
+          "nan": 0,
+          "neginf": 0,
+          "posinf": 0
+        }
+      },
+      "vehicle_local_position": {
+        "vx": {
+          "count": 17377,
+          "finite": 17377,
+          "first_nonfinite_index": null,
+          "nan": 0,
+          "neginf": 0,
+          "posinf": 0
+        },
+        "vy": {
+          "count": 17377,
+          "finite": 17377,
+          "first_nonfinite_index": null,
+          "nan": 0,
+          "neginf": 0,
+          "posinf": 0
+        },
+        "vz": {
+          "count": 17377,
+          "finite": 17377,
+          "first_nonfinite_index": null,
+          "nan": 0,
+          "neginf": 0,
+          "posinf": 0
+        }
+      }
+    },
+    "params": {
+      "M2B_A_PROF": 0,
+      "M2B_EN": 1,
+      "M2B_END": 24.5,
+      "M2B_G_PROF": 0,
+      "M2B_START": 24.0,
+      "M2B_V_PROF": 5
+    },
+    "px4_alive_at_timeout": null,
+    "px4_returncode": 0,
+    "tag": "m2b_1_diag_d2_inf_20260624_velocity_inf_raptor",
+    "task_returncode": 0,
+    "timeout_observed": false,
+    "ulog": "/workspace/docs/m2b_1_diag_d2_inf_20260624/evals/m2b_1_diag_d2_inf_20260624_velocity_inf_raptor/m2b_1_diag_m2b_1_diag_d2_inf_20260624_velocity_inf_raptor_raptor.ulg"
+  },
+  {
+    "channel": "attitude",
+    "controller": "classical",
+    "nonfinite_summary": {
+      "raptor_input": {
+        "orientation[0]": {
+          "count": 30962,
+          "finite": 30962,
+          "first_nonfinite_index": null,
+          "nan": 0,
+          "neginf": 0,
+          "posinf": 0
+        },
+        "orientation[1]": {
+          "count": 30962,
+          "finite": 30962,
+          "first_nonfinite_index": null,
+          "nan": 0,
+          "neginf": 0,
+          "posinf": 0
+        },
+        "orientation[2]": {
+          "count": 30962,
+          "finite": 30962,
+          "first_nonfinite_index": null,
+          "nan": 0,
+          "neginf": 0,
+          "posinf": 0
+        },
+        "orientation[3]": {
+          "count": 30962,
+          "finite": 30962,
+          "first_nonfinite_index": null,
+          "nan": 0,
+          "neginf": 0,
+          "posinf": 0
+        }
+      },
+      "vehicle_attitude": {
+        "q[0]": {
+          "count": 34445,
+          "finite": 34445,
+          "first_nonfinite_index": null,
+          "nan": 0,
+          "neginf": 0,
+          "posinf": 0
+        },
+        "q[1]": {
+          "count": 34445,
+          "finite": 34445,
+          "first_nonfinite_index": null,
+          "nan": 0,
+          "neginf": 0,
+          "posinf": 0
+        },
+        "q[2]": {
+          "count": 34445,
+          "finite": 34445,
+          "first_nonfinite_index": null,
+          "nan": 0,
+          "neginf": 0,
+          "posinf": 0
+        },
+        "q[3]": {
+          "count": 34445,
+          "finite": 34445,
+          "first_nonfinite_index": null,
+          "nan": 0,
+          "neginf": 0,
+          "posinf": 0
+        }
+      }
+    },
+    "params": {
+      "M2B_A_PROF": 5,
+      "M2B_EN": 1,
+      "M2B_END": 24.5,
+      "M2B_G_PROF": 0,
+      "M2B_START": 24.0,
+      "M2B_V_PROF": 0
+    },
+    "px4_alive_at_timeout": null,
+    "px4_returncode": 0,
+    "tag": "m2b_1_diag_d2_inf_20260624_attitude_inf_classical",
+    "task_returncode": 0,
+    "timeout_observed": false,
+    "ulog": "/workspace/docs/m2b_1_diag_d2_inf_20260624/evals/m2b_1_diag_d2_inf_20260624_attitude_inf_classical/m2b_1_diag_m2b_1_diag_d2_inf_20260624_attitude_inf_classical_classical.ulg"
+  },
+  {
+    "channel": "attitude",
+    "controller": "raptor",
+    "nonfinite_summary": {
+      "raptor_input": {
+        "orientation[0]": {
+          "count": 30761,
+          "finite": 30761,
+          "first_nonfinite_index": null,
+          "nan": 0,
+          "neginf": 0,
+          "posinf": 0
+        },
+        "orientation[1]": {
+          "count": 30761,
+          "finite": 30761,
+          "first_nonfinite_index": null,
+          "nan": 0,
+          "neginf": 0,
+          "posinf": 0
+        },
+        "orientation[2]": {
+          "count": 30761,
+          "finite": 30761,
+          "first_nonfinite_index": null,
+          "nan": 0,
+          "neginf": 0,
+          "posinf": 0
+        },
+        "orientation[3]": {
+          "count": 30761,
+          "finite": 30761,
+          "first_nonfinite_index": null,
+          "nan": 0,
+          "neginf": 0,
+          "posinf": 0
+        }
+      },
+      "vehicle_attitude": {
+        "q[0]": {
+          "count": 34666,
+          "finite": 34666,
+          "first_nonfinite_index": null,
+          "nan": 0,
+          "neginf": 0,
+          "posinf": 0
+        },
+        "q[1]": {
+          "count": 34666,
+          "finite": 34666,
+          "first_nonfinite_index": null,
+          "nan": 0,
+          "neginf": 0,
+          "posinf": 0
+        },
+        "q[2]": {
+          "count": 34666,
+          "finite": 34666,
+          "first_nonfinite_index": null,
+          "nan": 0,
+          "neginf": 0,
+          "posinf": 0
+        },
+        "q[3]": {
+          "count": 34666,
+          "finite": 34666,
+          "first_nonfinite_index": null,
+          "nan": 0,
+          "neginf": 0,
+          "posinf": 0
+        }
+      }
+    },
+    "params": {
+      "M2B_A_PROF": 5,
+      "M2B_EN": 1,
+      "M2B_END": 24.5,
+      "M2B_G_PROF": 0,
+      "M2B_START": 24.0,
+      "M2B_V_PROF": 0
+    },
+    "px4_alive_at_timeout": null,
+    "px4_returncode": 0,
+    "tag": "m2b_1_diag_d2_inf_20260624_attitude_inf_raptor",
+    "task_returncode": 0,
+    "timeout_observed": false,
+    "ulog": "/workspace/docs/m2b_1_diag_d2_inf_20260624/evals/m2b_1_diag_d2_inf_20260624_attitude_inf_raptor/m2b_1_diag_m2b_1_diag_d2_inf_20260624_attitude_inf_raptor_raptor.ulg"
+  }
+]

@@ -738,8 +738,11 @@ def evaluate_theta(
             log_handle.write(f"\nERROR: {error}: {exc}\n")
     elapsed = time.monotonic() - start
     compare_path = docs_dir / f"m1_diff_{tag}.json"
-    genome = theta.get("m2", {}).get("genome", {})
-    family, severity, bin_name = feature_bin(genome) if isinstance(genome, dict) else ("unknown", 0.0, "unknown")
+    genome = theta.get("m2", {}).get("genome")
+    if isinstance(genome, dict) and "gps_delay_ms" in genome:
+        family, severity, bin_name = feature_bin(genome)
+    else:
+        family, severity, bin_name = ("unknown", 0.0, "unknown")
     if returncode != 0 or not compare_path.exists():
         return EvalResult(
             index=index,

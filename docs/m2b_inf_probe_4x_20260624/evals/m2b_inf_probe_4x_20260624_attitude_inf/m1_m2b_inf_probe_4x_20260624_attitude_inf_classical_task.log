@@ -1,0 +1,5 @@
+[INFO] [1782301581.480963878] [m1_offboard_task]: M1 task started controller=classical tag=m2b_inf_probe_4x_20260624_attitude_inf rate_hz=100.0 wall_timer_hz=100.0 PX4_SIM_SPEED_FACTOR=4.0
+{"detail": {"source": "first_px4_topic"}, "elapsed_s": 0.0, "name": "clock_origin", "timestamp_us": 1782301590944850}
+{"detail": {"controller": "classical", "main": 6}, "elapsed_s": 18.033752, "name": "mode_command", "timestamp_us": 1782301608978602}
+{"detail": {"nav_state": 14}, "elapsed_s": 18.073752, "name": "controller_active", "timestamp_us": 1782301609018602}
+{"detail": {"type": "sine"}, "elapsed_s": 22.026655, "name": "trajectory_start", "timestamp_us": 1782301612971505}

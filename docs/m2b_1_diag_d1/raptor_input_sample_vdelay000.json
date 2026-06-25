@@ -1,0 +1,151 @@
+{
+  "active": true,
+  "elapsed_from_ulog_start_s": 60.04,
+  "finite": true,
+  "logged_fields": {
+    "angular_velocity": [
+      0.1496526300907135,
+      0.005222967825829983,
+      -0.0003659123904071748
+    ],
+    "linear_velocity": [
+      0.15627165138721466,
+      0.03517208248376846,
+      0.0010752511443570256
+    ],
+    "orientation_quaternion_wxyz": [
+      0.999937891960144,
+      0.01034200843423605,
+      0.004137317184358835,
+      -4.2790848965523764e-05
+    ],
+    "position": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "previous_action": [
+      0.2715320289134979,
+      -0.02452719584107399,
+      -0.06677763164043427,
+      0.15671993792057037
+    ]
+  },
+  "policy_vector_22": [
+    {
+      "index": 0,
+      "label": "position_target_frame_flu_x",
+      "value": 0.0
+    },
+    {
+      "index": 1,
+      "label": "position_target_frame_flu_y",
+      "value": 0.0
+    },
+    {
+      "index": 2,
+      "label": "position_target_frame_flu_z",
+      "value": 0.0
+    },
+    {
+      "index": 3,
+      "label": "orientation_rotmat_r00",
+      "value": 0.9999657615509185
+    },
+    {
+      "index": 4,
+      "label": "orientation_rotmat_r01",
+      "value": 0.00017115272105103913
+    },
+    {
+      "index": 5,
+      "label": "orientation_rotmat_r02",
+      "value": 0.008273235360754685
+    },
+    {
+      "index": 6,
+      "label": "orientation_rotmat_r10",
+      "value": -4.418804384898056e-11
+    },
+    {
+      "index": 7,
+      "label": "orientation_rotmat_r11",
+      "value": 0.9997860820609789
+    },
+    {
+      "index": 8,
+      "label": "orientation_rotmat_r12",
+      "value": -0.020683086303357568
+    },
+    {
+      "index": 9,
+      "label": "orientation_rotmat_r20",
+      "value": -0.008275005534038324
+    },
+    {
+      "index": 10,
+      "label": "orientation_rotmat_r21",
+      "value": 0.020682378146098534
+    },
+    {
+      "index": 11,
+      "label": "orientation_rotmat_r22",
+      "value": 0.9997518509361244
+    },
+    {
+      "index": 12,
+      "label": "linear_velocity_target_frame_flu_x",
+      "value": 0.15627165138721466
+    },
+    {
+      "index": 13,
+      "label": "linear_velocity_target_frame_flu_y",
+      "value": 0.03517208248376846
+    },
+    {
+      "index": 14,
+      "label": "linear_velocity_target_frame_flu_z",
+      "value": 0.0010752511443570256
+    },
+    {
+      "index": 15,
+      "label": "angular_velocity_body_flu_x",
+      "value": 0.1496526300907135
+    },
+    {
+      "index": 16,
+      "label": "angular_velocity_body_flu_y",
+      "value": 0.005222967825829983
+    },
+    {
+      "index": 17,
+      "label": "angular_velocity_body_flu_z",
+      "value": -0.0003659123904071748
+    },
+    {
+      "index": 18,
+      "label": "action_history_0_motor0",
+      "value": 0.2715320289134979
+    },
+    {
+      "index": 19,
+      "label": "action_history_0_motor1",
+      "value": -0.02452719584107399
+    },
+    {
+      "index": 20,
+      "label": "action_history_0_motor2",
+      "value": -0.06677763164043427
+    },
+    {
+      "index": 21,
+      "label": "action_history_0_motor3",
+      "value": 0.15671993792057037
+    }
+  ],
+  "sample_index": 12576,
+  "timestamp_us": 60832000,
+  "topic": "raptor_input",
+  "ulog": "/mnt/nvme/uav_sf/docs/m2b_velocity_delay_verify_4x_20260624/evals/m2b_velocity_delay_verify_4x_20260624_vdelay_000ms/m1_m2b_velocity_delay_verify_4x_20260624_vdelay_000ms_raptor.ulg",
+  "ulog_start_timestamp_us": 792000
+}

@@ -1,0 +1,5 @@
+$ /usr/bin/python3 /workspace/scripts/m1_diff_runner.py --theta /workspace/docs/m2b_state_map_8eval_4x_20260624/theta/m2b_state_map_8eval_4x_20260624_e0004.json --skip-build --run-timeout 180 --docs-dir /workspace/docs/m2b_state_map_8eval_4x_20260624/evals/m2b_state_map_8eval_4x_20260624_e0004 --safety-config /workspace/config/m2b_safety_envelope_4x_high_twr.json
+RUN_CONTROLLER=classical
+RUN_CONTROLLER=raptor
+M1_DIFF_JSON=/workspace/docs/m2b_state_map_8eval_4x_20260624/evals/m2b_state_map_8eval_4x_20260624_e0004/m1_diff_m2b_state_map_8eval_4x_20260624_e0004.json
+M1_DIFF_SUMMARY=/workspace/docs/m2b_state_map_8eval_4x_20260624/evals/m2b_state_map_8eval_4x_20260624_e0004/m1_diff_m2b_state_map_8eval_4x_20260624_e0004_summary.md

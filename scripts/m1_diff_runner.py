@@ -471,6 +471,7 @@ def main() -> int:
     else:
         run_checked([str(repo / "scripts/install_raptor_sih_board.sh")], cwd=repo, log=docs / f"m1_{tag}_build.log", env=env)
         run_checked([str(repo / "scripts/install_m1_sih_x500.sh")], cwd=repo, log=docs / f"m1_{tag}_build.log", env=env)
+        run_checked([str(repo / "scripts/install_m2b_state_shim.sh")], cwd=repo, log=docs / f"m1_{tag}_build.log", env=env)
 
     outputs = {}
     for controller in ["classical", "raptor"]:

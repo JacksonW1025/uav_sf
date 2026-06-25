@@ -1,0 +1,9 @@
+# M2b-1 D2 Inf Timeout Diagnostic
+
+run_dir: `docs/m2b_1_diag_d2_inf_20260624`
+
+## records
+- velocity/classical: timeout=False px4_alive_at_timeout=None error=None ulog=/workspace/docs/m2b_1_diag_d2_inf_20260624/evals/m2b_1_diag_d2_inf_20260624_velocity_inf_classical/m2b_1_diag_m2b_1_diag_d2_inf_20260624_velocity_inf_classical_classical.ulg
+- velocity/raptor: timeout=False px4_alive_at_timeout=None error=None ulog=/workspace/docs/m2b_1_diag_d2_inf_20260624/evals/m2b_1_diag_d2_inf_20260624_velocity_inf_raptor/m2b_1_diag_m2b_1_diag_d2_inf_20260624_velocity_inf_raptor_raptor.ulg
+- attitude/classical: timeout=False px4_alive_at_timeout=None error=None ulog=/workspace/docs/m2b_1_diag_d2_inf_20260624/evals/m2b_1_diag_d2_inf_20260624_attitude_inf_classical/m2b_1_diag_m2b_1_diag_d2_inf_20260624_attitude_inf_classical_classical.ulg
+- attitude/raptor: timeout=False px4_alive_at_timeout=None error=None ulog=/workspace/docs/m2b_1_diag_d2_inf_20260624/evals/m2b_1_diag_d2_inf_20260624_attitude_inf_raptor/m2b_1_diag_m2b_1_diag_d2_inf_20260624_attitude_inf_raptor_raptor.ulg

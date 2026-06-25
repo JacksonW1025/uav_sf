@@ -4,7 +4,7 @@ This repository captures the Phase 1 environment for PX4 SITL with RAPTOR on Jet
 
 Phase 1 starts with the reproducible environment: build and headless smoke-test PX4 SITL with `mc_raptor`, stage the RAPTOR policy blob for module loading, and verify the ROS 2 / uXRCE-DDS topic path.
 
-M0 is now also captured in this repository: a real SIH SITL run with classical takeoff to Hold, in-flight switch to RAPTOR external mode, ULOG capture, and the missing-setpoint oracle sanity check. M1 work adds the oracle MVP: fixed parameterized offboard tasks, ULOG metrics, and classical-vs-RAPTOR four-quadrant classification. M2 adds the first guided MAP-Elites search wrapper around the M1 runner. M2.5 adds shared EKF/GNSS estimator-pollution knobs and fixes the 4x early-shutdown failure, but the targeted delay scan did not produce a confirmed primary bug.
+M0 is now also captured in this repository: a real SIH SITL run with classical takeoff to Hold, in-flight switch to RAPTOR external mode, ULOG capture, and the missing-setpoint oracle sanity check. M1 work adds the oracle MVP: fixed parameterized offboard tasks, ULOG metrics, and classical-vs-RAPTOR four-quadrant classification. M2 adds the first guided MAP-Elites search wrapper around the M1 runner. M2.5 adds shared EKF/GNSS estimator-pollution knobs and fixes the 4x early-shutdown failure, but the targeted delay scan did not produce a confirmed primary bug. M2.6 targets RAPTOR's unshielded angular-rate observation channel with fair shared `vehicle_angular_velocity` pollution plus high TWR; it also did not produce a confirmed primary bug, but it recorded high-TWR continuous divergence above the remeasured 1x noise floor. M2b-1 adds the missing adversarial shared-state uORB shim for velocity, attitude, and angular-rate pollution, plus targeted velocity-delay, NaN/Inf, and bounded state-search runs.
 
 ## Status
 
@@ -14,6 +14,8 @@ M0 is now also captured in this repository: a real SIH SITL run with classical t
 - M1 complete as an oracle MVP pipeline: tracked SIH-X500 airframe, parameterized fixed-theta offboard task, ULOG metrics, and classical-vs-RAPTOR four-quadrant runner. The manually tried anchors did not produce a primary-bug quadrant; see `docs/M1.md`.
 - M2 complete as a guided-search first pass: fixed safety envelope, classical baseline decontamination, theta controllability matrix, MAP-Elites searcher, archive output, and confirmation protocol. The first search found one raw primary candidate, but it did not pass confirmation; confirmed primary batch is empty. See `docs/M2.md`.
 - M2.5 complete as a blocker-unlock pass: shared EKF/GNSS estimator-pollution θ dimensions are implemented with ULOG fairness evidence, and `PX4_SIM_SPEED_FACTOR=4` now reaches `mission_end`. The 1x delay gradient and one harsh estimator-pollution probe were both-safe, so no confirmed primary bug was produced. Strict 1x-vs-4x metric invariance did not pass the existing M2 noise floor; see `docs/M2_5.md`.
+- M2.6 complete as a targeted unshielded-channel pass: `IMU_GYRO_CUTOFF` is used as fair shared `vehicle_angular_velocity` pollution, fairness verifies RAPTOR input routing, the 1x noise floor is remeasured from five repeats, and an eight-point cutoff x TWR scan is both-safe with no confirmed primary bug. Two high-TWR runs show RAPTOR worse than classical above the updated floor. See `docs/M2_6.md`.
+- M2b-1 stop point reached: adversarial shared-state shim patch and installer are implemented, PX4 builds with the shim, fairness verifies shared topic pollution plus RAPTOR input touch, 1x/4x high-TWR floors are remeasured, velocity-delay and NaN/Inf probes are archived, and an eight-eval state-pollution MAP-Elites run completed. Confirmed primary bug remains empty; the requested several-hundred-eval campaign was not run because serial 4x throughput is about 105 s/eval. See `docs/M2b_1.md`.
 - P2 partial: Gazebo Harmonic is installed and used headless; graphical display passthrough and extra later-phase Python tools beyond PX4 essentials were not validated.
 
 ## M0 Status
@@ -147,6 +149,46 @@ Run the speed-factor hover smoke:
 sg docker -c 'cd /mnt/nvme/uav_sf && CONTAINER_NAME=uav_sf_m25_hover4x ./docker/run.sh bash -lc "cd /workspace && python3 -m pip install --break-system-packages pymavlink pyulog numpy -q && source /opt/ros/jazzy/setup.bash && source ros2_ws/install/setup.bash && PX4_SIM_SPEED_FACTOR=4 ./scripts/m1_diff_runner.py --theta config/m2_5_speed_hover.json --skip-build --run-timeout 150 --docs-dir docs/m2_5_speed_hover_4x_20260624 --safety-config config/m2_safety_envelope.json"'
 ```
 
+## Reproduce M2.6
+
+Remeasure the 1x noise floor for the rate-heavy M2.6 theta:
+
+```bash
+sg docker -c 'cd /mnt/nvme/uav_sf && CONTAINER_NAME=uav_sf_m26_noise ./docker/run.sh bash -lc "cd /workspace && python3 -m pip install --break-system-packages pymavlink pyulog numpy -q && source /opt/ros/jazzy/setup.bash && source ros2_ws/install/setup.bash && ./scripts/m2_6_noise_floor.py --run --run-id m2_6_noise_floor_1x_20260624 --sim-speed-factor 1 --run-timeout 180 --eval-timeout 480"'
+```
+
+Run the targeted shared angular-rate filter lag x high-TWR scan:
+
+```bash
+sg docker -c 'cd /mnt/nvme/uav_sf && CONTAINER_NAME=uav_sf_m26_scan ./docker/run.sh bash -lc "cd /workspace && python3 -m pip install --break-system-packages pymavlink pyulog numpy -q && source /opt/ros/jazzy/setup.bash && source ros2_ws/install/setup.bash && ./scripts/m2_6_unshielded_scan.py --run --run-id m2_6_unshielded_scan_1x_20260624 --cutoffs-hz 30 12 8 5 --twrs 1.743 2.3 --noise-floor-json docs/m2_6_noise_floor_1x_20260624/noise_floor_summary.json --sim-speed-factor 1 --run-timeout 180 --eval-timeout 480 --confirm-repeats 3"'
+```
+
+## Reproduce M2b-1
+
+Build PX4 with the tracked M2b shared-state shim:
+
+```bash
+sg docker -c 'cd /mnt/nvme/uav_sf && CONTAINER_NAME=uav_sf_m2b_build ./docker/run.sh bash -lc "cd /workspace && ./scripts/build_px4_raptor_sih.sh"'
+```
+
+Run the main targeted probes:
+
+```bash
+sg docker -c 'cd /mnt/nvme/uav_sf && CONTAINER_NAME=uav_sf_m2b_vdelay ./docker/run.sh bash -lc "cd /workspace && python3 -m pip install --break-system-packages pymavlink pyulog numpy -q && source /opt/ros/jazzy/setup.bash && source ros2_ws/install/setup.bash && ./scripts/m2b_velocity_delay_verify.py --run --run-id m2b_velocity_delay_verify_4x_20260624 --delays-ms 0 10 30 --sim-speed-factor 4 --run-timeout 180 --eval-timeout 480"'
+
+sg docker -c 'cd /mnt/nvme/uav_sf && CONTAINER_NAME=uav_sf_m2b_nan ./docker/run.sh bash -lc "cd /workspace && python3 -m pip install --break-system-packages pymavlink pyulog numpy -q && source /opt/ros/jazzy/setup.bash && source ros2_ws/install/setup.bash && ./scripts/m2b_nan_probe.py --run --run-id m2b_nan_probe_4x_20260624 --profiles nan --channels velocity angular_velocity attitude --sim-speed-factor 4 --run-timeout 180 --eval-timeout 480"'
+
+sg docker -c 'cd /mnt/nvme/uav_sf && CONTAINER_NAME=uav_sf_m2b_inf ./docker/run.sh bash -lc "cd /workspace && python3 -m pip install --break-system-packages pymavlink pyulog numpy -q && source /opt/ros/jazzy/setup.bash && source ros2_ws/install/setup.bash && ./scripts/m2b_nan_probe.py --run --run-id m2b_inf_probe_4x_20260624 --profiles inf --channels velocity angular_velocity attitude --sim-speed-factor 4 --run-timeout 180 --eval-timeout 480"'
+
+sg docker -c 'cd /mnt/nvme/uav_sf && CONTAINER_NAME=uav_sf_m2b_state8 ./docker/run.sh bash -lc "cd /workspace && python3 -m pip install --break-system-packages pymavlink pyulog numpy -q && source /opt/ros/jazzy/setup.bash && source ros2_ws/install/setup.bash && ./scripts/m2b_state_map_elites.py --run-id m2b_state_map_8eval_4x_20260624 --budget 8 --bootstrap 8 --no-confirm --sim-speed-factor 4 --run-timeout 180 --eval-timeout 480"'
+```
+
+The configured larger state-search shape is:
+
+```bash
+sg docker -c 'cd /mnt/nvme/uav_sf && CONTAINER_NAME=uav_sf_m2b_state120 ./docker/run.sh bash -lc "cd /workspace && python3 -m pip install --break-system-packages pymavlink pyulog numpy -q && source /opt/ros/jazzy/setup.bash && source ros2_ws/install/setup.bash && ./scripts/m2b_state_map_elites.py --run-id m2b_state_map_120eval_4x_20260624 --budget 120 --bootstrap 24 --sim-speed-factor 4 --run-timeout 180 --eval-timeout 480 --confirm-repeats 3 --max-confirm-candidates 5"'
+```
+
 ## Evidence
 
 Verification artifacts are kept under `docs/`:
@@ -170,6 +212,14 @@ Verification artifacts are kept under `docs/`:
 - `docs/M1.md`: M1 oracle MVP summary, reproduction commands, fixed-theta results, determinism check, failure-injection status, and stop point.
 - `docs/M2.md`: M2 guided search design, safety envelope, controllability matrix, MAP-Elites run results, unconfirmed primary candidate, and stop point.
 - `docs/M2_5.md`: M2.5 shared-estimator-pollution implementation, fairness evidence, targeted delay scan, speed-factor smoke results, and stop point.
+- `docs/M2_6.md`: M2.6 unshielded angular-rate pollution mechanism, noise-floor remeasurement, fairness evidence, targeted cutoff x TWR scan, continuous-divergence results, and stop point.
+- `docs/M2b_1.md`: M2b-1 adversarial shared-state shim mechanism, mitigation search, fairness evidence, velocity-delay verification, NaN/Inf probe, bounded state search, and stop point.
+- `docs/m2_6_noise_floor_1x_20260624/`: five 1x same-theta repeats and updated noise-floor evidence.
+- `docs/m2_6_unshielded_scan_1x_20260624/`: eight 1x targeted M2.6 evals with ULOGs and fairness JSON.
+- `docs/m2b_noise_floor_4x_high_twr_20260624/` and `docs/m2b_noise_floor_1x_high_twr_20260624/`: M2b high-TWR same-theta floor remeasurement.
+- `docs/m2b_velocity_delay_verify_4x_20260624/` and `docs/m2b_velocity_delay_smoke_20260624/`: fair shared velocity-delay probes.
+- `docs/m2b_nan_probe_4x_20260624/` and `docs/m2b_inf_probe_4x_20260624/`: NaN/Inf state input-robustness probes.
+- `docs/m2b_state_map_8eval_4x_20260624/`: bounded M2b state-pollution MAP-Elites archive and one 1x confirmation of the best 4x continuous elite.
 - `docs/m1_diff_anchor_sine_5hz.json`: representative both-safe fixed-theta diff result.
 - `docs/m1_diff_anchor_heavy_338_step.json`: near-boundary heavy-mass diff result.
 - `docs/m1_diff_anchor_heavy_max_step.json`: too-hard diff result.
@@ -197,8 +247,11 @@ DDS_TOPICS_FOUND=1
 - The inherited RAPTOR SITL config logs a non-blocking `vision_target_estimator` / `landing_target_estimator` conflict; the same warning was already visible in Phase 1 smoke output.
 - M1 ROS output topics are versioned in this PX4/px4_msgs combination; `scripts/m1_offboard_task.py` expects `/fmu/out/vehicle_status_v4` and `/fmu/out/vehicle_local_position_v1`.
 - The first finite bad-setpoint anchors did not produce a primary-bug quadrant because RAPTOR clips position/velocity error before policy inference; this is documented in `docs/M1.md`.
-- M2.5 fixes the original 4x early-shutdown failure: 4x runs now reach `mission_end`. However, 1x-vs-4x metric invariance did not pass the existing M2 noise floor, so use 4x for smoke/triage only and keep primary-bug confirmation at 1x until this is root-caused.
+- M2.5 fixes the original 4x early-shutdown failure: 4x runs now reach `mission_end`. However, 1x-vs-4x metric invariance did not pass the M2 floor, and M2.6 remeasured a larger 1x floor for rate-heavy probes, so use 4x for smoke/triage only and keep primary-bug confirmation at 1x until this is root-caused.
+- The paper's S2 accelerometer-integration IIR mitigation was not found in local PX4 `mc_raptor` at `3042f906`; M2b-1 therefore cannot isolate mitigation on/off without a separate source patch.
+- M2b-1 full-scale state search was not completed. The serial 4x path is about 105 s/eval and the default configured 120-eval campaign is multi-hour work unless parallelized.
+- M2b Inf probes for velocity and attitude timed out in the classical task node before compare/fairness output; treat those as unresolved harness/input-robustness failures, not negative results.
 
 ## Next Step
 
-M2b can start after this state as a full guided rerun that includes `A_estimator`, but primary confirmation should stay at 1x unless speed-factor invariance is resolved. M3 remains out of scope: random/grid baseline comparison, no-feedback ablation, systematic failure taxonomy, and large repeat campaigns are still not part of this commit.
+Finish the M2b-1 full-budget state-pollution campaign with parallel 4x triage or a long serial 120+ eval run, then confirm candidates at 1x. After that, M2b-2 can add plant asymmetry, switching transient, and Gazebo sensor-failure paths. M3 remains out of scope: random/grid baseline comparison, no-feedback ablation, systematic failure taxonomy, and large repeat campaigns are still not part of this commit.

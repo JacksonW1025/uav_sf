@@ -1,0 +1,7 @@
+[INFO] [1782291700.619692602] [m1_offboard_task]: M1 task started controller=raptor tag=m2_6_unshielded_scan_1x_20260624_gyro120_twr230 rate_hz=100.0 wall_timer_hz=100.0 PX4_SIM_SPEED_FACTOR=1.0
+{"detail": {"source": "first_px4_topic"}, "elapsed_s": 0.0, "name": "clock_origin", "timestamp_us": 1782291705816486}
+{"detail": {"controller": "raptor", "main": 4, "mode_id": 23, "sub": 11}, "elapsed_s": 18.001399, "name": "mode_command", "timestamp_us": 1782291723817885}
+{"detail": {"nav_state": 23}, "elapsed_s": 18.037399, "name": "controller_active", "timestamp_us": 1782291723853885}
+{"detail": {"type": "sine"}, "elapsed_s": 22.001399, "name": "trajectory_start", "timestamp_us": 1782291727817885}
+{"detail": {"setpoint_ned": [0.22339833770273773, 0.0, -2.5]}, "elapsed_s": 38.01378, "name": "mission_end", "timestamp_us": 1782291743830266}
+[INFO] [1782291744.726041787] [m1_offboard_task]: M1 task finished exit_code=0

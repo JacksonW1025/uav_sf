@@ -1,0 +1,7 @@
+[INFO] [1782289922.571129694] [m1_offboard_task]: M1 task started controller=classical tag=m2_6_noise_floor_1x_20260624_s202661 rate_hz=100.0 wall_timer_hz=100.0 PX4_SIM_SPEED_FACTOR=1.0
+{"detail": {"source": "first_px4_topic"}, "elapsed_s": 0.0, "name": "clock_origin", "timestamp_us": 1782289922369910}
+{"detail": {"controller": "classical", "main": 6}, "elapsed_s": 18.001428, "name": "mode_command", "timestamp_us": 1782289940371338}
+{"detail": {"nav_state": 14}, "elapsed_s": 18.193428, "name": "controller_active", "timestamp_us": 1782289940563338}
+{"detail": {"type": "sine"}, "elapsed_s": 22.001428, "name": "trajectory_start", "timestamp_us": 1782289944371338}
+{"detail": {"setpoint_ned": [0.10724303438136769, 0.0, -2.5]}, "elapsed_s": 38.243617, "name": "mission_end", "timestamp_us": 1782289960613527}
+[INFO] [1782289960.628368614] [m1_offboard_task]: M1 task finished exit_code=0

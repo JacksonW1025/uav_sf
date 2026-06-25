@@ -1,0 +1,70 @@
+{
+  "controller": "raptor",
+  "controller_active_us": 1782291054548146,
+  "events": [
+    {
+      "detail": {
+        "source": "first_px4_topic"
+      },
+      "elapsed_s": 0.0,
+      "name": "clock_origin",
+      "timestamp_us": 1782291036506365
+    },
+    {
+      "detail": {
+        "controller": "raptor",
+        "main": 4,
+        "mode_id": 23,
+        "sub": 11
+      },
+      "elapsed_s": 18.009781,
+      "name": "mode_command",
+      "timestamp_us": 1782291054516146
+    },
+    {
+      "detail": {
+        "nav_state": 23
+      },
+      "elapsed_s": 18.041781,
+      "name": "controller_active",
+      "timestamp_us": 1782291054548146
+    },
+    {
+      "detail": {
+        "type": "sine"
+      },
+      "elapsed_s": 22.009781,
+      "name": "trajectory_start",
+      "timestamp_us": 1782291058516146
+    },
+    {
+      "detail": {
+        "setpoint_ned": [
+          0.02590757579086398,
+          0.0,
+          -2.5
+        ]
+      },
+      "elapsed_s": 38.001528,
+      "name": "mission_end",
+      "timestamp_us": 1782291074507893
+    }
+  ],
+  "exit_code": 0,
+  "last_nav_state": 23,
+  "last_position_ned": {
+    "x": 0.19284415245056152,
+    "y": -0.38644835352897644,
+    "z": -2.32159423828125
+  },
+  "mission_end_us": 1782291074507893,
+  "mode_confirmed": true,
+  "origin_us": 1782291036506365,
+  "raptor_internal_reference_max": null,
+  "raptor_internal_reference_min": null,
+  "setpoint_rate_hz": 100.0,
+  "sim_speed_factor": 1.0,
+  "tag": "m2_6_unshielded_scan_1x_20260624_gyro120_twr174",
+  "trajectory_start_us": 1782291058516146,
+  "wall_timer_hz": 100.0
+}

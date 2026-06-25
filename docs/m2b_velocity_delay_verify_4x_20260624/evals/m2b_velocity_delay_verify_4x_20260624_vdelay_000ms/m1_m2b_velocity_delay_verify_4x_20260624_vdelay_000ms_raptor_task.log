@@ -1,0 +1,7 @@
+[INFO] [1782297880.412621740] [m1_offboard_task]: M1 task started controller=raptor tag=m2b_velocity_delay_verify_4x_20260624_vdelay_000ms rate_hz=100.0 wall_timer_hz=100.0 PX4_SIM_SPEED_FACTOR=4.0
+{"detail": {"source": "first_px4_topic"}, "elapsed_s": 0.0, "name": "clock_origin", "timestamp_us": 1782297889388083}
+{"detail": {"controller": "raptor", "main": 4, "mode_id": 23, "sub": 11}, "elapsed_s": 18.029277, "name": "mode_command", "timestamp_us": 1782297907417360}
+{"detail": {"nav_state": 23}, "elapsed_s": 18.093277, "name": "controller_active", "timestamp_us": 1782297907481360}
+{"detail": {"type": "sine"}, "elapsed_s": 22.001697, "name": "trajectory_start", "timestamp_us": 1782297911389780}
+{"detail": {"setpoint_ned": [0.0, 0.0, -2.4876487287693125]}, "elapsed_s": 38.003576, "name": "mission_end", "timestamp_us": 1782297927391659}
+[INFO] [1782297921.080573715] [m1_offboard_task]: M1 task finished exit_code=0

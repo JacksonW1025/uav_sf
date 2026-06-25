@@ -1,0 +1,17 @@
+{
+  "bins": "state channel x profile x severity, with optional secondary channel conjunction",
+  "budget": 120,
+  "bootstrap": 24,
+  "channels": [
+    "velocity",
+    "angular_velocity",
+    "attitude"
+  ],
+  "profiles": [
+    "delay",
+    "bias",
+    "noise"
+  ],
+  "seed": 20260800,
+  "sim_speed_factor": 4.0
+}

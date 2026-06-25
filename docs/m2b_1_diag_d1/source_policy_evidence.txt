@@ -1,0 +1,1064 @@
+# mc_raptor source evidence
+     1	#pragma once
+     2	
+     3	#include "trajectories/lissajous.hpp"
+     4	
+     5	#include <px4_platform_common/defines.h>
+     6	#include <px4_platform_common/module.h>
+     7	#include <px4_platform_common/module_params.h>
+     8	#include <px4_platform_common/posix.h>
+     9	#include <px4_platform_common/px4_work_queue/ScheduledWorkItem.hpp>
+    10	
+    11	#include <drivers/drv_hrt.h>
+    12	#include <lib/perf/perf_counter.h>
+    13	
+    14	#include <uORB/Publication.hpp>
+    15	#include <uORB/Subscription.hpp>
+    16	#include <uORB/SubscriptionCallback.hpp>
+    17	#include <uORB/topics/vehicle_local_position.h>
+    18	#include <uORB/topics/vehicle_odometry.h>
+    19	#include <uORB/topics/vehicle_attitude.h>
+    20	#include <uORB/topics/vehicle_angular_velocity.h>
+    21	#include <uORB/topics/actuator_motors.h>
+    22	#include <uORB/topics/trajectory_setpoint.h>
+    23	#include <uORB/topics/register_ext_component_request.h>
+    24	#include <uORB/topics/register_ext_component_reply.h>
+    25	#include <uORB/topics/unregister_ext_component.h>
+    26	#include <uORB/topics/vehicle_status.h>
+    27	#include <uORB/topics/raptor_status.h>
+    28	#include <uORB/topics/raptor_input.h>
+    29	#include <uORB/topics/tune_control.h>
+    30	#include <uORB/topics/vehicle_control_mode.h>
+    31	#include <uORB/topics/arming_check_request.h>
+    32	#include <uORB/topics/arming_check_reply.h>
+    33	#undef OK
+    34	
+    35	#ifdef __PX4_POSIX
+    36	#include <rl_tools/operations/cpu.h>
+    37	#else
+    38	#include <rl_tools/operations/arm.h>
+    39	#endif
+    40	
+    41	#include <rl_tools/nn/layers/standardize/operations_generic.h>
+    42	#include <rl_tools/nn/layers/dense/operations_arm/opt.h>
+    43	#include <rl_tools/nn/layers/sample_and_squash/operations_generic.h>
+    44	#include <rl_tools/nn/layers/gru/operations_generic.h>
+    45	#include <rl_tools/nn_models/mlp/operations_generic.h>
+    46	#include <rl_tools/nn_models/sequential/operations_generic.h>
+    47	
+    48	#include <rl_tools/inference/executor/executor.h>
+    49	#include <rl_tools/inference/applications/l2f/l2f.h>
+    50	
+    51	#include "blob/policy.h"
+    52	
+    53	#include <rl_tools/persist/backends/tar/operations_posix.h>
+    54	#include <rl_tools/nn/optimizers/adam/instance/persist.h>
+    55	#include <rl_tools/nn/layers/gru/persist.h>
+    56	#include <rl_tools/nn/layers/dense/persist.h>
+    57	#include <rl_tools/nn_models/sequential/persist.h>
+    58	
+    59	namespace rlt = rl_tools;
+    60	
+    61	#define MC_RAPTOR_POLICY_NAMESPACE rlt::checkpoint::actor
+    62	#define MC_RAPTOR_EXAMPLE_NAMESPACE rlt::checkpoint::example
+    63	#define MC_RAPTOR_META_NAMESPACE rlt::checkpoint::meta
+    64	// #define MC_RAPTOR_EMBED_POLICY // you can use this to directly embed the policy into the firmware instead of loading it from the sd card. To fit into the flash you might need to disable some unnecessary features in the .px4board config.
+    65	
+    66	
+    67	
+    68	
+    69	
+    70	using namespace time_literals;
+    71	
+    72	class Raptor : public ModuleBase, public ModuleParams, public px4::ScheduledWorkItem
+    73	{
+    74	public:
+    75		static Descriptor desc;
+    76	
+    77		Raptor();
+    78		~Raptor() override;
+    79	
+    80		/** @see ModuleBase */
+    81		static int task_spawn(int argc, char *argv[]);
+    82	
+    83		/** @see ModuleBase */
+    84		static int custom_command(int argc, char *argv[]);
+    85	
+    86		/** @see ModuleBase */
+    87		static int print_usage(const char *reason = nullptr);
+    88	
+    89		bool init();
+    90	
+    91		int print_status() override;
+    92	
+    93	private:
+    94	#ifdef __PX4_POSIX
+    95		using DEVICE = rlt::devices::DefaultCPU;
+    96	#else
+    97		using DEV_SPEC = rlt::devices::DefaultARMSpecification;
+    98		using DEVICE = rlt::devices::arm::OPT<DEV_SPEC>;
+    99	#endif
+   100		using TI = typename DEVICE::index_t;
+   101		using RNG = DEVICE::SPEC::RANDOM::ENGINE<>;
+   102		using T = float;
+   103		static constexpr uint64_t EXT_COMPONENT_REQUEST_ID = 1337;
+   104		DEVICE device;
+   105		RNG rng;
+   106		hrt_abstime init_time;
+   107		// node constants
+   108		static constexpr TI OBSERVATION_TIMEOUT_ANGULAR_VELOCITY = 10 * 1000;
+   109		static constexpr TI OBSERVATION_TIMEOUT_LOCAL_POSITION = 100 * 1000;
+   110		static constexpr TI OBSERVATION_TIMEOUT_ATTITUDE = 50 * 1000;
+   111		static constexpr TI TRAJECTORY_SETPOINT_TIMEOUT = 200 * 1000;
+   112		static constexpr T RESET_PREVIOUS_ACTION_VALUE = 0; // -1 to 1
+   113		static constexpr bool ENABLE_CONTROL_FREQUENCY_INFO = false;
+   114	
+   115		T max_position_error = 0.5;
+   116		T max_velocity_error = 1.0;
+   117	
+   118		void Run() override;
+   119	
+   120		decltype(register_ext_component_reply_s::mode_id) ext_component_mode_id;
+   121		decltype(register_ext_component_reply_s::arming_check_id) ext_component_arming_check_id;
+   122	
+   123		enum class FlightModeState : TI {
+   124			UNREGISTERED = 0,
+   125			REGISTERED = 1,
+   126			CONFIGURED = 2
+   127		};
+   128		FlightModeState flightmode_state = FlightModeState::UNREGISTERED;
+   129		bool can_arm = false;
+   130		void updateArmingCheckReply();
+   131	
+   132		// node state
+   133		vehicle_local_position_s _vehicle_local_position{};
+   134		vehicle_angular_velocity_s _vehicle_angular_velocity{};
+   135		vehicle_attitude_s _vehicle_attitude{};
+   136		vehicle_status_s _vehicle_status{};
+   137		trajectory_setpoint_s _trajectory_setpoint{};
+   138		hrt_abstime timestamp_last_local_position, timestamp_last_angular_velocity, timestamp_last_attitude, timestamp_last_trajectory_setpoint,
+   139			    timestamp_last_manual_control_input, timestamp_last_vehicle_status;
+   140		bool timestamp_last_local_position_set = false, timestamp_last_angular_velocity_set = false, timestamp_last_attitude_set = false,
+   141		     timestamp_last_trajectory_setpoint_set = false, timestamp_last_manual_control_input_set = false, timestamp_last_vehicle_status_set = false;
+   142		bool timeout_message_sent = false;
+   143		bool previous_trajectory_setpoint_stale = false;
+   144		bool previous_active = false;
+   145	
+   146		T position[3];
+   147		T linear_velocity[3];
+   148	
+   149		uORB::Subscription _vehicle_local_position_sub{ORB_ID(vehicle_local_position)};
+   150		uORB::Subscription _vehicle_attitude_sub{ORB_ID(vehicle_attitude)};
+   151		uORB::Subscription _register_ext_component_reply_sub{ORB_ID(register_ext_component_reply)};
+   152		uORB::Subscription _trajectory_setpoint_sub{ORB_ID(trajectory_setpoint)};
+   153		uORB::Subscription _arming_check_request_sub{ORB_ID(arming_check_request)};
+   154		uORB::Subscription _vehicle_status_sub{ORB_ID(vehicle_status)};
+   155		uORB::SubscriptionCallbackWorkItem _vehicle_angular_velocity_sub{this, ORB_ID(vehicle_angular_velocity)};
+   156		uORB::Publication<actuator_motors_s> _actuator_motors_pub{ORB_ID(actuator_motors)};
+   157		uORB::Publication<raptor_status_s> _raptor_status_pub{ORB_ID(raptor_status)};
+   158		uORB::Publication<raptor_input_s> _raptor_input_pub{ORB_ID(raptor_input)};
+   159		uORB::Publication<tune_control_s> _tune_control_pub{ORB_ID(tune_control)};
+   160		uORB::Publication<register_ext_component_request_s> _register_ext_component_request_pub{ORB_ID(register_ext_component_request)};
+   161		uORB::Publication<unregister_ext_component_s> _unregister_ext_component_pub{ORB_ID(unregister_ext_component)};
+   162		uORB::Publication<vehicle_control_mode_s> _config_control_setpoints_pub{ORB_ID(config_control_setpoints)};
+   163		uORB::Publication<arming_check_reply_s> _arming_check_reply_pub{ORB_ID(arming_check_reply)};
+   164		// Performance (perf) counters
+   165		perf_counter_t	_loop_perf{perf_alloc(PC_ELAPSED, MODULE_NAME": cycle")};
+   166		perf_counter_t	_loop_interval_perf{perf_alloc(PC_INTERVAL, MODULE_NAME": interval")};
+   167		perf_counter_t	_loop_interval_policy_perf{perf_alloc(PC_INTERVAL, MODULE_NAME": interval_policy")};
+   168	
+   169		struct EXECUTOR_CONFIG {
+   170			static constexpr TI ACTION_HISTORY_LENGTH = 1;
+   171			static constexpr TI CONTROL_INTERVAL_INTERMEDIATE_NS = 2.5 * 1000 * 1000; // Inference is at 500hz
+   172			static constexpr TI CONTROL_INTERVAL_NATIVE_NS = 10 * 1000 * 1000; // Training is 100hz
+   173			static constexpr TI TIMING_STATS_NUM_STEPS = 100;
+   174			static constexpr bool FORCE_SYNC_INTERMEDIATE = true;
+   175			static constexpr bool FORCE_SYNC_NATIVE_RUNTIME = true;
+   176			static constexpr TI FORCE_SYNC_NATIVE = 8;
+   177			static constexpr bool DYNAMIC_ALLOCATION = false;
+   178	
+   179			using ACTOR_TYPE_ORIGINAL = MC_RAPTOR_POLICY_NAMESPACE ::TYPE;
+   180			using POLICY_TEST = MC_RAPTOR_POLICY_NAMESPACE ::TYPE::template CHANGE_BATCH_SIZE<TI, 1>::template CHANGE_SEQUENCE_LENGTH<TI, 1>;
+   181			using POLICY_BATCH_SIZE = ACTOR_TYPE_ORIGINAL::template CHANGE_BATCH_SIZE<TI, 1>;
+   182	#ifdef MC_RAPTOR_EMBED_POLICY
+   183			using POLICY = POLICY_BATCH_SIZE;
+   184	#else
+   185			using POLICY = POLICY_BATCH_SIZE::template CHANGE_CAPABILITY<rlt::nn::capability::Forward<false, false>>;
+   186	#endif
+   187			using TYPE_POLICY = typename POLICY::TYPE_POLICY;
+   188	
+   189	#if defined(__PX4_POSIX)
+   190			// Relax warning levels for Gazebo sitl. Because Gazebo SITL runs at 250Hz IMU rate, it is not a clean multiple of the training frequency (100hz), hence if the thresholds are set too strict, warnings will be triggered all the time. Generally, Raptor is quite robuts agains control frequency deviations.
+   191			struct WARNING_LEVELS: rlt::inference::executor::WarningLevelsDefault<TYPE_POLICY> {
+   192				using T = typename TYPE_POLICY::DEFAULT;
+   193				static constexpr T INTERMEDIATE_TIMING_JITTER_HIGH_THRESHOLD = 2.0;
+   194				static constexpr T INTERMEDIATE_TIMING_JITTER_LOW_THRESHOLD = 0.5;
+   195				static constexpr T INTERMEDIATE_TIMING_BIAS_HIGH_THRESHOLD = 2.0;
+   196				static constexpr T INTERMEDIATE_TIMING_BIAS_LOW_THRESHOLD = 0.5;
+   197				static constexpr T NATIVE_TIMING_JITTER_HIGH_THRESHOLD = 2.0;
+   198				static constexpr T NATIVE_TIMING_JITTER_LOW_THRESHOLD = 0.5;
+   199				static constexpr T NATIVE_TIMING_BIAS_HIGH_THRESHOLD = 2.0;
+   200				static constexpr T NATIVE_TIMING_BIAS_LOW_THRESHOLD = 0.5;
+   201			};
+   202	#else
+   203			struct WARNING_LEVELS: rlt::inference::executor::WarningLevelsDefault<TYPE_POLICY> {
+   204				using T = typename TYPE_POLICY::DEFAULT;
+   205				static constexpr T NATIVE_TIMING_JITTER_HIGH_THRESHOLD = 1.5;
+   206				static constexpr T NATIVE_TIMING_JITTER_LOW_THRESHOLD = 0.5;
+   207			};
+   208	#endif
+   209			using TIMESTAMP = hrt_abstime;
+   210			static constexpr TI OUTPUT_DIM = 4;
+   211			static constexpr TI TEST_SEQUENCE_LENGTH_ACTUAL = 5;
+   212			static constexpr TI TEST_BATCH_SIZE_ACTUAL = 2;
+   213	
+   214			using EXECUTOR_SPEC =
+   215				rl_tools::inference::applications::l2f::Specification<TYPE_POLICY, TI, TIMESTAMP, ACTION_HISTORY_LENGTH, OUTPUT_DIM, POLICY, CONTROL_INTERVAL_INTERMEDIATE_NS, CONTROL_INTERVAL_NATIVE_NS, FORCE_SYNC_INTERMEDIATE, FORCE_SYNC_NATIVE, FORCE_SYNC_NATIVE_RUNTIME, WARNING_LEVELS, DYNAMIC_ALLOCATION>;
+   216			using EXECUTOR_STATUS = rlt::inference::executor::Status<EXECUTOR_SPEC::EXECUTOR_SPEC>;
+   217		};
+   218		using EXECUTOR_SPEC = EXECUTOR_CONFIG::EXECUTOR_SPEC;
+   219		rl_tools::inference::applications::L2F<EXECUTOR_SPEC> executor;
+   220	#ifdef MC_RAPTOR_EMBED_POLICY
+   221		const decltype(MC_RAPTOR_POLICY_NAMESPACE ::module) &policy = MC_RAPTOR_POLICY_NAMESPACE::module;
+   222	#else
+   223		EXECUTOR_CONFIG::POLICY policy;
+   224	#endif
+   225		static constexpr TI CHECKPOINT_NAME_LENGTH = 100;
+   226		char checkpoint_name[CHECKPOINT_NAME_LENGTH] = "n/a";
+   227	
+   228	#ifdef MC_RAPTOR_EMBED_POLICY
+   229		bool test_policy();
+   230	#else
+
+# mc_raptor observe/action evidence
+   300	template <typename T>
+   301	void quaternion_multiplication(T q1[4], T q2[4], T q_res[4])
+   302	{
+   303		q_res[0] = q1[0] * q2[0] - q1[1] * q2[1] - q1[2] * q2[2] - q1[3] * q2[3];
+   304		q_res[1] = q1[0] * q2[1] + q1[1] * q2[0] + q1[2] * q2[3] - q1[3] * q2[2];
+   305		q_res[2] = q1[0] * q2[2] - q1[1] * q2[3] + q1[2] * q2[0] + q1[3] * q2[1];
+   306		q_res[3] = q1[0] * q2[3] + q1[1] * q2[2] - q1[2] * q2[1] + q1[3] * q2[0];
+   307	}
+   308	template <typename T>
+   309	void quaternion_conjugate(T q[4], T q_res[4])
+   310	{
+   311		q_res[0] = +q[0];
+   312		q_res[1] = -q[1];
+   313		q_res[2] = -q[2];
+   314		q_res[3] = -q[3];
+   315	}
+   316	template <typename T>
+   317	void quaternion_to_rotation_matrix(T q[4], T R[9])
+   318	{
+   319		// row-major
+   320		T qw = q[0];
+   321		T qx = q[1];
+   322		T qy = q[2];
+   323		T qz = q[3];
+   324	
+   325		R[0] = 1 - 2 * qy * qy - 2 * qz * qz;
+   326		R[1] =     2 * qx * qy - 2 * qw * qz;
+   327		R[2] =     2 * qx * qz + 2 * qw * qy;
+   328		R[3] =     2 * qx * qy + 2 * qw * qz;
+   329		R[4] = 1 - 2 * qx * qx - 2 * qz * qz;
+   330		R[5] =     2 * qy * qz - 2 * qw * qx;
+   331		R[6] =     2 * qx * qz - 2 * qw * qy;
+   332		R[7] =     2 * qy * qz + 2 * qw * qx;
+   333		R[8] = 1 - 2 * qx * qx - 2 * qy * qy;
+   334	}
+   335	
+   336	template <typename T>
+   337	void rotate_vector(T R[9], T v[3], T v_rotated[3])
+   338	{
+   339		v_rotated[0] = R[0] * v[0] + R[1] * v[1] + R[2] * v[2];
+   340		v_rotated[1] = R[3] * v[0] + R[4] * v[1] + R[5] * v[2];
+   341		v_rotated[2] = R[6] * v[0] + R[7] * v[1] + R[8] * v[2];
+   342	}
+   343	
+   344	void Raptor::observe(rl_tools::inference::applications::l2f::Observation<EXECUTOR_SPEC> &observation)
+   345	{
+   346		// converting from FRD to FLU
+   347		T Rt_inv[9];
+   348	
+   349		{
+   350			// Orientation
+   351			// FRD to FLU
+   352			T q_target[4];
+   353			q_target[0] = cosf(0.5f * _trajectory_setpoint.yaw); // minus because the setpoint yaw is in NED
+   354			q_target[1] = 0;
+   355			q_target[2] = 0;
+   356			q_target[3] = sinf(0.5f * _trajectory_setpoint.yaw);
+   357	
+   358			T qt[4], qtc[4], qr[4];
+   359			qt[0] = +q_target[0]; // conjugate to build the difference between setpoint and current
+   360			qt[1] = +q_target[1];
+   361			qt[2] = -q_target[2];
+   362			qt[3] = -q_target[3];
+   363			quaternion_conjugate(qt, qtc);
+   364			quaternion_to_rotation_matrix(qtc, Rt_inv);
+   365	
+   366			qr[0] = +_vehicle_attitude.q[0];
+   367			qr[1] = +_vehicle_attitude.q[1];
+   368			qr[2] = -_vehicle_attitude.q[2];
+   369			qr[3] = -_vehicle_attitude.q[3];
+   370			// qr = qt * qd
+   371			// qd = qt' * qr
+   372			T qd[4];
+   373			quaternion_multiplication(qtc, qr, qd);
+   374	
+   375			observation.orientation[0] = qd[0];
+   376			observation.orientation[1] = qd[1];
+   377			observation.orientation[2] = qd[2];
+   378			observation.orientation[3] = qd[3];
+   379		}
+   380	
+   381		{
+   382			// Position
+   383			T p[3], pt[3]; // FLU
+   384			p[0] = +(position[0] - _trajectory_setpoint.position[0]);
+   385			p[1] = -(position[1] - _trajectory_setpoint.position[1]);
+   386			p[2] = -(position[2] - _trajectory_setpoint.position[2]);
+   387			rotate_vector(Rt_inv, p, pt); // The position and velocity error are in the target frame
+   388			observation.position[0] = clip(pt[0], max_position_error, -max_position_error);
+   389			observation.position[1] = clip(pt[1], max_position_error, -max_position_error);
+   390			observation.position[2] = clip(pt[2], max_position_error, -max_position_error);
+   391		}
+   392		{
+   393			// Linear Velocity
+   394			T v[3], vt[3];
+   395			v[0] = +(linear_velocity[0] - _trajectory_setpoint.velocity[0]);
+   396			v[1] = -(linear_velocity[1] - _trajectory_setpoint.velocity[1]);
+   397			v[2] = -(linear_velocity[2] - _trajectory_setpoint.velocity[2]);
+   398			rotate_vector(Rt_inv, v, vt);
+   399			observation.linear_velocity[0] = clip(vt[0], max_velocity_error, -max_velocity_error);
+   400			observation.linear_velocity[1] = clip(vt[1], max_velocity_error, -max_velocity_error);
+   401			observation.linear_velocity[2] = clip(vt[2], max_velocity_error, -max_velocity_error);
+   402		}
+   403		{
+   404			// Angular Velocity
+   405			observation.angular_velocity[0] = +_vehicle_angular_velocity.xyz[0];
+   406			observation.angular_velocity[1] = -_vehicle_angular_velocity.xyz[1];
+   407			observation.angular_velocity[2] = -_vehicle_angular_velocity.xyz[2];
+   408		}
+   409	
+   410		for (TI action_i = 0; action_i < EXECUTOR_CONFIG::OUTPUT_DIM; action_i++) {
+   411			observation.previous_action[action_i] = this->previous_action[action_i];
+   412		}
+   413	}
+   414	
+   415	
+   416	void Raptor::updateArmingCheckReply()
+   417	{
+   418		if (flightmode_state == FlightModeState::CONFIGURED) {
+   419			if (_arming_check_request_sub.updated()) {
+   420				arming_check_request_s arming_check_request;
+   421				_arming_check_request_sub.copy(&arming_check_request);
+   422				arming_check_reply_s arming_check_reply;
+   423				arming_check_reply.timestamp = hrt_absolute_time();
+   424				arming_check_reply.request_id = arming_check_request.request_id;
+   425				arming_check_reply.registration_id = ext_component_arming_check_id;
+   426				arming_check_reply.health_component_index = arming_check_reply.HEALTH_COMPONENT_INDEX_NONE;
+   427				arming_check_reply.num_events = 0;
+   428				arming_check_reply.can_arm_and_run = can_arm;
+   429				arming_check_reply.mode_req_angular_velocity = true;
+   430				arming_check_reply.mode_req_local_position = true;
+   431				arming_check_reply.mode_req_attitude = true;
+   432				arming_check_reply.mode_req_local_alt = true;
+   433				arming_check_reply.mode_req_home_position = false;
+   434				arming_check_reply.mode_req_mission = false;
+   435				arming_check_reply.mode_req_global_position = false;
+   436				arming_check_reply.mode_req_prevent_arming = false;
+   437				arming_check_reply.mode_req_manual_control = false;
+   438				_arming_check_reply_pub.publish(arming_check_reply);
+   439			}
+   440		}
+   441	}
+   442	
+   443	
+   444	void Raptor::Run()
+   445	{
+   446		if (should_exit()) {
+   447			_vehicle_angular_velocity_sub.unregisterCallback();
+   448	
+   449			if (flightmode_state >= FlightModeState::REGISTERED) {
+   450				unregister_ext_component_s unregister_ext_component{};
+   451				unregister_ext_component.timestamp = hrt_absolute_time();
+   452				strncpy(unregister_ext_component.name, "RAPTOR", sizeof(unregister_ext_component.name) - 1);
+   453				unregister_ext_component.arming_check_id = ext_component_arming_check_id;
+   454				unregister_ext_component.mode_id = ext_component_mode_id;
+   455				unregister_ext_component.mode_executor_id = -1;
+   456				_unregister_ext_component_pub.publish(unregister_ext_component);
+   457			}
+   458	
+   459			ScheduleClear();
+   460			exit_and_cleanup(desc);
+   461			return;
+   462		}
+   463	
+   464		register_ext_component_reply_s register_ext_component_reply;
+   465	
+   466		if (_register_ext_component_reply_sub.update(&register_ext_component_reply)) {
+   467			if (register_ext_component_reply.request_id == Raptor::EXT_COMPONENT_REQUEST_ID && register_ext_component_reply.success) {
+   468				ext_component_arming_check_id = register_ext_component_reply.arming_check_id;
+   469				ext_component_mode_id = register_ext_component_reply.mode_id;
+   470				flightmode_state = FlightModeState::REGISTERED;
+   471				PX4_INFO("Raptor mode registration successful, arming_check_id: %d, mode_id: %d", ext_component_arming_check_id, ext_component_mode_id);
+   472			}
+   473		}
+   474	
+   475		if (flightmode_state == FlightModeState::REGISTERED) {
+   476			vehicle_control_mode_s config_control_setpoints{};
+   477			config_control_setpoints.timestamp = hrt_absolute_time();
+   478			config_control_setpoints.source_id = ext_component_mode_id;
+   479			config_control_setpoints.flag_multicopter_position_control_enabled = false;
+   480			config_control_setpoints.flag_control_manual_enabled = false;
+   481			config_control_setpoints.flag_control_offboard_enabled = false;
+   482			config_control_setpoints.flag_control_position_enabled = false;
+   483			config_control_setpoints.flag_control_climb_rate_enabled = false;
+   484			config_control_setpoints.flag_control_allocation_enabled = false;
+   485			config_control_setpoints.flag_control_termination_enabled = true;
+   486			_config_control_setpoints_pub.publish(config_control_setpoints);
+   487			flightmode_state = FlightModeState::CONFIGURED;
+   488			PX4_INFO("Raptor mode configuration sent");
+   489		}
+   490	
+   491	
+   492		perf_count(_loop_interval_perf);
+   493	
+   494		perf_begin(_loop_perf);
+   495		hrt_abstime current_time = hrt_absolute_time();
+   496	
+   497		raptor_status_s status{};
+   498		status.timestamp = current_time;
+   499		status.timestamp_sample = current_time;
+   500		status.exit_reason = raptor_status_s::EXIT_REASON_NONE;
+   501		status.substep = 0;
+   502		status.active = false;
+   503		status.control_interval = NAN;
+   504		status.trajectory_setpoint_dt_mean = NAN;
+   505		status.trajectory_setpoint_dt_max = NAN;
+   506		status.trajectory_setpoint_dt_max_since_activation = NAN;
+   507	
+   508		if (trajectory_setpoint_dts_full || trajectory_setpoint_dt_index > 0) {
+   509			float trajectory_setpoint_dt_mean = 0;
+   510			float trajectory_setpoint_dt_max = 0;
+   511	
+   512			for (TI i = 0; i < (trajectory_setpoint_dts_full ? NUM_TRAJECTORY_SETPOINT_DTS : trajectory_setpoint_dt_index); i++) {
+   513				TI index = trajectory_setpoint_dts_full ? i : trajectory_setpoint_dt_index - 1 - i;
+   514				trajectory_setpoint_dt_mean += trajectory_setpoint_dts[index];
+   515	
+   516				if (trajectory_setpoint_dts[index] > trajectory_setpoint_dt_max) {
+   517					trajectory_setpoint_dt_max = trajectory_setpoint_dts[index];
+   518				}
+   519			}
+   520	
+   521			if (trajectory_setpoint_dt_max > trajectory_setpoint_dt_max_since_reset) {
+   522				trajectory_setpoint_dt_max_since_reset = trajectory_setpoint_dt_max;
+   523			}
+   524	
+   525			trajectory_setpoint_dt_mean /= NUM_TRAJECTORY_SETPOINT_DTS;
+   526			status.trajectory_setpoint_dt_mean = trajectory_setpoint_dt_mean;
+   527			status.trajectory_setpoint_dt_max = trajectory_setpoint_dt_max;
+   528			status.trajectory_setpoint_dt_max_since_activation = trajectory_setpoint_dt_max_since_reset;
+   529		}
+   530	
+   531		status.subscription_update_vehicle_status = _vehicle_status_sub.update(&_vehicle_status);
+   532	
+   533		if (status.subscription_update_vehicle_status) {
+   534			timestamp_last_vehicle_status = current_time;
+   535			timestamp_last_vehicle_status_set = true;
+   536		}
+   537	
+   538		bool next_active = timestamp_last_vehicle_status_set && _vehicle_status.nav_state == ext_component_mode_id;
+   539	
+   540		if (!previous_active && next_active) {
+   541			this->reset();
+   542			PX4_INFO("Resetting Inference Executor (Recurrent State)");
+   543	
+   544		} else {
+   545			if (previous_active && !next_active) {
+   546				PX4_INFO("inactive");
+   547			}
+   548		}
+   549	
+   550		bool angular_velocity_update = false;
+   551		status.subscription_update_angular_velocity = _vehicle_angular_velocity_sub.update(&_vehicle_angular_velocity);
+   552	
+   553		if (status.subscription_update_angular_velocity) {
+   554			timestamp_last_angular_velocity = current_time;
+   555			timestamp_last_angular_velocity_set = true;
+   556			angular_velocity_update = true;
+   557		}
+   558	
+   559		status.timestamp_last_vehicle_angular_velocity = current_time;
+   560		status.timestamp_sample = _vehicle_angular_velocity.timestamp_sample;
+   561	
+   562		status.subscription_update_local_position = _vehicle_local_position_sub.update(&_vehicle_local_position);
+   563	
+   564		if (status.subscription_update_local_position) {
+   565			timestamp_last_local_position = current_time;
+   566			timestamp_last_local_position_set = true;
+   567		}
+   568	
+   569		status.timestamp_last_vehicle_local_position = current_time;
+   570	
+   571		status.subscription_update_attitude = _vehicle_attitude_sub.update(&_vehicle_attitude);
+   572	
+   573		if (status.subscription_update_attitude) {
+   574			timestamp_last_attitude = current_time;
+   575			timestamp_last_attitude_set = true;
+   576		}
+   577	
+   578		status.timestamp_last_vehicle_attitude = timestamp_last_attitude;
+   579	
+   580		trajectory_setpoint_s temp_trajectory_setpoint;
+   581		bool use_external_reference = !use_internal_reference;
+   582		status.subscription_update_trajectory_setpoint = use_external_reference && _trajectory_setpoint_sub.update(&temp_trajectory_setpoint);
+   583	
+   584		if (status.subscription_update_trajectory_setpoint) {
+   585			if (
+   586				PX4_ISFINITE(temp_trajectory_setpoint.position[0]) &&
+   587				PX4_ISFINITE(temp_trajectory_setpoint.position[1]) &&
+   588				PX4_ISFINITE(temp_trajectory_setpoint.position[2]) &&
+   589				PX4_ISFINITE(temp_trajectory_setpoint.yaw) &&
+   590				PX4_ISFINITE(temp_trajectory_setpoint.velocity[0]) &&
+   591				PX4_ISFINITE(temp_trajectory_setpoint.velocity[1]) &&
+   592				PX4_ISFINITE(temp_trajectory_setpoint.velocity[2]) &&
+   593				PX4_ISFINITE(temp_trajectory_setpoint.yawspeed)
+   594			) {
+   595				if (timestamp_last_trajectory_setpoint_set) {
+   596					trajectory_setpoint_dts[trajectory_setpoint_dt_index] = current_time - timestamp_last_trajectory_setpoint;
+   597					trajectory_setpoint_dt_index++;
+   598	
+   599					if (trajectory_setpoint_dt_index == NUM_TRAJECTORY_SETPOINT_DTS) {
+   600						if (next_active && !trajectory_setpoint_dts_full) {
+   601							PX4_INFO("trajectory_setpoint_dts_full");
+   602						}
+   603	
+   604						trajectory_setpoint_dts_full = true;
+   605						trajectory_setpoint_dt_index = 0;
+   606					}
+   607				}
+   608	
+   609				timestamp_last_trajectory_setpoint_set = true;
+   610				status.timestamp_last_trajectory_setpoint = current_time;
+   611				timestamp_last_trajectory_setpoint = current_time;
+   612				_trajectory_setpoint = temp_trajectory_setpoint;
+   613	
+   614			} else {
+   615				trajectory_setpoint_invalid_count++;
+   616	
+   617				if (next_active && trajectory_setpoint_invalid_count % TRAJECTORY_SETPOINT_INVALID_COUNT_WARNING_INTERVAL == 0) {
+   618					PX4_WARN("trajectory_setpoint invalid, count: %d", (int)trajectory_setpoint_invalid_count);
+   619				}
+   620			}
+   621		}
+   622	
+   623		constexpr bool PUBLISH_NON_COMPLETE_STATUS = true;
+   624	
+   625		if (!angular_velocity_update) {
+   626			status.exit_reason = raptor_status_s::EXIT_REASON_NO_ANGULAR_VELOCITY_UPDATE;
+   627	
+   628			if constexpr(PUBLISH_NON_COMPLETE_STATUS) {
+   629				_raptor_status_pub.publish(status);
+   630			}
+   631	
+   632			updateArmingCheckReply();
+   633			return;
+   634		}
+   635	
+   636		if (!timestamp_last_angular_velocity_set || !timestamp_last_local_position_set || !timestamp_last_attitude_set) {
+   637			status.exit_reason = raptor_status_s::EXIT_REASON_NOT_ALL_OBSERVATIONS_SET;
+   638			status.vehicle_angular_velocity_stale = !timestamp_last_angular_velocity_set;
+   639			status.vehicle_local_position_stale = !timestamp_last_local_position_set;
+   640			status.vehicle_attitude_stale = !timestamp_last_attitude_set;
+   641	
+   642			if constexpr(PUBLISH_NON_COMPLETE_STATUS) {
+   643				_raptor_status_pub.publish(status);
+   644			}
+   645	
+   646			can_arm = false;
+   647			updateArmingCheckReply();
+   648			return;
+   649		}
+   650	
+   651		if ((current_time - timestamp_last_angular_velocity) > OBSERVATION_TIMEOUT_ANGULAR_VELOCITY) {
+   652			status.exit_reason = raptor_status_s::EXIT_REASON_ANGULAR_VELOCITY_STALE;
+   653	
+   654			if constexpr(PUBLISH_NON_COMPLETE_STATUS) {
+   655				_raptor_status_pub.publish(status);
+   656			}
+   657	
+   658			if (!timeout_message_sent) {
+   659				PX4_ERR("angular velocity timeout");
+   660				timeout_message_sent = true;
+   661			}
+   662	
+   663			can_arm = false;
+   664			updateArmingCheckReply();
+   665			return;
+   666		}
+   667	
+   668		if ((current_time - timestamp_last_local_position) > OBSERVATION_TIMEOUT_LOCAL_POSITION) {
+   669			status.exit_reason = raptor_status_s::EXIT_REASON_LOCAL_POSITION_STALE;
+   670	
+   671			if constexpr(PUBLISH_NON_COMPLETE_STATUS) {
+   672				_raptor_status_pub.publish(status);
+   673			}
+   674	
+   675			if (!timeout_message_sent) {
+   676				PX4_ERR("local position timeout");
+   677				timeout_message_sent = true;
+   678			}
+   679	
+   680			can_arm = false;
+   681			updateArmingCheckReply();
+   682			return;
+   683	
+   684		} else {
+   685			position[0] = _vehicle_local_position.x;
+   686			position[1] = _vehicle_local_position.y;
+   687			position[2] = _vehicle_local_position.z;
+   688			linear_velocity[0] = _vehicle_local_position.vx;
+   689			linear_velocity[1] = _vehicle_local_position.vy;
+   690			linear_velocity[2] = _vehicle_local_position.vz;
+   691		}
+   692	
+   693		// position and linear_velocity are guaranteed to be set after this point
+   694		auto previous_internal_reference = internal_reference;
+   695		internal_reference = static_cast<InternalReference>(_param_mc_raptor_intref.get());
+   696		bool internal_reference_changed = previous_internal_reference != internal_reference;
+   697	
+   698		if (internal_reference_changed) {
+   699			PX4_INFO("internal reference changed from %d to %d", (int)previous_internal_reference, (int)internal_reference);
+   700		}
+   701	
+   702		if (use_internal_reference && internal_reference != InternalReference::NONE) {
+   703			if (next_active && (!previous_active || internal_reference_changed || internal_reference_params_changed)) {
+   704				internal_reference_activation_position[0] = position[0];
+   705				internal_reference_activation_position[1] = - position[1];
+   706				internal_reference_activation_position[2] = - position[2];
+   707				internal_reference_activation_orientation[0] = _vehicle_attitude.q[0];
+   708				internal_reference_activation_orientation[1] = _vehicle_attitude.q[1];
+   709				internal_reference_activation_orientation[2] = -_vehicle_attitude.q[2];
+   710				internal_reference_activation_orientation[3] = -_vehicle_attitude.q[3];
+   711				internal_reference_activation_time = current_time;
+   712				PX4_INFO("internal reference activated at: %f %f %f", (double)internal_reference_activation_position[0],
+   713					 (double)internal_reference_activation_position[1], (double)internal_reference_activation_position[2]);
+   714				internal_reference_params_changed = false;
+   715			}
+   716	
+   717			Setpoint setpoint{};
+   718	
+   719			if (internal_reference == InternalReference::LISSAJOUS) {
+   720				setpoint = lissajous(static_cast<T>(current_time - internal_reference_activation_time) / 1000000, lissajous_params);
+   721	
+   722			} else {
+   723				PX4_ERR("internal reference type not supported");
+   724			}
+   725	
+   726			auto &q = internal_reference_activation_orientation;
+   727			matrix::Quatf q_activation_frame(q[0], q[1], q[2], q[3]);
+   728			matrix::Vector3f position_activation_frame = q_activation_frame.rotateVector(matrix::Vector3f(setpoint.position[0], setpoint.position[1],
+   729					setpoint.position[2]));
+   730			matrix::Vector3f linear_velocity_activation_frame = q_activation_frame.rotateVector(matrix::Vector3f(setpoint.linear_velocity[0],
+   731					setpoint.linear_velocity[1], setpoint.linear_velocity[2]));
+   732	
+   733			_trajectory_setpoint.position[0] = +(internal_reference_activation_position[0] + position_activation_frame(0));
+   734			_trajectory_setpoint.position[1] = -(internal_reference_activation_position[1] + position_activation_frame(1));
+   735			_trajectory_setpoint.position[2] = -(internal_reference_activation_position[2] + position_activation_frame(2));
+   736			_trajectory_setpoint.yaw = - atan2f(2.0f * (q[1] * q[2] + q[0] * q[3]), 1.0f - 2.0f * (q[2] * q[2] + q[3] * q[3])) - setpoint.yaw;
+   737			_trajectory_setpoint.velocity[0] = +linear_velocity_activation_frame(0);
+   738			_trajectory_setpoint.velocity[1] = -linear_velocity_activation_frame(1);
+   739			_trajectory_setpoint.velocity[2] = -linear_velocity_activation_frame(2);
+   740			_trajectory_setpoint.yawspeed = -setpoint.yaw_rate;
+   741			timestamp_last_trajectory_setpoint_set = true;
+   742			status.timestamp_last_trajectory_setpoint = current_time;
+   743			timestamp_last_trajectory_setpoint = current_time;
+   744	
+   745			status.internal_reference_position[0] = _trajectory_setpoint.position[0];
+   746			status.internal_reference_position[1] = _trajectory_setpoint.position[1];
+   747			status.internal_reference_position[2] = _trajectory_setpoint.position[2];
+   748			status.internal_reference_linear_velocity[0] = _trajectory_setpoint.velocity[0];
+   749			status.internal_reference_linear_velocity[1] = _trajectory_setpoint.velocity[1];
+   750			status.internal_reference_linear_velocity[2] = _trajectory_setpoint.velocity[2];
+   751		}
+   752	
+   753		if ((current_time - timestamp_last_attitude) > OBSERVATION_TIMEOUT_ATTITUDE) {
+   754			status.exit_reason = raptor_status_s::EXIT_REASON_ATTITUDE_STALE;
+   755	
+   756			if constexpr(PUBLISH_NON_COMPLETE_STATUS) {
+   757				_raptor_status_pub.publish(status);
+   758			}
+   759	
+   760			if (!timeout_message_sent) {
+   761				PX4_ERR("attitude timeout");
+   762				timeout_message_sent = true;
+   763			}
+   764	
+   765			can_arm = false;
+   766			updateArmingCheckReply();
+   767			return;
+   768		}
+   769	
+   770		timeout_message_sent = false;
+   771	
+   772		// is ready to control at this point
+   773		can_arm = true;
+   774		updateArmingCheckReply();
+   775	
+   776		if (!timestamp_last_trajectory_setpoint_set || use_internal_reference
+   777		    || (current_time - timestamp_last_trajectory_setpoint) > TRAJECTORY_SETPOINT_TIMEOUT) {
+   778			status.trajectory_setpoint_stale = true;
+   779	
+   780			if (!previous_trajectory_setpoint_stale || (!previous_active && next_active)) {
+   781				_trajectory_setpoint.position[0] = position[0];
+   782				_trajectory_setpoint.position[1] = position[1];
+   783				_trajectory_setpoint.position[2] = position[2];
+   784				auto &q = _vehicle_attitude.q;
+   785				_trajectory_setpoint.yaw = atan2f(2.0f * (q[1] * q[2] + q[0] * q[3]), 1.0f - 2.0f * (q[2] * q[2] + q[3] * q[3]));
+   786				_trajectory_setpoint.velocity[0] = 0;
+   787				_trajectory_setpoint.velocity[1] = 0;
+   788				_trajectory_setpoint.velocity[2] = 0;
+   789				_trajectory_setpoint.yawspeed = 0;
+   790	
+   791				if (!previous_trajectory_setpoint_stale) {
+   792					PX4_WARN("trajectory_setpoint turned stale at: %f %f %f, yaw: %f %llu / %llu us", (double)position[0], (double)position[1],
+   793						 (double)position[2],
+   794						 (double)_trajectory_setpoint.yaw, (unsigned long long)(current_time - timestamp_last_trajectory_setpoint),
+   795						 (unsigned long long)(TRAJECTORY_SETPOINT_TIMEOUT));
+   796	
+   797				} else {
+   798					PX4_WARN("trajectory_setpoint reset due to activation at: %f %f %f, yaw: %f", (double)position[0], (double)position[1], (double)position[2],
+   799						 (double)_trajectory_setpoint.yaw);
+   800				}
+   801			}
+   802	
+   803			previous_trajectory_setpoint_stale = true;
+   804	
+   805		} else {
+   806			if (previous_trajectory_setpoint_stale) {
+   807				PX4_WARN("trajectory_setpoint turned non-stale at: %f %f %f", (double)position[0], (double)position[1], (double)position[2]);
+   808				previous_trajectory_setpoint_stale = false;
+   809			}
+   810	
+   811			status.trajectory_setpoint_stale = false;
+   812		}
+   813	
+   814	
+   815	
+   816	
+   817	
+   818		rl_tools::inference::applications::l2f::Observation<EXECUTOR_SPEC> observation;
+   819		rl_tools::inference::applications::l2f::Action<EXECUTOR_SPEC> action;
+   820		observe(observation);
+   821		hrt_abstime nanoseconds = current_time * 1000;
+   822		auto executor_status = rl_tools::control(device, executor, nanoseconds, policy, observation, action, rng);
+   823	
+   824		if (!executor_status.OK) {
+   825			if (executor_status.TIMESTAMP_INVALID) {
+   826				PX4_ERR("RLtools executor error: Timestamp invalid");
+   827			}
+   828	
+   829			if (executor_status.LAST_CONTROL_TIMESTAMP_GREATER_THAN_LAST_OBSERVATION_TIMESTAMP) {
+   830				PX4_ERR("RLtools executor error: Last control timestamp %llu greater than last observation timestamp %llu",
+   831					(unsigned long long)executor.executor.last_control_timestamp, (unsigned long long)executor.executor.last_observation_timestamp);
+   832			}
+   833		}
+   834	
+   835		if (executor_status.source != decltype(executor_status.source)::CONTROL) {
+   836			// status.exit_reason = raptor_status_s::EXIT_REASON_EXECUTOR_STATUS_SOURCE_NOT_CONTROL;
+   837			// if constexpr(PUBLISH_NON_COMPLETE_STATUS){
+   838			// 	_raptor_status_pub.publish(status);
+   839			// }
+   840			// Exit early if it is not time to control
+   841			return;
+   842		}
+   843	
+   844	
+   845		status.active = next_active;
+   846	
+   847	
+   848		// no return after this point!
+   849	
+   850		raptor_input_s input_msg;
+   851		input_msg.active = status.active;
+   852		static_assert(raptor_input_s::ACTION_DIM == EXECUTOR_CONFIG::OUTPUT_DIM);
+   853		input_msg.timestamp = current_time;
+   854		input_msg.timestamp_sample = _vehicle_angular_velocity.timestamp_sample;
+   855	
+   856		for (TI dim_i = 0; dim_i < 3; dim_i++) {
+   857			input_msg.position[dim_i] = observation.position[dim_i];
+   858			input_msg.orientation[dim_i] = observation.orientation[dim_i];
+   859			input_msg.linear_velocity[dim_i] = observation.linear_velocity[dim_i];
+   860			input_msg.angular_velocity[dim_i] = observation.angular_velocity[dim_i];
+   861		}
+   862	
+   863		input_msg.orientation[3] = observation.orientation[3];
+   864	
+   865		for (TI dim_i = 0; dim_i < EXECUTOR_CONFIG::OUTPUT_DIM; dim_i++) {
+   866			input_msg.previous_action[dim_i] = observation.previous_action[dim_i];
+   867		}
+   868	
+   869		_raptor_input_pub.publish(input_msg);
+   870		_raptor_status_pub.publish(status);
+   871	
+   872		actuator_motors_s actuator_motors{};
+   873		actuator_motors.timestamp = hrt_absolute_time();
+   874		actuator_motors.timestamp_sample = _vehicle_angular_velocity.timestamp_sample;
+   875	
+   876		for (TI action_i = 0; action_i < actuator_motors_s::NUM_CONTROLS; action_i++) {
+   877			if (action_i < EXECUTOR_CONFIG::OUTPUT_DIM) {
+   878				T value = action.action[action_i];
+   879				this->previous_action[action_i] = value;
+   880				value = (value + 1) / 2;
+   881				constexpr T training_min = 0;
+   882				constexpr T training_max = 1.0;
+   883				T scaled_value = (training_max - training_min) * value + training_min;
+   884				actuator_motors.control[action_i] = scaled_value;
+   885	
+   886			} else {
+   887				actuator_motors.control[action_i] = NAN;
+   888			}
+   889		}
+   890	
+   891		if constexpr(Raptor::REMAP_FROM_CRAZYFLIE) {
+   892			actuator_motors_s temp = actuator_motors;
+   893			temp.control[0] = actuator_motors.control[0];
+   894			temp.control[1] = actuator_motors.control[2];
+   895			temp.control[2] = actuator_motors.control[3];
+   896			temp.control[3] = actuator_motors.control[1];
+   897			actuator_motors = temp;
+   898		}
+   899	
+   900		if (status.active) {
+
+# RLtools L2F input flattening evidence
+     1	#include "../../../version.h"
+     2	#if (defined(RL_TOOLS_DISABLE_INCLUDE_GUARDS) || !defined(RL_TOOLS_INFERENCE_APPLICATIONS_L2F_L2F_H)) && (RL_TOOLS_USE_THIS_VERSION == 1)
+     3	#pragma once
+     4	#define RL_TOOLS_INFERENCE_APPLICATIONS_L2F_L2F_H
+     5	
+     6	#include "../../executor/executor.h"
+     7	RL_TOOLS_NAMESPACE_WRAPPER_START
+     8	namespace rl_tools::inference::applications{
+     9	    namespace l2f{
+    10	        template <typename T_TYPE_POLICY, typename T_TI, typename T_TIMESTAMP, T_TI T_ACTION_HISTORY_LENGTH, T_TI T_OUTPUT_DIM, typename T_POLICY, T_TIMESTAMP T_CONTROL_INTERVAL_INTERMEDIATE_NS, T_TIMESTAMP T_CONTROL_INTERVAL_NATIVE_NS, bool T_FORCE_SYNC_INTERMEDIATE=false, T_TI T_FORCE_SYNC_NATIVE=0, bool T_FORCE_SYNC_NATIVE_RUNTIME=false, typename T_WARNING_LEVELS=executor::WarningLevelsDefault<T_TYPE_POLICY>, bool T_DYNAMIC_ALLOCATION=true>
+    11	        struct Specification{
+    12	            using TYPE_POLICY = T_TYPE_POLICY;
+    13	            using T = typename TYPE_POLICY::DEFAULT;
+    14	            using TI = T_TI;
+    15	            using TIMESTAMP = T_TIMESTAMP;
+    16	            using POLICY = T_POLICY;
+    17	            static constexpr T_TI ACTION_HISTORY_LENGTH = T_ACTION_HISTORY_LENGTH;
+    18	            static constexpr T_TI OUTPUT_DIM = T_OUTPUT_DIM;
+    19	            static constexpr bool DYNAMIC_ALLOCATION = T_DYNAMIC_ALLOCATION;
+    20	            using EXECUTOR_SPEC = executor::Specification<TYPE_POLICY, TI, TIMESTAMP, POLICY, T_CONTROL_INTERVAL_INTERMEDIATE_NS, T_CONTROL_INTERVAL_NATIVE_NS, T_FORCE_SYNC_INTERMEDIATE, T_FORCE_SYNC_NATIVE, T_FORCE_SYNC_NATIVE_RUNTIME, T_WARNING_LEVELS, T_DYNAMIC_ALLOCATION>;
+    21	        };
+    22	        template <typename SPEC>
+    23	        struct Observation{
+    24	            using T = typename SPEC::T;
+    25	            T position[3];
+    26	            T orientation[4]; // Quaternion: w, x, y, z
+    27	            T linear_velocity[3];
+    28	            T angular_velocity[3];
+    29	            T previous_action[4];
+    30	        };
+    31	        template <typename SPEC>
+    32	        struct Action{
+    33	            float action[SPEC::OUTPUT_DIM];
+    34	        };
+    35	    }
+    36	    template <typename SPEC>
+    37	    struct L2F{
+    38	        using TYPE_POLICY = typename SPEC::TYPE_POLICY;
+    39	        using T = typename TYPE_POLICY::DEFAULT;
+    40	        using TI = typename SPEC::TI;
+    41	        using TIMESTAMP = typename SPEC::TIMESTAMP;
+    42	        T action_history[SPEC::ACTION_HISTORY_LENGTH][SPEC::OUTPUT_DIM];
+    43	        static constexpr TI INPUT_DIM = 18 + SPEC::OUTPUT_DIM * SPEC::ACTION_HISTORY_LENGTH;
+    44	        Tensor<tensor::Specification<T, TI, tensor::Shape<TI, 1, INPUT_DIM>, SPEC::DYNAMIC_ALLOCATION>> input;
+    45	        Tensor<tensor::Specification<T, TI, tensor::Shape<TI, 1, SPEC::OUTPUT_DIM>, SPEC::DYNAMIC_ALLOCATION>> output;
+    46	        Executor<typename SPEC::EXECUTOR_SPEC> executor;
+    47	        TI steps_since_original_control_step;
+    48	    };
+    49	}
+    50	RL_TOOLS_NAMESPACE_WRAPPER_END
+    51	#endif
+    25	        using TI = typename SPEC::TI;
+    26	        constexpr T HOVERING_THROTTLE = 0.66;
+    27	        for(TI step_i = 0; step_i < SPEC::ACTION_HISTORY_LENGTH; step_i++){
+    28	            for(TI action_i = 0; action_i < SPEC::OUTPUT_DIM; action_i++){
+    29	                executor.action_history[step_i][action_i] = HOVERING_THROTTLE * 2 - 1;
+    30	            }
+    31	        }
+    32	        executor.steps_since_original_control_step = 0;
+    33	        reset(device, executor.executor, policy, rng);
+    34	    }
+    35	    namespace inference::applications::l2f{
+    36	        template <typename DEVICE, typename SPEC, typename OBS_SPEC>
+    37	        RL_TOOLS_FUNCTION_PLACEMENT void observe(DEVICE& device, L2F<SPEC>& executor, Observation<SPEC>& observation, Tensor<OBS_SPEC>& observation_flat){
+    38	            using TI = typename DEVICE::index_t;
+    39	            static_assert(OBS_SPEC::SHAPE::template GET<0> == 1);
+    40	            static_assert(OBS_SPEC::SHAPE::template GET<1> == 18 + SPEC::OUTPUT_DIM * SPEC::ACTION_HISTORY_LENGTH); // position + orientation + linear_velocity + angular_velocity + action_history
+    41	            TI base = 0;
+    42	            set(device, observation_flat, observation.position[0], 0,  base++);
+    43	            set(device, observation_flat, observation.position[1], 0,  base++);
+    44	            set(device, observation_flat, observation.position[2], 0,  base++);
+    45	            float qw = observation.orientation[0];
+    46	            float qx = observation.orientation[1];
+    47	            float qy = observation.orientation[2];
+    48	            float qz = observation.orientation[3];
+    49	            set(device, observation_flat,   (1 - 2*qy*qy - 2*qz*qz), 0, base++);
+    50	            set(device, observation_flat,   (    2*qx*qy - 2*qw*qz), 0, base++);
+    51	            set(device, observation_flat,   (    2*qx*qz + 2*qw*qy), 0, base++);
+    52	            set(device, observation_flat,   (    2*qx*qy + 2*qw*qz), 0, base++);
+    53	            set(device, observation_flat,   (1 - 2*qx*qx - 2*qz*qz), 0, base++);
+    54	            set(device, observation_flat,   (    2*qy*qz - 2*qw*qx), 0, base++);
+    55	            set(device, observation_flat,   (    2*qx*qz - 2*qw*qy), 0, base++);
+    56	            set(device, observation_flat,   (    2*qy*qz + 2*qw*qx), 0, base++);
+    57	            set(device, observation_flat,   (1 - 2*qx*qx - 2*qy*qy), 0, base++);
+    58	            set(device, observation_flat, observation.linear_velocity[0], 0, base++);
+    59	            set(device, observation_flat, observation.linear_velocity[1], 0, base++);
+    60	            set(device, observation_flat, observation.linear_velocity[2], 0, base++);
+    61	            set(device, observation_flat, observation.angular_velocity[0], 0, base++);
+    62	            set(device, observation_flat, observation.angular_velocity[1], 0, base++);
+    63	            set(device, observation_flat, observation.angular_velocity[2], 0, base++);
+    64	            for(TI step_i = 0; step_i < SPEC::ACTION_HISTORY_LENGTH; step_i++){
+    65	                for(TI action_i = 0; action_i < SPEC::OUTPUT_DIM; action_i++){
+    66	                    set(device, observation_flat, executor.action_history[step_i][action_i], 0, base++);
+    67	                }
+    68	            }
+    69	        }
+    70	    }
+    71	    template <typename DEVICE, typename SPEC, typename POLICY, typename RNG>
+    72	    RL_TOOLS_FUNCTION_PLACEMENT auto control(DEVICE& device, inference::applications::L2F<SPEC>& executor, typename SPEC::TIMESTAMP nanoseconds, POLICY& policy, inference::applications::l2f::Observation<SPEC>& observation, inference::applications::l2f::Action<SPEC>& action, RNG& rng){
+    73	        using TI = typename SPEC::TI;
+    74	        if(executor.steps_since_original_control_step == 0){
+    75	            for(TI action_i = 0; action_i < SPEC::OUTPUT_DIM; action_i++){
+    76	                executor.action_history[0][action_i] = observation.previous_action[action_i];
+    77	            }
+    78	        }
+    79	        else{
+    80	            for(TI action_i = 0; action_i < SPEC::OUTPUT_DIM; action_i++){
+    81	                executor.action_history[0][action_i] = (executor.action_history[0][action_i] * executor.steps_since_original_control_step + observation.previous_action[action_i]) / (executor.steps_since_original_control_step + 1);
+    82	            }
+    83	        }
+    84	        inference::applications::l2f::observe(device, executor, observation, executor.input);
+    85	        auto status = control(device, executor.executor, nanoseconds, policy, executor.input, executor.output, rng);
+    86	        for (TI output_i=0; output_i < SPEC::OUTPUT_DIM; output_i++){
+    87	            action.action[output_i] = get(device, executor.output, 0, output_i);
+    88	        }
+    89	
+    90	        executor.steps_since_original_control_step++; // gets overwritten with 0 in the case of an original control step
+    91	        if(status.source == decltype(status.source)::CONTROL){
+    92	            if(status.step_type == decltype(status.step_type)::NATIVE){
+    93	                // step action history
+    94	                static_assert(SPEC::ACTION_HISTORY_LENGTH >= 1);
+    95	                for(TI step_i = SPEC::ACTION_HISTORY_LENGTH-1; step_i > 0; step_i--){
+    96	                    for(TI action_i = 0; action_i < SPEC::OUTPUT_DIM; action_i++){
+    97	                        executor.action_history[step_i][action_i] = executor.action_history[step_i-1][action_i];
+    98	                    }
+    99	                }
+   100	                executor.steps_since_original_control_step = 0;
+   101	            }
+   102	        }
+   103	        return status;
+   104	    }
+   105	}
+   106	RL_TOOLS_NAMESPACE_WRAPPER_END
+   107	#endif
+
+# policy tar metadata
+-rw-r--r-- user/group       59 1969-12-31 16:00 actor/meta
+-rw-r--r-- user/group       60 1969-12-31 16:00 actor/layers/0/weights/parameters/meta
+-rw-r--r-- user/group     1408 1969-12-31 16:00 actor/layers/0/weights/parameters/data
+-rw-r--r-- user/group       50 1969-12-31 16:00 actor/layers/0/biases/parameters/meta
+-rw-r--r-- user/group       64 1969-12-31 16:00 actor/layers/0/biases/parameters/data
+-rw-r--r-- user/group       38 1969-12-31 16:00 actor/layers/0/meta
+-rw-r--r-- user/group       60 1969-12-31 16:00 actor/layers/1/weights_input/parameters/meta
+-rw-r--r-- user/group     3072 1969-12-31 16:00 actor/layers/1/weights_input/parameters/data
+-rw-r--r-- user/group       50 1969-12-31 16:00 actor/layers/1/biases_input/parameters/meta
+-rw-r--r-- user/group      192 1969-12-31 16:00 actor/layers/1/biases_input/parameters/data
+-rw-r--r-- user/group       60 1969-12-31 16:00 actor/layers/1/weights_hidden/parameters/meta
+-rw-r--r-- user/group     3072 1969-12-31 16:00 actor/layers/1/weights_hidden/parameters/data
+-rw-r--r-- user/group       50 1969-12-31 16:00 actor/layers/1/biases_hidden/parameters/meta
+-rw-r--r-- user/group      192 1969-12-31 16:00 actor/layers/1/biases_hidden/parameters/data
+-rw-r--r-- user/group       50 1969-12-31 16:00 actor/layers/1/initial_hidden_state/parameters/meta
+-rw-r--r-- user/group       64 1969-12-31 16:00 actor/layers/1/initial_hidden_state/parameters/data
+-rw-r--r-- user/group       10 1969-12-31 16:00 actor/layers/1/meta
+-rw-r--r-- user/group       59 1969-12-31 16:00 actor/layers/2/weights/parameters/meta
+-rw-r--r-- user/group      256 1969-12-31 16:00 actor/layers/2/weights/parameters/data
+-rw-r--r-- user/group       49 1969-12-31 16:00 actor/layers/2/biases/parameters/meta
+-rw-r--r-- user/group       16 1969-12-31 16:00 actor/layers/2/biases/parameters/data
+-rw-r--r-- user/group       42 1969-12-31 16:00 actor/layers/2/meta
+-rw-r--r-- user/group       70 1969-12-31 16:00 example/input/meta
+-rw-r--r-- user/group    88000 1969-12-31 16:00 example/input/data
+-rw-r--r-- user/group       69 1969-12-31 16:00 example/output/meta
+-rw-r--r-- user/group    16000 1969-12-31 16:00 example/output/data
+
+# policy tar text metadata
+
+--- actor/meta ---
+checkpoint_name: logs/2025-04-19_16-16-17
+type: sequential
+
+--- example/input/meta ---
+type: tensor
+dtype: float32
+num_dims: 3
+dim_0: 500
+dim_1: 2
+dim_2: 22
+
+--- example/output/meta ---
+type: tensor
+dtype: float32
+num_dims: 3
+dim_0: 500
+dim_1: 2
+dim_2: 4
+
+--- actor/layers/0/meta ---
+activation_function: RELU
+type: dense
+
+--- actor/layers/1/meta ---
+type: gru
+
+--- actor/layers/2/meta ---
+activation_function: IDENTITY
+type: dense
+
+--- actor/layers/0/weights/parameters/meta ---
+type: tensor
+dtype: float32
+num_dims: 2
+dim_0: 16
+dim_1: 22
+
+--- actor/layers/1/weights_input/parameters/meta ---
+type: tensor
+dtype: float32
+num_dims: 2
+dim_0: 48
+dim_1: 16
+
+--- actor/layers/1/weights_hidden/parameters/meta ---
+type: tensor
+dtype: float32
+num_dims: 2
+dim_0: 48
+dim_1: 16
+
+--- actor/layers/2/weights/parameters/meta ---
+type: tensor
+dtype: float32
+num_dims: 2
+dim_0: 4
+dim_1: 16
+
+# policy hashes
+5327c83dc57f094ca1977a2533ebce318645be010e16b9354c96c337cd5c278b  external/PX4-Autopilot/src/modules/mc_raptor/blob/policy.tar
+5327c83dc57f094ca1977a2533ebce318645be010e16b9354c96c337cd5c278b  external/PX4-Autopilot/build/px4_sitl_raptor_sih/raptor/policy.tar
+5327c83dc57f094ca1977a2533ebce318645be010e16b9354c96c337cd5c278b  external/PX4-Autopilot/build/px4_sitl_raptor_sih/rootfs/raptor/policy.tar

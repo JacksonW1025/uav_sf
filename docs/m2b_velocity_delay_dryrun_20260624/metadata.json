@@ -1,0 +1,20 @@
+{
+  "created_utc": "2026-06-24T10:40:06.959530+00:00",
+  "delays_ms": [
+    0,
+    10,
+    20,
+    30
+  ],
+  "mitigation_note": "PX4 mc_raptor at 3042f906 has no vehicle_acceleration/sensor_accel subscription and no S2 accelerometer-IIR parameter or code path; this run measures the default no-IIR module.",
+  "mitigation_switch_found": false,
+  "px4_commit": "3042f906abaab7ab59ae838ad5a530a9ef3df9a6",
+  "run_id": "m2b_velocity_delay_dryrun_20260624",
+  "scope_note": "M2b-1 targeted velocity-delay shim verification; not M2b full search and not M3.",
+  "shim_patch": "patches/px4/m2b_state_shim.patch",
+  "sim_speed_factor": 4.0,
+  "sine_amplitude_m": 0.22,
+  "sine_axis": "z",
+  "sine_frequency_hz": 2.5,
+  "thrust_to_weight_ratio": 2.3
+}

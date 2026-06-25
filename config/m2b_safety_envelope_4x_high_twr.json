@@ -1,0 +1,27 @@
+{
+  "name": "m2b_x500_v2_sih_4x_high_twr_envelope",
+  "version": 3,
+  "safe_thresholds": {
+    "tracking_error_max_m": 4.0,
+    "tracking_error_rms_m": 2.0,
+    "final_error_m": 1.5,
+    "roll_pitch_max_deg": 75.0,
+    "angular_rate_max_rad_s": 8.0,
+    "motor_saturation_ratio_max": 0.99,
+    "min_altitude_agl_m": 0.25
+  },
+  "noise_floor": {
+    "tracking_error_max_m": 0.5427140020103318,
+    "tracking_error_rms_m": 0.36314829498422574,
+    "final_error_m": 0.46235195647076927,
+    "roll_pitch_max_deg": 4.421915645610252,
+    "roll_pitch_std_deg": 1.2023678527504846,
+    "angular_rate_max_rad_s": 0.10308727359543512,
+    "angular_rate_std_rad_s": 0.02,
+    "motor_saturation_ratio": 0.01
+  },
+  "notes": {
+    "source": "M2b-1 4x high-TWR same-theta repeats in docs/m2b_noise_floor_4x_high_twr_20260624/noise_floor_summary.json, combined conservatively with M2.6 v2 1x floors by taking per-metric maxima.",
+    "usage": "Use for 4x M2b-1 state-shim triage. Confirmed candidates still require 1x reruns with the base M2 safety envelope/noise floor."
+  }
+}

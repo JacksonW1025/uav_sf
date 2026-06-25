@@ -1,0 +1,159 @@
+{
+  "airframe": {
+    "model": "sihsim_x500_v2",
+    "sim": "sih",
+    "sys_autostart": 10046
+  },
+  "boot_px4_params": {
+    "M2B_A_DLY": 0,
+    "M2B_A_P": 0.0,
+    "M2B_A_PROF": 0,
+    "M2B_A_R": 0.0,
+    "M2B_A_Y": 0.0,
+    "M2B_EN": 1,
+    "M2B_END": 52.0,
+    "M2B_G_DLY": 0,
+    "M2B_G_PROF": 0,
+    "M2B_G_X": 0.0,
+    "M2B_G_Y": 0.0,
+    "M2B_G_Z": 0.0,
+    "M2B_SEED": 20261205,
+    "M2B_START": 28.0,
+    "M2B_V_DLY": 30,
+    "M2B_V_PROF": 1,
+    "M2B_V_X": 0.0,
+    "M2B_V_Y": 0.0,
+    "M2B_V_Z": 0.0,
+    "MPC_THR_HOVER": 0.57372347,
+    "SIH_MASS": 2.0,
+    "SIH_Q_MAX": 0.13674365,
+    "SIH_T_MAX": 8.54649548
+  },
+  "description": "M2b-1 adversarial shared-state shim theta.",
+  "divergence_thresholds": {
+    "position_divergence_m": 1.0
+  },
+  "environment": {
+    "mass_kg": 2.0,
+    "mpc_thr_hover": 0.5737,
+    "sih_wind_e": 0.0,
+    "sih_wind_n": 0.0,
+    "t_max_n": 8.5465,
+    "thrust_to_weight_ratio": 1.743
+  },
+  "faults": [],
+  "m2b_1": {
+    "channel": "velocity",
+    "delay_ms": 30,
+    "end_s": 52.0,
+    "generator": "scripts/m2b_state_profiles.py",
+    "low_noise_regime": {
+      "hover_window_start_s": 28.0,
+      "mission_end_s": 52.0,
+      "nominal_twr": 1.743,
+      "sim_speed_factor": 1.0,
+      "sine_amplitude_m": 0.0
+    },
+    "mitigation": "d3_ratio_low_noise_diagnostic",
+    "profile": "delay",
+    "ratio_degradation_diagnostic": true,
+    "safety_config": "config/m2b_safety_envelope_1x_high_twr.json",
+    "scenario": "velocity_delay_030ms",
+    "shim_patch": "patches/px4/m2b_state_shim.patch",
+    "start_s": 28.0,
+    "thrust_to_weight_ratio": 1.743,
+    "values": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "px4_params": {
+    "CA_FAILURE_MODE": 1,
+    "COM_DISARM_LAND": -1,
+    "COM_OF_LOSS_T": 5.0,
+    "COM_RCL_EXCEPT": 8,
+    "COM_RC_IN_MODE": 4,
+    "IMU_GYRO_RATEMAX": 400,
+    "M2B_A_DLY": 0,
+    "M2B_A_P": 0.0,
+    "M2B_A_PROF": 0,
+    "M2B_A_R": 0.0,
+    "M2B_A_Y": 0.0,
+    "M2B_EN": 1,
+    "M2B_END": 52.0,
+    "M2B_G_DLY": 0,
+    "M2B_G_PROF": 0,
+    "M2B_G_X": 0.0,
+    "M2B_G_Y": 0.0,
+    "M2B_G_Z": 0.0,
+    "M2B_SEED": 20261205,
+    "M2B_START": 28.0,
+    "M2B_V_DLY": 30,
+    "M2B_V_PROF": 1,
+    "M2B_V_X": 0.0,
+    "M2B_V_Y": 0.0,
+    "M2B_V_Z": 0.0,
+    "MC_RAPTOR_ENABLE": 1,
+    "MC_RAPTOR_INTREF": 0,
+    "MC_RAPTOR_OFFB": 0,
+    "MPC_THR_HOVER": 0.57372347,
+    "NAV_DLL_ACT": 0,
+    "SIH_MASS": 2.0,
+    "SIH_Q_MAX": 0.13674365,
+    "SIH_T_MAX": 8.54649548,
+    "SYS_FAILURE_EN": 1
+  },
+  "seed": 20261205,
+  "sensor_perturbations": [
+    {
+      "delay_ms": 30,
+      "end_s": 52.0,
+      "mechanism": "PX4 publish-point patch before shared uORB topic publication",
+      "physical_credibility": "Topic-level transport delay/bias/noise is applied to both controllers; NaN/Inf profiles are marked as input-robustness probes.",
+      "profile": "delay",
+      "shared_quantity": "velocity",
+      "simulator": "sih",
+      "start_s": 28.0,
+      "type": "adversarial_shared_state_shim",
+      "values": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  ],
+  "setpoint": {
+    "hover_ned": [
+      0.0,
+      0.0,
+      -2.5
+    ],
+    "max_wall_timer_hz": 100.0,
+    "rate_hz": 100.0,
+    "sine": {
+      "amplitude_m": 0.0,
+      "axis": "z",
+      "frequency_hz": 0.5
+    },
+    "step": {
+      "delta_ned": [
+        0.2,
+        0.0,
+        0.0
+      ]
+    },
+    "type": "sine",
+    "yaw_rad": 0.0
+  },
+  "tag": "m2b_1_diag_d3_ratio_20260624_velocity_delay_030ms_s20261205",
+  "timing": {
+    "controller_switch_s": 18.0,
+    "mission_end_s": 52.0,
+    "mode_command_repeat_s": 0.5,
+    "mode_command_timeout_s": 6.0,
+    "px4_shutdown_margin_s": 6.0,
+    "px4_shutdown_wall_slack_s": 22.0,
+    "trajectory_start_s": 28.0
+  }
+}

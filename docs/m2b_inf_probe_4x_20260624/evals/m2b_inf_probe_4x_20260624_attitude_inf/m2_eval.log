@@ -1,0 +1,25 @@
+$ /usr/bin/python3 /workspace/scripts/m1_diff_runner.py --theta /workspace/docs/m2b_inf_probe_4x_20260624/theta/m2b_inf_probe_4x_20260624_attitude_inf.json --skip-build --run-timeout 180 --docs-dir /workspace/docs/m2b_inf_probe_4x_20260624/evals/m2b_inf_probe_4x_20260624_attitude_inf --safety-config /workspace/config/m2b_safety_envelope_4x_high_twr.json
+RUN_CONTROLLER=classical
+Traceback (most recent call last):
+  File "/workspace/scripts/m1_diff_runner.py", line 361, in run_one
+    task_rc = task.wait(timeout=max(90, run_timeout_s - 20))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 1264, in wait
+    return self._wait(timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 2045, in _wait
+    raise TimeoutExpired(self.args, timeout)
+subprocess.TimeoutExpired: Command '['/usr/bin/python3', '/workspace/scripts/m1_offboard_task.py', '--theta', '/workspace/docs/m2b_inf_probe_4x_20260624/theta/m2b_inf_probe_4x_20260624_attitude_inf.json', '--controller', 'classical', '--result-json', '/workspace/docs/m2b_inf_probe_4x_20260624/evals/m2b_inf_probe_4x_20260624_attitude_inf/m1_m2b_inf_probe_4x_20260624_attitude_inf_classical_task.json']' timed out after 160 seconds
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspace/scripts/m1_diff_runner.py", line 506, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/workspace/scripts/m1_diff_runner.py", line 479, in main
+    outputs[controller] = run_one(repo, theta_path, theta, controller, docs, env, args.run_timeout, args.safety_config)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scripts/m1_diff_runner.py", line 364, in run_one
+    raise RuntimeError(f"task node timed out for {controller}") from exc
+RuntimeError: task node timed out for classical
