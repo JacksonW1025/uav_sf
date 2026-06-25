@@ -1,0 +1,32 @@
+{
+  "control_window": "switch to first infrastructure terminal; otherwise switch to mission_end",
+  "infrastructure_terminal_rule": {
+    "fields": {
+      "gcs_connection_lost": "GCS/datalink loss",
+      "global_position_invalid": "estimator global-position invalid",
+      "global_position_invalid_relaxed": "estimator global-position relaxed invalid",
+      "gnss_lost": "GNSS loss",
+      "high_latency_data_link_lost": "high-latency datalink loss",
+      "local_altitude_invalid": "estimator local-altitude invalid",
+      "local_position_invalid": "estimator local-position invalid",
+      "local_position_invalid_relaxed": "estimator local-position relaxed invalid",
+      "local_velocity_invalid": "estimator local-velocity invalid",
+      "manual_control_signal_lost": "RC/manual-control link loss",
+      "offboard_control_signal_lost": "offboard proof-of-life/signal loss"
+    },
+    "ground_contact_after_infrastructure_failsafe_is_infrastructure_aftermath": true,
+    "near_edge_window_s": 1.0
+  },
+  "s0_recovery_thresholds_last_window": {
+    "angular_rate_norm_rad_s": 1.0,
+    "hover_error_m": 1.5,
+    "min_agl_m": 1.0,
+    "roll_pitch_abs_deg": 40.0,
+    "window_s": 2.0
+  },
+  "s3_thresholds": {
+    "angular_rate_norm_rad_s": 8.0,
+    "roll_pitch_abs_deg": 90.0
+  },
+  "symmetric_application": true
+}
