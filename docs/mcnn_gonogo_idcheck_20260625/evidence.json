@@ -1,0 +1,97 @@
+{
+  "decision": "confirmed_mc_nn_control",
+  "gate": "CONTROLLER-ID",
+  "source_ulog": "docs/mcnn_gonogo_gate1_20260625/mcnn_gate1_hover.ulg",
+  "console_log": "docs/mcnn_gonogo_gate1_20260625/mcnn_gate1_px4_console.log",
+  "mode23": {
+    "metrics_controller_active_us": 29760000,
+    "metrics_mission_end_us": 59730221,
+    "first_vehicle_status_nav_state_23_sample_us": 29760000,
+    "first_vehicle_status_nav_state_timestamp_us": 29760000,
+    "vehicle_status_nav_state_23_samples": 123
+  },
+  "topics": {
+    "neural_control_count": 14207,
+    "actuator_motors_count": 21476,
+    "vehicle_status_count": 190,
+    "raptor_input_present": false,
+    "raptor_input_count": 0
+  },
+  "neural_control": {
+    "first_us": 30412000,
+    "last_us": 91400000,
+    "count_after_controller_active": 14207,
+    "count_between_active_and_mission_end": 6837,
+    "rate_hz_between_active_and_mission_end": 228.12644591442952,
+    "inference_time_us_min": 3,
+    "inference_time_us_median": 10.0,
+    "inference_time_us_max": 6655,
+    "controller_time_us_median": 18.0,
+    "network_output_min": [
+      0.33753424882888794,
+      0.32223090529441833,
+      0.3550027310848236,
+      0.3753780126571655
+    ],
+    "network_output_max": [
+      0.8226690292358398,
+      0.7889974117279053,
+      0.893449604511261,
+      0.8916298747062683
+    ],
+    "observation_min": [
+      -0.32073110342025757,
+      -0.42090079188346863,
+      -0.23309326171875,
+      0.7913923859596252,
+      -0.606774091720581,
+      -0.13902616500854492,
+      -0.10375797748565674,
+      0.7948717474937439,
+      -0.09099212288856506,
+      -0.37718525528907776,
+      -0.511428952217102,
+      -0.2979993224143982,
+      -0.6250948905944824,
+      -0.5131084322929382,
+      -2.0944809913635254
+    ],
+    "observation_max": [
+      0.22345827519893646,
+      0.44182291626930237,
+      0.11834716796875,
+      0.9999982714653015,
+      0.102791428565979,
+      0.03721635416150093,
+      0.603872537612915,
+      0.9999998211860657,
+      0.06880802661180496,
+      0.24814723432064056,
+      0.703303337097168,
+      0.3058570325374603,
+      0.8763580918312073,
+      0.7228280305862427,
+      0.13861152529716492
+    ]
+  },
+  "actuator_alignment": {
+    "mission_neural_samples": 6837,
+    "exact_timestamp_matches": 6826,
+    "exact_timestamp_zero_diff_count": 6452,
+    "exact_timestamp_zero_diff_tolerance": 0.0,
+    "interpretation": "A large exact-match subset proves mc_nn_control published actuator_motors values equal to its rescaled network_output during nav_state 23. Extra actuator_motors samples exist in the log, so not every actuator_motors record is a one-to-one neural_control record."
+  },
+  "console_evidence": {
+    "mc_nn_control_start_line": 164,
+    "registration_line": 167,
+    "mc_nn_control_status_lines": [
+      199,
+      339
+    ],
+    "commander_external_mode_lines": [
+      206,
+      224
+    ],
+    "mc_raptor_or_raptor_console_matches": 0
+  }
+}
