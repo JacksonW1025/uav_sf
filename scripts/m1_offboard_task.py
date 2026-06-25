@@ -21,7 +21,7 @@ from typing import Any
 import rclpy
 from rclpy.executors import ExternalShutdownException
 from px4_msgs.msg import OffboardControlMode, RaptorStatus, TrajectorySetpoint, VehicleCommand
-from px4_msgs.msg import VehicleLocalPosition, VehicleStatus
+from px4_msgs.msg import VehicleAngularVelocity, VehicleAttitude, VehicleLocalPosition, VehicleStatus
 from rclpy.node import Node
 from rclpy.qos import DurabilityPolicy, HistoryPolicy, QoSProfile, ReliabilityPolicy
 
@@ -44,6 +44,31 @@ def finite_triplet(values: list[float] | tuple[float, float, float]) -> list[flo
     if not all(math.isfinite(v) for v in out):
         raise ValueError(f"non-finite setpoint component: {values}")
     return out
+
+
+def px4_topic_candidates(base: str, msg_type: type) -> list[str]:
+    fallback_versions = {
+        "VehicleStatus": 4,
+        "VehicleLocalPosition": 1,
+        "VehicleAttitude": 0,
+        "VehicleAngularVelocity": 0,
+    }
+    version = getattr(msg_type, "MESSAGE_VERSION", fallback_versions.get(msg_type.__name__))
+    if version is None:
+        return [base]
+    version = int(version)
+    if version > 0:
+        return [f"{base}_v{version}", base]
+    return [base, f"{base}_v0"]
+
+
+def quat_to_rpy(q: list[float] | tuple[float, float, float, float]) -> tuple[float, float, float]:
+    q0, q1, q2, q3 = [float(value) for value in q]
+    roll = math.atan2(2.0 * (q0 * q1 + q2 * q3), 1.0 - 2.0 * (q1 * q1 + q2 * q2))
+    sin_pitch = max(-1.0, min(1.0, 2.0 * (q0 * q2 - q3 * q1)))
+    pitch = math.asin(sin_pitch)
+    yaw = math.atan2(2.0 * (q0 * q3 + q1 * q2), 1.0 - 2.0 * (q2 * q2 + q3 * q3))
+    return roll, pitch, yaw
 
 
 @dataclass
@@ -116,11 +141,23 @@ class M1OffboardTask(Node):
         self.post_switch_enabled = bool(post_switch) and self.post_switch_type not in {"", "none"}
         self.post_switch_hover_ned = finite_triplet(post_switch.get("hover_ned", self.hover_ned))
         self.post_switch_recorded = False
+        self.activation_trigger = setpoint.get("activation_trigger") or {}
+        self.state_trigger_enabled = bool(self.activation_trigger.get("enabled", False))
+        self.state_trigger_start_s = float(self.activation_trigger.get("start_s", self.trajectory_start_s))
+        self.state_trigger_deadline_s = float(
+            self.activation_trigger.get("deadline_s", max(self.switch_s, self.state_trigger_start_s))
+        )
+        self.state_trigger_fired = not self.state_trigger_enabled
+        self.state_trigger_state: dict[str, Any] | None = None
+        self.state_trigger_us: int | None = None
+        self.state_trigger_max_observed: dict[str, Any] | None = None
 
         self.origin_us: int | None = None
         self.now_us: int | None = None
         self.last_status: VehicleStatus | None = None
         self.last_local_position: VehicleLocalPosition | None = None
+        self.last_truth_attitude: VehicleAttitude | None = None
+        self.last_truth_rates: VehicleAngularVelocity | None = None
         self.last_raptor_status: RaptorStatus | None = None
         self.commanded_mode = False
         self.approach_mode_confirmed = False
@@ -145,18 +182,14 @@ class M1OffboardTask(Node):
         self.offboard_pub = self.create_publisher(OffboardControlMode, "/fmu/in/offboard_control_mode", qos_pub)
         self.setpoint_pub = self.create_publisher(TrajectorySetpoint, "/fmu/in/trajectory_setpoint", qos_pub)
         self.command_pub = self.create_publisher(VehicleCommand, "/fmu/in/vehicle_command", qos_pub)
-        self.create_subscription(
-            VehicleStatus,
-            f"/fmu/out/vehicle_status_v{VehicleStatus.MESSAGE_VERSION}",
-            self.status_cb,
-            qos_sub,
-        )
-        self.create_subscription(
-            VehicleLocalPosition,
-            f"/fmu/out/vehicle_local_position_v{VehicleLocalPosition.MESSAGE_VERSION}",
-            self.local_position_cb,
-            qos_sub,
-        )
+        for topic in px4_topic_candidates("/fmu/out/vehicle_status", VehicleStatus):
+            self.create_subscription(VehicleStatus, topic, self.status_cb, qos_sub)
+        for topic in px4_topic_candidates("/fmu/out/vehicle_local_position", VehicleLocalPosition):
+            self.create_subscription(VehicleLocalPosition, topic, self.local_position_cb, qos_sub)
+        for topic in px4_topic_candidates("/fmu/out/vehicle_attitude_groundtruth", VehicleAttitude):
+            self.create_subscription(VehicleAttitude, topic, self.truth_attitude_cb, qos_sub)
+        for topic in px4_topic_candidates("/fmu/out/vehicle_angular_velocity_groundtruth", VehicleAngularVelocity):
+            self.create_subscription(VehicleAngularVelocity, topic, self.truth_rates_cb, qos_sub)
         self.create_subscription(RaptorStatus, "/fmu/out/raptor_status", self.raptor_status_cb, qos_sub)
 
         self.timer = self.create_timer(1.0 / self.wall_timer_hz, self.tick)
@@ -172,6 +205,14 @@ class M1OffboardTask(Node):
 
     def local_position_cb(self, msg: VehicleLocalPosition) -> None:
         self.last_local_position = msg
+        self.update_time(int(msg.timestamp))
+
+    def truth_attitude_cb(self, msg: VehicleAttitude) -> None:
+        self.last_truth_attitude = msg
+        self.update_time(int(msg.timestamp))
+
+    def truth_rates_cb(self, msg: VehicleAngularVelocity) -> None:
+        self.last_truth_rates = msg
         self.update_time(int(msg.timestamp))
 
     def raptor_status_cb(self, msg: RaptorStatus) -> None:
@@ -217,10 +258,13 @@ class M1OffboardTask(Node):
         return self.current_trajectory(elapsed_s)[0]
 
     def current_trajectory(self, elapsed_s: float) -> tuple[list[float], list[float], list[float]]:
-        if self.post_switch_enabled and elapsed_s >= self.switch_s:
+        if self.post_switch_enabled and self.state_trigger_fired and elapsed_s >= self.switch_s:
             if not self.post_switch_recorded:
                 self.post_switch_recorded = True
-                self.record_event("post_switch_setpoint", {"type": self.post_switch_type})
+                self.record_event(
+                    "post_switch_setpoint",
+                    {"type": self.post_switch_type, "state_trigger": self.state_trigger_state},
+                )
             if self.post_switch_type == "hover":
                 return self.post_switch_hover_ned.copy(), [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]
             raise ValueError(f"unsupported post_switch type {self.post_switch_type}")
@@ -281,6 +325,96 @@ class M1OffboardTask(Node):
             return sp, velocity, acceleration
 
         raise ValueError(f"unsupported setpoint type {self.setpoint_type}")
+
+    def truth_state_snapshot(self) -> dict[str, Any] | None:
+        if self.now_us is None or self.last_truth_attitude is None or self.last_truth_rates is None:
+            return None
+        roll, pitch, yaw = quat_to_rpy(self.last_truth_attitude.q)
+        omega = [float(value) for value in self.last_truth_rates.xyz]
+        omega_norm = math.sqrt(sum(value * value for value in omega))
+        return {
+            "timestamp_us": self.now_us,
+            "attitude_timestamp_us": int(self.last_truth_attitude.timestamp),
+            "angular_velocity_timestamp_us": int(self.last_truth_rates.timestamp),
+            "elapsed_s": self.elapsed_s(),
+            "roll_deg": math.degrees(roll),
+            "pitch_deg": math.degrees(pitch),
+            "yaw_deg": math.degrees(yaw),
+            "roll_pitch_abs_deg": max(abs(math.degrees(roll)), abs(math.degrees(pitch))),
+            "angular_rate_xyz_rad_s": omega,
+            "angular_rate_norm_rad_s": omega_norm,
+            "roll_rate_abs_rad_s": abs(omega[0]),
+            "pitch_rate_abs_rad_s": abs(omega[1]),
+            "yaw_rate_abs_rad_s": abs(omega[2]),
+        }
+
+    def update_trigger_max(self, state: dict[str, Any]) -> None:
+        if self.state_trigger_max_observed is None:
+            self.state_trigger_max_observed = dict(state)
+            return
+        current = self.state_trigger_max_observed
+        if state["roll_pitch_abs_deg"] > current.get("roll_pitch_abs_deg", -math.inf):
+            current["roll_pitch_abs_deg"] = state["roll_pitch_abs_deg"]
+            current["roll_pitch_abs_state"] = dict(state)
+        if state["angular_rate_norm_rad_s"] > current.get("angular_rate_norm_rad_s", -math.inf):
+            current["angular_rate_norm_rad_s"] = state["angular_rate_norm_rad_s"]
+            current["angular_rate_norm_state"] = dict(state)
+
+    def trigger_condition_met(self, state: dict[str, Any]) -> bool:
+        checks = [
+            ("roll_abs_min_deg", abs(state["roll_deg"]), ">="),
+            ("roll_abs_max_deg", abs(state["roll_deg"]), "<="),
+            ("pitch_abs_min_deg", abs(state["pitch_deg"]), ">="),
+            ("pitch_abs_max_deg", abs(state["pitch_deg"]), "<="),
+            ("roll_pitch_abs_min_deg", state["roll_pitch_abs_deg"], ">="),
+            ("roll_pitch_abs_max_deg", state["roll_pitch_abs_deg"], "<="),
+            ("angular_rate_norm_min_rad_s", state["angular_rate_norm_rad_s"], ">="),
+            ("angular_rate_norm_max_rad_s", state["angular_rate_norm_rad_s"], "<="),
+            ("roll_rate_abs_min_rad_s", state["roll_rate_abs_rad_s"], ">="),
+            ("roll_rate_abs_max_rad_s", state["roll_rate_abs_rad_s"], "<="),
+            ("pitch_rate_abs_min_rad_s", state["pitch_rate_abs_rad_s"], ">="),
+            ("pitch_rate_abs_max_rad_s", state["pitch_rate_abs_rad_s"], "<="),
+            ("yaw_rate_abs_min_rad_s", state["yaw_rate_abs_rad_s"], ">="),
+            ("yaw_rate_abs_max_rad_s", state["yaw_rate_abs_rad_s"], "<="),
+        ]
+        for key, value, op in checks:
+            if key not in self.activation_trigger:
+                continue
+            threshold = float(self.activation_trigger[key])
+            if op == ">=" and value < threshold:
+                return False
+            if op == "<=" and value > threshold:
+                return False
+        max_topic_age_s = float(self.activation_trigger.get("max_topic_age_s", 0.25))
+        attitude_age_s = abs(state["timestamp_us"] - state["attitude_timestamp_us"]) / 1e6
+        rate_age_s = abs(state["timestamp_us"] - state["angular_velocity_timestamp_us"]) / 1e6
+        return attitude_age_s <= max_topic_age_s and rate_age_s <= max_topic_age_s
+
+    def maybe_fire_state_trigger(self, elapsed_s: float) -> None:
+        if not self.state_trigger_enabled or self.state_trigger_fired:
+            return
+        state = self.truth_state_snapshot()
+        if state is not None and elapsed_s >= self.state_trigger_start_s:
+            self.update_trigger_max(state)
+            if self.trigger_condition_met(state):
+                self.state_trigger_fired = True
+                self.state_trigger_state = dict(state)
+                self.state_trigger_us = self.now_us
+                self.switch_s = elapsed_s
+                self.record_event(
+                    "state_trigger",
+                    {"trigger": self.activation_trigger, "state": self.state_trigger_state},
+                )
+        if not self.state_trigger_fired and elapsed_s >= self.state_trigger_deadline_s:
+            self.record_event(
+                "state_trigger_timeout",
+                {
+                    "trigger": self.activation_trigger,
+                    "max_observed": self.state_trigger_max_observed,
+                    "last_state": state,
+                },
+            )
+            self.finish(exit_code=3)
 
     def publish_offboard_control_mode(self) -> None:
         if self.now_us is None:
@@ -404,15 +538,16 @@ class M1OffboardTask(Node):
             return
 
         elapsed = self.elapsed_s()
+        self.maybe_fire_state_trigger(elapsed)
         sp, velocity, acceleration = self.current_trajectory(elapsed)
 
         self.publish_offboard_control_mode()
         self.publish_trajectory_setpoint(sp, velocity, acceleration)
 
         if self.has_approach_stage and elapsed >= self.approach_start_s and not self.approach_mode_confirmed:
-            self.command_controller_mode("classical", final=(self.controller == "classical"))
+            self.command_controller_mode("classical", final=(self.controller == "classical" and not self.state_trigger_enabled))
 
-        if elapsed >= self.switch_s and not self.mode_confirmed:
+        if self.state_trigger_fired and elapsed >= self.switch_s and not self.mode_confirmed:
             self.command_controller_mode(self.controller, final=True)
 
         if (
@@ -430,7 +565,7 @@ class M1OffboardTask(Node):
             self.finish(exit_code=2)
             return
 
-        if elapsed >= self.switch_s + self.mode_timeout_s and not self.mode_confirmed:
+        if self.state_trigger_fired and elapsed >= self.switch_s + self.mode_timeout_s and not self.mode_confirmed:
             self.record_event(
                 "controller_mode_timeout",
                 {
@@ -466,6 +601,11 @@ class M1OffboardTask(Node):
                 "mode_confirmed": self.mode_confirmed,
                 "external_mode_id": self.external_mode_id,
                 "external_sub_mode": self.external_sub_mode,
+                "state_trigger_enabled": self.state_trigger_enabled,
+                "state_trigger_fired": self.state_trigger_fired,
+                "state_trigger_us": self.state_trigger_us,
+                "state_trigger_state": self.state_trigger_state,
+                "state_trigger_max_observed": self.state_trigger_max_observed,
                 "last_nav_state": int(self.last_status.nav_state) if self.last_status else None,
                 "last_position_ned": {
                     "x": float(self.last_local_position.x),

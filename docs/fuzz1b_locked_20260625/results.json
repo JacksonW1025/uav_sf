@@ -1,0 +1,2895 @@
+{
+  "decision": {
+    "rationale": "The bounded state-triggered severity scan did not find a case with matched trigger states where classical survived and mc_nn failed. Cases that were too hard or failed to trigger are recorded.",
+    "status": "DOWNGRADED"
+  },
+  "pair_summary": {
+    "both_triggered_count": 5,
+    "locked_count": 0,
+    "pair_count": 6,
+    "rate_residual_mean_rad_s": 0.07174999507069493,
+    "too_hard_count": 5
+  },
+  "pairs": [
+    {
+      "classical": {
+        "case": "target_rp48_62_rate2p45_2p85",
+        "controller": "classical",
+        "detector": {
+          "active_motor_nonfinite": {
+            "first_nonfinite": null,
+            "nan_count": 0,
+            "neginf_count": 0,
+            "nonfinite_count": 0,
+            "posinf_count": 0,
+            "samples": 14559
+          },
+          "active_motor_saturation_count": 16816,
+          "active_motor_saturation_ratio": 0.28875609588570644,
+          "analysis_start_us": 26992000,
+          "console": {
+            "fault": false,
+            "matches": [],
+            "px4_timeout_rc": false
+          },
+          "controller": "classical",
+          "hit": true,
+          "hit_reasons": [
+            "failsafe",
+            "ground_contact_post_switch"
+          ],
+          "post_switch_disarmed": false,
+          "post_switch_failsafe": true,
+          "severity": 2,
+          "severity_label": "medium",
+          "source_map": {
+            "actuator_motors": "mc_nn_control.cpp PublishOutput() writes active actuator_motors.control[0..3].",
+            "network_output": "mc_nn_control.cpp RescaleActions() mutates output tensor before neural_control.network_output publish.",
+            "observation": "mc_nn_control.cpp PopulateInputTensor() fills _input_data; neural_control.cpp publish loop copies it."
+          },
+          "switch_us_source": "matched_groundtruth_state",
+          "tracking_only_reasons_ignored": []
+        },
+        "exact_switch_state": {
+          "angular_rate_norm_rad_s": 2.7678435510714454,
+          "angular_rate_xyz_rad_s": [
+            1.3190970420837402,
+            -2.113412380218506,
+            1.205997109413147
+          ],
+          "angular_velocity_dt_ms": 0.0,
+          "angular_velocity_timestamp_us": 26992000,
+          "angular_velocity_topic": "vehicle_angular_velocity_groundtruth",
+          "attitude_dt_ms": 0.0,
+          "attitude_timestamp_us": 26992000,
+          "attitude_topic": "vehicle_attitude_groundtruth",
+          "local_position_dt_ms": 0.0,
+          "local_position_timestamp_us": 26992000,
+          "local_position_topic": "vehicle_local_position_groundtruth",
+          "pitch_deg": 19.70123399321658,
+          "pitch_rate_abs_rad_s": 2.113412380218506,
+          "position_ned_m": [
+            -15.287506103515625,
+            -3.2341325283050537,
+            -2.511474609375
+          ],
+          "roll_deg": 48.64892083071468,
+          "roll_pitch_abs_deg": 48.64892083071468,
+          "roll_rate_abs_rad_s": 1.3190970420837402,
+          "switch_us": 26992000,
+          "velocity_ned_m_s": [
+            -6.718791484832764,
+            -0.4266737699508667,
+            -0.034020211547613144
+          ],
+          "velocity_norm_m_s": 6.732411670227771,
+          "yaw_rate_abs_rad_s": 1.205997109413147
+        },
+        "outputs": {
+          "agent": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_target_rp48_62_rate2p45_2p85_s20261700/mcnn_gate3_fuzz1b_locked_20260625_target_rp48_62_rate2p45_2p85_s20261700_classical_agent.log",
+          "console": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_target_rp48_62_rate2p45_2p85_s20261700/mcnn_gate3_fuzz1b_locked_20260625_target_rp48_62_rate2p45_2p85_s20261700_classical_px4_console.log",
+          "metrics": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_target_rp48_62_rate2p45_2p85_s20261700/mcnn_gate3_fuzz1b_locked_20260625_target_rp48_62_rate2p45_2p85_s20261700_classical_metrics.json",
+          "task": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_target_rp48_62_rate2p45_2p85_s20261700/mcnn_gate3_fuzz1b_locked_20260625_target_rp48_62_rate2p45_2p85_s20261700_classical_task.json",
+          "topics": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_target_rp48_62_rate2p45_2p85_s20261700/mcnn_gate3_fuzz1b_locked_20260625_target_rp48_62_rate2p45_2p85_s20261700_classical_topics.log",
+          "ulog": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_target_rp48_62_rate2p45_2p85_s20261700/mcnn_gate3_fuzz1b_locked_20260625_target_rp48_62_rate2p45_2p85_s20261700_classical.ulg"
+        },
+        "run_error": null,
+        "seed": 20261700,
+        "stage": "target_2p6",
+        "state_trigger": {
+          "enabled": true,
+          "event": {
+            "detail": {
+              "state": {
+                "angular_rate_norm_rad_s": 2.7678435510714454,
+                "angular_rate_xyz_rad_s": [
+                  1.3190970420837402,
+                  -2.113412380218506,
+                  1.205997109413147
+                ],
+                "angular_velocity_timestamp_us": 1782406120897117,
+                "attitude_timestamp_us": 1782406120897117,
+                "elapsed_s": 21.747293,
+                "pitch_deg": 19.70123399321658,
+                "pitch_rate_abs_rad_s": 2.113412380218506,
+                "roll_deg": 48.64892083071468,
+                "roll_pitch_abs_deg": 48.64892083071468,
+                "roll_rate_abs_rad_s": 1.3190970420837402,
+                "timestamp_us": 1782406120897117,
+                "yaw_deg": -13.707173316026516,
+                "yaw_rate_abs_rad_s": 1.205997109413147
+              },
+              "trigger": {
+                "angular_rate_norm_max_rad_s": 2.85,
+                "angular_rate_norm_min_rad_s": 2.45,
+                "deadline_s": 38.0,
+                "enabled": true,
+                "max_topic_age_s": 0.25,
+                "method": "SIH groundtruth threshold crossing",
+                "roll_pitch_abs_max_deg": 62.0,
+                "roll_pitch_abs_min_deg": 48.0,
+                "start_s": 20.0
+              }
+            },
+            "elapsed_s": 21.747293,
+            "name": "state_trigger",
+            "timestamp_us": 1782406120897117
+          },
+          "fired": true,
+          "max_observed": {
+            "angular_rate_norm_rad_s": 3.349139546609311,
+            "angular_rate_norm_state": {
+              "angular_rate_norm_rad_s": 3.349139546609311,
+              "angular_rate_xyz_rad_s": [
+                3.160646915435791,
+                -0.633132815361023,
+                0.9089497327804565
+              ],
+              "angular_velocity_timestamp_us": 1782406120637117,
+              "attitude_timestamp_us": 1782406120637117,
+              "elapsed_s": 21.487293,
+              "pitch_deg": 46.91548872049492,
+              "pitch_rate_abs_rad_s": 0.633132815361023,
+              "roll_deg": 13.26685926581864,
+              "roll_pitch_abs_deg": 46.91548872049492,
+              "roll_rate_abs_rad_s": 3.160646915435791,
+              "timestamp_us": 1782406120637117,
+              "yaw_deg": -11.459691605352383,
+              "yaw_rate_abs_rad_s": 0.9089497327804565
+            },
+            "angular_rate_xyz_rad_s": [
+              -1.6946454048156738,
+              -0.8988484144210815,
+              1.5610735416412354
+            ],
+            "angular_velocity_timestamp_us": 1782406119169117,
+            "attitude_timestamp_us": 1782406119169117,
+            "elapsed_s": 20.019293,
+            "pitch_deg": -34.535626508559695,
+            "pitch_rate_abs_rad_s": 0.8988484144210815,
+            "roll_deg": 39.373093858233226,
+            "roll_pitch_abs_deg": 48.64892083071468,
+            "roll_pitch_abs_state": {
+              "angular_rate_norm_rad_s": 2.7678435510714454,
+              "angular_rate_xyz_rad_s": [
+                1.3190970420837402,
+                -2.113412380218506,
+                1.205997109413147
+              ],
+              "angular_velocity_timestamp_us": 1782406120897117,
+              "attitude_timestamp_us": 1782406120897117,
+              "elapsed_s": 21.747293,
+              "pitch_deg": 19.70123399321658,
+              "pitch_rate_abs_rad_s": 2.113412380218506,
+              "roll_deg": 48.64892083071468,
+              "roll_pitch_abs_deg": 48.64892083071468,
+              "roll_rate_abs_rad_s": 1.3190970420837402,
+              "timestamp_us": 1782406120897117,
+              "yaw_deg": -13.707173316026516,
+              "yaw_rate_abs_rad_s": 1.205997109413147
+            },
+            "roll_rate_abs_rad_s": 1.6946454048156738,
+            "timestamp_us": 1782406119169117,
+            "yaw_deg": -22.845564314870067,
+            "yaw_rate_abs_rad_s": 1.5610735416412354
+          },
+          "state": {
+            "angular_rate_norm_rad_s": 2.7678435510714454,
+            "angular_rate_xyz_rad_s": [
+              1.3190970420837402,
+              -2.113412380218506,
+              1.205997109413147
+            ],
+            "angular_velocity_timestamp_us": 1782406120897117,
+            "attitude_timestamp_us": 1782406120897117,
+            "elapsed_s": 21.747293,
+            "pitch_deg": 19.70123399321658,
+            "pitch_rate_abs_rad_s": 2.113412380218506,
+            "roll_deg": 48.64892083071468,
+            "roll_pitch_abs_deg": 48.64892083071468,
+            "roll_rate_abs_rad_s": 1.3190970420837402,
+            "timestamp_us": 1782406120897117,
+            "yaw_deg": -13.707173316026516,
+            "yaw_rate_abs_rad_s": 1.205997109413147
+          },
+          "timeout_event": null
+        },
+        "switch_context": {
+          "controller_active_us": 27400000,
+          "mission_end_us": 89400000,
+          "post_switch_angular_rate_max_rad_s": 4.223637122672218,
+          "post_switch_min_altitude_agl_m": -1.142578125,
+          "post_switch_position_samples": 7801,
+          "post_switch_roll_pitch_max_deg": 54.09904744008662,
+          "pre_switch_angular_rate_max_rad_s": 3.47101339288343,
+          "pre_switch_angular_rate_mean_rad_s": 3.0644417684424266,
+          "pre_switch_angular_rate_samples": 121,
+          "pre_switch_angular_rate_x_max_abs_rad_s": 3.328120708465576,
+          "pre_switch_angular_rate_y_max_abs_rad_s": 2.1262753009796143,
+          "pre_switch_angular_rate_z_max_abs_rad_s": 1.1944345235824585,
+          "pre_switch_attitude_samples": 126,
+          "pre_switch_roll_pitch_max_deg": 49.194770272642515,
+          "pre_switch_roll_pitch_mean_deg": 44.108511765511544,
+          "pre_window_s": 0.5,
+          "switch_us": 26992000
+        },
+        "tag": "fuzz1b_locked_20260625_target_rp48_62_rate2p45_2p85_s20261700",
+        "trigger_ulog_match": {
+          "angular_rate_error_norm_rad_s": 0.0,
+          "matched": true,
+          "pitch_error_deg": 0.0,
+          "roll_error_deg": 0.0,
+          "score": 0.0,
+          "switch_us": 26992000
+        }
+      },
+      "classification": {
+        "both_triggered": true,
+        "classical_hit": true,
+        "classical_reasons": [
+          "failsafe",
+          "ground_contact_post_switch"
+        ],
+        "classical_severity": 2,
+        "label": "too_hard_not_primary",
+        "locked_differential": false,
+        "mcnn_hit": true,
+        "mcnn_reasons": [
+          "angular_rate_loss_of_control",
+          "attitude_loss_of_control",
+          "ground_contact_post_switch"
+        ],
+        "mcnn_severity": 3,
+        "nn_only_mode": false,
+        "primary_bug": false,
+        "state_residual": {
+          "angular_rate_norm_rad_s": 0.10264853308389466,
+          "angular_rate_xyz_abs_rad_s": [
+            0.04601144790649414,
+            0.10284185409545898,
+            0.005945563316345215
+          ],
+          "pitch_deg": 2.098510836686554,
+          "roll_deg": 0.24682895634980184,
+          "roll_pitch_abs_deg": 0.24682895634980184,
+          "velocity_ned_abs_m_s": [
+            0.041431427001953125,
+            0.20728611946105957,
+            0.050556737929582596
+          ],
+          "velocity_norm_m_s": 0.02449129624595514,
+          "within_method_a_tolerance": true
+        },
+        "too_hard": true
+      },
+      "mcnn": {
+        "case": "target_rp48_62_rate2p45_2p85",
+        "controller": "mcnn",
+        "detector": {
+          "active_motor_nonfinite": {
+            "first_nonfinite": null,
+            "nan_count": 0,
+            "neginf_count": 0,
+            "nonfinite_count": 0,
+            "posinf_count": 0,
+            "samples": 14267
+          },
+          "active_motor_saturation_count": 56170,
+          "active_motor_saturation_ratio": 0.9842643863461135,
+          "analysis_start_us": 28940000,
+          "console": {
+            "fault": false,
+            "matches": [],
+            "px4_timeout_rc": false
+          },
+          "controller": "mcnn",
+          "hit": true,
+          "hit_reasons": [
+            "angular_rate_loss_of_control",
+            "attitude_loss_of_control",
+            "ground_contact_post_switch"
+          ],
+          "network_output_nonfinite": {
+            "first_nonfinite": null,
+            "nan_count": 0,
+            "neginf_count": 0,
+            "nonfinite_count": 0,
+            "posinf_count": 0,
+            "samples": 13900
+          },
+          "neural_control_samples": 13900,
+          "observation_nonfinite": {
+            "first_nonfinite": null,
+            "nan_count": 0,
+            "neginf_count": 0,
+            "nonfinite_count": 0,
+            "posinf_count": 0,
+            "samples": 13900
+          },
+          "post_switch_disarmed": false,
+          "post_switch_failsafe": false,
+          "severity": 3,
+          "severity_label": "high",
+          "source_map": {
+            "actuator_motors": "mc_nn_control.cpp PublishOutput() writes active actuator_motors.control[0..3].",
+            "network_output": "mc_nn_control.cpp RescaleActions() mutates output tensor before neural_control.network_output publish.",
+            "observation": "mc_nn_control.cpp PopulateInputTensor() fills _input_data; neural_control.cpp publish loop copies it."
+          },
+          "switch_us_source": "matched_groundtruth_state",
+          "tracking_only_reasons_ignored": []
+        },
+        "exact_switch_state": {
+          "angular_rate_norm_rad_s": 2.6651950179875508,
+          "angular_rate_xyz_rad_s": [
+            1.273085594177246,
+            -2.010570526123047,
+            1.2000515460968018
+          ],
+          "angular_velocity_dt_ms": 0.0,
+          "angular_velocity_timestamp_us": 28908000,
+          "angular_velocity_topic": "vehicle_angular_velocity_groundtruth",
+          "attitude_dt_ms": 0.0,
+          "attitude_timestamp_us": 28908000,
+          "attitude_topic": "vehicle_attitude_groundtruth",
+          "local_position_dt_ms": 0.0,
+          "local_position_timestamp_us": 28908000,
+          "local_position_topic": "vehicle_local_position_groundtruth",
+          "pitch_deg": 21.799744829903133,
+          "pitch_rate_abs_rad_s": 2.010570526123047,
+          "position_ned_m": [
+            -15.192739486694336,
+            -5.11563777923584,
+            -1.70306396484375
+          ],
+          "roll_deg": 48.40209187436488,
+          "roll_pitch_abs_deg": 48.40209187436488,
+          "roll_rate_abs_rad_s": 1.273085594177246,
+          "switch_us": 28908000,
+          "velocity_ned_m_s": [
+            -6.6773600578308105,
+            -0.6339598894119263,
+            -0.08457694947719574
+          ],
+          "velocity_norm_m_s": 6.707920373981816,
+          "yaw_rate_abs_rad_s": 1.2000515460968018
+        },
+        "outputs": {
+          "agent": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_target_rp48_62_rate2p45_2p85_s20261700/mcnn_gate3_fuzz1b_locked_20260625_target_rp48_62_rate2p45_2p85_s20261700_mcnn_agent.log",
+          "console": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_target_rp48_62_rate2p45_2p85_s20261700/mcnn_gate3_fuzz1b_locked_20260625_target_rp48_62_rate2p45_2p85_s20261700_mcnn_px4_console.log",
+          "metrics": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_target_rp48_62_rate2p45_2p85_s20261700/mcnn_gate3_fuzz1b_locked_20260625_target_rp48_62_rate2p45_2p85_s20261700_mcnn_metrics.json",
+          "task": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_target_rp48_62_rate2p45_2p85_s20261700/mcnn_gate3_fuzz1b_locked_20260625_target_rp48_62_rate2p45_2p85_s20261700_mcnn_task.json",
+          "topics": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_target_rp48_62_rate2p45_2p85_s20261700/mcnn_gate3_fuzz1b_locked_20260625_target_rp48_62_rate2p45_2p85_s20261700_mcnn_topics.log",
+          "ulog": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_target_rp48_62_rate2p45_2p85_s20261700/mcnn_gate3_fuzz1b_locked_20260625_target_rp48_62_rate2p45_2p85_s20261700_mcnn.ulg"
+        },
+        "run_error": null,
+        "seed": 20261700,
+        "stage": "target_2p6",
+        "state_trigger": {
+          "enabled": true,
+          "event": {
+            "detail": {
+              "state": {
+                "angular_rate_norm_rad_s": 2.6651950179875508,
+                "angular_rate_xyz_rad_s": [
+                  1.273085594177246,
+                  -2.010570526123047,
+                  1.2000515460968018
+                ],
+                "angular_velocity_timestamp_us": 1782406020201729,
+                "attitude_timestamp_us": 1782406020201729,
+                "elapsed_s": 21.737101,
+                "pitch_deg": 21.799744829903133,
+                "pitch_rate_abs_rad_s": 2.010570526123047,
+                "roll_deg": 48.40209187436488,
+                "roll_pitch_abs_deg": 48.40209187436488,
+                "roll_rate_abs_rad_s": 1.273085594177246,
+                "timestamp_us": 1782406020201729,
+                "yaw_deg": -12.57347462407381,
+                "yaw_rate_abs_rad_s": 1.2000515460968018
+              },
+              "trigger": {
+                "angular_rate_norm_max_rad_s": 2.85,
+                "angular_rate_norm_min_rad_s": 2.45,
+                "deadline_s": 38.0,
+                "enabled": true,
+                "max_topic_age_s": 0.25,
+                "method": "SIH groundtruth threshold crossing",
+                "roll_pitch_abs_max_deg": 62.0,
+                "roll_pitch_abs_min_deg": 48.0,
+                "start_s": 20.0
+              }
+            },
+            "elapsed_s": 21.737101,
+            "name": "state_trigger",
+            "timestamp_us": 1782406020201729
+          },
+          "fired": true,
+          "max_observed": {
+            "angular_rate_norm_rad_s": 3.310061927970881,
+            "angular_rate_norm_state": {
+              "angular_rate_norm_rad_s": 3.310061927970881,
+              "angular_rate_xyz_rad_s": [
+                3.164719343185425,
+                0.17364147305488586,
+                0.9544160962104797
+              ],
+              "angular_velocity_timestamp_us": 1782406019881729,
+              "attitude_timestamp_us": 1782406019881729,
+              "elapsed_s": 21.417101,
+              "pitch_deg": 48.19371593376034,
+              "pitch_rate_abs_rad_s": 0.17364147305488586,
+              "roll_deg": -1.7670192786532262,
+              "roll_pitch_abs_deg": 48.19371593376034,
+              "roll_rate_abs_rad_s": 3.164719343185425,
+              "timestamp_us": 1782406019881729,
+              "yaw_deg": -16.467674599363306,
+              "yaw_rate_abs_rad_s": 0.9544160962104797
+            },
+            "angular_rate_xyz_rad_s": [
+              -1.5713438987731934,
+              -0.9841629266738892,
+              1.53059720993042
+            ],
+            "angular_velocity_timestamp_us": 1782406018469729,
+            "attitude_timestamp_us": 1782406018469729,
+            "elapsed_s": 20.005101,
+            "pitch_deg": -34.85673489738365,
+            "pitch_rate_abs_rad_s": 0.9841629266738892,
+            "roll_deg": 37.70669095327986,
+            "roll_pitch_abs_deg": 48.40209187436488,
+            "roll_pitch_abs_state": {
+              "angular_rate_norm_rad_s": 2.6651950179875508,
+              "angular_rate_xyz_rad_s": [
+                1.273085594177246,
+                -2.010570526123047,
+                1.2000515460968018
+              ],
+              "angular_velocity_timestamp_us": 1782406020201729,
+              "attitude_timestamp_us": 1782406020201729,
+              "elapsed_s": 21.737101,
+              "pitch_deg": 21.799744829903133,
+              "pitch_rate_abs_rad_s": 2.010570526123047,
+              "roll_deg": 48.40209187436488,
+              "roll_pitch_abs_deg": 48.40209187436488,
+              "roll_rate_abs_rad_s": 1.273085594177246,
+              "timestamp_us": 1782406020201729,
+              "yaw_deg": -12.57347462407381,
+              "yaw_rate_abs_rad_s": 1.2000515460968018
+            },
+            "roll_rate_abs_rad_s": 1.5713438987731934,
+            "timestamp_us": 1782406018469729,
+            "yaw_deg": -20.003140011547558,
+            "yaw_rate_abs_rad_s": 1.53059720993042
+          },
+          "state": {
+            "angular_rate_norm_rad_s": 2.6651950179875508,
+            "angular_rate_xyz_rad_s": [
+              1.273085594177246,
+              -2.010570526123047,
+              1.2000515460968018
+            ],
+            "angular_velocity_timestamp_us": 1782406020201729,
+            "attitude_timestamp_us": 1782406020201729,
+            "elapsed_s": 21.737101,
+            "pitch_deg": 21.799744829903133,
+            "pitch_rate_abs_rad_s": 2.010570526123047,
+            "roll_deg": 48.40209187436488,
+            "roll_pitch_abs_deg": 48.40209187436488,
+            "roll_rate_abs_rad_s": 1.273085594177246,
+            "timestamp_us": 1782406020201729,
+            "yaw_deg": -12.57347462407381,
+            "yaw_rate_abs_rad_s": 1.2000515460968018
+          },
+          "timeout_event": null
+        },
+        "switch_context": {
+          "controller_active_us": 28940000,
+          "mission_end_us": 89460000,
+          "post_switch_angular_rate_max_rad_s": 24.48947400070115,
+          "post_switch_min_altitude_agl_m": -2.041961669921875,
+          "post_switch_position_samples": 7569,
+          "post_switch_roll_pitch_max_deg": 179.9988872895891,
+          "pre_switch_angular_rate_max_rad_s": 3.4059004847998287,
+          "pre_switch_angular_rate_mean_rad_s": 3.0571870022051066,
+          "pre_switch_angular_rate_samples": 116,
+          "pre_switch_angular_rate_x_max_abs_rad_s": 3.2610175609588623,
+          "pre_switch_angular_rate_y_max_abs_rad_s": 2.0140597820281982,
+          "pre_switch_angular_rate_z_max_abs_rad_s": 1.1956373453140259,
+          "pre_switch_attitude_samples": 126,
+          "pre_switch_roll_pitch_max_deg": 48.56962854790188,
+          "pre_switch_roll_pitch_mean_deg": 43.92936215226803,
+          "pre_window_s": 0.5,
+          "switch_us": 28908000
+        },
+        "tag": "fuzz1b_locked_20260625_target_rp48_62_rate2p45_2p85_s20261700",
+        "trigger_ulog_match": {
+          "angular_rate_error_norm_rad_s": 0.0,
+          "matched": true,
+          "pitch_error_deg": 0.0,
+          "roll_error_deg": 0.0,
+          "score": 0.0,
+          "switch_us": 28908000
+        }
+      }
+    },
+    {
+      "classical": {
+        "case": "scan_rp45_65_rate2p20_2p60",
+        "controller": "classical",
+        "detector": {
+          "active_motor_nonfinite": {
+            "first_nonfinite": null,
+            "nan_count": 0,
+            "neginf_count": 0,
+            "nonfinite_count": 0,
+            "posinf_count": 0,
+            "samples": 14926
+          },
+          "active_motor_saturation_count": 20288,
+          "active_motor_saturation_ratio": 0.33980972799142434,
+          "analysis_start_us": 25328000,
+          "console": {
+            "fault": false,
+            "matches": [],
+            "px4_timeout_rc": false
+          },
+          "controller": "classical",
+          "hit": true,
+          "hit_reasons": [
+            "failsafe",
+            "ground_contact_post_switch"
+          ],
+          "post_switch_disarmed": false,
+          "post_switch_failsafe": true,
+          "severity": 2,
+          "severity_label": "medium",
+          "source_map": {
+            "actuator_motors": "mc_nn_control.cpp PublishOutput() writes active actuator_motors.control[0..3].",
+            "network_output": "mc_nn_control.cpp RescaleActions() mutates output tensor before neural_control.network_output publish.",
+            "observation": "mc_nn_control.cpp PopulateInputTensor() fills _input_data; neural_control.cpp publish loop copies it."
+          },
+          "switch_us_source": "matched_groundtruth_state",
+          "tracking_only_reasons_ignored": []
+        },
+        "exact_switch_state": {
+          "angular_rate_norm_rad_s": 2.2083882326223643,
+          "angular_rate_xyz_rad_s": [
+            -1.8638005256652832,
+            -0.2565900981426239,
+            1.1564548015594482
+          ],
+          "angular_velocity_dt_ms": 0.0,
+          "angular_velocity_timestamp_us": 25328000,
+          "angular_velocity_topic": "vehicle_angular_velocity_groundtruth",
+          "attitude_dt_ms": 0.0,
+          "attitude_timestamp_us": 25328000,
+          "attitude_topic": "vehicle_attitude_groundtruth",
+          "local_position_dt_ms": 0.0,
+          "local_position_timestamp_us": 25328000,
+          "local_position_topic": "vehicle_local_position_groundtruth",
+          "pitch_deg": -45.19165135988662,
+          "pitch_rate_abs_rad_s": 0.2565900981426239,
+          "position_ned_m": [
+            -12.614316940307617,
+            -3.645930290222168,
+            -2.4522705078125
+          ],
+          "roll_deg": 11.866088914560317,
+          "roll_pitch_abs_deg": 45.19165135988662,
+          "roll_rate_abs_rad_s": 1.8638005256652832,
+          "switch_us": 25328000,
+          "velocity_ned_m_s": [
+            -2.7782676219940186,
+            4.012277603149414,
+            0.18730001151561737
+          ],
+          "velocity_norm_m_s": 4.883873855708034,
+          "yaw_rate_abs_rad_s": 1.1564548015594482
+        },
+        "outputs": {
+          "agent": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp45_65_rate2p20_2p60_s20261701/mcnn_gate3_fuzz1b_locked_20260625_scan_rp45_65_rate2p20_2p60_s20261701_classical_agent.log",
+          "console": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp45_65_rate2p20_2p60_s20261701/mcnn_gate3_fuzz1b_locked_20260625_scan_rp45_65_rate2p20_2p60_s20261701_classical_px4_console.log",
+          "metrics": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp45_65_rate2p20_2p60_s20261701/mcnn_gate3_fuzz1b_locked_20260625_scan_rp45_65_rate2p20_2p60_s20261701_classical_metrics.json",
+          "task": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp45_65_rate2p20_2p60_s20261701/mcnn_gate3_fuzz1b_locked_20260625_scan_rp45_65_rate2p20_2p60_s20261701_classical_task.json",
+          "topics": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp45_65_rate2p20_2p60_s20261701/mcnn_gate3_fuzz1b_locked_20260625_scan_rp45_65_rate2p20_2p60_s20261701_classical_topics.log",
+          "ulog": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp45_65_rate2p20_2p60_s20261701/mcnn_gate3_fuzz1b_locked_20260625_scan_rp45_65_rate2p20_2p60_s20261701_classical.ulg"
+        },
+        "run_error": null,
+        "seed": 20261701,
+        "stage": "scan_down",
+        "state_trigger": {
+          "enabled": true,
+          "event": {
+            "detail": {
+              "state": {
+                "angular_rate_norm_rad_s": 2.2083882326223643,
+                "angular_rate_xyz_rad_s": [
+                  -1.8638005256652832,
+                  -0.2565900981426239,
+                  1.1564548015594482
+                ],
+                "angular_velocity_timestamp_us": 1782406324719688,
+                "attitude_timestamp_us": 1782406324719688,
+                "elapsed_s": 20.191956,
+                "pitch_deg": -45.19165135988662,
+                "pitch_rate_abs_rad_s": 0.2565900981426239,
+                "roll_deg": 11.866088914560317,
+                "roll_pitch_abs_deg": 45.19165135988662,
+                "roll_rate_abs_rad_s": 1.8638005256652832,
+                "timestamp_us": 1782406324719688,
+                "yaw_deg": -6.237314891081455,
+                "yaw_rate_abs_rad_s": 1.1564548015594482
+              },
+              "trigger": {
+                "angular_rate_norm_max_rad_s": 2.6,
+                "angular_rate_norm_min_rad_s": 2.2,
+                "deadline_s": 38.0,
+                "enabled": true,
+                "max_topic_age_s": 0.25,
+                "method": "SIH groundtruth threshold crossing",
+                "roll_pitch_abs_max_deg": 65.0,
+                "roll_pitch_abs_min_deg": 45.0,
+                "start_s": 20.0
+              }
+            },
+            "elapsed_s": 20.191956,
+            "name": "state_trigger",
+            "timestamp_us": 1782406324719688
+          },
+          "fired": true,
+          "max_observed": {
+            "angular_rate_norm_rad_s": 2.4332624315501694,
+            "angular_rate_norm_state": {
+              "angular_rate_norm_rad_s": 2.4332624315501694,
+              "angular_rate_xyz_rad_s": [
+                -1.6884567737579346,
+                -0.8875507712364197,
+                1.51067316532135
+              ],
+              "angular_velocity_timestamp_us": 1782406324547688,
+              "attitude_timestamp_us": 1782406324547688,
+              "elapsed_s": 20.019956,
+              "pitch_deg": -34.32553715191206,
+              "pitch_rate_abs_rad_s": 0.8875507712364197,
+              "roll_deg": 37.73242983920251,
+              "roll_pitch_abs_deg": 37.73242983920251,
+              "roll_rate_abs_rad_s": 1.6884567737579346,
+              "timestamp_us": 1782406324547688,
+              "yaw_deg": -18.525142987771908,
+              "yaw_rate_abs_rad_s": 1.51067316532135
+            },
+            "angular_rate_xyz_rad_s": [
+              -1.6352053880691528,
+              -0.9188501834869385,
+              1.5265532732009888
+            ],
+            "angular_velocity_timestamp_us": 1782406324535688,
+            "attitude_timestamp_us": 1782406324535688,
+            "elapsed_s": 20.007956,
+            "pitch_deg": -33.18674900079936,
+            "pitch_rate_abs_rad_s": 0.9188501834869385,
+            "roll_deg": 39.15756887227384,
+            "roll_pitch_abs_deg": 45.19165135988662,
+            "roll_pitch_abs_state": {
+              "angular_rate_norm_rad_s": 2.2083882326223643,
+              "angular_rate_xyz_rad_s": [
+                -1.8638005256652832,
+                -0.2565900981426239,
+                1.1564548015594482
+              ],
+              "angular_velocity_timestamp_us": 1782406324719688,
+              "attitude_timestamp_us": 1782406324719688,
+              "elapsed_s": 20.191956,
+              "pitch_deg": -45.19165135988662,
+              "pitch_rate_abs_rad_s": 0.2565900981426239,
+              "roll_deg": 11.866088914560317,
+              "roll_pitch_abs_deg": 45.19165135988662,
+              "roll_rate_abs_rad_s": 1.8638005256652832,
+              "timestamp_us": 1782406324719688,
+              "yaw_deg": -6.237314891081455,
+              "yaw_rate_abs_rad_s": 1.1564548015594482
+            },
+            "roll_rate_abs_rad_s": 1.6352053880691528,
+            "timestamp_us": 1782406324535688,
+            "yaw_deg": -19.044020938199733,
+            "yaw_rate_abs_rad_s": 1.5265532732009888
+          },
+          "state": {
+            "angular_rate_norm_rad_s": 2.2083882326223643,
+            "angular_rate_xyz_rad_s": [
+              -1.8638005256652832,
+              -0.2565900981426239,
+              1.1564548015594482
+            ],
+            "angular_velocity_timestamp_us": 1782406324719688,
+            "attitude_timestamp_us": 1782406324719688,
+            "elapsed_s": 20.191956,
+            "pitch_deg": -45.19165135988662,
+            "pitch_rate_abs_rad_s": 0.2565900981426239,
+            "roll_deg": 11.866088914560317,
+            "roll_pitch_abs_deg": 45.19165135988662,
+            "roll_rate_abs_rad_s": 1.8638005256652832,
+            "timestamp_us": 1782406324719688,
+            "yaw_deg": -6.237314891081455,
+            "yaw_rate_abs_rad_s": 1.1564548015594482
+          },
+          "timeout_event": null
+        },
+        "switch_context": {
+          "controller_active_us": 25788000,
+          "mission_end_us": 89420000,
+          "post_switch_angular_rate_max_rad_s": 2.242073656342995,
+          "post_switch_min_altitude_agl_m": -0.98876953125,
+          "post_switch_position_samples": 8011,
+          "post_switch_roll_pitch_max_deg": 46.356205767999015,
+          "pre_switch_angular_rate_max_rad_s": 2.5147194333584233,
+          "pre_switch_angular_rate_mean_rad_s": 2.3807025553501573,
+          "pre_switch_angular_rate_samples": 117,
+          "pre_switch_angular_rate_x_max_abs_rad_s": 1.9853944778442383,
+          "pre_switch_angular_rate_y_max_abs_rad_s": 1.994702696800232,
+          "pre_switch_angular_rate_z_max_abs_rad_s": 1.6277114152908325,
+          "pre_switch_attitude_samples": 126,
+          "pre_switch_roll_pitch_max_deg": 54.747721679925625,
+          "pre_switch_roll_pitch_mean_deg": 46.75726850355299,
+          "pre_window_s": 0.5,
+          "switch_us": 25328000
+        },
+        "tag": "fuzz1b_locked_20260625_scan_rp45_65_rate2p20_2p60_s20261701",
+        "trigger_ulog_match": {
+          "angular_rate_error_norm_rad_s": 0.0,
+          "matched": true,
+          "pitch_error_deg": 0.0,
+          "roll_error_deg": 0.0,
+          "score": 0.0,
+          "switch_us": 25328000
+        }
+      },
+      "classification": {
+        "both_triggered": true,
+        "classical_hit": true,
+        "classical_reasons": [
+          "failsafe",
+          "ground_contact_post_switch"
+        ],
+        "classical_severity": 2,
+        "label": "too_hard_not_primary",
+        "locked_differential": false,
+        "mcnn_hit": true,
+        "mcnn_reasons": [
+          "angular_rate_loss_of_control",
+          "attitude_loss_of_control",
+          "ground_contact_post_switch"
+        ],
+        "mcnn_severity": 3,
+        "nn_only_mode": false,
+        "primary_bug": false,
+        "state_residual": {
+          "angular_rate_norm_rad_s": 0.17869719574720655,
+          "angular_rate_xyz_abs_rad_s": [
+            0.05385112762451172,
+            0.2771420180797577,
+            0.1610879898071289
+          ],
+          "pitch_deg": 0.19911974575654767,
+          "roll_deg": 7.516069712285768,
+          "roll_pitch_abs_deg": 0.19911974575654767,
+          "velocity_ned_abs_m_s": [
+            0.24637198448181152,
+            0.354891300201416,
+            0.0424877405166626
+          ],
+          "velocity_norm_m_s": 0.13227183859444303,
+          "within_method_a_tolerance": true
+        },
+        "too_hard": true
+      },
+      "mcnn": {
+        "case": "scan_rp45_65_rate2p20_2p60",
+        "controller": "mcnn",
+        "detector": {
+          "active_motor_nonfinite": {
+            "first_nonfinite": null,
+            "nan_count": 0,
+            "neginf_count": 0,
+            "nonfinite_count": 0,
+            "posinf_count": 0,
+            "samples": 14989
+          },
+          "active_motor_saturation_count": 59109,
+          "active_motor_saturation_ratio": 0.9858729735139102,
+          "analysis_start_us": 25380000,
+          "console": {
+            "fault": false,
+            "matches": [],
+            "px4_timeout_rc": false
+          },
+          "controller": "mcnn",
+          "hit": true,
+          "hit_reasons": [
+            "angular_rate_loss_of_control",
+            "attitude_loss_of_control",
+            "ground_contact_post_switch"
+          ],
+          "network_output_nonfinite": {
+            "first_nonfinite": null,
+            "nan_count": 0,
+            "neginf_count": 0,
+            "nonfinite_count": 0,
+            "posinf_count": 0,
+            "samples": 14578
+          },
+          "neural_control_samples": 14578,
+          "observation_nonfinite": {
+            "first_nonfinite": null,
+            "nan_count": 0,
+            "neginf_count": 0,
+            "nonfinite_count": 0,
+            "posinf_count": 0,
+            "samples": 14578
+          },
+          "post_switch_disarmed": false,
+          "post_switch_failsafe": false,
+          "severity": 3,
+          "severity_label": "high",
+          "source_map": {
+            "actuator_motors": "mc_nn_control.cpp PublishOutput() writes active actuator_motors.control[0..3].",
+            "network_output": "mc_nn_control.cpp RescaleActions() mutates output tensor before neural_control.network_output publish.",
+            "observation": "mc_nn_control.cpp PopulateInputTensor() fills _input_data; neural_control.cpp publish loop copies it."
+          },
+          "switch_us_source": "matched_groundtruth_state",
+          "tracking_only_reasons_ignored": []
+        },
+        "exact_switch_state": {
+          "angular_rate_norm_rad_s": 2.387085428369571,
+          "angular_rate_xyz_rad_s": [
+            -1.917651653289795,
+            -0.5337321162223816,
+            1.3175427913665771
+          ],
+          "angular_velocity_dt_ms": 0.0,
+          "angular_velocity_timestamp_us": 25352000,
+          "angular_velocity_topic": "vehicle_angular_velocity_groundtruth",
+          "attitude_dt_ms": 0.0,
+          "attitude_timestamp_us": 25352000,
+          "attitude_topic": "vehicle_attitude_groundtruth",
+          "local_position_dt_ms": 0.0,
+          "local_position_timestamp_us": 25352000,
+          "local_position_topic": "vehicle_local_position_groundtruth",
+          "pitch_deg": -45.39077110564317,
+          "pitch_rate_abs_rad_s": 0.5337321162223816,
+          "position_ned_m": [
+            -11.995915412902832,
+            -3.3031256198883057,
+            -2.306640625
+          ],
+          "roll_deg": 19.382158626846085,
+          "roll_pitch_abs_deg": 45.39077110564317,
+          "roll_rate_abs_rad_s": 1.917651653289795,
+          "switch_us": 25352000,
+          "velocity_ned_m_s": [
+            -3.02463960647583,
+            3.657386302947998,
+            0.22978775203227997
+          ],
+          "velocity_norm_m_s": 4.751602017113591,
+          "yaw_rate_abs_rad_s": 1.3175427913665771
+        },
+        "outputs": {
+          "agent": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp45_65_rate2p20_2p60_s20261701/mcnn_gate3_fuzz1b_locked_20260625_scan_rp45_65_rate2p20_2p60_s20261701_mcnn_agent.log",
+          "console": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp45_65_rate2p20_2p60_s20261701/mcnn_gate3_fuzz1b_locked_20260625_scan_rp45_65_rate2p20_2p60_s20261701_mcnn_px4_console.log",
+          "metrics": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp45_65_rate2p20_2p60_s20261701/mcnn_gate3_fuzz1b_locked_20260625_scan_rp45_65_rate2p20_2p60_s20261701_mcnn_metrics.json",
+          "task": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp45_65_rate2p20_2p60_s20261701/mcnn_gate3_fuzz1b_locked_20260625_scan_rp45_65_rate2p20_2p60_s20261701_mcnn_task.json",
+          "topics": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp45_65_rate2p20_2p60_s20261701/mcnn_gate3_fuzz1b_locked_20260625_scan_rp45_65_rate2p20_2p60_s20261701_mcnn_topics.log",
+          "ulog": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp45_65_rate2p20_2p60_s20261701/mcnn_gate3_fuzz1b_locked_20260625_scan_rp45_65_rate2p20_2p60_s20261701_mcnn.ulg"
+        },
+        "run_error": null,
+        "seed": 20261701,
+        "stage": "scan_down",
+        "state_trigger": {
+          "enabled": true,
+          "event": {
+            "detail": {
+              "state": {
+                "angular_rate_norm_rad_s": 2.387085428369571,
+                "angular_rate_xyz_rad_s": [
+                  -1.917651653289795,
+                  -0.5337321162223816,
+                  1.3175427913665771
+                ],
+                "angular_velocity_timestamp_us": 1782406221598326,
+                "attitude_timestamp_us": 1782406221598326,
+                "elapsed_s": 20.142858,
+                "pitch_deg": -45.39077110564317,
+                "pitch_rate_abs_rad_s": 0.5337321162223816,
+                "roll_deg": 19.382158626846085,
+                "roll_pitch_abs_deg": 45.39077110564317,
+                "roll_rate_abs_rad_s": 1.917651653289795,
+                "timestamp_us": 1782406221598326,
+                "yaw_deg": -10.76706344060612,
+                "yaw_rate_abs_rad_s": 1.3175427913665771
+              },
+              "trigger": {
+                "angular_rate_norm_max_rad_s": 2.6,
+                "angular_rate_norm_min_rad_s": 2.2,
+                "deadline_s": 38.0,
+                "enabled": true,
+                "max_topic_age_s": 0.25,
+                "method": "SIH groundtruth threshold crossing",
+                "roll_pitch_abs_max_deg": 65.0,
+                "roll_pitch_abs_min_deg": 45.0,
+                "start_s": 20.0
+              }
+            },
+            "elapsed_s": 20.142858,
+            "name": "state_trigger",
+            "timestamp_us": 1782406221598326
+          },
+          "fired": true,
+          "max_observed": {
+            "angular_rate_norm_rad_s": 2.435878124838453,
+            "angular_rate_xyz_rad_s": [
+              -1.6469122171401978,
+              -0.9379500150680542,
+              1.530173897743225
+            ],
+            "angular_velocity_timestamp_us": 1782406221478326,
+            "attitude_timestamp_us": 1782406221478326,
+            "elapsed_s": 20.022858,
+            "pitch_deg": -36.13463702745257,
+            "pitch_rate_abs_rad_s": 0.9379500150680542,
+            "roll_deg": 36.93469827499228,
+            "roll_pitch_abs_deg": 45.39077110564317,
+            "roll_pitch_abs_state": {
+              "angular_rate_norm_rad_s": 2.387085428369571,
+              "angular_rate_xyz_rad_s": [
+                -1.917651653289795,
+                -0.5337321162223816,
+                1.3175427913665771
+              ],
+              "angular_velocity_timestamp_us": 1782406221598326,
+              "attitude_timestamp_us": 1782406221598326,
+              "elapsed_s": 20.142858,
+              "pitch_deg": -45.39077110564317,
+              "pitch_rate_abs_rad_s": 0.5337321162223816,
+              "roll_deg": 19.382158626846085,
+              "roll_pitch_abs_deg": 45.39077110564317,
+              "roll_rate_abs_rad_s": 1.917651653289795,
+              "timestamp_us": 1782406221598326,
+              "yaw_deg": -10.76706344060612,
+              "yaw_rate_abs_rad_s": 1.3175427913665771
+            },
+            "roll_rate_abs_rad_s": 1.6469122171401978,
+            "timestamp_us": 1782406221478326,
+            "yaw_deg": -18.91337708228885,
+            "yaw_rate_abs_rad_s": 1.530173897743225
+          },
+          "state": {
+            "angular_rate_norm_rad_s": 2.387085428369571,
+            "angular_rate_xyz_rad_s": [
+              -1.917651653289795,
+              -0.5337321162223816,
+              1.3175427913665771
+            ],
+            "angular_velocity_timestamp_us": 1782406221598326,
+            "attitude_timestamp_us": 1782406221598326,
+            "elapsed_s": 20.142858,
+            "pitch_deg": -45.39077110564317,
+            "pitch_rate_abs_rad_s": 0.5337321162223816,
+            "roll_deg": 19.382158626846085,
+            "roll_pitch_abs_deg": 45.39077110564317,
+            "roll_rate_abs_rad_s": 1.917651653289795,
+            "timestamp_us": 1782406221598326,
+            "yaw_deg": -10.76706344060612,
+            "yaw_rate_abs_rad_s": 1.3175427913665771
+          },
+          "timeout_event": null
+        },
+        "switch_context": {
+          "controller_active_us": 25380000,
+          "mission_end_us": 89360000,
+          "post_switch_angular_rate_max_rad_s": 24.597770640320473,
+          "post_switch_min_altitude_agl_m": -1.961212158203125,
+          "post_switch_position_samples": 8000,
+          "post_switch_roll_pitch_max_deg": 179.9998265273878,
+          "pre_switch_angular_rate_max_rad_s": 2.5182226665608365,
+          "pre_switch_angular_rate_mean_rad_s": 2.4063305961576607,
+          "pre_switch_angular_rate_samples": 117,
+          "pre_switch_angular_rate_x_max_abs_rad_s": 1.9113976955413818,
+          "pre_switch_angular_rate_y_max_abs_rad_s": 2.0468294620513916,
+          "pre_switch_angular_rate_z_max_abs_rad_s": 1.6317893266677856,
+          "pre_switch_attitude_samples": 126,
+          "pre_switch_roll_pitch_max_deg": 55.24220704336262,
+          "pre_switch_roll_pitch_mean_deg": 48.71070417667645,
+          "pre_window_s": 0.5,
+          "switch_us": 25352000
+        },
+        "tag": "fuzz1b_locked_20260625_scan_rp45_65_rate2p20_2p60_s20261701",
+        "trigger_ulog_match": {
+          "angular_rate_error_norm_rad_s": 0.0,
+          "matched": true,
+          "pitch_error_deg": 0.0,
+          "roll_error_deg": 0.0,
+          "score": 0.0,
+          "switch_us": 25352000
+        }
+      }
+    },
+    {
+      "classical": {
+        "case": "scan_rp40_65_rate1p80_2p30",
+        "controller": "classical",
+        "detector": {
+          "active_motor_nonfinite": {
+            "first_nonfinite": null,
+            "nan_count": 0,
+            "neginf_count": 0,
+            "nonfinite_count": 0,
+            "posinf_count": 0,
+            "samples": 14956
+          },
+          "active_motor_saturation_count": 20993,
+          "active_motor_saturation_ratio": 0.3509126771864135,
+          "analysis_start_us": 24976000,
+          "console": {
+            "fault": false,
+            "matches": [],
+            "px4_timeout_rc": false
+          },
+          "controller": "classical",
+          "hit": true,
+          "hit_reasons": [
+            "failsafe",
+            "ground_contact_post_switch"
+          ],
+          "post_switch_disarmed": false,
+          "post_switch_failsafe": true,
+          "severity": 2,
+          "severity_label": "medium",
+          "source_map": {
+            "actuator_motors": "mc_nn_control.cpp PublishOutput() writes active actuator_motors.control[0..3].",
+            "network_output": "mc_nn_control.cpp RescaleActions() mutates output tensor before neural_control.network_output publish.",
+            "observation": "mc_nn_control.cpp PopulateInputTensor() fills _input_data; neural_control.cpp publish loop copies it."
+          },
+          "switch_us_source": "matched_groundtruth_state",
+          "tracking_only_reasons_ignored": []
+        },
+        "exact_switch_state": {
+          "angular_rate_norm_rad_s": 2.295671471643401,
+          "angular_rate_xyz_rad_s": [
+            -1.9010329246520996,
+            -0.33630168437957764,
+            1.24220871925354
+          ],
+          "angular_velocity_dt_ms": 0.0,
+          "angular_velocity_timestamp_us": 24976000,
+          "angular_velocity_topic": "vehicle_angular_velocity_groundtruth",
+          "attitude_dt_ms": 0.0,
+          "attitude_timestamp_us": 24976000,
+          "attitude_topic": "vehicle_attitude_groundtruth",
+          "local_position_dt_ms": 0.0,
+          "local_position_timestamp_us": 24976000,
+          "local_position_topic": "vehicle_local_position_groundtruth",
+          "pitch_deg": -45.07442663537436,
+          "pitch_rate_abs_rad_s": 0.33630168437957764,
+          "position_ned_m": [
+            -12.853050231933594,
+            -4.386850357055664,
+            -2.207427978515625
+          ],
+          "roll_deg": 15.518778935225718,
+          "roll_pitch_abs_deg": 45.07442663537436,
+          "roll_rate_abs_rad_s": 1.9010329246520996,
+          "switch_us": 24976000,
+          "velocity_ned_m_s": [
+            -2.841991424560547,
+            4.154248237609863,
+            0.27577367424964905
+          ],
+          "velocity_norm_m_s": 5.040907140224812,
+          "yaw_rate_abs_rad_s": 1.24220871925354
+        },
+        "outputs": {
+          "agent": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp40_65_rate1p80_2p30_s20261702/mcnn_gate3_fuzz1b_locked_20260625_scan_rp40_65_rate1p80_2p30_s20261702_classical_agent.log",
+          "console": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp40_65_rate1p80_2p30_s20261702/mcnn_gate3_fuzz1b_locked_20260625_scan_rp40_65_rate1p80_2p30_s20261702_classical_px4_console.log",
+          "metrics": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp40_65_rate1p80_2p30_s20261702/mcnn_gate3_fuzz1b_locked_20260625_scan_rp40_65_rate1p80_2p30_s20261702_classical_metrics.json",
+          "task": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp40_65_rate1p80_2p30_s20261702/mcnn_gate3_fuzz1b_locked_20260625_scan_rp40_65_rate1p80_2p30_s20261702_classical_task.json",
+          "topics": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp40_65_rate1p80_2p30_s20261702/mcnn_gate3_fuzz1b_locked_20260625_scan_rp40_65_rate1p80_2p30_s20261702_classical_topics.log",
+          "ulog": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp40_65_rate1p80_2p30_s20261702/mcnn_gate3_fuzz1b_locked_20260625_scan_rp40_65_rate1p80_2p30_s20261702_classical.ulg"
+        },
+        "run_error": null,
+        "seed": 20261702,
+        "stage": "scan_down",
+        "state_trigger": {
+          "enabled": true,
+          "event": {
+            "detail": {
+              "state": {
+                "angular_rate_norm_rad_s": 2.295671471643401,
+                "angular_rate_xyz_rad_s": [
+                  -1.9010329246520996,
+                  -0.33630168437957764,
+                  1.24220871925354
+                ],
+                "angular_velocity_timestamp_us": 1782406530197472,
+                "attitude_timestamp_us": 1782406530197472,
+                "elapsed_s": 20.174259,
+                "pitch_deg": -45.07442663537436,
+                "pitch_rate_abs_rad_s": 0.33630168437957764,
+                "roll_deg": 15.518778935225718,
+                "roll_pitch_abs_deg": 45.07442663537436,
+                "roll_rate_abs_rad_s": 1.9010329246520996,
+                "timestamp_us": 1782406530197472,
+                "yaw_deg": -9.36793222386434,
+                "yaw_rate_abs_rad_s": 1.24220871925354
+              },
+              "trigger": {
+                "angular_rate_norm_max_rad_s": 2.3,
+                "angular_rate_norm_min_rad_s": 1.8,
+                "deadline_s": 38.0,
+                "enabled": true,
+                "max_topic_age_s": 0.25,
+                "method": "SIH groundtruth threshold crossing",
+                "roll_pitch_abs_max_deg": 65.0,
+                "roll_pitch_abs_min_deg": 40.0,
+                "start_s": 20.0
+              }
+            },
+            "elapsed_s": 20.174259,
+            "name": "state_trigger",
+            "timestamp_us": 1782406530197472
+          },
+          "fired": true,
+          "max_observed": {
+            "angular_rate_norm_rad_s": 2.4827814156477013,
+            "angular_rate_norm_state": {
+              "angular_rate_norm_rad_s": 2.4827814156477013,
+              "angular_rate_xyz_rad_s": [
+                -1.8325440883636475,
+                -0.8132651448249817,
+                1.4644403457641602
+              ],
+              "angular_velocity_timestamp_us": 1782406530093472,
+              "attitude_timestamp_us": 1782406530093472,
+              "elapsed_s": 20.070259,
+              "pitch_deg": -38.5949831384272,
+              "pitch_rate_abs_rad_s": 0.8132651448249817,
+              "roll_deg": 32.064819177673705,
+              "roll_pitch_abs_deg": 38.5949831384272,
+              "roll_rate_abs_rad_s": 1.8325440883636475,
+              "timestamp_us": 1782406530093472,
+              "yaw_deg": -17.36928740455449,
+              "yaw_rate_abs_rad_s": 1.4644403457641602
+            },
+            "angular_rate_xyz_rad_s": [
+              -1.6470144987106323,
+              -1.00661039352417,
+              1.5582467317581177
+            ],
+            "angular_velocity_timestamp_us": 1782406530029472,
+            "attitude_timestamp_us": 1782406530029472,
+            "elapsed_s": 20.006259,
+            "pitch_deg": -32.62612894387042,
+            "pitch_rate_abs_rad_s": 1.00661039352417,
+            "roll_deg": 40.13179958808133,
+            "roll_pitch_abs_deg": 45.07442663537436,
+            "roll_pitch_abs_state": {
+              "angular_rate_norm_rad_s": 2.295671471643401,
+              "angular_rate_xyz_rad_s": [
+                -1.9010329246520996,
+                -0.33630168437957764,
+                1.24220871925354
+              ],
+              "angular_velocity_timestamp_us": 1782406530197472,
+              "attitude_timestamp_us": 1782406530197472,
+              "elapsed_s": 20.174259,
+              "pitch_deg": -45.07442663537436,
+              "pitch_rate_abs_rad_s": 0.33630168437957764,
+              "roll_deg": 15.518778935225718,
+              "roll_pitch_abs_deg": 45.07442663537436,
+              "roll_rate_abs_rad_s": 1.9010329246520996,
+              "timestamp_us": 1782406530197472,
+              "yaw_deg": -9.36793222386434,
+              "yaw_rate_abs_rad_s": 1.24220871925354
+            },
+            "roll_rate_abs_rad_s": 1.6470144987106323,
+            "timestamp_us": 1782406530029472,
+            "yaw_deg": -20.466639332502556,
+            "yaw_rate_abs_rad_s": 1.5582467317581177
+          },
+          "state": {
+            "angular_rate_norm_rad_s": 2.295671471643401,
+            "angular_rate_xyz_rad_s": [
+              -1.9010329246520996,
+              -0.33630168437957764,
+              1.24220871925354
+            ],
+            "angular_velocity_timestamp_us": 1782406530197472,
+            "attitude_timestamp_us": 1782406530197472,
+            "elapsed_s": 20.174259,
+            "pitch_deg": -45.07442663537436,
+            "pitch_rate_abs_rad_s": 0.33630168437957764,
+            "roll_deg": 15.518778935225718,
+            "roll_pitch_abs_deg": 45.07442663537436,
+            "roll_rate_abs_rad_s": 1.9010329246520996,
+            "timestamp_us": 1782406530197472,
+            "yaw_deg": -9.36793222386434,
+            "yaw_rate_abs_rad_s": 1.24220871925354
+          },
+          "timeout_event": null
+        },
+        "switch_context": {
+          "controller_active_us": 25448000,
+          "mission_end_us": 89412000,
+          "post_switch_angular_rate_max_rad_s": 2.381261004314291,
+          "post_switch_min_altitude_agl_m": -0.960723876953125,
+          "post_switch_position_samples": 8053,
+          "post_switch_roll_pitch_max_deg": 46.36477408773221,
+          "pre_switch_angular_rate_max_rad_s": 2.620934130398666,
+          "pre_switch_angular_rate_mean_rad_s": 2.401580131180384,
+          "pre_switch_angular_rate_samples": 117,
+          "pre_switch_angular_rate_x_max_abs_rad_s": 1.9804086685180664,
+          "pre_switch_angular_rate_y_max_abs_rad_s": 1.9774551391601562,
+          "pre_switch_angular_rate_z_max_abs_rad_s": 1.6325808763504028,
+          "pre_switch_attitude_samples": 126,
+          "pre_switch_roll_pitch_max_deg": 55.106638721493226,
+          "pre_switch_roll_pitch_mean_deg": 47.180365604961274,
+          "pre_window_s": 0.5,
+          "switch_us": 24976000
+        },
+        "tag": "fuzz1b_locked_20260625_scan_rp40_65_rate1p80_2p30_s20261702",
+        "trigger_ulog_match": {
+          "angular_rate_error_norm_rad_s": 0.0,
+          "matched": true,
+          "pitch_error_deg": 0.0,
+          "roll_error_deg": 0.0,
+          "score": 0.0,
+          "switch_us": 24976000
+        }
+      },
+      "classification": {
+        "both_triggered": true,
+        "classical_hit": true,
+        "classical_reasons": [
+          "failsafe",
+          "ground_contact_post_switch"
+        ],
+        "classical_severity": 2,
+        "label": "too_hard_not_primary",
+        "locked_differential": false,
+        "mcnn_hit": true,
+        "mcnn_reasons": [
+          "angular_rate_loss_of_control",
+          "attitude_loss_of_control",
+          "ground_contact_post_switch"
+        ],
+        "mcnn_severity": 3,
+        "nn_only_mode": false,
+        "primary_bug": false,
+        "state_residual": {
+          "angular_rate_norm_rad_s": 0.012195599443834748,
+          "angular_rate_xyz_abs_rad_s": [
+            0.01659691333770752,
+            0.1470426321029663,
+            0.04657447338104248
+          ],
+          "pitch_deg": 1.8410894718378685,
+          "roll_deg": 1.6136412021607782,
+          "roll_pitch_abs_deg": 1.8410894718378685,
+          "velocity_ned_abs_m_s": [
+            0.4194924831390381,
+            0.3352055549621582,
+            0.026683330535888672
+          ],
+          "velocity_norm_m_s": 0.511488399105291,
+          "within_method_a_tolerance": true
+        },
+        "too_hard": true
+      },
+      "mcnn": {
+        "case": "scan_rp40_65_rate1p80_2p30",
+        "controller": "mcnn",
+        "detector": {
+          "active_motor_nonfinite": {
+            "first_nonfinite": null,
+            "nan_count": 0,
+            "neginf_count": 0,
+            "nonfinite_count": 0,
+            "posinf_count": 0,
+            "samples": 14992
+          },
+          "active_motor_saturation_count": 58582,
+          "active_motor_saturation_ratio": 0.9768876734258272,
+          "analysis_start_us": 25468000,
+          "console": {
+            "fault": false,
+            "matches": [],
+            "px4_timeout_rc": false
+          },
+          "controller": "mcnn",
+          "hit": true,
+          "hit_reasons": [
+            "angular_rate_loss_of_control",
+            "attitude_loss_of_control",
+            "ground_contact_post_switch"
+          ],
+          "network_output_nonfinite": {
+            "first_nonfinite": null,
+            "nan_count": 0,
+            "neginf_count": 0,
+            "nonfinite_count": 0,
+            "posinf_count": 0,
+            "samples": 14539
+          },
+          "neural_control_samples": 14539,
+          "observation_nonfinite": {
+            "first_nonfinite": null,
+            "nan_count": 0,
+            "neginf_count": 0,
+            "nonfinite_count": 0,
+            "posinf_count": 0,
+            "samples": 14539
+          },
+          "post_switch_disarmed": false,
+          "post_switch_failsafe": false,
+          "severity": 3,
+          "severity_label": "high",
+          "source_map": {
+            "actuator_motors": "mc_nn_control.cpp PublishOutput() writes active actuator_motors.control[0..3].",
+            "network_output": "mc_nn_control.cpp RescaleActions() mutates output tensor before neural_control.network_output publish.",
+            "observation": "mc_nn_control.cpp PopulateInputTensor() fills _input_data; neural_control.cpp publish loop copies it."
+          },
+          "switch_us_source": "matched_groundtruth_state",
+          "tracking_only_reasons_ignored": []
+        },
+        "exact_switch_state": {
+          "angular_rate_norm_rad_s": 2.283475872199566,
+          "angular_rate_xyz_rad_s": [
+            -1.884436011314392,
+            -0.48334431648254395,
+            1.1956342458724976
+          ],
+          "angular_velocity_dt_ms": 0.0,
+          "angular_velocity_timestamp_us": 25448000,
+          "angular_velocity_topic": "vehicle_angular_velocity_groundtruth",
+          "attitude_dt_ms": 0.0,
+          "attitude_timestamp_us": 25448000,
+          "attitude_topic": "vehicle_attitude_groundtruth",
+          "local_position_dt_ms": 0.0,
+          "local_position_timestamp_us": 25448000,
+          "local_position_topic": "vehicle_local_position_groundtruth",
+          "pitch_deg": -46.91551610721223,
+          "pitch_rate_abs_rad_s": 0.48334431648254395,
+          "position_ned_m": [
+            -12.370580673217773,
+            -3.8492674827575684,
+            -2.523406982421875
+          ],
+          "roll_deg": 13.90513773306494,
+          "roll_pitch_abs_deg": 46.91551610721223,
+          "roll_rate_abs_rad_s": 1.884436011314392,
+          "switch_us": 25448000,
+          "velocity_ned_m_s": [
+            -2.422498941421509,
+            3.819042682647705,
+            0.24909034371376038
+          ],
+          "velocity_norm_m_s": 4.529418741119521,
+          "yaw_rate_abs_rad_s": 1.1956342458724976
+        },
+        "outputs": {
+          "agent": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp40_65_rate1p80_2p30_s20261702/mcnn_gate3_fuzz1b_locked_20260625_scan_rp40_65_rate1p80_2p30_s20261702_mcnn_agent.log",
+          "console": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp40_65_rate1p80_2p30_s20261702/mcnn_gate3_fuzz1b_locked_20260625_scan_rp40_65_rate1p80_2p30_s20261702_mcnn_px4_console.log",
+          "metrics": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp40_65_rate1p80_2p30_s20261702/mcnn_gate3_fuzz1b_locked_20260625_scan_rp40_65_rate1p80_2p30_s20261702_mcnn_metrics.json",
+          "task": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp40_65_rate1p80_2p30_s20261702/mcnn_gate3_fuzz1b_locked_20260625_scan_rp40_65_rate1p80_2p30_s20261702_mcnn_task.json",
+          "topics": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp40_65_rate1p80_2p30_s20261702/mcnn_gate3_fuzz1b_locked_20260625_scan_rp40_65_rate1p80_2p30_s20261702_mcnn_topics.log",
+          "ulog": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp40_65_rate1p80_2p30_s20261702/mcnn_gate3_fuzz1b_locked_20260625_scan_rp40_65_rate1p80_2p30_s20261702_mcnn.ulg"
+        },
+        "run_error": null,
+        "seed": 20261702,
+        "stage": "scan_down",
+        "state_trigger": {
+          "enabled": true,
+          "event": {
+            "detail": {
+              "state": {
+                "angular_rate_norm_rad_s": 2.283475872199566,
+                "angular_rate_xyz_rad_s": [
+                  -1.884436011314392,
+                  -0.48334431648254395,
+                  1.1956342458724976
+                ],
+                "angular_velocity_timestamp_us": 1782406427519152,
+                "attitude_timestamp_us": 1782406427519152,
+                "elapsed_s": 20.181426,
+                "pitch_deg": -46.91551610721223,
+                "pitch_rate_abs_rad_s": 0.48334431648254395,
+                "roll_deg": 13.90513773306494,
+                "roll_pitch_abs_deg": 46.91551610721223,
+                "roll_rate_abs_rad_s": 1.884436011314392,
+                "timestamp_us": 1782406427519152,
+                "yaw_deg": -10.598260954008637,
+                "yaw_rate_abs_rad_s": 1.1956342458724976
+              },
+              "trigger": {
+                "angular_rate_norm_max_rad_s": 2.3,
+                "angular_rate_norm_min_rad_s": 1.8,
+                "deadline_s": 38.0,
+                "enabled": true,
+                "max_topic_age_s": 0.25,
+                "method": "SIH groundtruth threshold crossing",
+                "roll_pitch_abs_max_deg": 65.0,
+                "roll_pitch_abs_min_deg": 40.0,
+                "start_s": 20.0
+              }
+            },
+            "elapsed_s": 20.181426,
+            "name": "state_trigger",
+            "timestamp_us": 1782406427519152
+          },
+          "fired": true,
+          "max_observed": {
+            "angular_rate_norm_rad_s": 2.472137963139608,
+            "angular_rate_norm_state": {
+              "angular_rate_norm_rad_s": 2.472137963139608,
+              "angular_rate_xyz_rad_s": [
+                -1.7853140830993652,
+                -0.9117529392242432,
+                1.4466603994369507
+              ],
+              "angular_velocity_timestamp_us": 1782406427399152,
+              "attitude_timestamp_us": 1782406427399152,
+              "elapsed_s": 20.061426,
+              "pitch_deg": -38.77652668639764,
+              "pitch_rate_abs_rad_s": 0.9117529392242432,
+              "roll_deg": 32.5567071213012,
+              "roll_pitch_abs_deg": 38.77652668639764,
+              "roll_rate_abs_rad_s": 1.7853140830993652,
+              "timestamp_us": 1782406427399152,
+              "yaw_deg": -19.33173598453204,
+              "yaw_rate_abs_rad_s": 1.4466603994369507
+            },
+            "angular_rate_xyz_rad_s": [
+              -1.6117451190948486,
+              -1.0783172845840454,
+              1.5259630680084229
+            ],
+            "angular_velocity_timestamp_us": 1782406427343152,
+            "attitude_timestamp_us": 1782406427343152,
+            "elapsed_s": 20.005426,
+            "pitch_deg": -33.355894278275684,
+            "pitch_rate_abs_rad_s": 1.0783172845840454,
+            "roll_deg": 39.379347104318185,
+            "roll_pitch_abs_deg": 46.91551610721223,
+            "roll_pitch_abs_state": {
+              "angular_rate_norm_rad_s": 2.283475872199566,
+              "angular_rate_xyz_rad_s": [
+                -1.884436011314392,
+                -0.48334431648254395,
+                1.1956342458724976
+              ],
+              "angular_velocity_timestamp_us": 1782406427519152,
+              "attitude_timestamp_us": 1782406427519152,
+              "elapsed_s": 20.181426,
+              "pitch_deg": -46.91551610721223,
+              "pitch_rate_abs_rad_s": 0.48334431648254395,
+              "roll_deg": 13.90513773306494,
+              "roll_pitch_abs_deg": 46.91551610721223,
+              "roll_rate_abs_rad_s": 1.884436011314392,
+              "timestamp_us": 1782406427519152,
+              "yaw_deg": -10.598260954008637,
+              "yaw_rate_abs_rad_s": 1.1956342458724976
+            },
+            "roll_rate_abs_rad_s": 1.6117451190948486,
+            "timestamp_us": 1782406427343152,
+            "yaw_deg": -21.767790354852725,
+            "yaw_rate_abs_rad_s": 1.5259630680084229
+          },
+          "state": {
+            "angular_rate_norm_rad_s": 2.283475872199566,
+            "angular_rate_xyz_rad_s": [
+              -1.884436011314392,
+              -0.48334431648254395,
+              1.1956342458724976
+            ],
+            "angular_velocity_timestamp_us": 1782406427519152,
+            "attitude_timestamp_us": 1782406427519152,
+            "elapsed_s": 20.181426,
+            "pitch_deg": -46.91551610721223,
+            "pitch_rate_abs_rad_s": 0.48334431648254395,
+            "roll_deg": 13.90513773306494,
+            "roll_pitch_abs_deg": 46.91551610721223,
+            "roll_rate_abs_rad_s": 1.884436011314392,
+            "timestamp_us": 1782406427519152,
+            "yaw_deg": -10.598260954008637,
+            "yaw_rate_abs_rad_s": 1.1956342458724976
+          },
+          "timeout_event": null
+        },
+        "switch_context": {
+          "controller_active_us": 25468000,
+          "mission_end_us": 89416000,
+          "post_switch_angular_rate_max_rad_s": 24.321634803538895,
+          "post_switch_min_altitude_agl_m": -1.746490478515625,
+          "post_switch_position_samples": 7996,
+          "post_switch_roll_pitch_max_deg": 179.99581344723603,
+          "pre_switch_angular_rate_max_rad_s": 2.553661361683115,
+          "pre_switch_angular_rate_mean_rad_s": 2.3858169503325235,
+          "pre_switch_angular_rate_samples": 122,
+          "pre_switch_angular_rate_x_max_abs_rad_s": 1.9754165410995483,
+          "pre_switch_angular_rate_y_max_abs_rad_s": 1.950815200805664,
+          "pre_switch_angular_rate_z_max_abs_rad_s": 1.6034586429595947,
+          "pre_switch_attitude_samples": 126,
+          "pre_switch_roll_pitch_max_deg": 54.95783890211315,
+          "pre_switch_roll_pitch_mean_deg": 47.10867681677996,
+          "pre_window_s": 0.5,
+          "switch_us": 25448000
+        },
+        "tag": "fuzz1b_locked_20260625_scan_rp40_65_rate1p80_2p30_s20261702",
+        "trigger_ulog_match": {
+          "angular_rate_error_norm_rad_s": 0.0,
+          "matched": true,
+          "pitch_error_deg": 0.0,
+          "roll_error_deg": 0.0,
+          "score": 0.0,
+          "switch_us": 25448000
+        }
+      }
+    },
+    {
+      "classical": {
+        "case": "scan_rp35_65_rate1p40_1p90",
+        "controller": "classical",
+        "detector": {
+          "active_motor_nonfinite": {
+            "first_nonfinite": null,
+            "nan_count": 0,
+            "neginf_count": 0,
+            "nonfinite_count": 0,
+            "posinf_count": 0,
+            "samples": 14955
+          },
+          "active_motor_saturation_count": 18380,
+          "active_motor_saturation_ratio": 0.307255098629221,
+          "analysis_start_us": 25172000,
+          "console": {
+            "fault": false,
+            "matches": [],
+            "px4_timeout_rc": false
+          },
+          "controller": "classical",
+          "hit": true,
+          "hit_reasons": [
+            "failsafe",
+            "ground_contact_post_switch"
+          ],
+          "post_switch_disarmed": false,
+          "post_switch_failsafe": true,
+          "severity": 2,
+          "severity_label": "medium",
+          "source_map": {
+            "actuator_motors": "mc_nn_control.cpp PublishOutput() writes active actuator_motors.control[0..3].",
+            "network_output": "mc_nn_control.cpp RescaleActions() mutates output tensor before neural_control.network_output publish.",
+            "observation": "mc_nn_control.cpp PopulateInputTensor() fills _input_data; neural_control.cpp publish loop copies it."
+          },
+          "switch_us_source": "matched_groundtruth_state",
+          "tracking_only_reasons_ignored": []
+        },
+        "exact_switch_state": {
+          "angular_rate_norm_rad_s": 1.8789991397762948,
+          "angular_rate_xyz_rad_s": [
+            -1.6977295875549316,
+            0.3655681312084198,
+            0.717434287071228
+          ],
+          "angular_velocity_dt_ms": 0.0,
+          "angular_velocity_timestamp_us": 25172000,
+          "angular_velocity_topic": "vehicle_angular_velocity_groundtruth",
+          "attitude_dt_ms": 0.0,
+          "attitude_timestamp_us": 25172000,
+          "attitude_topic": "vehicle_attitude_groundtruth",
+          "local_position_dt_ms": 0.0,
+          "local_position_timestamp_us": 25172000,
+          "local_position_topic": "vehicle_local_position_groundtruth",
+          "pitch_deg": -45.321527712870534,
+          "pitch_rate_abs_rad_s": 0.3655681312084198,
+          "position_ned_m": [
+            -13.708470344543457,
+            -3.5001606941223145,
+            -2.58575439453125
+          ],
+          "roll_deg": -10.988701071556248,
+          "roll_pitch_abs_deg": 45.321527712870534,
+          "roll_rate_abs_rad_s": 1.6977295875549316,
+          "switch_us": 25172000,
+          "velocity_ned_m_s": [
+            -1.6065196990966797,
+            3.6306586265563965,
+            0.07910001277923584
+          ],
+          "velocity_norm_m_s": 3.971000430394807,
+          "yaw_rate_abs_rad_s": 0.717434287071228
+        },
+        "outputs": {
+          "agent": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp35_65_rate1p40_1p90_s20261703/mcnn_gate3_fuzz1b_locked_20260625_scan_rp35_65_rate1p40_1p90_s20261703_classical_agent.log",
+          "console": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp35_65_rate1p40_1p90_s20261703/mcnn_gate3_fuzz1b_locked_20260625_scan_rp35_65_rate1p40_1p90_s20261703_classical_px4_console.log",
+          "metrics": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp35_65_rate1p40_1p90_s20261703/mcnn_gate3_fuzz1b_locked_20260625_scan_rp35_65_rate1p40_1p90_s20261703_classical_metrics.json",
+          "task": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp35_65_rate1p40_1p90_s20261703/mcnn_gate3_fuzz1b_locked_20260625_scan_rp35_65_rate1p40_1p90_s20261703_classical_task.json",
+          "topics": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp35_65_rate1p40_1p90_s20261703/mcnn_gate3_fuzz1b_locked_20260625_scan_rp35_65_rate1p40_1p90_s20261703_classical_topics.log",
+          "ulog": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp35_65_rate1p40_1p90_s20261703/mcnn_gate3_fuzz1b_locked_20260625_scan_rp35_65_rate1p40_1p90_s20261703_classical.ulg"
+        },
+        "run_error": null,
+        "seed": 20261703,
+        "stage": "scan_down",
+        "state_trigger": {
+          "enabled": true,
+          "event": {
+            "detail": {
+              "state": {
+                "angular_rate_norm_rad_s": 1.8689985554453115,
+                "angular_rate_xyz_rad_s": [
+                  -1.685686469078064,
+                  0.3896002471446991,
+                  0.7069854140281677
+                ],
+                "angular_velocity_timestamp_us": 1782406735650726,
+                "attitude_timestamp_us": 1782406735646726,
+                "elapsed_s": 20.332477,
+                "pitch_deg": -45.321527712870534,
+                "pitch_rate_abs_rad_s": 0.3896002471446991,
+                "roll_deg": -10.988701071556248,
+                "roll_pitch_abs_deg": 45.321527712870534,
+                "roll_rate_abs_rad_s": 1.685686469078064,
+                "timestamp_us": 1782406735650726,
+                "yaw_deg": 4.366572832287392,
+                "yaw_rate_abs_rad_s": 0.7069854140281677
+              },
+              "trigger": {
+                "angular_rate_norm_max_rad_s": 1.9,
+                "angular_rate_norm_min_rad_s": 1.4,
+                "deadline_s": 38.0,
+                "enabled": true,
+                "max_topic_age_s": 0.25,
+                "method": "SIH groundtruth threshold crossing",
+                "roll_pitch_abs_max_deg": 65.0,
+                "roll_pitch_abs_min_deg": 35.0,
+                "start_s": 20.0
+              }
+            },
+            "elapsed_s": 20.332477,
+            "name": "state_trigger",
+            "timestamp_us": 1782406735650726
+          },
+          "fired": true,
+          "max_observed": {
+            "angular_rate_norm_rad_s": 2.395693865028666,
+            "angular_rate_norm_state": {
+              "angular_rate_norm_rad_s": 2.395693865028666,
+              "angular_rate_xyz_rad_s": [
+                -1.7864246368408203,
+                -0.7955573797225952,
+                1.3838802576065063
+              ],
+              "angular_velocity_timestamp_us": 1782406735382726,
+              "attitude_timestamp_us": 1782406735382726,
+              "elapsed_s": 20.064477,
+              "pitch_deg": -38.42059093142582,
+              "pitch_rate_abs_rad_s": 0.7955573797225952,
+              "roll_deg": 29.91545228046358,
+              "roll_pitch_abs_deg": 38.42059093142582,
+              "roll_rate_abs_rad_s": 1.7864246368408203,
+              "timestamp_us": 1782406735382726,
+              "yaw_deg": -14.970025074336068,
+              "yaw_rate_abs_rad_s": 1.3838802576065063
+            },
+            "angular_rate_xyz_rad_s": [
+              -1.5015078783035278,
+              -0.9927366375923157,
+              1.4943804740905762
+            ],
+            "angular_velocity_timestamp_us": 1782406735318726,
+            "attitude_timestamp_us": 1782406735318726,
+            "elapsed_s": 20.000477,
+            "pitch_deg": -32.79312887690014,
+            "pitch_rate_abs_rad_s": 0.9927366375923157,
+            "roll_deg": 37.74313908533,
+            "roll_pitch_abs_deg": 46.4379933746375,
+            "roll_pitch_abs_state": {
+              "angular_rate_norm_rad_s": 2.0416422730398662,
+              "angular_rate_xyz_rad_s": [
+                -1.8216753005981445,
+                0.003375534201040864,
+                0.921841025352478
+              ],
+              "angular_velocity_timestamp_us": 1782406735570726,
+              "attitude_timestamp_us": 1782406735570726,
+              "elapsed_s": 20.252477,
+              "pitch_deg": -46.4379933746375,
+              "pitch_rate_abs_rad_s": 0.003375534201040864,
+              "roll_deg": 0.29703214954768564,
+              "roll_pitch_abs_deg": 46.4379933746375,
+              "roll_rate_abs_rad_s": 1.8216753005981445,
+              "timestamp_us": 1782406735570726,
+              "yaw_deg": -0.6323934493725291,
+              "yaw_rate_abs_rad_s": 0.921841025352478
+            },
+            "roll_rate_abs_rad_s": 1.5015078783035278,
+            "timestamp_us": 1782406735318726,
+            "yaw_deg": -18.15808909552007,
+            "yaw_rate_abs_rad_s": 1.4943804740905762
+          },
+          "state": {
+            "angular_rate_norm_rad_s": 1.8689985554453115,
+            "angular_rate_xyz_rad_s": [
+              -1.685686469078064,
+              0.3896002471446991,
+              0.7069854140281677
+            ],
+            "angular_velocity_timestamp_us": 1782406735650726,
+            "attitude_timestamp_us": 1782406735646726,
+            "elapsed_s": 20.332477,
+            "pitch_deg": -45.321527712870534,
+            "pitch_rate_abs_rad_s": 0.3896002471446991,
+            "roll_deg": -10.988701071556248,
+            "roll_pitch_abs_deg": 45.321527712870534,
+            "roll_rate_abs_rad_s": 1.685686469078064,
+            "timestamp_us": 1782406735650726,
+            "yaw_deg": 4.366572832287392,
+            "yaw_rate_abs_rad_s": 0.7069854140281677
+          },
+          "timeout_event": null
+        },
+        "switch_context": {
+          "controller_active_us": 25500000,
+          "mission_end_us": 89444000,
+          "post_switch_angular_rate_max_rad_s": 1.9097949407021546,
+          "post_switch_min_altitude_agl_m": -0.821197509765625,
+          "post_switch_position_samples": 8033,
+          "post_switch_roll_pitch_max_deg": 45.10009326939401,
+          "pre_switch_angular_rate_max_rad_s": 2.525364818110058,
+          "pre_switch_angular_rate_mean_rad_s": 2.247111811672232,
+          "pre_switch_angular_rate_samples": 116,
+          "pre_switch_angular_rate_x_max_abs_rad_s": 1.978211522102356,
+          "pre_switch_angular_rate_y_max_abs_rad_s": 1.516419529914856,
+          "pre_switch_angular_rate_z_max_abs_rad_s": 1.6092033386230469,
+          "pre_switch_attitude_samples": 126,
+          "pre_switch_roll_pitch_max_deg": 50.39730195945546,
+          "pre_switch_roll_pitch_mean_deg": 43.49204955247824,
+          "pre_window_s": 0.5,
+          "switch_us": 25172000
+        },
+        "tag": "fuzz1b_locked_20260625_scan_rp35_65_rate1p40_1p90_s20261703",
+        "trigger_ulog_match": {
+          "angular_rate_error_norm_rad_s": 0.02884021925874755,
+          "matched": true,
+          "pitch_error_deg": 0.0,
+          "roll_error_deg": 0.0,
+          "score": 0.576804385174951,
+          "switch_us": 25172000
+        }
+      },
+      "classification": {
+        "both_triggered": true,
+        "classical_hit": true,
+        "classical_reasons": [
+          "failsafe",
+          "ground_contact_post_switch"
+        ],
+        "classical_severity": 2,
+        "label": "too_hard_not_primary",
+        "locked_differential": false,
+        "mcnn_hit": true,
+        "mcnn_reasons": [
+          "angular_rate_loss_of_control",
+          "attitude_loss_of_control",
+          "ground_contact_post_switch"
+        ],
+        "mcnn_severity": 3,
+        "nn_only_mode": false,
+        "primary_bug": false,
+        "state_residual": {
+          "angular_rate_norm_rad_s": 0.053755411713984236,
+          "angular_rate_xyz_abs_rad_s": [
+            0.12799346446990967,
+            0.29582539200782776,
+            0.06168907880783081
+          ],
+          "pitch_deg": 3.1470013642849963,
+          "roll_deg": 10.015264745268167,
+          "roll_pitch_abs_deg": 3.1470013642849963,
+          "velocity_ned_abs_m_s": [
+            0.8098977208137512,
+            0.16435456275939941,
+            0.4101061522960663
+          ],
+          "velocity_norm_m_s": 0.3808481897611782,
+          "within_method_a_tolerance": true
+        },
+        "too_hard": true
+      },
+      "mcnn": {
+        "case": "scan_rp35_65_rate1p40_1p90",
+        "controller": "mcnn",
+        "detector": {
+          "active_motor_nonfinite": {
+            "first_nonfinite": null,
+            "nan_count": 0,
+            "neginf_count": 0,
+            "nonfinite_count": 0,
+            "posinf_count": 0,
+            "samples": 14873
+          },
+          "active_motor_saturation_count": 57695,
+          "active_motor_saturation_ratio": 0.9697942580515028,
+          "analysis_start_us": 25720000,
+          "console": {
+            "fault": false,
+            "matches": [],
+            "px4_timeout_rc": false
+          },
+          "controller": "mcnn",
+          "hit": true,
+          "hit_reasons": [
+            "angular_rate_loss_of_control",
+            "attitude_loss_of_control",
+            "ground_contact_post_switch"
+          ],
+          "network_output_nonfinite": {
+            "first_nonfinite": null,
+            "nan_count": 0,
+            "neginf_count": 0,
+            "nonfinite_count": 0,
+            "posinf_count": 0,
+            "samples": 14487
+          },
+          "neural_control_samples": 14487,
+          "observation_nonfinite": {
+            "first_nonfinite": null,
+            "nan_count": 0,
+            "neginf_count": 0,
+            "nonfinite_count": 0,
+            "posinf_count": 0,
+            "samples": 14487
+          },
+          "post_switch_disarmed": false,
+          "post_switch_failsafe": false,
+          "severity": 3,
+          "severity_label": "high",
+          "source_map": {
+            "actuator_motors": "mc_nn_control.cpp PublishOutput() writes active actuator_motors.control[0..3].",
+            "network_output": "mc_nn_control.cpp RescaleActions() mutates output tensor before neural_control.network_output publish.",
+            "observation": "mc_nn_control.cpp PopulateInputTensor() fills _input_data; neural_control.cpp publish loop copies it."
+          },
+          "switch_us_source": "matched_groundtruth_state",
+          "tracking_only_reasons_ignored": []
+        },
+        "exact_switch_state": {
+          "angular_rate_norm_rad_s": 1.8252437280623106,
+          "angular_rate_xyz_rad_s": [
+            -1.569736123085022,
+            0.6613935232162476,
+            0.6557452082633972
+          ],
+          "angular_velocity_dt_ms": 0.0,
+          "angular_velocity_timestamp_us": 25700000,
+          "angular_velocity_topic": "vehicle_angular_velocity_groundtruth",
+          "attitude_dt_ms": 0.0,
+          "attitude_timestamp_us": 25700000,
+          "attitude_topic": "vehicle_attitude_groundtruth",
+          "local_position_dt_ms": 0.0,
+          "local_position_timestamp_us": 25700000,
+          "local_position_topic": "vehicle_local_position_groundtruth",
+          "pitch_deg": -42.17452634858554,
+          "pitch_rate_abs_rad_s": 0.6613935232162476,
+          "position_ned_m": [
+            -11.364852905273438,
+            -1.742409348487854,
+            -1.671142578125
+          ],
+          "roll_deg": -21.003965816824415,
+          "roll_pitch_abs_deg": 42.17452634858554,
+          "roll_rate_abs_rad_s": 1.569736123085022,
+          "switch_us": 25700000,
+          "velocity_ned_m_s": [
+            -0.7966219782829285,
+            3.466304063796997,
+            0.4892061650753021
+          ],
+          "velocity_norm_m_s": 3.590152240633629,
+          "yaw_rate_abs_rad_s": 0.6557452082633972
+        },
+        "outputs": {
+          "agent": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp35_65_rate1p40_1p90_s20261703/mcnn_gate3_fuzz1b_locked_20260625_scan_rp35_65_rate1p40_1p90_s20261703_mcnn_agent.log",
+          "console": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp35_65_rate1p40_1p90_s20261703/mcnn_gate3_fuzz1b_locked_20260625_scan_rp35_65_rate1p40_1p90_s20261703_mcnn_px4_console.log",
+          "metrics": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp35_65_rate1p40_1p90_s20261703/mcnn_gate3_fuzz1b_locked_20260625_scan_rp35_65_rate1p40_1p90_s20261703_mcnn_metrics.json",
+          "task": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp35_65_rate1p40_1p90_s20261703/mcnn_gate3_fuzz1b_locked_20260625_scan_rp35_65_rate1p40_1p90_s20261703_mcnn_task.json",
+          "topics": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp35_65_rate1p40_1p90_s20261703/mcnn_gate3_fuzz1b_locked_20260625_scan_rp35_65_rate1p40_1p90_s20261703_mcnn_topics.log",
+          "ulog": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp35_65_rate1p40_1p90_s20261703/mcnn_gate3_fuzz1b_locked_20260625_scan_rp35_65_rate1p40_1p90_s20261703_mcnn.ulg"
+        },
+        "run_error": null,
+        "seed": 20261703,
+        "stage": "scan_down",
+        "state_trigger": {
+          "enabled": true,
+          "event": {
+            "detail": {
+              "state": {
+                "angular_rate_norm_rad_s": 1.8252437280623106,
+                "angular_rate_xyz_rad_s": [
+                  -1.569736123085022,
+                  0.6613935232162476,
+                  0.6557452082633972
+                ],
+                "angular_velocity_timestamp_us": 1782406633533381,
+                "attitude_timestamp_us": 1782406633533381,
+                "elapsed_s": 20.416428,
+                "pitch_deg": -42.17452634858554,
+                "pitch_rate_abs_rad_s": 0.6613935232162476,
+                "roll_deg": -21.003965816824415,
+                "roll_pitch_abs_deg": 42.17452634858554,
+                "roll_rate_abs_rad_s": 1.569736123085022,
+                "timestamp_us": 1782406633533381,
+                "yaw_deg": 7.751616454825896,
+                "yaw_rate_abs_rad_s": 0.6557452082633972
+              },
+              "trigger": {
+                "angular_rate_norm_max_rad_s": 1.9,
+                "angular_rate_norm_min_rad_s": 1.4,
+                "deadline_s": 38.0,
+                "enabled": true,
+                "max_topic_age_s": 0.25,
+                "method": "SIH groundtruth threshold crossing",
+                "roll_pitch_abs_max_deg": 65.0,
+                "roll_pitch_abs_min_deg": 35.0,
+                "start_s": 20.0
+              }
+            },
+            "elapsed_s": 20.416428,
+            "name": "state_trigger",
+            "timestamp_us": 1782406633533381
+          },
+          "fired": true,
+          "max_observed": {
+            "angular_rate_norm_rad_s": 2.4376057995821654,
+            "angular_rate_norm_state": {
+              "angular_rate_norm_rad_s": 2.4376057995821654,
+              "angular_rate_xyz_rad_s": [
+                -1.7229198217391968,
+                -0.8196666836738586,
+                1.5171077251434326
+              ],
+              "angular_velocity_timestamp_us": 1782406633173381,
+              "attitude_timestamp_us": 1782406633173381,
+              "elapsed_s": 20.056428,
+              "pitch_deg": -36.82783822209305,
+              "pitch_rate_abs_rad_s": 0.8196666836738586,
+              "roll_deg": 35.31566105453849,
+              "roll_pitch_abs_deg": 36.82783822209305,
+              "roll_rate_abs_rad_s": 1.7229198217391968,
+              "timestamp_us": 1782406633173381,
+              "yaw_deg": -18.933086742365838,
+              "yaw_rate_abs_rad_s": 1.5171077251434326
+            },
+            "angular_rate_xyz_rad_s": [
+              -1.5419988632202148,
+              -0.9687950015068054,
+              1.5792560577392578
+            ],
+            "angular_velocity_timestamp_us": 1782406633121381,
+            "attitude_timestamp_us": 1782406633121381,
+            "elapsed_s": 20.004428,
+            "pitch_deg": -31.87597713860034,
+            "pitch_rate_abs_rad_s": 0.9687950015068054,
+            "roll_deg": 41.50080066852543,
+            "roll_pitch_abs_deg": 46.27620421478417,
+            "roll_pitch_abs_state": {
+              "angular_rate_norm_rad_s": 2.170063832283481,
+              "angular_rate_xyz_rad_s": [
+                -1.8934489488601685,
+                0.017396217212080956,
+                1.0600591897964478
+              ],
+              "angular_velocity_timestamp_us": 1782406633381381,
+              "attitude_timestamp_us": 1782406633381381,
+              "elapsed_s": 20.264428,
+              "pitch_deg": -46.27620421478417,
+              "pitch_rate_abs_rad_s": 0.017396217212080956,
+              "roll_deg": 1.2056364705086111,
+              "roll_pitch_abs_deg": 46.27620421478417,
+              "roll_rate_abs_rad_s": 1.8934489488601685,
+              "timestamp_us": 1782406633381381,
+              "yaw_deg": -1.6405499507106476,
+              "yaw_rate_abs_rad_s": 1.0600591897964478
+            },
+            "roll_rate_abs_rad_s": 1.5419988632202148,
+            "timestamp_us": 1782406633121381,
+            "yaw_deg": -21.319022423925304,
+            "yaw_rate_abs_rad_s": 1.5792560577392578
+          },
+          "state": {
+            "angular_rate_norm_rad_s": 1.8252437280623106,
+            "angular_rate_xyz_rad_s": [
+              -1.569736123085022,
+              0.6613935232162476,
+              0.6557452082633972
+            ],
+            "angular_velocity_timestamp_us": 1782406633533381,
+            "attitude_timestamp_us": 1782406633533381,
+            "elapsed_s": 20.416428,
+            "pitch_deg": -42.17452634858554,
+            "pitch_rate_abs_rad_s": 0.6613935232162476,
+            "roll_deg": -21.003965816824415,
+            "roll_pitch_abs_deg": 42.17452634858554,
+            "roll_rate_abs_rad_s": 1.569736123085022,
+            "timestamp_us": 1782406633533381,
+            "yaw_deg": 7.751616454825896,
+            "yaw_rate_abs_rad_s": 0.6557452082633972
+          },
+          "timeout_event": null
+        },
+        "switch_context": {
+          "controller_active_us": 25720000,
+          "mission_end_us": 89420000,
+          "post_switch_angular_rate_max_rad_s": 24.17359361062348,
+          "post_switch_min_altitude_agl_m": -1.944244384765625,
+          "post_switch_position_samples": 7964,
+          "post_switch_roll_pitch_max_deg": 179.99622150151743,
+          "pre_switch_angular_rate_max_rad_s": 2.570455345696454,
+          "pre_switch_angular_rate_mean_rad_s": 2.2629145347806534,
+          "pre_switch_angular_rate_samples": 121,
+          "pre_switch_angular_rate_x_max_abs_rad_s": 2.0621159076690674,
+          "pre_switch_angular_rate_y_max_abs_rad_s": 1.3341009616851807,
+          "pre_switch_angular_rate_z_max_abs_rad_s": 1.6225335597991943,
+          "pre_switch_attitude_samples": 126,
+          "pre_switch_roll_pitch_max_deg": 49.06845079079363,
+          "pre_switch_roll_pitch_mean_deg": 43.334999549852895,
+          "pre_window_s": 0.5,
+          "switch_us": 25700000
+        },
+        "tag": "fuzz1b_locked_20260625_scan_rp35_65_rate1p40_1p90_s20261703",
+        "trigger_ulog_match": {
+          "angular_rate_error_norm_rad_s": 0.0,
+          "matched": true,
+          "pitch_error_deg": 0.0,
+          "roll_error_deg": 0.0,
+          "score": 0.0,
+          "switch_us": 25700000
+        }
+      }
+    },
+    {
+      "classical": {
+        "case": "scan_rp30_65_rate1p00_1p50",
+        "controller": "classical",
+        "detector": {
+          "active_motor_nonfinite": {
+            "first_nonfinite": null,
+            "nan_count": 0,
+            "neginf_count": 0,
+            "nonfinite_count": 0,
+            "posinf_count": 0,
+            "samples": 13154
+          },
+          "active_motor_saturation_count": 18264,
+          "active_motor_saturation_ratio": 0.34711874714915614,
+          "analysis_start_us": 32976000,
+          "console": {
+            "fault": false,
+            "matches": [],
+            "px4_timeout_rc": false
+          },
+          "controller": "classical",
+          "hit": true,
+          "hit_reasons": [
+            "failsafe",
+            "ground_contact_post_switch"
+          ],
+          "post_switch_disarmed": false,
+          "post_switch_failsafe": true,
+          "severity": 2,
+          "severity_label": "medium",
+          "source_map": {
+            "actuator_motors": "mc_nn_control.cpp PublishOutput() writes active actuator_motors.control[0..3].",
+            "network_output": "mc_nn_control.cpp RescaleActions() mutates output tensor before neural_control.network_output publish.",
+            "observation": "mc_nn_control.cpp PopulateInputTensor() fills _input_data; neural_control.cpp publish loop copies it."
+          },
+          "switch_us_source": "matched_groundtruth_state",
+          "tracking_only_reasons_ignored": []
+        },
+        "exact_switch_state": {
+          "angular_rate_norm_rad_s": 1.4882888250173099,
+          "angular_rate_xyz_rad_s": [
+            -1.3072706460952759,
+            0.09145447611808777,
+            0.705466628074646
+          ],
+          "angular_velocity_dt_ms": 0.0,
+          "angular_velocity_timestamp_us": 32976000,
+          "angular_velocity_topic": "vehicle_angular_velocity_groundtruth",
+          "attitude_dt_ms": 0.0,
+          "attitude_timestamp_us": 32976000,
+          "attitude_topic": "vehicle_attitude_groundtruth",
+          "local_position_dt_ms": 0.0,
+          "local_position_timestamp_us": 32976000,
+          "local_position_topic": "vehicle_local_position_groundtruth",
+          "pitch_deg": -41.53355152862262,
+          "pitch_rate_abs_rad_s": 0.09145447611808777,
+          "position_ned_m": [
+            -29.564424514770508,
+            -0.5992720127105713,
+            -2.128997802734375
+          ],
+          "roll_deg": -13.56866042686305,
+          "roll_pitch_abs_deg": 41.53355152862262,
+          "roll_rate_abs_rad_s": 1.3072706460952759,
+          "switch_us": 32976000,
+          "velocity_ned_m_s": [
+            -0.6391972303390503,
+            3.3931684494018555,
+            0.07778044790029526
+          ],
+          "velocity_norm_m_s": 3.4537248042316393,
+          "yaw_rate_abs_rad_s": 0.705466628074646
+        },
+        "outputs": {
+          "agent": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp30_65_rate1p00_1p50_s20261704/mcnn_gate3_fuzz1b_locked_20260625_scan_rp30_65_rate1p00_1p50_s20261704_classical_agent.log",
+          "console": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp30_65_rate1p00_1p50_s20261704/mcnn_gate3_fuzz1b_locked_20260625_scan_rp30_65_rate1p00_1p50_s20261704_classical_px4_console.log",
+          "metrics": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp30_65_rate1p00_1p50_s20261704/mcnn_gate3_fuzz1b_locked_20260625_scan_rp30_65_rate1p00_1p50_s20261704_classical_metrics.json",
+          "task": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp30_65_rate1p00_1p50_s20261704/mcnn_gate3_fuzz1b_locked_20260625_scan_rp30_65_rate1p00_1p50_s20261704_classical_task.json",
+          "topics": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp30_65_rate1p00_1p50_s20261704/mcnn_gate3_fuzz1b_locked_20260625_scan_rp30_65_rate1p00_1p50_s20261704_classical_topics.log",
+          "ulog": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp30_65_rate1p00_1p50_s20261704/mcnn_gate3_fuzz1b_locked_20260625_scan_rp30_65_rate1p00_1p50_s20261704_classical.ulg"
+        },
+        "run_error": null,
+        "seed": 20261704,
+        "stage": "scan_down",
+        "state_trigger": {
+          "enabled": true,
+          "event": {
+            "detail": {
+              "state": {
+                "angular_rate_norm_rad_s": 1.4882888250173099,
+                "angular_rate_xyz_rad_s": [
+                  -1.3072706460952759,
+                  0.09145447611808777,
+                  0.705466628074646
+                ],
+                "angular_velocity_timestamp_us": 1782406949599608,
+                "attitude_timestamp_us": 1782406949599608,
+                "elapsed_s": 29.116692,
+                "pitch_deg": -41.53355152862262,
+                "pitch_rate_abs_rad_s": 0.09145447611808777,
+                "roll_deg": -13.56866042686305,
+                "roll_pitch_abs_deg": 41.53355152862262,
+                "roll_rate_abs_rad_s": 1.3072706460952759,
+                "timestamp_us": 1782406949599608,
+                "yaw_deg": 4.839864226933767,
+                "yaw_rate_abs_rad_s": 0.705466628074646
+              },
+              "trigger": {
+                "angular_rate_norm_max_rad_s": 1.5,
+                "angular_rate_norm_min_rad_s": 1.0,
+                "deadline_s": 38.0,
+                "enabled": true,
+                "max_topic_age_s": 0.25,
+                "method": "SIH groundtruth threshold crossing",
+                "roll_pitch_abs_max_deg": 65.0,
+                "roll_pitch_abs_min_deg": 30.0,
+                "start_s": 20.0
+              }
+            },
+            "elapsed_s": 29.116692,
+            "name": "state_trigger",
+            "timestamp_us": 1782406949599608
+          },
+          "fired": true,
+          "max_observed": {
+            "angular_rate_norm_rad_s": 4.607010639029233,
+            "angular_rate_norm_state": {
+              "angular_rate_norm_rad_s": 4.607010639029233,
+              "angular_rate_xyz_rad_s": [
+                2.9284627437591553,
+                -3.4313817024230957,
+                0.9350254535675049
+              ],
+              "angular_velocity_timestamp_us": 1782406947120196,
+              "attitude_timestamp_us": 1782406947120196,
+              "elapsed_s": 26.63728,
+              "pitch_deg": 14.489224735567415,
+              "pitch_rate_abs_rad_s": 3.4313817024230957,
+              "roll_deg": -11.693502666056782,
+              "roll_pitch_abs_deg": 14.489224735567415,
+              "roll_rate_abs_rad_s": 2.9284627437591553,
+              "timestamp_us": 1782406947120196,
+              "yaw_deg": -13.969048169915085,
+              "yaw_rate_abs_rad_s": 0.9350254535675049
+            },
+            "angular_rate_xyz_rad_s": [
+              -1.5777429342269897,
+              -0.9899595379829407,
+              1.517417073249817
+            ],
+            "angular_velocity_timestamp_us": 1782406940486187,
+            "attitude_timestamp_us": 1782406940486187,
+            "elapsed_s": 20.003271,
+            "pitch_deg": -32.83962802638157,
+            "pitch_rate_abs_rad_s": 0.9899595379829407,
+            "roll_deg": 38.61674787292736,
+            "roll_pitch_abs_deg": 56.24982091520843,
+            "roll_pitch_abs_state": {
+              "angular_rate_norm_rad_s": 2.465067780360962,
+              "angular_rate_xyz_rad_s": [
+                -2.4647533893585205,
+                -0.012147940695285797,
+                -0.037447549402713776
+              ],
+              "angular_velocity_timestamp_us": 1782406947648864,
+              "attitude_timestamp_us": 1782406947648864,
+              "elapsed_s": 27.165948,
+              "pitch_deg": -56.24982091520843,
+              "pitch_rate_abs_rad_s": 0.012147940695285797,
+              "roll_deg": -35.73433803718599,
+              "roll_pitch_abs_deg": 56.24982091520843,
+              "roll_rate_abs_rad_s": 2.4647533893585205,
+              "timestamp_us": 1782406947648864,
+              "yaw_deg": 8.504664619485476,
+              "yaw_rate_abs_rad_s": 0.037447549402713776
+            },
+            "roll_rate_abs_rad_s": 1.5777429342269897,
+            "timestamp_us": 1782406940486187,
+            "yaw_deg": -21.417697475642754,
+            "yaw_rate_abs_rad_s": 1.517417073249817
+          },
+          "state": {
+            "angular_rate_norm_rad_s": 1.4882888250173099,
+            "angular_rate_xyz_rad_s": [
+              -1.3072706460952759,
+              0.09145447611808777,
+              0.705466628074646
+            ],
+            "angular_velocity_timestamp_us": 1782406949599608,
+            "attitude_timestamp_us": 1782406949599608,
+            "elapsed_s": 29.116692,
+            "pitch_deg": -41.53355152862262,
+            "pitch_rate_abs_rad_s": 0.09145447611808777,
+            "roll_deg": -13.56866042686305,
+            "roll_pitch_abs_deg": 41.53355152862262,
+            "roll_rate_abs_rad_s": 1.3072706460952759,
+            "timestamp_us": 1782406949599608,
+            "yaw_deg": 4.839864226933767,
+            "yaw_rate_abs_rad_s": 0.705466628074646
+          },
+          "timeout_event": null
+        },
+        "switch_context": {
+          "controller_active_us": 32996000,
+          "mission_end_us": 89408000,
+          "post_switch_angular_rate_max_rad_s": 1.6312389081743917,
+          "post_switch_min_altitude_agl_m": -1.458221435546875,
+          "post_switch_position_samples": 7053,
+          "post_switch_roll_pitch_max_deg": 50.609245243989506,
+          "pre_switch_angular_rate_max_rad_s": 2.742740079736999,
+          "pre_switch_angular_rate_mean_rad_s": 2.2183027924706114,
+          "pre_switch_angular_rate_samples": 121,
+          "pre_switch_angular_rate_x_max_abs_rad_s": 1.7845538854599,
+          "pre_switch_angular_rate_y_max_abs_rad_s": 1.3746178150177002,
+          "pre_switch_angular_rate_z_max_abs_rad_s": 1.924180030822754,
+          "pre_switch_attitude_samples": 126,
+          "pre_switch_roll_pitch_max_deg": 43.89487128548295,
+          "pre_switch_roll_pitch_mean_deg": 38.71701042622683,
+          "pre_window_s": 0.5,
+          "switch_us": 32976000
+        },
+        "tag": "fuzz1b_locked_20260625_scan_rp30_65_rate1p00_1p50_s20261704",
+        "trigger_ulog_match": {
+          "angular_rate_error_norm_rad_s": 0.0,
+          "matched": true,
+          "pitch_error_deg": 0.0,
+          "roll_error_deg": 0.0,
+          "score": 0.0,
+          "switch_us": 32976000
+        }
+      },
+      "classification": {
+        "both_triggered": true,
+        "classical_hit": true,
+        "classical_reasons": [
+          "failsafe",
+          "ground_contact_post_switch"
+        ],
+        "classical_severity": 2,
+        "label": "too_hard_not_primary",
+        "locked_differential": false,
+        "mcnn_hit": true,
+        "mcnn_reasons": [
+          "angular_rate_loss_of_control",
+          "attitude_loss_of_control",
+          "ground_contact_post_switch",
+          "motor_saturation"
+        ],
+        "mcnn_severity": 3,
+        "nn_only_mode": false,
+        "primary_bug": false,
+        "state_residual": {
+          "angular_rate_norm_rad_s": 0.011453235364554448,
+          "angular_rate_xyz_abs_rad_s": [
+            2.337689518928528,
+            0.5033961832523346,
+            0.20755904912948608
+          ],
+          "pitch_deg": 83.26401790684208,
+          "roll_deg": 29.817551104032773,
+          "roll_pitch_abs_deg": 0.19691484959685113,
+          "velocity_ned_abs_m_s": [
+            2.9224475622177124,
+            5.254421949386597,
+            0.4201179966330528
+          ],
+          "velocity_norm_m_s": 0.579483994829538,
+          "within_method_a_tolerance": true
+        },
+        "too_hard": true
+      },
+      "mcnn": {
+        "case": "scan_rp30_65_rate1p00_1p50",
+        "controller": "mcnn",
+        "detector": {
+          "active_motor_nonfinite": {
+            "first_nonfinite": null,
+            "nan_count": 0,
+            "neginf_count": 0,
+            "nonfinite_count": 0,
+            "posinf_count": 0,
+            "samples": 14265
+          },
+          "active_motor_saturation_count": 56597,
+          "active_motor_saturation_ratio": 0.9918857343147564,
+          "analysis_start_us": 28896000,
+          "console": {
+            "fault": false,
+            "matches": [],
+            "px4_timeout_rc": false
+          },
+          "controller": "mcnn",
+          "hit": true,
+          "hit_reasons": [
+            "angular_rate_loss_of_control",
+            "attitude_loss_of_control",
+            "ground_contact_post_switch",
+            "motor_saturation"
+          ],
+          "network_output_nonfinite": {
+            "first_nonfinite": null,
+            "nan_count": 0,
+            "neginf_count": 0,
+            "nonfinite_count": 0,
+            "posinf_count": 0,
+            "samples": 13947
+          },
+          "neural_control_samples": 13947,
+          "observation_nonfinite": {
+            "first_nonfinite": null,
+            "nan_count": 0,
+            "neginf_count": 0,
+            "nonfinite_count": 0,
+            "posinf_count": 0,
+            "samples": 13947
+          },
+          "post_switch_disarmed": false,
+          "post_switch_failsafe": false,
+          "severity": 3,
+          "severity_label": "high",
+          "source_map": {
+            "actuator_motors": "mc_nn_control.cpp PublishOutput() writes active actuator_motors.control[0..3].",
+            "network_output": "mc_nn_control.cpp RescaleActions() mutates output tensor before neural_control.network_output publish.",
+            "observation": "mc_nn_control.cpp PopulateInputTensor() fills _input_data; neural_control.cpp publish loop copies it."
+          },
+          "switch_us_source": "matched_groundtruth_state",
+          "tracking_only_reasons_ignored": []
+        },
+        "exact_switch_state": {
+          "angular_rate_norm_rad_s": 1.4997420603818643,
+          "angular_rate_xyz_rad_s": [
+            1.030418872833252,
+            0.5948506593704224,
+            0.9130256772041321
+          ],
+          "angular_velocity_dt_ms": 0.0,
+          "angular_velocity_timestamp_us": 28864000,
+          "angular_velocity_topic": "vehicle_angular_velocity_groundtruth",
+          "attitude_dt_ms": 0.0,
+          "attitude_timestamp_us": 28864000,
+          "attitude_topic": "vehicle_attitude_groundtruth",
+          "local_position_dt_ms": 0.0,
+          "local_position_timestamp_us": 28864000,
+          "local_position_topic": "vehicle_local_position_groundtruth",
+          "pitch_deg": 41.73046637821947,
+          "pitch_rate_abs_rad_s": 0.5948506593704224,
+          "position_ned_m": [
+            -17.794509887695312,
+            -2.9349305629730225,
+            -2.282012939453125
+          ],
+          "roll_deg": 16.248890677169722,
+          "roll_pitch_abs_deg": 41.73046637821947,
+          "roll_rate_abs_rad_s": 1.030418872833252,
+          "switch_us": 28864000,
+          "velocity_ned_m_s": [
+            -3.5616447925567627,
+            -1.8612534999847412,
+            -0.34233754873275757
+          ],
+          "velocity_norm_m_s": 4.033208799061177,
+          "yaw_rate_abs_rad_s": 0.9130256772041321
+        },
+        "outputs": {
+          "agent": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp30_65_rate1p00_1p50_s20261704/mcnn_gate3_fuzz1b_locked_20260625_scan_rp30_65_rate1p00_1p50_s20261704_mcnn_agent.log",
+          "console": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp30_65_rate1p00_1p50_s20261704/mcnn_gate3_fuzz1b_locked_20260625_scan_rp30_65_rate1p00_1p50_s20261704_mcnn_px4_console.log",
+          "metrics": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp30_65_rate1p00_1p50_s20261704/mcnn_gate3_fuzz1b_locked_20260625_scan_rp30_65_rate1p00_1p50_s20261704_mcnn_metrics.json",
+          "task": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp30_65_rate1p00_1p50_s20261704/mcnn_gate3_fuzz1b_locked_20260625_scan_rp30_65_rate1p00_1p50_s20261704_mcnn_task.json",
+          "topics": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp30_65_rate1p00_1p50_s20261704/mcnn_gate3_fuzz1b_locked_20260625_scan_rp30_65_rate1p00_1p50_s20261704_mcnn_topics.log",
+          "ulog": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_scan_rp30_65_rate1p00_1p50_s20261704/mcnn_gate3_fuzz1b_locked_20260625_scan_rp30_65_rate1p00_1p50_s20261704_mcnn.ulg"
+        },
+        "run_error": null,
+        "seed": 20261704,
+        "stage": "scan_down",
+        "state_trigger": {
+          "enabled": true,
+          "event": {
+            "detail": {
+              "state": {
+                "angular_rate_norm_rad_s": 1.4997420603818643,
+                "angular_rate_xyz_rad_s": [
+                  1.030418872833252,
+                  0.5948506593704224,
+                  0.9130256772041321
+                ],
+                "angular_velocity_timestamp_us": 1782406841836674,
+                "attitude_timestamp_us": 1782406841836674,
+                "elapsed_s": 23.540328,
+                "pitch_deg": 41.73046637821947,
+                "pitch_rate_abs_rad_s": 0.5948506593704224,
+                "roll_deg": 16.248890677169722,
+                "roll_pitch_abs_deg": 41.73046637821947,
+                "roll_rate_abs_rad_s": 1.030418872833252,
+                "timestamp_us": 1782406841836674,
+                "yaw_deg": -11.068186374922217,
+                "yaw_rate_abs_rad_s": 0.9130256772041321
+              },
+              "trigger": {
+                "angular_rate_norm_max_rad_s": 1.5,
+                "angular_rate_norm_min_rad_s": 1.0,
+                "deadline_s": 38.0,
+                "enabled": true,
+                "max_topic_age_s": 0.25,
+                "method": "SIH groundtruth threshold crossing",
+                "roll_pitch_abs_max_deg": 65.0,
+                "roll_pitch_abs_min_deg": 30.0,
+                "start_s": 20.0
+              }
+            },
+            "elapsed_s": 23.540328,
+            "name": "state_trigger",
+            "timestamp_us": 1782406841836674
+          },
+          "fired": true,
+          "max_observed": {
+            "angular_rate_norm_rad_s": 3.6940679136257732,
+            "angular_rate_norm_state": {
+              "angular_rate_norm_rad_s": 3.6940679136257732,
+              "angular_rate_xyz_rad_s": [
+                3.281498908996582,
+                1.3909395933151245,
+                0.9711795449256897
+              ],
+              "angular_velocity_timestamp_us": 1782406841656674,
+              "attitude_timestamp_us": 1782406841656674,
+              "elapsed_s": 23.360328,
+              "pitch_deg": 35.571780870644076,
+              "pitch_rate_abs_rad_s": 1.3909395933151245,
+              "roll_deg": -17.651432484333693,
+              "roll_pitch_abs_deg": 35.571780870644076,
+              "roll_rate_abs_rad_s": 3.281498908996582,
+              "timestamp_us": 1782406841656674,
+              "yaw_deg": -23.5062258401753,
+              "yaw_rate_abs_rad_s": 0.9711795449256897
+            },
+            "angular_rate_xyz_rad_s": [
+              -1.5512672662734985,
+              -1.0984009504318237,
+              1.570349931716919
+            ],
+            "angular_velocity_timestamp_us": 1782406838304674,
+            "attitude_timestamp_us": 1782406838304674,
+            "elapsed_s": 20.008328,
+            "pitch_deg": -34.646973466170515,
+            "pitch_rate_abs_rad_s": 1.0984009504318237,
+            "roll_deg": 41.08363385421931,
+            "roll_pitch_abs_deg": 52.43778256245688,
+            "roll_pitch_abs_state": {
+              "angular_rate_norm_rad_s": 2.30464074726951,
+              "angular_rate_xyz_rad_s": [
+                -0.00784824788570404,
+                -1.8586194515228271,
+                1.3626595735549927
+              ],
+              "angular_velocity_timestamp_us": 1782406840212674,
+              "attitude_timestamp_us": 1782406840212674,
+              "elapsed_s": 21.916328,
+              "pitch_deg": -2.454895517699033,
+              "pitch_rate_abs_rad_s": 1.8586194515228271,
+              "roll_deg": 52.43778256245688,
+              "roll_pitch_abs_deg": 52.43778256245688,
+              "roll_rate_abs_rad_s": 0.00784824788570404,
+              "timestamp_us": 1782406840212674,
+              "yaw_deg": -17.36977856348298,
+              "yaw_rate_abs_rad_s": 1.3626595735549927
+            },
+            "roll_rate_abs_rad_s": 1.5512672662734985,
+            "timestamp_us": 1782406838304674,
+            "yaw_deg": -21.66084063587415,
+            "yaw_rate_abs_rad_s": 1.570349931716919
+          },
+          "state": {
+            "angular_rate_norm_rad_s": 1.4997420603818643,
+            "angular_rate_xyz_rad_s": [
+              1.030418872833252,
+              0.5948506593704224,
+              0.9130256772041321
+            ],
+            "angular_velocity_timestamp_us": 1782406841836674,
+            "attitude_timestamp_us": 1782406841836674,
+            "elapsed_s": 23.540328,
+            "pitch_deg": 41.73046637821947,
+            "pitch_rate_abs_rad_s": 0.5948506593704224,
+            "roll_deg": 16.248890677169722,
+            "roll_pitch_abs_deg": 41.73046637821947,
+            "roll_rate_abs_rad_s": 1.030418872833252,
+            "timestamp_us": 1782406841836674,
+            "yaw_deg": -11.068186374922217,
+            "yaw_rate_abs_rad_s": 0.9130256772041321
+          },
+          "timeout_event": null
+        },
+        "switch_context": {
+          "controller_active_us": 28896000,
+          "mission_end_us": 89408000,
+          "post_switch_angular_rate_max_rad_s": 24.654853241789905,
+          "post_switch_min_altitude_agl_m": -2.347930908203125,
+          "post_switch_position_samples": 7568,
+          "post_switch_roll_pitch_max_deg": 179.99036872979664,
+          "pre_switch_angular_rate_max_rad_s": 3.7493779885470366,
+          "pre_switch_angular_rate_mean_rad_s": 3.0648205263582105,
+          "pre_switch_angular_rate_samples": 116,
+          "pre_switch_angular_rate_x_max_abs_rad_s": 3.526905059814453,
+          "pre_switch_angular_rate_y_max_abs_rad_s": 2.9415857791900635,
+          "pre_switch_angular_rate_z_max_abs_rad_s": 0.992883026599884,
+          "pre_switch_attitude_samples": 126,
+          "pre_switch_roll_pitch_max_deg": 41.84037275076052,
+          "pre_switch_roll_pitch_mean_deg": 37.62837651997908,
+          "pre_window_s": 0.5,
+          "switch_us": 28864000
+        },
+        "tag": "fuzz1b_locked_20260625_scan_rp30_65_rate1p00_1p50_s20261704",
+        "trigger_ulog_match": {
+          "angular_rate_error_norm_rad_s": 0.0,
+          "matched": true,
+          "pitch_error_deg": 0.0,
+          "roll_error_deg": 0.0,
+          "score": 0.0,
+          "switch_us": 28864000
+        }
+      }
+    },
+    {
+      "classical": {
+        "case": "easy_rp25_65_rate0p65_1p10",
+        "controller": "classical",
+        "detector": {
+          "active_motor_nonfinite": {
+            "first_nonfinite": null,
+            "nan_count": 0,
+            "neginf_count": 0,
+            "nonfinite_count": 0,
+            "posinf_count": 0,
+            "samples": 13057
+          },
+          "active_motor_saturation_count": 20759,
+          "active_motor_saturation_ratio": 0.3974687906869878,
+          "analysis_start_us": 33352000,
+          "console": {
+            "fault": false,
+            "matches": [],
+            "px4_timeout_rc": false
+          },
+          "controller": "classical",
+          "hit": true,
+          "hit_reasons": [
+            "failsafe",
+            "ground_contact_post_switch"
+          ],
+          "post_switch_disarmed": false,
+          "post_switch_failsafe": true,
+          "severity": 2,
+          "severity_label": "medium",
+          "source_map": {
+            "actuator_motors": "mc_nn_control.cpp PublishOutput() writes active actuator_motors.control[0..3].",
+            "network_output": "mc_nn_control.cpp RescaleActions() mutates output tensor before neural_control.network_output publish.",
+            "observation": "mc_nn_control.cpp PopulateInputTensor() fills _input_data; neural_control.cpp publish loop copies it."
+          },
+          "switch_us_source": "matched_groundtruth_state",
+          "tracking_only_reasons_ignored": []
+        },
+        "exact_switch_state": {
+          "angular_rate_norm_rad_s": 1.0594622949091757,
+          "angular_rate_xyz_rad_s": [
+            -0.36103811860084534,
+            0.992063581943512,
+            0.08900382369756699
+          ],
+          "angular_velocity_dt_ms": 0.0,
+          "angular_velocity_timestamp_us": 33352000,
+          "angular_velocity_topic": "vehicle_angular_velocity_groundtruth",
+          "attitude_dt_ms": 0.0,
+          "attitude_timestamp_us": 33352000,
+          "attitude_topic": "vehicle_attitude_groundtruth",
+          "local_position_dt_ms": 0.0,
+          "local_position_timestamp_us": 33352000,
+          "local_position_topic": "vehicle_local_position_groundtruth",
+          "pitch_deg": -27.388669969648593,
+          "pitch_rate_abs_rad_s": 0.992063581943512,
+          "position_ned_m": [
+            -32.31083297729492,
+            10.267130851745605,
+            -2.0440673828125
+          ],
+          "roll_deg": -22.77868487766684,
+          "roll_pitch_abs_deg": 27.388669969648593,
+          "roll_rate_abs_rad_s": 0.36103811860084534,
+          "switch_us": 33352000,
+          "velocity_ned_m_s": [
+            1.7937994003295898,
+            3.712350845336914,
+            0.9354960322380066
+          ],
+          "velocity_norm_m_s": 4.227814791807885,
+          "yaw_rate_abs_rad_s": 0.08900382369756699
+        },
+        "outputs": {
+          "agent": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_easy_rp25_65_rate0p65_1p10_s20261705/mcnn_gate3_fuzz1b_locked_20260625_easy_rp25_65_rate0p65_1p10_s20261705_classical_agent.log",
+          "console": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_easy_rp25_65_rate0p65_1p10_s20261705/mcnn_gate3_fuzz1b_locked_20260625_easy_rp25_65_rate0p65_1p10_s20261705_classical_px4_console.log",
+          "metrics": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_easy_rp25_65_rate0p65_1p10_s20261705/mcnn_gate3_fuzz1b_locked_20260625_easy_rp25_65_rate0p65_1p10_s20261705_classical_metrics.json",
+          "task": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_easy_rp25_65_rate0p65_1p10_s20261705/mcnn_gate3_fuzz1b_locked_20260625_easy_rp25_65_rate0p65_1p10_s20261705_classical_task.json",
+          "topics": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_easy_rp25_65_rate0p65_1p10_s20261705/mcnn_gate3_fuzz1b_locked_20260625_easy_rp25_65_rate0p65_1p10_s20261705_classical_topics.log",
+          "ulog": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_easy_rp25_65_rate0p65_1p10_s20261705/mcnn_gate3_fuzz1b_locked_20260625_easy_rp25_65_rate0p65_1p10_s20261705_classical.ulg"
+        },
+        "run_error": null,
+        "seed": 20261705,
+        "stage": "scan_down",
+        "state_trigger": {
+          "enabled": true,
+          "event": {
+            "detail": {
+              "state": {
+                "angular_rate_norm_rad_s": 1.0594622949091757,
+                "angular_rate_xyz_rad_s": [
+                  -0.36103811860084534,
+                  0.992063581943512,
+                  0.08900382369756699
+                ],
+                "angular_velocity_timestamp_us": 1782407151222531,
+                "attitude_timestamp_us": 1782407151222531,
+                "elapsed_s": 29.184268,
+                "pitch_deg": -27.388669969648593,
+                "pitch_rate_abs_rad_s": 0.992063581943512,
+                "roll_deg": -22.77868487766684,
+                "roll_pitch_abs_deg": 27.388669969648593,
+                "roll_rate_abs_rad_s": 0.36103811860084534,
+                "timestamp_us": 1782407151222531,
+                "yaw_deg": 9.726116742500441,
+                "yaw_rate_abs_rad_s": 0.08900382369756699
+              },
+              "trigger": {
+                "angular_rate_norm_max_rad_s": 1.1,
+                "angular_rate_norm_min_rad_s": 0.65,
+                "deadline_s": 38.0,
+                "enabled": true,
+                "max_topic_age_s": 0.25,
+                "method": "SIH groundtruth threshold crossing",
+                "roll_pitch_abs_max_deg": 65.0,
+                "roll_pitch_abs_min_deg": 25.0,
+                "start_s": 20.0
+              }
+            },
+            "elapsed_s": 29.184268,
+            "name": "state_trigger",
+            "timestamp_us": 1782407151222531
+          },
+          "fired": true,
+          "max_observed": {
+            "angular_rate_norm_rad_s": 5.309598147934388,
+            "angular_rate_norm_state": {
+              "angular_rate_norm_rad_s": 5.309598147934388,
+              "angular_rate_xyz_rad_s": [
+                -4.98515510559082,
+                -0.9212337136268616,
+                1.5784136056900024
+              ],
+              "angular_velocity_timestamp_us": 1782407149443453,
+              "attitude_timestamp_us": 1782407149443453,
+              "elapsed_s": 27.40519,
+              "pitch_deg": -23.192807651610025,
+              "pitch_rate_abs_rad_s": 0.9212337136268616,
+              "roll_deg": 26.19557820555975,
+              "roll_pitch_abs_deg": 26.19557820555975,
+              "roll_rate_abs_rad_s": 4.98515510559082,
+              "timestamp_us": 1782407149443453,
+              "yaw_deg": -19.719934119586327,
+              "yaw_rate_abs_rad_s": 1.5784136056900024
+            },
+            "angular_rate_xyz_rad_s": [
+              -1.5559252500534058,
+              -1.0953706502914429,
+              1.5305819511413574
+            ],
+            "angular_velocity_timestamp_us": 1782407142043276,
+            "attitude_timestamp_us": 1782407142043276,
+            "elapsed_s": 20.005013,
+            "pitch_deg": -31.32737396382547,
+            "pitch_rate_abs_rad_s": 1.0953706502914429,
+            "roll_deg": 41.70950268498373,
+            "roll_pitch_abs_deg": 60.75635883997864,
+            "roll_pitch_abs_state": {
+              "angular_rate_norm_rad_s": 2.3030757672279383,
+              "angular_rate_xyz_rad_s": [
+                -0.48668116331100464,
+                -1.5350719690322876,
+                1.6464669704437256
+              ],
+              "angular_velocity_timestamp_us": 1782407150454531,
+              "attitude_timestamp_us": 1782407150454531,
+              "elapsed_s": 28.416268,
+              "pitch_deg": -34.51224168394451,
+              "pitch_rate_abs_rad_s": 1.5350719690322876,
+              "roll_deg": 60.75635883997864,
+              "roll_pitch_abs_deg": 60.75635883997864,
+              "roll_rate_abs_rad_s": 0.48668116331100464,
+              "timestamp_us": 1782407150454531,
+              "yaw_deg": -27.169496582947026,
+              "yaw_rate_abs_rad_s": 1.6464669704437256
+            },
+            "roll_rate_abs_rad_s": 1.5559252500534058,
+            "timestamp_us": 1782407142043276,
+            "yaw_deg": -22.959773017576715,
+            "yaw_rate_abs_rad_s": 1.5305819511413574
+          },
+          "state": {
+            "angular_rate_norm_rad_s": 1.0594622949091757,
+            "angular_rate_xyz_rad_s": [
+              -0.36103811860084534,
+              0.992063581943512,
+              0.08900382369756699
+            ],
+            "angular_velocity_timestamp_us": 1782407151222531,
+            "attitude_timestamp_us": 1782407151222531,
+            "elapsed_s": 29.184268,
+            "pitch_deg": -27.388669969648593,
+            "pitch_rate_abs_rad_s": 0.992063581943512,
+            "roll_deg": -22.77868487766684,
+            "roll_pitch_abs_deg": 27.388669969648593,
+            "roll_rate_abs_rad_s": 0.36103811860084534,
+            "timestamp_us": 1782407151222531,
+            "yaw_deg": 9.726116742500441,
+            "yaw_rate_abs_rad_s": 0.08900382369756699
+          },
+          "timeout_event": null
+        },
+        "switch_context": {
+          "controller_active_us": 33508000,
+          "mission_end_us": 89392000,
+          "post_switch_angular_rate_max_rad_s": 1.1871141748820855,
+          "post_switch_min_altitude_agl_m": -0.47552490234375,
+          "post_switch_position_samples": 7005,
+          "post_switch_roll_pitch_max_deg": 52.94973881074541,
+          "pre_switch_angular_rate_max_rad_s": 2.551252044749969,
+          "pre_switch_angular_rate_mean_rad_s": 1.8655602309948307,
+          "pre_switch_angular_rate_samples": 120,
+          "pre_switch_angular_rate_x_max_abs_rad_s": 2.1954727172851562,
+          "pre_switch_angular_rate_y_max_abs_rad_s": 1.4068230390548706,
+          "pre_switch_angular_rate_z_max_abs_rad_s": 1.300797939300537,
+          "pre_switch_attitude_samples": 126,
+          "pre_switch_roll_pitch_max_deg": 56.48253107201901,
+          "pre_switch_roll_pitch_mean_deg": 44.4235308284761,
+          "pre_window_s": 0.5,
+          "switch_us": 33352000
+        },
+        "tag": "fuzz1b_locked_20260625_easy_rp25_65_rate0p65_1p10_s20261705",
+        "trigger_ulog_match": {
+          "angular_rate_error_norm_rad_s": 0.0,
+          "matched": true,
+          "pitch_error_deg": 0.0,
+          "roll_error_deg": 0.0,
+          "score": 0.0,
+          "switch_us": 33352000
+        }
+      },
+      "classification": {
+        "both_triggered": false,
+        "classical_hit": true,
+        "classical_reasons": [
+          "failsafe",
+          "ground_contact_post_switch"
+        ],
+        "classical_severity": 2,
+        "label": "no_mcnn_hit",
+        "locked_differential": false,
+        "mcnn_hit": false,
+        "mcnn_reasons": [],
+        "mcnn_severity": 0,
+        "nn_only_mode": false,
+        "primary_bug": false,
+        "state_residual": {
+          "angular_rate_norm_rad_s": null,
+          "pitch_deg": null,
+          "roll_deg": null,
+          "roll_pitch_abs_deg": null,
+          "velocity_norm_m_s": null,
+          "within_method_a_tolerance": false
+        },
+        "too_hard": false
+      },
+      "mcnn": {
+        "case": "easy_rp25_65_rate0p65_1p10",
+        "controller": "mcnn",
+        "detector": {
+          "console": {
+            "fault": false,
+            "matches": [],
+            "px4_timeout_rc": false
+          },
+          "controller": "mcnn",
+          "harness_exception": "RuntimeError('PX4 did not shut down after task for mcnn')",
+          "hit": false,
+          "hit_reasons": [],
+          "severity": 0,
+          "severity_label": "harness_error"
+        },
+        "exact_switch_state": {},
+        "outputs": {
+          "console": "/workspace/docs/fuzz1b_locked_20260625/evals/fuzz1b_locked_20260625_easy_rp25_65_rate0p65_1p10_s20261705/mcnn_gate3_fuzz1b_locked_20260625_easy_rp25_65_rate0p65_1p10_s20261705_mcnn_px4_console.log"
+        },
+        "run_error": "RuntimeError('PX4 did not shut down after task for mcnn')",
+        "seed": 20261705,
+        "stage": "scan_down",
+        "state_trigger": {
+          "enabled": true,
+          "error": "RuntimeError('PX4 did not shut down after task for mcnn')",
+          "fired": false
+        },
+        "switch_context": {},
+        "tag": "fuzz1b_locked_20260625_easy_rp25_65_rate0p65_1p10_s20261705",
+        "trigger_ulog_match": null
+      }
+    }
+  ],
+  "reachability": "The tested switch states are reached by classical Offboard circle approach with SIH wind. For the FUZZ-1 lead and this FUZZ-1b run the approach uses relaxed position-controller limits as initial-condition setup (`MPC_TILTMAX_AIR=89`, high accel/jerk/rate limits); this is not a claim that default position control reaches the same envelope. The operational framing is dynamic handoff/upset recovery: if the aircraft is already at this attitude/rate state, the recovery controller is compared from a matched trigger state.",
+  "run_id": "fuzz1b_locked_20260625"
+}

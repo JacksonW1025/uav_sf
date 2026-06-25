@@ -16,6 +16,7 @@ mkdir -p "${LOG_DIR}"
 
   "${REPO_ROOT}/scripts/install_mcnn_sih_board.sh"
   "${REPO_ROOT}/scripts/install_m1_sih_x500.sh"
+  "${REPO_ROOT}/scripts/install_fuzz1b_dds_groundtruth.sh"
 
   cd "${PX4_DIR}"
   HEADLESS=1 make px4_sitl_mcnn_sih

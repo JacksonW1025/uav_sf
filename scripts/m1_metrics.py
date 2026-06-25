@@ -180,6 +180,30 @@ def task_event_elapsed_us(task: dict[str, Any], name: str) -> int | None:
     return None
 
 
+def estimate_origin_from_setpoint(
+    setpoint: Any,
+    theta: dict[str, Any],
+    task: dict[str, Any],
+) -> int | None:
+    trajectory_elapsed_us = task_event_elapsed_us(task, "trajectory_start")
+    if trajectory_elapsed_us is None or setpoint is None:
+        return None
+    try:
+        ts = setpoint.data["timestamp"].astype(np.int64)
+        pos = vector3(setpoint.data, "position")
+    except KeyError:
+        return None
+    hover = np.asarray(theta.get("setpoint", {}).get("hover_ned", [0.0, 0.0, -2.5]), dtype=float)
+    if hover.shape != (3,):
+        return None
+    delta = np.linalg.norm(pos - hover, axis=1)
+    finite = np.isfinite(delta)
+    idx = np.where(finite & (delta > 0.25))[0]
+    if len(idx) == 0:
+        return None
+    return int(ts[int(idx[0])] - trajectory_elapsed_us)
+
+
 def extract_metrics(
     ulog_path: Path,
     theta: dict[str, Any],
@@ -212,7 +236,14 @@ def extract_metrics(
             active_us = active_us_from_nav
             mode_confirmed = True
 
+    estimated_origin_us = estimate_origin_from_setpoint(setpoint, theta, task) if task.get("state_trigger_enabled") else None
+
     task_active_us = task.get("controller_active_us")
+    if task.get("state_trigger_enabled") and estimated_origin_us is not None:
+        active_elapsed_us_for_trigger = task_event_elapsed_us(task, "controller_active")
+        if active_elapsed_us_for_trigger is not None:
+            active_us = int(estimated_origin_us + active_elapsed_us_for_trigger)
+            mode_confirmed = bool(task.get("mode_confirmed", mode_confirmed))
     if active_us is None and isinstance(task_active_us, int) and task_active_us < 10**12:
         active_us = task_active_us
 
@@ -221,6 +252,8 @@ def extract_metrics(
     mission_elapsed_us = task_event_elapsed_us(task, "mission_end")
     if active_us is not None and active_elapsed_us is not None:
         origin_us = int(active_us - active_elapsed_us)
+    elif estimated_origin_us is not None:
+        origin_us = int(estimated_origin_us)
     else:
         origin_us = int(ulog.start_timestamp)
 
