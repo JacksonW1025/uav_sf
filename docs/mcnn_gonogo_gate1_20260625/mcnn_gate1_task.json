@@ -1,0 +1,94 @@
+{
+  "approach_active_us": 1782385386082507,
+  "approach_mode_confirmed": true,
+  "approach_start_s": 14.0,
+  "controller": "mcnn",
+  "controller_active_us": 1782385396072623,
+  "events": [
+    {
+      "detail": {
+        "source": "first_px4_topic"
+      },
+      "elapsed_s": 0.0,
+      "name": "clock_origin",
+      "timestamp_us": 1782385372029283
+    },
+    {
+      "detail": {
+        "controller": "classical",
+        "main": 6,
+        "phase": "approach"
+      },
+      "elapsed_s": 14.013224,
+      "name": "mode_command",
+      "timestamp_us": 1782385386042507
+    },
+    {
+      "detail": {
+        "nav_state": 14
+      },
+      "elapsed_s": 14.053224,
+      "name": "approach_active",
+      "timestamp_us": 1782385386082507
+    },
+    {
+      "detail": {
+        "controller": "mcnn",
+        "main": 4,
+        "mode_id": 23,
+        "phase": "final",
+        "sub": 11
+      },
+      "elapsed_s": 24.00139,
+      "name": "mode_command",
+      "timestamp_us": 1782385396030673
+    },
+    {
+      "detail": {
+        "nav_state": 23
+      },
+      "elapsed_s": 24.04334,
+      "name": "controller_active",
+      "timestamp_us": 1782385396072623
+    },
+    {
+      "detail": {
+        "type": "step"
+      },
+      "elapsed_s": 32.006027,
+      "name": "trajectory_start",
+      "timestamp_us": 1782385404035310
+    },
+    {
+      "detail": {
+        "setpoint_ned": [
+          0.0,
+          0.0,
+          -2.5
+        ]
+      },
+      "elapsed_s": 54.013561,
+      "name": "mission_end",
+      "timestamp_us": 1782385426042844
+    }
+  ],
+  "exit_code": 0,
+  "external_mode_id": 23,
+  "external_sub_mode": 11,
+  "last_nav_state": 23,
+  "last_position_ned": {
+    "x": -0.17910414934158325,
+    "y": -0.18899749219417572,
+    "z": -2.6346435546875
+  },
+  "mission_end_us": 1782385426042844,
+  "mode_confirmed": true,
+  "origin_us": 1782385372029283,
+  "raptor_internal_reference_max": null,
+  "raptor_internal_reference_min": null,
+  "setpoint_rate_hz": 50.0,
+  "sim_speed_factor": 1.0,
+  "tag": "mcnn_gate1_hover",
+  "trajectory_start_us": 1782385404035310,
+  "wall_timer_hz": 50.0
+}

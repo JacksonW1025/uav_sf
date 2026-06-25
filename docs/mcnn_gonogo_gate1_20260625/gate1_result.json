@@ -1,0 +1,19 @@
+{
+  "board": "px4_sitl_mcnn_sih",
+  "build_note": "mcnn_sih also compiles mc_raptor/RLtools so the local M2b shim parameter definitions are generated; MC_RAPTOR_ENABLE remains false and RAPTOR is not started.",
+  "console_log": "/workspace/docs/mcnn_gonogo_gate1_20260625/mcnn_gate1_px4_console.log",
+  "controller_safe": true,
+  "decision": "PASS",
+  "enable_flags": "CONFIG_LIB_TFLM=y, CONFIG_MODULES_MC_NN_CONTROL=y",
+  "gate": "GATE-1",
+  "metrics_json": "/workspace/docs/mcnn_gonogo_gate1_20260625/mcnn_gate1_metrics.json",
+  "mode_id": 23,
+  "px4_sha": "3042f906abaab7ab59ae838ad5a530a9ef3df9a6",
+  "safe_reasons": [],
+  "source_module": "external/PX4-Autopilot/src/modules/mc_nn_control",
+  "switch_path": "MAV_CMD_DO_SET_MODE main=4/sub=11 -> nav_state 23",
+  "task_json": "/workspace/docs/mcnn_gonogo_gate1_20260625/mcnn_gate1_task.json",
+  "theta": "/workspace/config/mcnn_gate1_hover.json",
+  "ulog": "/workspace/docs/mcnn_gonogo_gate1_20260625/mcnn_gate1_hover.ulg",
+  "x500_network_doc": "external/PX4-Autopilot/docs/en/neural_networks/mc_neural_network_control.md"
+}

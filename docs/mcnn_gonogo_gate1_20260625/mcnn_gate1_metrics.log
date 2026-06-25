@@ -1,0 +1,2 @@
+$ /usr/bin/python3 /workspace/scripts/m1_metrics.py --ulog /workspace/docs/mcnn_gonogo_gate1_20260625/mcnn_gate1_hover.ulg --theta /workspace/config/mcnn_gate1_hover.json --task-json /workspace/docs/mcnn_gonogo_gate1_20260625/mcnn_gate1_task.json --controller mcnn --output /workspace/docs/mcnn_gonogo_gate1_20260625/mcnn_gate1_metrics.json --safety-config /workspace/config/m2_safety_envelope.json
+{"output": "/workspace/docs/mcnn_gonogo_gate1_20260625/mcnn_gate1_metrics.json", "safe": true, "safe_reasons": []}

@@ -1,0 +1,52 @@
+{
+  "tag": "mcnn_gate1_hover",
+  "description": "GATE-1 mc_nn_control bring-up: classical offboard hover, switch to Neural Control, hold hover.",
+  "seed": 20260625,
+  "airframe": {
+    "sim": "sih",
+    "model": "sihsim_x500_v2",
+    "sys_autostart": 10046
+  },
+  "timing": {
+    "approach_start_s": 14.0,
+    "controller_switch_s": 24.0,
+    "trajectory_start_s": 32.0,
+    "mission_end_s": 54.0,
+    "mode_command_repeat_s": 0.5,
+    "mode_command_timeout_s": 8.0,
+    "px4_shutdown_margin_s": 8.0,
+    "px4_shutdown_wall_slack_s": 22.0
+  },
+  "setpoint": {
+    "rate_hz": 50.0,
+    "hover_ned": [0.0, 0.0, -2.5],
+    "yaw_rad": 0.0,
+    "type": "step",
+    "step": {
+      "delta_ned": [0.0, 0.0, 0.0]
+    }
+  },
+  "boot_px4_params": {
+    "MC_NN_EN": 0,
+    "MC_NN_MANL_CTRL": 0
+  },
+  "px4_params": {
+    "NAV_DLL_ACT": 0,
+    "COM_DISARM_LAND": -1,
+    "COM_OF_LOSS_T": 5.0,
+    "IMU_GYRO_RATEMAX": 400,
+    "COM_RC_IN_MODE": 4,
+    "COM_RCL_EXCEPT": 8,
+    "MC_NN_MANL_CTRL": 0,
+    "SYS_FAILURE_EN": 1,
+    "CA_FAILURE_MODE": 1
+  },
+  "environment": {
+    "sih_wind_n": 0.0,
+    "sih_wind_e": 0.0,
+    "mass_scale": 1.0,
+    "inertia_scale": 1.0
+  },
+  "faults": [],
+  "sensor_perturbations": []
+}

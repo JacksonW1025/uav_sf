@@ -31,7 +31,7 @@ PX4_CUSTOM_MAIN_MODE_OFFBOARD = 6
 PX4_CUSTOM_SUB_MODE_EXTERNAL1 = 11
 MAV_MODE_FLAG_CUSTOM_MODE_ENABLED = 1
 NAV_STATE_OFFBOARD = 14
-NAV_STATE_RAPTOR_EXTERNAL1 = 23
+NAV_STATE_EXTERNAL1 = 23
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -65,8 +65,8 @@ class Event:
 class M1OffboardTask(Node):
     def __init__(self, theta: dict[str, Any], controller: str, result_json: Path | None):
         super().__init__("m1_offboard_task")
-        if controller not in {"classical", "raptor"}:
-            raise ValueError(f"controller must be classical or raptor, got {controller}")
+        if controller not in {"classical", "raptor", "mcnn"}:
+            raise ValueError(f"controller must be classical, raptor, or mcnn, got {controller}")
 
         self.theta = theta
         self.controller = controller
@@ -82,6 +82,10 @@ class M1OffboardTask(Node):
         self.mission_end_s = float(timing["mission_end_s"])
         self.mode_repeat_s = float(timing.get("mode_command_repeat_s", 0.5))
         self.mode_timeout_s = float(timing.get("mode_command_timeout_s", 6.0))
+        self.external_mode_id = int(timing.get("external_mode_id", NAV_STATE_EXTERNAL1))
+        if self.external_mode_id < NAV_STATE_EXTERNAL1:
+            raise ValueError(f"external_mode_id must be >= {NAV_STATE_EXTERNAL1}, got {self.external_mode_id}")
+        self.external_sub_mode = PX4_CUSTOM_SUB_MODE_EXTERNAL1 + (self.external_mode_id - NAV_STATE_EXTERNAL1)
         self.rate_hz = float(setpoint.get("rate_hz", 50.0))
         self.sim_speed_factor = max(1.0, float(os.environ.get("PX4_SIM_SPEED_FACTOR", "1") or 1.0))
         self.wall_timer_hz = self.rate_hz * self.sim_speed_factor
@@ -289,7 +293,7 @@ class M1OffboardTask(Node):
 
     def command_controller_mode(self, target_controller: str | None = None, *, final: bool = True) -> None:
         target_controller = target_controller or self.controller
-        target_nav = NAV_STATE_OFFBOARD if target_controller == "classical" else NAV_STATE_RAPTOR_EXTERNAL1
+        target_nav = NAV_STATE_OFFBOARD if target_controller == "classical" else self.external_mode_id
         if self.last_status and int(self.last_status.nav_state) == target_nav:
             if final and not self.mode_confirmed:
                 self.mode_confirmed = True
@@ -325,7 +329,7 @@ class M1OffboardTask(Node):
                 VehicleCommand.VEHICLE_CMD_DO_SET_MODE,
                 MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
                 PX4_CUSTOM_MAIN_MODE_AUTO,
-                PX4_CUSTOM_SUB_MODE_EXTERNAL1,
+                self.external_sub_mode,
             )
             self.record_event(
                 "mode_command",
@@ -333,8 +337,8 @@ class M1OffboardTask(Node):
                     "controller": target_controller,
                     "phase": phase,
                     "main": PX4_CUSTOM_MAIN_MODE_AUTO,
-                    "sub": PX4_CUSTOM_SUB_MODE_EXTERNAL1,
-                    "mode_id": NAV_STATE_RAPTOR_EXTERNAL1,
+                    "sub": self.external_sub_mode,
+                    "mode_id": self.external_mode_id,
                 },
             )
 
@@ -405,6 +409,8 @@ class M1OffboardTask(Node):
                 "trajectory_start_us": self.trajectory_start_us,
                 "mission_end_us": self.mission_end_us,
                 "mode_confirmed": self.mode_confirmed,
+                "external_mode_id": self.external_mode_id,
+                "external_sub_mode": self.external_sub_mode,
                 "last_nav_state": int(self.last_status.nav_state) if self.last_status else None,
                 "last_position_ned": {
                     "x": float(self.last_local_position.x),
@@ -428,7 +434,7 @@ class M1OffboardTask(Node):
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--theta", type=Path, required=True)
-    parser.add_argument("--controller", choices=["classical", "raptor"], required=True)
+    parser.add_argument("--controller", choices=["classical", "raptor", "mcnn"], required=True)
     parser.add_argument("--result-json", type=Path)
     args = parser.parse_args()
 

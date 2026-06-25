@@ -13,7 +13,7 @@ import numpy as np
 from pyulog import ULog
 
 
-NAV_STATE_BY_CONTROLLER = {"classical": 14, "raptor": 23}
+NAV_STATE_BY_CONTROLLER = {"classical": 14, "raptor": 23, "mcnn": 23}
 ACTIVE_MOTORS = 4
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SAFETY_CONFIG = REPO_ROOT / "config/m2_safety_envelope.json"
@@ -462,7 +462,7 @@ def main() -> int:
     parser.add_argument("--ulog", type=Path, required=True)
     parser.add_argument("--theta", type=Path, required=True)
     parser.add_argument("--task-json", type=Path)
-    parser.add_argument("--controller", choices=["classical", "raptor"], required=True)
+    parser.add_argument("--controller", choices=["classical", "raptor", "mcnn"], required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--safety-config", type=Path, default=DEFAULT_SAFETY_CONFIG)
     args = parser.parse_args()
