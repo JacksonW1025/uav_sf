@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""M2 guided theta search using a small MAP-Elites loop.
+"""Tier 0.5 MAP-Elites search wired to differential property fitness.
 
-The evaluator is the M1 differential runner. This script only bootstraps and
-guides candidates; it is not a random/grid baseline experiment.
+Each real evaluation runs the same theta with the classical controller and
+mc_nn mode 23, computes property-oracle rho_i on both ULOGs, then archives by
+max valid classical-minus-neural property gap.
 """
 
 from __future__ import annotations
@@ -19,6 +20,17 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+import m1_diff_runner as m1
+import mcnn_gate3_position_error_probe as mcnn_runner
+import theta_genome
+from m1_compare import property_only_result
+from property_fitness import (
+    FITNESS_FLOOR,
+    differential_property_fitness,
+    driver_target_properties,
+)
+from property_oracle import evaluate_ulog, load_thresholds
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -72,8 +84,12 @@ class EvalResult:
     raptor_safe: bool | None
     infrastructure_limited: bool | None
     quality: float
+    fitness: dict[str, Any]
     feature_bin: str
     severity: float
+    selected_parent_tag: str | None = None
+    selected_parent_quality: float | None = None
+    mcnn_confirmed: bool | None = None
     error: str | None = None
 
     def as_dict(self) -> dict[str, Any]:
@@ -92,8 +108,12 @@ class EvalResult:
             "raptor_safe": self.raptor_safe,
             "infrastructure_limited": self.infrastructure_limited,
             "quality": self.quality,
+            "fitness": self.fitness,
             "feature_bin": self.feature_bin,
             "severity": self.severity,
+            "selected_parent_tag": self.selected_parent_tag,
+            "selected_parent_quality": self.selected_parent_quality,
+            "mcnn_confirmed": self.mcnn_confirmed,
             "error": self.error,
         }
 
@@ -689,60 +709,172 @@ def theta_from_genome(genome: dict[str, Any], tag: str, seed: int) -> dict[str, 
     return theta
 
 
+def theta_genome_bin(genome: dict[str, Any]) -> tuple[str, float, str]:
+    kind, bucket, severity = theta_genome.feature_bin(genome)
+    return kind, float(severity), f"{kind}:{bucket}"
+
+
+def empty_fitness(targets: list[str] | None = None) -> dict[str, Any]:
+    return {
+        "fitness": FITNESS_FLOOR,
+        "fitness_floor": FITNESS_FLOOR,
+        "target_properties": targets or [],
+        "best_property": None,
+        "valid_property_count": 0,
+        "clean_differential_properties": [],
+        "property_finding": False,
+        "per_property": {},
+    }
+
+
+def mock_property_pair(theta: dict[str, Any], genome: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+    targets = driver_target_properties(theta)
+    kind, _, severity = theta_genome.feature_bin(genome)
+    prop_by_kind = {
+        "wind": "P6",
+        "physics_mismatch": "P7",
+        "switching": "P4",
+        "step": "P5",
+    }
+    best = prop_by_kind.get(kind, targets[0])
+    base_rho = {
+        "P1": 1.5,
+        "P2": 6.0,
+        "P3": 0.5,
+        "P4": 0.7,
+        "P5": 0.4,
+        "P6": 0.25,
+        "P7": 0.4,
+    }
+    neural_rho = dict(base_rho)
+    neural_rho[best] = base_rho[best] - (0.15 + 1.25 * float(severity))
+    if float(severity) > 0.72:
+        neural_rho[best] = -0.15 - float(severity)
+    details = {prop: {"vacuous": False} for prop in base_rho}
+    if "P5" not in targets:
+        details["P5"] = {"vacuous": True}
+    nsev = 0
+    if neural_rho.get("P1", 1.0) <= 0.0 or neural_rho.get("P2", 1.0) <= 0.0:
+        nsev = 3
+    elif neural_rho.get("P5", 1.0) <= 0.0:
+        nsev = 2
+    elif any(neural_rho.get(prop, 1.0) <= 0.0 for prop in ["P4", "P6", "P7"]):
+        nsev = 1
+    labels = {
+        0: "S0_clean_recovery",
+        1: "S1_controlled_degraded_survival",
+        2: "S2_controlled_safe_failure",
+        3: "S3_uncontrolled_tumble_or_spin",
+    }
+    classical_property = {
+        "tag": theta.get("tag"),
+        "controller": "classical",
+        "rho": base_rho,
+        "details": details,
+        "severity": {"severity": 0, "label": labels[0], "reasons": []},
+        "window": {"terminal": {"terminal_class": "NONE"}},
+        "controller_identity": {"controller": "classical", "raptor_input_present": False},
+    }
+    neural_property = {
+        "tag": theta.get("tag"),
+        "controller": "mcnn",
+        "rho": neural_rho,
+        "details": details,
+        "severity": {"severity": nsev, "label": labels[nsev], "reasons": []},
+        "window": {"terminal": {"terminal_class": "NONE"}},
+        "controller_identity": {
+            "controller": "mcnn",
+            "mcnn_confirmed": True,
+            "neural_control_rate_hz": 228.0,
+            "raptor_input_present": False,
+        },
+    }
+    return classical_property, neural_property
+
+
 def evaluate_theta(
     theta: dict[str, Any],
     theta_path: Path,
     docs_dir: Path,
     index: int,
     run_timeout_s: int,
-    eval_timeout_s: int,
     env: dict[str, str],
+    thresholds: dict[str, float],
+    selected_parent_tag: str | None = None,
+    selected_parent_quality: float | None = None,
+    mock_evaluator: bool = False,
 ) -> EvalResult:
     write_json(theta_path, theta)
     tag = str(theta["tag"])
-    log_path = docs_dir / "m2_eval.log"
     docs_dir.mkdir(parents=True, exist_ok=True)
-    cmd = [
-        sys.executable,
-        str(REPO_ROOT / "scripts/m1_diff_runner.py"),
-        "--theta",
-        str(theta_path),
-        "--skip-build",
-        "--run-timeout",
-        str(run_timeout_s),
-        "--docs-dir",
-        str(docs_dir),
-        "--safety-config",
-        str(SAFETY_CONFIG),
-    ]
     start = time.monotonic()
     returncode = 1
     error: str | None = None
-    with log_path.open("w", encoding="utf-8") as log_handle:
-        log_handle.write("$ " + " ".join(cmd) + "\n")
-        log_handle.flush()
-        try:
-            proc = subprocess.run(
-                cmd,
-                cwd=str(REPO_ROOT),
-                env=env,
-                stdout=log_handle,
-                stderr=subprocess.STDOUT,
-                timeout=eval_timeout_s,
-                check=False,
-            )
-            returncode = int(proc.returncode)
-        except subprocess.TimeoutExpired as exc:
-            error = f"eval_timeout_after_{eval_timeout_s}s"
-            returncode = 124
-            log_handle.write(f"\nERROR: {error}: {exc}\n")
-    elapsed = time.monotonic() - start
-    compare_path = docs_dir / f"m1_diff_{tag}.json"
-    genome = theta.get("m2", {}).get("genome")
-    if isinstance(genome, dict) and "gps_delay_ms" in genome:
-        family, severity, bin_name = feature_bin(genome)
+    genome = theta.get("theta_genome", {}).get("genome")
+    if isinstance(genome, dict):
+        _, severity, bin_name = theta_genome_bin(genome)
     else:
-        family, severity, bin_name = ("unknown", 0.0, "unknown")
+        severity, bin_name = 0.0, "unknown"
+    target_properties = driver_target_properties(theta)
+    compare_path = docs_dir / f"m1_diff_{tag}.json"
+
+    try:
+        if mock_evaluator:
+            if not isinstance(genome, dict):
+                raise ValueError("mock evaluator requires theta_genome.genome")
+            classical_property, mcnn_property = mock_property_pair(theta, genome)
+        else:
+            outputs: dict[str, dict[str, Path]] = {}
+            for controller in ["classical", "mcnn"]:
+                outputs[controller] = mcnn_runner.run_one(
+                    REPO_ROOT,
+                    theta_path,
+                    theta,
+                    controller,
+                    docs_dir,
+                    env,
+                    run_timeout_s,
+                    SAFETY_CONFIG,
+                )
+            classical_property = evaluate_ulog(
+                outputs["classical"]["ulog"],
+                controller="classical",
+                theta=theta,
+                task=load_json(outputs["classical"]["task"]),
+                thresholds=thresholds,
+            )
+            mcnn_property = evaluate_ulog(
+                outputs["mcnn"]["ulog"],
+                controller="mcnn",
+                theta=theta,
+                task=load_json(outputs["mcnn"]["task"]),
+                thresholds=thresholds,
+            )
+        write_json(docs_dir / f"{tag}_classical_property.json", classical_property)
+        write_json(docs_dir / f"{tag}_mcnn_property.json", mcnn_property)
+        fitness = differential_property_fitness(
+            classical_property,
+            mcnn_property,
+            target_properties=target_properties,
+        )
+        comparison = property_only_result(theta, classical_property, mcnn_property)
+        comparison["property_oracle"]["fitness"] = fitness
+        write_json(compare_path, comparison)
+        mcnn_identity = mcnn_property.get("controller_identity", {})
+        mcnn_confirmed = bool(mcnn_identity.get("mcnn_confirmed"))
+        if not mock_evaluator and not mcnn_confirmed:
+            error = "mcnn_identity_not_confirmed"
+            returncode = 2
+        else:
+            returncode = 0
+    except Exception as exc:  # fail loud into the eval record, keep the campaign alive
+        error = f"{type(exc).__name__}: {exc}"
+        returncode = 1
+        fitness = empty_fitness(target_properties)
+        classical_property = {}
+        mcnn_property = {}
+        mcnn_confirmed = None
+    elapsed = time.monotonic() - start
     if returncode != 0 or not compare_path.exists():
         return EvalResult(
             index=index,
@@ -758,17 +890,21 @@ def evaluate_theta(
             classical_safe=None,
             raptor_safe=None,
             infrastructure_limited=None,
-            quality=0.0,
+            quality=FITNESS_FLOOR,
+            fitness=fitness,
             feature_bin=bin_name,
             severity=severity,
+            selected_parent_tag=selected_parent_tag,
+            selected_parent_quality=selected_parent_quality,
+            mcnn_confirmed=mcnn_confirmed,
             error=error or f"runner_returncode_{returncode}",
         )
-    compare = load_json(compare_path)
-    classical = compare.get("classical", {})
-    raptor = compare.get("raptor", {})
-    quality = float(compare.get("divergence", {}).get("quality") or 0.0)
-    classical_usable = bool(compare.get("classical_usable_for_primary"))
-    primary_bug = bool(compare.get("primary_bug")) and classical_usable and quality > 0.0
+    quality = float(fitness["fitness"])
+    csev = fitness.get("classical_severity")
+    nsev = fitness.get("neural_severity")
+    classical_usable = bool(fitness.get("valid_property_count", 0) > 0)
+    primary_bug = bool(fitness.get("property_finding"))
+    terminal = classical_property.get("window", {}).get("terminal", {}) if isinstance(classical_property, dict) else {}
     return EvalResult(
         index=index,
         tag=tag,
@@ -777,15 +913,19 @@ def evaluate_theta(
         returncode=returncode,
         elapsed_wall_s=elapsed,
         compare_path=str(compare_path),
-        quadrant=compare.get("quadrant"),
+        quadrant="property_differential" if primary_bug else "property_gradient",
         primary_bug=primary_bug,
         classical_usable=classical_usable,
-        classical_safe=bool(classical.get("safe")),
-        raptor_safe=bool(raptor.get("safe")),
-        infrastructure_limited=bool(classical.get("infrastructure_limited")),
+        classical_safe=bool(csev is not None and int(csev) <= 2),
+        raptor_safe=bool(nsev is not None and int(nsev) <= 2),
+        infrastructure_limited=terminal.get("terminal_class") == "INFRASTRUCTURE",
         quality=quality,
+        fitness=fitness,
         feature_bin=bin_name,
         severity=severity,
+        selected_parent_tag=selected_parent_tag,
+        selected_parent_quality=selected_parent_quality,
+        mcnn_confirmed=mcnn_confirmed,
         error=None,
     )
 
@@ -795,7 +935,7 @@ def select_parent(archive: dict[str, dict[str, Any]], rng: random.Random) -> dic
         return None
     elites = sorted(archive.values(), key=lambda item: float(item["result"]["quality"]), reverse=True)
     pool = elites[: max(1, min(8, len(elites)))]
-    return dict(rng.choice(pool)["genome"])
+    return dict(rng.choice(pool))
 
 
 def write_archive(path: Path, archive: dict[str, dict[str, Any]]) -> None:
@@ -828,12 +968,31 @@ def search(args: argparse.Namespace) -> tuple[Path, list[EvalResult], list[dict[
         "safety_config": str(SAFETY_CONFIG.relative_to(REPO_ROOT)),
         "px4_commit": "3042f906abaab7ab59ae838ad5a530a9ef3df9a6",
         "searcher": "MAP-Elites",
-        "bins": "dominant disturbance family x severity bucket",
-        "scope_note": "MAP-Elites random initialization is algorithm bootstrap, not an M3 random baseline.",
+        "genome": "scripts/theta_genome.py shim-free Tier 0.5 genome",
+        "bins": "theta_genome disturbance_type x amplitude_bucket",
+        "fitness": "differential property gap: max_i rho_i(classical)-rho_i(mcnn) with per-property classical margin",
+        "driver_target_properties": {
+            "default": ["P4", "P6", "P7"],
+            "step_theta": ["P4", "P5", "P6", "P7"],
+            "excluded_from_driver": ["P1", "P2", "P3"],
+        },
+        "neural_controller": "mc_nn_control mode 23",
+        "mode_23_identity_required": True,
+        "mock_evaluator": bool(args.mock_evaluator),
+        "scope_note": "Tier 0.5 fitness-wire run; not a convergence or baseline experiment.",
     }
     write_json(run_dir / "metadata.json", metadata)
 
     env = dict(**os_environ_with_speed(args.sim_speed_factor))
+    thresholds = load_thresholds(args.thresholds_json)
+    if not args.mock_evaluator:
+        if args.skip_build:
+            m1.run_checked([str(REPO_ROOT / "scripts/install_mcnn_sih_board.sh")], cwd=REPO_ROOT, log=run_dir / "build.log", env=env)
+            m1.run_checked([str(REPO_ROOT / "scripts/install_m1_sih_x500.sh")], cwd=REPO_ROOT, log=run_dir / "build.log", env=env)
+        else:
+            build_env = env.copy()
+            build_env["PX4_MCNN_SIH_BUILD_LOG"] = str(run_dir / "px4_mcnn_sih_build.log")
+            m1.run_checked([str(REPO_ROOT / "scripts/build_px4_mcnn_sih.sh")], cwd=REPO_ROOT, log=run_dir / "build.log", env=build_env)
     archive: dict[str, dict[str, Any]] = {}
     results: list[EvalResult] = []
     primary_candidates: list[dict[str, Any]] = []
@@ -842,19 +1001,46 @@ def search(args: argparse.Namespace) -> tuple[Path, list[EvalResult], list[dict[
     for index in range(args.budget):
         if deadline is not None and time.monotonic() >= deadline:
             break
-        fixed_seeds = seed_bank()
         parent = select_parent(archive, rng)
-        if index < len(fixed_seeds):
-            genome = fixed_seeds[index]
-        elif parent is None or index < args.bootstrap:
-            genome = random_genome(rng)
+        selected_parent_tag = None
+        selected_parent_quality = None
+        if parent is None or index < args.bootstrap:
+            genome = theta_genome.random_genome(rng)
+            selection_source = "bootstrap_random"
         else:
-            genome = mutate_genome(parent, rng)
+            selected_parent_tag = parent["result"].get("tag")
+            selected_parent_quality = float(parent["result"]["quality"])
+            parent_genome = parent["genome"]
+            if args.crossover and len(archive) > 1 and rng.random() < args.crossover_rate:
+                mate = select_parent(archive, rng)
+                mate_genome = mate["genome"] if mate is not None else parent_genome
+                genome = theta_genome.crossover_genome(parent_genome, mate_genome, rng)
+                genome = theta_genome.mutate_genome(genome, rng)
+                selection_source = "elite_crossover_mutation"
+            else:
+                genome = theta_genome.mutate_genome(parent_genome, rng)
+                selection_source = "elite_mutation"
         tag = f"{run_id}_e{index:04d}"
-        theta = theta_from_genome(genome, tag, args.seed + index)
+        theta = theta_genome.theta_from_genome(genome, tag, args.seed + index)
+        theta.setdefault("m2_map_elites", {})["selection"] = {
+            "source": selection_source,
+            "selected_parent_tag": selected_parent_tag,
+            "selected_parent_quality": selected_parent_quality,
+        }
         theta_path = theta_dir / f"{tag}.json"
         docs_dir = evals_dir / tag
-        result = evaluate_theta(theta, theta_path, docs_dir, index, args.run_timeout, args.eval_timeout, env)
+        result = evaluate_theta(
+            theta,
+            theta_path,
+            docs_dir,
+            index,
+            args.run_timeout,
+            env,
+            thresholds,
+            selected_parent_tag=selected_parent_tag,
+            selected_parent_quality=selected_parent_quality,
+            mock_evaluator=args.mock_evaluator,
+        )
         results.append(result)
         append_jsonl(run_dir / "evals.jsonl", result.as_dict())
 
@@ -885,9 +1071,14 @@ def search(args: argparse.Namespace) -> tuple[Path, list[EvalResult], list[dict[
                     "tag": tag,
                     "bin": bin_name,
                     "quality": result.quality,
+                    "best_property": result.fitness.get("best_property"),
+                    "valid_property_count": result.fitness.get("valid_property_count"),
                     "quadrant": result.quadrant,
                     "primary_bug": result.primary_bug,
                     "classical_usable": result.classical_usable,
+                    "selection_source": selection_source,
+                    "selected_parent_tag": selected_parent_tag,
+                    "selected_parent_quality": selected_parent_quality,
                     "error": result.error,
                 },
                 sort_keys=True,
@@ -901,9 +1092,7 @@ def search(args: argparse.Namespace) -> tuple[Path, list[EvalResult], list[dict[
 
 
 def os_environ_with_speed(sim_speed_factor: float) -> dict[str, str]:
-    import os
-
-    env = os.environ.copy()
+    env = m1.agent_env(REPO_ROOT)
     env["PX4_SIM_SPEED_FACTOR"] = str(sim_speed_factor)
     return env
 
@@ -914,6 +1103,7 @@ def confirm_candidates(
     args: argparse.Namespace,
 ) -> list[dict[str, Any]]:
     env = os_environ_with_speed(args.sim_speed_factor)
+    thresholds = load_thresholds(args.thresholds_json)
     confirmed: list[dict[str, Any]] = []
     selected = sorted(candidates, key=lambda item: float(item["result"]["quality"]), reverse=True)[
         : args.max_confirm_candidates
@@ -939,8 +1129,11 @@ def confirm_candidates(
                 docs_dir,
                 100000 + cidx * 100 + ridx,
                 args.run_timeout,
-                args.eval_timeout,
                 env,
+                thresholds,
+                selected_parent_tag=original_tag,
+                selected_parent_quality=float(candidate["result"]["quality"]),
+                mock_evaluator=args.mock_evaluator,
             )
             repeats.append(result.as_dict())
             if not result.primary_bug:
@@ -1023,6 +1216,11 @@ def main() -> int:
     parser.add_argument("--confirm-repeats", type=int, default=3)
     parser.add_argument("--max-confirm-candidates", type=int, default=3)
     parser.add_argument("--no-confirm", action="store_true")
+    parser.add_argument("--skip-build", action="store_true")
+    parser.add_argument("--thresholds-json", type=Path)
+    parser.add_argument("--mock-evaluator", action="store_true")
+    parser.add_argument("--crossover", action="store_true")
+    parser.add_argument("--crossover-rate", type=float, default=0.25)
     args = parser.parse_args()
 
     run_dir, results, candidates, archive = search(args)

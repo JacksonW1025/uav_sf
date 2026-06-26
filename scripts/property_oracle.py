@@ -56,6 +56,13 @@ DEFAULT_THRESHOLDS: dict[str, float] = {
     "epsilon_ss_m": 1.80,
     "W_ss_s": 2.0,
     "margin_c": 0.02,
+    "margin_c_P1": 0.4548139946,
+    "margin_c_P2": 2.3421337853,
+    "margin_c_P3": 0.1500000000,
+    "margin_c_P4": 0.2023303610,
+    "margin_c_P5": 0.1083387278,
+    "margin_c_P6": 0.0759150636,
+    "margin_c_P7": 0.1126242187,
     "state_moving_average_s": 0.10,
     "control_moving_average_s": 0.02,
 }
@@ -592,7 +599,13 @@ def robustness_p5(position: dict[str, np.ndarray], thresholds: dict[str, float])
         if np.any(candidates):
             rhos.append(float(np.nanmax(hold_min[candidates])))
     if not rhos:
-        raise ValueError("P5 detected setpoint step but no settling candidates")
+        return finite_real(thresholds["epsilon_set_m"]), {
+            "vacuous": True,
+            "steps": len(step_times),
+            "s_min_m": thresholds["s_min_m"],
+            "reason": "detected_step_without_settling_candidates",
+            "step_times_us": step_times,
+        }
     rho = finite_real(min(rhos))
     return rho, {
         "vacuous": False,

@@ -11,6 +11,7 @@ from typing import Any
 
 import numpy as np
 
+from property_fitness import differential_property_fitness, property_margins
 from property_oracle import PROPERTY_ORDER, evaluate_ulog, load_thresholds
 
 
@@ -90,31 +91,30 @@ def property_severity_label(result: dict[str, Any]) -> str | None:
 def property_differential(
     classical_property: dict[str, Any],
     neural_property: dict[str, Any],
-    margin_c: float,
+    margin_c: float | dict[str, float] | None = None,
 ) -> dict[str, Any]:
-    classical_rho = classical_property.get("rho", {})
-    neural_rho = neural_property.get("rho", {})
+    explicit = None
+    if isinstance(margin_c, dict):
+        explicit = {str(key): float(value) for key, value in margin_c.items() if isinstance(value, (int, float))}
+    elif isinstance(margin_c, (int, float)):
+        explicit = {prop: float(margin_c) for prop in PROPERTY_ORDER}
+    margins = property_margins(classical_property, neural_property, explicit)
+    fitness = differential_property_fitness(
+        classical_property,
+        neural_property,
+        target_properties=PROPERTY_ORDER,
+        explicit_margins=margins,
+    )
     per_property: dict[str, Any] = {}
     clean = []
     for prop in PROPERTY_ORDER:
-        c = classical_rho.get(prop)
-        n = neural_rho.get(prop)
-        if not isinstance(c, (int, float)) or not isinstance(n, (int, float)):
-            per_property[prop] = {"available": False}
-            continue
-        is_diff = float(n) <= 0.0 and float(c) >= margin_c
-        per_property[prop] = {
-            "available": True,
-            "classical_rho": float(c),
-            "neural_rho": float(n),
-            "margin_c": margin_c,
-            "clean_differential": bool(is_diff),
-        }
-        if is_diff:
+        item = dict(fitness["per_property"][prop])
+        per_property[prop] = item
+        if item["clean_differential"]:
             clean.append(prop)
 
-    csev = property_severity_value(classical_property)
-    nsev = property_severity_value(neural_property)
+    csev = fitness["classical_severity"]
+    nsev = fitness["neural_severity"]
     if csev is None or nsev is None:
         strict = False
         wide = False
@@ -128,10 +128,13 @@ def property_differential(
         "neural_severity": nsev,
         "neural_severity_label": property_severity_label(neural_property),
         "clean_differential_properties": clean,
+        "property_finding": bool(clean),
         "per_property": per_property,
         "strict_s0_vs_s3": bool(strict),
         "wide_control_vs_uncontrolled": bool(wide),
-        "property_primary_bug": bool(clean and wide),
+        "catastrophic_property_primary_bug": bool(clean and wide),
+        "property_primary_bug": bool(clean),
+        "fitness_validation": fitness,
     }
 
 
@@ -237,11 +240,10 @@ def compare(
         },
     }
     if classical_property is not None and raptor_property is not None:
-        margin_c = float((raptor_property.get("thresholds") or classical_property.get("thresholds") or {}).get("margin_c", 0.0))
         result["property_oracle"] = {
             "classical": classical_property,
             "neural": raptor_property,
-            "differential": property_differential(classical_property, raptor_property, margin_c),
+            "differential": property_differential(classical_property, raptor_property),
         }
     return result
 
@@ -251,8 +253,7 @@ def property_only_result(
     classical_property: dict[str, Any],
     neural_property: dict[str, Any],
 ) -> dict[str, Any]:
-    margin_c = float((neural_property.get("thresholds") or classical_property.get("thresholds") or {}).get("margin_c", 0.0))
-    differential = property_differential(classical_property, neural_property, margin_c)
+    differential = property_differential(classical_property, neural_property)
     return {
         "tag": theta.get("tag"),
         "theta": theta,

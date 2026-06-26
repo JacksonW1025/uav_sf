@@ -34,7 +34,7 @@ Mode-23 identity was positively checked on the mcnn baseline logs: `neural_contr
 | `W_osc` | 2.0 s | Oscillation window for P6. |
 | `epsilon_ss` | 1.80 m | Nominal tracking RMS max 0.542 m gives factor 3.32; also exceeds worst 2 s axis-mean steady offset 1.425 m. |
 | `W_ss` | 2.0 s | Steady-state mean-error window for P7. |
-| `margin_c` | 0.02 | Small positive classical margin for heterogeneous rho units. |
+| `margin_c` | deprecated fallback only | Replaced by per-property `margin_c_Pi` below; the scalar is kept only for old JSON compatibility. |
 
 Implementation denoising constants:
 
@@ -56,6 +56,24 @@ After calibration, all 10 nominal runs are `S0_clean_recovery`.
 | P7 | 0.3754140622 |
 
 Noise/denoising check: raw-vs-smoothed nominal attitude and rate differences were small relative to final margins. The worst raw tilt max was 7.70 deg versus smoothed 7.51 deg, far below `theta_max=90 deg`; worst raw rate max was 2.28 rad/s versus smoothed 2.18 rad/s, leaving 5.82 rad/s P2 margin. Behavior-class margins after smoothing were also above the nominal floor: P4 margin 0.47 motor units, P6 margin 0.219 rad (12.58 deg), and P7 margin 0.375 m.
+
+## Differential Classical Margins
+
+`margin_c` is now per property. The old scalar `0.02` mixed radians, meters, seconds, and motor-command units, so it is retained only as a backward-compatible fallback field. Differential search and comparison use the `margin_c_Pi` values below.
+
+For P1/P2/P3/P4/P6/P7, margins are 30% of the recomputed classical-only nominal minimum over the five `mcnn_gonogo_gate3_20260625` baseline classical ULOGs. P5 uses 30% of the non-vacuous pure-step classical minimum from `docs/tier05_p5_step_20260626/`.
+
+| property | classical calibration source | classical min rho | `margin_c_Pi` |
+|---|---|---:|---:|
+| P1 | nominal classical hover, 5 seeds | 1.5160466486 | 0.4548139946 |
+| P2 | nominal classical hover, 5 seeds | 7.8071126176 | 2.3421337853 |
+| P3 | nominal classical hover, 5 seeds | 0.5000000000 | 0.1500000000 |
+| P4 | nominal classical hover, 5 seeds | 0.6744345367 | 0.2023303610 |
+| P5 | pure-step classical, 3 seeds | 0.3611290926 | 0.1083387278 |
+| P6 | nominal classical hover, 5 seeds | 0.2530502121 | 0.0759150636 |
+| P7 | nominal classical hover, 5 seeds | 0.3754140622 | 0.1126242187 |
+
+Search validity is per property: a gap for `Pi` is counted only when `rho_i(classical) >= margin_c_Pi`. A failure by classical on another property does not invalidate a clean differential for `Pi`.
 
 ## P5 Step Calibration
 

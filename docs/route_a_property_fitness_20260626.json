@@ -1,0 +1,103 @@
+{
+  "passed": true,
+  "passed_count": 4,
+  "records": [
+    {
+      "best_property": "P2",
+      "case": "rp48_62_rate2p45_2p90_w6_r6_f045",
+      "classical_ulog": "docs/fuzz1c_severity_20260625/evals/fuzz1c_severity_20260625_rp48_62_rate2p45_2p90_w6_r6_f045_s20261800/mcnn_gate3_fuzz1c_severity_20260625_rp48_62_rate2p45_2p90_w6_r6_f045_s20261800_classical.ulg",
+      "clean_differential_properties": [
+        "P1",
+        "P2",
+        "P6",
+        "P7"
+      ],
+      "fitness_p1_p2": 20.158677108381383,
+      "idx": 1,
+      "mcnn_confirmed": true,
+      "mcnn_rate_hz": 229.31069800788651,
+      "mcnn_ulog": "docs/fuzz1c_severity_20260625/evals/fuzz1c_severity_20260625_rp48_62_rate2p45_2p90_w6_r6_f045_s20261800/mcnn_gate3_fuzz1c_severity_20260625_rp48_62_rate2p45_2p90_w6_r6_f045_s20261800_mcnn.ulg",
+      "p1_gap": 1.4231337471171241,
+      "p1p2_clean_count": 2,
+      "p2_gap": 20.158677108381383,
+      "passed": true,
+      "property_global_strict_s0_vs_s3": false,
+      "raptor_input_present": false,
+      "route_a_decontam_strict": true,
+      "source_decision": "STRICT_DIFFERENTIAL"
+    },
+    {
+      "best_property": "P2",
+      "case": "rp48_62_rate2p45_2p90_w6_r6_f045_confirm1",
+      "classical_ulog": "docs/fuzz1c_severity_20260625/evals/fuzz1c_severity_20260625_rp48_62_rate2p45_2p90_w6_r6_f045_confirm1_s20261901/mcnn_gate3_fuzz1c_severity_20260625_rp48_62_rate2p45_2p90_w6_r6_f045_confirm1_s20261901_classical.ulg",
+      "clean_differential_properties": [
+        "P2",
+        "P6",
+        "P7"
+      ],
+      "fitness_p1_p2": 20.20332381751006,
+      "idx": 2,
+      "mcnn_confirmed": true,
+      "mcnn_rate_hz": 230.71168520273304,
+      "mcnn_ulog": "docs/fuzz1c_severity_20260625/evals/fuzz1c_severity_20260625_rp48_62_rate2p45_2p90_w6_r6_f045_confirm1_s20261901/mcnn_gate3_fuzz1c_severity_20260625_rp48_62_rate2p45_2p90_w6_r6_f045_confirm1_s20261901_mcnn.ulg",
+      "p1_gap": 0.6572240220121759,
+      "p1p2_clean_count": 1,
+      "p2_gap": 20.20332381751006,
+      "passed": true,
+      "property_global_strict_s0_vs_s3": false,
+      "raptor_input_present": false,
+      "route_a_decontam_strict": true,
+      "source_decision": "STRICT_DIFFERENTIAL"
+    },
+    {
+      "best_property": "P2",
+      "case": "rp36_44_rate1p55_2p15_w3_r4_f038",
+      "classical_ulog": "docs/fuzz1c_severity_20260625/evals/fuzz1c_severity_20260625_rp36_44_rate1p55_2p15_w3_r4_f038_s20261802/mcnn_gate3_fuzz1c_severity_20260625_rp36_44_rate1p55_2p15_w3_r4_f038_s20261802_classical.ulg",
+      "clean_differential_properties": [
+        "P2",
+        "P6",
+        "P7"
+      ],
+      "fitness_p1_p2": 13.811474004526788,
+      "idx": 4,
+      "mcnn_confirmed": true,
+      "mcnn_rate_hz": 230.99645529736117,
+      "mcnn_ulog": "docs/fuzz1c_severity_20260625/evals/fuzz1c_severity_20260625_rp36_44_rate1p55_2p15_w3_r4_f038_s20261802/mcnn_gate3_fuzz1c_severity_20260625_rp36_44_rate1p55_2p15_w3_r4_f038_s20261802_mcnn.ulg",
+      "p1_gap": 0.29004707748531655,
+      "p1p2_clean_count": 1,
+      "p2_gap": 13.811474004526788,
+      "passed": true,
+      "property_global_strict_s0_vs_s3": false,
+      "raptor_input_present": false,
+      "route_a_decontam_strict": true,
+      "source_decision": "STRICT_DIFFERENTIAL"
+    },
+    {
+      "best_property": "P2",
+      "case": "rp32_40_rate1p30_1p95_w0_r4_f038",
+      "classical_ulog": "docs/fuzz1c_severity_20260625/evals/fuzz1c_severity_20260625_rp32_40_rate1p30_1p95_w0_r4_f038_s20261803/mcnn_gate3_fuzz1c_severity_20260625_rp32_40_rate1p30_1p95_w0_r4_f038_s20261803_classical.ulg",
+      "clean_differential_properties": [
+        "P1",
+        "P2",
+        "P6",
+        "P7"
+      ],
+      "fitness_p1_p2": 19.96223754488313,
+      "idx": 5,
+      "mcnn_confirmed": true,
+      "mcnn_rate_hz": 229.50214211848132,
+      "mcnn_ulog": "docs/fuzz1c_severity_20260625/evals/fuzz1c_severity_20260625_rp32_40_rate1p30_1p95_w0_r4_f038_s20261803/mcnn_gate3_fuzz1c_severity_20260625_rp32_40_rate1p30_1p95_w0_r4_f038_s20261803_mcnn.ulg",
+      "p1_gap": 1.331253944533081,
+      "p1p2_clean_count": 2,
+      "p2_gap": 19.96223754488313,
+      "passed": true,
+      "property_global_strict_s0_vs_s3": false,
+      "raptor_input_present": false,
+      "route_a_decontam_strict": true,
+      "source_decision": "STRICT_DIFFERENTIAL"
+    }
+  ],
+  "source": "docs/fuzz1c_decontam_20260625/results.json",
+  "strict_pair_count": 4,
+  "thresholds_json": "property_oracle defaults"
+}
