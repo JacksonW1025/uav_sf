@@ -11,6 +11,8 @@ from typing import Any
 
 import numpy as np
 
+from property_oracle import PROPERTY_ORDER, evaluate_ulog, load_thresholds
+
 
 NOISE_FLOOR_DEFAULT = {
     "tracking_error_max_m": 0.05,
@@ -73,6 +75,66 @@ def quadrant(classical_safe: bool, raptor_safe: bool) -> str:
     return "too_hard_not_bug"
 
 
+def property_severity_value(result: dict[str, Any]) -> int | None:
+    severity = result.get("severity", {})
+    value = severity.get("severity") if isinstance(severity, dict) else None
+    return int(value) if isinstance(value, int) else None
+
+
+def property_severity_label(result: dict[str, Any]) -> str | None:
+    severity = result.get("severity", {})
+    label = severity.get("label") if isinstance(severity, dict) else None
+    return str(label) if label is not None else None
+
+
+def property_differential(
+    classical_property: dict[str, Any],
+    neural_property: dict[str, Any],
+    margin_c: float,
+) -> dict[str, Any]:
+    classical_rho = classical_property.get("rho", {})
+    neural_rho = neural_property.get("rho", {})
+    per_property: dict[str, Any] = {}
+    clean = []
+    for prop in PROPERTY_ORDER:
+        c = classical_rho.get(prop)
+        n = neural_rho.get(prop)
+        if not isinstance(c, (int, float)) or not isinstance(n, (int, float)):
+            per_property[prop] = {"available": False}
+            continue
+        is_diff = float(n) <= 0.0 and float(c) >= margin_c
+        per_property[prop] = {
+            "available": True,
+            "classical_rho": float(c),
+            "neural_rho": float(n),
+            "margin_c": margin_c,
+            "clean_differential": bool(is_diff),
+        }
+        if is_diff:
+            clean.append(prop)
+
+    csev = property_severity_value(classical_property)
+    nsev = property_severity_value(neural_property)
+    if csev is None or nsev is None:
+        strict = False
+        wide = False
+    else:
+        strict = csev == 0 and nsev >= 3
+        wide = csev <= 2 and nsev >= 3
+
+    return {
+        "classical_severity": csev,
+        "classical_severity_label": property_severity_label(classical_property),
+        "neural_severity": nsev,
+        "neural_severity_label": property_severity_label(neural_property),
+        "clean_differential_properties": clean,
+        "per_property": per_property,
+        "strict_s0_vs_s3": bool(strict),
+        "wide_control_vs_uncontrolled": bool(wide),
+        "property_primary_bug": bool(clean and wide),
+    }
+
+
 def noise_floor(theta: dict[str, Any], classical: dict[str, Any], raptor: dict[str, Any]) -> dict[str, float]:
     floor = dict(NOISE_FLOOR_DEFAULT)
     for source in [theta.get("noise_floor", {}), classical.get("noise_floor", {}), raptor.get("noise_floor", {})]:
@@ -128,7 +190,13 @@ def divergence_quality(
     return float(score)
 
 
-def compare(theta: dict[str, Any], classical: dict[str, Any], raptor: dict[str, Any]) -> dict[str, Any]:
+def compare(
+    theta: dict[str, Any],
+    classical: dict[str, Any],
+    raptor: dict[str, Any],
+    classical_property: dict[str, Any] | None = None,
+    raptor_property: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     div_threshold = float(theta.get("divergence_thresholds", {}).get("position_divergence_m", 2.0))
     ttd = time_to_divergence(classical, raptor, div_threshold)
     deltas = {
@@ -145,7 +213,7 @@ def compare(theta: dict[str, Any], classical: dict[str, Any], raptor: dict[str, 
     effective = effective_deltas(deltas, floor)
     classical_usable = bool(classical.get("safe")) and not bool(classical.get("infrastructure_limited"))
     raptor_safe = bool(raptor.get("safe"))
-    return {
+    result = {
         "tag": theta.get("tag"),
         "theta": theta,
         "classical": classical,
@@ -168,17 +236,92 @@ def compare(theta: dict[str, Any], classical: dict[str, Any], raptor: dict[str, 
             },
         },
     }
+    if classical_property is not None and raptor_property is not None:
+        margin_c = float((raptor_property.get("thresholds") or classical_property.get("thresholds") or {}).get("margin_c", 0.0))
+        result["property_oracle"] = {
+            "classical": classical_property,
+            "neural": raptor_property,
+            "differential": property_differential(classical_property, raptor_property, margin_c),
+        }
+    return result
+
+
+def property_only_result(
+    theta: dict[str, Any],
+    classical_property: dict[str, Any],
+    neural_property: dict[str, Any],
+) -> dict[str, Any]:
+    margin_c = float((neural_property.get("thresholds") or classical_property.get("thresholds") or {}).get("margin_c", 0.0))
+    differential = property_differential(classical_property, neural_property, margin_c)
+    return {
+        "tag": theta.get("tag"),
+        "theta": theta,
+        "quadrant": "property_only",
+        "primary_bug": bool(differential["property_primary_bug"]),
+        "classical_usable_for_primary": differential["classical_severity"] == 0,
+        "property_oracle": {
+            "classical": classical_property,
+            "neural": neural_property,
+            "differential": differential,
+        },
+    }
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--theta", type=Path, required=True)
-    parser.add_argument("--classical", type=Path, required=True)
-    parser.add_argument("--raptor", type=Path, required=True)
+    parser.add_argument("--theta", type=Path)
+    parser.add_argument("--classical", type=Path)
+    parser.add_argument("--raptor", "--neural", dest="raptor", type=Path)
+    parser.add_argument("--classical-property", type=Path)
+    parser.add_argument("--raptor-property", "--neural-property", dest="raptor_property", type=Path)
+    parser.add_argument("--classical-ulog", type=Path)
+    parser.add_argument("--raptor-ulog", "--neural-ulog", dest="raptor_ulog", type=Path)
+    parser.add_argument("--neural-controller", choices=["raptor", "mcnn"], default="raptor")
+    parser.add_argument("--thresholds-json", type=Path)
+    parser.add_argument("--classical-analysis-start-us", type=int)
+    parser.add_argument("--classical-analysis-end-us", type=int)
+    parser.add_argument("--raptor-analysis-start-us", "--neural-analysis-start-us", dest="raptor_analysis_start_us", type=int)
+    parser.add_argument("--raptor-analysis-end-us", "--neural-analysis-end-us", dest="raptor_analysis_end_us", type=int)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
 
-    result = compare(load_json(args.theta), load_json(args.classical), load_json(args.raptor))
+    theta = load_json(args.theta) if args.theta else {}
+    thresholds = load_thresholds(args.thresholds_json)
+
+    classical_property = load_json(args.classical_property) if args.classical_property else None
+    raptor_property = load_json(args.raptor_property) if args.raptor_property else None
+    if classical_property is None and args.classical_ulog:
+        classical_property = evaluate_ulog(
+            args.classical_ulog,
+            controller="classical",
+            theta=theta,
+            thresholds=thresholds,
+            analysis_start_us=args.classical_analysis_start_us,
+            analysis_end_us=args.classical_analysis_end_us,
+        )
+    if raptor_property is None and args.raptor_ulog:
+        raptor_property = evaluate_ulog(
+            args.raptor_ulog,
+            controller=args.neural_controller,
+            theta=theta,
+            thresholds=thresholds,
+            analysis_start_us=args.raptor_analysis_start_us,
+            analysis_end_us=args.raptor_analysis_end_us,
+        )
+
+    if args.classical and args.raptor:
+        result = compare(
+            theta,
+            load_json(args.classical),
+            load_json(args.raptor),
+            classical_property,
+            raptor_property,
+        )
+    elif classical_property is not None and raptor_property is not None:
+        result = property_only_result(theta, classical_property, raptor_property)
+    else:
+        raise SystemExit("provide either --classical/--raptor metrics, or property JSONs/ULOGs for both controllers")
+
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open("w", encoding="utf-8") as handle:
         json.dump(result, handle, indent=2, sort_keys=True, allow_nan=False)
@@ -189,6 +332,7 @@ def main() -> int:
                 "output": str(args.output),
                 "quadrant": result["quadrant"],
                 "primary_bug": result["primary_bug"],
+                "property": result.get("property_oracle", {}).get("differential"),
             },
             sort_keys=True,
         )
