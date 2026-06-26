@@ -181,6 +181,17 @@ def write_logger_topics(run_root: Path) -> None:
     (logging_dir / "logger_topics.txt").write_text("\n".join(LOGGER_TOPICS) + "\n", encoding="utf-8")
 
 
+def isolated_px4_run_root(build_dir: Path, base_dir: Path | None, prefix: str) -> Path:
+    if base_dir is None:
+        return build_dir
+    run_root = base_dir / prefix
+    if run_root.exists():
+        shutil.rmtree(run_root)
+    run_root.mkdir(parents=True, exist_ok=True)
+    shutil.copytree(build_dir / "etc", run_root / "etc", symlinks=True)
+    return run_root
+
+
 def px4_command_script(theta: dict[str, Any], controller: str, sim_speed_factor: float) -> str:
     lines = ["sleep 4"]
     for name, value in theta.get("px4_params", {}).items():
@@ -201,7 +212,7 @@ def px4_command_script(theta: dict[str, Any], controller: str, sim_speed_factor:
     mission_end_s = float(timing["mission_end_s"])
     shutdown_margin_s = float(timing.get("px4_shutdown_margin_s", 8.0))
     shutdown_wall_slack_s = float(timing.get("px4_shutdown_wall_slack_s", 22.0))
-    sleep_after_takeoff = int(math.ceil(mission_end_s + shutdown_margin_s + shutdown_wall_slack_s * sim_speed_factor))
+    sleep_after_takeoff = int(math.ceil((mission_end_s + shutdown_margin_s) / sim_speed_factor + shutdown_wall_slack_s))
     lines.extend(
         [
             f"sleep {sleep_after_takeoff}",
@@ -307,10 +318,12 @@ def run_one(
     tag = theta["tag"]
     px4_dir = repo / "external/PX4-Autopilot"
     build_dir = px4_dir / "build/px4_sitl_mcnn_sih"
-    run_root = build_dir
+    prefix = f"mcnn_gate3_{tag}_{controller}"
+    run_root_base_value = env.get("PX4_RUN_ROOT_BASE") or os.environ.get("PX4_RUN_ROOT_BASE")
+    run_root_base = Path(run_root_base_value) if run_root_base_value else None
+    run_root = isolated_px4_run_root(build_dir, run_root_base, f"{prefix}_px4_root")
     log_root = run_root / "log"
 
-    prefix = f"mcnn_gate3_{tag}_{controller}"
     console_log = run_dir / f"{prefix}_px4_console.log"
     agent_log = run_dir / f"{prefix}_agent.log"
     topics_log = run_dir / f"{prefix}_topics.log"
@@ -347,7 +360,7 @@ def run_one(
             "PX4_SIMULATOR": "sihsim",
             "PX4_SIM_MODEL": theta.get("airframe", {}).get("model", "sihsim_x500_v2"),
             "PX4_SYS_AUTOSTART": str(theta.get("airframe", {}).get("sys_autostart", 10046)),
-            "PX4_SIM_SPEED_FACTOR": os.environ.get("PX4_SIM_SPEED_FACTOR", "1"),
+            "PX4_SIM_SPEED_FACTOR": env.get("PX4_SIM_SPEED_FACTOR", os.environ.get("PX4_SIM_SPEED_FACTOR", "1")),
         }
     )
     sim_speed_factor = max(1.0, float(px4_env["PX4_SIM_SPEED_FACTOR"]))
@@ -380,12 +393,13 @@ def run_one(
             console_handle.write(f"PX4_SIM_MODEL={px4_env['PX4_SIM_MODEL']}\n")
             console_handle.write(f"PX4_SYS_AUTOSTART={px4_env['PX4_SYS_AUTOSTART']}\n")
             console_handle.write(f"PX4_SIM_SPEED_FACTOR={px4_env['PX4_SIM_SPEED_FACTOR']}\n")
+            console_handle.write(f"PX4_RUN_ROOT={run_root}\n")
             console_handle.write(f"THETA={theta_path}\n")
             console_handle.write(f"BOOT_AIRFRAME={boot_airframe}\n")
             console_handle.write(f"BOOT_PX4_PARAMS={json.dumps(theta.get('boot_px4_params', {}), sort_keys=True)}\n\n")
             console_handle.flush()
             px4 = subprocess.Popen(
-                ["timeout", str(run_timeout_s), "./bin/px4", "."],
+                ["timeout", str(run_timeout_s), str(build_dir / "bin/px4"), "."],
                 cwd=str(run_root),
                 env=px4_env,
                 stdin=stdin,
