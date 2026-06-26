@@ -423,6 +423,9 @@ def run_one(
 
             console_handle.write(f"\n# task_rc={task_rc}\n")
             console_handle.flush()
+            if task_rc != 0:
+                m1.terminate_process(px4)
+                raise RuntimeError(f"task node failed rc={task_rc} for {controller}")
             try:
                 px4_rc = px4.wait(timeout=45)
             except subprocess.TimeoutExpired as exc:

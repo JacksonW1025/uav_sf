@@ -29,6 +29,7 @@ from property_fitness import (
     FITNESS_FLOOR,
     differential_property_fitness,
     driver_target_properties,
+    normalize_target_properties,
 )
 from property_oracle import evaluate_ulog, load_thresholds
 
@@ -66,6 +67,15 @@ BASE_PX4_PARAMS = {
 
 FAMILIES = ["A_estimator", "A_physical", "A_wind", "B_timing", "C_setpoint"]
 CONFIRM_SEEDS = [202601, 202602, 202603]
+TARGET_PRESETS: dict[str, list[str] | None] = {
+    "auto": None,
+    "behavior": ["P4", "P6", "P7"],
+    "behavior-step": ["P4", "P5", "P6", "P7"],
+    "route-a-catastrophic": ["P1", "P2"],
+    "validation": ["P1", "P2", "P4", "P5", "P6", "P7"],
+}
+SUBSPACES = ["full", "route-a-switching", "steady-wind-physics"]
+STRATEGIES = ["map-elites", "random"]
 
 
 @dataclass
@@ -135,6 +145,176 @@ def append_jsonl(path: Path, data: dict[str, Any]) -> None:
     with path.open("a", encoding="utf-8") as handle:
         json.dump(data, handle, sort_keys=True, allow_nan=False)
         handle.write("\n")
+
+
+def parse_target_properties(value: str | None) -> list[str] | None:
+    if value is None:
+        return None
+    value = value.strip()
+    if value == "" or value == "auto":
+        return None
+    if value in TARGET_PRESETS:
+        preset = TARGET_PRESETS[value]
+        return None if preset is None else normalize_target_properties(preset)
+    return normalize_target_properties(item.strip() for item in value.split(",") if item.strip())
+
+
+def target_properties_for_theta(theta: dict[str, Any], override: list[str] | None) -> list[str]:
+    return list(override) if override is not None else driver_target_properties(theta)
+
+
+def route_a_switching_genome(rng: random.Random) -> dict[str, Any]:
+    genome = theta_genome.default_genome("switching")
+    genome.update(
+        {
+            "approach_radius_m": 2.30,
+            "approach_frequency_hz": 0.33,
+            "approach_phase_rad": 0.0,
+            "wind_speed_m_s": 6.0,
+            "wind_direction_rad": 0.0,
+            "setpoint_rate_hz": 80.0,
+            "switch_roll_pitch_deg": rng.uniform(38.0, 46.0),
+            "switch_rate_rad_s": rng.uniform(1.10, 1.80),
+            "switch_delay_s": rng.uniform(0.0, 0.18),
+        }
+    )
+    return theta_genome.normalize_genome(genome)
+
+
+def mutate_route_a_switching_genome(parent: dict[str, Any], rng: random.Random) -> dict[str, Any]:
+    if parent.get("disturbance_type") != "switching" or rng.random() < 0.10:
+        return route_a_switching_genome(rng)
+    genome = dict(parent)
+    genome.update(
+        {
+            "disturbance_type": "switching",
+            "approach_radius_m": 2.30,
+            "approach_frequency_hz": 0.33,
+            "approach_phase_rad": 0.0,
+            "wind_speed_m_s": 6.0,
+            "wind_direction_rad": 0.0,
+            "setpoint_rate_hz": 80.0,
+            "switch_roll_pitch_deg": float(genome["switch_roll_pitch_deg"]) + rng.gauss(0.0, 2.6),
+            "switch_rate_rad_s": float(genome["switch_rate_rad_s"]) + rng.gauss(0.0, 0.22),
+            "switch_delay_s": float(genome["switch_delay_s"]) + rng.gauss(0.0, 0.055),
+        }
+    )
+    return project_genome_to_subspace(genome, "route-a-switching", rng)
+
+
+def steady_wind_physics_genome(rng: random.Random, kind: str | None = None) -> dict[str, Any]:
+    kind = kind if kind in {"wind", "physics_mismatch"} else rng.choice(["wind", "physics_mismatch"])
+    genome = theta_genome.default_genome(kind)
+    genome.update({"mission_end_s": 54.0, "setpoint_rate_hz": rng.choice(theta_genome.SETPOINT_RATES_HZ)})
+    if kind == "wind":
+        genome["wind_speed_m_s"] = rng.uniform(0.5, 8.0)
+        genome["wind_direction_rad"] = rng.uniform(0.0, 2.0 * math.pi)
+    else:
+        genome["mass_scale"] = rng.uniform(0.88, 1.23)
+        genome["inertia_roll_scale"] = rng.uniform(0.75, 1.55)
+        genome["inertia_pitch_scale"] = rng.uniform(0.75, 1.55)
+        genome["inertia_yaw_scale"] = rng.uniform(0.75, 1.75)
+        genome["twr_scale"] = rng.uniform(0.92, 1.13)
+    return theta_genome.normalize_genome(genome)
+
+
+def mutate_steady_wind_physics_genome(parent: dict[str, Any], rng: random.Random) -> dict[str, Any]:
+    kind = str(parent.get("disturbance_type", ""))
+    if kind not in {"wind", "physics_mismatch"} or rng.random() < 0.10:
+        return steady_wind_physics_genome(rng)
+    if rng.random() < 0.08:
+        kind = "physics_mismatch" if kind == "wind" else "wind"
+        return steady_wind_physics_genome(rng, kind)
+    genome = dict(parent)
+    genome["disturbance_type"] = kind
+    genome["mission_end_s"] = 54.0
+    if rng.random() < 0.10:
+        genome["setpoint_rate_hz"] = rng.choice(theta_genome.SETPOINT_RATES_HZ)
+    if kind == "wind":
+        genome["wind_speed_m_s"] = float(genome["wind_speed_m_s"]) + rng.gauss(0.0, 1.1)
+        genome["wind_direction_rad"] = float(genome["wind_direction_rad"]) + rng.gauss(0.0, 0.55)
+    else:
+        for key, sigma in [
+            ("mass_scale", 0.05),
+            ("inertia_roll_scale", 0.12),
+            ("inertia_pitch_scale", 0.12),
+            ("inertia_yaw_scale", 0.14),
+            ("twr_scale", 0.035),
+        ]:
+            if rng.random() < 0.45:
+                genome[key] = float(genome[key]) + rng.gauss(0.0, sigma)
+    return project_genome_to_subspace(genome, "steady-wind-physics", rng)
+
+
+def project_genome_to_subspace(genome: dict[str, Any], subspace: str, rng: random.Random) -> dict[str, Any]:
+    if subspace == "full":
+        return theta_genome.normalize_genome(genome)
+    if subspace == "route-a-switching":
+        projected = dict(genome)
+        projected.update(
+            {
+                "disturbance_type": "switching",
+                "approach_radius_m": 2.30,
+                "approach_frequency_hz": 0.33,
+                "approach_phase_rad": 0.0,
+                "wind_speed_m_s": 6.0,
+                "wind_direction_rad": 0.0,
+                "setpoint_rate_hz": 80.0,
+            }
+        )
+        projected["switch_roll_pitch_deg"] = clamp(float(projected["switch_roll_pitch_deg"]), 38.0, 46.0)
+        projected["switch_rate_rad_s"] = clamp(float(projected["switch_rate_rad_s"]), 1.10, 1.80)
+        projected["switch_delay_s"] = clamp(float(projected["switch_delay_s"]), 0.0, 0.18)
+        return theta_genome.normalize_genome(projected)
+    if subspace == "steady-wind-physics":
+        kind = str(genome.get("disturbance_type", ""))
+        if kind not in {"wind", "physics_mismatch"}:
+            kind = rng.choice(["wind", "physics_mismatch"])
+        projected = dict(genome)
+        projected.update(
+            {
+                "disturbance_type": kind,
+                "mission_end_s": 54.0,
+                "approach_radius_m": 3.0,
+                "approach_frequency_hz": 0.35,
+                "approach_phase_rad": 0.0,
+                "switch_roll_pitch_deg": 35.0,
+                "switch_rate_rad_s": 1.3,
+                "switch_delay_s": 0.0,
+                "step_magnitude_m": 0.75,
+                "step_axis": "x",
+                "step_sign": 1,
+                "step_time_s": 32.0,
+            }
+        )
+        return theta_genome.normalize_genome(projected)
+    raise ValueError(f"unknown subspace {subspace!r}; expected one of {SUBSPACES}")
+
+
+def random_candidate_genome(subspace: str, rng: random.Random) -> dict[str, Any]:
+    if subspace == "route-a-switching":
+        return route_a_switching_genome(rng)
+    if subspace == "steady-wind-physics":
+        return steady_wind_physics_genome(rng)
+    return theta_genome.random_genome(rng)
+
+
+def mutate_candidate_genome(parent: dict[str, Any], subspace: str, rng: random.Random) -> dict[str, Any]:
+    if subspace == "route-a-switching":
+        return mutate_route_a_switching_genome(parent, rng)
+    if subspace == "steady-wind-physics":
+        return mutate_steady_wind_physics_genome(parent, rng)
+    return theta_genome.mutate_genome(parent, rng)
+
+
+def crossover_candidate_genome(
+    a: dict[str, Any],
+    b: dict[str, Any],
+    subspace: str,
+    rng: random.Random,
+) -> dict[str, Any]:
+    genome = theta_genome.crossover_genome(a, b, rng)
+    return project_genome_to_subspace(genome, subspace, rng)
 
 
 def clamp(value: float, lo: float, hi: float) -> float:
@@ -727,8 +907,12 @@ def empty_fitness(targets: list[str] | None = None) -> dict[str, Any]:
     }
 
 
-def mock_property_pair(theta: dict[str, Any], genome: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
-    targets = driver_target_properties(theta)
+def mock_property_pair(
+    theta: dict[str, Any],
+    genome: dict[str, Any],
+    target_properties: list[str] | None = None,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    targets = target_properties_for_theta(theta, target_properties)
     kind, _, severity = theta_genome.feature_bin(genome)
     prop_by_kind = {
         "wind": "P6",
@@ -736,7 +920,11 @@ def mock_property_pair(theta: dict[str, Any], genome: dict[str, Any]) -> tuple[d
         "switching": "P4",
         "step": "P5",
     }
-    best = prop_by_kind.get(kind, targets[0])
+    target_candidates = [prop for prop in targets if prop in {"P1", "P2", "P4", "P5", "P6", "P7"}]
+    if kind == "switching" and any(prop in targets for prop in ["P1", "P2"]):
+        affected = ["P1", "P2"]
+    else:
+        affected = [prop_by_kind.get(kind, target_candidates[0] if target_candidates else "P4")]
     base_rho = {
         "P1": 1.5,
         "P2": 6.0,
@@ -747,9 +935,15 @@ def mock_property_pair(theta: dict[str, Any], genome: dict[str, Any]) -> tuple[d
         "P7": 0.4,
     }
     neural_rho = dict(base_rho)
-    neural_rho[best] = base_rho[best] - (0.15 + 1.25 * float(severity))
-    if float(severity) > 0.72:
-        neural_rho[best] = -0.15 - float(severity)
+    for prop in affected:
+        if prop == "P1":
+            neural_rho[prop] = base_rho[prop] - (0.55 + 2.2 * float(severity))
+        elif prop == "P2":
+            neural_rho[prop] = base_rho[prop] - (2.0 + 7.0 * float(severity))
+        else:
+            neural_rho[prop] = base_rho[prop] - (0.15 + 1.25 * float(severity))
+            if float(severity) > 0.72:
+                neural_rho[prop] = -0.15 - float(severity)
     details = {prop: {"vacuous": False} for prop in base_rho}
     if "P5" not in targets:
         details["P5"] = {"vacuous": True}
@@ -803,6 +997,7 @@ def evaluate_theta(
     selected_parent_tag: str | None = None,
     selected_parent_quality: float | None = None,
     mock_evaluator: bool = False,
+    target_properties: list[str] | None = None,
 ) -> EvalResult:
     write_json(theta_path, theta)
     tag = str(theta["tag"])
@@ -815,14 +1010,14 @@ def evaluate_theta(
         _, severity, bin_name = theta_genome_bin(genome)
     else:
         severity, bin_name = 0.0, "unknown"
-    target_properties = driver_target_properties(theta)
+    target_properties = target_properties_for_theta(theta, target_properties)
     compare_path = docs_dir / f"m1_diff_{tag}.json"
 
     try:
         if mock_evaluator:
             if not isinstance(genome, dict):
                 raise ValueError("mock evaluator requires theta_genome.genome")
-            classical_property, mcnn_property = mock_property_pair(theta, genome)
+            classical_property, mcnn_property = mock_property_pair(theta, genome, target_properties)
         else:
             outputs: dict[str, dict[str, Path]] = {}
             for controller in ["classical", "mcnn"]:
@@ -951,6 +1146,49 @@ def write_archive(path: Path, archive: dict[str, dict[str, Any]]) -> None:
     write_json(path, serializable)
 
 
+def qd_score(archive: dict[str, dict[str, Any]]) -> float:
+    return float(sum(max(0.0, float(value["result"]["quality"])) for value in archive.values()))
+
+
+def best_result(results: list[EvalResult]) -> EvalResult | None:
+    if not results:
+        return None
+    return max(results, key=lambda result: float(result.quality))
+
+
+def append_progress(
+    path: Path,
+    result: EvalResult,
+    results: list[EvalResult],
+    archive: dict[str, dict[str, Any]],
+    selection_source: str,
+) -> dict[str, Any]:
+    best = best_result(results)
+    archive_best = None
+    if archive:
+        archive_best = max(archive.values(), key=lambda item: float(item["result"]["quality"]))["result"]
+    record = {
+        "eval": result.index,
+        "tag": result.tag,
+        "selection_source": selection_source,
+        "selected_parent_tag": result.selected_parent_tag,
+        "selected_parent_quality": result.selected_parent_quality,
+        "quality": result.quality,
+        "best_so_far_tag": best.tag if best else None,
+        "best_so_far_quality": best.quality if best else FITNESS_FLOOR,
+        "archive_bins": len(archive),
+        "archive_best_tag": archive_best.get("tag") if archive_best else None,
+        "archive_best_quality": archive_best.get("quality") if archive_best else FITNESS_FLOOR,
+        "qd_score": qd_score(archive),
+        "feature_bin": result.feature_bin,
+        "best_property": result.fitness.get("best_property"),
+        "primary_bug": result.primary_bug,
+        "error": result.error,
+    }
+    append_jsonl(path, record)
+    return record
+
+
 def search(args: argparse.Namespace) -> tuple[Path, list[EvalResult], list[dict[str, Any]], dict[str, dict[str, Any]]]:
     rng = random.Random(args.seed)
     run_id = args.run_id or datetime.now(timezone.utc).strftime("m2_%Y%m%dT%H%M%SZ")
@@ -965,12 +1203,16 @@ def search(args: argparse.Namespace) -> tuple[Path, list[EvalResult], list[dict[
         "budget": args.budget,
         "run_timeout_s": args.run_timeout,
         "eval_timeout_s": args.eval_timeout,
+        "strategy": args.strategy,
+        "subspace": args.subspace,
         "safety_config": str(SAFETY_CONFIG.relative_to(REPO_ROOT)),
         "px4_commit": "3042f906abaab7ab59ae838ad5a530a9ef3df9a6",
-        "searcher": "MAP-Elites",
+        "searcher": "MAP-Elites" if args.strategy == "map-elites" else "random baseline",
         "genome": "scripts/theta_genome.py shim-free Tier 0.5 genome",
         "bins": "theta_genome disturbance_type x amplitude_bucket",
         "fitness": "differential property gap: max_i rho_i(classical)-rho_i(mcnn) with per-property classical margin",
+        "target_property_override": args.target_properties,
+        "resolved_target_properties": args.resolved_target_properties,
         "driver_target_properties": {
             "default": ["P4", "P6", "P7"],
             "step_theta": ["P4", "P5", "P6", "P7"],
@@ -1001,25 +1243,29 @@ def search(args: argparse.Namespace) -> tuple[Path, list[EvalResult], list[dict[
     for index in range(args.budget):
         if deadline is not None and time.monotonic() >= deadline:
             break
-        parent = select_parent(archive, rng)
         selected_parent_tag = None
         selected_parent_quality = None
-        if parent is None or index < args.bootstrap:
-            genome = theta_genome.random_genome(rng)
-            selection_source = "bootstrap_random"
+        if args.strategy == "random":
+            genome = random_candidate_genome(args.subspace, rng)
+            selection_source = "random_baseline"
         else:
-            selected_parent_tag = parent["result"].get("tag")
-            selected_parent_quality = float(parent["result"]["quality"])
-            parent_genome = parent["genome"]
-            if args.crossover and len(archive) > 1 and rng.random() < args.crossover_rate:
-                mate = select_parent(archive, rng)
-                mate_genome = mate["genome"] if mate is not None else parent_genome
-                genome = theta_genome.crossover_genome(parent_genome, mate_genome, rng)
-                genome = theta_genome.mutate_genome(genome, rng)
-                selection_source = "elite_crossover_mutation"
+            parent = select_parent(archive, rng)
+            if parent is None or index < args.bootstrap:
+                genome = random_candidate_genome(args.subspace, rng)
+                selection_source = "bootstrap_random"
             else:
-                genome = theta_genome.mutate_genome(parent_genome, rng)
-                selection_source = "elite_mutation"
+                selected_parent_tag = parent["result"].get("tag")
+                selected_parent_quality = float(parent["result"]["quality"])
+                parent_genome = parent["genome"]
+                if args.crossover and len(archive) > 1 and rng.random() < args.crossover_rate:
+                    mate = select_parent(archive, rng)
+                    mate_genome = mate["genome"] if mate is not None else parent_genome
+                    genome = crossover_candidate_genome(parent_genome, mate_genome, args.subspace, rng)
+                    genome = mutate_candidate_genome(genome, args.subspace, rng)
+                    selection_source = "elite_crossover_mutation"
+                else:
+                    genome = mutate_candidate_genome(parent_genome, args.subspace, rng)
+                    selection_source = "elite_mutation"
         tag = f"{run_id}_e{index:04d}"
         theta = theta_genome.theta_from_genome(genome, tag, args.seed + index)
         theta.setdefault("m2_map_elites", {})["selection"] = {
@@ -1040,6 +1286,7 @@ def search(args: argparse.Namespace) -> tuple[Path, list[EvalResult], list[dict[
             selected_parent_tag=selected_parent_tag,
             selected_parent_quality=selected_parent_quality,
             mock_evaluator=args.mock_evaluator,
+            target_properties=args.resolved_target_properties,
         )
         results.append(result)
         append_jsonl(run_dir / "evals.jsonl", result.as_dict())
@@ -1064,6 +1311,7 @@ def search(args: argparse.Namespace) -> tuple[Path, list[EvalResult], list[dict[
             primary_candidates.append(candidate)
             write_json(run_dir / "primary_candidates.json", primary_candidates)
 
+        progress = append_progress(run_dir / "progress.jsonl", result, results, archive, selection_source)
         print(
             json.dumps(
                 {
@@ -1071,6 +1319,9 @@ def search(args: argparse.Namespace) -> tuple[Path, list[EvalResult], list[dict[
                     "tag": tag,
                     "bin": bin_name,
                     "quality": result.quality,
+                    "best_so_far_quality": progress["best_so_far_quality"],
+                    "archive_bins": progress["archive_bins"],
+                    "qd_score": progress["qd_score"],
                     "best_property": result.fitness.get("best_property"),
                     "valid_property_count": result.fitness.get("valid_property_count"),
                     "quadrant": result.quadrant,
@@ -1093,8 +1344,46 @@ def search(args: argparse.Namespace) -> tuple[Path, list[EvalResult], list[dict[
 
 def os_environ_with_speed(sim_speed_factor: float) -> dict[str, str]:
     env = m1.agent_env(REPO_ROOT)
+    env = with_ros_environment(env)
     env["PX4_SIM_SPEED_FACTOR"] = str(sim_speed_factor)
     return env
+
+
+def with_ros_environment(env: dict[str, str]) -> dict[str, str]:
+    setup_files = [Path("/opt/ros/jazzy/setup.bash"), REPO_ROOT / "ros2_ws/install/setup.bash"]
+    existing = [path for path in setup_files if path.exists()]
+    if shutil.which("ros2", path=env.get("PATH")) and not (REPO_ROOT / "ros2_ws/install/setup.bash").exists():
+        return env
+    if not existing:
+        return env
+    source_cmd = " && ".join(f"source {path}" for path in existing)
+    result = subprocess.run(
+        ["bash", "-lc", f"{source_cmd} && env -0"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=True,
+    )
+    overlay: dict[str, str] = {}
+    for item in result.stdout.decode("utf-8", errors="replace").split("\0"):
+        if not item or "=" not in item:
+            continue
+        key, value = item.split("=", 1)
+        overlay[key] = value
+    merged = dict(env)
+    for key in [
+        "PATH",
+        "LD_LIBRARY_PATH",
+        "PYTHONPATH",
+        "AMENT_PREFIX_PATH",
+        "CMAKE_PREFIX_PATH",
+        "COLCON_PREFIX_PATH",
+        "ROS_DISTRO",
+        "ROS_PYTHON_VERSION",
+        "ROS_VERSION",
+    ]:
+        if key in overlay:
+            merged[key] = overlay[key]
+    return merged
 
 
 def confirm_candidates(
@@ -1134,6 +1423,7 @@ def confirm_candidates(
                 selected_parent_tag=original_tag,
                 selected_parent_quality=float(candidate["result"]["quality"]),
                 mock_evaluator=args.mock_evaluator,
+                target_properties=args.resolved_target_properties,
             )
             repeats.append(result.as_dict())
             if not result.primary_bug:
@@ -1176,8 +1466,35 @@ def write_summary(
         f"primary_candidates: {primary}",
         f"confirmed_primary_bugs: {len(confirmed)}",
         "",
-        "## best elites",
+        "## progress",
     ]
+    progress_records: list[dict[str, Any]] = []
+    progress_path = run_dir / "progress.jsonl"
+    if progress_path.exists():
+        with progress_path.open("r", encoding="utf-8") as handle:
+            progress_records = [json.loads(line) for line in handle if line.strip()]
+    if not progress_records:
+        lines.append("- none")
+    else:
+        wanted = {0, len(progress_records) // 2, len(progress_records) - 1}
+        lines.append("| eval | best quality | archive bins | QD-score | source | parent quality |")
+        lines.append("|---:|---:|---:|---:|---|---:|")
+        for idx, record in enumerate(progress_records):
+            if idx not in wanted:
+                continue
+            parent_quality = record.get("selected_parent_quality")
+            parent_text = "n/a" if parent_quality is None else f"{float(parent_quality):.6g}"
+            lines.append(
+                f"| {record['eval']} | {float(record['best_so_far_quality']):.6g} | "
+                f"{record['archive_bins']} | {float(record['qd_score']):.6g} | "
+                f"{record['selection_source']} | {parent_text} |"
+            )
+    lines.extend(
+        [
+            "",
+            "## best elites",
+        ]
+    )
     for key, elite in sorted(archive.items(), key=lambda item: float(item[1]["result"]["quality"]), reverse=True)[:10]:
         result = elite["result"]
         lines.append(
@@ -1219,9 +1536,20 @@ def main() -> int:
     parser.add_argument("--skip-build", action="store_true")
     parser.add_argument("--thresholds-json", type=Path)
     parser.add_argument("--mock-evaluator", action="store_true")
+    parser.add_argument("--strategy", choices=STRATEGIES, default="map-elites")
+    parser.add_argument("--subspace", choices=SUBSPACES, default="full")
+    parser.add_argument(
+        "--target-properties",
+        default="auto",
+        help=(
+            "Target preset or comma list. Presets: auto, behavior, behavior-step, "
+            "route-a-catastrophic, validation."
+        ),
+    )
     parser.add_argument("--crossover", action="store_true")
     parser.add_argument("--crossover-rate", type=float, default=0.25)
     args = parser.parse_args()
+    args.resolved_target_properties = parse_target_properties(args.target_properties)
 
     run_dir, results, candidates, archive = search(args)
     confirmed: list[dict[str, Any]] = []
