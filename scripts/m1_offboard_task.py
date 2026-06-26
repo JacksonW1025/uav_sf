@@ -120,7 +120,10 @@ class M1OffboardTask(Node):
         self.hover_ned = finite_triplet(setpoint["hover_ned"])
         self.yaw_rad = float(setpoint.get("yaw_rad", 0.0))
         self.setpoint_type = str(setpoint.get("type", "step"))
-        self.step_delta = finite_triplet(setpoint.get("step", {}).get("delta_ned", [0.0, 0.0, 0.0]))
+        step = setpoint.get("step", {})
+        self.step_delta = finite_triplet(step.get("delta_ned", [0.0, 0.0, 0.0]))
+        self.step_start_s = float(step.get("start_s", self.trajectory_start_s))
+        self.step_recorded = False
         ramp = setpoint.get("ramp", {})
         self.ramp_delta = finite_triplet(ramp.get("delta_ned", [0.0, 0.0, 0.0]))
         self.ramp_duration_s = float(ramp.get("duration_s", 1.0))
@@ -147,6 +150,7 @@ class M1OffboardTask(Node):
         self.state_trigger_deadline_s = float(
             self.activation_trigger.get("deadline_s", max(self.switch_s, self.state_trigger_start_s))
         )
+        self.state_trigger_switch_delay_s = float(self.activation_trigger.get("switch_delay_s", 0.0))
         self.state_trigger_fired = not self.state_trigger_enabled
         self.state_trigger_state: dict[str, Any] | None = None
         self.state_trigger_us: int | None = None
@@ -279,6 +283,11 @@ class M1OffboardTask(Node):
 
         t = elapsed_s - self.trajectory_start_s
         if self.setpoint_type == "step":
+            if elapsed_s < self.step_start_s:
+                return sp, [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]
+            if not self.step_recorded:
+                self.step_recorded = True
+                self.record_event("setpoint_step", {"delta_ned": self.step_delta, "start_s": self.step_start_s})
             return [sp[i] + self.step_delta[i] for i in range(3)], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]
 
         if self.setpoint_type == "ramp":
@@ -400,10 +409,14 @@ class M1OffboardTask(Node):
                 self.state_trigger_fired = True
                 self.state_trigger_state = dict(state)
                 self.state_trigger_us = self.now_us
-                self.switch_s = elapsed_s
+                self.switch_s = elapsed_s + max(0.0, self.state_trigger_switch_delay_s)
                 self.record_event(
                     "state_trigger",
-                    {"trigger": self.activation_trigger, "state": self.state_trigger_state},
+                    {
+                        "trigger": self.activation_trigger,
+                        "state": self.state_trigger_state,
+                        "controller_switch_s": self.switch_s,
+                    },
                 )
         if not self.state_trigger_fired and elapsed_s >= self.state_trigger_deadline_s:
             self.record_event(

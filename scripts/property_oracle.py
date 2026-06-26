@@ -47,8 +47,8 @@ DEFAULT_THRESHOLDS: dict[str, float] = {
     "epsilon_sat": 0.01,
     "W_sat_s": 0.5,
     "delta_u_max": 0.70,
-    "epsilon_set_m": 1.75,
-    "T_set_s": 8.0,
+    "epsilon_set_m": 1.05,
+    "T_set_s": 5.0,
     "W_hold_s": 2.0,
     "s_min_m": 0.5,
     "A_max_deg": 18.0,
@@ -308,6 +308,7 @@ def task_window_from_json(
         mission_end_us = int(ulog.last_timestamp)
 
     return {
+        "origin_us": origin_us,
         "active_us": active_us,
         "active_us_from_nav": active_us_from_nav,
         "trajectory_start_us": trajectory_start_us,
@@ -327,6 +328,7 @@ def infer_window_from_ulog(ulog: ULog, controller: str) -> dict[str, int | None]
     if active_us is None:
         active_us = int(ulog.start_timestamp)
     return {
+        "origin_us": int(ulog.start_timestamp),
         "active_us": active_us,
         "active_us_from_nav": active_us,
         "trajectory_start_us": active_us,
@@ -456,6 +458,9 @@ def extract_position_reference(
         "timestamp_us": pos_ts,
         "position_ned_m": pos_s,
         "setpoint_ned_m": sp_s,
+        "setpoint_raw_ned_m": sp_interp,
+        "setpoint_logged_timestamp_us": sp_ts,
+        "setpoint_logged_ned_m": sp_pos,
         "error_ned_m": err_vec,
         "error_norm_m": err_norm,
     }
@@ -557,10 +562,22 @@ def robustness_p4(motors: dict[str, np.ndarray], thresholds: dict[str, float]) -
 
 def robustness_p5(position: dict[str, np.ndarray], thresholds: dict[str, float]) -> tuple[float, dict[str, Any]]:
     ts = position["timestamp_us"]
-    sp = position["setpoint_ned_m"]
     err = position["error_norm_m"]
-    steps = detect_setpoint_steps(ts, sp, thresholds["s_min_m"], int(ts[0]), int(ts[-1]))
-    if not steps:
+    setpoint_type = position.get("setpoint_type")
+    event_step_times = [int(value) for value in position.get("task_step_times_us", [])]
+    if setpoint_type in {None, "", "step"}:
+        step_times = significant_setpoint_change_times(
+            position.get("setpoint_logged_timestamp_us", ts),
+            position.get("setpoint_logged_ned_m", position.get("setpoint_raw_ned_m", position["setpoint_ned_m"])),
+            thresholds["s_min_m"],
+            int(ts[0]),
+            int(ts[-1]),
+        )
+        if not step_times and event_step_times:
+            step_times = [value for value in event_step_times if int(ts[0]) <= value <= int(ts[-1])]
+    else:
+        step_times = []
+    if not step_times:
         return finite_real(thresholds["epsilon_set_m"]), {
             "vacuous": True,
             "steps": 0,
@@ -569,9 +586,9 @@ def robustness_p5(position: dict[str, np.ndarray], thresholds: dict[str, float])
     margin = thresholds["epsilon_set_m"] - err
     hold_min = future_window_extreme(ts, margin, thresholds["W_hold_s"], want_max=False)
     rhos: list[float] = []
-    for idx in steps:
-        end_us = int(ts[idx] + int(round(thresholds["T_set_s"] * 1e6)))
-        candidates = (ts >= ts[idx]) & (ts <= end_us)
+    for step_us in step_times:
+        end_us = int(step_us + int(round(thresholds["T_set_s"] * 1e6)))
+        candidates = (ts >= step_us) & (ts <= end_us)
         if np.any(candidates):
             rhos.append(float(np.nanmax(hold_min[candidates])))
     if not rhos:
@@ -579,10 +596,11 @@ def robustness_p5(position: dict[str, np.ndarray], thresholds: dict[str, float])
     rho = finite_real(min(rhos))
     return rho, {
         "vacuous": False,
-        "steps": len(steps),
+        "steps": len(step_times),
         "epsilon_set_m": thresholds["epsilon_set_m"],
         "T_set_s": thresholds["T_set_s"],
         "W_hold_s": thresholds["W_hold_s"],
+        "step_times_us": step_times,
         "worst_step_rho_m": rho,
     }
 
@@ -785,6 +803,14 @@ def evaluate_ulog(
     motors = first_dataset(ulog, "actuator_motors")
 
     position = extract_position_reference(lpos, setpoint, start_us, end_us, thresholds)
+    position["setpoint_type"] = str(theta.get("setpoint", {}).get("type", "")) if isinstance(theta, dict) else ""
+    origin_us = window.get("origin_us")
+    if isinstance(origin_us, int):
+        position["task_step_times_us"] = [
+            int(origin_us + int(round(float(event.get("elapsed_s", 0.0)) * 1e6)))
+            for event in task.get("events", [])
+            if event.get("name") == "setpoint_step"
+        ]
     trajectory_start_us = window.get("trajectory_start_us")
     if isinstance(trajectory_start_us, int):
         position["steady_base_us"] = max(start_us, int(trajectory_start_us))

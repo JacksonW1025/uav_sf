@@ -1,0 +1,454 @@
+{
+  "records": [
+    {
+      "compare_calibrated": {
+        "differential": {
+          "classical_severity": 0,
+          "classical_severity_label": "S0_clean_recovery",
+          "clean_differential_properties": [],
+          "neural_severity": 0,
+          "neural_severity_label": "S0_clean_recovery",
+          "per_property": {
+            "P1": {
+              "available": true,
+              "classical_rho": 1.5369280559615728,
+              "clean_differential": false,
+              "margin_c": 0.02,
+              "neural_rho": 1.5092304695921888
+            },
+            "P2": {
+              "available": true,
+              "classical_rho": 7.572911488280672,
+              "clean_differential": false,
+              "margin_c": 0.02,
+              "neural_rho": 5.8829921600198745
+            },
+            "P3": {
+              "available": true,
+              "classical_rho": 0.5,
+              "clean_differential": false,
+              "margin_c": 0.02,
+              "neural_rho": 0.5
+            },
+            "P4": {
+              "available": true,
+              "classical_rho": 0.676304042339325,
+              "clean_differential": false,
+              "margin_c": 0.02,
+              "neural_rho": 0.48687517046928397
+            },
+            "P5": {
+              "available": true,
+              "classical_rho": 0.6619307915183281,
+              "clean_differential": false,
+              "margin_c": 0.02,
+              "neural_rho": 0.2998305994776882
+            },
+            "P6": {
+              "available": true,
+              "classical_rho": 0.26000982618273816,
+              "clean_differential": false,
+              "margin_c": 0.02,
+              "neural_rho": 0.24650292520965317
+            },
+            "P7": {
+              "available": true,
+              "classical_rho": 1.0659283739304453,
+              "clean_differential": false,
+              "margin_c": 0.02,
+              "neural_rho": 1.3439162538350025
+            }
+          },
+          "property_primary_bug": false,
+          "strict_s0_vs_s3": false,
+          "wide_control_vs_uncontrolled": false
+        },
+        "path": "/mnt/nvme/uav_sf/docs/tier05_p5_step_20260626/evals/s20262601/tier05_p5_step_20260626_pure_step_s20262601_property_compare_calibrated.json",
+        "primary_bug": false
+      },
+      "controllers": {
+        "classical": {
+          "controller_identity": {
+            "controller": "classical",
+            "raptor_input_present": false
+          },
+          "p5_detail": {
+            "T_set_s": 5.0,
+            "W_hold_s": 2.0,
+            "epsilon_set_m": 1.05,
+            "step_times_us": [
+              37848000
+            ],
+            "steps": 1,
+            "vacuous": false,
+            "worst_step_rho_m": 0.6619307915183281
+          },
+          "property_calibrated": "/mnt/nvme/uav_sf/docs/tier05_p5_step_20260626/evals/s20262601/tier05_p5_step_20260626_pure_step_s20262601_classical_property_calibrated.json",
+          "rho": {
+            "P1": 1.5369280559615728,
+            "P2": 7.572911488280672,
+            "P3": 0.5,
+            "P4": 0.676304042339325,
+            "P5": 0.6619307915183281,
+            "P6": 0.26000982618273816,
+            "P7": 1.0659283739304453
+          },
+          "severity": {
+            "label": "S0_clean_recovery",
+            "reasons": [],
+            "severity": 0
+          }
+        },
+        "mcnn": {
+          "controller_identity": {
+            "controller": "mcnn",
+            "mcnn_confirmed": true,
+            "network_output_actuator_exact_equal_count": 6101,
+            "network_output_actuator_exact_match_fraction": 0.9057304038004751,
+            "network_output_actuator_exact_timestamp_matches": 6736,
+            "network_output_actuator_max_abs_diff": 0.7632500529289246,
+            "network_output_actuator_p99_abs_diff": 0.6889836720000232,
+            "neural_control_rate_hz": 229.2147806004619,
+            "neural_control_samples": 6749,
+            "raptor_input_present": false
+          },
+          "p5_detail": {
+            "T_set_s": 5.0,
+            "W_hold_s": 2.0,
+            "epsilon_set_m": 1.05,
+            "step_times_us": [
+              35648000
+            ],
+            "steps": 1,
+            "vacuous": false,
+            "worst_step_rho_m": 0.2998305994776882
+          },
+          "property_calibrated": "/mnt/nvme/uav_sf/docs/tier05_p5_step_20260626/evals/s20262601/tier05_p5_step_20260626_pure_step_s20262601_mcnn_property_calibrated.json",
+          "rho": {
+            "P1": 1.5092304695921888,
+            "P2": 5.8829921600198745,
+            "P3": 0.5,
+            "P4": 0.48687517046928397,
+            "P5": 0.2998305994776882,
+            "P6": 0.24650292520965317,
+            "P7": 1.3439162538350025
+          },
+          "severity": {
+            "label": "S0_clean_recovery",
+            "reasons": [],
+            "severity": 0
+          }
+        }
+      },
+      "seed": 20262601,
+      "tag": "tier05_p5_step_20260626_pure_step_s20262601"
+    },
+    {
+      "compare_calibrated": {
+        "differential": {
+          "classical_severity": 0,
+          "classical_severity_label": "S0_clean_recovery",
+          "clean_differential_properties": [],
+          "neural_severity": 0,
+          "neural_severity_label": "S0_clean_recovery",
+          "per_property": {
+            "P1": {
+              "available": true,
+              "classical_rho": 1.5389615241237469,
+              "clean_differential": false,
+              "margin_c": 0.02,
+              "neural_rho": 1.5167785179179747
+            },
+            "P2": {
+              "available": true,
+              "classical_rho": 7.614552293435736,
+              "clean_differential": false,
+              "margin_c": 0.02,
+              "neural_rho": 5.946026898247092
+            },
+            "P3": {
+              "available": true,
+              "classical_rho": 0.5,
+              "clean_differential": false,
+              "margin_c": 0.02,
+              "neural_rho": 0.5
+            },
+            "P4": {
+              "available": true,
+              "classical_rho": 0.6776712894439697,
+              "clean_differential": false,
+              "margin_c": 0.02,
+              "neural_rho": 0.476822543144226
+            },
+            "P5": {
+              "available": true,
+              "classical_rho": 0.36112909259250714,
+              "clean_differential": false,
+              "margin_c": 0.02,
+              "neural_rho": 0.43916941496993567
+            },
+            "P6": {
+              "available": true,
+              "classical_rho": 0.26462048256053705,
+              "clean_differential": false,
+              "margin_c": 0.02,
+              "neural_rho": 0.25480634457435075
+            },
+            "P7": {
+              "available": true,
+              "classical_rho": 1.1236126163893356,
+              "clean_differential": false,
+              "margin_c": 0.02,
+              "neural_rho": 0.8014557093488949
+            }
+          },
+          "property_primary_bug": false,
+          "strict_s0_vs_s3": false,
+          "wide_control_vs_uncontrolled": false
+        },
+        "path": "/mnt/nvme/uav_sf/docs/tier05_p5_step_20260626/evals/s20262602/tier05_p5_step_20260626_pure_step_s20262602_property_compare_calibrated.json",
+        "primary_bug": false
+      },
+      "controllers": {
+        "classical": {
+          "controller_identity": {
+            "controller": "classical",
+            "raptor_input_present": false
+          },
+          "p5_detail": {
+            "T_set_s": 5.0,
+            "W_hold_s": 2.0,
+            "epsilon_set_m": 1.05,
+            "step_times_us": [
+              36060000
+            ],
+            "steps": 1,
+            "vacuous": false,
+            "worst_step_rho_m": 0.36112909259250714
+          },
+          "property_calibrated": "/mnt/nvme/uav_sf/docs/tier05_p5_step_20260626/evals/s20262602/tier05_p5_step_20260626_pure_step_s20262602_classical_property_calibrated.json",
+          "rho": {
+            "P1": 1.5389615241237469,
+            "P2": 7.614552293435736,
+            "P3": 0.5,
+            "P4": 0.6776712894439697,
+            "P5": 0.36112909259250714,
+            "P6": 0.26462048256053705,
+            "P7": 1.1236126163893356
+          },
+          "severity": {
+            "label": "S0_clean_recovery",
+            "reasons": [],
+            "severity": 0
+          }
+        },
+        "mcnn": {
+          "controller_identity": {
+            "controller": "mcnn",
+            "mcnn_confirmed": true,
+            "network_output_actuator_exact_equal_count": 6161,
+            "network_output_actuator_exact_match_fraction": 0.8979740562600204,
+            "network_output_actuator_exact_timestamp_matches": 6861,
+            "network_output_actuator_max_abs_diff": 1.08674955368042,
+            "network_output_actuator_p99_abs_diff": 0.7090837364379688,
+            "neural_control_rate_hz": 230.73049550154425,
+            "neural_control_samples": 6873,
+            "raptor_input_present": false
+          },
+          "p5_detail": {
+            "T_set_s": 5.0,
+            "W_hold_s": 2.0,
+            "epsilon_set_m": 1.05,
+            "step_times_us": [
+              36024000
+            ],
+            "steps": 1,
+            "vacuous": false,
+            "worst_step_rho_m": 0.43916941496993567
+          },
+          "property_calibrated": "/mnt/nvme/uav_sf/docs/tier05_p5_step_20260626/evals/s20262602/tier05_p5_step_20260626_pure_step_s20262602_mcnn_property_calibrated.json",
+          "rho": {
+            "P1": 1.5167785179179747,
+            "P2": 5.946026898247092,
+            "P3": 0.5,
+            "P4": 0.476822543144226,
+            "P5": 0.43916941496993567,
+            "P6": 0.25480634457435075,
+            "P7": 0.8014557093488949
+          },
+          "severity": {
+            "label": "S0_clean_recovery",
+            "reasons": [],
+            "severity": 0
+          }
+        }
+      },
+      "seed": 20262602,
+      "tag": "tier05_p5_step_20260626_pure_step_s20262602"
+    },
+    {
+      "compare_calibrated": {
+        "differential": {
+          "classical_severity": 0,
+          "classical_severity_label": "S0_clean_recovery",
+          "clean_differential_properties": [],
+          "neural_severity": 0,
+          "neural_severity_label": "S0_clean_recovery",
+          "per_property": {
+            "P1": {
+              "available": true,
+              "classical_rho": 1.538485162777144,
+              "clean_differential": false,
+              "margin_c": 0.02,
+              "neural_rho": 1.541267741301472
+            },
+            "P2": {
+              "available": true,
+              "classical_rho": 7.609334263234974,
+              "clean_differential": false,
+              "margin_c": 0.02,
+              "neural_rho": 5.666075703362828
+            },
+            "P3": {
+              "available": true,
+              "classical_rho": 0.5,
+              "clean_differential": false,
+              "margin_c": 0.02,
+              "neural_rho": 0.5
+            },
+            "P4": {
+              "available": true,
+              "classical_rho": 0.6771283268928527,
+              "clean_differential": false,
+              "margin_c": 0.02,
+              "neural_rho": 0.4754558801651001
+            },
+            "P5": {
+              "available": true,
+              "classical_rho": 0.5472074842761985,
+              "clean_differential": false,
+              "margin_c": 0.02,
+              "neural_rho": 0.6520570780526993
+            },
+            "P6": {
+              "available": true,
+              "classical_rho": 0.25993690586054347,
+              "clean_differential": false,
+              "margin_c": 0.02,
+              "neural_rho": 0.2557029036010101
+            },
+            "P7": {
+              "available": true,
+              "classical_rho": 0.542325960493087,
+              "clean_differential": false,
+              "margin_c": 0.02,
+              "neural_rho": 1.3270060193836688
+            }
+          },
+          "property_primary_bug": false,
+          "strict_s0_vs_s3": false,
+          "wide_control_vs_uncontrolled": false
+        },
+        "path": "/mnt/nvme/uav_sf/docs/tier05_p5_step_20260626/evals/s20262603/tier05_p5_step_20260626_pure_step_s20262603_property_compare_calibrated.json",
+        "primary_bug": false
+      },
+      "controllers": {
+        "classical": {
+          "controller_identity": {
+            "controller": "classical",
+            "raptor_input_present": false
+          },
+          "p5_detail": {
+            "T_set_s": 5.0,
+            "W_hold_s": 2.0,
+            "epsilon_set_m": 1.05,
+            "step_times_us": [
+              36164000
+            ],
+            "steps": 1,
+            "vacuous": false,
+            "worst_step_rho_m": 0.5472074842761985
+          },
+          "property_calibrated": "/mnt/nvme/uav_sf/docs/tier05_p5_step_20260626/evals/s20262603/tier05_p5_step_20260626_pure_step_s20262603_classical_property_calibrated.json",
+          "rho": {
+            "P1": 1.538485162777144,
+            "P2": 7.609334263234974,
+            "P3": 0.5,
+            "P4": 0.6771283268928527,
+            "P5": 0.5472074842761985,
+            "P6": 0.25993690586054347,
+            "P7": 0.542325960493087
+          },
+          "severity": {
+            "label": "S0_clean_recovery",
+            "reasons": [],
+            "severity": 0
+          }
+        },
+        "mcnn": {
+          "controller_identity": {
+            "controller": "mcnn",
+            "mcnn_confirmed": true,
+            "network_output_actuator_exact_equal_count": 6170,
+            "network_output_actuator_exact_match_fraction": 0.9073529411764706,
+            "network_output_actuator_exact_timestamp_matches": 6800,
+            "network_output_actuator_max_abs_diff": 1.0935213565826416,
+            "network_output_actuator_p99_abs_diff": 0.7062102321686962,
+            "neural_control_rate_hz": 230.21072538160206,
+            "neural_control_samples": 6817,
+            "raptor_input_present": false
+          },
+          "p5_detail": {
+            "T_set_s": 5.0,
+            "W_hold_s": 2.0,
+            "epsilon_set_m": 1.05,
+            "step_times_us": [
+              36044000
+            ],
+            "steps": 1,
+            "vacuous": false,
+            "worst_step_rho_m": 0.6520570780526993
+          },
+          "property_calibrated": "/mnt/nvme/uav_sf/docs/tier05_p5_step_20260626/evals/s20262603/tier05_p5_step_20260626_pure_step_s20262603_mcnn_property_calibrated.json",
+          "rho": {
+            "P1": 1.541267741301472,
+            "P2": 5.666075703362828,
+            "P3": 0.5,
+            "P4": 0.4754558801651001,
+            "P5": 0.6520570780526993,
+            "P6": 0.2557029036010101,
+            "P7": 1.3270060193836688
+          },
+          "severity": {
+            "label": "S0_clean_recovery",
+            "reasons": [],
+            "severity": 0
+          }
+        }
+      },
+      "seed": 20262603,
+      "tag": "tier05_p5_step_20260626_pure_step_s20262603"
+    }
+  ],
+  "run_id": "tier05_p5_step_20260626",
+  "thresholds": {
+    "A_max_deg": 18.0,
+    "T_set_s": 5.0,
+    "W_hold_s": 2.0,
+    "W_osc_s": 2.0,
+    "W_sat_s": 0.5,
+    "W_ss_s": 2.0,
+    "control_moving_average_s": 0.02,
+    "delta_u_max": 0.7,
+    "epsilon_sat": 0.01,
+    "epsilon_set_m": 1.05,
+    "epsilon_ss_m": 1.8,
+    "margin_c": 0.02,
+    "omega_max_rad_s": 8.0,
+    "s_min_m": 0.5,
+    "state_moving_average_s": 0.1,
+    "tau_rec_s": 1.5,
+    "theta_max_deg": 90.0,
+    "u_sat": 0.99
+  }
+}
