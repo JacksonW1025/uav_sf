@@ -2,6 +2,8 @@ decision: DOWNGRADED
 
 # FUZZ-1b Locked Differential
 
+Status note: this downgrade remains important as the state-alignment lesson, but it is superseded as the final Route-A decision by `fuzz1c_severity_20260625.md` and `fuzz1c_decontam_20260625.md`.
+
 run_id: `fuzz1b_locked_20260625`
 
 ## Decision

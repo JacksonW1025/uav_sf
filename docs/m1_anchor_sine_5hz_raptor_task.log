@@ -1,7 +1,0 @@
-[INFO] [1782272806.231887063] [m1_offboard_task]: M1 task started controller=raptor tag=anchor_sine_5hz rate_hz=100.0
-{"detail": {"source": "first_px4_topic"}, "elapsed_s": 0.0, "name": "clock_origin", "timestamp_us": 1782272811084588}
-{"detail": {"controller": "raptor", "main": 4, "mode_id": 23, "sub": 11}, "elapsed_s": 18.016647, "name": "mode_command", "timestamp_us": 1782272829101235}
-{"detail": {"nav_state": 23}, "elapsed_s": 18.052647, "name": "controller_active", "timestamp_us": 1782272829137235}
-{"detail": {"type": "sine"}, "elapsed_s": 24.017632, "name": "trajectory_start", "timestamp_us": 1782272835102220}
-{"detail": {"setpoint_ned": [0.03587506399491791, 0.0, -2.5]}, "elapsed_s": 42.000571, "name": "mission_end", "timestamp_us": 1782272853085159}
-[INFO] [1782272853.220876819] [m1_offboard_task]: M1 task finished exit_code=0

@@ -1,5 +1,0 @@
-$ /usr/bin/python3 /workspace/scripts/m1_diff_runner.py --theta /workspace/docs/raptor_closeout_p0_nonfinite_20260625/theta/raptor_closeout_p0_nonfinite_20260625_velocity_nan.json --skip-build --run-timeout 180 --docs-dir /workspace/docs/raptor_closeout_p0_nonfinite_20260625/evals/raptor_closeout_p0_nonfinite_20260625_velocity_nan --safety-config /workspace/config/m2b_safety_envelope_4x_high_twr.json
-RUN_CONTROLLER=classical
-RUN_CONTROLLER=raptor
-M1_DIFF_JSON=/workspace/docs/raptor_closeout_p0_nonfinite_20260625/evals/raptor_closeout_p0_nonfinite_20260625_velocity_nan/m1_diff_raptor_closeout_p0_nonfinite_20260625_velocity_nan.json
-M1_DIFF_SUMMARY=/workspace/docs/raptor_closeout_p0_nonfinite_20260625/evals/raptor_closeout_p0_nonfinite_20260625_velocity_nan/m1_diff_raptor_closeout_p0_nonfinite_20260625_velocity_nan_summary.md

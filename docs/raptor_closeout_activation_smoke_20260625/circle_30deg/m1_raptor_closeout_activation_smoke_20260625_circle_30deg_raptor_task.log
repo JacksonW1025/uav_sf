@@ -1,9 +1,0 @@
-[INFO] [1782372978.716552977] [m1_offboard_task]: M1 task started controller=raptor tag=raptor_closeout_activation_smoke_20260625_circle_30deg rate_hz=50.0 wall_timer_hz=50.0 PX4_SIM_SPEED_FACTOR=1.0
-{"detail": {"source": "first_px4_topic"}, "elapsed_s": 0.0, "name": "clock_origin", "timestamp_us": 1782372985888502}
-{"detail": {"controller": "classical", "main": 6, "phase": "approach"}, "elapsed_s": 14.018928, "name": "mode_command", "timestamp_us": 1782372999907430}
-{"detail": {"nav_state": 14}, "elapsed_s": 14.062928, "name": "approach_active", "timestamp_us": 1782372999951430}
-{"detail": {"type": "circle"}, "elapsed_s": 18.014928, "name": "trajectory_start", "timestamp_us": 1782373003903430}
-{"detail": {"controller": "raptor", "main": 4, "mode_id": 23, "phase": "final", "sub": 11}, "elapsed_s": 30.002521, "name": "mode_command", "timestamp_us": 1782373015891023}
-{"detail": {"nav_state": 23}, "elapsed_s": 30.042521, "name": "controller_active", "timestamp_us": 1782373015931023}
-{"detail": {"setpoint_ned": [0.026783288073157007, 1.7998007266028067, -2.5]}, "elapsed_s": 46.009473, "name": "mission_end", "timestamp_us": 1782373031897975}
-[INFO] [1782373032.326431742] [m1_offboard_task]: M1 task finished exit_code=0

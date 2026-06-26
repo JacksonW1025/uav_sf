@@ -1,6 +1,11 @@
 decision: DOWNGRADED
+status: METHOD_LESSON_SUPERSEDED_BY_FUZZ1C_DECONTAM
 
 # FUZZ-1b Locked Differential
+
+This run remains the groundtruth-triggering method lesson for Route A. Its
+negative/downgrade decision is superseded by FUZZ-1c severity and symmetric
+decontamination, which provide the current strict differentials.
 
 run_id: `fuzz1b_locked_20260625`
 

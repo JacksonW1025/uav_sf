@@ -1,7 +1,0 @@
-[INFO] [1782273299.399662605] [m1_offboard_task]: M1 task started controller=classical tag=anchor_intref_lissajous rate_hz=100.0
-{"detail": {"source": "first_px4_topic"}, "elapsed_s": 0.0, "name": "clock_origin", "timestamp_us": 1782273299310677}
-{"detail": {"controller": "classical", "main": 6}, "elapsed_s": 18.013413, "name": "mode_command", "timestamp_us": 1782273317324090}
-{"detail": {"nav_state": 14}, "elapsed_s": 18.041413, "name": "controller_active", "timestamp_us": 1782273317352090}
-{"detail": {"type": "step"}, "elapsed_s": 24.013963, "name": "trajectory_start", "timestamp_us": 1782273323324640}
-{"detail": {"setpoint_ned": [0.0, 0.0, -2.5]}, "elapsed_s": 42.011066, "name": "mission_end", "timestamp_us": 1782273341321743}
-[INFO] [1782273341.527543469] [m1_offboard_task]: M1 task finished exit_code=0

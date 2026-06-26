@@ -2,6 +2,8 @@ decision: CLEAN_DIFFERENTIAL
 
 # FUZZ-1c Severity Scan
 
+Status note: this severity scan is the input to the final decontamination pass. The current hard decision is `STRICT_DIFFERENTIAL_CONFIRMED` in `fuzz1c_decontam_20260625.md`.
+
 run_id: `fuzz1c_severity_20260625`
 method: Method A, SIH groundtruth state-triggered switch
 state_shim: not used
@@ -64,4 +66,4 @@ Trigger timeouts are marked UNTESTED and are not used as safe/no-hit evidence. U
 
 results_json: `fuzz1c_severity_20260625/results.json`
 results_jsonl: `fuzz1c_severity_20260625/results.jsonl`
-eval_dir: `fuzz1c_severity_20260625/evals`
+raw eval dirs: local/ignored; structured summaries above are tracked

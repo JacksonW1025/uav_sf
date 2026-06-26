@@ -1,106 +1,0 @@
-# M0 classical takeoff
-2026-06-23T12:16:22-07:00
-SIM=sih
-COMMAND=commander takeoff
-
-## PX4 console excerpt
-pxh> [2Kpxh> c[2Kpxh> co[2Kpxh> com[2Kpxh> comm[2Kpxh> comma[2Kpxh> comman[2Kpxh> command[2Kpxh> commande[2Kpxh> commander[2Kpxh> commander [2Kpxh> commander s[2Kpxh> commander st[2Kpxh> commander sta[2Kpxh> commander stat[2Kpxh> commander statu[2Kpxh> commander status
-INFO  [commander] Disarmed
-INFO  [commander] prearm safety: Off
-INFO  [commander] navigation mode: Hold
-INFO  [commander] user intended navigation mode: Hold
-INFO  [commander] in failsafe: no
-INFO  [commander] External Mode 1: nav_state: 23, name: RAPTOR
-commander: cycle: 834 events, 0us elapsed, 0.00us avg, min 0us max 0us 0.000us rms
-commander: preflight check: 94 events, 0us elapsed, 0.00us avg, min 0us max 0us 0.000us rms
-pxh> [2Kpxh> l[2Kpxh> lo[2Kpxh> log[2Kpxh> logg[2Kpxh> logge[2Kpxh> logger[2Kpxh> logger [2Kpxh> logger s[2Kpxh> logger st[2Kpxh> logger sta[2Kpxh> logger stat[2Kpxh> logger statu[2Kpxh> logger status
-INFO  [logger] Running in mode: all
-INFO  [logger] Number of subscriptions: 255 (8160 bytes)
-INFO  [logger] Full File Logging Running:
-INFO  [logger] Log file: ./log/2026-06-23/19_11_37.ulg
-INFO  [logger] Wrote 2.54 MiB (avg 260.11 KiB/s)
-INFO  [logger] Since last status: dropouts: 0 (max len: 0.000 s), max used buffer: 48331 / 1024000 B
-pxh> [2Kpxh> c[2Kpxh> co[2Kpxh> com[2Kpxh> comm[2Kpxh> comma[2Kpxh> comman[2Kpxh> command[2Kpxh> commande[2Kpxh> commander[2Kpxh> commander [2Kpxh> commander t[2Kpxh> commander ta[2Kpxh> commander tak[2Kpxh> commander take[2Kpxh> commander takeo[2Kpxh> commander takeof[2Kpxh> commander takeoff
-pxh> [2Kpxh> s[2Kpxh> INFO  [commander] Armed by internal command	
-sl[2Kpxh> sle[2Kpxh> sleeINFO  [tone_alarm] arming warning
-[2Kpxh> sleep[2Kpxh> sleep INFO  [navigator] Using default takeoff altitude: 2.5 m	
-[2Kpxh> sleep 2[2Kpxh> sleep 25
-Sleeping for 25 s; (25000000 us).
-WARN  [mc_raptor] trajectory_setpoint turned stale at: -0.030118 0.026827 -0.015472, yaw: -0.005592 204000 / 200000 us
-INFO  [commander] Takeoff detected	
-WARN  [mc_raptor] trajectory_setpoint turned non-stale at: -0.039801 -0.586800 -1.978027
-pxh> [2Kpxh> c[2Kpxh> co[2Kpxh> com[2Kpxh> comm[2Kpxh> comma[2Kpxh> comman[2Kpxh> command[2Kpxh> commande[2Kpxh> commander[2Kpxh> commander [2Kpxh> commander s[2Kpxh> commander st[2Kpxh> commander sta[2Kpxh> commander stat[2Kpxh> commander statu[2Kpxh> commander status
-INFO  [commander] Armed
-INFO  [commander] prearm safety: Off
-INFO  [commander] navigation mode: Hold
-INFO  [commander] user intended navigation mode: Hold
-INFO  [commander] in failsafe: no
-INFO  [commander] External Mode 1: nav_state: 23, name: RAPTOR
-commander: cycle: 2919 events, 0us elapsed, 0.00us avg, min 0us max 0us 0.000us rms
-commander: preflight check: 327 events, 0us elapsed, 0.00us avg, min 0us max 0us 0.000us rms
-pxh> [2Kpxh> l[2Kpxh> li[2Kpxh> lis[2Kpxh> list[2Kpxh> liste[2Kpxh> listen[2Kpxh> listene[2Kpxh> listener[2Kpxh> listener [2Kpxh> listener v[2Kpxh> listener ve[2Kpxh> listener veh[2Kpxh> listener vehi[2Kpxh> listener vehic[2Kpxh> listener vehicl[2Kpxh> listener vehicle[2Kpxh> listener vehicle_[2Kpxh> listener vehicle_l[2Kpxh> listener vehicle_lo[2Kpxh> listener vehicle_loc[2Kpxh> listener vehicle_loca[2Kpxh> listener vehicle_local[2Kpxh> listener vehicle_local_[2Kpxh> listener vehicle_local_p[2Kpxh> listener vehicle_local_po[2Kpxh> listener vehicle_local_pos[2Kpxh> listener vehicle_local_posi[2Kpxh> listener vehicle_local_posit[2Kpxh> listener vehicle_local_positi[2Kpxh> listener vehicle_local_positio[2Kpxh> listener vehicle_local_position[2Kpxh> listener vehicle_local_position [2Kpxh> listener vehicle_local_position 1
-
-TOPIC: vehicle_local_position
- vehicle_local_position
-    timestamp: 35292000 (0.004000 seconds ago)
-    timestamp_sample: 35292000 (0 us before timestamp)
-    ref_timestamp: 764000
-    ref_lat: 47.397744
-    ref_lon: 8.545594
-    x: -0.01359
-    y: 0.02547
-    z: -2.48993
-    delta_xy: [0.00000, 0.00000]
-    delta_z: -489.35593
-    vx: -0.05159
-    vy: 0.11484
-    vz: -0.10049
-    z_deriv: -0.08515
-    delta_vxy: [0.00276, 0.00462]
-    delta_vz: -0.00013
-    ax: -0.23069
-    ay: 1.32789
-    az: 0.54898
-    heading: 0.03002
-    heading_var: 0.00396
-    unaided_heading: -0.02519
-    delta_heading: -0.01260
-    tilt_var: 0.00055
-    ref_alt: 489.35800
-    dist_bottom: 2.70410
-    dist_bottom_var: 0.00093
-    delta_dist_bottom: -489.35593
-    eph: 0.28432
-    epv: 0.03202
-    evh: 0.13182
-    evv: 0.03548
-    vxy_max: inf
-    vz_max: inf
-    hagl_min: inf
-    hagl_max_z: inf
-    hagl_max_xy: inf
-    xy_valid: True
-    z_valid: True
-    v_xy_valid: True
-    v_z_valid: True
-    xy_reset_counter: 4
-    z_reset_counter: 2
-    vxy_reset_counter: 3
-    vz_reset_counter: 1
-    heading_reset_counter: 1
-    heading_good_for_control: True
-    xy_global: True
-    z_global: True
-    dist_bottom_valid: True
-    dist_bottom_reset_counter: 2
-    dist_bottom_sensor_bitfield: 1
-    dead_reckoning: False
-pxh> [2Kpxh> l[2Kpxh> li[2Kpxh> lis[2Kpxh> list[2Kpxh> liste[2Kpxh> listen[2Kpxh> listene[2Kpxh> listener[2Kpxh> listener [2Kpxh> listener v[2Kpxh> listener ve[2Kpxh> listener veh[2Kpxh> listener vehi[2Kpxh> listener vehic[2Kpxh> listener vehicl[2Kpxh> listener vehicle[2Kpxh> listener vehicle_[2Kpxh> listener vehicle_a[2Kpxh> listener vehicle_at[2Kpxh> listener vehicle_att[2Kpxh> listener vehicle_atti[2Kpxh> listener vehicle_attit[2Kpxh> listener vehicle_attitu[2Kpxh> listener vehicle_attitud[2Kpxh> listener vehicle_attitude[2Kpxh> listener vehicle_attitude [2Kpxh> listener vehicle_attitude 1
-
-TOPIC: vehicle_attitude
- vehicle_attitude
-    timestamp: 35296000 (0.000000 seconds ago)
-    timestamp_sample: 35296000 (0 us before timestamp)
-    q: [0.99988, -0.00202, -0.00400, 0.01503] (Roll: -0.2 deg, Pitch: -0.5 deg, Yaw: 1.7 deg)
-    delta_q_reset: [0.99998, -0.00000, -0.00000, -0.00630]
-    quat_reset_counter: 1

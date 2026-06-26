@@ -1,5 +1,0 @@
-$ /usr/bin/python3 /workspace/scripts/m1_diff_runner.py --theta /workspace/docs/m2_map_elites_20260624/theta/m2_map_elites_20260624_e0000.json --skip-build --run-timeout 150 --docs-dir /workspace/docs/m2_map_elites_20260624/evals/m2_map_elites_20260624_e0000 --safety-config /workspace/config/m2_safety_envelope.json
-RUN_CONTROLLER=classical
-RUN_CONTROLLER=raptor
-M1_DIFF_JSON=/workspace/docs/m2_map_elites_20260624/evals/m2_map_elites_20260624_e0000/m1_diff_m2_map_elites_20260624_e0000.json
-M1_DIFF_SUMMARY=/workspace/docs/m2_map_elites_20260624/evals/m2_map_elites_20260624_e0000/m1_diff_m2_map_elites_20260624_e0000_summary.md

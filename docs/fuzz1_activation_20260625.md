@@ -2,6 +2,8 @@ decision: BUG-FOUND (corner_r6_f045_w6_n_phase0: differential_primary_bug)
 
 # FUZZ-1 mc_nn_control Violent Activation
 
+Status note: this is the first-kill report, not the current hard differential claim. FUZZ-1b later found switch-state alignment confounding, and FUZZ-1c plus decontamination supersedes this as the Route-A primary result.
+
 run_id: `fuzz1_activation_20260625`
 scope: offboard aggressive circle approach + SIH wind + mode 23 mc_nn activation + post-switch hover
 mcnn_evals: 3

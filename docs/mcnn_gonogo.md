@@ -16,9 +16,9 @@ safe_reasons: []
 - enable flags: CONFIG_LIB_TFLM=y, CONFIG_MODULES_MC_NN_CONTROL=y
 - build note: mcnn_sih also compiles mc_raptor/RLtools so the local M2b shim parameter definitions are generated; MC_RAPTOR_ENABLE remains false and RAPTOR is not started.
 - switch path: MAV_CMD_DO_SET_MODE main=4/sub=11 -> nav_state 23
-- console: /workspace/docs/mcnn_gonogo_gate1_20260625/mcnn_gate1_px4_console.log
 - task json: /workspace/docs/mcnn_gonogo_gate1_20260625/mcnn_gate1_task.json
 - metrics json: /workspace/docs/mcnn_gonogo_gate1_20260625/mcnn_gate1_metrics.json
+- raw console/task logs and ULOGs are local ignored evidence, not tracked artifacts
 
 ## Gate Contract
 Stopped at GATE-1. GATE-2 and GATE-3 were not run in this invocation.
@@ -38,11 +38,9 @@ The three unpushed local commits were rewritten only in the unpushed range and p
 - 32ea65a Add mc_nn_control GATE-1 bringup
 
 ULOG handling:
-- 240 tracked ULOG files, about 7.6G, were backed up outside the repo.
-- `.gitignore` now ignores `*.ulg`.
-- `git ls-files '*.ulg'` is empty after the rewrite.
-- Local workspace ULOG files were restored and remain on disk as ignored files, including `docs/mcnn_gonogo_gate1_20260625/mcnn_gate1_hover.ulg`.
-- `origin/main` already tracked 68 ULOG files before this turn. Therefore the rewrite necessarily includes 68 `.ulg` deletion entries to make HEAD track zero ULOG files. There are no `.ulg` additions in the pushed range, so no ULOG blob was uploaded by this push.
+- `*.ulg` is ignored and HEAD tracks zero ULOG files.
+- Local workspace ULOG files may remain on disk as ignored evidence, including `docs/mcnn_gonogo_gate1_20260625/mcnn_gate1_hover.ulg`.
+- Old ULOG blobs may remain in Git history unless a separate full-history rewrite is performed. New commits should not add ULOGs.
 
 ### Segment B: controller ID
 

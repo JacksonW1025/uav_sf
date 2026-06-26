@@ -1,5 +1,0 @@
-$ /usr/bin/python3 /workspace/scripts/m1_diff_runner.py --theta /workspace/docs/m2b_nan_probe_4x_20260624/theta/m2b_nan_probe_4x_20260624_angular_velocity_nan.json --skip-build --run-timeout 180 --docs-dir /workspace/docs/m2b_nan_probe_4x_20260624/evals/m2b_nan_probe_4x_20260624_angular_velocity_nan --safety-config /workspace/config/m2_safety_envelope.json
-RUN_CONTROLLER=classical
-RUN_CONTROLLER=raptor
-M1_DIFF_JSON=/workspace/docs/m2b_nan_probe_4x_20260624/evals/m2b_nan_probe_4x_20260624_angular_velocity_nan/m1_diff_m2b_nan_probe_4x_20260624_angular_velocity_nan.json
-M1_DIFF_SUMMARY=/workspace/docs/m2b_nan_probe_4x_20260624/evals/m2b_nan_probe_4x_20260624_angular_velocity_nan/m1_diff_m2b_nan_probe_4x_20260624_angular_velocity_nan_summary.md

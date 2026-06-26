@@ -1,7 +1,0 @@
-[INFO] [1782291952.921603001] [m1_offboard_task]: M1 task started controller=classical tag=m2_6_unshielded_scan_1x_20260624_gyro050_twr230 rate_hz=100.0 wall_timer_hz=100.0 PX4_SIM_SPEED_FACTOR=1.0
-{"detail": {"source": "first_px4_topic"}, "elapsed_s": 0.0, "name": "clock_origin", "timestamp_us": 1782291958166750}
-{"detail": {"controller": "classical", "main": 6}, "elapsed_s": 18.000011, "name": "mode_command", "timestamp_us": 1782291976166761}
-{"detail": {"nav_state": 14}, "elapsed_s": 18.040011, "name": "controller_active", "timestamp_us": 1782291976206761}
-{"detail": {"type": "sine"}, "elapsed_s": 22.016011, "name": "trajectory_start", "timestamp_us": 1782291980182761}
-{"detail": {"setpoint_ned": [0.3401064967894251, 0.0, -2.5]}, "elapsed_s": 38.022729, "name": "mission_end", "timestamp_us": 1782291996189479}
-[INFO] [1782291997.017495605] [m1_offboard_task]: M1 task finished exit_code=0

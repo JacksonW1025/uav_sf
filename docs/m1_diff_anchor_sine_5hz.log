@@ -1,4 +1,0 @@
-$ /usr/bin/python3 /workspace/scripts/m1_compare.py --theta /workspace/config/m1_anchor_sine_5hz.json --classical /workspace/docs/m1_anchor_sine_5hz_classical_metrics.json --raptor /workspace/docs/m1_anchor_sine_5hz_raptor_metrics.json --output /workspace/docs/m1_diff_anchor_sine_5hz.json
-{"output": "/workspace/docs/m1_diff_anchor_sine_5hz.json", "primary_bug": false, "quadrant": "boring_both_safe"}
-$ /usr/bin/python3 /workspace/scripts/m1_compare.py --theta /workspace/config/m1_anchor_sine_5hz.json --classical /workspace/docs/m1_anchor_sine_5hz_classical_metrics.json --raptor /workspace/docs/m1_anchor_sine_5hz_raptor_metrics.json --output /workspace/docs/m1_diff_anchor_sine_5hz.json
-{"output": "/workspace/docs/m1_diff_anchor_sine_5hz.json", "primary_bug": false, "quadrant": "boring_both_safe"}

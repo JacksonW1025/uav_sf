@@ -1,8 +1,0 @@
-# M2b-1 NaN/Inf State Probe
-
-run_dir: `docs/m2b_nan_probe_4x_20260624`
-
-## results
-- velocity/nan: quadrant=boring_both_safe raptor_nan_rpm_defect=False raptor_active_motor_nan_count=0 fair_state=True theta=`docs/m2b_nan_probe_4x_20260624/theta/m2b_nan_probe_4x_20260624_velocity_nan.json` fairness=`/workspace/docs/m2b_nan_probe_4x_20260624/evals/m2b_nan_probe_4x_20260624_velocity_nan/m2b_1_fairness_m2b_nan_probe_4x_20260624_velocity_nan.json`
-- angular_velocity/nan: quadrant=too_hard_not_bug raptor_nan_rpm_defect=False raptor_active_motor_nan_count=0 fair_state=False theta=`docs/m2b_nan_probe_4x_20260624/theta/m2b_nan_probe_4x_20260624_angular_velocity_nan.json` fairness=`/workspace/docs/m2b_nan_probe_4x_20260624/evals/m2b_nan_probe_4x_20260624_angular_velocity_nan/m2b_1_fairness_m2b_nan_probe_4x_20260624_angular_velocity_nan.json`
-- attitude/nan: quadrant=boring_both_safe raptor_nan_rpm_defect=False raptor_active_motor_nan_count=0 fair_state=True theta=`docs/m2b_nan_probe_4x_20260624/theta/m2b_nan_probe_4x_20260624_attitude_nan.json` fairness=`/workspace/docs/m2b_nan_probe_4x_20260624/evals/m2b_nan_probe_4x_20260624_attitude_nan/m2b_1_fairness_m2b_nan_probe_4x_20260624_attitude_nan.json`

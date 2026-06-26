@@ -1,526 +1,0 @@
-# RAPTOR closeout Gazebo controller=classical tag=raptor_closeout_gz_asym_20260625_com_x_006
-PX4_DIR=/workspace/external/PX4-Autopilot
-PX4_SIM_MODEL=gz_x500
-PX4_SIM_SPEED_FACTOR=1.0
-THETA=/workspace/docs/raptor_closeout_gz_asym_20260625/eval_05_com_x_006/raptor_closeout_gz_asym_20260625_com_x_006.json
-
-[0/1] cd /workspace/external/PX4-Autopilot/build/px4_sitl_raptor/src/modules/simulation/gz_bridge && /usr/bin/cmake -E env PX4_SIM_MODEL=gz_x500 GZ_IP=127.0.0.1 /workspace/external/PX4-Autopilot/build/px4_sitl_raptor/bin/px4
-
-______  __   __    ___ 
-| ___ \ \ \ / /   /   |
-| |_/ /  \ V /   / /| |
-|  __/   /   \  / /_| |
-| |     / /^\ \ \___  |
-\_|     \/   \/     |_/
-
-px4 starting.
-
-INFO  [px4] startup script: /bin/sh etc/init.d-posix/rcS 0
-INFO  [init] found model autostart file as SYS_AUTOSTART=4001
-INFO  [param] selected parameter default file parameters.bson
-INFO  [param] selected parameter backup file parameters_backup.bson
-  SYS_AUTOCONFIG: curr: 0 -> new: 1
-  SYS_AUTOSTART: curr: 0 -> new: 4001
-  CAL_ACC0_ID: curr: 0 -> new: 1310988
-  CAL_GYRO0_ID: curr: 0 -> new: 1310988
-  CAL_ACC1_ID: curr: 0 -> new: 1310996
-  CAL_GYRO1_ID: curr: 0 -> new: 1310996
-  CAL_ACC2_ID: curr: 0 -> new: 1311004
-  CAL_GYRO2_ID: curr: 0 -> new: 1311004
-  CAL_MAG0_ID: curr: 0 -> new: 197388
-  CAL_MAG0_PRIO: curr: -1 -> new: 50
-  CAL_MAG1_ID: curr: 0 -> new: 197644
-  CAL_MAG1_PRIO: curr: -1 -> new: 50
-  SENS_BOARD_X_OFF: curr: 0.0000 -> new: 0.0000
-  SENS_DPRES_OFF: curr: 0.0000 -> new: 0.0010
-COM_DL_LOSS_T set to 10.0
-COM_RC_LOSS_T set to 1.0
-  COM_RC_LOSS_T: curr: 0.5000 -> new: 1.0000
-COM_OF_LOSS_T set to 1.0
-INFO  [dataman] data manager file './dataman' size is 1208528 bytes
-INFO  [init] Gazebo simulator 8.14.0
-INFO  [init] Starting gazebo with world: /workspace/external/PX4-Autopilot/Tools/simulation/gz/worlds/default.sdf
-INFO  [init] Waiting for Gazebo world...
-INFO  [init] Gazebo world is ready
-INFO  [init] Spawning Gazebo model
-[1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="x500_base"]/link[@name="base_link"]/sensor[@name="air_pressure_sensor"]/gz_frame_id:/workspace/external/PX4-Autopilot/Tools/simulation/gz/models/x500_base/model.sdf:L220]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
-[1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="x500_base"]/link[@name="base_link"]/sensor[@name="magnetometer_sensor"]/gz_frame_id:/workspace/external/PX4-Autopilot/Tools/simulation/gz/models/x500_base/model.sdf:L233]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
-[1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="x500_base"]/link[@name="base_link"]/sensor[@name="imu_sensor"]/gz_frame_id:/workspace/external/PX4-Autopilot/Tools/simulation/gz/models/x500_base/model.sdf:L255]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
-[1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="x500_base"]/link[@name="base_link"]/sensor[@name="navsat_sensor"]/gz_frame_id:/workspace/external/PX4-Autopilot/Tools/simulation/gz/models/x500_base/model.sdf:L302]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
-INFO  [lockstep_scheduler] setting initial absolute time to 4160000 us
-INFO  [gz_bridge] world: default, model: x500_0
-INFO  [init] Setting simulation speed factor: 1.0
-INFO  [init] Preserving physics: gravity=(0, 0, -9.8), max_step_size=0.004
-INFO  [init] Setting camera to follow x500_0
-INFO  [init] Camera follow offset set to -2.0, -2.0, 2.0
-INFO  [commander] LED: open /dev/led0 failed (22)
-WARN  [health_and_arming_checks] Preflight Fail: No connection to the GCS
-ERROR [vision_target_estimator] Vision Target Estimator cannot run with CONFIG_MODULES_LANDING_TARGET_ESTIMATOR enabled.
-ERROR [px4] Task start failed (-1)
-INFO  [uxrce_dds_client] init UDP agent IP:127.0.0.1, port:8888
-INFO  [mavlink] mode: Normal, data rate: 4000000 B/s on udp port 18570 remote port 14550
-INFO  [tone_alarm] home set
-INFO  [mavlink] mode: Onboard, data rate: 4000000 B/s on udp port 14580 remote port 14540
-INFO  [mavlink] mode: Onboard, data rate: 4000 B/s on udp port 14280 remote port 14030
-INFO  [mavlink] mode: Gimbal, data rate: 400000 B/s on udp port 13030 remote port 13280
-INFO  [logger] logger started (mode=all)
-WARN  [logger] Too many subscriptions, failed to add: vehicle_angular_velocity 9
-WARN  [logger] Too many subscriptions, failed to add: vehicle_angular_velocity_groundtruth 1
-WARN  [logger] Too many subscriptions, failed to add: vehicle_angular_velocity_groundtruth 2
-WARN  [logger] Too many subscriptions, failed to add: vehicle_angular_velocity_groundtruth 3
-WARN  [logger] Too many subscriptions, failed to add: vehicle_angular_velocity_groundtruth 4
-WARN  [logger] Too many subscriptions, failed to add: vehicle_angular_velocity_groundtruth 5
-WARN  [logger] Too many subscriptions, failed to add: vehicle_angular_velocity_groundtruth 6
-WARN  [logger] Too many subscriptions, failed to add: vehicle_angular_velocity_groundtruth 7
-WARN  [logger] Too many subscriptions, failed to add: vehicle_angular_velocity_groundtruth 8
-WARN  [logger] Too many subscriptions, failed to add: vehicle_angular_velocity_groundtruth 9
-WARN  [logger] Too many subscriptions, failed to add: vehicle_attitude 1
-WARN  [logger] Too many subscriptions, failed to add: vehicle_attitude 2
-WARN  [logger] Too many subscriptions, failed to add: vehicle_attitude 3
-WARN  [logger] Too many subscriptions, failed to add: vehicle_attitude 4
-WARN  [logger] Too many subscriptions, failed to add: vehicle_attitude 5
-WARN  [logger] Too many subscriptions, failed to add: vehicle_attitude 6
-WARN  [logger] Too many subscriptions, failed to add: vehicle_attitude 7
-WARN  [logger] Too many subscriptions, failed to add: vehicle_attitude 8
-WARN  [logger] Too many subscriptions, failed to add: vehicle_attitude 9
-WARN  [logger] Too many subscriptions, failed to add: vehicle_attitude_groundtruth 1
-WARN  [logger] Too many subscriptions, failed to add: vehicle_attitude_groundtruth 2
-WARN  [logger] Too many subscriptions, failed to add: vehicle_attitude_groundtruth 3
-WARN  [logger] Too many subscriptions, failed to add: vehicle_attitude_groundtruth 4
-WARN  [logger] Too many subscriptions, failed to add: vehicle_attitude_groundtruth 5
-WARN  [logger] Too many subscriptions, failed to add: vehicle_attitude_groundtruth 6
-WARN  [logger] Too many subscriptions, failed to add: vehicle_attitude_groundtruth 7
-WARN  [logger] Too many subscriptions, failed to add: vehicle_attitude_groundtruth 8
-WARN  [logger] Too many subscriptions, failed to add: vehicle_attitude_groundtruth 9
-WARN  [logger] Too many subscriptions, failed to add: vehicle_status 1
-WARN  [logger] Too many subscriptions, failed to add: vehicle_status 2
-WARN  [logger] Too many subscriptions, failed to add: vehicle_status 3
-WARN  [logger] Too many subscriptions, failed to add: vehicle_status 4
-WARN  [logger] Too many subscriptions, failed to add: vehicle_status 5
-WARN  [logger] Too many subscriptions, failed to add: vehicle_status 6
-WARN  [logger] Too many subscriptions, failed to add: vehicle_status 7
-WARN  [logger] Too many subscriptions, failed to add: vehicle_status 8
-WARN  [logger] Too many subscriptions, failed to add: vehicle_status 9
-WARN  [logger] Too many subscriptions, failed to add: estimator_status 1
-WARN  [logger] Too many subscriptions, failed to add: estimator_status 2
-WARN  [logger] Too many subscriptions, failed to add: estimator_status 3
-WARN  [logger] Too many subscriptions, failed to add: estimator_status 4
-WARN  [logger] Too many subscriptions, failed to add: estimator_status 5
-WARN  [logger] Too many subscriptions, failed to add: estimator_status 6
-WARN  [logger] Too many subscriptions, failed to add: estimator_status 7
-WARN  [logger] Too many subscriptions, failed to add: estimator_status 8
-WARN  [logger] Too many subscriptions, failed to add: estimator_status 9
-WARN  [logger] Too many subscriptions, failed to add: estimator_status_flags 1
-WARN  [logger] Too many subscriptions, failed to add: estimator_status_flags 2
-WARN  [logger] Too many subscriptions, failed to add: estimator_status_flags 3
-WARN  [logger] Too many subscriptions, failed to add: estimator_status_flags 4
-WARN  [logger] Too many subscriptions, failed to add: estimator_status_flags 5
-WARN  [logger] Too many subscriptions, failed to add: estimator_status_flags 6
-WARN  [logger] Too many subscriptions, failed to add: estimator_status_flags 7
-WARN  [logger] Too many subscriptions, failed to add: estimator_status_flags 8
-WARN  [logger] Too many subscriptions, failed to add: estimator_status_flags 9
-WARN  [logger] Too many subscriptions, failed to add: failsafe_flags 1
-WARN  [logger] Too many subscriptions, failed to add: failsafe_flags 2
-WARN  [logger] Too many subscriptions, failed to add: failsafe_flags 3
-WARN  [logger] Too many subscriptions, failed to add: failsafe_flags 4
-WARN  [logger] Too many subscriptions, failed to add: failsafe_flags 5
-WARN  [logger] Too many subscriptions, failed to add: failsafe_flags 6
-WARN  [logger] Too many subscriptions, failed to add: failsafe_flags 7
-WARN  [logger] Too many subscriptions, failed to add: failsafe_flags 8
-WARN  [logger] Too many subscriptions, failed to add: failsafe_flags 9
-WARN  [logger] Too many subscriptions, failed to add: actuator_motors 1
-WARN  [logger] Too many subscriptions, failed to add: actuator_motors 2
-WARN  [logger] Too many subscriptions, failed to add: actuator_motors 3
-WARN  [logger] Too many subscriptions, failed to add: actuator_motors 4
-WARN  [logger] Too many subscriptions, failed to add: actuator_motors 5
-WARN  [logger] Too many subscriptions, failed to add: actuator_motors 6
-WARN  [logger] Too many subscriptions, failed to add: actuator_motors 7
-WARN  [logger] Too many subscriptions, failed to add: actuator_motors 8
-WARN  [logger] Too many subscriptions, failed to add: actuator_motors 9
-WARN  [logger] Too many subscriptions, failed to add: actuator_outputs 3
-WARN  [logger] Too many subscriptions, failed to add: actuator_outputs 4
-WARN  [logger] Too many subscriptions, failed to add: actuator_outputs 5
-WARN  [logger] Too many subscriptions, failed to add: actuator_outputs 6
-WARN  [logger] Too many subscriptions, failed to add: actuator_outputs 7
-WARN  [logger] Too many subscriptions, failed to add: actuator_outputs 8
-WARN  [logger] Too many subscriptions, failed to add: actuator_outputs 9
-WARN  [logger] Too many subscriptions, failed to add: failure_detector_status 1
-WARN  [logger] Too many subscriptions, failed to add: failure_detector_status 2
-WARN  [logger] Too many subscriptions, failed to add: failure_detector_status 3
-WARN  [logger] Too many subscriptions, failed to add: failure_detector_status 4
-WARN  [logger] Too many subscriptions, failed to add: failure_detector_status 5
-WARN  [logger] Too many subscriptions, failed to add: failure_detector_status 6
-WARN  [logger] Too many subscriptions, failed to add: failure_detector_status 7
-WARN  [logger] Too many subscriptions, failed to add: failure_detector_status 8
-WARN  [logger] Too many subscriptions, failed to add: failure_detector_status 9
-INFO  [logger] logging 16 topics from logger_topics.txt
-INFO  [logger] Max log file size: 1024 MiB
-INFO  [logger] Start file log (type: full)
-INFO  [logger] [logger] ./log/2026-06-25/07_30_41.ulg	
-INFO  [logger] Opened full log file: ./log/2026-06-25/07_30_41.ulg
-INFO  [mavlink] MAVLink only on localhost (set param MAV_{i}_BROADCAST = 1 to enable network)
-INFO  [mavlink] MAVLink only on localhost (set param MAV_{i}_BROADCAST = 1 to enable network)
-INFO  [px4] Startup script returned successfully
-pxh> [2Kpxh> s[2Kpxh> sl[2Kpxh> sle[2Kpxh> slee[2Kpxh> sleep[2Kpxh> sleep [2Kpxh> sleep 4
-Sleeping for 4 s; (4000000 us).
-WARN  [health_and_arming_checks] Preflight Fail: No connection to the GCS
-WARN  [health_and_arming_checks] Preflight Fail: No connection to the GCS
-pxh> [2Kpxh> p[2Kpxh> pa[2Kpxh> par[2Kpxh> para[2Kpxh> param[2Kpxh> param [2Kpxh> param s[2Kpxh> param se[2Kpxh> param set[2Kpxh> param set [2Kpxh> param set N[2Kpxh> param set NA[2Kpxh> param set NAV[2Kpxh> param set NAV_[2Kpxh> param set NAV_D[2Kpxh> param set NAV_DL[2Kpxh> param set NAV_DLL[2Kpxh> param set NAV_DLL_[2Kpxh> param set NAV_DLL_A[2Kpxh> param set NAV_DLL_AC[2Kpxh> param set NAV_DLL_ACT[2Kpxh> param set NAV_DLL_ACT [2Kpxh> param set NAV_DLL_ACT 0
-  NAV_DLL_ACT: curr: 2 -> new: 0
-pxh> [2Kpxh> p[2Kpxh> pa[2Kpxh> par[2Kpxh> para[2Kpxh> param[2Kpxh> param [2Kpxh> param s[2Kpxh> param se[2Kpxh> param set[2Kpxh> param set [2Kpxh> param set C[2Kpxh> param set CO[2Kpxh> param set COM[2Kpxh> param set COM_[2Kpxh> param set COM_D[2Kpxh> param set COM_DI[2Kpxh> param set COM_DIS[2Kpxh> param set COM_DISA[2Kpxh> param set COM_DISAR[2Kpxh> param set COM_DISARM[2Kpxh> param set COM_DISARM_[2Kpxh> param set COM_DISARM_L[2Kpxh> param set COM_DISARM_LA[2Kpxh> param set COM_DISARM_LAN[2Kpxh> param set COM_DISARM_LAND[2Kpxh> param set COM_DISARM_LAND [2Kpxh> param set COM_DISARM_LAND -[2Kpxh> param set COM_DISARM_LAND -1
-  COM_DISARM_LAND: curr: 2.0000 -> new: -1.0000
-pxh> [2Kpxh> p[2Kpxh> pa[2Kpxh> par[2Kpxh> para[2Kpxh> param[2Kpxh> param [2Kpxh> param s[2Kpxh> param se[2Kpxh> param set[2Kpxh> param set [2Kpxh> param set C[2Kpxh> param set CO[2Kpxh> param set COM[2Kpxh> param set COM_[2Kpxh> param set COM_O[2Kpxh> param set COM_OF[2Kpxh> param set COM_OF_[2Kpxh> param set COM_OF_L[2Kpxh> param set COM_OF_LO[2Kpxh> param set COM_OF_LOS[2Kpxh> param set COM_OF_LOSS[2Kpxh> param set COM_OF_LOSS_[2Kpxh> param set COM_OF_LOSS_T[2Kpxh> param set COM_OF_LOSS_T [2Kpxh> param set COM_OF_LOSS_T 5[2Kpxh> param set COM_OF_LOSS_T 5.[2Kpxh> param set COM_OF_LOSS_T 5.0
-  COM_OF_LOSS_T: curr: 1.0000 -> new: 5.0000
-pxh> [2Kpxh> p[2Kpxh> pa[2Kpxh> par[2Kpxh> para[2Kpxh> param[2Kpxh> param [2Kpxh> param s[2Kpxh> param se[2Kpxh> param set[2Kpxh> param set [2Kpxh> param set C[2Kpxh> param set CO[2Kpxh> param set COM[2Kpxh> param set COM_[2Kpxh> param set COM_R[2Kpxh> param set COM_RC[2Kpxh> param set COM_RC_[2Kpxh> param set COM_RC_I[2Kpxh> param set COM_RC_IN[2Kpxh> param set COM_RC_IN_[2Kpxh> param set COM_RC_IN_M[2Kpxh> param set COM_RC_IN_MO[2Kpxh> param set COM_RC_IN_MOD[2Kpxh> param set COM_RC_IN_MODE[2Kpxh> param set COM_RC_IN_MODE [2Kpxh> param set COM_RC_IN_MODE 4
-  COM_RC_IN_MODE: curr: 1 -> new: 4
-pxh> [2Kpxh> p[2Kpxh> pa[2Kpxh> par[2Kpxh> para[2Kpxh> param[2Kpxh> param [2Kpxh> param s[2Kpxh> param se[2Kpxh> param set[2Kpxh> param set [2Kpxh> param set C[2Kpxh> param set CO[2Kpxh> param set COM[2Kpxh> param set COM_[2Kpxh> param set COM_R[2Kpxh> param set COM_RC[2Kpxh> param set COM_RCL[2Kpxh> param set COM_RCL_[2Kpxh> param set COM_RCL_E[2Kpxh> param set COM_RCL_EX[2Kpxh> param set COM_RCL_EXC[2Kpxh> param set COM_RCL_EXCE[2Kpxh> param set COM_RCL_EXCEP[2Kpxh> param set COM_RCL_EXCEPT[2Kpxh> param set COM_RCL_EXCEPT [2Kpxh> param set COM_RCL_EXCEPT 8
-  COM_RCL_EXCEPT: curr: 0 -> new: 8
-pxh> [2Kpxh> p[2Kpxh> pa[2Kpxh> par[2Kpxh> para[2Kpxh> param[2Kpxh> param [2Kpxh> param s[2Kpxh> param se[2Kpxh> param set[2Kpxh> param set [2Kpxh> param set M[2Kpxh> param set MC[2Kpxh> param set MC_[2Kpxh> param set MC_R[2Kpxh> param set MC_RA[2Kpxh> param set MC_RAP[2Kpxh> param set MC_RAPT[2Kpxh> param set MC_RAPTO[2Kpxh> param set MC_RAPTOR[2Kpxh> param set MC_RAPTOR_[2Kpxh> param set MC_RAPTOR_E[2Kpxh> param set MC_RAPTOR_EN[2Kpxh> param set MC_RAPTOR_ENA[2Kpxh> param set MC_RAPTOR_ENAB[2Kpxh> param set MC_RAPTOR_ENABL[2Kpxh> param set MC_RAPTOR_ENABLE[2Kpxh> param set MC_RAPTOR_ENABLE [2Kpxh> param set MC_RAPTOR_ENABLE 1
-  MC_RAPTOR_ENABLE: curr: 0 -> new: 1
-pxh> [2Kpxh> p[2Kpxh> pa[2Kpxh> par[2Kpxh> para[2Kpxh> param[2Kpxh> param [2Kpxh> param s[2Kpxh> param se[2Kpxh> param set[2Kpxh> param set [2Kpxh> param set M[2Kpxh> param set MC[2Kpxh> param set MC_[2Kpxh> param set MC_R[2Kpxh> param set MC_RA[2Kpxh> param set MC_RAP[2Kpxh> param set MC_RAPT[2Kpxh> param set MC_RAPTO[2Kpxh> param set MC_RAPTOR[2Kpxh> param set MC_RAPTOR_[2Kpxh> param set MC_RAPTOR_O[2Kpxh> param set MC_RAPTOR_OF[2Kpxh> param set MC_RAPTOR_OFF[2Kpxh> param set MC_RAPTOR_OFFB[2Kpxh> param set MC_RAPTOR_OFFB [2Kpxh> param set MC_RAPTOR_OFFB 0
-pxh> [2Kpxh> p[2Kpxh> pa[2Kpxh> par[2Kpxh> para[2Kpxh> param[2Kpxh> param [2Kpxh> param s[2Kpxh> param se[2Kpxh> param set[2Kpxh> param set [2Kpxh> param set M[2Kpxh> param set MC[2Kpxh> param set MC_[2Kpxh> param set MC_R[2Kpxh> param set MC_RA[2Kpxh> param set MC_RAP[2Kpxh> param set MC_RAPT[2Kpxh> param set MC_RAPTO[2Kpxh> param set MC_RAPTOR[2Kpxh> param set MC_RAPTOR_[2Kpxh> param set MC_RAPTOR_I[2Kpxh> param set MC_RAPTOR_IN[2Kpxh> param set MC_RAPTOR_INT[2Kpxh> param set MC_RAPTOR_INTR[2Kpxh> param set MC_RAPTOR_INTRE[2Kpxh> param set MC_RAPTOR_INTREF[2Kpxh> param set MC_RAPTOR_INTREF [2Kpxh> param set MC_RAPTOR_INTREF 0
-pxh> [2Kpxh> p[2Kpxh> pa[2Kpxh> par[2Kpxh> para[2Kpxh> param[2Kpxh> param [2Kpxh> param s[2Kpxh> param se[2Kpxh> param set[2Kpxh> param set [2Kpxh> param set S[2Kpxh> param set SY[2Kpxh> param set SYS[2Kpxh> param set SYS_[2Kpxh> param set SYS_F[2Kpxh> param set SYS_FA[2Kpxh> param set SYS_FAI[2Kpxh> param set SYS_FAIL[2Kpxh> param set SYS_FAILU[2Kpxh> param set SYS_FAILUR[2Kpxh> param set SYS_FAILURE[2Kpxh> param set SYS_FAILURE_[2Kpxh> param set SYS_FAILURE_E[2Kpxh> param set SYS_FAILURE_EN[2Kpxh> param set SYS_FAILURE_EN [2Kpxh> param set SYS_FAILURE_EN 1
-pxh> [2Kpxh> p[2Kpxh> pa[2Kpxh> par[2Kpxh> para[2Kpxh> param[2Kpxh> param [2Kpxh> param s[2Kpxh> param se[2Kpxh> param set[2Kpxh> param set [2Kpxh> param set C[2Kpxh> param set CA[2Kpxh> param set CA_[2Kpxh> param set CA_F[2Kpxh> param set CA_FA[2Kpxh> param set CA_FAI[2Kpxh> param set CA_FAIL[2Kpxh> param set CA_FAILU[2Kpxh> param set CA_FAILUR[2Kpxh> param set CA_FAILURE[2Kpxh> param set CA_FAILURE_[2Kpxh> param set CA_FAILURE_M[2Kpxh> param set CA_FAILURE_MO[2Kpxh> param set CA_FAILURE_MOD[2Kpxh> param set CA_FAILURE_MODE[2Kpxh> param set CA_FAILURE_MODE [2Kpxh> param set CA_FAILURE_MODE 1
-  CA_FAILURE_MODE: curr: 0 -> new: 1
-pxh> [2Kpxh> m[2Kpxh> mc[2Kpxh> mc_[2Kpxh> mc_r[2Kpxh> mc_ra[2Kpxh> mc_rap[2Kpxh> mc_rapt[2Kpxh> mc_rapto[2Kpxh> mc_raptor[2Kpxh> mc_raptor [2Kpxh> mc_raptor s[2Kpxh> mc_raptor st[2Kpxh> mc_raptor sta[2Kpxh> mc_raptor star[2Kpxh> mc_raptor start
-INFO  [mc_raptor] Policy checkpoint ./raptor/policy.tar exists
-INFO  [mc_raptor] Policy loaded from file ./raptor/policy.tar
-INFO  [mc_raptor] Input offset: 30208
-INFO  [mc_raptor] Output offset: 119808
-INFO  [mc_raptor] Checkpoint test diff: 0.000000
-INFO  [mc_raptor] output[0]: 0.229492
-INFO  [mc_raptor] output[1]: -0.870051
-INFO  [mc_raptor] output[2]: -2.016715
-INFO  [mc_raptor] output[3]: -1.367968
-INFO  [mc_raptor] Checkpoint test passed with diff 0.0000001448
-INFO  [mc_raptor] Checkpoint name: logs/2025-04-19_16-16-17
-INFO  [mc_raptor] IMU_GYRO_RATEMAX=800 Hz
-INFO  [mc_raptor] POLICY_CONTROL_FREQUENCY_TRAINING=100 Hz
-INFO  [mc_raptor] Setting force_sync_native = 800 Hz / 100 Hz = 8
-pxh> [2Kpxh> s[2Kpxh> sl[2Kpxh> sle[2Kpxh> slee[2Kpxh> sleep[2Kpxh> sleep [2Kpxh> sleep 3
-Sleeping for 3 s; (3000000 us).
-INFO  [commander] [32mReady for takeoff![0m
-INFO  [mc_raptor] Raptor mode registration successful, arming_check_id: 0, mode_id: 23
-INFO  [mc_raptor] Raptor mode configuration sent
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.200000x JITTER 3.200000x
-INFO  [uxrce_dds_client] synchronized with time offset 1782372635040183us
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.296000x JITTER 3.200000x
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/register_ext_component_reply_v1 data writer, topic id: 219
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/arming_check_request_v1 data writer, topic id: 16
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/mode_completed data writer, topic id: 166
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/battery_status_v1 data writer, topic id: 20
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/collision_constraints data writer, topic id: 27
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/estimator_status_flags data writer, topic id: 90
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/failsafe_flags data writer, topic id: 96
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/manual_control_setpoint data writer, topic id: 157
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/message_format_response data writer, topic id: 163
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/position_setpoint_triplet data writer, topic id: 202
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/sensor_combined data writer, topic id: 239
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/timesync_status data writer, topic id: 265
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/transponder_report data writer, topic id: 268
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/vehicle_land_detected data writer, topic id: 293
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/vehicle_attitude data writer, topic id: 280
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/vehicle_control_mode data writer, topic id: 287
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/vehicle_command_ack_v1 data writer, topic id: 284
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/vehicle_global_position data writer, topic id: 288
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/vehicle_gps_position data writer, topic id: 290
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/vehicle_local_position_v1 data writer, topic id: 294
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/vehicle_odometry data writer, topic id: 299
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/vehicle_status_v4 data writer, topic id: 304
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/airspeed_validated_v1 data writer, topic id: 13
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/vtol_vehicle_status data writer, topic id: 323
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/home_position_v1 data writer, topic id: 136
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/wind data writer, topic id: 326
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/gimbal_device_attitude_status data writer, topic id: 118
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/vtx data writer, topic id: 324
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/input_rc data writer, topic id: 138
-pxh> [2Kpxh> m[2Kpxh> mc[2Kpxh> mc_[2Kpxh> mc_r[2Kpxh> mc_ra[2Kpxh> mc_rap[2Kpxh> mc_rapt[2Kpxh> mc_rapto[2Kpxh> mc_raptor[2Kpxh> mc_raptor [2Kpxh> mc_raptor s[2Kpxh> mc_raptor st[2Kpxh> mc_raptor sta[2Kpxh> mc_raptor stat[2Kpxh> mc_raptor statu[2Kpxh> mc_raptor status
-mc_raptor: cycle: 747 events, 28000us elapsed, 37.48us avg, min 0us max 4000us 385.652us rms
-mc_raptor: interval: 747 events, 4016.06us avg, min 0us max 12000us 948.865us rms
-mc_raptor: interval_policy: 0 events, 0.00us avg, min 0us max 0us 0.000us rms
-Checkpoint: logs/2025-04-19_16-16-17
-pxh> [2Kpxh> c[2Kpxh> co[2Kpxh> com[2Kpxh> comm[2Kpxh> comma[2Kpxh> comman[2Kpxh> command[2Kpxh> commande[2Kpxh> commander[2Kpxh> commander [2Kpxh> commander s[2Kpxh> commander st[2Kpxh> commander sta[2Kpxh> commander stat[2Kpxh> commander statu[2Kpxh> commander status
-INFO  [commander] Disarmed
-INFO  [commander] prearm safety: Off
-INFO  [commander] navigation mode: Hold
-INFO  [commander] user intended navigation mode: Hold
-INFO  [commander] in failsafe: no
-INFO  [commander] External Mode 1: nav_state: 23, name: RAPTOR
-commander: cycle: 586 events, 4000us elapsed, 6.83us avg, min 0us max 4000us 165.239us rms
-commander: preflight check: 68 events, 0us elapsed, 0.00us avg, min 0us max 0us 0.000us rms
-pxh> [2Kpxh> c[2Kpxh> co[2Kpxh> com[2Kpxh> comm[2Kpxh> comma[2Kpxh> comman[2Kpxh> command[2Kpxh> commande[2Kpxh> commander[2Kpxh> commander [2Kpxh> commander t[2Kpxh> commander ta[2Kpxh> commander tak[2Kpxh> commander take[2Kpxh> commander takeo[2Kpxh> commander takeof[2Kpxh> commander takeoff
-pxh> [2Kpxh> s[2Kpxh> sl[2Kpxh> sle[2Kpxh> slee[2Kpxh> sleep[2Kpxh> sleep [2Kpxh> sleep 6[2Kpxh> sleep 63
-Sleeping for 63 s; (63000000 us).
-INFO  [commander] Armed by internal command	
-INFO  [tone_alarm] arming warning
-INFO  [navigator] Using default takeoff altitude: 2.5 m	
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.200000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.200000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.216000x JITTER 3.600000x
-INFO  [commander] Takeoff detected	
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.264000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.212000x JITTER 3.600000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.296000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.224000x JITTER 3.600000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.200000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.228000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.264000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.232000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.264000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.224000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.200000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.216000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.232000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.220000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.264000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.220000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.264000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.224000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.232000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.220000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.200000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.224000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.232000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.232000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.232000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.228000x JITTER 2.800000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.232000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.228000x JITTER 2.800000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.232000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.236000x JITTER 2.800000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.232000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.236000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.232000x JITTER 0.000000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.228000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.232000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.220000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.232000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.224000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.264000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.236000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.232000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.240000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.200000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.244000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.296000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.240000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.264000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.232000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.424000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.252000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.232000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.276000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.232000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.276000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.232000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.252000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.232000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.232000x JITTER 2.800000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.200000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.228000x JITTER 2.800000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.200000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.212000x JITTER 2.800000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.232000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.220000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.264000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.232000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.200000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.236000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.200000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.232000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.232000x JITTER 6.400000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.224000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.264000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.228000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.232000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.236000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.200000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.224000x JITTER 3.200000x
-WARN  [mc_raptor] trajectory_setpoint turned stale at: -0.846278 0.167561 -2.505883, yaw: -0.004219 204000 / 200000 us
-
-# task_rc=0
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.232000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.232000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.232000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.216000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.200000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.228000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.200000x JITTER 0.000000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.220000x JITTER 3.200000x
-WARN  [failsafe] Failsafe activated	
-INFO  [tone_alarm] battery warning (fast)
-INFO  [navigator] RTL: start return at 3 m (3 m above destination)	
-WARN  [mc_raptor] trajectory_setpoint turned non-stale at: -0.014842 0.002074 -2.532939
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.264000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.240000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.200000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.224000x JITTER 2.800000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.200000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.216000x JITTER 2.800000x
-INFO  [navigator] RTL: land at destination	
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.200000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.200000x JITTER 2.800000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.200000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.200000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.232000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.204000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.328000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.224000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.232000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.236000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.200000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.244000x JITTER 3.200000x
-INFO  [commander] Landing detected	
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.264000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.240000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.232000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.244000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.200000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.240000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.200000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.232000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.264000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.224000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.200000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.228000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.264000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.236000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.232000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.232000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.200000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.224000x JITTER 3.200000x
-pxh> [2Kpxh> c[2Kpxh> co[2Kpxh> com[2Kpxh> comm[2Kpxh> comma[2Kpxh> comman[2Kpxh> command[2Kpxh> commande[2Kpxh> commander[2Kpxh> commander [2Kpxh> commander s[2Kpxh> commander st[2Kpxh> commander sta[2Kpxh> commander stat[2Kpxh> commander statu[2Kpxh> commander status
-INFO  [commander] Armed
-INFO  [commander] prearm safety: Off
-INFO  [commander] navigation mode: Return
-INFO  [commander] user intended navigation mode: Offboard
-INFO  [commander] in failsafe: yes
-INFO  [commander] External Mode 1: nav_state: 23, name: RAPTOR
-commander: cycle: 5809 events, 28000us elapsed, 4.82us avg, min 0us max 4000us 138.782us rms
-commander: preflight check: 658 events, 12000us elapsed, 18.24us avg, min 0us max 4000us 269.678us rms
-pxh> [2Kpxh> l[2Kpxh> li[2Kpxh> lis[2Kpxh> list[2Kpxh> liste[2Kpxh> listen[2Kpxh> listene[2Kpxh> listener[2Kpxh> listener [2Kpxh> listener v[2Kpxh> listener ve[2Kpxh> listener veh[2Kpxh> listener vehi[2Kpxh> listener vehic[2Kpxh> listener vehicl[2Kpxh> listener vehicle[2Kpxh> listener vehicle_[2Kpxh> listener vehicle_s[2Kpxh> listener vehicle_st[2Kpxh> listener vehicle_sta[2Kpxh> listener vehicle_stat[2Kpxh> listener vehicle_statu[2Kpxh> listener vehicle_status[2Kpxh> listener vehicle_status [2Kpxh> listener vehicle_status 1
-
-TOPIC: vehicle_status
- vehicle_status
-    timestamp: 76752000 (0.156000 seconds ago)
-    armed_time: 13908000
-    takeoff_time: 15616000
-    nav_state_timestamp: 58904000
-    valid_nav_states_mask: 2147411455
-    can_set_nav_states_mask: 16696831
-    arming_state: 2
-    latest_arming_reason: 3
-    latest_disarming_reason: 0
-    nav_state_user_intention: 14
-    nav_state: 5
-    executor_in_charge: 0
-    nav_state_display: 5
-    accepts_offboard_setpoints: False
-    hil_state: 0
-    vehicle_type: 1
-    failsafe: True
-    failsafe_and_user_took_over: False
-    failsafe_defer_state: 0
-    gcs_connection_lost: True
-    gcs_connection_lost_counter: 0
-    high_latency_data_link_lost: False
-    is_vtol: False
-    is_vtol_tailsitter: False
-    in_transition_mode: False
-    in_transition_to_fw: False
-    system_type: 2
-    system_id: 1
-    component_id: 1
-    safety_button_available: True
-    safety_off: True
-    power_input_valid: True
-    usb_connected: False
-    open_drone_id_system_present: False
-    open_drone_id_system_healthy: False
-    parachute_system_present: False
-    parachute_system_healthy: False
-    traffic_avoidance_system_present: False
-    rc_calibration_in_progress: False
-    calibration_enabled: False
-    pre_flight_checks_pass: True
-
-pxh> [2Kpxh> l[2Kpxh> li[2Kpxh> lis[2Kpxh> list[2Kpxh> liste[2Kpxh> listen[2Kpxh> listene[2Kpxh> listener[2Kpxh> listener [2Kpxh> listener v[2Kpxh> listener ve[2Kpxh> listener veh[2Kpxh> listener vehi[2Kpxh> listener vehic[2Kpxh> listener vehicl[2Kpxh> listener vehicle[2Kpxh> listener vehicle_[2Kpxh> listener vehicle_l[2Kpxh> listener vehicle_lo[2Kpxh> listener vehicle_loc[2Kpxh> listener vehicle_loca[2Kpxh> listener vehicle_local[2Kpxh> listener vehicle_local_[2Kpxh> listener vehicle_local_p[2Kpxh> listener vehicle_local_po[2Kpxh> listener vehicle_local_pos[2Kpxh> listener vehicle_local_posi[2Kpxh> listener vehicle_local_posit[2Kpxh> listener vehicle_local_positi[2Kpxh> listener vehicle_local_positio[2Kpxh> listener vehicle_local_position[2Kpxh> listener vehicle_local_position [2Kpxh> listener vehicle_local_position 1
-
-TOPIC: vehicle_local_position
- vehicle_local_position
-    timestamp: 76904000 (0.004000 seconds ago)
-    timestamp_sample: 76904000 (0 us before timestamp)
-    ref_timestamp: 6264000
-    ref_lat: 47.397970
-    ref_lon: 8.546164
-    x: 0.19035
-    y: 0.07921
-    z: -0.01489
-    delta_xy: [0.00000, 0.00000]
-    delta_z: -0.20704
-    vx: 0.00512
-    vy: 0.01355
-    vz: 0.02074
-    z_deriv: 0.00397
-    delta_vxy: [-0.00066, -0.00003]
-    delta_vz: -0.00007
-    ax: 0.00659
-    ay: 0.01221
-    az: 0.01563
-    heading: 1.70083
-    heading_var: 0.00112
-    unaided_heading: -0.77800
-    delta_heading: 1.67504
-    tilt_var: 0.00003
-    ref_alt: 0.20703
-    dist_bottom: 0.01000
-    dist_bottom_var: 0.02736
-    delta_dist_bottom: -0.20704
-    eph: 0.15038
-    epv: 0.16512
-    evh: 0.08655
-    evv: 0.05457
-    vxy_max: inf
-    vz_max: inf
-    hagl_min: inf
-    hagl_max_z: inf
-    hagl_max_xy: inf
-    xy_valid: True
-    z_valid: True
-    v_xy_valid: True
-    v_z_valid: True
-    xy_reset_counter: 4
-    z_reset_counter: 2
-    vxy_reset_counter: 4
-    vz_reset_counter: 1
-    heading_reset_counter: 1
-    heading_good_for_control: True
-    xy_global: True
-    z_global: True
-    dist_bottom_valid: False
-    dist_bottom_reset_counter: 2
-    dist_bottom_sensor_bitfield: 0
-    dead_reckoning: False
-pxh> [2Kpxh> l[2Kpxh> li[2Kpxh> lis[2Kpxh> list[2Kpxh> liste[2Kpxh> listen[2Kpxh> listene[2Kpxh> listener[2Kpxh> listener [2Kpxh> listener v[2Kpxh> listener ve[2Kpxh> listener veh[2Kpxh> listener vehi[2Kpxh> listener vehic[2Kpxh> listener vehicl[2Kpxh> listener vehicle[2Kpxh> listener vehicle_[2Kpxh> listener vehicle_a[2Kpxh> listener vehicle_an[2Kpxh> listener vehicle_ang[2Kpxh> listener vehicle_angu[2Kpxh> listener vehicle_angul[2Kpxh> listener vehicle_angula[2Kpxh> listener vehicle_angular[2Kpxh> listener vehicle_angular_[2Kpxh> listener vehicle_angular_v[2Kpxh> listener vehicle_angular_ve[2Kpxh> listener vehicle_angular_vel[2Kpxh> listener vehicle_angular_velo[2Kpxh> listener vehicle_angular_veloc[2Kpxh> listener vehicle_angular_veloci[2Kpxh> listener vehicle_angular_velocit[2Kpxh> listener vehicle_angular_velocity[2Kpxh> listener vehicle_angular_velocity [2Kpxh> listener vehicle_angular_velocity 1
-
-TOPIC: vehicle_angular_velocity
- vehicle_angular_velocity
-    timestamp: 76904000 (0.004000 seconds ago)
-    timestamp_sample: 76904000 (0 us before timestamp)
-    xyz: [-0.00034, 0.00074, -0.00000]
-    xyz_derivative: [-0.00199, 0.08173, 0.01022]
-pxh> [2Kpxh> l[2Kpxh> lo[2Kpxh> log[2Kpxh> logg[2Kpxh> logge[2Kpxh> logger[2Kpxh> logger [2Kpxh> logger s[2Kpxh> logger st[2Kpxh> logger sta[2Kpxh> logger stat[2Kpxh> logger statu[2Kpxh> logger status
-INFO  [logger] Running in mode: all
-INFO  [logger] Number of subscriptions: 255 (8160 bytes)
-INFO  [logger] Full File Logging Running:
-INFO  [logger] Log file: ./log/2026-06-25/07_30_41.ulg
-INFO  [logger] Wrote 21.02 MiB (avg 307.23 KiB/s)
-INFO  [logger] Since last status: dropouts: 0 (max len: 0.000 s), max used buffer: 39190 / 1024000 B
-pxh> [2Kpxh> s[2Kpxh> sh[2Kpxh> shu[2Kpxh> shut[2Kpxh> shutd[2Kpxh> shutdo[2Kpxh> shutdow[2Kpxh> shutdown
-Exiting NOW.
-ninja: build stopped: interrupted by user.
-make: *** [Makefile:245: px4_sitl_raptor] Terminated
-
-# px4_wait_timeout=1
-
-# px4_rc=124

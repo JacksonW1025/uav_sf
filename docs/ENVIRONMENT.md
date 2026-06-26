@@ -14,7 +14,8 @@ The image intentionally does not bake in the PX4 source tree, because PX4 `main`
 
 ## Host Inventory
 
-Captured in `docs/host_inventory.log` before environment changes:
+The raw host inventory log was an intermediate setup artifact and is no
+longer tracked. Stable facts retained from that capture:
 
 - Kernel/arch: `5.15.148-tegra`, `aarch64`.
 - OS: Ubuntu 22.04.5 LTS.
@@ -153,4 +154,3 @@ make px4_sitl_raptor_sih sihsim_quadx
 ```
 
 No flight, arming, ULOG work, failure injection, or search work was performed in this phase.
-

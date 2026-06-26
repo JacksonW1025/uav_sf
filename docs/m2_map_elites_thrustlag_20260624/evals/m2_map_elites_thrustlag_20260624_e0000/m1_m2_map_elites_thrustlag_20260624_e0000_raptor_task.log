@@ -1,7 +1,0 @@
-[INFO] [1782283084.050048252] [m1_offboard_task]: M1 task started controller=raptor tag=m2_map_elites_thrustlag_20260624_e0000 rate_hz=100.0
-{"detail": {"source": "first_px4_topic"}, "elapsed_s": 0.0, "name": "clock_origin", "timestamp_us": 1782283089566585}
-{"detail": {"controller": "raptor", "main": 4, "mode_id": 23, "sub": 11}, "elapsed_s": 18.016271, "name": "mode_command", "timestamp_us": 1782283107582856}
-{"detail": {"nav_state": 23}, "elapsed_s": 18.052271, "name": "controller_active", "timestamp_us": 1782283107618856}
-{"detail": {"type": "step"}, "elapsed_s": 22.016271, "name": "trajectory_start", "timestamp_us": 1782283111582856}
-{"detail": {"setpoint_ned": [0.4, 0.0, -2.5]}, "elapsed_s": 38.022446, "name": "mission_end", "timestamp_us": 1782283127589031}
-[INFO] [1782283128.529368697] [m1_offboard_task]: M1 task finished exit_code=0

@@ -1,273 +1,0 @@
-# PX4 RAPTOR smoke
-2026-06-25T07:01:41+00:00
-PX4_SHA=3042f906abaab7ab59ae838ad5a530a9ef3df9a6
-POLICY_DST=/workspace/external/PX4-Autopilot/build/px4_sitl_raptor/rootfs/raptor/policy.tar
--rw-r--r-- 1 px4 ubuntu 136192 Jun 25 07:01 build/px4_sitl_raptor/rootfs/raptor/policy.tar
-COMMAND=HEADLESS=1 PX4_SIM_SPEED_FACTOR=1 make px4_sitl_raptor gz_x500 < /tmp/uav_sf_px4_smoke.cmds
-[0/1] cd /workspace/external/PX4-Autopilot/build/px4_sitl_raptor/src/modules/simulation/gz_bridge && /usr/bin/cmake -E env PX4_SIM_MODEL=gz_x500 GZ_IP=127.0.0.1 /workspace/external/PX4-Autopilot/build/px4_sitl_raptor/bin/px4
-
-______  __   __    ___
-| ___ \ \ \ / /   /   |
-| |_/ /  \ V /   / /| |
-|  __/   /   \  / /_| |
-| |     / /^\ \ \___  |
-\_|     \/   \/     |_/
-
-px4 starting.
-
-INFO  [px4] startup script: /bin/sh etc/init.d-posix/rcS 0
-INFO  [init] found model autostart file as SYS_AUTOSTART=4001
-INFO  [param] selected parameter default file parameters.bson
-INFO  [param] importing from 'parameters.bson'
-INFO  [parameters] BSON document size 377 bytes, decoded 377 bytes (INT32:15, FLOAT:4)
-INFO  [param] selected parameter backup file parameters_backup.bson
-COM_DL_LOSS_T set to 10
-COM_RC_LOSS_T set to 1.0
-COM_OF_LOSS_T set to 1.0
-INFO  [dataman] data manager file './dataman' size is 1208528 bytes
-INFO  [init] Gazebo simulator 8.14.0
-INFO  [init] Starting gazebo with world: /workspace/external/PX4-Autopilot/Tools/simulation/gz/worlds/default.sdf
-INFO  [init] Waiting for Gazebo world...
-INFO  [init] Gazebo world is ready
-INFO  [init] Spawning Gazebo model
-[1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="x500_base"]/link[@name="base_link"]/sensor[@name="air_pressure_sensor"]/gz_frame_id:/workspace/external/PX4-Autopilot/Tools/simulation/gz/models/x500_base/model.sdf:L219]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
-[1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="x500_base"]/link[@name="base_link"]/sensor[@name="magnetometer_sensor"]/gz_frame_id:/workspace/external/PX4-Autopilot/Tools/simulation/gz/models/x500_base/model.sdf:L233]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
-[1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="x500_base"]/link[@name="base_link"]/sensor[@name="imu_sensor"]/gz_frame_id:/workspace/external/PX4-Autopilot/Tools/simulation/gz/models/x500_base/model.sdf:L259]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
-[1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="x500_base"]/link[@name="base_link"]/sensor[@name="navsat_sensor"]/gz_frame_id:/workspace/external/PX4-Autopilot/Tools/simulation/gz/models/x500_base/model.sdf:L311]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
-INFO  [lockstep_scheduler] setting initial absolute time to 3880000 us
-INFO  [gz_bridge] world: default, model: x500_0
-INFO  [init] Setting simulation speed factor: 1
-INFO  [init] Preserving physics: gravity=(0, 0, -9.8), max_step_size=0.004
-INFO  [init] Setting camera to follow x500_0
-INFO  [init] Camera follow offset set to -2.0, -2.0, 2.0
-INFO  [commander] LED: open /dev/led0 failed (22)
-WARN  [health_and_arming_checks] Preflight Fail: No connection to the GCS
-INFO  [tone_alarm] home set
-ERROR [vision_target_estimator] Vision Target Estimator cannot run with CONFIG_MODULES_LANDING_TARGET_ESTIMATOR enabled.
-ERROR [px4] Task start failed (-1)
-INFO  [mc_raptor] Policy checkpoint ./raptor/policy.tar exists
-INFO  [mc_raptor] Policy loaded from file ./raptor/policy.tar
-INFO  [mc_raptor] Input offset: 30208
-INFO  [mc_raptor] Output offset: 119808
-INFO  [mc_raptor] Checkpoint test diff: 0.000000
-INFO  [mc_raptor] output[0]: 0.229492
-INFO  [mc_raptor] output[1]: -0.870051
-INFO  [mc_raptor] output[2]: -2.016715
-INFO  [mc_raptor] output[3]: -1.367968
-INFO  [mc_raptor] Checkpoint test passed with diff 0.0000001448
-INFO  [mc_raptor] Checkpoint name: logs/2025-04-19_16-16-17
-INFO  [mc_raptor] IMU_GYRO_RATEMAX=800 Hz
-INFO  [mc_raptor] POLICY_CONTROL_FREQUENCY_TRAINING=100 Hz
-INFO  [mc_raptor] Setting force_sync_native = 800 Hz / 100 Hz = 8
-INFO  [mc_raptor] Raptor mode registration successful, arming_check_id: 0, mode_id: 23
-INFO  [mc_raptor] Raptor mode configuration sent
-INFO  [uxrce_dds_client] init UDP agent IP:127.0.0.1, port:8888
-INFO  [mavlink] mode: Normal, data rate: 4000000 B/s on udp port 18570 remote port 14550
-WARN  [mc_raptor] trajectory_setpoint turned stale at: -0.000714 0.000301 0.009845, yaw: 0.000092 6420000 / 200000 us
-INFO  [mavlink] mode: Onboard, data rate: 4000000 B/s on udp port 14580 remote port 14540
-INFO  [mavlink] mode: Onboard, data rate: 4000 B/s on udp port 14280 remote port 14030
-INFO  [mavlink] mode: Gimbal, data rate: 400000 B/s on udp port 13030 remote port 13280
-INFO  [logger] logger started (mode=all)
-INFO  [logger] Max log file size: 1024 MiB
-INFO  [logger] Start file log (type: full)
-INFO  [logger] [logger] ./log/2026-06-25/07_01_56.ulg
-INFO  [logger] Opened full log file: ./log/2026-06-25/07_01_56.ulg
-INFO  [mavlink] MAVLink only on localhost (set param MAV_{i}_BROADCAST = 1 to enable network)
-INFO  [mavlink] MAVLink only on localhost (set param MAV_{i}_BROADCAST = 1 to enable network)
-INFO  [px4] Startup script returned successfully
-pxh> [2Kpxh> s[2Kpxh> sl[2Kpxh> sle[2Kpxh> slee[2Kpxh> sleep[2Kpxh> sleep [2Kpxh> sleep 5
-Sleeping for 5 s; (5000000 us).
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.328000x JITTER 3.200000x
-WARN  [mc_raptor] trajectory_setpoint turned non-stale at: -0.034209 -0.027313 0.011426
-WARN  [health_and_arming_checks] Preflight Fail: No connection to the GCS
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.200000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.200000x JITTER 3.200000x
-WARN  [health_and_arming_checks] Preflight Fail: No connection to the GCS
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.264000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.256000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.232000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.240000x JITTER 3.200000x
-pxh> [2Kpxh> h[2Kpxh> he[2Kpxh> hel[2Kpxh> help
-Builtin Commands:
-  actuator_test
-  airship_att_control
-  airspeed_selector
-  attitude_estimator_q
-  battery_simulator
-  bsondump
-  camera_feedback
-  camera_trigger
-  cdev_test
-  commander
-  control_allocator
-  controllib_test
-  dataman
-  dyn
-  ekf2
-  failure
-  fake_gps
-  fake_imu
-  fake_magnetometer
-  flight_mode_manager
-  fw_att_control
-  fw_autotune_attitude_control
-  fw_lat_lon_control
-  fw_mode_manager
-  fw_rate_control
-  gimbal
-  gps
-  gyro_calibration
-  gyro_fft
-  gz_bridge
-  hello
-  hrt_test
-  land_detector
-  landing_target_estimator
-  led_control
-  list_files
-  list_tasks
-  listener
-  load_mon
-  local_position_estimator
-  logger
-  mag_bias_estimator
-  manual_control
-  mavlink
-  mc_att_control
-  mc_autotune_attitude_control
-  mc_hover_thrust_estimator
-  mc_pos_control
-  mc_raptor
-  mc_rate_control
-  msp_osd
-  navigator
-  param
-  payload_deliverer
-  perf
-  pwm_out_sim
-  px4_mavlink_debug
-  px4_simple_app
-  rc_tests
-  rc_update
-  replay
-  rover_ackermann
-  rover_differential
-  rover_mecanum
-  sd_bench
-  send_event
-  sensor_agp_sim
-  sensor_airspeed_sim
-  sensor_baro_sim
-  sensor_gps_sim
-  sensor_mag_sim
-  sensors
-  septentrio
-  shutdown
-  simulator_mavlink
-  simulator_sih
-  sleep
-  system_power_simulator
-  system_time
-  temperature_compensation
-  tests
-  tone_alarm
-  tune_control
-  uorb
-  uorb_tests
-  uuv_att_control
-  uuv_pos_control
-  uxrce_dds_client
-  ver
-  vision_target_estimator
-  vtol_att_control
-  work_item_example
-  work_queue
-  wqueue_test
-pxh> [2Kpxh> p[2Kpxh> pa[2Kpxh> par[2Kpxh> para[2Kpxh> param[2Kpxh> param [2Kpxh> param s[2Kpxh> param se[2Kpxh> param set[2Kpxh> param set [2Kpxh> param set M[2Kpxh> param set MC[2Kpxh> param set MC_[2Kpxh> param set MC_R[2Kpxh> param set MC_RA[2Kpxh> param set MC_RAP[2Kpxh> param set MC_RAPT[2Kpxh> param set MC_RAPTO[2Kpxh> param set MC_RAPTOR[2Kpxh> param set MC_RAPTOR_[2Kpxh> param set MC_RAPTOR_E[2Kpxh> param set MC_RAPTOR_EN[2Kpxh> param set MC_RAPTOR_ENA[2Kpxh> param set MC_RAPTOR_ENAB[2Kpxh> param set MC_RAPTOR_ENABL[2Kpxh> param set MC_RAPTOR_ENABLE[2Kpxh> param set MC_RAPTOR_ENABLE [2Kpxh> param set MC_RAPTOR_ENABLE 1
-pxh> [2Kpxh> p[2Kpxh> pa[2Kpxh> par[2Kpxh> para[2Kpxh> param[2Kpxh> param [2Kpxh> param s[2Kpxh> param se[2Kpxh> param set[2Kpxh> param set [2Kpxh> param set M[2Kpxh> param set MC[2Kpxh> param set MC_[2Kpxh> param set MC_R[2Kpxh> param set MC_RA[2Kpxh> param set MC_RAP[2Kpxh> param set MC_RAPT[2Kpxh> param set MC_RAPTO[2Kpxh> param set MC_RAPTOR[2Kpxh> param set MC_RAPTOR_[2Kpxh> param set MC_RAPTOR_O[2Kpxh> param set MC_RAPTOR_OF[2Kpxh> param set MC_RAPTOR_OFF[2Kpxh> param set MC_RAPTOR_OFFB[2Kpxh> param set MC_RAPTOR_OFFB [2Kpxh> param set MC_RAPTOR_OFFB 0
-pxh> [2Kpxh> m[2Kpxh> mc[2Kpxh> mc_[2Kpxh> mc_r[2Kpxh> mc_ra[2Kpxh> mc_rap[2Kpxh> mc_rapt[2Kpxh> mc_rapto[2Kpxh> mc_raptor[2Kpxh> mc_raptor [2Kpxh> mc_raptor s[2Kpxh> mc_raptor st[2Kpxh> mc_raptor sta[2Kpxh> mc_raptor star[2Kpxh> mc_raptor start
-ERROR [px4] Task already running
-Command 'mc_raptor' failed, returned -1.
-pxh> [2Kpxh> s[2Kpxh> sl[2Kpxh> sle[2Kpxh> slee[2Kpxh> sleep[2Kpxh> sleep [2Kpxh> sleep 5
-Sleeping for 5 s; (5000000 us).
-INFO  [uxrce_dds_client] synchronized with time offset 1782370910800786us
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.296000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.240000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.200000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.232000x JITTER 3.200000x
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/register_ext_component_reply_v1 data writer, topic id: 219
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/arming_check_request_v1 data writer, topic id: 16
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/mode_completed data writer, topic id: 166
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/battery_status_v1 data writer, topic id: 20
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/collision_constraints data writer, topic id: 27
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/estimator_status_flags data writer, topic id: 90
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/failsafe_flags data writer, topic id: 96
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/manual_control_setpoint data writer, topic id: 157
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/message_format_response data writer, topic id: 163
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/position_setpoint_triplet data writer, topic id: 202
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/sensor_combined data writer, topic id: 239
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/timesync_status data writer, topic id: 265
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/transponder_report data writer, topic id: 268
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/vehicle_land_detected data writer, topic id: 293
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/vehicle_attitude data writer, topic id: 280
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/vehicle_control_mode data writer, topic id: 287
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/vehicle_command_ack_v1 data writer, topic id: 284
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/vehicle_global_position data writer, topic id: 288
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/vehicle_gps_position data writer, topic id: 290
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/vehicle_local_position_v1 data writer, topic id: 294
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/vehicle_odometry data writer, topic id: 299
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/vehicle_status_v4 data writer, topic id: 304
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/airspeed_validated_v1 data writer, topic id: 13
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/vtol_vehicle_status data writer, topic id: 323
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/home_position_v1 data writer, topic id: 136
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/wind data writer, topic id: 326
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/gimbal_device_attitude_status data writer, topic id: 118
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/vtx data writer, topic id: 324
-INFO  [uxrce_dds_client] successfully created rt/fmu/out/input_rc data writer, topic id: 138
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.328000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.236000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.200000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.244000x JITTER 3.200000x
-WARN  [mc_raptor] Raptor: INTERMEDIATE: BIAS 3.200000x JITTER 0.000000x
-WARN  [mc_raptor] Raptor: NATIVE: BIAS 3.248000x JITTER 2.800000x
-pxh> [2Kpxh> m[2Kpxh> mc[2Kpxh> mc_[2Kpxh> mc_r[2Kpxh> mc_ra[2Kpxh> mc_rap[2Kpxh> mc_rapt[2Kpxh> mc_rapto[2Kpxh> mc_raptor[2Kpxh> mc_raptor [2Kpxh> mc_raptor s[2Kpxh> mc_raptor st[2Kpxh> mc_raptor sta[2Kpxh> mc_raptor stat[2Kpxh> mc_raptor statu[2Kpxh> mc_raptor status
-mc_raptor: cycle: 2473 events, 36000us elapsed, 14.56us avg, min 0us max 8000us 266.431us rms
-mc_raptor: interval: 2473 events, 4056.61us avg, min 0us max 16000us 1270.720us rms
-mc_raptor: interval_policy: 0 events, 0.00us avg, min 0us max 0us 0.000us rms
-Checkpoint: logs/2025-04-19_16-16-17
-pxh> [2Kpxh> p[2Kpxh> pa[2Kpxh> par[2Kpxh> para[2Kpxh> param[2Kpxh> param [2Kpxh> param s[2Kpxh> param sh[2Kpxh> param sho[2Kpxh> param show[2Kpxh> param show [2Kpxh> param show M[2Kpxh> param show MC[2Kpxh> param show MC_[2Kpxh> param show MC_R[2Kpxh> param show MC_RA[2Kpxh> param show MC_RAP[2Kpxh> param show MC_RAPT[2Kpxh> param show MC_RAPTO[2Kpxh> param show MC_RAPTOR[2Kpxh> param show MC_RAPTOR*
-Symbols: x = used, + = saved, * = unsaved, l = locked
-x +   MC_RAPTOR_ENABLE [572,1046] : 1
-x     MC_RAPTOR_INTREF [573,1047] : 0
-x     MC_RAPTOR_OFFB [574,1048] : 0
-
- 1093/2079 parameters used.
-pxh> [2Kpxh> c[2Kpxh> co[2Kpxh> com[2Kpxh> comm[2Kpxh> comma[2Kpxh> comman[2Kpxh> command[2Kpxh> commande[2Kpxh> commander[2Kpxh> commander [2Kpxh> commander s[2Kpxh> commander st[2Kpxh> commander sta[2Kpxh> commander stat[2Kpxh> commander statu[2Kpxh> commander status
-INFO  [commander] Disarmed
-INFO  [commander] prearm safety: Off
-INFO  [commander] navigation mode: Hold
-INFO  [commander] user intended navigation mode: Hold
-INFO  [commander] in failsafe: no
-INFO  [commander] External Mode 1: nav_state: 23, name: RAPTOR
-commander: cycle: 825 events, 4000us elapsed, 4.85us avg, min 0us max 4000us 139.262us rms
-commander: preflight check: 94 events, 0us elapsed, 0.00us avg, min 0us max 0us 0.000us rms
-pxh> [2Kpxh> u[2Kpxh> ux[2Kpxh> uxr[2Kpxh> uxrc[2Kpxh> uxrce[2Kpxh> uxrce_[2Kpxh> uxrce_d[2Kpxh> uxrce_dd[2Kpxh> uxrce_dds[2Kpxh> uxrce_dds_[2Kpxh> uxrce_dds_c[2Kpxh> uxrce_dds_cl[2Kpxh> uxrce_dds_cli[2Kpxh> uxrce_dds_clie[2Kpxh> uxrce_dds_clien[2Kpxh> uxrce_dds_client[2Kpxh> uxrce_dds_client [2Kpxh> uxrce_dds_client s[2Kpxh> uxrce_dds_client st[2Kpxh> uxrce_dds_client sta[2Kpxh> uxrce_dds_client stat[2Kpxh> uxrce_dds_client statu[2Kpxh> uxrce_dds_client status
-INFO  [uxrce_dds_client] Running, connected
-INFO  [uxrce_dds_client] Using transport:     udp
-INFO  [uxrce_dds_client] Agent IP:            127.0.0.1
-INFO  [uxrce_dds_client] Agent port:          8888
-INFO  [uxrce_dds_client] Custom participant:  no
-INFO  [uxrce_dds_client] Localhost only:      no
-INFO  [uxrce_dds_client] Payload tx:          46903 B/s
-INFO  [uxrce_dds_client] Payload rx:          0 B/s
-INFO  [uxrce_dds_client] timesync converged: true
-uxrce_dds_client: cycle: 1470 events, 2692000us elapsed, 1831.29us avg, min 0us max 16000us 2216.063us rms
-uxrce_dds_client: cycle interval: 1471 events, 1830.05us avg, min 0us max 16000us 2215.309us rms
-pxh> [2Kpxh> s[2Kpxh> sh[2Kpxh> shu[2Kpxh> shut[2Kpxh> shutd[2Kpxh> shutdo[2Kpxh> shutdow[2Kpxh> shutdown
-Exiting NOW.
-NodeShared::Publish() Error: Interrupted system call
-NodeShared::Publish() Error: Interrupted system call
-ninja: build stopped: interrupted by user.
-make: *** [Makefile:245: px4_sitl_raptor] Terminated
-PX4_RUN_RC=124
-PX4_SHUTDOWN_OBSERVED=1

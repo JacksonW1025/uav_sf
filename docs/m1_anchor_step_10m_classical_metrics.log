@@ -1,2 +1,0 @@
-$ /usr/bin/python3 /workspace/scripts/m1_metrics.py --ulog /workspace/docs/m1_anchor_step_10m_classical.ulg --theta /workspace/config/m1_anchor_step.json --task-json /workspace/docs/m1_anchor_step_10m_classical_task.json --controller classical --output /workspace/docs/m1_anchor_step_10m_classical_metrics.json
-{"output": "/workspace/docs/m1_anchor_step_10m_classical_metrics.json", "safe": false, "safe_reasons": ["missing_position_or_setpoint_window"]}

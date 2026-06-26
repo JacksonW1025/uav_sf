@@ -1,6 +1,11 @@
 decision: CLEAN_DIFFERENTIAL
+status: SUPERSEDED_BY_FUZZ1C_DECONTAM_FOR_FINAL_HARD_DECISION
 
 # FUZZ-1c Severity Scan
+
+This report is retained as the graded severity scan. The final hard
+differential decision is made by `docs/fuzz1c_decontam_20260625.md`, which
+rejudges the same ULOG evidence with symmetric infrastructure decontamination.
 
 run_id: `fuzz1c_severity_20260625`
 method: Method A, SIH groundtruth state-triggered switch
@@ -64,4 +69,4 @@ Trigger timeouts are marked UNTESTED and are not used as safe/no-hit evidence. U
 
 results_json: `fuzz1c_severity_20260625/results.json`
 results_jsonl: `fuzz1c_severity_20260625/results.jsonl`
-eval_dir: `fuzz1c_severity_20260625/evals`
+raw_eval_dirs: local/ignored; structured summaries above are tracked

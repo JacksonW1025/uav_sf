@@ -1,7 +1,0 @@
-[INFO] [1782372896.198255253] [m1_offboard_task]: M1 task started controller=classical tag=raptor_closeout_activation_smoke_20260625_circle_30deg rate_hz=50.0 wall_timer_hz=50.0 PX4_SIM_SPEED_FACTOR=1.0
-{"detail": {"source": "first_px4_topic"}, "elapsed_s": 0.0, "name": "clock_origin", "timestamp_us": 1782372902734771}
-{"detail": {"controller": "classical", "main": 6, "phase": "final"}, "elapsed_s": 14.006936, "name": "mode_command", "timestamp_us": 1782372916741707}
-{"detail": {"nav_state": 14}, "elapsed_s": 14.046936, "name": "controller_active", "timestamp_us": 1782372916781707}
-{"detail": {"type": "circle"}, "elapsed_s": 18.006936, "name": "trajectory_start", "timestamp_us": 1782372920741707}
-{"detail": {"setpoint_ned": [0.049507769368091994, 1.7993190325154114, -2.5]}, "elapsed_s": 46.017512, "name": "mission_end", "timestamp_us": 1782372948752283}
-[INFO] [1782372949.166002940] [m1_offboard_task]: M1 task finished exit_code=0

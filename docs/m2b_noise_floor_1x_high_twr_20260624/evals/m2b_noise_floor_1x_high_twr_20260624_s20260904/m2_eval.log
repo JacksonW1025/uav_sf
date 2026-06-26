@@ -1,5 +1,0 @@
-$ /usr/bin/python3 /workspace/scripts/m1_diff_runner.py --theta /workspace/docs/m2b_noise_floor_1x_high_twr_20260624/theta/m2b_noise_floor_1x_high_twr_20260624_s20260904.json --skip-build --run-timeout 240 --docs-dir /workspace/docs/m2b_noise_floor_1x_high_twr_20260624/evals/m2b_noise_floor_1x_high_twr_20260624_s20260904 --safety-config /workspace/config/m2b_safety_envelope_4x_high_twr.json
-RUN_CONTROLLER=classical
-RUN_CONTROLLER=raptor
-M1_DIFF_JSON=/workspace/docs/m2b_noise_floor_1x_high_twr_20260624/evals/m2b_noise_floor_1x_high_twr_20260624_s20260904/m1_diff_m2b_noise_floor_1x_high_twr_20260624_s20260904.json
-M1_DIFF_SUMMARY=/workspace/docs/m2b_noise_floor_1x_high_twr_20260624/evals/m2b_noise_floor_1x_high_twr_20260624_s20260904/m1_diff_m2b_noise_floor_1x_high_twr_20260624_s20260904_summary.md

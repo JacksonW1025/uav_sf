@@ -1,6 +1,12 @@
 decision: BUG-FOUND (corner_r6_f045_w6_n_phase0: differential_primary_bug)
+status: HISTORICAL_LEAD_SUPERSEDED_BY_FUZZ1B_FUZZ1C_DECONTAM
 
 # FUZZ-1 mc_nn_control Violent Activation
+
+This first kill remains useful as activation evidence, but its original
+differential-primary classification is not the current Route-A decision. The
+matched-state FUZZ-1b run downgraded this exact lead, and FUZZ-1c decontam is
+the final Route-A result.
 
 run_id: `fuzz1_activation_20260625`
 scope: offboard aggressive circle approach + SIH wind + mode 23 mc_nn activation + post-switch hover

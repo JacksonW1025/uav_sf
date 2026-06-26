@@ -1,2 +1,0 @@
-$ /usr/bin/python3 /workspace/scripts/m1_compare.py --theta /workspace/config/m1_anchor_step.json --classical /workspace/docs/m1_anchor_step_10m_classical_metrics.json --raptor /workspace/docs/m1_anchor_step_10m_raptor_metrics.json --output /workspace/docs/m1_diff_anchor_step_10m.json
-{"output": "/workspace/docs/m1_diff_anchor_step_10m.json", "primary_bug": false, "quadrant": "too_hard_not_bug"}
