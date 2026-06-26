@@ -38,10 +38,16 @@ if [[ -t 0 && -t 1 ]]; then
   tty_args=(-it)
 fi
 
+cpu_args=()
+if [[ -n "${DOCKER_CPUSET_CPUS:-}" ]]; then
+  cpu_args=(--cpuset-cpus "${DOCKER_CPUSET_CPUS}")
+fi
+
 "${docker_cmd[@]}" run --rm "${tty_args[@]}" \
   --name "${CONTAINER_NAME}" \
   --network host \
   --ipc host \
+  "${cpu_args[@]}" \
   "${env_args[@]}" \
   -v "${REPO_ROOT}:/workspace" \
   -w /workspace \

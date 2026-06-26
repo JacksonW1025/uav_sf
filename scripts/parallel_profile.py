@@ -58,6 +58,12 @@ def parse_csv_floats(value: str) -> list[float]:
     return [float(item.strip()) for item in value.split(",") if item.strip()]
 
 
+def parse_cpuset_groups(value: str | None) -> list[str]:
+    if value is None:
+        return []
+    return [item.strip() for item in value.split(";") if item.strip()]
+
+
 def profile_genome(mission_end_s: float) -> dict[str, Any]:
     sys.path.insert(0, str(REPO_ROOT / "scripts"))
     import theta_genome
@@ -133,6 +139,7 @@ def worker_main(args: argparse.Namespace) -> int:
         "theta_path": str(theta_path),
         "docs_dir": str(docs_dir),
         "sim_speed_factor": args.sim_speed_factor,
+        "cpuset_cpus": os.environ.get("PROFILE_CPUSET_CPUS"),
         "rho": {
             "classical": classical_property.get("rho", {}),
             "mcnn": mcnn_property.get("rho", {}),
@@ -228,6 +235,7 @@ def worker_command(
     agent_port: int,
     target_properties: str,
     mission_end_s: float,
+    cpuset_cpus: str | None,
 ) -> list[str]:
     docs_dir = worker_dir / "docs"
     theta_path = worker_dir / f"{tag}.json"
@@ -248,6 +256,7 @@ def worker_command(
         "export PX4_UXRCE_DDS_NS=",
         f"export TMPDIR={shlex.quote(container_path(tmp_dir))}",
         f"export PX4_RUN_ROOT_BASE={shlex.quote(container_path(px4_roots))}",
+        f"export PROFILE_CPUSET_CPUS={shlex.quote(cpuset_cpus or '')}",
         " ".join(
             [
                 "python3",
@@ -281,6 +290,7 @@ def worker_command(
         f"cd {shlex.quote(str(REPO_ROOT))} && "
         f"CONTAINER_NAME={shlex.quote(container_name)} "
         f"ROS_DOMAIN_ID={ros_domain_id} "
+        f"DOCKER_CPUSET_CPUS={shlex.quote(cpuset_cpus or '')} "
         f"./docker/run.sh bash -lc {shlex.quote(inner)}"
     )
     return ["sg", "docker", "-c", outer]
@@ -301,6 +311,9 @@ def run_batch(
     batch_dir.mkdir(parents=True, exist_ok=True)
     processes: list[dict[str, Any]] = []
     container_names: list[str] = []
+    cpuset_groups = parse_cpuset_groups(getattr(args, "cpuset_groups", ""))
+    if cpuset_groups and len(cpuset_groups) < n:
+        raise ValueError(f"need at least {n} cpuset groups, got {len(cpuset_groups)}")
     start = time.monotonic()
     for slot in range(n):
         tag = f"{run_id}_{label}_w{slot:02d}"
@@ -320,6 +333,7 @@ def run_batch(
             agent_port=port_base + slot,
             target_properties=args.target_properties,
             mission_end_s=args.mission_end_s,
+            cpuset_cpus=cpuset_groups[slot] if cpuset_groups else None,
         )
         log_handle = log_path.open("w", encoding="utf-8")
         process = subprocess.Popen(command, cwd=str(REPO_ROOT), stdout=log_handle, stderr=subprocess.STDOUT)
@@ -329,6 +343,7 @@ def run_batch(
                 "tag": tag,
                 "worker_dir": worker_dir,
                 "container_name": container_name,
+                "cpuset_cpus": cpuset_groups[slot] if cpuset_groups else None,
                 "log_path": log_path,
                 "process": process,
                 "log_handle": log_handle,
@@ -369,6 +384,7 @@ def run_batch(
             {
                 "container_returncode": rc,
                 "container_name": entry["container_name"],
+                "cpuset_cpus": entry["cpuset_cpus"],
                 "container_log": str(entry["log_path"]),
             }
         )
@@ -401,6 +417,7 @@ def run_batch(
         "label": label,
         "n": n,
         "sim_speed_factor": sim_speed_factor,
+        "cpuset_groups": cpuset_groups[:n],
         "elapsed_wall_s": elapsed,
         "success_count": success_count,
         "failure_count": n - success_count,
@@ -528,6 +545,7 @@ def orchestrator_main(args: argparse.Namespace) -> int:
         "mission_end_s": args.mission_end_s,
         "levels": parse_csv_ints(args.levels),
         "speed_factors": parse_csv_floats(args.speed_factors),
+        "cpuset_groups": parse_cpuset_groups(args.cpuset_groups),
         "container_entry": "sg docker -c 'cd /mnt/nvme/uav_sf && CONTAINER_NAME=<name> ./docker/run.sh bash -lc ...'",
         "isolation": {
             "container_name": "unique per worker",
@@ -651,6 +669,11 @@ def main() -> int:
     parser.add_argument("--stats-interval-s", type=float, default=8.0)
     parser.add_argument("--ros-domain-base", type=int, default=30)
     parser.add_argument("--agent-port-base", type=int, default=18888)
+    parser.add_argument(
+        "--cpuset-groups",
+        default="",
+        help="Optional semicolon-separated Docker cpuset-cpus groups, one per worker slot.",
+    )
 
     parser.add_argument("--tag", help=argparse.SUPPRESS)
     parser.add_argument("--worker-label", default="worker", help=argparse.SUPPRESS)
