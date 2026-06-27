@@ -89,6 +89,17 @@ class PropertyFitnessTest(unittest.TestCase):
         self.assertEqual([], result["clean_differential_properties"])
         self.assertEqual("vacuous_property", result["per_property"]["P5"]["excluded_reason"])
 
+    def test_borderline_violation_inside_jitter_band_is_not_finding(self) -> None:
+        result = property_fitness.differential_property_fitness(
+            property_result({}),
+            property_result({"P7": -0.05}, severity=1),
+            target_properties=["P7"],
+        )
+        self.assertEqual(["P7"], result["candidate_differential_properties"])
+        self.assertEqual([], result["clean_differential_properties"])
+        self.assertFalse(result["property_finding"])
+        self.assertGreater(result["per_property"]["P7"]["rho_jitter_reproduction_margin"], 0.05)
+
     def test_step_theta_adds_p5_to_driver_targets(self) -> None:
         theta = {
             "setpoint": {

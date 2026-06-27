@@ -31,6 +31,7 @@ from m1_metrics import (
     task_event_elapsed_us,
     vector3,
 )
+from validity_automation import decontaminated_control_window, mcnn_identity_gate
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -68,21 +69,6 @@ DEFAULT_THRESHOLDS: dict[str, float] = {
 }
 
 PROPERTY_ORDER = ["P1", "P2", "P3", "P4", "P5", "P6", "P7"]
-
-INFRASTRUCTURE_TRIGGER_FIELDS = {
-    "offboard_control_signal_lost",
-    "manual_control_signal_lost",
-    "gcs_connection_lost",
-    "high_latency_data_link_lost",
-    "local_position_invalid",
-    "local_position_invalid_relaxed",
-    "local_velocity_invalid",
-    "local_altitude_invalid",
-    "global_position_invalid",
-    "global_position_invalid_relaxed",
-    "gnss_lost",
-}
-
 
 def finite_float(value: float | np.floating[Any] | None) -> float | None:
     if value is None:
@@ -343,67 +329,6 @@ def infer_window_from_ulog(ulog: ULog, controller: str) -> dict[str, int | None]
     }
 
 
-def first_true(dataset: Any, field: str, start_us: int, end_us: int | None = None) -> int | None:
-    if dataset is None or field not in dataset.data:
-        return None
-    ts = dataset.data["timestamp"].astype(np.int64)
-    values = dataset.data[field].astype(bool)
-    mask = ts >= start_us
-    if end_us is not None:
-        mask &= ts <= end_us
-    idx = np.where(mask & values)[0]
-    if len(idx) == 0:
-        return None
-    return int(ts[int(idx[0])])
-
-
-def active_bool_fields_at(dataset: Any, timestamp_us: int | None, window_s: float = 1.0) -> list[str]:
-    if dataset is None or timestamp_us is None:
-        return []
-    ts = dataset.data["timestamp"].astype(np.int64)
-    mask = (ts >= timestamp_us - int(0.25e6)) & (ts <= timestamp_us + int(window_s * 1e6))
-    if not np.any(mask):
-        return []
-    fields: list[str] = []
-    for field, values in dataset.data.items():
-        if field.startswith("timestamp"):
-            continue
-        arr = np.asarray(values)
-        if arr.dtype != np.bool_ and not np.all(np.isin(arr[mask], [0, 1, False, True])):
-            continue
-        if bool(np.any(arr[mask].astype(bool))):
-            fields.append(field)
-    return sorted(fields)
-
-
-def infrastructure_control_end(ulog: ULog, start_us: int, mission_end_us: int) -> dict[str, Any]:
-    status = first_dataset(ulog, "vehicle_status")
-    flags = first_dataset(ulog, "failsafe_flags")
-    first_failsafe_us = first_true(status, "failsafe", start_us, mission_end_us)
-    active_at_failsafe = active_bool_fields_at(flags, first_failsafe_us)
-    causes: list[str] = []
-    if first_failsafe_us is not None:
-        for field in INFRASTRUCTURE_TRIGGER_FIELDS:
-            first_at = first_true(flags, field, start_us, first_failsafe_us + int(1e6))
-            if first_at is None:
-                continue
-            if field in active_at_failsafe and abs(first_at - first_failsafe_us) <= int(1e6):
-                causes.append(field)
-    if first_failsafe_us is not None and causes:
-        return {
-            "control_end_us": int(first_failsafe_us),
-            "terminal_class": "INFRASTRUCTURE",
-            "terminal_reasons": sorted(causes),
-            "first_failsafe_us": int(first_failsafe_us),
-        }
-    return {
-        "control_end_us": int(mission_end_us),
-        "terminal_class": "NONE" if first_failsafe_us is None else "UNRESOLVED",
-        "terminal_reasons": [],
-        "first_failsafe_us": first_failsafe_us,
-    }
-
-
 def choose_window(
     ulog: ULog,
     theta: dict[str, Any],
@@ -420,8 +345,14 @@ def choose_window(
 
     start_us = int(analysis_start_us if analysis_start_us is not None else window["active_us"] or ulog.start_timestamp)
     mission_end_us = int(analysis_end_us if analysis_end_us is not None else window["mission_end_us"] or ulog.last_timestamp)
-    terminal = infrastructure_control_end(ulog, start_us, mission_end_us)
-    control_end_us = min(int(terminal["control_end_us"]), mission_end_us)
+    decontamination = decontaminated_control_window(
+        ulog,
+        start_us,
+        mission_end_us,
+        controller=controller,
+    )
+    terminal = decontamination["terminal"]
+    control_end_us = min(int(decontamination["control_end_us"]), mission_end_us)
     if control_end_us <= start_us:
         raise ValueError(f"empty analysis window: start_us={start_us}, control_end_us={control_end_us}")
     window.update(
@@ -431,6 +362,7 @@ def choose_window(
             "control_end_us": control_end_us,
             "control_duration_s": (control_end_us - start_us) / 1e6,
             "terminal": terminal,
+            "decontamination": decontamination,
         }
     )
     return window
@@ -755,12 +687,9 @@ def controller_identity(ulog: ULog, start_us: int, end_us: int, controller: str)
     out["network_output_actuator_max_abs_diff"] = max_abs_diff
     out["network_output_actuator_exact_match_fraction"] = exact_match_fraction
     out["network_output_actuator_p99_abs_diff"] = p99_abs_diff
-    out["mcnn_confirmed"] = (
-        samples > 100
-        and float(out.get("neural_control_rate_hz") or 0.0) > 100.0
-        and not bool(out["raptor_input_present"])
-        and exact_equal_count > 1000
-    )
+    identity_gate = mcnn_identity_gate(out)
+    out["identity_gate"] = identity_gate
+    out["mcnn_confirmed"] = bool(identity_gate["passed"])
     return out
 
 

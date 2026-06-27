@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from property_oracle import PROPERTY_ORDER
+from validity_automation import reproduction_margins, robust_property_finding, robust_violation_margin
 
 
 FITNESS_FLOOR = -1.0e9
@@ -155,9 +156,15 @@ def differential_property_fitness(
     *,
     target_properties: Iterable[str] | None = None,
     explicit_margins: dict[str, float] | None = None,
+    explicit_reproduction_margins: dict[str, float] | None = None,
 ) -> dict[str, Any]:
     targets = normalize_target_properties(target_properties)
     margins = property_margins(classical_property, neural_property, explicit_margins)
+    repro_margins = reproduction_margins()
+    if explicit_reproduction_margins:
+        for prop, value in explicit_reproduction_margins.items():
+            if prop in PROPERTY_ORDER:
+                repro_margins[prop] = float(value)
     classical_rho = classical_property.get("rho", {})
     neural_rho = neural_property.get("rho", {})
     if not isinstance(classical_rho, dict) or not isinstance(neural_rho, dict):
@@ -165,17 +172,26 @@ def differential_property_fitness(
 
     per_property: dict[str, Any] = {}
     clean: list[str] = []
+    candidates: list[str] = []
     valid_gaps: list[tuple[str, float]] = []
 
     for prop in PROPERTY_ORDER:
         c = _finite_number(classical_rho.get(prop))
         n = _finite_number(neural_rho.get(prop))
         margin = float(margins[prop])
+        repro_margin = float(repro_margins[prop])
         target = prop in targets
         vacuous = property_is_vacuous(classical_property, neural_property, prop)
         available = c is not None and n is not None
         classical_margin_valid = bool(available and c is not None and c >= margin)
-        clean_differential = bool(available and not vacuous and n is not None and n <= 0.0 and classical_margin_valid)
+        candidate_differential = bool(available and not vacuous and n is not None and n <= 0.0 and classical_margin_valid)
+        clean_differential = robust_property_finding(
+            c,
+            n,
+            margin,
+            repro_margin,
+            vacuous=vacuous,
+        )
         gap = (c - n) if available and c is not None and n is not None else None
         valid_for_fitness = bool(target and available and not vacuous and classical_margin_valid)
 
@@ -196,14 +212,19 @@ def differential_property_fitness(
             "classical_rho": c,
             "neural_rho": n,
             "margin_c": margin,
+            "rho_jitter_reproduction_margin": repro_margin,
+            "neural_violation_margin": robust_violation_margin(n),
             "classical_margin_valid": classical_margin_valid,
             "gap": gap,
             "valid_for_fitness": valid_for_fitness,
+            "candidate_differential": candidate_differential,
             "clean_differential": clean_differential,
         }
         if reason:
             record["excluded_reason"] = reason
         per_property[prop] = record
+        if candidate_differential:
+            candidates.append(prop)
         if clean_differential:
             clean.append(prop)
         if valid_for_fitness and gap is not None:
@@ -225,7 +246,9 @@ def differential_property_fitness(
         "best_property": best_property,
         "target_properties": targets,
         "valid_property_count": len(valid_gaps),
+        "candidate_differential_properties": candidates,
         "clean_differential_properties": clean,
+        "rho_jitter_reproduction_margins": repro_margins,
         "property_finding": bool(clean),
         "classical_severity": csev,
         "classical_severity_label": severity_label(classical_property),

@@ -32,6 +32,7 @@ from property_fitness import (
     normalize_target_properties,
 )
 from property_oracle import evaluate_ulog, load_thresholds
+from validity_automation import decontamination_gate, reproduction_margins
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -101,11 +102,14 @@ class EvalResult:
     selected_parent_quality: float | None = None
     mcnn_confirmed: bool | None = None
     error: str | None = None
+    seed: int | None = None
+    evidence: dict[str, Any] | None = None
 
     def as_dict(self) -> dict[str, Any]:
         return {
             "index": self.index,
             "tag": self.tag,
+            "seed": self.seed,
             "theta_path": self.theta_path,
             "docs_dir": self.docs_dir,
             "returncode": self.returncode,
@@ -125,6 +129,7 @@ class EvalResult:
             "selected_parent_quality": self.selected_parent_quality,
             "mcnn_confirmed": self.mcnn_confirmed,
             "error": self.error,
+            "evidence": self.evidence or {},
         }
 
 
@@ -1012,6 +1017,22 @@ def evaluate_theta(
         severity, bin_name = 0.0, "unknown"
     target_properties = target_properties_for_theta(theta, target_properties)
     compare_path = docs_dir / f"m1_diff_{tag}.json"
+    seed = int(theta["seed"]) if isinstance(theta.get("seed"), int) else None
+    evidence: dict[str, Any] = {
+        "tag": tag,
+        "seed": seed,
+        "theta_path": str(theta_path),
+        "docs_dir": str(docs_dir),
+        "ulog_paths": {},
+        "task_paths": {},
+        "property_paths": {},
+        "compare_path": str(compare_path),
+        "validity": {},
+    }
+    fitness = empty_fitness(target_properties)
+    classical_property: dict[str, Any] = {}
+    mcnn_property: dict[str, Any] = {}
+    mcnn_confirmed: bool | None = None
 
     try:
         if mock_evaluator:
@@ -1031,6 +1052,8 @@ def evaluate_theta(
                     run_timeout_s,
                     SAFETY_CONFIG,
                 )
+            evidence["ulog_paths"] = {controller: str(paths["ulog"]) for controller, paths in outputs.items()}
+            evidence["task_paths"] = {controller: str(paths["task"]) for controller, paths in outputs.items()}
             classical_property = evaluate_ulog(
                 outputs["classical"]["ulog"],
                 controller="classical",
@@ -1045,29 +1068,66 @@ def evaluate_theta(
                 task=load_json(outputs["mcnn"]["task"]),
                 thresholds=thresholds,
             )
-        write_json(docs_dir / f"{tag}_classical_property.json", classical_property)
-        write_json(docs_dir / f"{tag}_mcnn_property.json", mcnn_property)
-        fitness = differential_property_fitness(
-            classical_property,
-            mcnn_property,
-            target_properties=target_properties,
-        )
-        comparison = property_only_result(theta, classical_property, mcnn_property)
-        comparison["property_oracle"]["fitness"] = fitness
-        write_json(compare_path, comparison)
+        classical_property_path = docs_dir / f"{tag}_classical_property.json"
+        mcnn_property_path = docs_dir / f"{tag}_mcnn_property.json"
+        write_json(classical_property_path, classical_property)
+        write_json(mcnn_property_path, mcnn_property)
+        evidence["property_paths"] = {
+            "classical": str(classical_property_path),
+            "mcnn": str(mcnn_property_path),
+        }
+
+        if mock_evaluator:
+            decontam_gates = {
+                "classical": {"passed": True, "reasons": [], "mock_evaluator": True},
+                "mcnn": {"passed": True, "reasons": [], "mock_evaluator": True},
+            }
+        else:
+            decontam_gates = {
+                "classical": decontamination_gate(
+                    classical_property.get("window", {}).get("decontamination", {})
+                ),
+                "mcnn": decontamination_gate(mcnn_property.get("window", {}).get("decontamination", {})),
+            }
         mcnn_identity = mcnn_property.get("controller_identity", {})
-        mcnn_confirmed = bool(mcnn_identity.get("mcnn_confirmed"))
-        if not mock_evaluator and not mcnn_confirmed:
-            error = "mcnn_identity_not_confirmed"
+        identity_gate = (
+            {"passed": True, "reasons": [], "mock_evaluator": True}
+            if mock_evaluator
+            else mcnn_identity.get("identity_gate", {"passed": False, "reasons": ["missing_identity_gate"]})
+        )
+        mcnn_confirmed = bool(identity_gate.get("passed"))
+        evidence["validity"] = {
+            "decontamination": decontam_gates,
+            "mcnn_identity": identity_gate,
+            "rho_jitter_reproduction_margins": reproduction_margins(),
+        }
+        write_json(docs_dir / f"{tag}_validity.json", evidence["validity"])
+
+        gate_failures: list[str] = []
+        if not mock_evaluator:
+            for controller, gate in decontam_gates.items():
+                if not bool(gate.get("passed")):
+                    gate_failures.append(f"{controller}_decontamination:{','.join(gate.get('reasons', []))}")
+            if not bool(identity_gate.get("passed")):
+                gate_failures.append(f"mcnn_identity:{','.join(identity_gate.get('reasons', []))}")
+
+        if gate_failures:
+            error = "validity_gate_failed: " + ";".join(gate_failures)
             returncode = 2
         else:
+            fitness = differential_property_fitness(
+                classical_property,
+                mcnn_property,
+                target_properties=target_properties,
+            )
+            comparison = property_only_result(theta, classical_property, mcnn_property)
+            comparison["property_oracle"]["fitness"] = fitness
+            write_json(compare_path, comparison)
             returncode = 0
     except Exception as exc:  # fail loud into the eval record, keep the campaign alive
         error = f"{type(exc).__name__}: {exc}"
         returncode = 1
         fitness = empty_fitness(target_properties)
-        classical_property = {}
-        mcnn_property = {}
         mcnn_confirmed = None
     elapsed = time.monotonic() - start
     if returncode != 0 or not compare_path.exists():
@@ -1093,6 +1153,8 @@ def evaluate_theta(
             selected_parent_quality=selected_parent_quality,
             mcnn_confirmed=mcnn_confirmed,
             error=error or f"runner_returncode_{returncode}",
+            seed=seed,
+            evidence=evidence,
         )
     quality = float(fitness["fitness"])
     csev = fitness.get("classical_severity")
@@ -1122,6 +1184,8 @@ def evaluate_theta(
         selected_parent_quality=selected_parent_quality,
         mcnn_confirmed=mcnn_confirmed,
         error=None,
+        seed=seed,
+        evidence=evidence,
     )
 
 
@@ -1170,6 +1234,7 @@ def append_progress(
     record = {
         "eval": result.index,
         "tag": result.tag,
+        "seed": result.seed,
         "selection_source": selection_source,
         "selected_parent_tag": result.selected_parent_tag,
         "selected_parent_quality": result.selected_parent_quality,
@@ -1184,6 +1249,11 @@ def append_progress(
         "best_property": result.fitness.get("best_property"),
         "primary_bug": result.primary_bug,
         "error": result.error,
+        "theta_ulog_map": {
+            "theta_path": result.theta_path,
+            "seed": result.seed,
+            "ulog_paths": (result.evidence or {}).get("ulog_paths", {}),
+        },
     }
     append_jsonl(path, record)
     return record
@@ -1210,7 +1280,10 @@ def search(args: argparse.Namespace) -> tuple[Path, list[EvalResult], list[dict[
         "searcher": "MAP-Elites" if args.strategy == "map-elites" else "random baseline",
         "genome": "scripts/theta_genome.py shim-free Tier 0.5 genome",
         "bins": "theta_genome disturbance_type x amplitude_bucket",
-        "fitness": "differential property gap: max_i rho_i(classical)-rho_i(mcnn) with per-property classical margin",
+        "fitness": (
+            "differential property gap: max_i rho_i(classical)-rho_i(mcnn) with per-property classical margin; "
+            "findings require neural rho beyond per-property rho jitter reproduction margin"
+        ),
         "target_property_override": args.target_properties,
         "resolved_target_properties": args.resolved_target_properties,
         "driver_target_properties": {
@@ -1220,6 +1293,12 @@ def search(args: argparse.Namespace) -> tuple[Path, list[EvalResult], list[dict[
         },
         "neural_controller": "mc_nn_control mode 23",
         "mode_23_identity_required": True,
+        "validity_automation": {
+            "symmetric_decontamination": True,
+            "fail_loud_gates": ["decontamination", "mcnn_identity"],
+            "rho_jitter_reproduction_margins": reproduction_margins(),
+            "theta_seed_ulog_mapping": "result.evidence and progress.theta_ulog_map",
+        },
         "mock_evaluator": bool(args.mock_evaluator),
         "scope_note": "Tier 0.5 fitness-wire run; not a convergence or baseline experiment.",
     }
@@ -1386,6 +1465,14 @@ def with_ros_environment(env: dict[str, str]) -> dict[str, str]:
     return merged
 
 
+def robust_properties_from_result(result: dict[str, Any]) -> set[str]:
+    fitness = result.get("fitness", {}) if isinstance(result, dict) else {}
+    props = fitness.get("clean_differential_properties") if isinstance(fitness, dict) else None
+    if not isinstance(props, list):
+        return set()
+    return {str(prop) for prop in props}
+
+
 def confirm_candidates(
     run_dir: Path,
     candidates: list[dict[str, Any]],
@@ -1399,6 +1486,7 @@ def confirm_candidates(
     ]
     for cidx, candidate in enumerate(selected):
         theta = load_json(Path(candidate["theta_path"]))
+        required_properties = robust_properties_from_result(candidate["result"])
         repeats: list[dict[str, Any]] = []
         all_passed = True
         for ridx in range(args.confirm_repeats):
@@ -1425,12 +1513,19 @@ def confirm_candidates(
                 mock_evaluator=args.mock_evaluator,
                 target_properties=args.resolved_target_properties,
             )
-            repeats.append(result.as_dict())
-            if not result.primary_bug:
+            result_record = result.as_dict()
+            repeated_properties = robust_properties_from_result(result_record)
+            result_record["confirmation_required_properties"] = sorted(required_properties)
+            result_record["confirmation_repeated_properties"] = sorted(repeated_properties)
+            result_record["confirmation_property_match"] = bool(required_properties & repeated_properties)
+            repeats.append(result_record)
+            if result.returncode != 0 or not bool(required_properties & repeated_properties):
                 all_passed = False
         record = {
             "candidate": candidate,
             "passed": all_passed,
+            "required_properties": sorted(required_properties),
+            "rho_jitter_reproduction_margins": reproduction_margins(),
             "repeats": repeats,
         }
         if all_passed:
