@@ -40,6 +40,47 @@ class ThetaGenomeTest(unittest.TestCase):
         self.assertGreaterEqual(math.sqrt(sum(value * value for value in delta)), 0.5)
         self.assertGreaterEqual(theta["timing"]["mission_end_s"] - theta["setpoint"]["step"]["start_s"], 12.0)
 
+    def test_steady_combo_keeps_wind_and_physics_and_uses_2d_descriptor(self) -> None:
+        genome = theta_genome.default_genome(theta_genome.COMBINED_STEADY_DISTURBANCE_TYPE)
+        genome.update(
+            {
+                "wind_speed_m_s": 8.0,
+                "wind_direction_rad": 1.8,
+                "mass_scale": 1.25,
+                "inertia_roll_scale": 1.60,
+                "inertia_pitch_scale": 1.60,
+                "inertia_yaw_scale": 1.80,
+                "twr_scale": 1.0,
+            }
+        )
+        genome = theta_genome.normalize_genome(genome)
+        self.assertEqual([], theta_genome.validate_genome(genome))
+        theta = theta_genome.theta_from_genome(genome, "unit_steady_combo", 20260627)
+        feature = theta["theta_genome"]["map_elites"]
+        self.assertEqual(["wind_bucket", "physics_bucket"], feature["feature_dimensions"])
+        self.assertEqual("high", feature["wind_bucket"])
+        self.assertEqual("high", feature["physics_bucket"])
+        self.assertGreater(abs(theta["boot_px4_params"]["SIH_WIND_N"]), 0.1)
+        self.assertNotEqual(theta_genome.NOMINAL["mass"], theta["boot_px4_params"]["SIH_MASS"])
+        self.assertTrue(theta["environment"]["steady_combo"]["combined_wind_and_physics"])
+
+    def test_switching_and_step_subspaces_keep_existing_gates(self) -> None:
+        switching = theta_genome.default_genome("switching")
+        switching.update({"wind_speed_m_s": 6.0, "mass_scale": 1.25, "inertia_roll_scale": 1.60})
+        switching = theta_genome.normalize_genome(switching)
+        self.assertEqual(6.0, switching["wind_speed_m_s"])
+        self.assertEqual(1.0, switching["mass_scale"])
+        switching_theta = theta_genome.theta_from_genome(switching, "unit_switching", 20260627)
+        self.assertEqual("circle", switching_theta["setpoint"]["type"])
+
+        step = theta_genome.default_genome("step")
+        step.update({"wind_speed_m_s": 8.0, "mass_scale": 1.25})
+        step = theta_genome.normalize_genome(step)
+        self.assertEqual(0.0, step["wind_speed_m_s"])
+        self.assertEqual(1.0, step["mass_scale"])
+        step_theta = theta_genome.theta_from_genome(step, "unit_step_gate", 20260627)
+        self.assertNotIn("steady_combo", step_theta["environment"])
+
     def test_state_contamination_is_deferred_by_default(self) -> None:
         genome = theta_genome.default_genome("state_contam")
         errors = theta_genome.validate_genome(genome)

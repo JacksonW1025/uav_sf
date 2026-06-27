@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import random
 import sys
 import tempfile
 import unittest
@@ -15,6 +16,7 @@ sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
 import campaign_runner  # noqa: E402
 import m2_map_elites  # noqa: E402
+import theta_genome  # noqa: E402
 
 
 def base_config(tmp: Path, run_id: str, *, strategy: str = "guided", budget: int = 8) -> campaign_runner.CampaignConfig:
@@ -56,6 +58,25 @@ def archive_signature(state: dict[str, Any]) -> dict[str, Any]:
 
 
 class CampaignRunnerTest(unittest.TestCase):
+    def assert_steady_combo(self, genome: dict[str, Any]) -> None:
+        self.assertEqual(theta_genome.COMBINED_STEADY_DISTURBANCE_TYPE, genome["disturbance_type"])
+        self.assertGreater(float(genome["wind_speed_m_s"]), 0.0)
+        self.assertGreater(theta_genome.genome_severity(genome)["physics_mismatch"], 0.0)
+        theta = theta_genome.theta_from_genome(genome, "unit_combo", 20260627)
+        feature = theta["theta_genome"]["map_elites"]
+        self.assertEqual(["wind_bucket", "physics_bucket"], feature["feature_dimensions"])
+
+    def test_steady_subspace_candidate_operators_combine_wind_and_physics(self) -> None:
+        rng = random.Random(20260627)
+        parents = [m2_map_elites.random_candidate_genome("steady-wind-physics", rng) for _ in range(20)]
+        mutants = [m2_map_elites.mutate_candidate_genome(parent, "steady-wind-physics", rng) for parent in parents]
+        children = [
+            m2_map_elites.crossover_candidate_genome(a, b, "steady-wind-physics", rng)
+            for a, b in zip(parents, reversed(mutants))
+        ]
+        for genome in parents + mutants + children:
+            self.assert_steady_combo(genome)
+
     def test_resume_matches_uninterrupted_mock_guided_sequence(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
             root = Path(tmpdir)
@@ -110,9 +131,8 @@ class CampaignRunnerTest(unittest.TestCase):
             )
             self.assertEqual(6, state["eval_count"])
             self.assertTrue(all(item["selection_source"] == "grid_baseline" for item in state["progress_records"]))
-            disturbances = [genome["disturbance_type"] for genome in genome_trace(state)]
-            self.assertIn("wind", disturbances)
-            self.assertIn("physics_mismatch", disturbances)
+            for genome in genome_trace(state):
+                self.assert_steady_combo(genome)
 
 
 if __name__ == "__main__":

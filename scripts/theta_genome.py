@@ -52,7 +52,15 @@ BASE_PX4_PARAMS = {
     "CA_FAILURE_MODE": 1,
 }
 
-DISTURBANCE_TYPES = ["wind", "physics_mismatch", "state_contam", "switching", "step"]
+COMBINED_STEADY_DISTURBANCE_TYPE = "steady_combo"
+DISTURBANCE_TYPES = [
+    "wind",
+    "physics_mismatch",
+    COMBINED_STEADY_DISTURBANCE_TYPE,
+    "state_contam",
+    "switching",
+    "step",
+]
 SHIM_FREE_DISTURBANCE_TYPES = ["wind", "physics_mismatch", "switching", "step"]
 AXES = ["x", "y", "z"]
 SIGNS = [-1, 1]
@@ -93,7 +101,7 @@ VARIABLE_SPECS: list[VariableSpec] = [
         "scenario selector",
         "state_contam choice is DEFERRED pending m2b shim patch drift",
         True,
-        "MAP-Elites categorical feature dimension.",
+        "Scenario selector. steady_combo is reserved for the steady-wind-physics subspace.",
     ),
     VariableSpec(
         "wind_speed_m_s",
@@ -412,7 +420,7 @@ def default_genome(disturbance_type: str = "wind") -> dict[str, Any]:
 
 def random_genome(rng: random.Random, *, include_deferred: bool = False) -> dict[str, Any]:
     choices = DISTURBANCE_TYPES if include_deferred else SHIM_FREE_DISTURBANCE_TYPES
-    weights = [0.30, 0.35, 0.20, 0.15] if not include_deferred else [0.27, 0.30, 0.13, 0.17, 0.13]
+    weights = [0.30, 0.35, 0.20, 0.15] if not include_deferred else [0.24, 0.27, 0.10, 0.12, 0.15, 0.12]
     disturbance_type = rng.choices(choices, weights=weights[: len(choices)], k=1)[0]
     genome = default_genome(disturbance_type)
 
@@ -424,6 +432,14 @@ def random_genome(rng: random.Random, *, include_deferred: bool = False) -> dict
         genome["inertia_roll_scale"] = rng.uniform(0.75, 1.55)
         genome["inertia_pitch_scale"] = rng.uniform(0.75, 1.55)
         genome["inertia_yaw_scale"] = rng.uniform(0.75, 1.75)
+        genome["twr_scale"] = rng.uniform(0.92, 1.13)
+    elif disturbance_type == COMBINED_STEADY_DISTURBANCE_TYPE:
+        genome["wind_speed_m_s"] = rng.uniform(0.5, 8.0)
+        genome["wind_direction_rad"] = rng.uniform(0.0, 2.0 * math.pi)
+        genome["mass_scale"] = rng.uniform(0.88, 1.25)
+        genome["inertia_roll_scale"] = rng.uniform(0.75, 1.60)
+        genome["inertia_pitch_scale"] = rng.uniform(0.75, 1.60)
+        genome["inertia_yaw_scale"] = rng.uniform(0.75, 1.80)
         genome["twr_scale"] = rng.uniform(0.92, 1.13)
     elif disturbance_type == "state_contam":
         genome["fake_velocity_bias_m_s"] = rng.uniform(-0.45, 0.45)
@@ -496,9 +512,11 @@ def normalize_genome(genome: dict[str, Any]) -> dict[str, Any]:
         out["fake_velocity_bias_m_s"] = 0.0
         out["fake_angular_rate_bias_rad_s"] = 0.0
         out["position_estimate_jump_m"] = 0.0
-    if out["disturbance_type"] != "wind" and out["disturbance_type"] != "switching":
+    wind_enabled = out["disturbance_type"] in {"wind", "switching", COMBINED_STEADY_DISTURBANCE_TYPE}
+    physics_enabled = out["disturbance_type"] in {"physics_mismatch", COMBINED_STEADY_DISTURBANCE_TYPE}
+    if not wind_enabled:
         out["wind_speed_m_s"] = 0.0
-    if out["disturbance_type"] != "physics_mismatch":
+    if not physics_enabled:
         out["mass_scale"] = 1.0
         out["inertia_roll_scale"] = 1.0
         out["inertia_pitch_scale"] = 1.0
@@ -659,23 +677,57 @@ def genome_severity(genome: dict[str, Any]) -> dict[str, float]:
     return {
         "wind": clamp(wind, 0.0, 1.0),
         "physics_mismatch": clamp(physics, 0.0, 1.0),
+        COMBINED_STEADY_DISTURBANCE_TYPE: clamp(max(wind, physics), 0.0, 1.0),
         "state_contam": clamp(state, 0.0, 1.0),
         "switching": clamp(switching, 0.0, 1.0),
         "step": clamp(step, 0.0, 1.0),
     }
 
 
+def severity_bucket(severity: float) -> str:
+    if severity < 0.34:
+        return "low"
+    if severity < 0.67:
+        return "mid"
+    return "high"
+
+
 def feature_bin(genome: dict[str, Any]) -> tuple[str, str, float]:
     severities = genome_severity(genome)
     kind = str(genome["disturbance_type"])
+    if kind == COMBINED_STEADY_DISTURBANCE_TYPE:
+        wind_severity = severities["wind"]
+        physics_severity = severities["physics_mismatch"]
+        severity = max(wind_severity, physics_severity)
+        bucket = f"wind_{severity_bucket(wind_severity)}:physics_{severity_bucket(physics_severity)}"
+        return kind, bucket, severity
     severity = severities[kind]
-    if severity < 0.34:
-        bucket = "low"
-    elif severity < 0.67:
-        bucket = "mid"
-    else:
-        bucket = "high"
+    bucket = severity_bucket(severity)
     return kind, bucket, severity
+
+
+def feature_metadata(genome: dict[str, Any]) -> dict[str, Any]:
+    kind, bucket, severity = feature_bin(genome)
+    if kind != COMBINED_STEADY_DISTURBANCE_TYPE:
+        return {
+            "feature_dimensions": ["disturbance_type", "amplitude_bucket"],
+            "disturbance_type": kind,
+            "amplitude_bucket": bucket,
+            "severity": round(severity, 6),
+        }
+    severities = genome_severity(genome)
+    wind_severity = severities["wind"]
+    physics_severity = severities["physics_mismatch"]
+    return {
+        "feature_dimensions": ["wind_bucket", "physics_bucket"],
+        "disturbance_type": kind,
+        "amplitude_bucket": bucket,
+        "wind_bucket": severity_bucket(wind_severity),
+        "physics_bucket": severity_bucket(physics_severity),
+        "wind_severity": round(wind_severity, 6),
+        "physics_severity": round(physics_severity, 6),
+        "severity": round(severity, 6),
+    }
 
 
 def validate_genome(genome: dict[str, Any], *, allow_deferred: bool = False) -> list[str]:
@@ -727,7 +779,7 @@ def assert_valid_genome(genome: dict[str, Any], *, allow_deferred: bool = False)
 def theta_from_genome(genome: dict[str, Any], tag: str, seed: int) -> dict[str, Any]:
     genome = normalize_genome(genome)
     assert_valid_genome(genome, allow_deferred=False)
-    kind, bucket, severity = feature_bin(genome)
+    kind, _, _ = feature_bin(genome)
     params = dict(BASE_PX4_PARAMS)
     physical = {key: round(value, 8) for key, value in physical_params(genome).items()}
     params.update(physical)
@@ -745,12 +797,7 @@ def theta_from_genome(genome: dict[str, Any], tag: str, seed: int) -> dict[str, 
     theta["theta_genome"] = {
         "generator": "scripts/theta_genome.py",
         "genome": genome,
-        "map_elites": {
-            "feature_dimensions": ["disturbance_type", "amplitude_bucket"],
-            "disturbance_type": kind,
-            "amplitude_bucket": bucket,
-            "severity": round(severity, 6),
-        },
+        "map_elites": feature_metadata(genome),
         "state_contam_status": "DEFERRED - pending m2b_state_shim.patch drift",
         "excluded": {
             "c_tier_setpoint_amplitude_attack": "excluded by design; step axis is moderate P5 settling stimulus only",
@@ -822,11 +869,20 @@ def base_theta(
 
 
 def configure_steady_theta(theta: dict[str, Any], genome: dict[str, Any]) -> None:
-    theta["description"] += " Steady hover under wind/physics mismatch."
+    theta["description"] += " Steady hover under wind and/or physics mismatch."
     theta["timing"]["trajectory_start_s"] = 31.0
     theta["setpoint"]["type"] = "step"
     theta["setpoint"]["step"] = {"delta_ned": [0.0, 0.0, 0.0], "start_s": 31.0}
     theta["environment"]["steady_property_focus"] = ["P4", "P6", "P7"]
+    if genome.get("disturbance_type") == COMBINED_STEADY_DISTURBANCE_TYPE:
+        severities = genome_severity(genome)
+        theta["environment"]["steady_combo"] = {
+            "combined_wind_and_physics": True,
+            "wind_speed_m_s": round(float(genome["wind_speed_m_s"]), 4),
+            "wind_direction_rad": round(float(genome["wind_direction_rad"]), 6),
+            "physics_severity": round(severities["physics_mismatch"], 6),
+            "wind_severity": round(severities["wind"], 6),
+        }
 
 
 def configure_step_theta(theta: dict[str, Any], genome: dict[str, Any]) -> None:

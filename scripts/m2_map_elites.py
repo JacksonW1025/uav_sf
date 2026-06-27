@@ -208,47 +208,53 @@ def mutate_route_a_switching_genome(parent: dict[str, Any], rng: random.Random) 
 
 
 def steady_wind_physics_genome(rng: random.Random, kind: str | None = None) -> dict[str, Any]:
-    kind = kind if kind in {"wind", "physics_mismatch"} else rng.choice(["wind", "physics_mismatch"])
-    genome = theta_genome.default_genome(kind)
+    del kind
+    genome = theta_genome.default_genome(theta_genome.COMBINED_STEADY_DISTURBANCE_TYPE)
     genome.update({"mission_end_s": 54.0, "setpoint_rate_hz": rng.choice(theta_genome.SETPOINT_RATES_HZ)})
-    if kind == "wind":
-        genome["wind_speed_m_s"] = rng.uniform(0.5, 8.0)
-        genome["wind_direction_rad"] = rng.uniform(0.0, 2.0 * math.pi)
-    else:
-        genome["mass_scale"] = rng.uniform(0.88, 1.23)
-        genome["inertia_roll_scale"] = rng.uniform(0.75, 1.55)
-        genome["inertia_pitch_scale"] = rng.uniform(0.75, 1.55)
-        genome["inertia_yaw_scale"] = rng.uniform(0.75, 1.75)
-        genome["twr_scale"] = rng.uniform(0.92, 1.13)
+    genome["wind_speed_m_s"] = rng.uniform(0.5, 8.0)
+    genome["wind_direction_rad"] = rng.uniform(0.0, 2.0 * math.pi)
+    genome["mass_scale"] = rng.uniform(0.88, 1.25)
+    genome["inertia_roll_scale"] = rng.uniform(0.75, 1.60)
+    genome["inertia_pitch_scale"] = rng.uniform(0.75, 1.60)
+    genome["inertia_yaw_scale"] = rng.uniform(0.75, 1.80)
+    genome["twr_scale"] = rng.uniform(0.92, 1.13)
     return theta_genome.normalize_genome(genome)
 
 
 def mutate_steady_wind_physics_genome(parent: dict[str, Any], rng: random.Random) -> dict[str, Any]:
-    kind = str(parent.get("disturbance_type", ""))
-    if kind not in {"wind", "physics_mismatch"} or rng.random() < 0.10:
+    if parent.get("disturbance_type") != theta_genome.COMBINED_STEADY_DISTURBANCE_TYPE or rng.random() < 0.10:
         return steady_wind_physics_genome(rng)
-    if rng.random() < 0.08:
-        kind = "physics_mismatch" if kind == "wind" else "wind"
-        return steady_wind_physics_genome(rng, kind)
     genome = dict(parent)
-    genome["disturbance_type"] = kind
+    genome["disturbance_type"] = theta_genome.COMBINED_STEADY_DISTURBANCE_TYPE
     genome["mission_end_s"] = 54.0
     if rng.random() < 0.10:
         genome["setpoint_rate_hz"] = rng.choice(theta_genome.SETPOINT_RATES_HZ)
-    if kind == "wind":
-        genome["wind_speed_m_s"] = float(genome["wind_speed_m_s"]) + rng.gauss(0.0, 1.1)
-        genome["wind_direction_rad"] = float(genome["wind_direction_rad"]) + rng.gauss(0.0, 0.55)
-    else:
-        for key, sigma in [
-            ("mass_scale", 0.05),
-            ("inertia_roll_scale", 0.12),
-            ("inertia_pitch_scale", 0.12),
-            ("inertia_yaw_scale", 0.14),
-            ("twr_scale", 0.035),
-        ]:
-            if rng.random() < 0.45:
-                genome[key] = float(genome[key]) + rng.gauss(0.0, sigma)
+    for key, sigma in [
+        ("wind_speed_m_s", 1.1),
+        ("wind_direction_rad", 0.55),
+        ("mass_scale", 0.05),
+        ("inertia_roll_scale", 0.12),
+        ("inertia_pitch_scale", 0.12),
+        ("inertia_yaw_scale", 0.14),
+        ("twr_scale", 0.035),
+    ]:
+        if rng.random() < 0.45:
+            genome[key] = float(genome[key]) + rng.gauss(0.0, sigma)
     return project_genome_to_subspace(genome, "steady-wind-physics", rng)
+
+
+def ensure_steady_combo_stress(genome: dict[str, Any], rng: random.Random) -> dict[str, Any]:
+    out = dict(genome)
+    if float(out.get("wind_speed_m_s", 0.0)) < 0.5:
+        out["wind_speed_m_s"] = rng.uniform(0.5, 8.0)
+        out["wind_direction_rad"] = rng.uniform(0.0, 2.0 * math.pi)
+    if theta_genome.genome_severity(out)["physics_mismatch"] < 0.05:
+        out["mass_scale"] = rng.uniform(0.88, 1.25)
+        out["inertia_roll_scale"] = rng.uniform(0.75, 1.60)
+        out["inertia_pitch_scale"] = rng.uniform(0.75, 1.60)
+        out["inertia_yaw_scale"] = rng.uniform(0.75, 1.80)
+        out["twr_scale"] = rng.uniform(0.92, 1.13)
+    return out
 
 
 def project_genome_to_subspace(genome: dict[str, Any], subspace: str, rng: random.Random) -> dict[str, Any]:
@@ -272,13 +278,10 @@ def project_genome_to_subspace(genome: dict[str, Any], subspace: str, rng: rando
         projected["switch_delay_s"] = clamp(float(projected["switch_delay_s"]), 0.0, 0.18)
         return theta_genome.normalize_genome(projected)
     if subspace == "steady-wind-physics":
-        kind = str(genome.get("disturbance_type", ""))
-        if kind not in {"wind", "physics_mismatch"}:
-            kind = rng.choice(["wind", "physics_mismatch"])
         projected = dict(genome)
         projected.update(
             {
-                "disturbance_type": kind,
+                "disturbance_type": theta_genome.COMBINED_STEADY_DISTURBANCE_TYPE,
                 "mission_end_s": 54.0,
                 "approach_radius_m": 3.0,
                 "approach_frequency_hz": 0.35,
@@ -292,6 +295,7 @@ def project_genome_to_subspace(genome: dict[str, Any], subspace: str, rng: rando
                 "step_time_s": 32.0,
             }
         )
+        projected = ensure_steady_combo_stress(projected, rng)
         return theta_genome.normalize_genome(projected)
     raise ValueError(f"unknown subspace {subspace!r}; expected one of {SUBSPACES}")
 
@@ -922,12 +926,15 @@ def mock_property_pair(
     prop_by_kind = {
         "wind": "P6",
         "physics_mismatch": "P7",
+        theta_genome.COMBINED_STEADY_DISTURBANCE_TYPE: "P7",
         "switching": "P4",
         "step": "P5",
     }
     target_candidates = [prop for prop in targets if prop in {"P1", "P2", "P4", "P5", "P6", "P7"}]
     if kind == "switching" and any(prop in targets for prop in ["P1", "P2"]):
         affected = ["P1", "P2"]
+    elif kind == theta_genome.COMBINED_STEADY_DISTURBANCE_TYPE:
+        affected = [prop for prop in ["P6", "P7"] if prop in targets] or ["P7"]
     else:
         affected = [prop_by_kind.get(kind, target_candidates[0] if target_candidates else "P4")]
     base_rho = {
@@ -1279,7 +1286,10 @@ def search(args: argparse.Namespace) -> tuple[Path, list[EvalResult], list[dict[
         "px4_commit": "3042f906abaab7ab59ae838ad5a530a9ef3df9a6",
         "searcher": "MAP-Elites" if args.strategy == "map-elites" else "random baseline",
         "genome": "scripts/theta_genome.py shim-free Tier 0.5 genome",
-        "bins": "theta_genome disturbance_type x amplitude_bucket",
+        "bins": (
+            "steady-wind-physics uses steady_combo wind_bucket x physics_bucket; "
+            "other subspaces use disturbance_type x amplitude_bucket"
+        ),
         "fitness": (
             "differential property gap: max_i rho_i(classical)-rho_i(mcnn) with per-property classical margin; "
             "findings require neural rho beyond per-property rho jitter reproduction margin"

@@ -28,10 +28,10 @@ campaign infrastructure only, not a wave-1 campaign launch.
 - `guided` / `map-elites`: existing MAP-Elites parent selection, mutation, and
   optional crossover.
 - `random`: same harness with parent selection disabled.
-- `grid`: added. For `steady-wind-physics`, it interleaves a wind grid
-  (`speed x direction`) with a physics grid (`mass x inertia x TWR`) inside the
-  current shim-free genome. It does not combine wind and physics in one theta
-  because the current genome encodes `disturbance_type` as a single categorical.
+- `grid`: added. For `steady-wind-physics`, this was originally a pure-wind /
+  pure-physics interleaving because the genome encoded one disturbance type per
+  theta. That limitation was removed by `docs/genome_combined_steady_20260627.md`;
+  the steady grid now samples combined wind+physics stress.
 
 ## Resume Evidence
 

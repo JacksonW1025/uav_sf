@@ -258,45 +258,45 @@ def linspace(lo: float, hi: float, count: int) -> list[float]:
 
 
 def steady_grid_genomes() -> list[dict[str, Any]]:
-    wind: list[dict[str, Any]] = []
-    for speed in linspace(0.5, 8.0, 5):
-        for direction in [0.0, 0.5 * math.pi, math.pi, 1.5 * math.pi]:
-            genome = theta_genome.default_genome("wind")
-            genome.update(
-                {
-                    "wind_speed_m_s": speed,
-                    "wind_direction_rad": direction,
-                    "mission_end_s": 54.0,
-                    "setpoint_rate_hz": 80.0,
-                }
-            )
-            wind.append(theta_genome.normalize_genome(genome))
-
-    physics: list[dict[str, Any]] = []
-    for mass in [0.88, 1.0, 1.23]:
-        for inertia in [0.75, 1.15, 1.55]:
-            for twr in [0.92, 1.0, 1.13]:
-                genome = theta_genome.default_genome("physics_mismatch")
+    genomes: list[dict[str, Any]] = []
+    physics_levels = [
+        {
+            "mass_scale": 1.25,
+            "inertia_roll_scale": 1.60,
+            "inertia_pitch_scale": 1.60,
+            "inertia_yaw_scale": 1.80,
+            "twr_scale": 1.00,
+        },
+        {
+            "mass_scale": 1.12,
+            "inertia_roll_scale": 1.30,
+            "inertia_pitch_scale": 1.30,
+            "inertia_yaw_scale": 1.45,
+            "twr_scale": 1.00,
+        },
+        {
+            "mass_scale": 0.90,
+            "inertia_roll_scale": 0.80,
+            "inertia_pitch_scale": 0.80,
+            "inertia_yaw_scale": 0.85,
+            "twr_scale": 1.00,
+        },
+    ]
+    for speed in [8.0, 4.25, 0.75]:
+        for physics in physics_levels:
+            for direction in [0.0, 0.5 * math.pi, math.pi, 1.5 * math.pi]:
+                genome = theta_genome.default_genome(theta_genome.COMBINED_STEADY_DISTURBANCE_TYPE)
                 genome.update(
                     {
-                        "mass_scale": mass,
-                        "inertia_roll_scale": inertia,
-                        "inertia_pitch_scale": inertia,
-                        "inertia_yaw_scale": min(1.75, inertia + 0.10),
-                        "twr_scale": twr,
+                        "wind_speed_m_s": speed,
+                        "wind_direction_rad": direction,
                         "mission_end_s": 54.0,
                         "setpoint_rate_hz": 80.0,
+                        **physics,
                     }
                 )
-                physics.append(theta_genome.normalize_genome(genome))
-
-    interleaved: list[dict[str, Any]] = []
-    for idx in range(max(len(wind), len(physics))):
-        if idx < len(wind):
-            interleaved.append(wind[idx])
-        if idx < len(physics):
-            interleaved.append(physics[idx])
-    return interleaved
+                genomes.append(theta_genome.normalize_genome(genome))
+    return genomes
 
 
 def route_a_grid_genomes() -> list[dict[str, Any]]:
