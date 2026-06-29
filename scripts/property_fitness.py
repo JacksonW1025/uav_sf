@@ -171,7 +171,8 @@ def differential_property_fitness(
         raise ValueError("property results must contain rho objects")
 
     per_property: dict[str, Any] = {}
-    clean: list[str] = []
+    strict_props: list[str] = []
+    relative: list[str] = []
     candidates: list[str] = []
     valid_gaps: list[tuple[str, float]] = []
 
@@ -184,8 +185,7 @@ def differential_property_fitness(
         vacuous = property_is_vacuous(classical_property, neural_property, prop)
         available = c is not None and n is not None
         classical_margin_valid = bool(available and c is not None and c >= margin)
-        candidate_differential = bool(available and not vacuous and n is not None and n <= 0.0 and classical_margin_valid)
-        clean_differential = robust_property_finding(
+        strict_differential = robust_property_finding(
             c,
             n,
             margin,
@@ -193,7 +193,33 @@ def differential_property_fitness(
             vacuous=vacuous,
         )
         gap = (c - n) if available and c is not None and n is not None else None
+        relative_degradation_differential = bool(
+            available
+            and not vacuous
+            and n is not None
+            and n > 0.0
+            and classical_margin_valid
+            and gap is not None
+            and gap >= repro_margin
+        )
+        candidate_differential = bool(
+            target
+            and available
+            and not vacuous
+            and n is not None
+            and n <= 0.0
+            and not strict_differential
+        )
         valid_for_fitness = bool(target and available and not vacuous and classical_margin_valid)
+
+        if strict_differential:
+            differential_class = "strict_differential"
+        elif relative_degradation_differential:
+            differential_class = "relative_degradation_differential"
+        elif candidate_differential:
+            differential_class = "candidate"
+        else:
+            differential_class = None
 
         reason = None
         if not available:
@@ -218,15 +244,20 @@ def differential_property_fitness(
             "gap": gap,
             "valid_for_fitness": valid_for_fitness,
             "candidate_differential": candidate_differential,
-            "clean_differential": clean_differential,
+            "strict_differential": strict_differential,
+            "clean_differential": strict_differential,
+            "relative_degradation_differential": relative_degradation_differential,
+            "differential_class": differential_class,
         }
         if reason:
             record["excluded_reason"] = reason
         per_property[prop] = record
         if candidate_differential:
             candidates.append(prop)
-        if clean_differential:
-            clean.append(prop)
+        if strict_differential:
+            strict_props.append(prop)
+        if relative_degradation_differential:
+            relative.append(prop)
         if valid_for_fitness and gap is not None:
             valid_gaps.append((prop, float(gap)))
 
@@ -237,7 +268,7 @@ def differential_property_fitness(
 
     csev = severity_value(classical_property)
     nsev = severity_value(neural_property)
-    strict = bool(csev == 0 and nsev is not None and nsev >= 3)
+    strict_severity = bool(csev == 0 and nsev is not None and nsev >= 3)
     wide = bool(csev is not None and csev <= 2 and nsev is not None and nsev >= 3)
     return {
         "fitness": float(fitness),
@@ -247,14 +278,18 @@ def differential_property_fitness(
         "target_properties": targets,
         "valid_property_count": len(valid_gaps),
         "candidate_differential_properties": candidates,
-        "clean_differential_properties": clean,
+        "strict_differential_properties": strict_props,
+        "clean_differential_properties": strict_props,
+        "relative_degradation_differential_properties": relative,
+        "strict_differential_finding": bool(strict_props),
+        "relative_degradation_finding": bool(relative),
         "rho_jitter_reproduction_margins": repro_margins,
-        "property_finding": bool(clean),
+        "property_finding": bool(strict_props or relative),
         "classical_severity": csev,
         "classical_severity_label": severity_label(classical_property),
         "neural_severity": nsev,
         "neural_severity_label": severity_label(neural_property),
-        "strict_s0_vs_s3": strict,
+        "strict_s0_vs_s3": strict_severity,
         "wide_control_vs_uncontrolled": wide,
         "per_property": per_property,
     }

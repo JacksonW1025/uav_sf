@@ -910,10 +910,46 @@ def empty_fitness(targets: list[str] | None = None) -> dict[str, Any]:
         "target_properties": targets or [],
         "best_property": None,
         "valid_property_count": 0,
+        "candidate_differential_properties": [],
+        "strict_differential_properties": [],
         "clean_differential_properties": [],
+        "relative_degradation_differential_properties": [],
+        "strict_differential_finding": False,
+        "relative_degradation_finding": False,
         "property_finding": False,
         "per_property": {},
     }
+
+
+def target_properties_from_lists(fitness: dict[str, Any], keys: list[str]) -> set[str]:
+    props: set[str] = set()
+    for key in keys:
+        values = fitness.get(key)
+        if isinstance(values, list):
+            props.update(str(prop) for prop in values)
+    targets = fitness.get("target_properties")
+    if isinstance(targets, list) and targets:
+        props.intersection_update(str(prop) for prop in targets)
+    return props
+
+
+def target_finding_properties(fitness: dict[str, Any]) -> set[str]:
+    return target_properties_from_lists(
+        fitness,
+        [
+            "strict_differential_properties",
+            "clean_differential_properties",
+            "relative_degradation_differential_properties",
+        ],
+    )
+
+
+def target_strict_differential_properties(fitness: dict[str, Any]) -> set[str]:
+    return target_properties_from_lists(fitness, ["strict_differential_properties", "clean_differential_properties"])
+
+
+def target_relative_degradation_properties(fitness: dict[str, Any]) -> set[str]:
+    return target_properties_from_lists(fitness, ["relative_degradation_differential_properties"])
 
 
 def mock_property_pair(
@@ -1167,7 +1203,8 @@ def evaluate_theta(
     csev = fitness.get("classical_severity")
     nsev = fitness.get("neural_severity")
     classical_usable = bool(fitness.get("valid_property_count", 0) > 0)
-    primary_bug = bool(fitness.get("property_finding"))
+    primary_bug = bool(target_strict_differential_properties(fitness))
+    relative_degradation = bool(target_relative_degradation_properties(fitness))
     terminal = classical_property.get("window", {}).get("terminal", {}) if isinstance(classical_property, dict) else {}
     return EvalResult(
         index=index,
@@ -1177,7 +1214,13 @@ def evaluate_theta(
         returncode=returncode,
         elapsed_wall_s=elapsed,
         compare_path=str(compare_path),
-        quadrant="property_differential" if primary_bug else "property_gradient",
+        quadrant=(
+            "strict_differential"
+            if primary_bug
+            else "relative_degradation_differential"
+            if relative_degradation
+            else "property_gradient"
+        ),
         primary_bug=primary_bug,
         classical_usable=classical_usable,
         classical_safe=bool(csev is not None and int(csev) <= 2),
@@ -1292,7 +1335,8 @@ def search(args: argparse.Namespace) -> tuple[Path, list[EvalResult], list[dict[
         ),
         "fitness": (
             "differential property gap: max_i rho_i(classical)-rho_i(mcnn) with per-property classical margin; "
-            "findings require neural rho beyond per-property rho jitter reproduction margin"
+            "strict findings require neural rho beyond per-property rho jitter reproduction margin; "
+            "relative-degradation findings require both controllers controlled and gap beyond the same margin"
         ),
         "target_property_override": args.target_properties,
         "resolved_target_properties": args.resolved_target_properties,
@@ -1477,10 +1521,16 @@ def with_ros_environment(env: dict[str, str]) -> dict[str, str]:
 
 def robust_properties_from_result(result: dict[str, Any]) -> set[str]:
     fitness = result.get("fitness", {}) if isinstance(result, dict) else {}
-    props = fitness.get("clean_differential_properties") if isinstance(fitness, dict) else None
-    if not isinstance(props, list):
+    if not isinstance(fitness, dict):
         return set()
-    return {str(prop) for prop in props}
+    return target_finding_properties(fitness)
+
+
+def strict_properties_from_result(result: dict[str, Any]) -> set[str]:
+    fitness = result.get("fitness", {}) if isinstance(result, dict) else {}
+    if not isinstance(fitness, dict):
+        return set()
+    return target_strict_differential_properties(fitness)
 
 
 def confirm_candidates(
@@ -1494,9 +1544,11 @@ def confirm_candidates(
     selected = sorted(candidates, key=lambda item: float(item["result"]["quality"]), reverse=True)[
         : args.max_confirm_candidates
     ]
+    confirmed_relative: list[dict[str, Any]] = []
     for cidx, candidate in enumerate(selected):
         theta = load_json(Path(candidate["theta_path"]))
         required_properties = robust_properties_from_result(candidate["result"])
+        strict_required_properties = strict_properties_from_result(candidate["result"])
         repeats: list[dict[str, Any]] = []
         all_passed = True
         for ridx in range(args.confirm_repeats):
@@ -1535,17 +1587,23 @@ def confirm_candidates(
             "candidate": candidate,
             "passed": all_passed,
             "required_properties": sorted(required_properties),
+            "strict_required_properties": sorted(strict_required_properties),
             "rho_jitter_reproduction_margins": reproduction_margins(),
             "repeats": repeats,
         }
         if all_passed:
-            confirmed.append(record)
-            primary_dir = REPO_ROOT / "config" / "m2_primary_bugs"
-            primary_dir.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(candidate["theta_path"], primary_dir / Path(candidate["theta_path"]).name)
+            if strict_required_properties:
+                confirmed.append(record)
+                primary_dir = REPO_ROOT / "config" / "m2_primary_bugs"
+                primary_dir.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(candidate["theta_path"], primary_dir / Path(candidate["theta_path"]).name)
+            else:
+                confirmed_relative.append(record)
         append_jsonl(run_dir / "confirmations.jsonl", record)
         write_json(run_dir / "confirmed_primary_bugs.json", confirmed)
+        write_json(run_dir / "confirmed_relative_degradations.json", confirmed_relative)
     write_json(run_dir / "confirmed_primary_bugs.json", confirmed)
+    write_json(run_dir / "confirmed_relative_degradations.json", confirmed_relative)
     return confirmed
 
 

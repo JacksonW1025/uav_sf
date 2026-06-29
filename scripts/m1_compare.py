@@ -106,12 +106,15 @@ def property_differential(
         explicit_margins=margins,
     )
     per_property: dict[str, Any] = {}
-    clean = []
+    strict_props = []
+    relative = []
     for prop in PROPERTY_ORDER:
         item = dict(fitness["per_property"][prop])
         per_property[prop] = item
-        if item["clean_differential"]:
-            clean.append(prop)
+        if item["strict_differential"]:
+            strict_props.append(prop)
+        if item["relative_degradation_differential"]:
+            relative.append(prop)
 
     csev = fitness["classical_severity"]
     nsev = fitness["neural_severity"]
@@ -128,14 +131,18 @@ def property_differential(
         "neural_severity": nsev,
         "neural_severity_label": property_severity_label(neural_property),
         "candidate_differential_properties": fitness["candidate_differential_properties"],
-        "clean_differential_properties": clean,
+        "strict_differential_properties": strict_props,
+        "clean_differential_properties": strict_props,
+        "relative_degradation_differential_properties": relative,
         "rho_jitter_reproduction_margins": fitness["rho_jitter_reproduction_margins"],
-        "property_finding": bool(clean),
+        "strict_differential_finding": bool(strict_props),
+        "relative_degradation_finding": bool(relative),
+        "property_finding": bool(strict_props or relative),
         "per_property": per_property,
         "strict_s0_vs_s3": bool(strict),
         "wide_control_vs_uncontrolled": bool(wide),
-        "catastrophic_property_primary_bug": bool(clean and wide),
-        "property_primary_bug": bool(clean),
+        "catastrophic_property_primary_bug": bool(strict_props and wide),
+        "property_primary_bug": bool(strict_props),
         "fitness_validation": fitness,
     }
 

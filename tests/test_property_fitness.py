@@ -10,6 +10,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
 import property_fitness  # noqa: E402
+import m1_compare  # noqa: E402
 
 
 BASE_RHO = {
@@ -63,6 +64,9 @@ class PropertyFitnessTest(unittest.TestCase):
         self.assertEqual(property_fitness.FITNESS_FLOOR, too_hard["fitness"])
         self.assertGreater(behavior["fitness"], boring["fitness"])
         self.assertIn("P6", behavior["clean_differential_properties"])
+        self.assertIn("P6", behavior["strict_differential_properties"])
+        self.assertEqual(behavior["clean_differential_properties"], behavior["strict_differential_properties"])
+        self.assertEqual([], behavior["relative_degradation_differential_properties"])
         self.assertTrue(behavior["property_finding"])
         self.assertGreater(catastrophic["fitness"], boring["fitness"])
         self.assertEqual(["P1", "P2"], catastrophic["clean_differential_properties"])
@@ -98,7 +102,55 @@ class PropertyFitnessTest(unittest.TestCase):
         self.assertEqual(["P7"], result["candidate_differential_properties"])
         self.assertEqual([], result["clean_differential_properties"])
         self.assertFalse(result["property_finding"])
+        self.assertEqual("candidate", result["per_property"]["P7"]["differential_class"])
         self.assertGreater(result["per_property"]["P7"]["rho_jitter_reproduction_margin"], 0.05)
+
+    def test_relative_degradation_flags_probe_but_not_boring(self) -> None:
+        probe = property_fitness.differential_property_fitness(
+            property_result({"P7": 0.80}),
+            property_result({"P7": 0.30}, severity=1),
+            target_properties=["P7"],
+        )
+        boring = property_fitness.differential_property_fitness(
+            property_result({"P7": 0.80}),
+            property_result({"P7": 0.60}),
+            target_properties=["P7"],
+        )
+
+        self.assertEqual(["P7"], probe["relative_degradation_differential_properties"])
+        self.assertEqual([], probe["candidate_differential_properties"])
+        self.assertEqual([], probe["strict_differential_properties"])
+        self.assertTrue(probe["property_finding"])
+        self.assertTrue(probe["per_property"]["P7"]["relative_degradation_differential"])
+        self.assertFalse(probe["per_property"]["P7"]["strict_differential"])
+        self.assertEqual("relative_degradation_differential", probe["per_property"]["P7"]["differential_class"])
+        self.assertGreater(
+            probe["per_property"]["P7"]["gap"],
+            probe["per_property"]["P7"]["rho_jitter_reproduction_margin"],
+        )
+        self.assertEqual([], boring["relative_degradation_differential_properties"])
+        self.assertFalse(boring["property_finding"])
+
+    def test_m1_compare_surfaces_relative_degradation_fields(self) -> None:
+        result = m1_compare.property_differential(
+            property_result({"P7": 0.80}),
+            property_result({"P7": 0.30}, severity=1),
+        )
+
+        self.assertEqual(["P7"], result["relative_degradation_differential_properties"])
+        self.assertEqual([], result["strict_differential_properties"])
+        self.assertTrue(result["relative_degradation_finding"])
+        self.assertFalse(result["strict_differential_finding"])
+        self.assertTrue(result["property_finding"])
+        self.assertFalse(result["property_primary_bug"])
+        self.assertTrue(result["per_property"]["P7"]["relative_degradation_differential"])
+
+        property_only = m1_compare.property_only_result(
+            {"tag": "unit_relative"},
+            property_result({"P7": 0.80}),
+            property_result({"P7": 0.30}, severity=1),
+        )
+        self.assertFalse(property_only["primary_bug"])
 
     def test_step_theta_adds_p5_to_driver_targets(self) -> None:
         theta = {

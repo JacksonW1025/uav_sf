@@ -188,6 +188,11 @@ def make_metadata(config: CampaignConfig) -> dict[str, Any]:
         },
         "single_eval_failure_policy": "record returncode/error and continue to the next eval",
         "baseline_comparability": "guided, random, and grid share budget, theta generator, evaluator, oracle, and validity gate",
+        "fitness": (
+            "quality is max classical-minus-mcnn rho gap over valid target properties; "
+            "strict differential requires neural rho <= -rho jitter reproduction margin; "
+            "relative degradation differential requires neural rho > 0 and gap beyond that margin"
+        ),
         "target_property_override": config.target_properties,
         "resolved_target_properties": config.resolved_target_properties,
         "mock_evaluator": config.mock_evaluator,
@@ -509,6 +514,37 @@ def qd_score(archive: dict[str, dict[str, Any]]) -> float:
     return float(sum(max(0.0, float(value["result"]["quality"])) for value in archive.values()))
 
 
+def property_list(result: dict[str, Any], key: str) -> list[str]:
+    fitness = result.get("fitness", {}) if isinstance(result, dict) else {}
+    values = fitness.get(key) if isinstance(fitness, dict) else None
+    if not isinstance(values, list):
+        return []
+    out = [str(value) for value in values]
+    targets = fitness.get("target_properties") if isinstance(fitness, dict) else None
+    if isinstance(targets, list) and targets:
+        allowed = {str(prop) for prop in targets}
+        out = [prop for prop in out if prop in allowed]
+    return out
+
+
+def best_relative_degradation(results: list[dict[str, Any]]) -> dict[str, Any]:
+    best: dict[str, Any] = {"tag": None, "property": None, "gap": None}
+    for result in results:
+        props = property_list(result, "relative_degradation_differential_properties")
+        if not props:
+            continue
+        fitness = result.get("fitness", {}) if isinstance(result.get("fitness"), dict) else {}
+        per_property = fitness.get("per_property", {}) if isinstance(fitness, dict) else {}
+        for prop in props:
+            item = per_property.get(prop) if isinstance(per_property, dict) else None
+            gap = item.get("gap") if isinstance(item, dict) else None
+            if not isinstance(gap, (int, float)) or not math.isfinite(float(gap)):
+                continue
+            if best["gap"] is None or float(gap) > float(best["gap"]):
+                best = {"tag": result.get("tag"), "property": prop, "gap": float(gap)}
+    return best
+
+
 def progress_record(
     result: dict[str, Any],
     results: list[dict[str, Any]],
@@ -520,6 +556,9 @@ def progress_record(
     if archive:
         archive_best = max(archive.values(), key=lambda item: float(item["result"]["quality"]))["result"]
     evidence = result.get("evidence", {}) if isinstance(result.get("evidence"), dict) else {}
+    strict_props = property_list(result, "strict_differential_properties")
+    relative_props = property_list(result, "relative_degradation_differential_properties")
+    best_relative = best_relative_degradation(results)
     return {
         "eval": result["index"],
         "tag": result["tag"],
@@ -536,6 +575,17 @@ def progress_record(
         "qd_score": qd_score(archive),
         "feature_bin": result.get("feature_bin"),
         "best_property": result.get("fitness", {}).get("best_property"),
+        "strict_differential_properties": strict_props,
+        "relative_degradation_differential_properties": relative_props,
+        "strict_differential_eval_count": sum(
+            1 for item in results if property_list(item, "strict_differential_properties")
+        ),
+        "relative_degradation_eval_count": sum(
+            1 for item in results if property_list(item, "relative_degradation_differential_properties")
+        ),
+        "best_relative_degradation_gap": best_relative["gap"],
+        "best_relative_degradation_tag": best_relative["tag"],
+        "best_relative_degradation_property": best_relative["property"],
         "primary_bug": result.get("primary_bug", False),
         "returncode": result.get("returncode"),
         "error": result.get("error"),
@@ -650,6 +700,13 @@ def print_eval_progress(progress: dict[str, Any]) -> None:
                 "archive_bins": progress["archive_bins"],
                 "qd_score": progress["qd_score"],
                 "best_property": progress["best_property"],
+                "strict_differential_properties": progress["strict_differential_properties"],
+                "relative_degradation_differential_properties": progress[
+                    "relative_degradation_differential_properties"
+                ],
+                "relative_degradation_eval_count": progress["relative_degradation_eval_count"],
+                "best_relative_degradation_gap": progress["best_relative_degradation_gap"],
+                "best_relative_degradation_property": progress["best_relative_degradation_property"],
                 "primary_bug": progress["primary_bug"],
                 "returncode": progress["returncode"],
                 "error": progress["error"],
@@ -671,7 +728,16 @@ def write_summary(run_dir: Path, state: dict[str, Any]) -> None:
     total = len(results)
     errors = sum(1 for result in results if result.get("error"))
     usable = sum(1 for result in results if result.get("classical_usable"))
-    primary = sum(1 for result in results if result.get("primary_bug"))
+    strict_count = sum(1 for result in results if property_list(result, "strict_differential_properties"))
+    relative_count = sum(1 for result in results if property_list(result, "relative_degradation_differential_properties"))
+    reportable_count = sum(
+        1
+        for result in results
+        if property_list(result, "strict_differential_properties")
+        or property_list(result, "relative_degradation_differential_properties")
+    )
+    primary = strict_count
+    best_relative = best_relative_degradation(results)
     lines = [
         "# Campaign runner summary",
         "",
@@ -684,7 +750,16 @@ def write_summary(run_dir: Path, state: dict[str, Any]) -> None:
         f"classical_usable: {usable}",
         f"archive_bins: {len(state['archive'])}",
         f"primary_candidates: {primary}",
+        f"reportable_property_candidates: {reportable_count}",
+        f"strict_differential_evals: {strict_count}",
+        f"relative_degradation_evals: {relative_count}",
+        (
+            "best_relative_degradation: none"
+            if best_relative["gap"] is None
+            else f"best_relative_degradation: {best_relative['property']} gap={float(best_relative['gap']):.6g} tag={best_relative['tag']}"
+        ),
         f"confirmed_primary_bugs: {len(state.get('confirmed', []))}",
+        f"confirmed_reportable_findings: {len(state.get('confirmed', []))}",
         f"checkpoint: `{display_path(Path(state['metadata']['checkpoint']['path']))}`",
         "",
         "## progress",
@@ -694,8 +769,8 @@ def write_summary(run_dir: Path, state: dict[str, Any]) -> None:
         lines.append("- none")
     else:
         wanted = {0, len(progress) // 2, len(progress) - 1}
-        lines.append("| eval | best quality | archive bins | QD-score | source | error |")
-        lines.append("|---:|---:|---:|---:|---|---|")
+        lines.append("| eval | best quality | archive bins | QD-score | relative evals | source | error |")
+        lines.append("|---:|---:|---:|---:|---:|---|---|")
         for idx, record in enumerate(progress):
             if idx not in wanted:
                 continue
@@ -703,6 +778,7 @@ def write_summary(run_dir: Path, state: dict[str, Any]) -> None:
             lines.append(
                 f"| {record['eval']} | {float(record['best_so_far_quality']):.6g} | "
                 f"{record['archive_bins']} | {float(record['qd_score']):.6g} | "
+                f"{record.get('relative_degradation_eval_count', 0)} | "
                 f"{record['selection_source']} | {error} |"
             )
     lines.extend(["", "## best elites"])

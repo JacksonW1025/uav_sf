@@ -134,6 +134,22 @@ class CampaignRunnerTest(unittest.TestCase):
             for genome in genome_trace(state):
                 self.assert_steady_combo(genome)
 
+    def test_confirmation_properties_are_filtered_to_targets(self) -> None:
+        result = {
+            "fitness": {
+                "target_properties": ["P4", "P6", "P7"],
+                "strict_differential_properties": [],
+                "clean_differential_properties": [],
+                "relative_degradation_differential_properties": ["P2", "P4", "P6"],
+            }
+        }
+
+        self.assertEqual({"P4", "P6"}, m2_map_elites.robust_properties_from_result(result))
+        self.assertEqual(set(), m2_map_elites.strict_properties_from_result(result))
+        self.assertEqual({"P4", "P6"}, m2_map_elites.target_relative_degradation_properties(result["fitness"]))
+        self.assertEqual(set(), m2_map_elites.target_strict_differential_properties(result["fitness"]))
+        self.assertEqual(["P4", "P6"], campaign_runner.property_list(result, "relative_degradation_differential_properties"))
+
 
 if __name__ == "__main__":
     unittest.main()
