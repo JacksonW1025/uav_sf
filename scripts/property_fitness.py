@@ -35,6 +35,7 @@ DEFAULT_PROPERTY_MARGINS: dict[str, float] = {
 DEFAULT_SEARCH_TARGET_PROPERTIES = ("P4", "P6", "P7")
 STEP_SEARCH_TARGET_PROPERTIES = ("P4", "P5", "P6", "P7")
 VALIDATION_PROPERTIES = ("P1", "P2", "P4", "P5", "P6", "P7")
+CATASTROPHIC_SEARCH_TARGET_PROPERTIES = ("P1", "P2")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -169,12 +170,18 @@ def differential_property_fitness(
     neural_rho = neural_property.get("rho", {})
     if not isinstance(classical_rho, dict) or not isinstance(neural_rho, dict):
         raise ValueError("property results must contain rho objects")
+    csev = severity_value(classical_property)
+    nsev = severity_value(neural_property)
+    catastrophic_fitness_requires_classical_s0 = any(
+        prop in targets for prop in CATASTROPHIC_SEARCH_TARGET_PROPERTIES
+    )
 
     per_property: dict[str, Any] = {}
     strict_props: list[str] = []
     relative: list[str] = []
     candidates: list[str] = []
     valid_gaps: list[tuple[str, float]] = []
+    target_exclusion_reasons: dict[str, str] = {}
 
     for prop in PROPERTY_ORDER:
         c = _finite_number(classical_rho.get(prop))
@@ -185,6 +192,10 @@ def differential_property_fitness(
         vacuous = property_is_vacuous(classical_property, neural_property, prop)
         available = c is not None and n is not None
         classical_margin_valid = bool(available and c is not None and c >= margin)
+        catastrophic_target = prop in CATASTROPHIC_SEARCH_TARGET_PROPERTIES
+        catastrophic_severity_gate_valid = bool(
+            not (target and catastrophic_target) or csev == 0
+        )
         strict_differential = robust_property_finding(
             c,
             n,
@@ -210,7 +221,13 @@ def differential_property_fitness(
             and n <= 0.0
             and not strict_differential
         )
-        valid_for_fitness = bool(target and available and not vacuous and classical_margin_valid)
+        valid_for_fitness = bool(
+            target
+            and available
+            and not vacuous
+            and classical_margin_valid
+            and catastrophic_severity_gate_valid
+        )
 
         if strict_differential:
             differential_class = "strict_differential"
@@ -228,8 +245,12 @@ def differential_property_fitness(
             reason = "vacuous_property"
         elif not classical_margin_valid:
             reason = "classical_below_property_margin"
+        elif not catastrophic_severity_gate_valid:
+            reason = "classical_not_decontaminated_s0_for_catastrophic_fitness"
         elif not target:
             reason = "not_in_target_set"
+        if target and reason:
+            target_exclusion_reasons[prop] = reason
 
         record = {
             "available": available,
@@ -241,6 +262,9 @@ def differential_property_fitness(
             "rho_jitter_reproduction_margin": repro_margin,
             "neural_violation_margin": robust_violation_margin(n),
             "classical_margin_valid": classical_margin_valid,
+            "catastrophic_target": catastrophic_target,
+            "catastrophic_fitness_requires_classical_s0": bool(target and catastrophic_target),
+            "catastrophic_severity_gate_valid": catastrophic_severity_gate_valid,
             "gap": gap,
             "valid_for_fitness": valid_for_fitness,
             "candidate_differential": candidate_differential,
@@ -266,17 +290,21 @@ def differential_property_fitness(
     else:
         best_property, fitness = None, FITNESS_FLOOR
 
-    csev = severity_value(classical_property)
-    nsev = severity_value(neural_property)
-    strict_severity = bool(csev == 0 and nsev is not None and nsev >= 3)
+    strict_severity = bool(csev == 0 and nsev == 3)
     wide = bool(csev is not None and csev <= 2 and nsev is not None and nsev >= 3)
     return {
         "fitness": float(fitness),
         "fitness_floor": FITNESS_FLOOR,
-        "fitness_semantics": "max(classical_rho - neural_rho) over target properties with classical_rho >= per-property margin_c",
+        "fitness_semantics": (
+            "max(classical_rho - neural_rho) over target properties with classical_rho >= per-property margin_c; "
+            "catastrophic P1/P2 target fitness additionally requires decontaminated classical severity S0"
+        ),
+        "severity_semantics": "property_oracle severity over the decontaminated control window",
+        "catastrophic_fitness_requires_classical_s0": catastrophic_fitness_requires_classical_s0,
         "best_property": best_property,
         "target_properties": targets,
         "valid_property_count": len(valid_gaps),
+        "target_exclusion_reasons": target_exclusion_reasons,
         "candidate_differential_properties": candidates,
         "strict_differential_properties": strict_props,
         "clean_differential_properties": strict_props,

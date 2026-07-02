@@ -25,7 +25,15 @@ class ThetaGenomeTest(unittest.TestCase):
             theta = theta_genome.theta_from_genome(genome, "unit_theta", 20260626)
             feature = theta["theta_genome"]["map_elites"]
             self.assertIn(feature["disturbance_type"], theta_genome.SHIM_FREE_DISTURBANCE_TYPES)
-            self.assertIn(feature["amplitude_bucket"], {"low", "mid", "high"})
+            if feature["disturbance_type"] == "switching":
+                self.assertEqual(
+                    ["switch_roll_pitch_bucket", "wind_bucket"],
+                    feature["feature_dimensions"],
+                )
+                self.assertRegex(feature["switch_roll_pitch_bucket"], r"^rp_[0-4]$")
+                self.assertRegex(feature["wind_bucket"], r"^wind_[0-4]$")
+            else:
+                self.assertIn(feature["amplitude_bucket"], {"low", "mid", "high"})
 
     def test_step_theta_has_p5_sized_command_and_settling_window(self) -> None:
         genome = theta_genome.default_genome("step")
@@ -72,6 +80,10 @@ class ThetaGenomeTest(unittest.TestCase):
         self.assertEqual(1.0, switching["mass_scale"])
         switching_theta = theta_genome.theta_from_genome(switching, "unit_switching", 20260627)
         self.assertEqual("circle", switching_theta["setpoint"]["type"])
+        self.assertEqual(
+            ["switch_roll_pitch_bucket", "wind_bucket"],
+            switching_theta["theta_genome"]["map_elites"]["feature_dimensions"],
+        )
 
         step = theta_genome.default_genome("step")
         step.update({"wind_speed_m_s": 8.0, "mass_scale": 1.25})

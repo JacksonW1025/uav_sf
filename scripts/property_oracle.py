@@ -264,19 +264,40 @@ def task_window_from_json(
             active_us_from_nav = int(status.data["timestamp"][idx[0]])
             active_us = active_us_from_nav
 
+    active_elapsed_us = task_event_elapsed_us(task, "controller_active")
+    if active_elapsed_us is None:
+        active_elapsed_us = task_event_elapsed_us(task, "post_switch_setpoint")
+    if active_elapsed_us is None:
+        active_elapsed_us = task_event_elapsed_us(task, "state_trigger")
+    trajectory_elapsed_us = task_event_elapsed_us(task, "trajectory_start")
+    mission_elapsed_us = task_event_elapsed_us(task, "mission_end")
+    if task.get("state_trigger_enabled") and active_elapsed_us is not None:
+        # Method-A task event timestamps are ROS/wall-clock values, while ULog
+        # timestamps are PX4 boot-relative.  The elapsed_s fields are the stable
+        # bridge; using setpoint-derived origins can pick pre-switch samples.
+        origin_us = int(ulog.start_timestamp)
+        active_us = int(origin_us + active_elapsed_us)
+        trajectory_start_us = (
+            int(origin_us + trajectory_elapsed_us) if trajectory_elapsed_us is not None else active_us
+        )
+        mission_end_us = int(origin_us + mission_elapsed_us) if mission_elapsed_us is not None else int(ulog.last_timestamp)
+        return {
+            "origin_us": origin_us,
+            "active_us": active_us,
+            "active_us_from_nav": active_us_from_nav,
+            "trajectory_start_us": trajectory_start_us,
+            "mission_end_us": mission_end_us,
+        }
+
     estimated_origin_us = estimate_origin_from_setpoint(setpoint, theta, task) if task.get("state_trigger_enabled") else None
     if task.get("state_trigger_enabled") and estimated_origin_us is not None:
-        active_elapsed_us_for_trigger = task_event_elapsed_us(task, "controller_active")
-        if active_elapsed_us_for_trigger is not None:
-            active_us = int(estimated_origin_us + active_elapsed_us_for_trigger)
+        if active_elapsed_us is not None:
+            active_us = int(estimated_origin_us + active_elapsed_us)
 
     task_active_us = task.get("controller_active_us")
     if active_us is None and isinstance(task_active_us, int):
         active_us = int(task_active_us if task_active_us < 10**12 else task_active_us - int(ulog.start_timestamp))
 
-    active_elapsed_us = task_event_elapsed_us(task, "controller_active")
-    trajectory_elapsed_us = task_event_elapsed_us(task, "trajectory_start")
-    mission_elapsed_us = task_event_elapsed_us(task, "mission_end")
     if active_us is not None and active_elapsed_us is not None:
         origin_us = int(active_us - active_elapsed_us)
     elif estimated_origin_us is not None:

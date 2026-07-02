@@ -77,6 +77,38 @@ class CampaignRunnerTest(unittest.TestCase):
         for genome in parents + mutants + children:
             self.assert_steady_combo(genome)
 
+    def test_route_a_switching_candidate_operators_use_switch_descriptor(self) -> None:
+        rng = random.Random(20260629)
+        parents = [m2_map_elites.random_candidate_genome("route-a-switching", rng) for _ in range(20)]
+        mutants = [m2_map_elites.mutate_candidate_genome(parent, "route-a-switching", rng) for parent in parents]
+        children = [
+            m2_map_elites.crossover_candidate_genome(a, b, "route-a-switching", rng)
+            for a, b in zip(parents, reversed(mutants))
+        ]
+        for genome in parents + mutants + children:
+            self.assertEqual("switching", genome["disturbance_type"])
+            self.assertGreaterEqual(float(genome["switch_roll_pitch_deg"]), m2_map_elites.ROUTE_A_ROLL_PITCH_RANGE[0])
+            self.assertLessEqual(float(genome["switch_roll_pitch_deg"]), m2_map_elites.ROUTE_A_ROLL_PITCH_RANGE[1])
+            self.assertGreaterEqual(float(genome["switch_rate_rad_s"]), m2_map_elites.ROUTE_A_RATE_RANGE[0])
+            self.assertLessEqual(float(genome["switch_rate_rad_s"]), m2_map_elites.ROUTE_A_RATE_RANGE[1])
+            self.assertGreaterEqual(float(genome["wind_speed_m_s"]), m2_map_elites.ROUTE_A_WIND_RANGE[0])
+            self.assertLessEqual(float(genome["wind_speed_m_s"]), m2_map_elites.ROUTE_A_WIND_RANGE[1])
+            theta = theta_genome.theta_from_genome(genome, "unit_route_a", 20260629)
+            feature = theta["theta_genome"]["map_elites"]
+            self.assertEqual(["switch_roll_pitch_bucket", "wind_bucket"], feature["feature_dimensions"])
+            self.assertRegex(feature["wind_bucket"], r"^wind_[0-4]$")
+
+    def test_route_a_grid_has_systematic_switching_cells(self) -> None:
+        genomes = campaign_runner.route_a_grid_genomes()
+        self.assertEqual(125, len(genomes))
+        cells = {
+            theta_genome.theta_from_genome(genome, "unit_route_a_grid", 20260629)["theta_genome"]["map_elites"][
+                "amplitude_bucket"
+            ]
+            for genome in genomes
+        }
+        self.assertGreaterEqual(len(cells), 20)
+
     def test_resume_matches_uninterrupted_mock_guided_sequence(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
             root = Path(tmpdir)
@@ -149,6 +181,28 @@ class CampaignRunnerTest(unittest.TestCase):
         self.assertEqual({"P4", "P6"}, m2_map_elites.target_relative_degradation_properties(result["fitness"]))
         self.assertEqual(set(), m2_map_elites.target_strict_differential_properties(result["fitness"]))
         self.assertEqual(["P4", "P6"], campaign_runner.property_list(result, "relative_degradation_differential_properties"))
+
+    def test_primary_bug_is_severity_strict_not_property_strict(self) -> None:
+        property_only = {
+            "fitness": {
+                "target_properties": ["P1", "P2"],
+                "strict_s0_vs_s3": False,
+                "strict_differential_properties": ["P1"],
+                "clean_differential_properties": ["P1"],
+            }
+        }
+        severity = {
+            "fitness": {
+                "target_properties": ["P1", "P2"],
+                "strict_s0_vs_s3": True,
+                "strict_differential_properties": [],
+                "clean_differential_properties": [],
+            }
+        }
+
+        self.assertFalse(m2_map_elites.severity_primary_from_result(property_only))
+        self.assertTrue(m2_map_elites.severity_primary_from_result(severity))
+        self.assertEqual(202601, m2_map_elites.confirmation_seed(20260629, 0))
 
 
 if __name__ == "__main__":

@@ -83,6 +83,28 @@ class PropertyFitnessTest(unittest.TestCase):
         self.assertEqual(["P1", "P2"], result["clean_differential_properties"])
         self.assertFalse(result["per_property"]["P1"]["target"])
 
+    def test_catastrophic_fitness_requires_decontaminated_classical_s0(self) -> None:
+        result = property_fitness.differential_property_fitness(
+            property_result({"P1": 0.8, "P2": 3.5}, severity=2),
+            property_result({"P1": -0.2, "P2": -0.4}, severity=3),
+            target_properties=["P1", "P2"],
+        )
+
+        self.assertEqual(property_fitness.FITNESS_FLOOR, result["fitness"])
+        self.assertTrue(result["catastrophic_fitness_requires_classical_s0"])
+        self.assertFalse(result["per_property"]["P1"]["valid_for_fitness"])
+        self.assertEqual(
+            "classical_not_decontaminated_s0_for_catastrophic_fitness",
+            result["per_property"]["P1"]["excluded_reason"],
+        )
+        self.assertEqual(
+            {
+                "P1": "classical_not_decontaminated_s0_for_catastrophic_fitness",
+                "P2": "classical_not_decontaminated_s0_for_catastrophic_fitness",
+            },
+            result["target_exclusion_reasons"],
+        )
+
     def test_vacuous_p5_is_not_fitness_valid_even_if_rho_is_bad(self) -> None:
         result = property_fitness.differential_property_fitness(
             property_result({"P5": 1.0}, vacuous={"P5"}),

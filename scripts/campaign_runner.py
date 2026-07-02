@@ -190,8 +190,10 @@ def make_metadata(config: CampaignConfig) -> dict[str, Any]:
         "baseline_comparability": "guided, random, and grid share budget, theta generator, evaluator, oracle, and validity gate",
         "fitness": (
             "quality is max classical-minus-mcnn rho gap over valid target properties; "
+            "catastrophic P1/P2 target fitness additionally requires decontaminated classical severity S0; "
             "strict differential requires neural rho <= -rho jitter reproduction margin; "
-            "relative degradation differential requires neural rho > 0 and gap beyond that margin"
+            "relative degradation differential requires neural rho > 0 and gap beyond that margin; "
+            "primary_bug is reserved for decontaminated classical S0 versus mcnn S3 severity"
         ),
         "target_property_override": config.target_properties,
         "resolved_target_properties": config.resolved_target_properties,
@@ -306,24 +308,36 @@ def steady_grid_genomes() -> list[dict[str, Any]]:
 
 def route_a_grid_genomes() -> list[dict[str, Any]]:
     genomes: list[dict[str, Any]] = []
-    for roll_pitch in [38.0, 42.0, 46.0]:
-        for rate in [1.10, 1.45, 1.80]:
-            for delay in [0.0, 0.09, 0.18]:
+    nuisance_variants = [
+        {"requested_rate_rad_s": 0.75, "switch_delay_s": 0.0},
+        {"requested_rate_rad_s": 1.15, "switch_delay_s": 0.0},
+        {"requested_rate_rad_s": 1.55, "switch_delay_s": 0.06},
+        {"requested_rate_rad_s": 1.95, "switch_delay_s": 0.12},
+        {"requested_rate_rad_s": 2.35, "switch_delay_s": 0.18},
+    ]
+    for roll_pitch in linspace(
+        m2_map_elites.ROUTE_A_ROLL_PITCH_RANGE[0],
+        m2_map_elites.ROUTE_A_ROLL_PITCH_RANGE[1],
+        5,
+    ):
+        for wind_speed in linspace(
+            m2_map_elites.ROUTE_A_WIND_RANGE[0],
+            m2_map_elites.ROUTE_A_WIND_RANGE[1],
+            5,
+        ):
+            for nuisance in nuisance_variants:
                 genome = theta_genome.default_genome("switching")
                 genome.update(
                     {
-                        "approach_radius_m": 2.30,
-                        "approach_frequency_hz": 0.33,
+                        **m2_map_elites.route_a_profile_for(roll_pitch, nuisance["requested_rate_rad_s"]),
                         "approach_phase_rad": 0.0,
-                        "wind_speed_m_s": 6.0,
                         "wind_direction_rad": 0.0,
+                        "wind_speed_m_s": wind_speed,
                         "setpoint_rate_hz": 80.0,
-                        "switch_roll_pitch_deg": roll_pitch,
-                        "switch_rate_rad_s": rate,
-                        "switch_delay_s": delay,
+                        "switch_delay_s": nuisance["switch_delay_s"],
                     }
                 )
-                genomes.append(theta_genome.normalize_genome(genome))
+                genomes.append(m2_map_elites.project_genome_to_subspace(genome, "route-a-switching", random.Random(0)))
     return genomes
 
 
@@ -558,6 +572,7 @@ def progress_record(
     evidence = result.get("evidence", {}) if isinstance(result.get("evidence"), dict) else {}
     strict_props = property_list(result, "strict_differential_properties")
     relative_props = property_list(result, "relative_degradation_differential_properties")
+    strict_s0_vs_s3 = bool(result.get("fitness", {}).get("strict_s0_vs_s3"))
     best_relative = best_relative_degradation(results)
     return {
         "eval": result["index"],
@@ -577,6 +592,10 @@ def progress_record(
         "best_property": result.get("fitness", {}).get("best_property"),
         "strict_differential_properties": strict_props,
         "relative_degradation_differential_properties": relative_props,
+        "strict_s0_vs_s3": strict_s0_vs_s3,
+        "strict_s0_vs_s3_eval_count": sum(
+            1 for item in results if bool(item.get("fitness", {}).get("strict_s0_vs_s3"))
+        ),
         "strict_differential_eval_count": sum(
             1 for item in results if property_list(item, "strict_differential_properties")
         ),
@@ -701,6 +720,8 @@ def print_eval_progress(progress: dict[str, Any]) -> None:
                 "qd_score": progress["qd_score"],
                 "best_property": progress["best_property"],
                 "strict_differential_properties": progress["strict_differential_properties"],
+                "strict_s0_vs_s3": progress["strict_s0_vs_s3"],
+                "strict_s0_vs_s3_eval_count": progress["strict_s0_vs_s3_eval_count"],
                 "relative_degradation_differential_properties": progress[
                     "relative_degradation_differential_properties"
                 ],
@@ -729,6 +750,7 @@ def write_summary(run_dir: Path, state: dict[str, Any]) -> None:
     errors = sum(1 for result in results if result.get("error"))
     usable = sum(1 for result in results if result.get("classical_usable"))
     strict_count = sum(1 for result in results if property_list(result, "strict_differential_properties"))
+    severity_strict_count = sum(1 for result in results if bool(result.get("fitness", {}).get("strict_s0_vs_s3")))
     relative_count = sum(1 for result in results if property_list(result, "relative_degradation_differential_properties"))
     reportable_count = sum(
         1
@@ -736,7 +758,7 @@ def write_summary(run_dir: Path, state: dict[str, Any]) -> None:
         if property_list(result, "strict_differential_properties")
         or property_list(result, "relative_degradation_differential_properties")
     )
-    primary = strict_count
+    primary = severity_strict_count
     best_relative = best_relative_degradation(results)
     lines = [
         "# Campaign runner summary",
@@ -751,6 +773,7 @@ def write_summary(run_dir: Path, state: dict[str, Any]) -> None:
         f"archive_bins: {len(state['archive'])}",
         f"primary_candidates: {primary}",
         f"reportable_property_candidates: {reportable_count}",
+        f"strict_s0_vs_s3_evals: {severity_strict_count}",
         f"strict_differential_evals: {strict_count}",
         f"relative_degradation_evals: {relative_count}",
         (

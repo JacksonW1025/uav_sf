@@ -66,6 +66,10 @@ AXES = ["x", "y", "z"]
 SIGNS = [-1, 1]
 SETPOINT_RATES_HZ = [50.0, 80.0, 100.0]
 SETTLING_WINDOW_S = 12.0
+SWITCH_DESCRIPTOR_ROLL_PITCH_RANGE = (16.0, 50.0)
+SWITCH_DESCRIPTOR_RATE_RANGE = (0.45, 2.75)
+SWITCH_DESCRIPTOR_WIND_RANGE = (0.0, 6.0)
+SWITCH_DESCRIPTOR_BUCKETS = 5
 
 
 @dataclass(frozen=True)
@@ -500,7 +504,7 @@ def normalize_genome(genome: dict[str, Any]) -> dict[str, Any]:
     if low <= high:
         out["switch_roll_pitch_deg"] = clamp(float(out["switch_roll_pitch_deg"]), low, high)
     expected_rate = 2.0 * math.pi * float(out["approach_frequency_hz"])
-    out["switch_rate_rad_s"] = clamp(float(out["switch_rate_rad_s"]), max(0.30, expected_rate - 0.8), min(3.0, expected_rate + 1.0))
+    out["switch_rate_rad_s"] = clamp(float(out["switch_rate_rad_s"]), max(0.30, expected_rate - 1.2), min(3.0, expected_rate + 1.0))
 
     min_end = float(out["step_time_s"]) + SETTLING_WINDOW_S
     if float(out["mission_end_s"]) < min_end:
@@ -692,6 +696,14 @@ def severity_bucket(severity: float) -> str:
     return "high"
 
 
+def numeric_bucket(value: float, lo: float, hi: float, count: int, prefix: str) -> str:
+    if count <= 1 or hi <= lo:
+        return f"{prefix}_0"
+    clamped = clamp(float(value), float(lo), float(hi))
+    idx = min(count - 1, int((clamped - lo) / (hi - lo) * count))
+    return f"{prefix}_{idx}"
+
+
 def feature_bin(genome: dict[str, Any]) -> tuple[str, str, float]:
     severities = genome_severity(genome)
     kind = str(genome["disturbance_type"])
@@ -701,6 +713,23 @@ def feature_bin(genome: dict[str, Any]) -> tuple[str, str, float]:
         severity = max(wind_severity, physics_severity)
         bucket = f"wind_{severity_bucket(wind_severity)}:physics_{severity_bucket(physics_severity)}"
         return kind, bucket, severity
+    if kind == "switching":
+        rp_bucket = numeric_bucket(
+            float(genome["switch_roll_pitch_deg"]),
+            SWITCH_DESCRIPTOR_ROLL_PITCH_RANGE[0],
+            SWITCH_DESCRIPTOR_ROLL_PITCH_RANGE[1],
+            SWITCH_DESCRIPTOR_BUCKETS,
+            "rp",
+        )
+        wind_bucket = numeric_bucket(
+            float(genome["wind_speed_m_s"]),
+            SWITCH_DESCRIPTOR_WIND_RANGE[0],
+            SWITCH_DESCRIPTOR_WIND_RANGE[1],
+            SWITCH_DESCRIPTOR_BUCKETS,
+            "wind",
+        )
+        severity = severities[kind]
+        return kind, f"{rp_bucket}:{wind_bucket}", severity
     severity = severities[kind]
     bucket = severity_bucket(severity)
     return kind, bucket, severity
@@ -708,6 +737,23 @@ def feature_bin(genome: dict[str, Any]) -> tuple[str, str, float]:
 
 def feature_metadata(genome: dict[str, Any]) -> dict[str, Any]:
     kind, bucket, severity = feature_bin(genome)
+    if kind == "switching":
+        rp_bucket, wind_bucket = bucket.split(":", 1)
+        return {
+            "feature_dimensions": ["switch_roll_pitch_bucket", "wind_bucket"],
+            "disturbance_type": kind,
+            "amplitude_bucket": bucket,
+            "switch_roll_pitch_bucket": rp_bucket,
+            "wind_bucket": wind_bucket,
+            "switch_roll_pitch_deg": round(float(genome["switch_roll_pitch_deg"]), 6),
+            "switch_rate_rad_s": round(float(genome["switch_rate_rad_s"]), 6),
+            "wind_speed_m_s": round(float(genome["wind_speed_m_s"]), 6),
+            "switch_descriptor_roll_pitch_range_deg": list(SWITCH_DESCRIPTOR_ROLL_PITCH_RANGE),
+            "switch_descriptor_wind_range_m_s": list(SWITCH_DESCRIPTOR_WIND_RANGE),
+            "switch_rate_rad_s_diagnostic_range": list(SWITCH_DESCRIPTOR_RATE_RANGE),
+            "switch_descriptor_bucket_count": SWITCH_DESCRIPTOR_BUCKETS,
+            "severity": round(severity, 6),
+        }
     if kind != COMBINED_STEADY_DISTURBANCE_TYPE:
         return {
             "feature_dimensions": ["disturbance_type", "amplitude_bucket"],

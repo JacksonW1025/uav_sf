@@ -77,6 +77,10 @@ TARGET_PRESETS: dict[str, list[str] | None] = {
 }
 SUBSPACES = ["full", "route-a-switching", "steady-wind-physics"]
 STRATEGIES = ["map-elites", "random"]
+ROUTE_A_ROLL_PITCH_RANGE = (16.0, 50.0)
+ROUTE_A_RATE_RANGE = (0.45, 2.75)
+ROUTE_A_WIND_RANGE = (0.0, 6.0)
+ROUTE_A_DELAY_RANGE = (0.0, 0.18)
 
 
 @dataclass
@@ -168,19 +172,42 @@ def target_properties_for_theta(theta: dict[str, Any], override: list[str] | Non
     return list(override) if override is not None else driver_target_properties(theta)
 
 
+def reachable_circle_rate_rad_s(radius_m: float, frequency_hz: float) -> float:
+    omega = 2.0 * math.pi * float(frequency_hz)
+    lateral_accel = float(radius_m) * omega**2
+    tilt_rad = math.atan2(lateral_accel, 9.80665)
+    return omega * math.sin(tilt_rad)
+
+
+def route_a_profile_for(roll_pitch_deg: float, rate_rad_s: float) -> dict[str, float]:
+    target_rp = clamp(float(roll_pitch_deg), ROUTE_A_ROLL_PITCH_RANGE[0], ROUTE_A_ROLL_PITCH_RANGE[1])
+    target_rate = clamp(float(rate_rad_s), ROUTE_A_RATE_RANGE[0], ROUTE_A_RATE_RANGE[1])
+    freq = clamp(target_rate / (2.0 * math.pi), 0.25, 0.50)
+    lateral_accel = math.tan(math.radians(target_rp)) * 9.80665
+    radius = lateral_accel / max((2.0 * math.pi * freq) ** 2, 1e-6)
+    if radius < 1.8 or radius > 6.0:
+        radius = clamp(radius, 1.8, 6.0)
+        freq = clamp(math.sqrt(max(lateral_accel, 0.0) / radius) / (2.0 * math.pi), 0.25, 0.50)
+    return {
+        "approach_radius_m": radius,
+        "approach_frequency_hz": freq,
+        "switch_roll_pitch_deg": target_rp,
+        "switch_rate_rad_s": clamp(reachable_circle_rate_rad_s(radius, freq), ROUTE_A_RATE_RANGE[0], ROUTE_A_RATE_RANGE[1]),
+    }
+
+
 def route_a_switching_genome(rng: random.Random) -> dict[str, Any]:
     genome = theta_genome.default_genome("switching")
+    target_rp = rng.uniform(ROUTE_A_ROLL_PITCH_RANGE[0], ROUTE_A_ROLL_PITCH_RANGE[1])
+    target_rate = rng.uniform(ROUTE_A_RATE_RANGE[0], ROUTE_A_RATE_RANGE[1])
     genome.update(
         {
-            "approach_radius_m": 2.30,
-            "approach_frequency_hz": 0.33,
+            **route_a_profile_for(target_rp, target_rate),
             "approach_phase_rad": 0.0,
-            "wind_speed_m_s": 6.0,
+            "wind_speed_m_s": rng.uniform(ROUTE_A_WIND_RANGE[0], ROUTE_A_WIND_RANGE[1]),
             "wind_direction_rad": 0.0,
             "setpoint_rate_hz": 80.0,
-            "switch_roll_pitch_deg": rng.uniform(38.0, 46.0),
-            "switch_rate_rad_s": rng.uniform(1.10, 1.80),
-            "switch_delay_s": rng.uniform(0.0, 0.18),
+            "switch_delay_s": rng.uniform(ROUTE_A_DELAY_RANGE[0], ROUTE_A_DELAY_RANGE[1]),
         }
     )
     return theta_genome.normalize_genome(genome)
@@ -190,17 +217,16 @@ def mutate_route_a_switching_genome(parent: dict[str, Any], rng: random.Random) 
     if parent.get("disturbance_type") != "switching" or rng.random() < 0.10:
         return route_a_switching_genome(rng)
     genome = dict(parent)
+    target_rp = float(genome["switch_roll_pitch_deg"]) + rng.gauss(0.0, 3.8)
+    target_rate = float(genome["switch_rate_rad_s"]) + rng.gauss(0.0, 0.28)
     genome.update(
         {
             "disturbance_type": "switching",
-            "approach_radius_m": 2.30,
-            "approach_frequency_hz": 0.33,
+            **route_a_profile_for(target_rp, target_rate),
             "approach_phase_rad": 0.0,
-            "wind_speed_m_s": 6.0,
+            "wind_speed_m_s": float(genome.get("wind_speed_m_s", 0.0)) + rng.gauss(0.0, 1.0),
             "wind_direction_rad": 0.0,
             "setpoint_rate_hz": 80.0,
-            "switch_roll_pitch_deg": float(genome["switch_roll_pitch_deg"]) + rng.gauss(0.0, 2.6),
-            "switch_rate_rad_s": float(genome["switch_rate_rad_s"]) + rng.gauss(0.0, 0.22),
             "switch_delay_s": float(genome["switch_delay_s"]) + rng.gauss(0.0, 0.055),
         }
     )
@@ -262,20 +288,35 @@ def project_genome_to_subspace(genome: dict[str, Any], subspace: str, rng: rando
         return theta_genome.normalize_genome(genome)
     if subspace == "route-a-switching":
         projected = dict(genome)
+        target_rp = clamp(
+            float(projected.get("switch_roll_pitch_deg", 35.0)),
+            ROUTE_A_ROLL_PITCH_RANGE[0],
+            ROUTE_A_ROLL_PITCH_RANGE[1],
+        )
+        target_rate = clamp(
+            float(projected.get("switch_rate_rad_s", 1.3)),
+            ROUTE_A_RATE_RANGE[0],
+            ROUTE_A_RATE_RANGE[1],
+        )
         projected.update(
             {
                 "disturbance_type": "switching",
-                "approach_radius_m": 2.30,
-                "approach_frequency_hz": 0.33,
+                **route_a_profile_for(target_rp, target_rate),
                 "approach_phase_rad": 0.0,
-                "wind_speed_m_s": 6.0,
+                "wind_speed_m_s": clamp(
+                    float(projected.get("wind_speed_m_s", 0.0)),
+                    ROUTE_A_WIND_RANGE[0],
+                    ROUTE_A_WIND_RANGE[1],
+                ),
                 "wind_direction_rad": 0.0,
                 "setpoint_rate_hz": 80.0,
             }
         )
-        projected["switch_roll_pitch_deg"] = clamp(float(projected["switch_roll_pitch_deg"]), 38.0, 46.0)
-        projected["switch_rate_rad_s"] = clamp(float(projected["switch_rate_rad_s"]), 1.10, 1.80)
-        projected["switch_delay_s"] = clamp(float(projected["switch_delay_s"]), 0.0, 0.18)
+        projected["switch_delay_s"] = clamp(
+            float(projected["switch_delay_s"]),
+            ROUTE_A_DELAY_RANGE[0],
+            ROUTE_A_DELAY_RANGE[1],
+        )
         return theta_genome.normalize_genome(projected)
     if subspace == "steady-wind-physics":
         projected = dict(genome)
@@ -907,9 +948,13 @@ def empty_fitness(targets: list[str] | None = None) -> dict[str, Any]:
     return {
         "fitness": FITNESS_FLOOR,
         "fitness_floor": FITNESS_FLOOR,
+        "fitness_semantics": "empty fitness for failed or gated eval",
+        "severity_semantics": "property_oracle severity over the decontaminated control window",
+        "catastrophic_fitness_requires_classical_s0": False,
         "target_properties": targets or [],
         "best_property": None,
         "valid_property_count": 0,
+        "target_exclusion_reasons": {},
         "candidate_differential_properties": [],
         "strict_differential_properties": [],
         "clean_differential_properties": [],
@@ -917,6 +962,12 @@ def empty_fitness(targets: list[str] | None = None) -> dict[str, Any]:
         "strict_differential_finding": False,
         "relative_degradation_finding": False,
         "property_finding": False,
+        "classical_severity": None,
+        "classical_severity_label": None,
+        "neural_severity": None,
+        "neural_severity_label": None,
+        "strict_s0_vs_s3": False,
+        "wide_control_vs_uncontrolled": False,
         "per_property": {},
     }
 
@@ -950,6 +1001,13 @@ def target_strict_differential_properties(fitness: dict[str, Any]) -> set[str]:
 
 def target_relative_degradation_properties(fitness: dict[str, Any]) -> set[str]:
     return target_properties_from_lists(fitness, ["relative_degradation_differential_properties"])
+
+
+def severity_primary_from_result(result: dict[str, Any]) -> bool:
+    fitness = result.get("fitness", {}) if isinstance(result, dict) else {}
+    if not isinstance(fitness, dict):
+        return False
+    return bool(fitness.get("strict_s0_vs_s3"))
 
 
 def mock_property_pair(
@@ -1203,7 +1261,7 @@ def evaluate_theta(
     csev = fitness.get("classical_severity")
     nsev = fitness.get("neural_severity")
     classical_usable = bool(fitness.get("valid_property_count", 0) > 0)
-    primary_bug = bool(target_strict_differential_properties(fitness))
+    primary_bug = bool(fitness.get("strict_s0_vs_s3"))
     relative_degradation = bool(target_relative_degradation_properties(fitness))
     terminal = classical_property.get("window", {}).get("terminal", {}) if isinstance(classical_property, dict) else {}
     return EvalResult(
@@ -1215,7 +1273,7 @@ def evaluate_theta(
         elapsed_wall_s=elapsed,
         compare_path=str(compare_path),
         quadrant=(
-            "strict_differential"
+            "strict_s0_vs_s3"
             if primary_bug
             else "relative_degradation_differential"
             if relative_degradation
@@ -1331,12 +1389,15 @@ def search(args: argparse.Namespace) -> tuple[Path, list[EvalResult], list[dict[
         "genome": "scripts/theta_genome.py shim-free Tier 0.5 genome",
         "bins": (
             "steady-wind-physics uses steady_combo wind_bucket x physics_bucket; "
+            "route-a-switching uses switch_roll_pitch_bucket x wind_bucket; "
             "other subspaces use disturbance_type x amplitude_bucket"
         ),
         "fitness": (
             "differential property gap: max_i rho_i(classical)-rho_i(mcnn) with per-property classical margin; "
+            "catastrophic P1/P2 target fitness additionally requires decontaminated classical severity S0; "
             "strict findings require neural rho beyond per-property rho jitter reproduction margin; "
-            "relative-degradation findings require both controllers controlled and gap beyond the same margin"
+            "relative-degradation findings require both controllers controlled and gap beyond the same margin; "
+            "primary_bug is reserved for decontaminated classical S0 versus mcnn S3 severity"
         ),
         "target_property_override": args.target_properties,
         "resolved_target_properties": args.resolved_target_properties,
@@ -1533,6 +1594,13 @@ def strict_properties_from_result(result: dict[str, Any]) -> set[str]:
     return target_strict_differential_properties(fitness)
 
 
+def confirmation_seed(candidate_seed: int | None, repeat_index: int) -> int:
+    seed = CONFIRM_SEEDS[repeat_index % len(CONFIRM_SEEDS)]
+    if candidate_seed is not None and int(candidate_seed) == seed:
+        return seed + 100000
+    return seed
+
+
 def confirm_candidates(
     run_dir: Path,
     candidates: list[dict[str, Any]],
@@ -1541,6 +1609,7 @@ def confirm_candidates(
     env = os_environ_with_speed(args.sim_speed_factor)
     thresholds = load_thresholds(args.thresholds_json)
     confirmed: list[dict[str, Any]] = []
+    confirmed_3of3: list[dict[str, Any]] = []
     selected = sorted(candidates, key=lambda item: float(item["result"]["quality"]), reverse=True)[
         : args.max_confirm_candidates
     ]
@@ -1549,10 +1618,14 @@ def confirm_candidates(
         theta = load_json(Path(candidate["theta_path"]))
         required_properties = robust_properties_from_result(candidate["result"])
         strict_required_properties = strict_properties_from_result(candidate["result"])
+        required_severity = severity_primary_from_result(candidate["result"])
+        candidate_seed = candidate.get("result", {}).get("seed")
+        candidate_seed_int = int(candidate_seed) if isinstance(candidate_seed, int) else None
         repeats: list[dict[str, Any]] = []
-        all_passed = True
+        property_all_passed = True
+        severity_hits = 0
         for ridx in range(args.confirm_repeats):
-            seed = CONFIRM_SEEDS[ridx % len(CONFIRM_SEEDS)] + cidx * 100
+            seed = confirmation_seed(candidate_seed_int, ridx)
             confirm_theta = json.loads(json.dumps(theta))
             original_tag = str(theta["tag"])
             confirm_tag = f"{original_tag}_confirm_s{seed}"
@@ -1560,6 +1633,7 @@ def confirm_candidates(
             confirm_theta["seed"] = seed
             confirm_theta.setdefault("m2", {})["confirmation_of"] = original_tag
             confirm_theta.setdefault("m2", {})["confirmation_seed"] = seed
+            confirm_theta.setdefault("m2", {})["confirmation_seed_index"] = ridx
             theta_path = run_dir / "confirm" / "theta" / f"{confirm_tag}.json"
             docs_dir = run_dir / "confirm" / "evals" / confirm_tag
             result = evaluate_theta(
@@ -1577,23 +1651,46 @@ def confirm_candidates(
             )
             result_record = result.as_dict()
             repeated_properties = robust_properties_from_result(result_record)
+            repeated_severity = severity_primary_from_result(result_record)
+            if result.returncode == 0 and repeated_severity:
+                severity_hits += 1
             result_record["confirmation_required_properties"] = sorted(required_properties)
             result_record["confirmation_repeated_properties"] = sorted(repeated_properties)
             result_record["confirmation_property_match"] = bool(required_properties & repeated_properties)
+            result_record["confirmation_required_severity"] = "strict_s0_vs_s3" if required_severity else None
+            result_record["confirmation_repeated_severity"] = bool(repeated_severity)
+            result_record["confirmation_severity_match"] = bool(required_severity and repeated_severity)
             repeats.append(result_record)
             if result.returncode != 0 or not bool(required_properties & repeated_properties):
-                all_passed = False
+                property_all_passed = False
+        required_hits_2of3 = int(math.ceil((2.0 / 3.0) * max(1, len(repeats))))
+        severity_passed_2of3 = bool(required_severity and severity_hits >= required_hits_2of3)
+        severity_passed_3of3 = bool(required_severity and repeats and severity_hits == len(repeats))
+        property_passed = bool((not required_severity) and required_properties and property_all_passed)
         record = {
             "candidate": candidate,
-            "passed": all_passed,
+            "passed": severity_passed_2of3 if required_severity else property_passed,
+            "passed_2of3": severity_passed_2of3 if required_severity else property_passed,
+            "passed_3of3": severity_passed_3of3 if required_severity else property_passed,
+            "confirmation_semantics": (
+                "strict_s0_vs_s3 severity over decontaminated control windows"
+                if required_severity
+                else "triggered property repeats"
+            ),
+            "required_severity": "strict_s0_vs_s3" if required_severity else None,
+            "severity_hits": severity_hits,
+            "severity_repeats": len(repeats),
+            "severity_required_hits_2of3": required_hits_2of3 if required_severity else None,
             "required_properties": sorted(required_properties),
             "strict_required_properties": sorted(strict_required_properties),
             "rho_jitter_reproduction_margins": reproduction_margins(),
             "repeats": repeats,
         }
-        if all_passed:
-            if strict_required_properties:
+        if record["passed"]:
+            if required_severity:
                 confirmed.append(record)
+                if severity_passed_3of3:
+                    confirmed_3of3.append(record)
                 primary_dir = REPO_ROOT / "config" / "m2_primary_bugs"
                 primary_dir.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(candidate["theta_path"], primary_dir / Path(candidate["theta_path"]).name)
@@ -1601,8 +1698,10 @@ def confirm_candidates(
                 confirmed_relative.append(record)
         append_jsonl(run_dir / "confirmations.jsonl", record)
         write_json(run_dir / "confirmed_primary_bugs.json", confirmed)
+        write_json(run_dir / "confirmed_primary_bugs_3of3.json", confirmed_3of3)
         write_json(run_dir / "confirmed_relative_degradations.json", confirmed_relative)
     write_json(run_dir / "confirmed_primary_bugs.json", confirmed)
+    write_json(run_dir / "confirmed_primary_bugs_3of3.json", confirmed_3of3)
     write_json(run_dir / "confirmed_relative_degradations.json", confirmed_relative)
     return confirmed
 
