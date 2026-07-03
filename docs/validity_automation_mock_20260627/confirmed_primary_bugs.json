@@ -1,0 +1,689 @@
+[
+  {
+    "candidate": {
+      "compare_path": "/mnt/nvme/uav_sf/docs/validity_automation_mock_20260627/evals/validity_automation_mock_20260627_e0002/m1_diff_validity_automation_mock_20260627_e0002.json",
+      "genome": {
+        "approach_frequency_hz": 0.37315692985493465,
+        "approach_phase_rad": 0.0,
+        "approach_radius_m": 3.0,
+        "disturbance_type": "physics_mismatch",
+        "fake_angular_rate_bias_rad_s": 0.0,
+        "fake_velocity_bias_m_s": 0.0,
+        "inertia_pitch_scale": 1.483845143322853,
+        "inertia_roll_scale": 1.3520828076479354,
+        "inertia_yaw_scale": 1.6362216169545127,
+        "mass_scale": 0.9846679755578546,
+        "mission_end_s": 54.54985854385012,
+        "position_estimate_jump_m": 0.0,
+        "setpoint_rate_hz": 80.0,
+        "step_axis": "x",
+        "step_magnitude_m": 0.75,
+        "step_sign": 1,
+        "step_time_s": 32.0,
+        "switch_delay_s": 0.0,
+        "switch_rate_rad_s": 1.5446141389367687,
+        "switch_roll_pitch_deg": 51.26244299965963,
+        "twr_scale": 1.1221736109134102,
+        "wind_direction_rad": 0.4372518004740467,
+        "wind_speed_m_s": 0.0
+      },
+      "result": {
+        "classical_safe": true,
+        "classical_usable": true,
+        "compare_path": "/mnt/nvme/uav_sf/docs/validity_automation_mock_20260627/evals/validity_automation_mock_20260627_e0002/m1_diff_validity_automation_mock_20260627_e0002.json",
+        "docs_dir": "/mnt/nvme/uav_sf/docs/validity_automation_mock_20260627/evals/validity_automation_mock_20260627_e0002",
+        "elapsed_wall_s": 0.002274547005072236,
+        "error": null,
+        "evidence": {
+          "compare_path": "/mnt/nvme/uav_sf/docs/validity_automation_mock_20260627/evals/validity_automation_mock_20260627_e0002/m1_diff_validity_automation_mock_20260627_e0002.json",
+          "docs_dir": "/mnt/nvme/uav_sf/docs/validity_automation_mock_20260627/evals/validity_automation_mock_20260627_e0002",
+          "property_paths": {
+            "classical": "/mnt/nvme/uav_sf/docs/validity_automation_mock_20260627/evals/validity_automation_mock_20260627_e0002/validity_automation_mock_20260627_e0002_classical_property.json",
+            "mcnn": "/mnt/nvme/uav_sf/docs/validity_automation_mock_20260627/evals/validity_automation_mock_20260627_e0002/validity_automation_mock_20260627_e0002_mcnn_property.json"
+          },
+          "seed": 20260626,
+          "tag": "validity_automation_mock_20260627_e0002",
+          "task_paths": {},
+          "theta_path": "/mnt/nvme/uav_sf/docs/validity_automation_mock_20260627/theta/validity_automation_mock_20260627_e0002.json",
+          "ulog_paths": {},
+          "validity": {
+            "decontamination": {
+              "classical": {
+                "mock_evaluator": true,
+                "passed": true,
+                "reasons": []
+              },
+              "mcnn": {
+                "mock_evaluator": true,
+                "passed": true,
+                "reasons": []
+              }
+            },
+            "mcnn_identity": {
+              "mock_evaluator": true,
+              "passed": true,
+              "reasons": []
+            },
+            "rho_jitter_reproduction_margins": {
+              "P1": 0.0255863354,
+              "P2": 0.187036041,
+              "P3": 0.02,
+              "P4": 0.0285933258,
+              "P5": 0.5669702594,
+              "P6": 0.0273949962,
+              "P7": 0.4484874426
+            }
+          }
+        },
+        "feature_bin": "physics_mismatch:high",
+        "fitness": {
+          "best_property": "P7",
+          "candidate_differential_properties": [
+            "P7"
+          ],
+          "classical_severity": 0,
+          "classical_severity_label": "S0_clean_recovery",
+          "clean_differential_properties": [
+            "P7"
+          ],
+          "fitness": 1.3644907394227346,
+          "fitness_floor": -1000000000.0,
+          "fitness_semantics": "max(classical_rho - neural_rho) over target properties with classical_rho >= per-property margin_c",
+          "neural_severity": 1,
+          "neural_severity_label": "S1_controlled_degraded_survival",
+          "per_property": {
+            "P1": {
+              "available": true,
+              "candidate_differential": false,
+              "classical_margin_valid": true,
+              "classical_rho": 1.5,
+              "clean_differential": false,
+              "excluded_reason": "not_in_target_set",
+              "gap": 0.0,
+              "margin_c": 0.4548139946,
+              "neural_rho": 1.5,
+              "neural_violation_margin": 0.0,
+              "rho_jitter_reproduction_margin": 0.0255863354,
+              "target": false,
+              "vacuous": false,
+              "valid_for_fitness": false
+            },
+            "P2": {
+              "available": true,
+              "candidate_differential": false,
+              "classical_margin_valid": true,
+              "classical_rho": 6.0,
+              "clean_differential": false,
+              "excluded_reason": "not_in_target_set",
+              "gap": 0.0,
+              "margin_c": 2.3421337853,
+              "neural_rho": 6.0,
+              "neural_violation_margin": 0.0,
+              "rho_jitter_reproduction_margin": 0.187036041,
+              "target": false,
+              "vacuous": false,
+              "valid_for_fitness": false
+            },
+            "P3": {
+              "available": true,
+              "candidate_differential": false,
+              "classical_margin_valid": true,
+              "classical_rho": 0.5,
+              "clean_differential": false,
+              "excluded_reason": "not_in_target_set",
+              "gap": 0.0,
+              "margin_c": 0.15,
+              "neural_rho": 0.5,
+              "neural_violation_margin": 0.0,
+              "rho_jitter_reproduction_margin": 0.02,
+              "target": false,
+              "vacuous": false,
+              "valid_for_fitness": false
+            },
+            "P4": {
+              "available": true,
+              "candidate_differential": false,
+              "classical_margin_valid": true,
+              "classical_rho": 0.7,
+              "clean_differential": false,
+              "gap": 0.0,
+              "margin_c": 0.202330361,
+              "neural_rho": 0.7,
+              "neural_violation_margin": 0.0,
+              "rho_jitter_reproduction_margin": 0.0285933258,
+              "target": true,
+              "vacuous": false,
+              "valid_for_fitness": true
+            },
+            "P5": {
+              "available": true,
+              "candidate_differential": false,
+              "classical_margin_valid": true,
+              "classical_rho": 0.4,
+              "clean_differential": false,
+              "excluded_reason": "vacuous_property",
+              "gap": 0.0,
+              "margin_c": 0.1083387278,
+              "neural_rho": 0.4,
+              "neural_violation_margin": 0.0,
+              "rho_jitter_reproduction_margin": 0.5669702594,
+              "target": false,
+              "vacuous": true,
+              "valid_for_fitness": false
+            },
+            "P6": {
+              "available": true,
+              "candidate_differential": false,
+              "classical_margin_valid": true,
+              "classical_rho": 0.25,
+              "clean_differential": false,
+              "gap": 0.0,
+              "margin_c": 0.0759150636,
+              "neural_rho": 0.25,
+              "neural_violation_margin": 0.0,
+              "rho_jitter_reproduction_margin": 0.0273949962,
+              "target": true,
+              "vacuous": false,
+              "valid_for_fitness": true
+            },
+            "P7": {
+              "available": true,
+              "candidate_differential": true,
+              "classical_margin_valid": true,
+              "classical_rho": 0.4,
+              "clean_differential": true,
+              "gap": 1.3644907394227346,
+              "margin_c": 0.1126242187,
+              "neural_rho": -0.9644907394227346,
+              "neural_violation_margin": 0.9644907394227346,
+              "rho_jitter_reproduction_margin": 0.4484874426,
+              "target": true,
+              "vacuous": false,
+              "valid_for_fitness": true
+            }
+          },
+          "property_finding": true,
+          "rho_jitter_reproduction_margins": {
+            "P1": 0.0255863354,
+            "P2": 0.187036041,
+            "P3": 0.02,
+            "P4": 0.0285933258,
+            "P5": 0.5669702594,
+            "P6": 0.0273949962,
+            "P7": 0.4484874426
+          },
+          "strict_s0_vs_s3": false,
+          "target_properties": [
+            "P4",
+            "P6",
+            "P7"
+          ],
+          "valid_property_count": 3,
+          "wide_control_vs_uncontrolled": false
+        },
+        "index": 2,
+        "infrastructure_limited": false,
+        "mcnn_confirmed": true,
+        "primary_bug": true,
+        "quadrant": "property_differential",
+        "quality": 1.3644907394227346,
+        "raptor_safe": true,
+        "returncode": 0,
+        "seed": 20260626,
+        "selected_parent_quality": 1.3452770211931409,
+        "selected_parent_tag": "validity_automation_mock_20260627_e0000",
+        "severity": 0.8144907394227345,
+        "tag": "validity_automation_mock_20260627_e0002",
+        "theta_path": "/mnt/nvme/uav_sf/docs/validity_automation_mock_20260627/theta/validity_automation_mock_20260627_e0002.json"
+      },
+      "theta_path": "/mnt/nvme/uav_sf/docs/validity_automation_mock_20260627/theta/validity_automation_mock_20260627_e0002.json"
+    },
+    "passed": true,
+    "repeats": [
+      {
+        "classical_safe": true,
+        "classical_usable": true,
+        "compare_path": "/mnt/nvme/uav_sf/docs/validity_automation_mock_20260627/confirm/evals/validity_automation_mock_20260627_e0002_confirm_s202601/m1_diff_validity_automation_mock_20260627_e0002_confirm_s202601.json",
+        "confirmation_property_match": true,
+        "confirmation_repeated_properties": [
+          "P7"
+        ],
+        "confirmation_required_properties": [
+          "P7"
+        ],
+        "docs_dir": "/mnt/nvme/uav_sf/docs/validity_automation_mock_20260627/confirm/evals/validity_automation_mock_20260627_e0002_confirm_s202601",
+        "elapsed_wall_s": 0.0036223160568624735,
+        "error": null,
+        "evidence": {
+          "compare_path": "/mnt/nvme/uav_sf/docs/validity_automation_mock_20260627/confirm/evals/validity_automation_mock_20260627_e0002_confirm_s202601/m1_diff_validity_automation_mock_20260627_e0002_confirm_s202601.json",
+          "docs_dir": "/mnt/nvme/uav_sf/docs/validity_automation_mock_20260627/confirm/evals/validity_automation_mock_20260627_e0002_confirm_s202601",
+          "property_paths": {
+            "classical": "/mnt/nvme/uav_sf/docs/validity_automation_mock_20260627/confirm/evals/validity_automation_mock_20260627_e0002_confirm_s202601/validity_automation_mock_20260627_e0002_confirm_s202601_classical_property.json",
+            "mcnn": "/mnt/nvme/uav_sf/docs/validity_automation_mock_20260627/confirm/evals/validity_automation_mock_20260627_e0002_confirm_s202601/validity_automation_mock_20260627_e0002_confirm_s202601_mcnn_property.json"
+          },
+          "seed": 202601,
+          "tag": "validity_automation_mock_20260627_e0002_confirm_s202601",
+          "task_paths": {},
+          "theta_path": "/mnt/nvme/uav_sf/docs/validity_automation_mock_20260627/confirm/theta/validity_automation_mock_20260627_e0002_confirm_s202601.json",
+          "ulog_paths": {},
+          "validity": {
+            "decontamination": {
+              "classical": {
+                "mock_evaluator": true,
+                "passed": true,
+                "reasons": []
+              },
+              "mcnn": {
+                "mock_evaluator": true,
+                "passed": true,
+                "reasons": []
+              }
+            },
+            "mcnn_identity": {
+              "mock_evaluator": true,
+              "passed": true,
+              "reasons": []
+            },
+            "rho_jitter_reproduction_margins": {
+              "P1": 0.0255863354,
+              "P2": 0.187036041,
+              "P3": 0.02,
+              "P4": 0.0285933258,
+              "P5": 0.5669702594,
+              "P6": 0.0273949962,
+              "P7": 0.4484874426
+            }
+          }
+        },
+        "feature_bin": "physics_mismatch:high",
+        "fitness": {
+          "best_property": "P7",
+          "candidate_differential_properties": [
+            "P7"
+          ],
+          "classical_severity": 0,
+          "classical_severity_label": "S0_clean_recovery",
+          "clean_differential_properties": [
+            "P7"
+          ],
+          "fitness": 1.3644907394227346,
+          "fitness_floor": -1000000000.0,
+          "fitness_semantics": "max(classical_rho - neural_rho) over target properties with classical_rho >= per-property margin_c",
+          "neural_severity": 1,
+          "neural_severity_label": "S1_controlled_degraded_survival",
+          "per_property": {
+            "P1": {
+              "available": true,
+              "candidate_differential": false,
+              "classical_margin_valid": true,
+              "classical_rho": 1.5,
+              "clean_differential": false,
+              "excluded_reason": "not_in_target_set",
+              "gap": 0.0,
+              "margin_c": 0.4548139946,
+              "neural_rho": 1.5,
+              "neural_violation_margin": 0.0,
+              "rho_jitter_reproduction_margin": 0.0255863354,
+              "target": false,
+              "vacuous": false,
+              "valid_for_fitness": false
+            },
+            "P2": {
+              "available": true,
+              "candidate_differential": false,
+              "classical_margin_valid": true,
+              "classical_rho": 6.0,
+              "clean_differential": false,
+              "excluded_reason": "not_in_target_set",
+              "gap": 0.0,
+              "margin_c": 2.3421337853,
+              "neural_rho": 6.0,
+              "neural_violation_margin": 0.0,
+              "rho_jitter_reproduction_margin": 0.187036041,
+              "target": false,
+              "vacuous": false,
+              "valid_for_fitness": false
+            },
+            "P3": {
+              "available": true,
+              "candidate_differential": false,
+              "classical_margin_valid": true,
+              "classical_rho": 0.5,
+              "clean_differential": false,
+              "excluded_reason": "not_in_target_set",
+              "gap": 0.0,
+              "margin_c": 0.15,
+              "neural_rho": 0.5,
+              "neural_violation_margin": 0.0,
+              "rho_jitter_reproduction_margin": 0.02,
+              "target": false,
+              "vacuous": false,
+              "valid_for_fitness": false
+            },
+            "P4": {
+              "available": true,
+              "candidate_differential": false,
+              "classical_margin_valid": true,
+              "classical_rho": 0.7,
+              "clean_differential": false,
+              "gap": 0.0,
+              "margin_c": 0.202330361,
+              "neural_rho": 0.7,
+              "neural_violation_margin": 0.0,
+              "rho_jitter_reproduction_margin": 0.0285933258,
+              "target": true,
+              "vacuous": false,
+              "valid_for_fitness": true
+            },
+            "P5": {
+              "available": true,
+              "candidate_differential": false,
+              "classical_margin_valid": true,
+              "classical_rho": 0.4,
+              "clean_differential": false,
+              "excluded_reason": "vacuous_property",
+              "gap": 0.0,
+              "margin_c": 0.1083387278,
+              "neural_rho": 0.4,
+              "neural_violation_margin": 0.0,
+              "rho_jitter_reproduction_margin": 0.5669702594,
+              "target": false,
+              "vacuous": true,
+              "valid_for_fitness": false
+            },
+            "P6": {
+              "available": true,
+              "candidate_differential": false,
+              "classical_margin_valid": true,
+              "classical_rho": 0.25,
+              "clean_differential": false,
+              "gap": 0.0,
+              "margin_c": 0.0759150636,
+              "neural_rho": 0.25,
+              "neural_violation_margin": 0.0,
+              "rho_jitter_reproduction_margin": 0.0273949962,
+              "target": true,
+              "vacuous": false,
+              "valid_for_fitness": true
+            },
+            "P7": {
+              "available": true,
+              "candidate_differential": true,
+              "classical_margin_valid": true,
+              "classical_rho": 0.4,
+              "clean_differential": true,
+              "gap": 1.3644907394227346,
+              "margin_c": 0.1126242187,
+              "neural_rho": -0.9644907394227346,
+              "neural_violation_margin": 0.9644907394227346,
+              "rho_jitter_reproduction_margin": 0.4484874426,
+              "target": true,
+              "vacuous": false,
+              "valid_for_fitness": true
+            }
+          },
+          "property_finding": true,
+          "rho_jitter_reproduction_margins": {
+            "P1": 0.0255863354,
+            "P2": 0.187036041,
+            "P3": 0.02,
+            "P4": 0.0285933258,
+            "P5": 0.5669702594,
+            "P6": 0.0273949962,
+            "P7": 0.4484874426
+          },
+          "strict_s0_vs_s3": false,
+          "target_properties": [
+            "P4",
+            "P6",
+            "P7"
+          ],
+          "valid_property_count": 3,
+          "wide_control_vs_uncontrolled": false
+        },
+        "index": 100000,
+        "infrastructure_limited": false,
+        "mcnn_confirmed": true,
+        "primary_bug": true,
+        "quadrant": "property_differential",
+        "quality": 1.3644907394227346,
+        "raptor_safe": true,
+        "returncode": 0,
+        "seed": 202601,
+        "selected_parent_quality": 1.3644907394227346,
+        "selected_parent_tag": "validity_automation_mock_20260627_e0002",
+        "severity": 0.8144907394227345,
+        "tag": "validity_automation_mock_20260627_e0002_confirm_s202601",
+        "theta_path": "/mnt/nvme/uav_sf/docs/validity_automation_mock_20260627/confirm/theta/validity_automation_mock_20260627_e0002_confirm_s202601.json"
+      },
+      {
+        "classical_safe": true,
+        "classical_usable": true,
+        "compare_path": "/mnt/nvme/uav_sf/docs/validity_automation_mock_20260627/confirm/evals/validity_automation_mock_20260627_e0002_confirm_s202602/m1_diff_validity_automation_mock_20260627_e0002_confirm_s202602.json",
+        "confirmation_property_match": true,
+        "confirmation_repeated_properties": [
+          "P7"
+        ],
+        "confirmation_required_properties": [
+          "P7"
+        ],
+        "docs_dir": "/mnt/nvme/uav_sf/docs/validity_automation_mock_20260627/confirm/evals/validity_automation_mock_20260627_e0002_confirm_s202602",
+        "elapsed_wall_s": 0.003289646003395319,
+        "error": null,
+        "evidence": {
+          "compare_path": "/mnt/nvme/uav_sf/docs/validity_automation_mock_20260627/confirm/evals/validity_automation_mock_20260627_e0002_confirm_s202602/m1_diff_validity_automation_mock_20260627_e0002_confirm_s202602.json",
+          "docs_dir": "/mnt/nvme/uav_sf/docs/validity_automation_mock_20260627/confirm/evals/validity_automation_mock_20260627_e0002_confirm_s202602",
+          "property_paths": {
+            "classical": "/mnt/nvme/uav_sf/docs/validity_automation_mock_20260627/confirm/evals/validity_automation_mock_20260627_e0002_confirm_s202602/validity_automation_mock_20260627_e0002_confirm_s202602_classical_property.json",
+            "mcnn": "/mnt/nvme/uav_sf/docs/validity_automation_mock_20260627/confirm/evals/validity_automation_mock_20260627_e0002_confirm_s202602/validity_automation_mock_20260627_e0002_confirm_s202602_mcnn_property.json"
+          },
+          "seed": 202602,
+          "tag": "validity_automation_mock_20260627_e0002_confirm_s202602",
+          "task_paths": {},
+          "theta_path": "/mnt/nvme/uav_sf/docs/validity_automation_mock_20260627/confirm/theta/validity_automation_mock_20260627_e0002_confirm_s202602.json",
+          "ulog_paths": {},
+          "validity": {
+            "decontamination": {
+              "classical": {
+                "mock_evaluator": true,
+                "passed": true,
+                "reasons": []
+              },
+              "mcnn": {
+                "mock_evaluator": true,
+                "passed": true,
+                "reasons": []
+              }
+            },
+            "mcnn_identity": {
+              "mock_evaluator": true,
+              "passed": true,
+              "reasons": []
+            },
+            "rho_jitter_reproduction_margins": {
+              "P1": 0.0255863354,
+              "P2": 0.187036041,
+              "P3": 0.02,
+              "P4": 0.0285933258,
+              "P5": 0.5669702594,
+              "P6": 0.0273949962,
+              "P7": 0.4484874426
+            }
+          }
+        },
+        "feature_bin": "physics_mismatch:high",
+        "fitness": {
+          "best_property": "P7",
+          "candidate_differential_properties": [
+            "P7"
+          ],
+          "classical_severity": 0,
+          "classical_severity_label": "S0_clean_recovery",
+          "clean_differential_properties": [
+            "P7"
+          ],
+          "fitness": 1.3644907394227346,
+          "fitness_floor": -1000000000.0,
+          "fitness_semantics": "max(classical_rho - neural_rho) over target properties with classical_rho >= per-property margin_c",
+          "neural_severity": 1,
+          "neural_severity_label": "S1_controlled_degraded_survival",
+          "per_property": {
+            "P1": {
+              "available": true,
+              "candidate_differential": false,
+              "classical_margin_valid": true,
+              "classical_rho": 1.5,
+              "clean_differential": false,
+              "excluded_reason": "not_in_target_set",
+              "gap": 0.0,
+              "margin_c": 0.4548139946,
+              "neural_rho": 1.5,
+              "neural_violation_margin": 0.0,
+              "rho_jitter_reproduction_margin": 0.0255863354,
+              "target": false,
+              "vacuous": false,
+              "valid_for_fitness": false
+            },
+            "P2": {
+              "available": true,
+              "candidate_differential": false,
+              "classical_margin_valid": true,
+              "classical_rho": 6.0,
+              "clean_differential": false,
+              "excluded_reason": "not_in_target_set",
+              "gap": 0.0,
+              "margin_c": 2.3421337853,
+              "neural_rho": 6.0,
+              "neural_violation_margin": 0.0,
+              "rho_jitter_reproduction_margin": 0.187036041,
+              "target": false,
+              "vacuous": false,
+              "valid_for_fitness": false
+            },
+            "P3": {
+              "available": true,
+              "candidate_differential": false,
+              "classical_margin_valid": true,
+              "classical_rho": 0.5,
+              "clean_differential": false,
+              "excluded_reason": "not_in_target_set",
+              "gap": 0.0,
+              "margin_c": 0.15,
+              "neural_rho": 0.5,
+              "neural_violation_margin": 0.0,
+              "rho_jitter_reproduction_margin": 0.02,
+              "target": false,
+              "vacuous": false,
+              "valid_for_fitness": false
+            },
+            "P4": {
+              "available": true,
+              "candidate_differential": false,
+              "classical_margin_valid": true,
+              "classical_rho": 0.7,
+              "clean_differential": false,
+              "gap": 0.0,
+              "margin_c": 0.202330361,
+              "neural_rho": 0.7,
+              "neural_violation_margin": 0.0,
+              "rho_jitter_reproduction_margin": 0.0285933258,
+              "target": true,
+              "vacuous": false,
+              "valid_for_fitness": true
+            },
+            "P5": {
+              "available": true,
+              "candidate_differential": false,
+              "classical_margin_valid": true,
+              "classical_rho": 0.4,
+              "clean_differential": false,
+              "excluded_reason": "vacuous_property",
+              "gap": 0.0,
+              "margin_c": 0.1083387278,
+              "neural_rho": 0.4,
+              "neural_violation_margin": 0.0,
+              "rho_jitter_reproduction_margin": 0.5669702594,
+              "target": false,
+              "vacuous": true,
+              "valid_for_fitness": false
+            },
+            "P6": {
+              "available": true,
+              "candidate_differential": false,
+              "classical_margin_valid": true,
+              "classical_rho": 0.25,
+              "clean_differential": false,
+              "gap": 0.0,
+              "margin_c": 0.0759150636,
+              "neural_rho": 0.25,
+              "neural_violation_margin": 0.0,
+              "rho_jitter_reproduction_margin": 0.0273949962,
+              "target": true,
+              "vacuous": false,
+              "valid_for_fitness": true
+            },
+            "P7": {
+              "available": true,
+              "candidate_differential": true,
+              "classical_margin_valid": true,
+              "classical_rho": 0.4,
+              "clean_differential": true,
+              "gap": 1.3644907394227346,
+              "margin_c": 0.1126242187,
+              "neural_rho": -0.9644907394227346,
+              "neural_violation_margin": 0.9644907394227346,
+              "rho_jitter_reproduction_margin": 0.4484874426,
+              "target": true,
+              "vacuous": false,
+              "valid_for_fitness": true
+            }
+          },
+          "property_finding": true,
+          "rho_jitter_reproduction_margins": {
+            "P1": 0.0255863354,
+            "P2": 0.187036041,
+            "P3": 0.02,
+            "P4": 0.0285933258,
+            "P5": 0.5669702594,
+            "P6": 0.0273949962,
+            "P7": 0.4484874426
+          },
+          "strict_s0_vs_s3": false,
+          "target_properties": [
+            "P4",
+            "P6",
+            "P7"
+          ],
+          "valid_property_count": 3,
+          "wide_control_vs_uncontrolled": false
+        },
+        "index": 100001,
+        "infrastructure_limited": false,
+        "mcnn_confirmed": true,
+        "primary_bug": true,
+        "quadrant": "property_differential",
+        "quality": 1.3644907394227346,
+        "raptor_safe": true,
+        "returncode": 0,
+        "seed": 202602,
+        "selected_parent_quality": 1.3644907394227346,
+        "selected_parent_tag": "validity_automation_mock_20260627_e0002",
+        "severity": 0.8144907394227345,
+        "tag": "validity_automation_mock_20260627_e0002_confirm_s202602",
+        "theta_path": "/mnt/nvme/uav_sf/docs/validity_automation_mock_20260627/confirm/theta/validity_automation_mock_20260627_e0002_confirm_s202602.json"
+      }
+    ],
+    "required_properties": [
+      "P7"
+    ],
+    "rho_jitter_reproduction_margins": {
+      "P1": 0.0255863354,
+      "P2": 0.187036041,
+      "P3": 0.02,
+      "P4": 0.0285933258,
+      "P5": 0.5669702594,
+      "P6": 0.0273949962,
+      "P7": 0.4484874426
+    }
+  }
+]

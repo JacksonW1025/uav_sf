@@ -1,0 +1,163 @@
+{
+  "airframe": {
+    "model": "sihsim_x500_v2",
+    "sim": "sih",
+    "sys_autostart": 10046
+  },
+  "boot_px4_params": {
+    "MC_NN_EN": 0,
+    "MC_NN_MANL_CTRL": 0,
+    "MPC_THR_HOVER": 0.57358357,
+    "SIH_IXX": 0.0216667,
+    "SIH_IYY": 0.0216667,
+    "SIH_IZZ": 0.04,
+    "SIH_KDV": 1.0,
+    "SIH_KDW": 0.025,
+    "SIH_L_PITCH": 0.13,
+    "SIH_L_ROLL": 0.21,
+    "SIH_MASS": 2.0,
+    "SIH_Q_MAX": 0.136777,
+    "SIH_T_MAX": 8.54858,
+    "SIH_T_TAU": 0.02,
+    "SIH_WIND_E": -2.97864534,
+    "SIH_WIND_N": 4.82142441
+  },
+  "description": "Tier 0.5 property-oracle theta generated from scripts/theta_genome.py. Steady hover under wind/physics mismatch.",
+  "divergence_thresholds": {
+    "position_divergence_m": 2.0
+  },
+  "environment": {
+    "inertia_pitch_scale": 1.0,
+    "inertia_roll_scale": 1.0,
+    "inertia_yaw_scale": 1.0,
+    "mass_scale": 1.0,
+    "route": "SIH/headless/lockstep",
+    "sih_wind_e": -2.9786,
+    "sih_wind_n": 4.8214,
+    "steady_property_focus": [
+      "P4",
+      "P6",
+      "P7"
+    ],
+    "thrust_to_weight_ratio": 1.7434,
+    "twr_scale": 1.0,
+    "uses_state_shim": false
+  },
+  "faults": [],
+  "m2_map_elites": {
+    "selection": {
+      "selected_parent_quality": 0.6082271045609896,
+      "selected_parent_tag": "smoke_2p3_part2_part2_real_20260626_e0003",
+      "source": "elite_mutation"
+    }
+  },
+  "px4_params": {
+    "CA_FAILURE_MODE": 1,
+    "COM_DISARM_LAND": -1,
+    "COM_OF_LOSS_T": 5.0,
+    "COM_RCL_EXCEPT": 8,
+    "COM_RC_IN_MODE": 4,
+    "IMU_GYRO_RATEMAX": 400,
+    "MC_NN_MANL_CTRL": 0,
+    "MPC_THR_HOVER": 0.57358357,
+    "NAV_DLL_ACT": 0,
+    "SIH_IXX": 0.0216667,
+    "SIH_IYY": 0.0216667,
+    "SIH_IZZ": 0.04,
+    "SIH_KDV": 1.0,
+    "SIH_KDW": 0.025,
+    "SIH_L_PITCH": 0.13,
+    "SIH_L_ROLL": 0.21,
+    "SIH_MASS": 2.0,
+    "SIH_Q_MAX": 0.136777,
+    "SIH_T_MAX": 8.54858,
+    "SIH_T_TAU": 0.02,
+    "SIH_WIND_E": -2.97864534,
+    "SIH_WIND_N": 4.82142441,
+    "SYS_FAILURE_EN": 1
+  },
+  "safe_thresholds": {
+    "angular_rate_max_rad_s": 8.0,
+    "final_error_m": 3.0,
+    "min_altitude_agl_m": 0.25,
+    "motor_saturation_ratio_max": 0.85,
+    "roll_pitch_max_deg": 75.0,
+    "tracking_error_max_m": 8.0,
+    "tracking_error_rms_m": 4.0
+  },
+  "seed": 20260629,
+  "sensor_perturbations": [],
+  "setpoint": {
+    "hover_ned": [
+      0.0,
+      0.0,
+      -2.5
+    ],
+    "max_wall_timer_hz": 800.0,
+    "rate_hz": 100.0,
+    "step": {
+      "delta_ned": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "start_s": 31.0
+    },
+    "type": "step",
+    "yaw_rad": 0.0
+  },
+  "tag": "smoke_2p3_part2_part2_real_20260626_e0005",
+  "theta_genome": {
+    "excluded": {
+      "c_tier_setpoint_amplitude_attack": "excluded by design; step axis is moderate P5 settling stimulus only",
+      "motor_or_sensor_faults": "deferred to Gazebo route after SIH support boundary is verified"
+    },
+    "generator": "scripts/theta_genome.py",
+    "genome": {
+      "approach_frequency_hz": 0.35,
+      "approach_phase_rad": 0.0,
+      "approach_radius_m": 3.0,
+      "disturbance_type": "wind",
+      "fake_angular_rate_bias_rad_s": 0.0,
+      "fake_velocity_bias_m_s": 0.0,
+      "inertia_pitch_scale": 1.0,
+      "inertia_roll_scale": 1.0,
+      "inertia_yaw_scale": 1.0,
+      "mass_scale": 1.0,
+      "mission_end_s": 54.0,
+      "position_estimate_jump_m": 0.0,
+      "setpoint_rate_hz": 100.0,
+      "step_axis": "x",
+      "step_magnitude_m": 0.75,
+      "step_sign": 1,
+      "step_time_s": 32.0,
+      "switch_delay_s": 0.0,
+      "switch_rate_rad_s": 1.3991148575128551,
+      "switch_roll_pitch_deg": 47.9439448209689,
+      "twr_scale": 1.0,
+      "wind_direction_rad": 5.729784883790613,
+      "wind_speed_m_s": 5.667315185213741
+    },
+    "map_elites": {
+      "amplitude_bucket": "high",
+      "disturbance_type": "wind",
+      "feature_dimensions": [
+        "disturbance_type",
+        "amplitude_bucket"
+      ],
+      "severity": 0.708414
+    },
+    "state_contam_status": "DEFERRED - pending m2b_state_shim.patch drift"
+  },
+  "timing": {
+    "approach_start_s": 14.0,
+    "controller_switch_s": 24.0,
+    "external_mode_id": 23,
+    "mission_end_s": 54.0,
+    "mode_command_repeat_s": 0.5,
+    "mode_command_timeout_s": 8.0,
+    "px4_shutdown_margin_s": 8.0,
+    "px4_shutdown_wall_slack_s": 22.0,
+    "trajectory_start_s": 31.0
+  }
+}

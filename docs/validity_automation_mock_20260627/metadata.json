@@ -1,0 +1,61 @@
+{
+  "bins": "theta_genome disturbance_type x amplitude_bucket",
+  "budget": 3,
+  "created_utc": "2026-06-27T08:03:11.213026+00:00",
+  "driver_target_properties": {
+    "default": [
+      "P4",
+      "P6",
+      "P7"
+    ],
+    "excluded_from_driver": [
+      "P1",
+      "P2",
+      "P3"
+    ],
+    "step_theta": [
+      "P4",
+      "P5",
+      "P6",
+      "P7"
+    ]
+  },
+  "eval_timeout_s": 260,
+  "fitness": "differential property gap: max_i rho_i(classical)-rho_i(mcnn) with per-property classical margin; findings require neural rho beyond per-property rho jitter reproduction margin",
+  "genome": "scripts/theta_genome.py shim-free Tier 0.5 genome",
+  "mock_evaluator": true,
+  "mode_23_identity_required": true,
+  "neural_controller": "mc_nn_control mode 23",
+  "px4_commit": "3042f906abaab7ab59ae838ad5a530a9ef3df9a6",
+  "resolved_target_properties": [
+    "P4",
+    "P6",
+    "P7"
+  ],
+  "run_id": "validity_automation_mock_20260627",
+  "run_timeout_s": 130,
+  "safety_config": "config/m2_safety_envelope.json",
+  "scope_note": "Tier 0.5 fitness-wire run; not a convergence or baseline experiment.",
+  "searcher": "MAP-Elites",
+  "seed": 20260624,
+  "strategy": "map-elites",
+  "subspace": "full",
+  "target_property_override": "behavior",
+  "validity_automation": {
+    "fail_loud_gates": [
+      "decontamination",
+      "mcnn_identity"
+    ],
+    "rho_jitter_reproduction_margins": {
+      "P1": 0.0255863354,
+      "P2": 0.187036041,
+      "P3": 0.02,
+      "P4": 0.0285933258,
+      "P5": 0.5669702594,
+      "P6": 0.0273949962,
+      "P7": 0.4484874426
+    },
+    "symmetric_decontamination": true,
+    "theta_seed_ulog_mapping": "result.evidence and progress.theta_ulog_map"
+  }
+}

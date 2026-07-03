@@ -1,0 +1,43 @@
+{
+  "bins": "theta_genome disturbance_type x amplitude_bucket",
+  "budget": 1,
+  "created_utc": "2026-06-26T11:52:24.139569+00:00",
+  "driver_target_properties": {
+    "default": [
+      "P4",
+      "P6",
+      "P7"
+    ],
+    "excluded_from_driver": [
+      "P1",
+      "P2",
+      "P3"
+    ],
+    "step_theta": [
+      "P4",
+      "P5",
+      "P6",
+      "P7"
+    ]
+  },
+  "eval_timeout_s": 260,
+  "fitness": "differential property gap: max_i rho_i(classical)-rho_i(mcnn) with per-property classical margin",
+  "genome": "scripts/theta_genome.py shim-free Tier 0.5 genome",
+  "mock_evaluator": false,
+  "mode_23_identity_required": true,
+  "neural_controller": "mc_nn_control mode 23",
+  "px4_commit": "3042f906abaab7ab59ae838ad5a530a9ef3df9a6",
+  "resolved_target_properties": [
+    "P1",
+    "P2"
+  ],
+  "run_id": "smoke_2p3_probe3_20260626",
+  "run_timeout_s": 130,
+  "safety_config": "config/m2_safety_envelope.json",
+  "scope_note": "Tier 0.5 fitness-wire run; not a convergence or baseline experiment.",
+  "searcher": "MAP-Elites",
+  "seed": 20260624,
+  "strategy": "map-elites",
+  "subspace": "route-a-switching",
+  "target_property_override": "route-a-catastrophic"
+}
