@@ -153,6 +153,42 @@ class PropertyFitnessTest(unittest.TestCase):
         self.assertEqual([], boring["relative_degradation_differential_properties"])
         self.assertFalse(boring["property_finding"])
 
+    def test_policy_findings_keep_catastrophic_gate_separate_from_behavior_gate(self) -> None:
+        behavior = property_fitness.policy_differential_findings(
+            property_result({"P1": -0.2}, severity=1),
+            property_result({"P1": -0.4, "P7": -0.50}, severity=3),
+        )
+        catastrophic = property_fitness.policy_differential_findings(
+            property_result({}),
+            property_result({"P2": -0.40}, severity=3),
+        )
+
+        self.assertEqual(["P7"], behavior["positive_policies"])
+        self.assertFalse(behavior["by_policy"]["P2"]["finding"])
+        self.assertEqual(
+            "catastrophic_requires_classical_s0_and_neural_s3",
+            behavior["by_policy"]["P2"]["excluded_reason"],
+        )
+        self.assertTrue(behavior["by_policy"]["P7"]["finding"])
+        self.assertEqual("behavior_margin_violation", behavior["by_policy"]["P7"]["finding_kind"])
+
+        self.assertEqual(["P2"], catastrophic["positive_policies"])
+        self.assertTrue(catastrophic["by_policy"]["P2"]["finding"])
+        self.assertEqual("catastrophic_severity_sign", catastrophic["by_policy"]["P2"]["finding_kind"])
+        self.assertFalse(catastrophic["by_policy"]["P1"]["finding"])
+        self.assertEqual("neural_does_not_violate_policy", catastrophic["by_policy"]["P1"]["excluded_reason"])
+
+    def test_policy_findings_reject_vacuous_and_relative_only_behavior(self) -> None:
+        result = property_fitness.policy_differential_findings(
+            property_result({"P5": 1.0, "P7": 0.80}, vacuous={"P5"}),
+            property_result({"P5": -2.0, "P7": 0.30}, severity=2, vacuous={"P5"}),
+        )
+
+        self.assertEqual([], result["positive_policies"])
+        self.assertEqual("vacuous_property", result["by_policy"]["P5"]["excluded_reason"])
+        self.assertEqual("neural_violation_inside_reproduction_margin", result["by_policy"]["P7"]["excluded_reason"])
+        self.assertFalse(result["by_policy"]["P7"]["finding"])
+
     def test_m1_compare_surfaces_relative_degradation_fields(self) -> None:
         result = m1_compare.property_differential(
             property_result({"P7": 0.80}),
@@ -173,6 +209,16 @@ class PropertyFitnessTest(unittest.TestCase):
             property_result({"P7": 0.30}, severity=1),
         )
         self.assertFalse(property_only["primary_bug"])
+
+    def test_m1_compare_surfaces_policy_findings(self) -> None:
+        result = m1_compare.property_differential(
+            property_result({}),
+            property_result({"P2": -0.40, "P7": -0.50}, severity=3),
+        )
+
+        self.assertEqual(["P2", "P7"], result["policy_findings"]["positive_policies"])
+        self.assertEqual(["P2"], result["policy_findings"]["catastrophic_positive_policies"])
+        self.assertEqual(["P7"], result["policy_findings"]["behavior_positive_policies"])
 
     def test_step_theta_adds_p5_to_driver_targets(self) -> None:
         theta = {

@@ -11,7 +11,7 @@ from typing import Any
 
 import numpy as np
 
-from property_fitness import differential_property_fitness, property_margins
+from property_fitness import differential_property_fitness, policy_differential_findings, property_margins
 from property_oracle import PROPERTY_ORDER, evaluate_ulog, load_thresholds
 
 
@@ -105,6 +105,11 @@ def property_differential(
         target_properties=PROPERTY_ORDER,
         explicit_margins=margins,
     )
+    policy_findings = policy_differential_findings(
+        classical_property,
+        neural_property,
+        explicit_margins=margins,
+    )
     per_property: dict[str, Any] = {}
     strict_props = []
     relative = []
@@ -143,6 +148,8 @@ def property_differential(
         "wide_control_vs_uncontrolled": bool(wide),
         "catastrophic_property_primary_bug": bool(strict_props and wide),
         "property_primary_bug": bool(strict_props),
+        "policy_findings": policy_findings,
+        "multipolicy_differential_finding": bool(policy_findings["finding"]),
         "fitness_validation": fitness,
     }
 

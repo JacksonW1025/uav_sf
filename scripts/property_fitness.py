@@ -36,6 +36,8 @@ DEFAULT_SEARCH_TARGET_PROPERTIES = ("P4", "P6", "P7")
 STEP_SEARCH_TARGET_PROPERTIES = ("P4", "P5", "P6", "P7")
 VALIDATION_PROPERTIES = ("P1", "P2", "P4", "P5", "P6", "P7")
 CATASTROPHIC_SEARCH_TARGET_PROPERTIES = ("P1", "P2")
+CATASTROPHIC_POLICY_PROPERTIES = ("P1", "P2")
+BEHAVIOR_POLICY_PROPERTIES = ("P3", "P4", "P5", "P6", "P7")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -320,6 +322,122 @@ def differential_property_fitness(
         "strict_s0_vs_s3": strict_severity,
         "wide_control_vs_uncontrolled": wide,
         "per_property": per_property,
+    }
+
+
+def policy_differential_findings(
+    classical_property: dict[str, Any],
+    neural_property: dict[str, Any],
+    *,
+    explicit_margins: dict[str, float] | None = None,
+    explicit_reproduction_margins: dict[str, float] | None = None,
+) -> dict[str, Any]:
+    margins = property_margins(classical_property, neural_property, explicit_margins)
+    repro_margins = reproduction_margins()
+    if explicit_reproduction_margins:
+        for prop, value in explicit_reproduction_margins.items():
+            if prop in PROPERTY_ORDER:
+                repro_margins[prop] = float(value)
+
+    classical_rho = classical_property.get("rho", {})
+    neural_rho = neural_property.get("rho", {})
+    if not isinstance(classical_rho, dict) or not isinstance(neural_rho, dict):
+        raise ValueError("property results must contain rho objects")
+
+    csev = severity_value(classical_property)
+    nsev = severity_value(neural_property)
+    by_policy: dict[str, Any] = {}
+    positive: list[str] = []
+    catastrophic_positive: list[str] = []
+    behavior_positive: list[str] = []
+
+    for prop in PROPERTY_ORDER:
+        c = _finite_number(classical_rho.get(prop))
+        n = _finite_number(neural_rho.get(prop))
+        available = c is not None and n is not None
+        vacuous = property_is_vacuous(classical_property, neural_property, prop)
+        policy_class = "catastrophic" if prop in CATASTROPHIC_POLICY_PROPERTIES else "behavior"
+        repro_margin = float(repro_margins[prop])
+        margin = float(margins[prop])
+        neural_margin = robust_violation_margin(n)
+
+        if policy_class == "catastrophic":
+            severity_gate = bool(csev == 0 and nsev == 3)
+            classical_satisfies = bool(available and c is not None and c > 0.0)
+            neural_violates = bool(available and n is not None and n <= 0.0)
+            finding = bool(available and not vacuous and severity_gate and classical_satisfies and neural_violates)
+            finding_kind = "catastrophic_severity_sign" if finding else None
+            if not available:
+                reason = "missing_or_nonfinite_rho"
+            elif vacuous:
+                reason = "vacuous_property"
+            elif not severity_gate:
+                reason = "catastrophic_requires_classical_s0_and_neural_s3"
+            elif not classical_satisfies:
+                reason = "classical_does_not_satisfy_policy"
+            elif not neural_violates:
+                reason = "neural_does_not_violate_policy"
+            else:
+                reason = None
+        else:
+            severity_gate = True
+            classical_satisfies = bool(available and c is not None and c >= margin)
+            neural_violates = bool(available and n is not None and n <= -repro_margin)
+            finding = bool(available and not vacuous and classical_satisfies and neural_violates)
+            finding_kind = "behavior_margin_violation" if finding else None
+            if not available:
+                reason = "missing_or_nonfinite_rho"
+            elif vacuous:
+                reason = "vacuous_property"
+            elif not classical_satisfies:
+                reason = "classical_below_property_margin"
+            elif not neural_violates:
+                reason = "neural_violation_inside_reproduction_margin"
+            else:
+                reason = None
+
+        record = {
+            "policy_class": policy_class,
+            "available": available,
+            "vacuous": vacuous,
+            "classical_rho": c,
+            "neural_rho": n,
+            "classical_severity": csev,
+            "neural_severity": nsev,
+            "classical_satisfies_policy": classical_satisfies,
+            "neural_violates_policy": neural_violates,
+            "classical_margin": margin,
+            "rho_jitter_reproduction_margin": repro_margin,
+            "neural_violation_margin": neural_margin,
+            "catastrophic_severity_gate_valid": severity_gate,
+            "finding": finding,
+            "finding_kind": finding_kind,
+        }
+        if reason:
+            record["excluded_reason"] = reason
+        by_policy[prop] = record
+        if finding:
+            positive.append(prop)
+            if policy_class == "catastrophic":
+                catastrophic_positive.append(prop)
+            else:
+                behavior_positive.append(prop)
+
+    return {
+        "semantics": (
+            "one differential oracle over P1-P7 policies: catastrophic P1/P2 require "
+            "decontaminated classical S0, neural S3, and neural rho sign violation for that policy; "
+            "behavior P3-P7 require non-vacuous classical rho >= margin_c_Pi and neural rho <= -rho jitter reproduction margin"
+        ),
+        "classical_severity": csev,
+        "classical_severity_label": severity_label(classical_property),
+        "neural_severity": nsev,
+        "neural_severity_label": severity_label(neural_property),
+        "positive_policies": positive,
+        "catastrophic_positive_policies": catastrophic_positive,
+        "behavior_positive_policies": behavior_positive,
+        "finding": bool(positive),
+        "by_policy": by_policy,
     }
 
 
