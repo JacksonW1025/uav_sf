@@ -16,6 +16,7 @@ mkdir -p "${LOG_DIR}"
 
   "${REPO_ROOT}/scripts/install_raptor_sih_board.sh"
   "${REPO_ROOT}/scripts/install_m1_sih_x500.sh"
+  "${REPO_ROOT}/scripts/install_fuzz1b_dds_groundtruth.sh"
   "${REPO_ROOT}/scripts/install_m2b_state_shim.sh"
 
   cd "${PX4_DIR}"

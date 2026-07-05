@@ -62,6 +62,7 @@ class CampaignConfig:
     max_confirm_candidates: int = 3
     crossover: bool = False
     crossover_rate: float = 0.25
+    sut: str = "mcnn"
 
     @property
     def canonical_strategy(self) -> str:
@@ -87,6 +88,7 @@ def config_from_json(data: dict[str, Any]) -> CampaignConfig:
     values["thresholds_json"] = Path(thresholds) if thresholds else None
     values["strategy"] = CANONICAL_STRATEGIES[str(values.get("strategy", "guided"))]
     values.setdefault("resolved_target_properties", m2_map_elites.parse_target_properties(values.get("target_properties")))
+    values.setdefault("sut", "mcnn")
     return CampaignConfig(**values)
 
 
@@ -157,6 +159,7 @@ def append_jsonl(path: Path, record: dict[str, Any]) -> None:
 
 
 def make_metadata(config: CampaignConfig) -> dict[str, Any]:
+    selected_sut = m2_map_elites.sut_config(config.sut)
     return {
         "run_id": config.run_id,
         "created_utc": datetime.now(timezone.utc).isoformat(),
@@ -189,12 +192,15 @@ def make_metadata(config: CampaignConfig) -> dict[str, Any]:
         "single_eval_failure_policy": "record returncode/error and continue to the next eval",
         "baseline_comparability": "guided, random, and grid share budget, theta generator, evaluator, oracle, and validity gate",
         "fitness": (
-            "quality is max classical-minus-mcnn rho gap over valid target properties; "
+            f"quality is max classical-minus-{selected_sut.controller} rho gap over valid target properties; "
             "catastrophic P1/P2 target fitness additionally requires decontaminated classical severity S0; "
             "strict differential requires neural rho <= -rho jitter reproduction margin; "
             "relative degradation differential requires neural rho > 0 and gap beyond that margin; "
-            "primary_bug is reserved for decontaminated classical S0 versus mcnn S3 severity"
+            f"primary_bug is reserved for decontaminated classical S0 versus {selected_sut.controller} S3 severity"
         ),
+        "sut": config.sut,
+        "neural_controller": selected_sut.neural_label,
+        "neural_controller_key": selected_sut.controller,
         "target_property_override": config.target_properties,
         "resolved_target_properties": config.resolved_target_properties,
         "mock_evaluator": config.mock_evaluator,
@@ -434,14 +440,19 @@ def failure_result(
     target_properties: list[str] | None,
     selected_parent_tag: str | None,
     selected_parent_quality: float | None,
+    sut: str,
 ) -> m2_map_elites.EvalResult:
     m2_map_elites.write_json(theta_path, theta)
     docs_dir.mkdir(parents=True, exist_ok=True)
     feature_bin, severity = feature_from_theta(theta)
     seed = int(theta["seed"]) if isinstance(theta.get("seed"), int) else None
+    selected_sut = m2_map_elites.sut_config(sut)
     evidence = {
         "tag": theta.get("tag"),
         "seed": seed,
+        "sut": selected_sut.key,
+        "neural_controller": selected_sut.controller,
+        "neural_controller_label": selected_sut.neural_label,
         "theta_path": str(theta_path),
         "docs_dir": str(docs_dir),
         "ulog_paths": {},
@@ -471,6 +482,9 @@ def failure_result(
         selected_parent_tag=selected_parent_tag,
         selected_parent_quality=selected_parent_quality,
         mcnn_confirmed=None,
+        sut=selected_sut.key,
+        neural_controller=selected_sut.controller,
+        neural_confirmed=None,
         error=error,
         seed=seed,
         evidence=evidence,
@@ -510,6 +524,7 @@ def evaluate_one(
             selected_parent_quality=selected_parent_quality,
             mock_evaluator=config.mock_evaluator,
             target_properties=config.resolved_target_properties,
+            sut=config.sut,
         )
     except Exception as exc:  # keep a single bad eval from killing the campaign
         result = failure_result(
@@ -521,6 +536,7 @@ def evaluate_one(
             config.resolved_target_properties,
             selected_parent_tag,
             selected_parent_quality,
+            config.sut,
         )
     return result, genome, selection_source
 
@@ -585,6 +601,9 @@ def progress_record(
         "eval": result["index"],
         "tag": result["tag"],
         "seed": result.get("seed"),
+        "sut": result.get("sut"),
+        "neural_controller": result.get("neural_controller"),
+        "neural_confirmed": result.get("neural_confirmed"),
         "selection_source": selection_source,
         "selected_parent_tag": result.get("selected_parent_tag"),
         "selected_parent_quality": result.get("selected_parent_quality"),
@@ -689,6 +708,7 @@ def update_state_after_eval(
 
 
 def prepare_environment(config: CampaignConfig) -> tuple[dict[str, str], dict[str, float]]:
+    selected_sut = m2_map_elites.sut_config(config.sut)
     env = m2_map_elites.os_environ_with_speed(config.sim_speed_factor)
     thresholds = m2_map_elites.load_thresholds(config.thresholds_json)
     if config.mock_evaluator:
@@ -696,23 +716,18 @@ def prepare_environment(config: CampaignConfig) -> tuple[dict[str, str], dict[st
 
     config.run_dir.mkdir(parents=True, exist_ok=True)
     if config.skip_build:
-        m1.run_checked(
-            [str(REPO_ROOT / "scripts/install_mcnn_sih_board.sh")],
-            cwd=REPO_ROOT,
-            log=config.run_dir / "build.log",
-            env=env,
-        )
-        m1.run_checked(
-            [str(REPO_ROOT / "scripts/install_m1_sih_x500.sh")],
-            cwd=REPO_ROOT,
-            log=config.run_dir / "build.log",
-            env=env,
-        )
+        for installer in selected_sut.skip_build_installers:
+            m1.run_checked(
+                [str(installer)],
+                cwd=REPO_ROOT,
+                log=config.run_dir / "build.log",
+                env=env,
+            )
     else:
         build_env = env.copy()
-        build_env["PX4_MCNN_SIH_BUILD_LOG"] = str(config.run_dir / "px4_mcnn_sih_build.log")
+        build_env[selected_sut.build_log_env] = str(config.run_dir / selected_sut.build_log_name)
         m1.run_checked(
-            [str(REPO_ROOT / "scripts/build_px4_mcnn_sih.sh")],
+            [str(selected_sut.build_script)],
             cwd=REPO_ROOT,
             log=config.run_dir / "build.log",
             env=build_env,
@@ -745,6 +760,9 @@ def print_eval_progress(progress: dict[str, Any]) -> None:
                 "primary_bug": progress["primary_bug"],
                 "returncode": progress["returncode"],
                 "error": progress["error"],
+                "sut": progress["sut"],
+                "neural_controller": progress["neural_controller"],
+                "neural_confirmed": progress["neural_confirmed"],
             },
             sort_keys=True,
         ),
@@ -841,6 +859,7 @@ def confirm_args(config: CampaignConfig) -> argparse.Namespace:
         resolved_target_properties=config.resolved_target_properties,
         sim_speed_factor=config.sim_speed_factor,
         thresholds_json=config.thresholds_json,
+        sut=config.sut,
     )
 
 
@@ -914,6 +933,7 @@ def merge_resume_config(saved: CampaignConfig, requested: CampaignConfig, state:
         "mock_evaluator",
         "crossover",
         "crossover_rate",
+        "sut",
     ]
     for field in invariant_fields:
         if getattr(saved, field) != getattr(requested, field):
@@ -943,6 +963,7 @@ def merge_resume_config(saved: CampaignConfig, requested: CampaignConfig, state:
         max_confirm_candidates=requested.max_confirm_candidates,
         crossover=saved.crossover,
         crossover_rate=saved.crossover_rate,
+        sut=saved.sut,
     )
 
 
@@ -950,6 +971,7 @@ def resolve_new_config(args: argparse.Namespace) -> CampaignConfig:
     run_id = args.run_id or datetime.now(timezone.utc).strftime("campaign_%Y%m%dT%H%M%SZ")
     strategy = CANONICAL_STRATEGIES[args.strategy or "guided"]
     target_properties = args.target_properties or "auto"
+    sut = args.sut or "mcnn"
     return CampaignConfig(
         run_id=run_id,
         run_root=(args.run_root or DEFAULT_RUN_ROOT).resolve(),
@@ -973,6 +995,7 @@ def resolve_new_config(args: argparse.Namespace) -> CampaignConfig:
         max_confirm_candidates=args.max_confirm_candidates if args.max_confirm_candidates is not None else 3,
         crossover=bool(args.crossover),
         crossover_rate=args.crossover_rate if args.crossover_rate is not None else 0.25,
+        sut=sut,
     )
 
 
@@ -1005,6 +1028,7 @@ def resolve_resume_config(args: argparse.Namespace, state: dict[str, Any]) -> Ca
         else saved.max_confirm_candidates,
         crossover=args.crossover if args.crossover is not None else saved.crossover,
         crossover_rate=args.crossover_rate if args.crossover_rate is not None else saved.crossover_rate,
+        sut=args.sut if args.sut is not None else saved.sut,
     )
 
 
@@ -1032,6 +1056,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--max-confirm-candidates", type=int)
     parser.add_argument("--crossover", action="store_true", default=None)
     parser.add_argument("--crossover-rate", type=float)
+    parser.add_argument("--sut", choices=m2_map_elites.SUTS)
     return parser
 
 

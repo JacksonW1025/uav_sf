@@ -32,7 +32,7 @@ from property_fitness import (
     normalize_target_properties,
 )
 from property_oracle import evaluate_ulog, load_thresholds
-from validity_automation import decontamination_gate, reproduction_margins
+from validity_automation import decontamination_gate, reproduction_margins, raptor_identity_gate
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -75,12 +75,95 @@ TARGET_PRESETS: dict[str, list[str] | None] = {
     "route-a-catastrophic": ["P1", "P2"],
     "validation": ["P1", "P2", "P4", "P5", "P6", "P7"],
 }
+SUTS = ["mcnn", "raptor"]
 SUBSPACES = ["full", "route-a-switching", "steady-wind-physics", "state-contam"]
 STRATEGIES = ["map-elites", "random"]
 ROUTE_A_ROLL_PITCH_RANGE = (16.0, 50.0)
 ROUTE_A_RATE_RANGE = (0.45, 2.75)
 ROUTE_A_WIND_RANGE = (0.0, 6.0)
 ROUTE_A_DELAY_RANGE = (0.0, 0.18)
+
+
+@dataclass(frozen=True)
+class SUTConfig:
+    key: str
+    controller: str
+    neural_label: str
+    build_script: Path
+    build_log_env: str
+    build_log_name: str
+    skip_build_installers: tuple[Path, ...]
+    identity_key: str
+
+
+def sut_config(sut: str = "mcnn") -> SUTConfig:
+    key = str(sut)
+    if key == "mcnn":
+        return SUTConfig(
+            key="mcnn",
+            controller="mcnn",
+            neural_label="mc_nn_control mode 23",
+            build_script=REPO_ROOT / "scripts/build_px4_mcnn_sih.sh",
+            build_log_env="PX4_MCNN_SIH_BUILD_LOG",
+            build_log_name="px4_mcnn_sih_build.log",
+            skip_build_installers=(
+                REPO_ROOT / "scripts/install_mcnn_sih_board.sh",
+                REPO_ROOT / "scripts/install_m1_sih_x500.sh",
+            ),
+            identity_key="mcnn_identity",
+        )
+    if key == "raptor":
+        return SUTConfig(
+            key="raptor",
+            controller="raptor",
+            neural_label="RAPTOR mc_raptor mode 23 (original clipped inputs)",
+            build_script=REPO_ROOT / "scripts/build_px4_raptor_sih.sh",
+            build_log_env="PX4_RAPTOR_SIH_BUILD_LOG",
+            build_log_name="px4_raptor_sih_build.log",
+            skip_build_installers=(
+                REPO_ROOT / "scripts/install_raptor_sih_board.sh",
+                REPO_ROOT / "scripts/install_m1_sih_x500.sh",
+                REPO_ROOT / "scripts/install_fuzz1b_dds_groundtruth.sh",
+                REPO_ROOT / "scripts/install_m2b_state_shim.sh",
+            ),
+            identity_key="raptor_identity",
+        )
+    raise ValueError(f"unknown SUT {sut!r}; expected one of {SUTS}")
+
+
+def run_one_for_sut(
+    config: SUTConfig,
+    theta_path: Path,
+    theta: dict[str, Any],
+    controller: str,
+    docs_dir: Path,
+    env: dict[str, str],
+    run_timeout_s: int,
+    safety_config: Path | None,
+) -> dict[str, Path]:
+    if config.key == "mcnn":
+        return mcnn_runner.run_one(
+            REPO_ROOT,
+            theta_path,
+            theta,
+            controller,
+            docs_dir,
+            env,
+            run_timeout_s,
+            safety_config,
+        )
+    if config.key == "raptor":
+        return m1.run_one(
+            REPO_ROOT,
+            theta_path,
+            theta,
+            controller,
+            docs_dir,
+            env,
+            run_timeout_s,
+            safety_config,
+        )
+    raise ValueError(f"unknown SUT {config.key!r}; expected one of {SUTS}")
 
 
 @dataclass
@@ -105,6 +188,9 @@ class EvalResult:
     selected_parent_tag: str | None = None
     selected_parent_quality: float | None = None
     mcnn_confirmed: bool | None = None
+    sut: str = "mcnn"
+    neural_controller: str = "mcnn"
+    neural_confirmed: bool | None = None
     error: str | None = None
     seed: int | None = None
     evidence: dict[str, Any] | None = None
@@ -132,6 +218,9 @@ class EvalResult:
             "selected_parent_tag": self.selected_parent_tag,
             "selected_parent_quality": self.selected_parent_quality,
             "mcnn_confirmed": self.mcnn_confirmed,
+            "sut": self.sut,
+            "neural_controller": self.neural_controller,
+            "neural_confirmed": self.neural_confirmed,
             "error": self.error,
             "evidence": self.evidence or {},
         }
@@ -183,11 +272,12 @@ def state_shim_fairness_command(
 ) -> tuple[list[str], Path, Path]:
     ulog_paths = evidence.get("ulog_paths", {})
     task_paths = evidence.get("task_paths", {})
+    neural_controller = str(evidence.get("neural_controller") or "mcnn")
     try:
         classical_ulog = ulog_paths["classical"]
-        mcnn_ulog = ulog_paths["mcnn"]
+        neural_ulog = ulog_paths[neural_controller]
         classical_task = task_paths["classical"]
-        mcnn_task = task_paths["mcnn"]
+        neural_task = task_paths[neural_controller]
     except KeyError as exc:
         raise ValueError(f"missing campaign output path for state shim fairness: {exc}") from exc
     output = docs_dir / f"state_shim_fairness_{tag}.json"
@@ -200,11 +290,11 @@ def state_shim_fairness_command(
         "--classical-ulog",
         str(classical_ulog),
         "--raptor-ulog",
-        str(mcnn_ulog),
+        str(neural_ulog),
         "--classical-task-json",
         str(classical_task),
         "--raptor-task-json",
-        str(mcnn_task),
+        str(neural_task),
         "--output",
         str(output),
         "--require-state-shim-delivery",
@@ -1178,6 +1268,7 @@ def mock_property_pair(
     theta: dict[str, Any],
     genome: dict[str, Any],
     target_properties: list[str] | None = None,
+    neural_controller: str = "mcnn",
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     targets = target_properties_for_theta(theta, target_properties)
     kind, _, severity = theta_genome.feature_bin(genome)
@@ -1239,19 +1330,41 @@ def mock_property_pair(
         "window": {"terminal": {"terminal_class": "NONE"}},
         "controller_identity": {"controller": "classical", "raptor_input_present": False},
     }
+    if neural_controller == "mcnn":
+        identity = {
+            "controller": "mcnn",
+            "mcnn_confirmed": True,
+            "identity_gate": {"passed": True, "reasons": [], "mock_evaluator": True},
+            "neural_control_rate_hz": 228.0,
+            "raptor_input_present": False,
+            "neural_control_present": True,
+        }
+    elif neural_controller == "raptor":
+        identity = {
+            "controller": "raptor",
+            "raptor_confirmed": True,
+            "identity_gate": {"passed": True, "reasons": [], "mock_evaluator": True},
+            "raptor_status_present": True,
+            "raptor_status_active_samples": 4_200,
+            "raptor_input_present": True,
+            "raptor_input_samples": 4_200,
+            "raptor_input_active_samples": 4_200,
+            "target_nav_state": 23,
+            "target_nav_state_samples": 4_200,
+            "target_nav_state_fraction": 1.0,
+            "neural_control_present": False,
+            "policy_tar_staged": True,
+        }
+    else:
+        raise ValueError(f"unknown neural_controller {neural_controller!r}; expected one of {SUTS}")
     neural_property = {
         "tag": theta.get("tag"),
-        "controller": "mcnn",
+        "controller": neural_controller,
         "rho": neural_rho,
         "details": details,
         "severity": {"severity": nsev, "label": labels[nsev], "reasons": []},
         "window": {"terminal": {"terminal_class": "NONE"}},
-        "controller_identity": {
-            "controller": "mcnn",
-            "mcnn_confirmed": True,
-            "neural_control_rate_hz": 228.0,
-            "raptor_input_present": False,
-        },
+        "controller_identity": identity,
     }
     return classical_property, neural_property
 
@@ -1268,7 +1381,9 @@ def evaluate_theta(
     selected_parent_quality: float | None = None,
     mock_evaluator: bool = False,
     target_properties: list[str] | None = None,
+    sut: str = "mcnn",
 ) -> EvalResult:
+    selected_sut = sut_config(sut)
     write_json(theta_path, theta)
     tag = str(theta["tag"])
     docs_dir.mkdir(parents=True, exist_ok=True)
@@ -1286,6 +1401,9 @@ def evaluate_theta(
     evidence: dict[str, Any] = {
         "tag": tag,
         "seed": seed,
+        "sut": selected_sut.key,
+        "neural_controller": selected_sut.controller,
+        "neural_controller_label": selected_sut.neural_label,
         "theta_path": str(theta_path),
         "docs_dir": str(docs_dir),
         "ulog_paths": {},
@@ -1296,19 +1414,25 @@ def evaluate_theta(
     }
     fitness = empty_fitness(target_properties)
     classical_property: dict[str, Any] = {}
-    mcnn_property: dict[str, Any] = {}
+    neural_property: dict[str, Any] = {}
     mcnn_confirmed: bool | None = None
+    neural_confirmed: bool | None = None
 
     try:
         if mock_evaluator:
             if not isinstance(genome, dict):
                 raise ValueError("mock evaluator requires theta_genome.genome")
-            classical_property, mcnn_property = mock_property_pair(theta, genome, target_properties)
+            classical_property, neural_property = mock_property_pair(
+                theta,
+                genome,
+                target_properties,
+                neural_controller=selected_sut.controller,
+            )
         else:
             outputs: dict[str, dict[str, Path]] = {}
-            for controller in ["classical", "mcnn"]:
-                outputs[controller] = mcnn_runner.run_one(
-                    REPO_ROOT,
+            for controller in ["classical", selected_sut.controller]:
+                outputs[controller] = run_one_for_sut(
+                    selected_sut,
                     theta_path,
                     theta,
                     controller,
@@ -1326,44 +1450,54 @@ def evaluate_theta(
                 task=load_json(outputs["classical"]["task"]),
                 thresholds=thresholds,
             )
-            mcnn_property = evaluate_ulog(
-                outputs["mcnn"]["ulog"],
-                controller="mcnn",
+            neural_property = evaluate_ulog(
+                outputs[selected_sut.controller]["ulog"],
+                controller=selected_sut.controller,
                 theta=theta,
-                task=load_json(outputs["mcnn"]["task"]),
+                task=load_json(outputs[selected_sut.controller]["task"]),
                 thresholds=thresholds,
             )
+            if selected_sut.key == "raptor":
+                identity = neural_property.setdefault("controller_identity", {})
+                policy_path = outputs[selected_sut.controller].get("policy_tar")
+                identity["policy_tar_staged"] = bool(policy_path is not None and policy_path.exists())
+                identity_gate = raptor_identity_gate(identity)
+                identity["identity_gate"] = identity_gate
+                identity["raptor_confirmed"] = bool(identity_gate.get("passed"))
         classical_property_path = docs_dir / f"{tag}_classical_property.json"
-        mcnn_property_path = docs_dir / f"{tag}_mcnn_property.json"
+        neural_property_path = docs_dir / f"{tag}_{selected_sut.controller}_property.json"
         write_json(classical_property_path, classical_property)
-        write_json(mcnn_property_path, mcnn_property)
+        write_json(neural_property_path, neural_property)
         evidence["property_paths"] = {
             "classical": str(classical_property_path),
-            "mcnn": str(mcnn_property_path),
+            selected_sut.controller: str(neural_property_path),
         }
 
         if mock_evaluator:
             decontam_gates = {
                 "classical": {"passed": True, "reasons": [], "mock_evaluator": True},
-                "mcnn": {"passed": True, "reasons": [], "mock_evaluator": True},
+                selected_sut.controller: {"passed": True, "reasons": [], "mock_evaluator": True},
             }
         else:
             decontam_gates = {
                 "classical": decontamination_gate(
                     classical_property.get("window", {}).get("decontamination", {})
                 ),
-                "mcnn": decontamination_gate(mcnn_property.get("window", {}).get("decontamination", {})),
+                selected_sut.controller: decontamination_gate(
+                    neural_property.get("window", {}).get("decontamination", {})
+                ),
             }
-        mcnn_identity = mcnn_property.get("controller_identity", {})
+        neural_identity = neural_property.get("controller_identity", {})
         identity_gate = (
             {"passed": True, "reasons": [], "mock_evaluator": True}
             if mock_evaluator
-            else mcnn_identity.get("identity_gate", {"passed": False, "reasons": ["missing_identity_gate"]})
+            else neural_identity.get("identity_gate", {"passed": False, "reasons": ["missing_identity_gate"]})
         )
-        mcnn_confirmed = bool(identity_gate.get("passed"))
+        neural_confirmed = bool(identity_gate.get("passed"))
+        mcnn_confirmed = neural_confirmed if selected_sut.controller == "mcnn" else None
         evidence["validity"] = {
             "decontamination": decontam_gates,
-            "mcnn_identity": identity_gate,
+            selected_sut.identity_key: identity_gate,
             "rho_jitter_reproduction_margins": reproduction_margins(),
         }
         if not mock_evaluator and requires_state_shim_delivery(theta):
@@ -1377,7 +1511,7 @@ def evaluate_theta(
                 if not bool(gate.get("passed")):
                     gate_failures.append(f"{controller}_decontamination:{','.join(gate.get('reasons', []))}")
             if not bool(identity_gate.get("passed")):
-                gate_failures.append(f"mcnn_identity:{','.join(identity_gate.get('reasons', []))}")
+                gate_failures.append(f"{selected_sut.identity_key}:{','.join(identity_gate.get('reasons', []))}")
             state_shim_gate = evidence["validity"].get("state_shim_delivery")
             if isinstance(state_shim_gate, dict) and not bool(state_shim_gate.get("passed")):
                 gate_failures.append(f"state_shim_delivery:{','.join(state_shim_gate.get('reasons', []))}")
@@ -1389,10 +1523,12 @@ def evaluate_theta(
         else:
             fitness = differential_property_fitness(
                 classical_property,
-                mcnn_property,
+                neural_property,
                 target_properties=target_properties,
             )
-            comparison = property_only_result(theta, classical_property, mcnn_property)
+            fitness["sut"] = selected_sut.key
+            fitness["neural_controller"] = selected_sut.controller
+            comparison = property_only_result(theta, classical_property, neural_property)
             comparison["property_oracle"]["fitness"] = fitness
             write_json(compare_path, comparison)
             returncode = 0
@@ -1401,6 +1537,7 @@ def evaluate_theta(
         returncode = 1
         fitness = empty_fitness(target_properties)
         mcnn_confirmed = None
+        neural_confirmed = None
     elapsed = time.monotonic() - start
     if returncode != 0 or not compare_path.exists():
         return EvalResult(
@@ -1424,6 +1561,9 @@ def evaluate_theta(
             selected_parent_tag=selected_parent_tag,
             selected_parent_quality=selected_parent_quality,
             mcnn_confirmed=mcnn_confirmed,
+            sut=selected_sut.key,
+            neural_controller=selected_sut.controller,
+            neural_confirmed=neural_confirmed,
             error=error or f"runner_returncode_{returncode}",
             seed=seed,
             evidence=evidence,
@@ -1462,6 +1602,9 @@ def evaluate_theta(
         selected_parent_tag=selected_parent_tag,
         selected_parent_quality=selected_parent_quality,
         mcnn_confirmed=mcnn_confirmed,
+        sut=selected_sut.key,
+        neural_controller=selected_sut.controller,
+        neural_confirmed=neural_confirmed,
         error=None,
         seed=seed,
         evidence=evidence,
@@ -1514,6 +1657,9 @@ def append_progress(
         "eval": result.index,
         "tag": result.tag,
         "seed": result.seed,
+        "sut": result.sut,
+        "neural_controller": result.neural_controller,
+        "neural_confirmed": result.neural_confirmed,
         "selection_source": selection_source,
         "selected_parent_tag": result.selected_parent_tag,
         "selected_parent_quality": result.selected_parent_quality,
@@ -1539,6 +1685,7 @@ def append_progress(
 
 
 def search(args: argparse.Namespace) -> tuple[Path, list[EvalResult], list[dict[str, Any]], dict[str, dict[str, Any]]]:
+    selected_sut = sut_config(getattr(args, "sut", "mcnn"))
     rng = random.Random(args.seed)
     run_id = args.run_id or datetime.now(timezone.utc).strftime("m2_%Y%m%dT%H%M%SZ")
     run_dir = (REPO_ROOT / "docs" / run_id).resolve()
@@ -1565,11 +1712,11 @@ def search(args: argparse.Namespace) -> tuple[Path, list[EvalResult], list[dict[
             "other subspaces use disturbance_type x amplitude_bucket"
         ),
         "fitness": (
-            "differential property gap: max_i rho_i(classical)-rho_i(mcnn) with per-property classical margin; "
+            f"differential property gap: max_i rho_i(classical)-rho_i({selected_sut.controller}) with per-property classical margin; "
             "catastrophic P1/P2 target fitness additionally requires decontaminated classical severity S0; "
             "strict findings require neural rho beyond per-property rho jitter reproduction margin; "
             "relative-degradation findings require both controllers controlled and gap beyond the same margin; "
-            "primary_bug is reserved for decontaminated classical S0 versus mcnn S3 severity"
+            f"primary_bug is reserved for decontaminated classical S0 versus {selected_sut.controller} S3 severity"
         ),
         "target_property_override": args.target_properties,
         "resolved_target_properties": args.resolved_target_properties,
@@ -1578,11 +1725,13 @@ def search(args: argparse.Namespace) -> tuple[Path, list[EvalResult], list[dict[
             "step_theta": ["P4", "P5", "P6", "P7"],
             "excluded_from_driver": ["P1", "P2", "P3"],
         },
-        "neural_controller": "mc_nn_control mode 23",
+        "sut": selected_sut.key,
+        "neural_controller": selected_sut.neural_label,
+        "neural_controller_key": selected_sut.controller,
         "mode_23_identity_required": True,
         "validity_automation": {
             "symmetric_decontamination": True,
-            "fail_loud_gates": ["decontamination", "mcnn_identity"],
+            "fail_loud_gates": ["decontamination", selected_sut.identity_key],
             "rho_jitter_reproduction_margins": reproduction_margins(),
             "theta_seed_ulog_mapping": "result.evidence and progress.theta_ulog_map",
         },
@@ -1595,12 +1744,12 @@ def search(args: argparse.Namespace) -> tuple[Path, list[EvalResult], list[dict[
     thresholds = load_thresholds(args.thresholds_json)
     if not args.mock_evaluator:
         if args.skip_build:
-            m1.run_checked([str(REPO_ROOT / "scripts/install_mcnn_sih_board.sh")], cwd=REPO_ROOT, log=run_dir / "build.log", env=env)
-            m1.run_checked([str(REPO_ROOT / "scripts/install_m1_sih_x500.sh")], cwd=REPO_ROOT, log=run_dir / "build.log", env=env)
+            for installer in selected_sut.skip_build_installers:
+                m1.run_checked([str(installer)], cwd=REPO_ROOT, log=run_dir / "build.log", env=env)
         else:
             build_env = env.copy()
-            build_env["PX4_MCNN_SIH_BUILD_LOG"] = str(run_dir / "px4_mcnn_sih_build.log")
-            m1.run_checked([str(REPO_ROOT / "scripts/build_px4_mcnn_sih.sh")], cwd=REPO_ROOT, log=run_dir / "build.log", env=build_env)
+            build_env[selected_sut.build_log_env] = str(run_dir / selected_sut.build_log_name)
+            m1.run_checked([str(selected_sut.build_script)], cwd=REPO_ROOT, log=run_dir / "build.log", env=build_env)
     archive: dict[str, dict[str, Any]] = {}
     results: list[EvalResult] = []
     primary_candidates: list[dict[str, Any]] = []
@@ -1653,6 +1802,7 @@ def search(args: argparse.Namespace) -> tuple[Path, list[EvalResult], list[dict[
             selected_parent_quality=selected_parent_quality,
             mock_evaluator=args.mock_evaluator,
             target_properties=args.resolved_target_properties,
+            sut=selected_sut.key,
         )
         results.append(result)
         append_jsonl(run_dir / "evals.jsonl", result.as_dict())
@@ -1693,6 +1843,9 @@ def search(args: argparse.Namespace) -> tuple[Path, list[EvalResult], list[dict[
                     "quadrant": result.quadrant,
                     "primary_bug": result.primary_bug,
                     "classical_usable": result.classical_usable,
+                    "sut": result.sut,
+                    "neural_controller": result.neural_controller,
+                    "neural_confirmed": result.neural_confirmed,
                     "selection_source": selection_source,
                     "selected_parent_tag": selected_parent_tag,
                     "selected_parent_quality": selected_parent_quality,
@@ -1715,10 +1868,47 @@ def os_environ_with_speed(sim_speed_factor: float) -> dict[str, str]:
     return env
 
 
+def ros_overlay_supports_current_python(install_dir: Path) -> bool:
+    px4_msgs = install_dir / "px4_msgs"
+    if not px4_msgs.exists():
+        return True
+    py_version = f"python{sys.version_info.major}.{sys.version_info.minor}"
+    return any(
+        (px4_msgs / root / py_version).exists()
+        for root in [
+            Path("lib"),
+            Path("local/lib"),
+        ]
+    )
+
+
+def ros_setup_files_for_environment(env: dict[str, str]) -> list[Path]:
+    repo_install = REPO_ROOT / "ros2_ws/install"
+    repo_setup = repo_install / "setup.bash"
+    repo_overlay_compatible = not repo_setup.exists() or ros_overlay_supports_current_python(repo_install)
+    if repo_setup.exists() and not repo_overlay_compatible and shutil.which("ros2", path=env.get("PATH")):
+        return []
+
+    candidates: list[Path] = []
+    ros_distro = env.get("ROS_DISTRO")
+    if ros_distro:
+        candidates.append(Path(f"/opt/ros/{ros_distro}/setup.bash"))
+    candidates.extend([Path("/opt/ros/humble/setup.bash"), Path("/opt/ros/jazzy/setup.bash")])
+    setup_files: list[Path] = []
+    seen: set[Path] = set()
+    for candidate in candidates:
+        if candidate.exists() and candidate not in seen:
+            setup_files.append(candidate)
+            seen.add(candidate)
+            break
+    if repo_setup.exists() and repo_overlay_compatible:
+        setup_files.append(repo_setup)
+    return setup_files
+
+
 def with_ros_environment(env: dict[str, str]) -> dict[str, str]:
-    setup_files = [Path("/opt/ros/jazzy/setup.bash"), REPO_ROOT / "ros2_ws/install/setup.bash"]
-    existing = [path for path in setup_files if path.exists()]
-    if shutil.which("ros2", path=env.get("PATH")) and not (REPO_ROOT / "ros2_ws/install/setup.bash").exists():
+    existing = ros_setup_files_for_environment(env)
+    if shutil.which("ros2", path=env.get("PATH")) and not existing:
         return env
     if not existing:
         return env
@@ -1820,6 +2010,7 @@ def confirm_candidates(
                 selected_parent_quality=float(candidate["result"]["quality"]),
                 mock_evaluator=args.mock_evaluator,
                 target_properties=args.resolved_target_properties,
+                sut=getattr(args, "sut", "mcnn"),
             )
             result_record = result.as_dict()
             repeated_properties = robust_properties_from_result(result_record)
@@ -1982,6 +2173,7 @@ def main() -> int:
     )
     parser.add_argument("--crossover", action="store_true")
     parser.add_argument("--crossover-rate", type=float, default=0.25)
+    parser.add_argument("--sut", choices=SUTS, default="mcnn")
     args = parser.parse_args()
     args.resolved_target_properties = parse_target_properties(args.target_properties)
 

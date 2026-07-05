@@ -118,6 +118,30 @@ class ValidityAutomationTest(unittest.TestCase):
         with self.assertRaises(validity.ValidityGateError):
             validity.assert_mcnn_identity(bad)
 
+    def test_raptor_identity_gate_requires_raptor_active_input_and_no_mcnn_topic(self) -> None:
+        good = {
+            "controller": "raptor",
+            "raptor_status_present": True,
+            "raptor_status_active_samples": 4_200,
+            "raptor_input_present": True,
+            "raptor_input_samples": 4_200,
+            "raptor_input_active_samples": 4_190,
+            "target_nav_state": 23,
+            "target_nav_state_samples": 4_220,
+            "target_nav_state_fraction": 0.98,
+            "neural_control_present": False,
+            "policy_tar_staged": True,
+        }
+        self.assertTrue(validity.raptor_identity_gate(good)["passed"])
+
+        bad = dict(good)
+        bad["neural_control_present"] = True
+        gate = validity.raptor_identity_gate(bad)
+        self.assertFalse(gate["passed"])
+        self.assertIn("neural_control_present", gate["reasons"])
+        with self.assertRaises(validity.ValidityGateError):
+            validity.assert_raptor_identity(bad)
+
     def test_reproduction_margin_rejects_p7_minus_0p05(self) -> None:
         margins = validity.reproduction_margins()
         self.assertGreater(margins["P7"], 0.05)

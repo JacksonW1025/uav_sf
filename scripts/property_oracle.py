@@ -31,7 +31,7 @@ from m1_metrics import (
     task_event_elapsed_us,
     vector3,
 )
-from validity_automation import decontaminated_control_window, mcnn_identity_gate
+from validity_automation import decontaminated_control_window, mcnn_identity_gate, raptor_identity_gate
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -669,8 +669,55 @@ def numeric_faults(ulog: ULog, start_us: int, end_us: int, controller: str) -> d
 def controller_identity(ulog: ULog, start_us: int, end_us: int, controller: str) -> dict[str, Any]:
     out: dict[str, Any] = {"controller": controller}
     neural = first_dataset(ulog, "neural_control")
+    raptor_status = first_dataset(ulog, "raptor_status")
     raptor_input = first_dataset(ulog, "raptor_input")
+    status = first_dataset(ulog, "vehicle_status")
+    out["neural_control_present"] = neural is not None
     out["raptor_input_present"] = raptor_input is not None
+    if controller == "raptor":
+        out["raptor_status_present"] = raptor_status is not None
+        if raptor_status is not None and "timestamp" in raptor_status.data:
+            rts = raptor_status.data["timestamp"].astype(np.int64)
+            rmask = mask_window(rts, start_us, end_us)
+            out["raptor_status_samples"] = int(np.count_nonzero(rmask))
+            active = raptor_status.data.get("active")
+            out["raptor_status_active_samples"] = (
+                int(np.count_nonzero(np.asarray(active)[rmask].astype(bool))) if active is not None else 0
+            )
+        else:
+            out["raptor_status_samples"] = 0
+            out["raptor_status_active_samples"] = 0
+        if raptor_input is not None and "timestamp" in raptor_input.data:
+            its = raptor_input.data["timestamp"].astype(np.int64)
+            imask = mask_window(its, start_us, end_us)
+            out["raptor_input_samples"] = int(np.count_nonzero(imask))
+            active = raptor_input.data.get("active")
+            out["raptor_input_active_samples"] = (
+                int(np.count_nonzero(np.asarray(active)[imask].astype(bool))) if active is not None else out["raptor_input_samples"]
+            )
+        else:
+            out["raptor_input_samples"] = 0
+            out["raptor_input_active_samples"] = 0
+        target_nav = NAV_STATE_BY_CONTROLLER[controller]
+        out["target_nav_state"] = int(target_nav)
+        if status is not None and "nav_state" in status.data:
+            sts = status.data["timestamp"].astype(np.int64)
+            smask = mask_window(sts, start_us, end_us)
+            nav = status.data["nav_state"].astype(int)
+            target_samples = int(np.count_nonzero(smask & (nav == target_nav)))
+            total_samples = int(np.count_nonzero(smask))
+            out["target_nav_state_samples"] = target_samples
+            out["target_nav_state_total_samples"] = total_samples
+            out["target_nav_state_fraction"] = float(target_samples / total_samples) if total_samples else None
+        else:
+            out["target_nav_state_samples"] = 0
+            out["target_nav_state_total_samples"] = 0
+            out["target_nav_state_fraction"] = None
+        out["policy_tar_staged"] = None
+        identity_gate = raptor_identity_gate(out)
+        out["identity_gate"] = identity_gate
+        out["raptor_confirmed"] = bool(identity_gate["passed"])
+        return out
     if controller != "mcnn":
         return out
     if neural is None:

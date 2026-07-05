@@ -266,7 +266,8 @@ def run_one(
     write_logger_topics(run_root)
     boot_airframe = prepare_run_airframe(repo, run_root, theta)
     (run_root / "raptor").mkdir(exist_ok=True)
-    shutil.copy2(px4_dir / "src/modules/mc_raptor/blob/policy.tar", run_root / "raptor/policy.tar")
+    policy_tar = run_root / "raptor/policy.tar"
+    shutil.copy2(px4_dir / "src/modules/mc_raptor/blob/policy.tar", policy_tar)
     if log_root.exists():
         shutil.rmtree(log_root)
     log_root.mkdir(parents=True, exist_ok=True)
@@ -287,7 +288,7 @@ def run_one(
             "PX4_SIMULATOR": "sihsim",
             "PX4_SIM_MODEL": theta.get("airframe", {}).get("model", "sihsim_x500_v2"),
             "PX4_SYS_AUTOSTART": str(theta.get("airframe", {}).get("sys_autostart", 10046)),
-            "PX4_SIM_SPEED_FACTOR": os.environ.get("PX4_SIM_SPEED_FACTOR", "1"),
+            "PX4_SIM_SPEED_FACTOR": env.get("PX4_SIM_SPEED_FACTOR", os.environ.get("PX4_SIM_SPEED_FACTOR", "1")),
         }
     )
     sim_speed_factor = max(1.0, float(px4_env["PX4_SIM_SPEED_FACTOR"]))
@@ -365,6 +366,9 @@ def run_one(
 
             console_handle.write(f"\n# task_rc={task_rc}\n")
             console_handle.flush()
+            if task_rc != 0:
+                terminate_process(px4)
+                raise RuntimeError(f"task node failed rc={task_rc} for {controller}")
             try:
                 px4_rc = px4.wait(timeout=40)
             except subprocess.TimeoutExpired:
@@ -406,6 +410,7 @@ def run_one(
             "console": console_log,
             "agent": agent_log,
             "topics": topics_log,
+            "policy_tar": policy_tar,
         }
     finally:
         terminate_process(task)
@@ -471,6 +476,7 @@ def main() -> int:
     else:
         run_checked([str(repo / "scripts/install_raptor_sih_board.sh")], cwd=repo, log=docs / f"m1_{tag}_build.log", env=env)
         run_checked([str(repo / "scripts/install_m1_sih_x500.sh")], cwd=repo, log=docs / f"m1_{tag}_build.log", env=env)
+        run_checked([str(repo / "scripts/install_fuzz1b_dds_groundtruth.sh")], cwd=repo, log=docs / f"m1_{tag}_build.log", env=env)
         run_checked([str(repo / "scripts/install_m2b_state_shim.sh")], cwd=repo, log=docs / f"m1_{tag}_build.log", env=env)
 
     outputs = {}

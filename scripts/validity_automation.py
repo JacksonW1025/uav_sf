@@ -337,10 +337,80 @@ def mcnn_identity_gate(
     }
 
 
+def raptor_identity_gate(
+    identity: dict[str, Any],
+    *,
+    min_active_samples: int = 100,
+    min_input_samples: int = 100,
+    min_target_nav_fraction: float = 0.80,
+    require_policy_staged: bool = True,
+) -> dict[str, Any]:
+    reasons: list[str] = []
+    if identity.get("controller") != "raptor":
+        reasons.append("identity_controller_not_raptor")
+    if not bool(identity.get("raptor_status_present")):
+        reasons.append("missing_raptor_status_topic")
+    status_active = identity.get("raptor_status_active_samples")
+    if not isinstance(status_active, int) or status_active < min_active_samples:
+        reasons.append("insufficient_raptor_status_active_samples")
+    if not bool(identity.get("raptor_input_present")):
+        reasons.append("missing_raptor_input_topic")
+    input_samples = identity.get("raptor_input_samples")
+    if not isinstance(input_samples, int) or input_samples < min_input_samples:
+        reasons.append("insufficient_raptor_input_samples")
+    input_active = identity.get("raptor_input_active_samples")
+    if not isinstance(input_active, int) or input_active < min_input_samples:
+        reasons.append("insufficient_raptor_input_active_samples")
+    target_nav = identity.get("target_nav_state")
+    if target_nav != TARGET_NAV["raptor"]:
+        reasons.append("target_nav_state_not_external1")
+    target_nav_samples = identity.get("target_nav_state_samples")
+    if not isinstance(target_nav_samples, int) or target_nav_samples <= 0:
+        reasons.append("missing_target_nav_state_samples")
+    target_nav_fraction = finite_float(identity.get("target_nav_state_fraction"))
+    if target_nav_fraction is None or target_nav_fraction < min_target_nav_fraction:
+        reasons.append("target_nav_state_fraction_low")
+    if bool(identity.get("neural_control_present")):
+        reasons.append("neural_control_present")
+    if require_policy_staged and identity.get("policy_tar_staged") is not True:
+        reasons.append("policy_tar_not_staged")
+    return {
+        "passed": not reasons,
+        "reasons": reasons,
+        "criteria": {
+            "min_active_samples": min_active_samples,
+            "min_input_samples": min_input_samples,
+            "min_target_nav_fraction": min_target_nav_fraction,
+            "target_nav_state": TARGET_NAV["raptor"],
+            "neural_control_absent_required": True,
+            "policy_tar_staged_required": require_policy_staged,
+        },
+        "evidence": {
+            "raptor_status_present": identity.get("raptor_status_present"),
+            "raptor_status_active_samples": status_active,
+            "raptor_input_present": identity.get("raptor_input_present"),
+            "raptor_input_samples": input_samples,
+            "raptor_input_active_samples": input_active,
+            "target_nav_state": target_nav,
+            "target_nav_state_samples": target_nav_samples,
+            "target_nav_state_fraction": target_nav_fraction,
+            "neural_control_present": identity.get("neural_control_present"),
+            "policy_tar_staged": identity.get("policy_tar_staged"),
+        },
+    }
+
+
 def assert_mcnn_identity(identity: dict[str, Any]) -> dict[str, Any]:
     gate = mcnn_identity_gate(identity)
     if not gate["passed"]:
         raise ValidityGateError("mcnn_identity_gate_failed: " + ",".join(gate["reasons"]))
+    return gate
+
+
+def assert_raptor_identity(identity: dict[str, Any]) -> dict[str, Any]:
+    gate = raptor_identity_gate(identity)
+    if not gate["passed"]:
+        raise ValidityGateError("raptor_identity_gate_failed: " + ",".join(gate["reasons"]))
     return gate
 
 
