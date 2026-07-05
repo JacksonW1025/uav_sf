@@ -93,13 +93,44 @@ class ThetaGenomeTest(unittest.TestCase):
         step_theta = theta_genome.theta_from_genome(step, "unit_step_gate", 20260627)
         self.assertNotIn("steady_combo", step_theta["environment"])
 
-    def test_state_contamination_is_deferred_by_default(self) -> None:
+    def test_state_contamination_generates_executable_shim_theta(self) -> None:
         genome = theta_genome.default_genome("state_contam")
-        errors = theta_genome.validate_genome(genome)
-        self.assertIn("state_contam is DEFERRED pending m2b shim patch drift", errors)
-        self.assertTrue(
-            all(not spec.enabled for spec in theta_genome.VARIABLE_SPECS if spec.group == "state_contam")
+        genome.update(
+            {
+                "fake_velocity_bias_m_s": -0.30,
+                "fake_angular_rate_bias_rad_s": 0.12,
+                "position_estimate_jump_m": 0.25,
+            }
         )
+        genome = theta_genome.normalize_genome(genome)
+
+        self.assertEqual([], theta_genome.validate_genome(genome))
+        self.assertTrue(all(spec.enabled for spec in theta_genome.VARIABLE_SPECS if spec.group == "state_contam"))
+
+        theta = theta_genome.theta_from_genome(genome, "unit_state_contam", 20260703)
+        for target_name in ["boot_px4_params", "px4_params"]:
+            params = theta[target_name]
+            self.assertEqual(1, params["M2B_EN"])
+            self.assertEqual(2, params["M2B_P_PROF"])
+            self.assertEqual(0.25, params["M2B_P_X"])
+            self.assertEqual(0.0, params["M2B_P_Y"])
+            self.assertEqual(0.0, params["M2B_P_Z"])
+            self.assertEqual(2, params["M2B_V_PROF"])
+            self.assertEqual(-0.30, params["M2B_V_X"])
+            self.assertEqual(0.0, params["M2B_V_Y"])
+            self.assertEqual(0.0, params["M2B_V_Z"])
+            self.assertEqual(2, params["M2B_G_PROF"])
+            self.assertEqual(0.0, params["M2B_G_X"])
+            self.assertEqual(0.0, params["M2B_G_Y"])
+            self.assertEqual(0.12, params["M2B_G_Z"])
+
+        feature = theta["theta_genome"]["map_elites"]
+        self.assertEqual(["velocity_bias_bucket", "angular_rate_bias_bucket"], feature["feature_dimensions"])
+        self.assertRegex(feature["velocity_bias_bucket"], r"^vel_[0-4]$")
+        self.assertRegex(feature["angular_rate_bias_bucket"], r"^gyro_[0-4]$")
+        self.assertEqual("ACTIVE - routed through m2b_state_shim.patch", theta["theta_genome"]["state_contam_status"])
+        self.assertTrue(theta["environment"]["uses_state_shim"])
+        self.assertEqual(3, len(theta["sensor_perturbations"]))
 
 
 if __name__ == "__main__":

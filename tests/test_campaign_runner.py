@@ -109,6 +109,65 @@ class CampaignRunnerTest(unittest.TestCase):
         }
         self.assertGreaterEqual(len(cells), 20)
 
+    def test_state_contam_subspace_candidate_operators_use_bias_descriptor(self) -> None:
+        rng = random.Random(20260703)
+        parents = [m2_map_elites.random_candidate_genome("state-contam", rng) for _ in range(20)]
+        mutants = [m2_map_elites.mutate_candidate_genome(parent, "state-contam", rng) for parent in parents]
+        children = [
+            m2_map_elites.crossover_candidate_genome(a, b, "state-contam", rng)
+            for a, b in zip(parents, reversed(mutants))
+        ]
+        for genome in parents + mutants + children:
+            self.assertEqual("state_contam", genome["disturbance_type"])
+            self.assertEqual(0.0, genome["wind_speed_m_s"])
+            self.assertEqual(1.0, genome["mass_scale"])
+            theta = theta_genome.theta_from_genome(genome, "unit_state_contam_route", 20260703)
+            feature = theta["theta_genome"]["map_elites"]
+            self.assertEqual(["velocity_bias_bucket", "angular_rate_bias_bucket"], feature["feature_dimensions"])
+            self.assertTrue(theta["environment"]["uses_state_shim"])
+            self.assertEqual(1, theta["px4_params"]["M2B_EN"])
+
+    def test_state_contam_theta_requires_state_shim_delivery_gate(self) -> None:
+        rng = random.Random(20260703)
+        state_genome = m2_map_elites.random_candidate_genome("state-contam", rng)
+        state_theta = theta_genome.theta_from_genome(state_genome, "unit_state_contam_delivery", 20260703)
+        self.assertTrue(m2_map_elites.requires_state_shim_delivery(state_theta))
+
+        steady_genome = m2_map_elites.random_candidate_genome("steady-wind-physics", rng)
+        steady_theta = theta_genome.theta_from_genome(steady_genome, "unit_steady_delivery", 20260703)
+        self.assertFalse(m2_map_elites.requires_state_shim_delivery(steady_theta))
+
+    def test_state_shim_fairness_command_uses_campaign_outputs_and_delivery_gate(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            docs_dir = Path(tmpdir)
+            theta_path = docs_dir / "theta.json"
+            evidence = {
+                "ulog_paths": {
+                    "classical": str(docs_dir / "classical.ulg"),
+                    "mcnn": str(docs_dir / "mcnn.ulg"),
+                },
+                "task_paths": {
+                    "classical": str(docs_dir / "classical_task.json"),
+                    "mcnn": str(docs_dir / "mcnn_task.json"),
+                },
+            }
+
+            cmd, output, log = m2_map_elites.state_shim_fairness_command(
+                theta_path,
+                docs_dir,
+                "unit_tag",
+                evidence,
+            )
+
+        self.assertEqual(docs_dir / "state_shim_fairness_unit_tag.json", output)
+        self.assertEqual(docs_dir / "state_shim_fairness_unit_tag.log", log)
+        self.assertIn("--require-state-shim-delivery", cmd)
+        self.assertEqual(str(theta_path), cmd[cmd.index("--theta") + 1])
+        self.assertEqual(str(docs_dir / "classical.ulg"), cmd[cmd.index("--classical-ulog") + 1])
+        self.assertEqual(str(docs_dir / "mcnn.ulg"), cmd[cmd.index("--raptor-ulog") + 1])
+        self.assertEqual(str(docs_dir / "classical_task.json"), cmd[cmd.index("--classical-task-json") + 1])
+        self.assertEqual(str(docs_dir / "mcnn_task.json"), cmd[cmd.index("--raptor-task-json") + 1])
+
     def test_resume_matches_uninterrupted_mock_guided_sequence(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
             root = Path(tmpdir)
@@ -203,6 +262,69 @@ class CampaignRunnerTest(unittest.TestCase):
         self.assertFalse(m2_map_elites.severity_primary_from_result(property_only))
         self.assertTrue(m2_map_elites.severity_primary_from_result(severity))
         self.assertEqual(202601, m2_map_elites.confirmation_seed(20260629, 0))
+
+    def test_relative_degradation_results_are_queued_for_confirmation(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            config = base_config(Path(tmpdir), "reportable_queue")
+            state = campaign_runner.new_state(config, random.Random(config.seed))
+            result = m2_map_elites.EvalResult(
+                index=0,
+                tag="relative_e0000",
+                theta_path=str(Path(tmpdir) / "theta.json"),
+                docs_dir=str(Path(tmpdir) / "evals"),
+                returncode=0,
+                elapsed_wall_s=1.0,
+                compare_path=None,
+                quadrant="relative_degradation_differential",
+                primary_bug=False,
+                classical_usable=True,
+                classical_safe=True,
+                raptor_safe=True,
+                infrastructure_limited=False,
+                quality=2.0,
+                fitness={
+                    "fitness": 2.0,
+                    "target_properties": ["P2", "P4"],
+                    "strict_s0_vs_s3": False,
+                    "strict_differential_properties": [],
+                    "relative_degradation_differential_properties": ["P2", "P4"],
+                    "per_property": {},
+                },
+                feature_bin="state_contam:vel_2:gyro_4",
+                severity=0.5,
+                seed=20260703,
+                evidence={},
+            )
+
+            campaign_runner.update_state_after_eval(config, state, result, {"disturbance_type": "state_contam"}, "random")
+
+        self.assertEqual(0, len(state["primary_candidates"]))
+        self.assertEqual(1, len(state["reportable_candidates"]))
+        self.assertEqual("relative_e0000", state["reportable_candidates"][0]["result"]["tag"])
+
+    def test_run_confirmations_uses_reportable_candidates_without_primary(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            config = replace(base_config(Path(tmpdir), "confirm_reportable"), no_confirm=False)
+            state = campaign_runner.new_state(config, random.Random(config.seed))
+            state["completed"] = True
+            state["primary_candidates"] = []
+            state["reportable_candidates"] = [{"result": {"tag": "relative_e0000", "quality": 2.0}}]
+            called: dict[str, Any] = {}
+            original = m2_map_elites.confirm_candidates
+
+            def fake_confirm(run_dir: Path, candidates: list[dict[str, Any]], args: Any) -> list[dict[str, Any]]:
+                called["run_dir"] = run_dir
+                called["candidates"] = candidates
+                return [{"passed": True}]
+
+            try:
+                m2_map_elites.confirm_candidates = fake_confirm
+                campaign_runner.run_confirmations(config, state, random.Random(config.seed))
+            finally:
+                m2_map_elites.confirm_candidates = original
+
+        self.assertEqual(["relative_e0000"], [item["result"]["tag"] for item in called["candidates"]])
+        self.assertEqual([{"passed": True}], state["confirmed"])
 
 
 if __name__ == "__main__":

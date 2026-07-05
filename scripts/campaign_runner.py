@@ -213,9 +213,11 @@ def new_state(config: CampaignConfig, rng: random.Random) -> dict[str, Any]:
         "results": [],
         "progress_records": [],
         "primary_candidates": [],
+        "reportable_candidates": [],
         "theta_ulog_map": [],
         "validity_records": [],
         "confirmed": [],
+        "confirmed_reportable_findings": [],
         "rng_state": rng_state_json(rng),
         "completed": False,
         "created_utc": datetime.now(timezone.utc).isoformat(),
@@ -230,6 +232,9 @@ def load_checkpoint(path: Path) -> dict[str, Any]:
         raise ValueError(f"unsupported checkpoint schema in {path}")
     if "rng_state" not in state:
         raise ValueError(f"checkpoint missing rng_state: {path}")
+    state.setdefault("reportable_candidates", [])
+    state.setdefault("confirmed", [])
+    state.setdefault("confirmed_reportable_findings", state.get("confirmed", []))
     return state
 
 
@@ -245,9 +250,11 @@ def materialize_state_files(run_dir: Path, state: dict[str, Any]) -> None:
     write_jsonl_records(run_dir / "progress.jsonl", state["progress_records"])
     m2_map_elites.write_archive(run_dir / "archive.json", state["archive"])
     atomic_write_json(run_dir / "primary_candidates.json", state["primary_candidates"])
+    atomic_write_json(run_dir / "reportable_candidates.json", state.get("reportable_candidates", []))
     atomic_write_json(run_dir / "theta_ulog_map.json", state["theta_ulog_map"])
     atomic_write_json(run_dir / "validity_records.json", state["validity_records"])
     atomic_write_json(run_dir / "confirmed_primary_bugs.json", state.get("confirmed", []))
+    atomic_write_json(run_dir / "confirmed_reportable_findings.json", state.get("confirmed_reportable_findings", []))
 
 
 def refresh_state_config(state: dict[str, Any], config: CampaignConfig) -> None:
@@ -640,15 +647,22 @@ def update_state_after_eval(
         }
         m2_map_elites.write_archive(config.run_dir / "archive.json", state["archive"])
 
+    candidate = {
+        "genome": genome,
+        "theta_path": result.theta_path,
+        "compare_path": result.compare_path,
+        "result": result_record,
+    }
     if result.primary_bug:
-        candidate = {
-            "genome": genome,
-            "theta_path": result.theta_path,
-            "compare_path": result.compare_path,
-            "result": result_record,
-        }
         state["primary_candidates"].append(candidate)
         atomic_write_json(config.run_dir / "primary_candidates.json", state["primary_candidates"])
+    if (
+        result.primary_bug
+        or property_list(result_record, "strict_differential_properties")
+        or property_list(result_record, "relative_degradation_differential_properties")
+    ):
+        state.setdefault("reportable_candidates", []).append(candidate)
+        atomic_write_json(config.run_dir / "reportable_candidates.json", state["reportable_candidates"])
 
     progress = progress_record(result_record, state["results"], state["archive"], selection_source)
     state["progress_records"].append(progress)
@@ -782,7 +796,7 @@ def write_summary(run_dir: Path, state: dict[str, Any]) -> None:
             else f"best_relative_degradation: {best_relative['property']} gap={float(best_relative['gap']):.6g} tag={best_relative['tag']}"
         ),
         f"confirmed_primary_bugs: {len(state.get('confirmed', []))}",
-        f"confirmed_reportable_findings: {len(state.get('confirmed', []))}",
+        f"confirmed_reportable_findings: {len(state.get('confirmed_reportable_findings', state.get('confirmed', [])))}",
         f"checkpoint: `{display_path(Path(state['metadata']['checkpoint']['path']))}`",
         "",
         "## progress",
@@ -831,10 +845,15 @@ def confirm_args(config: CampaignConfig) -> argparse.Namespace:
 
 
 def run_confirmations(config: CampaignConfig, state: dict[str, Any], rng: random.Random) -> None:
-    if config.no_confirm or not state.get("completed") or not state["primary_candidates"]:
+    candidates = state.get("reportable_candidates") or state.get("primary_candidates", [])
+    if config.no_confirm or not state.get("completed") or not candidates:
         return
-    confirmed = m2_map_elites.confirm_candidates(config.run_dir, state["primary_candidates"], confirm_args(config))
+    confirmed = m2_map_elites.confirm_candidates(config.run_dir, candidates, confirm_args(config))
     state["confirmed"] = confirmed
+    confirmed_relative_path = config.run_dir / "confirmed_relative_degradations.json"
+    confirmed_relative = m2_map_elites.load_json(confirmed_relative_path) if confirmed_relative_path.exists() else []
+    state["confirmed_reportable_findings"] = list(confirmed) + list(confirmed_relative)
+    atomic_write_json(config.run_dir / "confirmed_reportable_findings.json", state["confirmed_reportable_findings"])
     save_checkpoint(config.run_dir / "checkpoint.json", state, rng)
 
 

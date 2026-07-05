@@ -44,6 +44,11 @@ STATE_SHIM_PARAM_NAMES = [
     "M2B_START",
     "M2B_END",
     "M2B_SEED",
+    "M2B_P_PROF",
+    "M2B_P_DLY",
+    "M2B_P_X",
+    "M2B_P_Y",
+    "M2B_P_Z",
     "M2B_V_PROF",
     "M2B_V_DLY",
     "M2B_V_X",
@@ -131,6 +136,18 @@ def interp_columns(src_t: np.ndarray, src_v: np.ndarray, dst_t: np.ndarray) -> n
             out[:, idx] = src_v[valid, idx][0]
         else:
             out[:, idx] = np.interp(dst_t, src_t[valid], src_v[valid, idx])
+    return out
+
+
+def previous_columns(src_t: np.ndarray, src_v: np.ndarray, dst_t: np.ndarray) -> np.ndarray:
+    src_t = np.asarray(src_t, dtype=np.int64)
+    src_v = np.asarray(src_v, dtype=float)
+    out = np.full((len(dst_t), src_v.shape[1]), np.nan, dtype=float)
+    if len(src_t) == 0:
+        return out
+    idx = np.searchsorted(src_t, dst_t, side="right") - 1
+    valid = idx >= 0
+    out[valid] = src_v[idx[valid]]
     return out
 
 
@@ -264,16 +281,19 @@ def local_vs_groundtruth(ulog: ULog, window: dict[str, int | None]) -> dict[str,
     tts = truth.data["timestamp"].astype(np.int64)
     lmask = mask_window(lts, window["trajectory_start_us"], window["mission_end_us"])
     tmask = mask_window(tts, window["trajectory_start_us"], window["mission_end_us"])
+    all_pos = np.column_stack([lpos.data["x"], lpos.data["y"], lpos.data["z"]]).astype(float)
     all_vel = np.column_stack([lpos.data["vx"], lpos.data["vy"], lpos.data["vz"]]).astype(float)
     if not np.any(lmask) or not np.any(tmask):
         return {
             "present": True,
             "window_samples": 0,
+            "position_estimate_nonfinite_count_all": nonfinite_count(all_pos),
+            "position_estimate_nonfinite_breakdown_all": nonfinite_breakdown(all_pos),
             "velocity_estimate_nonfinite_count_all": nonfinite_count(all_vel),
             "velocity_estimate_nonfinite_breakdown_all": nonfinite_breakdown(all_vel),
         }
     ts = lts[lmask]
-    pos = np.column_stack([lpos.data["x"], lpos.data["y"], lpos.data["z"]]).astype(float)[lmask]
+    pos = all_pos[lmask]
     vel = all_vel[lmask]
     truth_pos = np.column_stack([truth.data["x"], truth.data["y"], truth.data["z"]]).astype(float)[tmask]
     truth_vel = np.column_stack([truth.data["vx"], truth.data["vy"], truth.data["vz"]]).astype(float)[tmask]
@@ -288,6 +308,11 @@ def local_vs_groundtruth(ulog: ULog, window: dict[str, int | None]) -> dict[str,
         "window_samples": int(len(ts)),
         "position_error_rms_m": finite_rms(pos_err),
         "position_error_max_m": finite_max(pos_err),
+        "position_error_axis_rms_m": [finite_rms(pos_delta[:, axis]) for axis in range(3)],
+        "position_estimate_nonfinite_count": nonfinite_count(pos),
+        "position_estimate_nonfinite_breakdown": nonfinite_breakdown(pos),
+        "position_estimate_nonfinite_count_all": nonfinite_count(all_pos),
+        "position_estimate_nonfinite_breakdown_all": nonfinite_breakdown(all_pos),
         "velocity_error_rms_m_s": finite_rms(vel_err),
         "velocity_error_max_m_s": finite_max(vel_err),
         "velocity_error_axis_rms_m_s": [finite_rms(vel_delta[:, axis]) for axis in range(3)],
@@ -506,6 +531,41 @@ def route_orientation_from_shared_topics(ulog: ULog, input_ts: np.ndarray, input
     }
 
 
+def route_position_from_shared_topics(ulog: ULog, input_ts: np.ndarray, input_values: np.ndarray, window: dict[str, int | None]) -> dict[str, Any]:
+    lpos = first_dataset(ulog, "vehicle_local_position")
+    sp = first_dataset(ulog, "trajectory_setpoint")
+    if lpos is None or sp is None:
+        return {"position_shared_route_present": False}
+    lts = lpos.data["timestamp"].astype(np.int64)
+    sts = sp.data["timestamp"].astype(np.int64)
+    lmask = mask_window(lts, window["active_us"], window["mission_end_us"])
+    smask = mask_window(sts, window["active_us"], window["mission_end_us"])
+    if not np.any(lmask) or not np.any(smask):
+        return {"position_shared_route_present": True, "position_shared_route_samples": 0}
+    position = np.column_stack([lpos.data["x"], lpos.data["y"], lpos.data["z"]]).astype(float)[lmask]
+    sp_position = vector3(sp.data, "position")[smask]
+    sp_position = np.where(np.isfinite(sp_position), sp_position, np.array([0.0, 0.0, -1.0]))
+    position_i = interp_columns(lts[lmask], position, input_ts)
+    sp_position_i = interp_columns(sts[smask], sp_position, input_ts)
+    expected = np.column_stack(
+        [
+            sp_position_i[:, 1] - position_i[:, 1],
+            sp_position_i[:, 0] - position_i[:, 0],
+            position_i[:, 2] - sp_position_i[:, 2],
+        ]
+    )
+    route_err = vector_norm(input_values - expected)
+    route_rms = finite_rms(route_err)
+    return {
+        "position_shared_route_present": True,
+        "position_shared_route_samples": int(len(input_ts)),
+        "position_shared_route_error_rms_m": route_rms,
+        "position_shared_route_error_max_m": finite_max(route_err),
+        "position_shared_route_verified": bool(route_rms is not None and route_rms < 0.08),
+        "position_route_note": "Recomputed as mc_nn position-error input [sp_y-y, sp_x-x, z-sp_z] from shared vehicle_local_position and trajectory_setpoint.",
+    }
+
+
 def raptor_input_summary(ulog: ULog, window: dict[str, int | None], state_params: dict[str, Any] | None = None) -> dict[str, Any]:
     raptor_input = first_dataset(ulog, "raptor_input")
     if raptor_input is None:
@@ -519,6 +579,7 @@ def raptor_input_summary(ulog: ULog, window: dict[str, int | None], state_params
     linear_velocity = vector3(raptor_input.data, "linear_velocity")[mask]
     angular_velocity = vector3(raptor_input.data, "angular_velocity")[mask]
     position = vector3(raptor_input.data, "position")[mask]
+    all_position = vector3(raptor_input.data, "position")
     all_linear_velocity = vector3(raptor_input.data, "linear_velocity")
     all_angular_velocity = vector3(raptor_input.data, "angular_velocity")
     orientation = np.column_stack(
@@ -574,6 +635,11 @@ def raptor_input_summary(ulog: ULog, window: dict[str, int | None], state_params
                 "m2b_window_start_us": m2b_start_us,
                 "m2b_window_end_us": m2b_end_us,
                 "m2b_window_active_samples": int(np.count_nonzero(m2b_mask)),
+                "position_m2b_window_nonfinite_count": nonfinite_count(all_position[m2b_mask]),
+                "position_m2b_window_nonfinite_breakdown": nonfinite_breakdown(all_position[m2b_mask]),
+                "position_m2b_window_axis_abs_max_m": [
+                    finite_max(np.abs(all_position[m2b_mask, axis])) for axis in range(3)
+                ],
                 "linear_velocity_m2b_window_nonfinite_count": nonfinite_count(all_linear_velocity[m2b_mask]),
                 "linear_velocity_m2b_window_nonfinite_breakdown": nonfinite_breakdown(all_linear_velocity[m2b_mask]),
                 "linear_velocity_m2b_window_axis_abs_max_m_s": [
@@ -588,6 +654,7 @@ def raptor_input_summary(ulog: ULog, window: dict[str, int | None], state_params
                 "orientation_m2b_window_nonfinite_breakdown": nonfinite_breakdown(all_orientation[m2b_mask]),
             }
         )
+    summary.update(route_position_from_shared_topics(ulog, ts[mask], position, window))
     summary.update(route_linear_velocity_from_shared_topics(ulog, ts[mask], linear_velocity, window))
     summary.update(route_orientation_from_shared_topics(ulog, ts[mask], orientation, window))
     rates = first_dataset(ulog, "vehicle_angular_velocity")
@@ -613,6 +680,110 @@ def raptor_input_summary(ulog: ULog, window: dict[str, int | None], state_params
     return summary
 
 
+def neural_control_observation_summary(
+    ulog: ULog,
+    window: dict[str, int | None],
+    state_params: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    neural = first_dataset(ulog, "neural_control")
+    if neural is None:
+        return {"present": False}
+    ts_all = neural.data["timestamp"].astype(np.int64)
+    mask = mask_window(ts_all, window["active_us"], window["mission_end_us"])
+    if not np.any(mask):
+        return {"present": True, "active_samples": 0}
+    ts = ts_all[mask]
+    observation_all = np.column_stack([field(neural.data, f"observation[{idx}]") for idx in range(15)]).astype(float)
+    observation = observation_all[mask]
+    position_error = observation[:, 0:3]
+    linear_velocity = observation[:, 9:12]
+    angular_velocity = observation[:, 12:15]
+    summary = {
+        "present": True,
+        "active_samples": int(np.count_nonzero(mask)),
+        "observation_nonfinite_count": nonfinite_count(observation),
+        "observation_nonfinite_breakdown": nonfinite_breakdown(observation),
+        "position_error_nonfinite_count": nonfinite_count(position_error),
+        "linear_velocity_nonfinite_count": nonfinite_count(linear_velocity),
+        "angular_velocity_nonfinite_count": nonfinite_count(angular_velocity),
+    }
+    if state_params:
+        start_s = float(state_params.get("M2B_START", 0.0) or 0.0)
+        end_s = float(state_params.get("M2B_END", 0.0) or 0.0)
+        m2b_start_us = int(round(start_s * 1e6))
+        m2b_end_us = int(round(end_s * 1e6)) if end_s > 0.0 else None
+        m2b_mask = mask_window(ts_all, m2b_start_us, m2b_end_us)
+        m2b_observation = observation_all[m2b_mask]
+        summary.update(
+            {
+                "m2b_window_start_us": m2b_start_us,
+                "m2b_window_end_us": m2b_end_us,
+                "m2b_window_active_samples": int(np.count_nonzero(m2b_mask)),
+                "m2b_window_observation_nonfinite_count": nonfinite_count(m2b_observation),
+                "m2b_window_observation_nonfinite_breakdown": nonfinite_breakdown(m2b_observation),
+            }
+        )
+
+    lpos = first_dataset(ulog, "vehicle_local_position")
+    if lpos is not None:
+        lts = lpos.data["timestamp"].astype(np.int64)
+        position = np.column_stack([lpos.data["x"], lpos.data["y"], lpos.data["z"]]).astype(float)
+        velocity = np.column_stack([lpos.data["vx"], lpos.data["vy"], lpos.data["vz"]]).astype(float)
+        position_i = previous_columns(lts, position, ts)
+        velocity_i = previous_columns(lts, velocity, ts)
+        expected_velocity = np.column_stack([velocity_i[:, 1], velocity_i[:, 0], -velocity_i[:, 2]])
+        velocity_err = vector_norm(linear_velocity - expected_velocity)
+        velocity_rms = finite_rms(velocity_err)
+        summary.update(
+            {
+                "linear_velocity_shared_route_error_rms_m_s": velocity_rms,
+                "linear_velocity_shared_route_error_max_m_s": finite_max(velocity_err),
+                "linear_velocity_shared_route_verified": bool(velocity_rms is not None and velocity_rms < 0.08),
+                "linear_velocity_route_note": "mc_nn observation[9:12] stores [vy, vx, -vz] from shared vehicle_local_position.",
+            }
+        )
+        sp = first_dataset(ulog, "trajectory_setpoint")
+        if sp is not None:
+            sts = sp.data["timestamp"].astype(np.int64)
+            sp_position = vector3(sp.data, "position")
+            sp_position = np.where(np.isfinite(sp_position), sp_position, np.array([0.0, 0.0, -1.0]))
+            sp_position_i = previous_columns(sts, sp_position, ts)
+            expected_position_error = np.column_stack(
+                [
+                    sp_position_i[:, 1] - position_i[:, 1],
+                    sp_position_i[:, 0] - position_i[:, 0],
+                    position_i[:, 2] - sp_position_i[:, 2],
+                ]
+            )
+            position_err = vector_norm(position_error - expected_position_error)
+            position_rms = finite_rms(position_err)
+            summary.update(
+                {
+                    "position_shared_route_error_rms_m": position_rms,
+                    "position_shared_route_error_max_m": finite_max(position_err),
+                    "position_shared_route_verified": bool(position_rms is not None and position_rms < 0.08),
+                    "position_route_note": "mc_nn observation[0:3] recomputed as [sp_y-y, sp_x-x, z-sp_z] from shared vehicle_local_position and trajectory_setpoint.",
+                }
+            )
+    rates = first_dataset(ulog, "vehicle_angular_velocity")
+    if rates is not None:
+        rts = rates.data["timestamp"].astype(np.int64)
+        omega = vector3(rates.data, "xyz")
+        omega_i = previous_columns(rts, omega, ts)
+        expected_rates = np.column_stack([omega_i[:, 0], -omega_i[:, 1], -omega_i[:, 2]])
+        rate_err = vector_norm(angular_velocity - expected_rates)
+        rate_rms = finite_rms(rate_err)
+        summary.update(
+            {
+                "angular_velocity_vehicle_route_error_rms_rad_s": rate_rms,
+                "angular_velocity_vehicle_route_error_max_rad_s": finite_max(rate_err),
+                "angular_velocity_vehicle_route_verified": bool(rate_rms is not None and rate_rms < 0.05),
+                "angular_velocity_route_note": "mc_nn observation[12:15] stores [x, -y, -z] from shared vehicle_angular_velocity.",
+            }
+        )
+    return summary
+
+
 def summarize_one(ulog_path: Path, task_path: Path | None, controller: str) -> dict[str, Any]:
     ulog = ULog(str(ulog_path))
     task = load_json(task_path)
@@ -632,6 +803,7 @@ def summarize_one(ulog_path: Path, task_path: Path | None, controller: str) -> d
         "angular_velocity_vs_groundtruth": angular_velocity_vs_groundtruth(ulog, window),
         "estimator_status": estimator_status_summary(ulog, window),
         "raptor_input": raptor_input_summary(ulog, window, state_params),
+        "neural_control_observation": neural_control_observation_summary(ulog, window, state_params),
     }
 
 
@@ -668,9 +840,16 @@ def fairness(theta: dict[str, Any], classical: dict[str, Any], raptor: dict[str,
         for summary in [classical, raptor]
     )
     raptor_consumed = bool(raptor["raptor_input"].get("present")) and int(raptor["raptor_input"].get("active_samples") or 0) > 0
+    raptor_position_routed = bool(raptor["raptor_input"].get("position_shared_route_verified"))
     raptor_rate_routed = bool(raptor["raptor_input"].get("angular_velocity_vehicle_route_verified"))
     raptor_velocity_routed = bool(raptor["raptor_input"].get("linear_velocity_shared_route_verified"))
     raptor_orientation_routed = bool(raptor["raptor_input"].get("orientation_shared_route_verified"))
+    mc_nn_observation = raptor.get("neural_control_observation", {})
+    mc_nn_observation_active = bool(mc_nn_observation.get("present")) and int(mc_nn_observation.get("active_samples") or 0) > 0
+    mc_nn_position_routed = bool(mc_nn_observation.get("position_shared_route_verified"))
+    mc_nn_rate_routed = bool(mc_nn_observation.get("angular_velocity_vehicle_route_verified"))
+    mc_nn_velocity_routed = bool(mc_nn_observation.get("linear_velocity_shared_route_verified"))
+    mc_nn_state_input_consumed = bool(raptor_consumed or mc_nn_observation_active)
     unshielded_expected = theta_unshielded_params(theta)
     nominal_cutoff = float(theta.get("m2_6", {}).get("nominal_gyro_cutoff_hz", 30.0))
     cutoff = unshielded_expected.get("IMU_GYRO_CUTOFF")
@@ -691,13 +870,20 @@ def fairness(theta: dict[str, Any], classical: dict[str, Any], raptor: dict[str,
         5: "inf",
     }
     state_channels: list[dict[str, Any]] = []
-    for channel, key in [("velocity", "M2B_V_PROF"), ("angular_velocity", "M2B_G_PROF"), ("attitude", "M2B_A_PROF")]:
+    for channel, key in [
+        ("position", "M2B_P_PROF"),
+        ("velocity", "M2B_V_PROF"),
+        ("angular_velocity", "M2B_G_PROF"),
+        ("attitude", "M2B_A_PROF"),
+    ]:
         profile = int(float(state_expected.get(key, 0) or 0))
         if profile > 0:
             state_channels.append({"channel": channel, "profile": profile_names.get(profile, str(profile)), "profile_id": profile})
 
     def selected_axes(channel: str) -> list[int]:
-        if channel == "velocity":
+        if channel == "position":
+            values = [state_expected.get(name, 0.0) for name in ["M2B_P_X", "M2B_P_Y", "M2B_P_Z"]]
+        elif channel == "velocity":
             values = [state_expected.get(name, 0.0) for name in ["M2B_V_X", "M2B_V_Y", "M2B_V_Z"]]
         elif channel == "angular_velocity":
             values = [state_expected.get(name, 0.0) for name in ["M2B_G_X", "M2B_G_Y", "M2B_G_Z"]]
@@ -709,6 +895,8 @@ def fairness(theta: dict[str, Any], classical: dict[str, Any], raptor: dict[str,
         return [idx for idx, value in enumerate(values) if (not any_axis or abs(float(value or 0.0)) > 1e-6)]
 
     def topic_nonfinite_count(summary: dict[str, Any], channel: str) -> int:
+        if channel == "position":
+            return int(summary["local_position_vs_groundtruth"].get("position_estimate_nonfinite_count_all") or 0)
         if channel == "velocity":
             return int(summary["local_position_vs_groundtruth"].get("velocity_estimate_nonfinite_count_all") or 0)
         if channel == "angular_velocity":
@@ -719,12 +907,23 @@ def fairness(theta: dict[str, Any], classical: dict[str, Any], raptor: dict[str,
 
     def raptor_input_nonfinite_count(channel: str) -> int:
         rin = raptor["raptor_input"]
+        if channel == "position":
+            return int(rin.get("position_m2b_window_nonfinite_count") or rin.get("position_nonfinite_count") or 0)
         if channel == "velocity":
             return int(rin.get("linear_velocity_m2b_window_nonfinite_count") or rin.get("linear_velocity_nonfinite_count") or 0)
         if channel == "angular_velocity":
             return int(rin.get("angular_velocity_m2b_window_nonfinite_count") or rin.get("angular_velocity_nonfinite_count") or 0)
         if channel == "attitude":
             return int(rin.get("orientation_m2b_window_nonfinite_count") or rin.get("orientation_nonfinite_count") or 0)
+        return 0
+
+    def mc_nn_observation_nonfinite_count(channel: str) -> int:
+        if channel == "position":
+            return int(mc_nn_observation.get("position_error_nonfinite_count") or 0)
+        if channel == "velocity":
+            return int(mc_nn_observation.get("linear_velocity_nonfinite_count") or 0)
+        if channel == "angular_velocity":
+            return int(mc_nn_observation.get("angular_velocity_nonfinite_count") or 0)
         return 0
 
     def velocity_inf_input_saturated(channel: str) -> bool:
@@ -746,6 +945,15 @@ def fairness(theta: dict[str, Any], classical: dict[str, Any], raptor: dict[str,
     def channel_topic_observed(summary: dict[str, Any], channel: str, profile_id: int) -> bool:
         if profile_id in {4, 5}:
             return topic_nonfinite_count(summary, channel) > 0
+        if channel == "position":
+            local = summary["local_position_vs_groundtruth"]
+            return bool(
+                local.get("present")
+                and (
+                    int(local.get("position_estimate_nonfinite_count") or 0) > 0
+                    or float(local.get("position_error_rms_m") or 0.0) > 0.005
+                )
+            )
         if channel == "velocity":
             local = summary["local_position_vs_groundtruth"]
             return bool(
@@ -781,6 +989,8 @@ def fairness(theta: dict[str, Any], classical: dict[str, Any], raptor: dict[str,
             return raptor_input_nonfinite_count(channel) > 0 or velocity_inf_input_saturated(channel)
         if profile_id in {4, 5}:
             return raptor_input_nonfinite_count(channel) > 0
+        if channel == "position":
+            return bool(rin.get("position_shared_route_verified") or int(rin.get("position_nonfinite_count") or 0) > 0)
         if channel == "velocity":
             return bool(raptor_velocity_routed or int(rin.get("linear_velocity_nonfinite_count") or 0) > 0)
         if channel == "angular_velocity":
@@ -788,6 +998,25 @@ def fairness(theta: dict[str, Any], classical: dict[str, Any], raptor: dict[str,
         if channel == "attitude":
             return bool(raptor_orientation_routed or int(rin.get("orientation_nonfinite_count") or 0) > 0)
         return False
+
+    def mc_nn_observation_touch_observed(channel: str, profile_id: int) -> bool:
+        if profile_id in {4, 5}:
+            return mc_nn_observation_nonfinite_count(channel) > 0
+        if channel == "position":
+            return bool(mc_nn_position_routed or mc_nn_observation_nonfinite_count(channel) > 0)
+        if channel == "velocity":
+            return bool(mc_nn_velocity_routed or mc_nn_observation_nonfinite_count(channel) > 0)
+        if channel == "angular_velocity":
+            return bool(mc_nn_rate_routed or mc_nn_observation_nonfinite_count(channel) > 0)
+        if channel == "attitude":
+            return bool(raptor_orientation_routed or mc_nn_observation_nonfinite_count(channel) > 0)
+        return False
+
+    def state_input_touch_observed(channel: str, profile_id: int) -> bool:
+        return bool(
+            raptor_touch_observed(channel, profile_id)
+            or mc_nn_observation_touch_observed(channel, profile_id)
+        )
 
     state_topic_checks = [
         {
@@ -798,10 +1027,13 @@ def fairness(theta: dict[str, Any], classical: dict[str, Any], raptor: dict[str,
             "classical_topic_nonfinite_count": topic_nonfinite_count(classical, item["channel"]),
             "raptor_topic_nonfinite_count": topic_nonfinite_count(raptor, item["channel"]),
             "raptor_input_nonfinite_count": raptor_input_nonfinite_count(item["channel"]),
+            "mc_nn_observation_nonfinite_count": mc_nn_observation_nonfinite_count(item["channel"]),
             "raptor_input_velocity_inf_saturated": velocity_inf_input_saturated(item["channel"]),
             "classical_topic_polluted": channel_topic_observed(classical, item["channel"], item["profile_id"]),
             "raptor_topic_polluted": channel_topic_observed(raptor, item["channel"], item["profile_id"]),
             "raptor_input_touch_verified": raptor_touch_observed(item["channel"], item["profile_id"]),
+            "mc_nn_observation_touch_verified": mc_nn_observation_touch_observed(item["channel"], item["profile_id"]),
+            "state_input_touch_verified": state_input_touch_observed(item["channel"], item["profile_id"]),
         }
         for item in state_channels
     ]
@@ -809,15 +1041,19 @@ def fairness(theta: dict[str, Any], classical: dict[str, Any], raptor: dict[str,
         item["classical_topic_polluted"] and item["raptor_topic_polluted"] for item in state_topic_checks
     )
     state_raptor_touch = bool(state_topic_checks) and all(item["raptor_input_touch_verified"] for item in state_topic_checks)
+    state_mc_nn_observation_touch = bool(state_topic_checks) and all(
+        item["mc_nn_observation_touch_verified"] for item in state_topic_checks
+    )
+    state_input_touch = bool(state_topic_checks) and all(item["state_input_touch_verified"] for item in state_topic_checks)
     state_delivery_failures: list[str] = []
     for item in state_topic_checks:
-        if item["profile_id"] in {4, 5}:
-            if not item["classical_topic_polluted"]:
-                state_delivery_failures.append(f"{item['channel']}/{item['profile']}: classical shared topic has no nonfinite samples")
-            if not item["raptor_topic_polluted"]:
-                state_delivery_failures.append(f"{item['channel']}/{item['profile']}: RAPTOR shared topic has no nonfinite samples")
-            if not item["raptor_input_touch_verified"]:
-                state_delivery_failures.append(f"{item['channel']}/{item['profile']}: RAPTOR input touch not verified")
+        topic_reason = "has no nonfinite samples" if item["profile_id"] in {4, 5} else "not polluted"
+        if not item["classical_topic_polluted"]:
+            state_delivery_failures.append(f"{item['channel']}/{item['profile']}: classical shared topic {topic_reason}")
+        if not item["raptor_topic_polluted"]:
+            state_delivery_failures.append(f"{item['channel']}/{item['profile']}: RAPTOR shared topic {topic_reason}")
+        if not item["state_input_touch_verified"]:
+            state_delivery_failures.append(f"{item['channel']}/{item['profile']}: mc_nn state input touch not verified")
     return {
         "same_effective_estimator_params": same_params,
         "theta_estimator_params_applied": expected_applied,
@@ -829,14 +1065,21 @@ def fairness(theta: dict[str, Any], classical: dict[str, Any], raptor: dict[str,
         "state_shim_topic_checks": state_topic_checks,
         "state_shim_topic_polluted_both_runs": state_topic_polluted_both,
         "state_shim_raptor_input_touch_verified": state_raptor_touch,
+        "state_shim_mc_nn_observation_touch_verified": state_mc_nn_observation_touch,
+        "state_shim_state_input_touch_verified": state_input_touch,
         "state_shim_delivery_failures": state_delivery_failures,
         "state_shim_delivery_valid": not state_delivery_failures,
         "shared_estimator_topics_present": shared_estimator_topics,
         "shared_unshielded_topics_present": shared_unshielded_topics,
         "raptor_input_active": raptor_consumed,
+        "raptor_input_position_routed_from_vehicle_local_position": raptor_position_routed,
         "raptor_input_rate_routed_from_vehicle_angular_velocity": raptor_rate_routed,
         "raptor_input_linear_velocity_routed_from_vehicle_local_position": raptor_velocity_routed,
         "raptor_input_orientation_routed_from_vehicle_attitude": raptor_orientation_routed,
+        "mc_nn_observation_active": mc_nn_observation_active,
+        "mc_nn_observation_position_routed_from_vehicle_local_position": mc_nn_position_routed,
+        "mc_nn_observation_rate_routed_from_vehicle_angular_velocity": mc_nn_rate_routed,
+        "mc_nn_observation_linear_velocity_routed_from_vehicle_local_position": mc_nn_velocity_routed,
         "rate_filter_pollution_configured": unshielded_configured,
         "fair_shared_estimator_pollution": same_params and expected_applied and shared_estimator_topics and raptor_consumed,
         "fair_shared_unshielded_pollution": (
@@ -854,9 +1097,9 @@ def fairness(theta: dict[str, Any], classical: dict[str, Any], raptor: dict[str,
             and bool(state_channels)
             and shared_estimator_topics
             and shared_unshielded_topics
-            and raptor_consumed
+            and mc_nn_state_input_consumed
             and state_topic_polluted_both
-            and state_raptor_touch
+            and state_input_touch
         ),
         "param_checks": param_checks,
         "note": "Error magnitudes need not match exactly because controller trajectories differ; fairness is parameter-identical shared-channel pollution, not RAPTOR-only observation modification.",

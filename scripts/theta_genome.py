@@ -70,6 +70,11 @@ SWITCH_DESCRIPTOR_ROLL_PITCH_RANGE = (16.0, 50.0)
 SWITCH_DESCRIPTOR_RATE_RANGE = (0.45, 2.75)
 SWITCH_DESCRIPTOR_WIND_RANGE = (0.0, 6.0)
 SWITCH_DESCRIPTOR_BUCKETS = 5
+STATE_CONTAM_DESCRIPTOR_VELOCITY_RANGE = (-0.50, 0.50)
+STATE_CONTAM_DESCRIPTOR_ANGULAR_RATE_RANGE = (-0.25, 0.25)
+STATE_CONTAM_DESCRIPTOR_BUCKETS = 5
+M2B_PROFILE_OFF = 0
+M2B_PROFILE_BIAS = 2
 
 
 @dataclass(frozen=True)
@@ -103,7 +108,7 @@ VARIABLE_SPECS: list[VariableSpec] = [
         tuple(DISTURBANCE_TYPES),
         "SIH",
         "scenario selector",
-        "state_contam choice is DEFERRED pending m2b shim patch drift",
+        "state_contam routes through m2b_state_shim.patch",
         True,
         "Scenario selector. steady_combo is reserved for the steady-wind-physics subspace.",
     ),
@@ -198,10 +203,10 @@ VARIABLE_SPECS: list[VariableSpec] = [
         (-0.50, 0.50),
         None,
         "SIH",
-        "m2b publish-point state shim",
-        "DEFERRED - pending m2b_state_shim.patch drift",
-        False,
-        "False shared velocity belief. Kept in the spec but not routable until the shim patch is realigned.",
+        "M2B_V_* publish-point state shim",
+        "routed through m2b_state_shim.patch",
+        True,
+        "False shared velocity belief on the N/X velocity component.",
     ),
     VariableSpec(
         "fake_angular_rate_bias_rad_s",
@@ -210,10 +215,10 @@ VARIABLE_SPECS: list[VariableSpec] = [
         (-0.25, 0.25),
         None,
         "SIH",
-        "m2b publish-point state shim",
-        "DEFERRED - pending m2b_state_shim.patch drift",
-        False,
-        "False shared angular-rate belief. Disabled for the delivered shim-free genome.",
+        "M2B_G_* publish-point state shim",
+        "routed through m2b_state_shim.patch",
+        True,
+        "False shared yaw-rate belief on the Z angular-rate component.",
     ),
     VariableSpec(
         "position_estimate_jump_m",
@@ -222,10 +227,10 @@ VARIABLE_SPECS: list[VariableSpec] = [
         (-0.50, 0.50),
         None,
         "SIH",
-        "m2b publish-point state shim",
-        "DEFERRED - pending m2b_state_shim.patch drift",
-        False,
-        "False position jump. Disabled for the delivered shim-free genome.",
+        "M2B_P_* publish-point state shim",
+        "routed through m2b_state_shim.patch",
+        True,
+        "False shared position jump on the N/X position component.",
     ),
     VariableSpec(
         "approach_radius_m",
@@ -713,6 +718,22 @@ def feature_bin(genome: dict[str, Any]) -> tuple[str, str, float]:
         severity = max(wind_severity, physics_severity)
         bucket = f"wind_{severity_bucket(wind_severity)}:physics_{severity_bucket(physics_severity)}"
         return kind, bucket, severity
+    if kind == "state_contam":
+        velocity_bucket = numeric_bucket(
+            float(genome["fake_velocity_bias_m_s"]),
+            STATE_CONTAM_DESCRIPTOR_VELOCITY_RANGE[0],
+            STATE_CONTAM_DESCRIPTOR_VELOCITY_RANGE[1],
+            STATE_CONTAM_DESCRIPTOR_BUCKETS,
+            "vel",
+        )
+        angular_rate_bucket = numeric_bucket(
+            float(genome["fake_angular_rate_bias_rad_s"]),
+            STATE_CONTAM_DESCRIPTOR_ANGULAR_RATE_RANGE[0],
+            STATE_CONTAM_DESCRIPTOR_ANGULAR_RATE_RANGE[1],
+            STATE_CONTAM_DESCRIPTOR_BUCKETS,
+            "gyro",
+        )
+        return kind, f"{velocity_bucket}:{angular_rate_bucket}", severities[kind]
     if kind == "switching":
         rp_bucket = numeric_bucket(
             float(genome["switch_roll_pitch_deg"]),
@@ -737,6 +758,23 @@ def feature_bin(genome: dict[str, Any]) -> tuple[str, str, float]:
 
 def feature_metadata(genome: dict[str, Any]) -> dict[str, Any]:
     kind, bucket, severity = feature_bin(genome)
+    if kind == "state_contam":
+        velocity_bucket, angular_rate_bucket = bucket.split(":", 1)
+        return {
+            "feature_dimensions": ["velocity_bias_bucket", "angular_rate_bias_bucket"],
+            "disturbance_type": kind,
+            "amplitude_bucket": bucket,
+            "velocity_bias_bucket": velocity_bucket,
+            "angular_rate_bias_bucket": angular_rate_bucket,
+            "fake_velocity_bias_m_s": round(float(genome["fake_velocity_bias_m_s"]), 6),
+            "fake_angular_rate_bias_rad_s": round(float(genome["fake_angular_rate_bias_rad_s"]), 6),
+            "position_estimate_jump_m": round(float(genome["position_estimate_jump_m"]), 6),
+            "state_contam_descriptor_velocity_range_m_s": list(STATE_CONTAM_DESCRIPTOR_VELOCITY_RANGE),
+            "state_contam_descriptor_angular_rate_range_rad_s": list(STATE_CONTAM_DESCRIPTOR_ANGULAR_RATE_RANGE),
+            "state_contam_descriptor_bucket_count": STATE_CONTAM_DESCRIPTOR_BUCKETS,
+            "position_jump_is_diagnostic_not_descriptor": True,
+            "severity": round(severity, 6),
+        }
     if kind == "switching":
         rp_bucket, wind_bucket = bucket.split(":", 1)
         return {
@@ -797,9 +835,6 @@ def validate_genome(genome: dict[str, Any], *, allow_deferred: bool = False) -> 
             if value not in (spec.choices or ()):
                 errors.append(f"{spec.name} not in {spec.choices}: {value}")
 
-    if genome.get("disturbance_type") == "state_contam" and not allow_deferred:
-        errors.append("state_contam is DEFERRED pending m2b shim patch drift")
-
     if float(genome["mission_end_s"]) - float(genome["step_time_s"]) < SETTLING_WINDOW_S - 1e-9:
         errors.append("step_time_s does not leave the P5 settling window before mission_end_s")
     if float(genome["step_magnitude_m"]) < 0.50 or float(genome["step_magnitude_m"]) > 1.50:
@@ -837,6 +872,8 @@ def theta_from_genome(genome: dict[str, Any], tag: str, seed: int) -> dict[str, 
         configure_switching_theta(theta, genome)
     elif kind == "step":
         configure_step_theta(theta, genome)
+    elif kind == "state_contam":
+        configure_state_contam_theta(theta, genome)
     else:
         configure_steady_theta(theta, genome)
 
@@ -844,7 +881,9 @@ def theta_from_genome(genome: dict[str, Any], tag: str, seed: int) -> dict[str, 
         "generator": "scripts/theta_genome.py",
         "genome": genome,
         "map_elites": feature_metadata(genome),
-        "state_contam_status": "DEFERRED - pending m2b_state_shim.patch drift",
+        "state_contam_status": "ACTIVE - routed through m2b_state_shim.patch"
+        if kind == "state_contam"
+        else "available via state-contam subspace",
         "excluded": {
             "c_tier_setpoint_amplitude_attack": "excluded by design; step axis is moderate P5 settling stimulus only",
             "motor_or_sensor_faults": "deferred to Gazebo route after SIH support boundary is verified",
@@ -929,6 +968,117 @@ def configure_steady_theta(theta: dict[str, Any], genome: dict[str, Any]) -> Non
             "physics_severity": round(severities["physics_mismatch"], 6),
             "wind_severity": round(severities["wind"], 6),
         }
+
+
+def state_contam_shim_defaults() -> dict[str, int | float]:
+    return {
+        "M2B_EN": 0,
+        "M2B_START": 0.0,
+        "M2B_END": 0.0,
+        "M2B_SEED": 20260703,
+        "M2B_P_PROF": 0,
+        "M2B_P_DLY": 0,
+        "M2B_P_X": 0.0,
+        "M2B_P_Y": 0.0,
+        "M2B_P_Z": 0.0,
+        "M2B_V_PROF": 0,
+        "M2B_V_DLY": 0,
+        "M2B_V_X": 0.0,
+        "M2B_V_Y": 0.0,
+        "M2B_V_Z": 0.0,
+        "M2B_G_PROF": 0,
+        "M2B_G_DLY": 0,
+        "M2B_G_X": 0.0,
+        "M2B_G_Y": 0.0,
+        "M2B_G_Z": 0.0,
+        "M2B_A_PROF": 0,
+        "M2B_A_DLY": 0,
+        "M2B_A_R": 0.0,
+        "M2B_A_P": 0.0,
+        "M2B_A_Y": 0.0,
+    }
+
+
+def state_contam_shim_params(genome: dict[str, Any], seed: int, start_s: float, end_s: float) -> dict[str, int | float]:
+    params = state_contam_shim_defaults()
+    position = round(float(genome["position_estimate_jump_m"]), 8)
+    velocity = round(float(genome["fake_velocity_bias_m_s"]), 8)
+    angular_rate = round(float(genome["fake_angular_rate_bias_rad_s"]), 8)
+    params["M2B_EN"] = 1 if any(abs(value) > 1e-9 for value in [position, velocity, angular_rate]) else 0
+    params["M2B_START"] = round(float(start_s), 4)
+    params["M2B_END"] = round(float(end_s), 4)
+    params["M2B_SEED"] = int(seed)
+    params["M2B_P_PROF"] = M2B_PROFILE_BIAS if abs(position) > 1e-9 else M2B_PROFILE_OFF
+    params["M2B_P_X"] = position
+    params["M2B_V_PROF"] = M2B_PROFILE_BIAS if abs(velocity) > 1e-9 else M2B_PROFILE_OFF
+    params["M2B_V_X"] = velocity
+    params["M2B_G_PROF"] = M2B_PROFILE_BIAS if abs(angular_rate) > 1e-9 else M2B_PROFILE_OFF
+    params["M2B_G_Z"] = angular_rate
+    return params
+
+
+def configure_state_contam_theta(theta: dict[str, Any], genome: dict[str, Any]) -> None:
+    theta["description"] += " Shared estimator-state contamination via the M2B publish-point shim."
+    theta["timing"]["trajectory_start_s"] = 31.0
+    theta["setpoint"]["type"] = "step"
+    theta["setpoint"]["step"] = {"delta_ned": [0.0, 0.0, 0.0], "start_s": 31.0}
+    start_s = 22.0
+    end_s = float(theta["timing"]["mission_end_s"])
+    shim = state_contam_shim_params(genome, int(theta["seed"]), start_s, end_s)
+    theta["boot_px4_params"].update(shim)
+    theta["px4_params"].update(shim)
+    theta["environment"]["uses_state_shim"] = True
+    theta["environment"]["state_contam"] = {
+        "mechanism": "PX4 publish-point M2B shim before shared uORB topic publication",
+        "symmetric_for_classical_and_mcnn": True,
+        "start_s": round(start_s, 4),
+        "end_s": round(end_s, 4),
+        "descriptor": "velocity_bias_bucket x angular_rate_bias_bucket",
+        "axis_map": {
+            "position_estimate_jump_m": "M2B_P_X / vehicle_local_position.x",
+            "fake_velocity_bias_m_s": "M2B_V_X / vehicle_local_position.vx",
+            "fake_angular_rate_bias_rad_s": "M2B_G_Z / vehicle_angular_velocity.xyz[2]",
+        },
+        "position_jump_m": round(float(genome["position_estimate_jump_m"]), 8),
+        "velocity_bias_m_s": round(float(genome["fake_velocity_bias_m_s"]), 8),
+        "angular_rate_bias_rad_s": round(float(genome["fake_angular_rate_bias_rad_s"]), 8),
+    }
+    perturbations = [
+        (
+            "position",
+            "M2B_P",
+            [round(float(genome["position_estimate_jump_m"]), 8), 0.0, 0.0],
+        ),
+        (
+            "velocity",
+            "M2B_V",
+            [round(float(genome["fake_velocity_bias_m_s"]), 8), 0.0, 0.0],
+        ),
+        (
+            "angular_velocity",
+            "M2B_G",
+            [0.0, 0.0, round(float(genome["fake_angular_rate_bias_rad_s"]), 8)],
+        ),
+    ]
+    theta["sensor_perturbations"] = [
+        {
+            "type": "adversarial_shared_state_shim",
+            "simulator": "sih",
+            "mechanism": "PX4 publish-point patch before shared uORB topic publication",
+            "shared_quantity": quantity,
+            "profile": "bias",
+            "profile_param_prefix": prefix,
+            "delay_ms": 0,
+            "values": values,
+            "start_s": round(start_s, 4),
+            "end_s": round(end_s, 4),
+            "timebase": "PX4 boot-time seconds",
+            "fairness_requirement": "same M2B parameters must be effective in classical and mc_nn runs",
+        }
+        for quantity, prefix, values in perturbations
+        if any(abs(float(value)) > 1e-9 for value in values)
+    ]
+    theta["environment"]["steady_property_focus"] = ["P1", "P2", "P4", "P5", "P6", "P7"]
 
 
 def configure_step_theta(theta: dict[str, Any], genome: dict[str, Any]) -> None:
@@ -1051,7 +1201,7 @@ def self_test(count: int, seed: int) -> dict[str, Any]:
         "crossed": len(crossed),
         "validated": len(all_genomes),
         "feature_bins": bins,
-        "deferred_state_contam": "excluded from default generation pending m2b shim patch drift",
+        "state_contam": "available through dedicated state-contam routing; excluded from the default random mix",
     }
 
 

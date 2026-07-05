@@ -75,7 +75,7 @@ TARGET_PRESETS: dict[str, list[str] | None] = {
     "route-a-catastrophic": ["P1", "P2"],
     "validation": ["P1", "P2", "P4", "P5", "P6", "P7"],
 }
-SUBSPACES = ["full", "route-a-switching", "steady-wind-physics"]
+SUBSPACES = ["full", "route-a-switching", "steady-wind-physics", "state-contam"]
 STRATEGIES = ["map-elites", "random"]
 ROUTE_A_ROLL_PITCH_RANGE = (16.0, 50.0)
 ROUTE_A_RATE_RANGE = (0.45, 2.75)
@@ -154,6 +154,108 @@ def append_jsonl(path: Path, data: dict[str, Any]) -> None:
     with path.open("a", encoding="utf-8") as handle:
         json.dump(data, handle, sort_keys=True, allow_nan=False)
         handle.write("\n")
+
+
+STATE_SHIM_PROFILE_PARAMS = ("M2B_P_PROF", "M2B_V_PROF", "M2B_G_PROF", "M2B_A_PROF")
+
+
+def theta_px4_params(theta: dict[str, Any]) -> dict[str, Any]:
+    params: dict[str, Any] = {}
+    for key in ["boot_px4_params", "px4_params"]:
+        value = theta.get(key)
+        if isinstance(value, dict):
+            params.update(value)
+    return params
+
+
+def requires_state_shim_delivery(theta: dict[str, Any]) -> bool:
+    params = theta_px4_params(theta)
+    enabled = int(float(params.get("M2B_EN", 0) or 0)) != 0
+    active_profile = any(int(float(params.get(name, 0) or 0)) != 0 for name in STATE_SHIM_PROFILE_PARAMS)
+    return bool(enabled or active_profile)
+
+
+def state_shim_fairness_command(
+    theta_path: Path,
+    docs_dir: Path,
+    tag: str,
+    evidence: dict[str, Any],
+) -> tuple[list[str], Path, Path]:
+    ulog_paths = evidence.get("ulog_paths", {})
+    task_paths = evidence.get("task_paths", {})
+    try:
+        classical_ulog = ulog_paths["classical"]
+        mcnn_ulog = ulog_paths["mcnn"]
+        classical_task = task_paths["classical"]
+        mcnn_task = task_paths["mcnn"]
+    except KeyError as exc:
+        raise ValueError(f"missing campaign output path for state shim fairness: {exc}") from exc
+    output = docs_dir / f"state_shim_fairness_{tag}.json"
+    log = docs_dir / f"state_shim_fairness_{tag}.log"
+    cmd = [
+        sys.executable,
+        str(REPO_ROOT / "scripts/m2_5_estimator_fairness.py"),
+        "--theta",
+        str(theta_path),
+        "--classical-ulog",
+        str(classical_ulog),
+        "--raptor-ulog",
+        str(mcnn_ulog),
+        "--classical-task-json",
+        str(classical_task),
+        "--raptor-task-json",
+        str(mcnn_task),
+        "--output",
+        str(output),
+        "--require-state-shim-delivery",
+    ]
+    return cmd, output, log
+
+
+def run_state_shim_fairness_gate(
+    theta_path: Path,
+    docs_dir: Path,
+    tag: str,
+    evidence: dict[str, Any],
+) -> dict[str, Any]:
+    cmd, output, log = state_shim_fairness_command(theta_path, docs_dir, tag, evidence)
+    summary: dict[str, Any] = {
+        "required": True,
+        "passed": False,
+        "command": cmd,
+        "output": str(output),
+        "log": str(log),
+        "returncode": None,
+        "fair_shared_state_shim_pollution": False,
+        "state_shim_delivery_valid": False,
+        "state_shim_delivery_failures": [],
+        "state_shim_topic_checks": [],
+        "reasons": [],
+    }
+    with log.open("w", encoding="utf-8") as handle:
+        handle.write("$ " + " ".join(cmd) + "\n")
+        handle.flush()
+        proc = subprocess.run(cmd, cwd=str(REPO_ROOT), stdout=handle, stderr=subprocess.STDOUT, check=False)
+    summary["returncode"] = int(proc.returncode)
+    reasons: list[str] = []
+    if output.exists():
+        result = load_json(output)
+        fairness = result.get("fairness", {}) if isinstance(result.get("fairness"), dict) else {}
+        summary["fair_shared_state_shim_pollution"] = bool(fairness.get("fair_shared_state_shim_pollution"))
+        summary["state_shim_delivery_valid"] = bool(fairness.get("state_shim_delivery_valid"))
+        summary["state_shim_delivery_failures"] = list(fairness.get("state_shim_delivery_failures") or [])
+        summary["state_shim_topic_checks"] = list(fairness.get("state_shim_topic_checks") or [])
+        if not summary["state_shim_delivery_valid"]:
+            reasons.extend(str(item) for item in summary["state_shim_delivery_failures"])
+        if not summary["fair_shared_state_shim_pollution"]:
+            reasons.append("fair_shared_state_shim_pollution:false")
+    else:
+        reasons.append("missing_state_shim_fairness_output")
+    if proc.returncode != 0:
+        reasons.append(f"state_shim_fairness_returncode:{proc.returncode}")
+    summary["reasons"] = reasons
+    summary["passed"] = not reasons
+    return summary
 
 
 def parse_target_properties(value: str | None) -> list[str] | None:
@@ -247,6 +349,37 @@ def steady_wind_physics_genome(rng: random.Random, kind: str | None = None) -> d
     return theta_genome.normalize_genome(genome)
 
 
+def state_contam_genome(rng: random.Random) -> dict[str, Any]:
+    genome = theta_genome.default_genome("state_contam")
+    genome.update(
+        {
+            "fake_velocity_bias_m_s": rng.uniform(-0.45, 0.45),
+            "fake_angular_rate_bias_rad_s": rng.uniform(-0.20, 0.20),
+            "position_estimate_jump_m": rng.uniform(-0.45, 0.45),
+            "mission_end_s": 54.0,
+            "setpoint_rate_hz": 80.0,
+        }
+    )
+    return theta_genome.normalize_genome(genome)
+
+
+def mutate_state_contam_genome(parent: dict[str, Any], rng: random.Random) -> dict[str, Any]:
+    if parent.get("disturbance_type") != "state_contam" or rng.random() < 0.10:
+        return state_contam_genome(rng)
+    genome = dict(parent)
+    genome["disturbance_type"] = "state_contam"
+    genome["mission_end_s"] = 54.0
+    genome["setpoint_rate_hz"] = 80.0
+    for key, sigma in [
+        ("fake_velocity_bias_m_s", 0.08),
+        ("fake_angular_rate_bias_rad_s", 0.035),
+        ("position_estimate_jump_m", 0.08),
+    ]:
+        if rng.random() < 0.55:
+            genome[key] = float(genome[key]) + rng.gauss(0.0, sigma)
+    return project_genome_to_subspace(genome, "state-contam", rng)
+
+
 def mutate_steady_wind_physics_genome(parent: dict[str, Any], rng: random.Random) -> dict[str, Any]:
     if parent.get("disturbance_type") != theta_genome.COMBINED_STEADY_DISTURBANCE_TYPE or rng.random() < 0.10:
         return steady_wind_physics_genome(rng)
@@ -338,6 +471,33 @@ def project_genome_to_subspace(genome: dict[str, Any], subspace: str, rng: rando
         )
         projected = ensure_steady_combo_stress(projected, rng)
         return theta_genome.normalize_genome(projected)
+    if subspace == "state-contam":
+        projected = dict(genome)
+        projected.update(
+            {
+                "disturbance_type": "state_contam",
+                "wind_speed_m_s": 0.0,
+                "wind_direction_rad": 0.0,
+                "mass_scale": 1.0,
+                "inertia_roll_scale": 1.0,
+                "inertia_pitch_scale": 1.0,
+                "inertia_yaw_scale": 1.0,
+                "twr_scale": 1.0,
+                "approach_radius_m": 3.0,
+                "approach_frequency_hz": 0.35,
+                "approach_phase_rad": 0.0,
+                "switch_roll_pitch_deg": 35.0,
+                "switch_rate_rad_s": 1.3,
+                "switch_delay_s": 0.0,
+                "step_magnitude_m": 0.75,
+                "step_axis": "x",
+                "step_sign": 1,
+                "step_time_s": 32.0,
+                "mission_end_s": 54.0,
+                "setpoint_rate_hz": 80.0,
+            }
+        )
+        return theta_genome.normalize_genome(projected)
     raise ValueError(f"unknown subspace {subspace!r}; expected one of {SUBSPACES}")
 
 
@@ -346,6 +506,8 @@ def random_candidate_genome(subspace: str, rng: random.Random) -> dict[str, Any]
         return route_a_switching_genome(rng)
     if subspace == "steady-wind-physics":
         return steady_wind_physics_genome(rng)
+    if subspace == "state-contam":
+        return state_contam_genome(rng)
     return theta_genome.random_genome(rng)
 
 
@@ -354,6 +516,8 @@ def mutate_candidate_genome(parent: dict[str, Any], subspace: str, rng: random.R
         return mutate_route_a_switching_genome(parent, rng)
     if subspace == "steady-wind-physics":
         return mutate_steady_wind_physics_genome(parent, rng)
+    if subspace == "state-contam":
+        return mutate_state_contam_genome(parent, rng)
     return theta_genome.mutate_genome(parent, rng)
 
 
@@ -1202,7 +1366,10 @@ def evaluate_theta(
             "mcnn_identity": identity_gate,
             "rho_jitter_reproduction_margins": reproduction_margins(),
         }
-        write_json(docs_dir / f"{tag}_validity.json", evidence["validity"])
+        if not mock_evaluator and requires_state_shim_delivery(theta):
+            state_shim_gate = run_state_shim_fairness_gate(theta_path, docs_dir, tag, evidence)
+            evidence["state_shim_fairness"] = state_shim_gate
+            evidence["validity"]["state_shim_delivery"] = state_shim_gate
 
         gate_failures: list[str] = []
         if not mock_evaluator:
@@ -1211,6 +1378,10 @@ def evaluate_theta(
                     gate_failures.append(f"{controller}_decontamination:{','.join(gate.get('reasons', []))}")
             if not bool(identity_gate.get("passed")):
                 gate_failures.append(f"mcnn_identity:{','.join(identity_gate.get('reasons', []))}")
+            state_shim_gate = evidence["validity"].get("state_shim_delivery")
+            if isinstance(state_shim_gate, dict) and not bool(state_shim_gate.get("passed")):
+                gate_failures.append(f"state_shim_delivery:{','.join(state_shim_gate.get('reasons', []))}")
+        write_json(docs_dir / f"{tag}_validity.json", evidence["validity"])
 
         if gate_failures:
             error = "validity_gate_failed: " + ";".join(gate_failures)
@@ -1386,10 +1557,11 @@ def search(args: argparse.Namespace) -> tuple[Path, list[EvalResult], list[dict[
         "safety_config": str(SAFETY_CONFIG.relative_to(REPO_ROOT)),
         "px4_commit": "3042f906abaab7ab59ae838ad5a530a9ef3df9a6",
         "searcher": "MAP-Elites" if args.strategy == "map-elites" else "random baseline",
-        "genome": "scripts/theta_genome.py shim-free Tier 0.5 genome",
+        "genome": "scripts/theta_genome.py Tier 0.5 genome with dedicated state-contam shim routing",
         "bins": (
             "steady-wind-physics uses steady_combo wind_bucket x physics_bucket; "
             "route-a-switching uses switch_roll_pitch_bucket x wind_bucket; "
+            "state-contam uses velocity_bias_bucket x angular_rate_bias_bucket; "
             "other subspaces use disturbance_type x amplitude_bucket"
         ),
         "fitness": (

@@ -1,8 +1,11 @@
 diff --git a/src/modules/ekf2/EKF2.cpp b/src/modules/ekf2/EKF2.cpp
-index 9cb699cdf5..78c00d2518 100644
+index 9cb699cdf5..3580dddf2c 100644
 --- a/src/modules/ekf2/EKF2.cpp
 +++ b/src/modules/ekf2/EKF2.cpp
-@@ -50,0 +51,180 @@ static px4::atomic<EKF2Selector *> _ekf2_selector {nullptr};
+@@ -48,6 +48,277 @@ static px4::atomic<EKF2 *> _objects[EKF2_MAX_INSTANCES] {};
+ static px4::atomic<EKF2Selector *> _ekf2_selector {nullptr};
+ #endif // CONFIG_EKF2_MULTI_INSTANCE
+ 
 +namespace
 +{
 +static constexpr int M2B_PROFILE_DELAY = 1;
@@ -45,6 +48,97 @@ index 9cb699cdf5..78c00d2518 100644
 +}
 +
 +} // namespace
++
++void EKF2::UpdateM2BPositionShimParams()
++{
++	if (_m2b_p_prof_handle == PARAM_INVALID) {
++		_m2b_p_prof_handle = param_find("M2B_P_PROF");
++		_m2b_p_dly_handle = param_find("M2B_P_DLY");
++		_m2b_p_x_handle = param_find("M2B_P_X");
++		_m2b_p_y_handle = param_find("M2B_P_Y");
++		_m2b_p_z_handle = param_find("M2B_P_Z");
++	}
++
++	if (_m2b_p_prof_handle != PARAM_INVALID) {
++		param_get(_m2b_p_prof_handle, &_m2b_p_prof);
++	}
++
++	if (_m2b_p_dly_handle != PARAM_INVALID) {
++		param_get(_m2b_p_dly_handle, &_m2b_p_dly);
++	}
++
++	if (_m2b_p_x_handle != PARAM_INVALID) {
++		param_get(_m2b_p_x_handle, &_m2b_p_x);
++	}
++
++	if (_m2b_p_y_handle != PARAM_INVALID) {
++		param_get(_m2b_p_y_handle, &_m2b_p_y);
++	}
++
++	if (_m2b_p_z_handle != PARAM_INVALID) {
++		param_get(_m2b_p_z_handle, &_m2b_p_z);
++	}
++}
++
++void EKF2::ApplyM2BPositionShim(vehicle_local_position_s &local_position)
++{
++	_m2b_position_buffer[_m2b_position_buffer_index].timestamp_sample = local_position.timestamp_sample;
++	_m2b_position_buffer[_m2b_position_buffer_index].xyz[0] = local_position.x;
++	_m2b_position_buffer[_m2b_position_buffer_index].xyz[1] = local_position.y;
++	_m2b_position_buffer[_m2b_position_buffer_index].xyz[2] = local_position.z;
++	_m2b_position_buffer_index = (_m2b_position_buffer_index + 1) % M2B_BUFFER_LEN;
++
++	if (!m2bShimActive(_param_m2b_en.get(), _param_m2b_start.get(), _param_m2b_end.get(), hrt_absolute_time())) {
++		return;
++	}
++
++	UpdateM2BPositionShimParams();
++	const int profile = _m2b_p_prof;
++
++	if (profile == M2B_PROFILE_DELAY) {
++		const int32_t delay_ms = _m2b_p_dly;
++		const uint64_t delay_us = static_cast<uint64_t>(delay_ms > 0 ? delay_ms : 0) * 1000ULL;
++		const uint64_t target_time = (local_position.timestamp_sample > delay_us) ? local_position.timestamp_sample - delay_us : 0;
++		bool found = false;
++		uint64_t best_time = 0;
++		float delayed[3] {};
++
++		for (const M2BVectorSample &sample : _m2b_position_buffer) {
++			if ((sample.timestamp_sample != 0) && (sample.timestamp_sample <= target_time) && (sample.timestamp_sample >= best_time)) {
++				best_time = sample.timestamp_sample;
++				delayed[0] = sample.xyz[0];
++				delayed[1] = sample.xyz[1];
++				delayed[2] = sample.xyz[2];
++				found = true;
++			}
++		}
++
++		if (found) {
++			local_position.x = delayed[0];
++			local_position.y = delayed[1];
++			local_position.z = delayed[2];
++		}
++
++	} else if (profile == M2B_PROFILE_BIAS) {
++		local_position.x += _m2b_p_x;
++		local_position.y += _m2b_p_y;
++		local_position.z += _m2b_p_z;
++
++	} else if (profile == M2B_PROFILE_NOISE) {
++		local_position.x += _m2b_p_x * m2bNoise(_m2b_noise_state, _param_m2b_seed.get());
++		local_position.y += _m2b_p_y * m2bNoise(_m2b_noise_state, _param_m2b_seed.get());
++		local_position.z += _m2b_p_z * m2bNoise(_m2b_noise_state, _param_m2b_seed.get());
++
++	} else if (profile == M2B_PROFILE_NAN || profile == M2B_PROFILE_INF) {
++		float *values[3] {&local_position.x, &local_position.y, &local_position.z};
++
++		for (int axis = 0; axis < 3; axis++) {
++			if (m2bAxisSelected(_m2b_p_x, _m2b_p_y, _m2b_p_z, axis)) {
++				*values[axis] = (profile == M2B_PROFILE_NAN) ? NAN : INFINITY;
++			}
++		}
++	}
++}
 +
 +void EKF2::ApplyM2BVelocityShim(vehicle_local_position_s &local_position)
 +{
@@ -183,18 +277,45 @@ index 9cb699cdf5..78c00d2518 100644
 +	}
 +}
 +
-@@ -1184,0 +1365 @@ void EKF2::PublishAttitude(const hrt_abstime &timestamp)
+ EKF2::EKF2(bool multi_mode, const px4::wq_config_t &config, bool replay_mode):
+ 	ModuleParams(nullptr),
+ 	ScheduledWorkItem(MODULE_NAME, config),
+@@ -1182,6 +1453,7 @@ void EKF2::PublishAttitude(const hrt_abstime &timestamp)
+ 
+ 		_ekf.get_quat_reset(&att.delta_q_reset[0], &att.quat_reset_counter);
+ 		att.timestamp = _replay_mode ? timestamp : hrt_absolute_time();
 +		ApplyM2BAttitudeShim(att);
-@@ -1815,0 +1997 @@ void EKF2::PublishLocalPosition(const hrt_abstime &timestamp)
+ 		_attitude_pub.publish(att);
+ 
+ 	}  else if (_replay_mode) {
+@@ -1813,6 +2085,8 @@ void EKF2::PublishLocalPosition(const hrt_abstime &timestamp)
+ 
+ 	// publish vehicle local position data
+ 	lpos.timestamp = _replay_mode ? timestamp : hrt_absolute_time();
++	ApplyM2BPositionShim(lpos);
 +	ApplyM2BVelocityShim(lpos);
+ 	_local_position_pub.publish(lpos);
+ }
+ 
 diff --git a/src/modules/ekf2/EKF2.hpp b/src/modules/ekf2/EKF2.hpp
-index fffed51789..b395205237 100644
+index fffed51789..08338e0229 100644
 --- a/src/modules/ekf2/EKF2.hpp
 +++ b/src/modules/ekf2/EKF2.hpp
-@@ -196,0 +197,2 @@ private:
+@@ -194,6 +194,10 @@ private:
+ 	void PublishInnovationTestRatios(const hrt_abstime &timestamp);
+ 	void PublishInnovationVariances(const hrt_abstime &timestamp);
+ 	void PublishLocalPosition(const hrt_abstime &timestamp);
++	void UpdateM2BPositionShimParams();
++	void ApplyM2BPositionShim(vehicle_local_position_s &local_position);
 +	void ApplyM2BVelocityShim(vehicle_local_position_s &local_position);
 +	void ApplyM2BAttitudeShim(vehicle_attitude_s &attitude);
-@@ -480,0 +483,17 @@ private:
+ 	void PublishOdometry(const hrt_abstime &timestamp, const imuSample &imu_sample);
+ 	void PublishSensorBias(const hrt_abstime &timestamp);
+ 	void PublishStates(const hrt_abstime &timestamp);
+@@ -478,6 +482,35 @@ private:
+ 	uORB::PublicationMulti<vehicle_global_position_s>    _global_position_pub;
+ 	uORB::PublicationMulti<vehicle_odometry_s>           _odometry_pub;
+ 
 +	struct M2BVectorSample {
 +		uint64_t timestamp_sample{0};
 +		float xyz[3] {};
@@ -206,13 +327,31 @@ index fffed51789..b395205237 100644
 +	};
 +
 +	static constexpr int M2B_BUFFER_LEN{128};
++	M2BVectorSample _m2b_position_buffer[M2B_BUFFER_LEN] {};
 +	M2BVectorSample _m2b_velocity_buffer[M2B_BUFFER_LEN] {};
 +	M2BAttitudeSample _m2b_attitude_buffer[M2B_BUFFER_LEN] {};
++	int _m2b_position_buffer_index{0};
 +	int _m2b_velocity_buffer_index{0};
 +	int _m2b_attitude_buffer_index{0};
 +	uint32_t _m2b_noise_state{0};
++	param_t _m2b_p_prof_handle{PARAM_INVALID};
++	param_t _m2b_p_dly_handle{PARAM_INVALID};
++	param_t _m2b_p_x_handle{PARAM_INVALID};
++	param_t _m2b_p_y_handle{PARAM_INVALID};
++	param_t _m2b_p_z_handle{PARAM_INVALID};
++	int32_t _m2b_p_prof{0};
++	int32_t _m2b_p_dly{0};
++	float _m2b_p_x{0.f};
++	float _m2b_p_y{0.f};
++	float _m2b_p_z{0.f};
 +
-@@ -556,0 +576,14 @@ private:
+ #if defined(CONFIG_EKF2_WIND)
+ 	uORB::PublicationMulti<wind_s>              _wind_pub;
+ #endif // CONFIG_EKF2_WIND
+@@ -554,6 +587,20 @@ private:
+ #endif // CONFIG_EKF2_WIND
+ 
+ 		(ParamExtFloat<px4::params::EKF2_NOAID_NOISE>) _param_ekf2_noaid_noise,
 +		(ParamBool<px4::params::M2B_EN>) _param_m2b_en,
 +		(ParamFloat<px4::params::M2B_START>) _param_m2b_start,
 +		(ParamFloat<px4::params::M2B_END>) _param_m2b_end,
@@ -227,11 +366,17 @@ index fffed51789..b395205237 100644
 +		(ParamFloat<px4::params::M2B_A_R>) _param_m2b_a_r,
 +		(ParamFloat<px4::params::M2B_A_P>) _param_m2b_a_p,
 +		(ParamFloat<px4::params::M2B_A_Y>) _param_m2b_a_y,
+ 
+ #if defined(CONFIG_EKF2_GNSS)
+ 		(ParamExtInt<px4::params::EKF2_GPS_CTRL>) _param_ekf2_gps_ctrl,
 diff --git a/src/modules/ekf2/EKF2Selector.cpp b/src/modules/ekf2/EKF2Selector.cpp
-index f5f67e2cde..b6cdcd4c50 100644
+index f5f67e2cde..ac54c64846 100644
 --- a/src/modules/ekf2/EKF2Selector.cpp
 +++ b/src/modules/ekf2/EKF2Selector.cpp
-@@ -59,0 +60,182 @@ EKF2Selector::~EKF2Selector()
+@@ -57,6 +57,247 @@ EKF2Selector::~EKF2Selector()
+ 	Stop();
+ }
+ 
 +namespace
 +{
 +static constexpr int M2B_PROFILE_DELAY = 1;
@@ -274,6 +419,65 @@ index f5f67e2cde..b6cdcd4c50 100644
 +}
 +
 +} // namespace
++
++void EKF2Selector::ApplyM2BPositionShim(vehicle_local_position_s &local_position)
++{
++	_m2b_position_buffer[_m2b_position_buffer_index].timestamp_sample = local_position.timestamp_sample;
++	_m2b_position_buffer[_m2b_position_buffer_index].xyz[0] = local_position.x;
++	_m2b_position_buffer[_m2b_position_buffer_index].xyz[1] = local_position.y;
++	_m2b_position_buffer[_m2b_position_buffer_index].xyz[2] = local_position.z;
++	_m2b_position_buffer_index = (_m2b_position_buffer_index + 1) % M2B_BUFFER_LEN;
++
++	if (!m2bShimActive(_param_m2b_en.get(), _param_m2b_start.get(), _param_m2b_end.get(), hrt_absolute_time())) {
++		return;
++	}
++
++	const int profile = _param_m2b_p_prof.get();
++
++	if (profile == M2B_PROFILE_DELAY) {
++		const int32_t delay_ms = _param_m2b_p_dly.get();
++		const uint64_t delay_us = static_cast<uint64_t>(delay_ms > 0 ? delay_ms : 0) * 1000ULL;
++		const uint64_t target_time = (local_position.timestamp_sample > delay_us) ? local_position.timestamp_sample - delay_us : 0;
++		bool found = false;
++		uint64_t best_time = 0;
++		float delayed[3] {};
++
++		for (const M2BVectorSample &sample : _m2b_position_buffer) {
++			if ((sample.timestamp_sample != 0) && (sample.timestamp_sample <= target_time) && (sample.timestamp_sample >= best_time)) {
++				best_time = sample.timestamp_sample;
++				delayed[0] = sample.xyz[0];
++				delayed[1] = sample.xyz[1];
++				delayed[2] = sample.xyz[2];
++				found = true;
++			}
++		}
++
++		if (found) {
++			local_position.x = delayed[0];
++			local_position.y = delayed[1];
++			local_position.z = delayed[2];
++		}
++
++	} else if (profile == M2B_PROFILE_BIAS) {
++		local_position.x += _param_m2b_p_x.get();
++		local_position.y += _param_m2b_p_y.get();
++		local_position.z += _param_m2b_p_z.get();
++
++	} else if (profile == M2B_PROFILE_NOISE) {
++		local_position.x += _param_m2b_p_x.get() * m2bNoise(_m2b_noise_state, _param_m2b_seed.get());
++		local_position.y += _param_m2b_p_y.get() * m2bNoise(_m2b_noise_state, _param_m2b_seed.get());
++		local_position.z += _param_m2b_p_z.get() * m2bNoise(_m2b_noise_state, _param_m2b_seed.get());
++
++	} else if (profile == M2B_PROFILE_NAN || profile == M2B_PROFILE_INF) {
++		float *values[3] {&local_position.x, &local_position.y, &local_position.z};
++
++		for (int axis = 0; axis < 3; axis++) {
++			if (m2bAxisSelected(_param_m2b_p_x.get(), _param_m2b_p_y.get(), _param_m2b_p_z.get(), axis)) {
++				*values[axis] = (profile == M2B_PROFILE_NAN) ? NAN : INFINITY;
++			}
++		}
++	}
++}
 +
 +void EKF2Selector::ApplyM2BVelocityShim(vehicle_local_position_s &local_position)
 +{
@@ -414,18 +618,44 @@ index f5f67e2cde..b6cdcd4c50 100644
 +	}
 +}
 +
-@@ -412,0 +595 @@ void EKF2Selector::PublishVehicleAttitude()
+ void EKF2Selector::Stop()
+ {
+ 	for (int i = 0; i < EKF2_MAX_INSTANCES; i++) {
+@@ -410,6 +651,7 @@ void EKF2Selector::PublishVehicleAttitude()
+ 			_delta_q_reset.copyTo(attitude.delta_q_reset);
+ 
+ 			attitude.timestamp = hrt_absolute_time();
 +			ApplyM2BAttitudeShim(attitude);
-@@ -538,0 +722 @@ void EKF2Selector::PublishVehicleLocalPosition()
+ 			_vehicle_attitude_pub.publish(attitude);
+ 		}
+ 	}
+@@ -536,6 +778,8 @@ void EKF2Selector::PublishVehicleLocalPosition()
+ 			local_position.delta_heading = _delta_heading_reset;
+ 
+ 			local_position.timestamp = hrt_absolute_time();
++			ApplyM2BPositionShim(local_position);
 +			ApplyM2BVelocityShim(local_position);
+ 			_vehicle_local_position_pub.publish(local_position);
+ 		}
+ 	}
 diff --git a/src/modules/ekf2/EKF2Selector.hpp b/src/modules/ekf2/EKF2Selector.hpp
-index 535af97e6d..47d61a1ab2 100644
+index 535af97e6d..fe44c8deab 100644
 --- a/src/modules/ekf2/EKF2Selector.hpp
 +++ b/src/modules/ekf2/EKF2Selector.hpp
-@@ -92,0 +93,2 @@ private:
+@@ -90,6 +90,9 @@ private:
+ 	void PublishVehicleGlobalPosition();
+ 	void PublishVehicleOdometry();
+ 	void PublishWindEstimate();
++	void ApplyM2BPositionShim(vehicle_local_position_s &local_position);
 +	void ApplyM2BVelocityShim(vehicle_local_position_s &local_position);
 +	void ApplyM2BAttitudeShim(vehicle_attitude_s &attitude);
-@@ -236,0 +239,17 @@ private:
+ 
+ 	bool SelectInstance(uint8_t instance);
+ 
+@@ -234,6 +237,25 @@ private:
+ 	uint8_t _global_position_instance_prev{INVALID_INSTANCE};
+ 	uint8_t _odometry_instance_prev{INVALID_INSTANCE};
+ 
 +	struct M2BVectorSample {
 +		uint64_t timestamp_sample{0};
 +		float xyz[3] {};
@@ -437,19 +667,32 @@ index 535af97e6d..47d61a1ab2 100644
 +	};
 +
 +	static constexpr int M2B_BUFFER_LEN{128};
++	M2BVectorSample _m2b_position_buffer[M2B_BUFFER_LEN] {};
 +	M2BVectorSample _m2b_velocity_buffer[M2B_BUFFER_LEN] {};
 +	M2BAttitudeSample _m2b_attitude_buffer[M2B_BUFFER_LEN] {};
++	int _m2b_position_buffer_index{0};
 +	int _m2b_velocity_buffer_index{0};
 +	int _m2b_attitude_buffer_index{0};
 +	uint32_t _m2b_noise_state{0};
 +
-@@ -254 +273,15 @@ private:
+ 	uORB::SubscriptionInterval _parameter_update_sub{ORB_ID(parameter_update), 1_s};
+ 	uORB::Subscription _sensors_status_imu{ORB_ID(sensors_status_imu)};
+ 
+@@ -251,7 +273,26 @@ private:
+ 		(ParamFloat<px4::params::EKF2_SEL_IMU_RAT>) _param_ekf2_sel_imu_angle_rate,
+ 		(ParamFloat<px4::params::EKF2_SEL_IMU_ANG>) _param_ekf2_sel_imu_angle,
+ 		(ParamFloat<px4::params::EKF2_SEL_IMU_ACC>) _param_ekf2_sel_imu_accel,
 -		(ParamFloat<px4::params::EKF2_SEL_IMU_VEL>) _param_ekf2_sel_imu_velocity
 +		(ParamFloat<px4::params::EKF2_SEL_IMU_VEL>) _param_ekf2_sel_imu_velocity,
 +		(ParamBool<px4::params::M2B_EN>) _param_m2b_en,
 +		(ParamFloat<px4::params::M2B_START>) _param_m2b_start,
 +		(ParamFloat<px4::params::M2B_END>) _param_m2b_end,
 +		(ParamInt<px4::params::M2B_SEED>) _param_m2b_seed,
++		(ParamInt<px4::params::M2B_P_PROF>) _param_m2b_p_prof,
++		(ParamInt<px4::params::M2B_P_DLY>) _param_m2b_p_dly,
++		(ParamFloat<px4::params::M2B_P_X>) _param_m2b_p_x,
++		(ParamFloat<px4::params::M2B_P_Y>) _param_m2b_p_y,
++		(ParamFloat<px4::params::M2B_P_Z>) _param_m2b_p_z,
 +		(ParamInt<px4::params::M2B_V_PROF>) _param_m2b_v_prof,
 +		(ParamInt<px4::params::M2B_V_DLY>) _param_m2b_v_dly,
 +		(ParamFloat<px4::params::M2B_V_X>) _param_m2b_v_x,
@@ -460,11 +703,229 @@ index 535af97e6d..47d61a1ab2 100644
 +		(ParamFloat<px4::params::M2B_A_R>) _param_m2b_a_r,
 +		(ParamFloat<px4::params::M2B_A_P>) _param_m2b_a_p,
 +		(ParamFloat<px4::params::M2B_A_Y>) _param_m2b_a_y
+ 	)
+ };
+ #endif // !EKF2SELECTOR_HPP
+diff --git a/src/modules/mc_raptor/module.yaml b/src/modules/mc_raptor/module.yaml
+index 2b61df845e..aa02e117d3 100644
+--- a/src/modules/mc_raptor/module.yaml
++++ b/src/modules/mc_raptor/module.yaml
+@@ -41,3 +41,207 @@ parameters:
+                 1: Lissajous
+             default: 0
+             category: System
++    - group: M2B State Shim
++      definitions:
++        M2B_EN:
++            description:
++                short: Enable M2b adversarial shared-state injection shim
++            type: boolean
++            default: false
++            category: System
++        M2B_START:
++            description:
++                short: Shim activation start time since boot
++            type: float
++            unit: s
++            min: 0.0
++            default: 0.0
++            category: System
++        M2B_END:
++            description:
++                short: Shim activation end time since boot
++                long: |
++                    A value less than or equal to zero leaves the shim active after M2B_START.
++            type: float
++            unit: s
++            min: 0.0
++            default: 0.0
++            category: System
++        M2B_SEED:
++            description:
++                short: Deterministic noise seed for the shim
++            type: int32
++            default: 20260624
++            category: System
++        M2B_P_PROF:
++            description:
++                short: vehicle_local_position position shim profile
++            type: enum
++            values:
++                0: Off
++                1: Delay
++                2: Bias
++                3: Noise
++                4: NaN
++                5: Inf
++            default: 0
++            category: System
++        M2B_P_DLY:
++            description:
++                short: vehicle_local_position position delay
++            type: int32
++            unit: ms
++            min: 0
++            max: 1000
++            default: 0
++            category: System
++        M2B_P_X:
++            description:
++                short: Position shim x amplitude
++            type: float
++            unit: m
++            default: 0.0
++            category: System
++        M2B_P_Y:
++            description:
++                short: Position shim y amplitude
++            type: float
++            unit: m
++            default: 0.0
++            category: System
++        M2B_P_Z:
++            description:
++                short: Position shim z amplitude
++            type: float
++            unit: m
++            default: 0.0
++            category: System
++        M2B_V_PROF:
++            description:
++                short: vehicle_local_position velocity shim profile
++            type: enum
++            values:
++                0: Off
++                1: Delay
++                2: Bias
++                3: Noise
++                4: NaN
++                5: Inf
++            default: 0
++            category: System
++        M2B_V_DLY:
++            description:
++                short: vehicle_local_position velocity delay
++            type: int32
++            unit: ms
++            min: 0
++            max: 1000
++            default: 0
++            category: System
++        M2B_V_X:
++            description:
++                short: Velocity shim x amplitude
++            type: float
++            unit: m/s
++            default: 0.0
++            category: System
++        M2B_V_Y:
++            description:
++                short: Velocity shim y amplitude
++            type: float
++            unit: m/s
++            default: 0.0
++            category: System
++        M2B_V_Z:
++            description:
++                short: Velocity shim z amplitude
++            type: float
++            unit: m/s
++            default: 0.0
++            category: System
++        M2B_G_PROF:
++            description:
++                short: vehicle_angular_velocity shim profile
++            type: enum
++            values:
++                0: Off
++                1: Delay
++                2: Bias
++                3: Noise
++                4: NaN
++                5: Inf
++            default: 0
++            category: System
++        M2B_G_DLY:
++            description:
++                short: vehicle_angular_velocity delay
++            type: int32
++            unit: ms
++            min: 0
++            max: 1000
++            default: 0
++            category: System
++        M2B_G_X:
++            description:
++                short: Angular velocity shim x amplitude
++            type: float
++            unit: rad/s
++            default: 0.0
++            category: System
++        M2B_G_Y:
++            description:
++                short: Angular velocity shim y amplitude
++            type: float
++            unit: rad/s
++            default: 0.0
++            category: System
++        M2B_G_Z:
++            description:
++                short: Angular velocity shim z amplitude
++            type: float
++            unit: rad/s
++            default: 0.0
++            category: System
++        M2B_A_PROF:
++            description:
++                short: vehicle_attitude shim profile
++            type: enum
++            values:
++                0: Off
++                1: Delay
++                2: Bias
++                3: Noise
++                4: NaN
++                5: Inf
++            default: 0
++            category: System
++        M2B_A_DLY:
++            description:
++                short: vehicle_attitude delay
++            type: int32
++            unit: ms
++            min: 0
++            max: 1000
++            default: 0
++            category: System
++        M2B_A_R:
++            description:
++                short: Attitude shim roll amplitude
++            type: float
++            unit: rad
++            default: 0.0
++            category: System
++        M2B_A_P:
++            description:
++                short: Attitude shim pitch amplitude
++            type: float
++            unit: rad
++            default: 0.0
++            category: System
++        M2B_A_Y:
++            description:
++                short: Attitude shim yaw amplitude
++            type: float
++            unit: rad
++            default: 0.0
++            category: System
 diff --git a/src/modules/sensors/vehicle_angular_velocity/VehicleAngularVelocity.cpp b/src/modules/sensors/vehicle_angular_velocity/VehicleAngularVelocity.cpp
 index 01750b4259..f080f02201 100644
 --- a/src/modules/sensors/vehicle_angular_velocity/VehicleAngularVelocity.cpp
 +++ b/src/modules/sensors/vehicle_angular_velocity/VehicleAngularVelocity.cpp
-@@ -70,0 +71,104 @@ VehicleAngularVelocity::~VehicleAngularVelocity()
+@@ -68,6 +68,110 @@ VehicleAngularVelocity::~VehicleAngularVelocity()
+ #endif // CONSTRAINED_FLASH
+ }
+ 
 +namespace
 +{
 +static constexpr int M2B_PROFILE_DELAY = 1;
@@ -569,15 +1030,33 @@ index 01750b4259..f080f02201 100644
 +	}
 +}
 +
-@@ -939,0 +1044 @@ bool VehicleAngularVelocity::CalibrateAndPublish(const hrt_abstime &timestamp_sa
+ bool VehicleAngularVelocity::Start()
+ {
+ 	// force initial updates
+@@ -937,6 +1041,7 @@ bool VehicleAngularVelocity::CalibrateAndPublish(const hrt_abstime &timestamp_sa
+ 		_angular_acceleration.copyTo(angular_velocity.xyz_derivative);
+ 
+ 		angular_velocity.timestamp = hrt_absolute_time();
 +		ApplyM2BGyroShim(angular_velocity);
+ 		_vehicle_angular_velocity_pub.publish(angular_velocity);
+ 
+ 		// shift last publish time forward, but don't let it get further behind than the interval
 diff --git a/src/modules/sensors/vehicle_angular_velocity/VehicleAngularVelocity.hpp b/src/modules/sensors/vehicle_angular_velocity/VehicleAngularVelocity.hpp
 index 8aae8a3c03..ed46e16891 100644
 --- a/src/modules/sensors/vehicle_angular_velocity/VehicleAngularVelocity.hpp
 +++ b/src/modules/sensors/vehicle_angular_velocity/VehicleAngularVelocity.hpp
-@@ -79,0 +80 @@ private:
+@@ -77,6 +77,7 @@ private:
+ 
+ 	bool CalibrateAndPublish(const hrt_abstime &timestamp_sample, const matrix::Vector3f &angular_velocity_uncalibrated,
+ 				 const matrix::Vector3f &angular_acceleration_uncalibrated);
 +	void ApplyM2BGyroShim(vehicle_angular_velocity_s &angular_velocity);
-@@ -125,0 +127,10 @@ private:
+ 
+ 	inline float FilterAngularVelocity(int axis, float data[], int N = 1);
+ 	inline float FilterAngularAcceleration(int axis, float inverse_dt_s, float data[], int N = 1);
+@@ -123,6 +124,16 @@ private:
+ 	matrix::Vector3f _angular_velocity_raw_prev{};
+ 	hrt_abstime _timestamp_sample_last{0};
+ 
 +	struct M2BVectorSample {
 +		uint64_t timestamp_sample{0};
 +		float xyz[3] {};
@@ -588,7 +1067,13 @@ index 8aae8a3c03..ed46e16891 100644
 +	int _m2b_gyro_buffer_index{0};
 +	uint32_t _m2b_noise_state{0};
 +
-@@ -197 +208,10 @@ private:
+ 	hrt_abstime _publish_interval_min_us{0};
+ 	hrt_abstime _last_publish{0};
+ 
+@@ -194,7 +205,16 @@ private:
+ 		(ParamFloat<px4::params::IMU_GYRO_NF1_FRQ>) _param_imu_gyro_nf1_frq,
+ 		(ParamFloat<px4::params::IMU_GYRO_NF1_BW>) _param_imu_gyro_nf1_bw,
+ 		(ParamInt<px4::params::IMU_GYRO_RATEMAX>) _param_imu_gyro_ratemax,
 -		(ParamFloat<px4::params::IMU_DGYRO_CUTOFF>) _param_imu_dgyro_cutoff
 +		(ParamFloat<px4::params::IMU_DGYRO_CUTOFF>) _param_imu_dgyro_cutoff,
 +		(ParamBool<px4::params::M2B_EN>) _param_m2b_en,
@@ -600,3 +1085,6 @@ index 8aae8a3c03..ed46e16891 100644
 +		(ParamFloat<px4::params::M2B_G_X>) _param_m2b_g_x,
 +		(ParamFloat<px4::params::M2B_G_Y>) _param_m2b_g_y,
 +		(ParamFloat<px4::params::M2B_G_Z>) _param_m2b_g_z
+ 	)
+ };
+ 

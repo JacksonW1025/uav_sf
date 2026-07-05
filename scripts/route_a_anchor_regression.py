@@ -38,6 +38,31 @@ PAIR5_FIXED_SEEDS = [
 ]
 PAIR1_RERUN_SEEDS = [20262001, 20262101]
 PAIR4_CONFIRM_SEEDS = [20261902, 20262002]
+PAIR4_GATE_A_PRIME_SEEDS = [
+    20261802,
+    20261902,
+    20262002,
+    20262102,
+    20262202,
+    20262302,
+    20262402,
+    20262502,
+]
+PAIR5_GATE_A_PRIME_SEEDS = [
+    20261803,
+    20261903,
+    20262003,
+    20262103,
+    20262203,
+    20262303,
+    20262403,
+    20262503,
+]
+BOUNDARY_ANCHOR_SEEDS = {
+    "pair4": PAIR4_GATE_A_PRIME_SEEDS,
+    "pair5": PAIR5_GATE_A_PRIME_SEEDS,
+}
+GATE_A_PRIME_BOUNDARY_STRICT_FLOOR = 6
 
 
 def write_json(path: Path, payload: Any) -> None:
@@ -65,6 +90,19 @@ def anchor_cases() -> list[tuple[str, severity_scan.SeverityCase, int]]:
         ("pair4", severity_scan.SCAN_CASES[2], 20261802),
         ("pair5", severity_scan.SCAN_CASES[3], 20261803),
     ]
+
+
+def gate_a_prime_cases() -> list[tuple[str, str, severity_scan.SeverityCase, int]]:
+    high = severity_scan.SCAN_CASES[0]
+    pair4_case = severity_scan.SCAN_CASES[2]
+    pair5_case = severity_scan.SCAN_CASES[3]
+    plan: list[tuple[str, str, severity_scan.SeverityCase, int]] = [
+        ("pair1", "pair1", high, 20261800),
+        ("pair2", "pair2", replace(high, tag=f"{high.tag}_confirm1"), 20261901),
+    ]
+    plan.extend(("pair4", f"pair4_seed_{seed}", pair4_case, seed) for seed in PAIR4_GATE_A_PRIME_SEEDS)
+    plan.extend(("pair5", f"pair5_seed_{seed}", pair5_case, seed) for seed in PAIR5_GATE_A_PRIME_SEEDS)
+    return plan
 
 
 def exact_strict_s0_vs_s3(pair: dict[str, Any]) -> bool:
@@ -300,6 +338,169 @@ def group_summary(records: list[dict[str, Any]], group: str) -> dict[str, Any]:
     }
 
 
+def canonical_gate_a_group(record: dict[str, Any]) -> str | None:
+    group = str(record.get("anchor_group") or "")
+    if group in {"pair1", "pair2", "pair4", "pair5"}:
+        return group
+    label = str(record.get("label") or record.get("anchor_label") or "")
+    for candidate in ("pair1", "pair2", "pair4", "pair5"):
+        if label.startswith(candidate):
+            return candidate
+    return None
+
+
+def gate_a_record_row(record: dict[str, Any]) -> dict[str, Any]:
+    judged = record.get("judged", {}) if isinstance(record.get("judged"), dict) else {}
+    return {
+        "label": record.get("label"),
+        "case": record.get("case") or judged.get("case"),
+        "seed": record.get("seed"),
+        "source": record.get("source"),
+        "strict_s0_vs_s3": bool(record.get("strict_s0_vs_s3")),
+        "classical_s0": bool(record.get("classical_s0")),
+        "mcnn_s3": bool(record.get("mcnn_s3")),
+        "classical": severity_label(judged, "classical") if judged else "-",
+        "mcnn": severity_label(judged, "mcnn") if judged else "-",
+        "rho_sign_gate": record.get("rho_sign_summary", {}).get("passes_sign_gate"),
+        "mcnn_negative_props": record.get("rho_sign_summary", {}).get("mcnn_catastrophic_negative_props", []),
+    }
+
+
+def summarize_deep_gate_a_anchor(records: list[dict[str, Any]], group: str) -> dict[str, Any]:
+    group_records = sorted(
+        [record for record in records if canonical_gate_a_group(record) == group],
+        key=lambda item: int(item.get("seed") or 0),
+    )
+    strict_hits = sum(1 for record in group_records if record.get("strict_s0_vs_s3"))
+    passed = bool(group_records) and strict_hits == len(group_records)
+    return {
+        "attempts": len(group_records),
+        "strict_s0_vs_s3_hits": strict_hits,
+        "passed": passed,
+        "required": "all provided deep-anchor records must be strict S0/S3",
+        "records": [gate_a_record_row(record) for record in group_records],
+    }
+
+
+def summarize_boundary_gate_a_anchor(records: list[dict[str, Any]], group: str) -> dict[str, Any]:
+    expected_seeds = BOUNDARY_ANCHOR_SEEDS[group]
+    expected = set(expected_seeds)
+    group_records = sorted(
+        [
+            record
+            for record in records
+            if canonical_gate_a_group(record) == group and int(record.get("seed") or -1) in expected
+        ],
+        key=lambda item: int(item.get("seed") or 0),
+    )
+    present = {int(record.get("seed") or -1) for record in group_records}
+    strict_seeds = [
+        int(record.get("seed"))
+        for record in group_records
+        if record.get("seed") is not None and record.get("strict_s0_vs_s3")
+    ]
+    non_strict_seeds = [
+        int(record.get("seed"))
+        for record in group_records
+        if record.get("seed") is not None and not record.get("strict_s0_vs_s3")
+    ]
+    missing_seeds = [seed for seed in expected_seeds if seed not in present]
+    strict_hits = len(strict_seeds)
+    expected_attempts = len(expected_seeds)
+    passed = not missing_seeds and strict_hits >= GATE_A_PRIME_BOUNDARY_STRICT_FLOOR
+    return {
+        "expected_seeds": expected_seeds,
+        "attempts": len(group_records),
+        "expected_attempts": expected_attempts,
+        "strict_s0_vs_s3_hits": strict_hits,
+        "strict_floor": GATE_A_PRIME_BOUNDARY_STRICT_FLOOR,
+        "hit_rate": strict_hits / expected_attempts if expected_attempts else 0.0,
+        "passed": passed,
+        "strict_seeds": strict_seeds,
+        "non_strict_seeds": non_strict_seeds,
+        "missing_seeds": missing_seeds,
+        "records": [gate_a_record_row(record) for record in group_records],
+    }
+
+
+def evaluate_gate_a_prime(records: list[dict[str, Any]]) -> dict[str, Any]:
+    deep = {group: summarize_deep_gate_a_anchor(records, group) for group in ("pair1", "pair2")}
+    boundary = {group: summarize_boundary_gate_a_anchor(records, group) for group in ("pair4", "pair5")}
+    gate_passed = all(item["passed"] for item in deep.values()) and all(item["passed"] for item in boundary.values())
+    return {
+        "decision": "GATE_A_PRIME_PASS" if gate_passed else "GATE_A_PRIME_BLOCKED",
+        "gate_passed": gate_passed,
+        "criteria": {
+            "deep_hard_gate": "pair1 and pair2 must be strict S0/S3",
+            "boundary_probability_gate": "pair4 and pair5 strict S0/S3 rate must be >=6/8 on fixed seed sets",
+            "boundary_fixed_seed_sets": BOUNDARY_ANCHOR_SEEDS,
+            "boundary_strict_floor": GATE_A_PRIME_BOUNDARY_STRICT_FLOOR,
+            "boundary_single_seed_flip_policy": "reported in per-seed rows; not a shim failure by itself",
+        },
+        "deep_anchors": deep,
+        "boundary_anchors": boundary,
+        "records": records,
+    }
+
+
+def write_gate_a_prime_summary(run_dir: Path, result: dict[str, Any]) -> None:
+    lines = [
+        "# Route-A Anchor Regression - Gate A Prime",
+        "",
+        f"run_dir: `{run_dir.relative_to(REPO_ROOT)}`",
+        f"decision: {result['decision']}",
+        "",
+        "## Criteria",
+        "",
+        "- hard gate: pair1 and pair2 must be strict S0/S3.",
+        "- boundary gate: pair4 and pair5 each need at least 6 strict S0/S3 hits in the fixed 8-seed set.",
+        "- boundary single-seed S0/S1 flips are reported as probability evidence, not shim failures.",
+        "",
+        "## Deep Anchors",
+        "",
+        "| anchor | attempts | strict hits | passed |",
+        "|---|---:|---:|---|",
+    ]
+    for group, summary in result["deep_anchors"].items():
+        lines.append(
+            f"| {group} | {summary['attempts']} | {summary['strict_s0_vs_s3_hits']} | {summary['passed']} |"
+        )
+    lines.extend(
+        [
+            "",
+            "## Boundary Anchors",
+            "",
+            "| anchor | attempts | strict hits | hit rate | floor | passed | non-strict seeds | missing seeds |",
+            "|---|---:|---:|---:|---:|---|---|---|",
+        ]
+    )
+    for group, summary in result["boundary_anchors"].items():
+        lines.append(
+            f"| {group} | {summary['attempts']}/{summary['expected_attempts']} | "
+            f"{summary['strict_s0_vs_s3_hits']} | {summary['hit_rate']:.3f} | "
+            f"{summary['strict_floor']} | {summary['passed']} | "
+            f"{summary['non_strict_seeds']} | {summary['missing_seeds']} |"
+        )
+    lines.extend(["", "## Per-Seed Boundary Rows", "", "| anchor | seed | classical | mc_nn | strict | sign gate |"])
+    lines.append("|---|---:|---|---|---|---|")
+    for group, summary in result["boundary_anchors"].items():
+        for record in summary["records"]:
+            lines.append(
+                f"| {group} | {record['seed']} | {record['classical']} | {record['mcnn']} | "
+                f"{record['strict_s0_vs_s3']} | {record['rho_sign_gate']} |"
+            )
+    lines.extend(
+        [
+            "",
+            "## Artifacts",
+            "",
+            f"- gate results: `{(run_dir / 'gate_a_prime_results.json').relative_to(REPO_ROOT)}`",
+            f"- gate records: `{(run_dir / 'gate_a_prime_records.json').relative_to(REPO_ROOT)}`",
+        ]
+    )
+    (run_dir / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
 def run_addendum3_diagnostics(args: argparse.Namespace) -> int:
     repo = m1.repo_root()
     run_dir = (args.run_root / args.run_id).resolve()
@@ -467,6 +668,87 @@ def write_addendum3_summary(run_dir: Path, result: dict[str, Any]) -> None:
     (run_dir / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def gate_a_prime_records_from_artifacts(decontam_path: Path, diagnostic_records_path: Path) -> list[dict[str, Any]]:
+    decontam_payload = load_json(decontam_path)
+    diagnostic_payload = load_json(diagnostic_records_path)
+    records: list[dict[str, Any]] = []
+    for label, pair in zip([item[0] for item in anchor_cases()], decontam_payload.get("pairs", [])):
+        if label not in {"pair1", "pair2"}:
+            continue
+        _, _, seed = next(item for item in anchor_cases() if item[0] == label)
+        records.append(
+            imported_record(
+                anchor_group=label,
+                label=label,
+                seed=seed,
+                pair=pair,
+                source=str(decontam_path.relative_to(REPO_ROOT)),
+            )
+        )
+    for record in diagnostic_payload.get("records", []):
+        group = canonical_gate_a_group(record)
+        if group in BOUNDARY_ANCHOR_SEEDS and int(record.get("seed") or -1) in set(BOUNDARY_ANCHOR_SEEDS[group]):
+            records.append(record)
+    return records
+
+
+def run_gate_a_prime_from_artifacts(args: argparse.Namespace) -> int:
+    run_dir = (args.run_root / args.run_id).resolve()
+    run_dir.mkdir(parents=True, exist_ok=True)
+    records = gate_a_prime_records_from_artifacts(
+        repo_path(args.reuse_decontam),
+        repo_path(args.reuse_diagnostic_records),
+    )
+    write_json(run_dir / "gate_a_prime_records.json", {"records": records})
+    result = evaluate_gate_a_prime(records)
+    result["run_id"] = args.run_id
+    result["source_artifacts"] = {
+        "deep_anchor_decontam": str(repo_path(args.reuse_decontam).relative_to(REPO_ROOT)),
+        "boundary_diagnostic_records": str(repo_path(args.reuse_diagnostic_records).relative_to(REPO_ROOT)),
+    }
+    write_json(run_dir / "gate_a_prime_results.json", result)
+    write_gate_a_prime_summary(run_dir, result)
+    print(f"GATE_A_PRIME_DECISION={result['decision']}")
+    print(f"GATE_A_PRIME_SUMMARY={run_dir / 'summary.md'}")
+    return 0 if result["gate_passed"] else 1
+
+
+def run_gate_a_prime(args: argparse.Namespace) -> int:
+    repo = m1.repo_root()
+    run_dir = (args.run_root / args.run_id).resolve()
+    run_dir.mkdir(parents=True, exist_ok=True)
+    env = m1.agent_env(repo)
+    env["PX4_SIM_SPEED_FACTOR"] = str(args.sim_speed_factor)
+    os.environ["PX4_SIM_SPEED_FACTOR"] = str(args.sim_speed_factor)
+    severity_scan.build_if_needed(repo, run_dir, env, args.rebuild)
+
+    records: list[dict[str, Any]] = []
+    for anchor_group, label, case, seed in gate_a_prime_cases():
+        record = run_diagnostic_pair(
+            repo=repo,
+            run_dir=run_dir,
+            run_id=args.run_id,
+            env=env,
+            run_timeout=args.run_timeout,
+            safety_config=args.safety_config,
+            anchor_group=anchor_group,
+            label=label,
+            case=case,
+            seed=seed,
+        )
+        records.append(record)
+        write_json(run_dir / "gate_a_prime_records.json", {"records": records})
+
+    result = evaluate_gate_a_prime(records)
+    result["run_id"] = args.run_id
+    write_json(run_dir / "gate_a_prime_results.json", result)
+    write_json(run_dir / "decontam_results.json", result)
+    write_gate_a_prime_summary(run_dir, result)
+    print(f"GATE_A_PRIME_DECISION={result['decision']}")
+    print(f"GATE_A_PRIME_SUMMARY={run_dir / 'summary.md'}")
+    return 0 if result["gate_passed"] else 1
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--run-id", default=datetime.now(timezone.utc).strftime("route_a_anchor_%Y%m%dT%H%M%SZ"))
@@ -476,16 +758,26 @@ def main() -> int:
     parser.add_argument("--rebuild", action="store_true")
     parser.add_argument("--safety-config", type=Path, default=REPO_ROOT / "config/m2_safety_envelope.json")
     parser.add_argument("--addendum3-diagnostics", action="store_true")
+    parser.add_argument("--gate-a-prime-from-artifacts", action="store_true")
     parser.add_argument(
         "--reuse-decontam",
         type=Path,
         default=REPO_ROOT
         / "runs/route_a_anchor_regression/route_a_anchor_regression_20260629/decontam_results.json",
     )
+    parser.add_argument(
+        "--reuse-diagnostic-records",
+        type=Path,
+        default=REPO_ROOT
+        / "runs/route_a_anchor_regression/wave2_gateA_diag_multiseed_20260703/diagnostic_records.json",
+    )
     args = parser.parse_args()
 
     if args.addendum3_diagnostics:
         return run_addendum3_diagnostics(args)
+    if args.gate_a_prime_from_artifacts:
+        return run_gate_a_prime_from_artifacts(args)
+    return run_gate_a_prime(args)
 
     repo = m1.repo_root()
     run_dir = (args.run_root / args.run_id).resolve()
