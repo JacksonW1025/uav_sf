@@ -142,6 +142,26 @@ class ValidityAutomationTest(unittest.TestCase):
         with self.assertRaises(validity.ValidityGateError):
             validity.assert_raptor_identity(bad)
 
+    def test_raptor_identity_gate_treats_nav_fraction_as_diagnostic_for_delayed_switch(self) -> None:
+        delayed_switch = {
+            "controller": "raptor",
+            "raptor_status_present": True,
+            "raptor_status_active_samples": 7_792,
+            "raptor_input_present": True,
+            "raptor_input_samples": 10_217,
+            "raptor_input_active_samples": 7_796,
+            "target_nav_state": 23,
+            "target_nav_state_samples": 65,
+            "target_nav_state_fraction": 0.7558139534883721,
+            "neural_control_present": False,
+            "policy_tar_staged": True,
+        }
+
+        gate = validity.raptor_identity_gate(delayed_switch)
+
+        self.assertTrue(gate["passed"])
+        self.assertNotIn("target_nav_state_fraction_low", gate["reasons"])
+
     def test_reproduction_margin_rejects_p7_minus_0p05(self) -> None:
         margins = validity.reproduction_margins()
         self.assertGreater(margins["P7"], 0.05)

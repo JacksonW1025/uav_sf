@@ -342,7 +342,6 @@ def raptor_identity_gate(
     *,
     min_active_samples: int = 100,
     min_input_samples: int = 100,
-    min_target_nav_fraction: float = 0.80,
     require_policy_staged: bool = True,
 ) -> dict[str, Any]:
     reasons: list[str] = []
@@ -368,8 +367,6 @@ def raptor_identity_gate(
     if not isinstance(target_nav_samples, int) or target_nav_samples <= 0:
         reasons.append("missing_target_nav_state_samples")
     target_nav_fraction = finite_float(identity.get("target_nav_state_fraction"))
-    if target_nav_fraction is None or target_nav_fraction < min_target_nav_fraction:
-        reasons.append("target_nav_state_fraction_low")
     if bool(identity.get("neural_control_present")):
         reasons.append("neural_control_present")
     if require_policy_staged and identity.get("policy_tar_staged") is not True:
@@ -380,7 +377,7 @@ def raptor_identity_gate(
         "criteria": {
             "min_active_samples": min_active_samples,
             "min_input_samples": min_input_samples,
-            "min_target_nav_fraction": min_target_nav_fraction,
+            "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
             "target_nav_state": TARGET_NAV["raptor"],
             "neural_control_absent_required": True,
             "policy_tar_staged_required": require_policy_staged,

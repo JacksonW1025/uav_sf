@@ -316,6 +316,37 @@ class CampaignRunnerTest(unittest.TestCase):
             for genome in genome_trace(state):
                 self.assert_steady_combo(genome)
 
+    def test_fitness_mode_reaches_evaluator_and_metadata(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            target = "route-a-catastrophic"
+            config = campaign_runner.CampaignConfig(
+                run_id="absolute_mode",
+                run_root=root,
+                budget=1,
+                bootstrap=1,
+                seed=20260629,
+                strategy="guided",
+                subspace="route-a-switching",
+                target_properties=target,
+                resolved_target_properties=m2_map_elites.parse_target_properties(target),
+                mock_evaluator=True,
+                no_confirm=True,
+                sim_speed_factor=1.25,
+                fitness_mode="absolute_severity",
+            )
+            seen: list[str] = []
+
+            def capture_evaluator(*args: Any, **kwargs: Any) -> m2_map_elites.EvalResult:
+                seen.append(str(kwargs.get("fitness_mode")))
+                return m2_map_elites.evaluate_theta(*args, **kwargs)
+
+            state = campaign_runner.run_campaign(config, evaluator=capture_evaluator)
+
+        self.assertEqual(["absolute_severity"], seen)
+        self.assertEqual("absolute_severity", state["metadata"]["fitness_mode"])
+        self.assertEqual("absolute_severity", state["results"][0]["fitness"]["fitness_mode"])
+
     def test_sut_reaches_evaluator_and_metadata(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
             root = Path(tmpdir)
@@ -347,6 +378,14 @@ class CampaignRunnerTest(unittest.TestCase):
         self.assertEqual("RAPTOR mc_raptor mode 23 (original clipped inputs)", state["metadata"]["neural_controller"])
         self.assertEqual("raptor", state["results"][0]["sut"])
         self.assertEqual("raptor", state["results"][0]["neural_controller"])
+
+    def test_guided_abs_strategy_alias_sets_absolute_fitness_mode(self) -> None:
+        parser = campaign_runner.build_parser()
+        args = parser.parse_args(["--run-id", "alias", "--strategy", "guided_abs"])
+        config = campaign_runner.resolve_new_config(args)
+
+        self.assertEqual("guided", config.strategy)
+        self.assertEqual("absolute_severity", config.fitness_mode)
 
     def test_cli_accepts_raptor_sut_selector(self) -> None:
         parser = campaign_runner.build_parser()

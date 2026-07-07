@@ -1,0 +1,207 @@
+{
+  "airframe": {
+    "model": "sihsim_x500_v2",
+    "sim": "sih",
+    "sys_autostart": 10046
+  },
+  "boot_px4_params": {
+    "MC_NN_EN": 0,
+    "MC_NN_MANL_CTRL": 0,
+    "MPC_THR_HOVER": 0.57358357,
+    "SIH_IXX": 0.0216667,
+    "SIH_IYY": 0.0216667,
+    "SIH_IZZ": 0.04,
+    "SIH_KDV": 1.0,
+    "SIH_KDW": 0.025,
+    "SIH_L_PITCH": 0.13,
+    "SIH_L_ROLL": 0.21,
+    "SIH_MASS": 2.0,
+    "SIH_Q_MAX": 0.136777,
+    "SIH_T_MAX": 8.54858,
+    "SIH_T_TAU": 0.02,
+    "SIH_WIND_E": 0.0,
+    "SIH_WIND_N": 1.06503588
+  },
+  "campaign_runner": {
+    "selection": {
+      "selected_parent_quality": null,
+      "selected_parent_tag": null,
+      "source": "bootstrap_random",
+      "strategy": "guided"
+    }
+  },
+  "description": "Tier 0.5 property-oracle theta generated from scripts/theta_genome.py. Circle approach with Method-A groundtruth-triggered controller handoff.",
+  "divergence_thresholds": {
+    "position_divergence_m": 2.0
+  },
+  "environment": {
+    "inertia_pitch_scale": 1.0,
+    "inertia_roll_scale": 1.0,
+    "inertia_yaw_scale": 1.0,
+    "mass_scale": 1.0,
+    "route": "SIH/headless/lockstep",
+    "sih_wind_e": 0.0,
+    "sih_wind_n": 1.065,
+    "switching": {
+      "expected_tilt_deg": 32.5564,
+      "reachability": "trigger window is cross-constrained to the selected circle approach"
+    },
+    "thrust_to_weight_ratio": 1.7434,
+    "twr_scale": 1.0,
+    "uses_state_shim": false
+  },
+  "faults": [],
+  "px4_params": {
+    "CA_FAILURE_MODE": 1,
+    "COM_DISARM_LAND": -1,
+    "COM_OF_LOSS_T": 5.0,
+    "COM_RCL_EXCEPT": 8,
+    "COM_RC_IN_MODE": 4,
+    "IMU_GYRO_RATEMAX": 400,
+    "MC_NN_MANL_CTRL": 0,
+    "MPC_THR_HOVER": 0.57358357,
+    "NAV_DLL_ACT": 0,
+    "SIH_IXX": 0.0216667,
+    "SIH_IYY": 0.0216667,
+    "SIH_IZZ": 0.04,
+    "SIH_KDV": 1.0,
+    "SIH_KDW": 0.025,
+    "SIH_L_PITCH": 0.13,
+    "SIH_L_ROLL": 0.21,
+    "SIH_MASS": 2.0,
+    "SIH_Q_MAX": 0.136777,
+    "SIH_T_MAX": 8.54858,
+    "SIH_T_TAU": 0.02,
+    "SIH_WIND_E": 0.0,
+    "SIH_WIND_N": 1.06503588,
+    "SYS_FAILURE_EN": 1
+  },
+  "safe_thresholds": {
+    "angular_rate_max_rad_s": 8.0,
+    "final_error_m": 3.0,
+    "min_altitude_agl_m": 0.25,
+    "motor_saturation_ratio_max": 0.85,
+    "roll_pitch_max_deg": 75.0,
+    "tracking_error_max_m": 8.0,
+    "tracking_error_rms_m": 4.0
+  },
+  "seed": 2026070507,
+  "sensor_perturbations": [],
+  "setpoint": {
+    "activation_trigger": {
+      "angular_rate_norm_max_rad_s": 1.1953,
+      "angular_rate_norm_min_rad_s": 0.4953,
+      "deadline_s": 54.0,
+      "enabled": true,
+      "max_topic_age_s": 0.25,
+      "method": "SIH groundtruth threshold crossing",
+      "roll_pitch_abs_max_deg": 36.5564,
+      "roll_pitch_abs_min_deg": 28.5564,
+      "start_s": 18.0,
+      "switch_delay_s": 0.1708
+    },
+    "circle": {
+      "frequency_hz": 0.25,
+      "phase_rad": 0.0,
+      "radius_m": 2.5375,
+      "z_amplitude_m": 0.0
+    },
+    "feedforward": true,
+    "hover_ned": [
+      0.0,
+      0.0,
+      -2.5
+    ],
+    "max_wall_timer_hz": 800.0,
+    "post_switch": {
+      "hover_ned": [
+        0.0,
+        0.0,
+        -2.5
+      ],
+      "type": "hover"
+    },
+    "rate_hz": 80.0,
+    "step": {
+      "delta_ned": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "type": "circle",
+    "yaw_rad": 0.0
+  },
+  "tag": "raptor_gate0_stability_20260705_e0007",
+  "theta_genome": {
+    "excluded": {
+      "c_tier_setpoint_amplitude_attack": "excluded by design; step axis is moderate P5 settling stimulus only",
+      "motor_or_sensor_faults": "deferred to Gazebo route after SIH support boundary is verified"
+    },
+    "generator": "scripts/theta_genome.py",
+    "genome": {
+      "approach_frequency_hz": 0.25,
+      "approach_phase_rad": 0.0,
+      "approach_radius_m": 2.5375343869984595,
+      "disturbance_type": "switching",
+      "fake_angular_rate_bias_rad_s": 0.0,
+      "fake_velocity_bias_m_s": 0.0,
+      "inertia_pitch_scale": 1.0,
+      "inertia_roll_scale": 1.0,
+      "inertia_yaw_scale": 1.0,
+      "mass_scale": 1.0,
+      "mission_end_s": 54.0,
+      "position_estimate_jump_m": 0.0,
+      "setpoint_rate_hz": 80.0,
+      "step_axis": "x",
+      "step_magnitude_m": 0.75,
+      "step_sign": 1,
+      "step_time_s": 32.0,
+      "switch_delay_s": 0.17079482337657256,
+      "switch_rate_rad_s": 0.8452929166451069,
+      "switch_roll_pitch_deg": 32.55644287157647,
+      "twr_scale": 1.0,
+      "wind_direction_rad": 0.0,
+      "wind_speed_m_s": 1.0650358772852186
+    },
+    "map_elites": {
+      "amplitude_bucket": "rp_2:wind_0",
+      "disturbance_type": "switching",
+      "feature_dimensions": [
+        "switch_roll_pitch_bucket",
+        "wind_bucket"
+      ],
+      "severity": 0.478057,
+      "switch_descriptor_bucket_count": 5,
+      "switch_descriptor_roll_pitch_range_deg": [
+        16.0,
+        50.0
+      ],
+      "switch_descriptor_wind_range_m_s": [
+        0.0,
+        6.0
+      ],
+      "switch_rate_rad_s": 0.845293,
+      "switch_rate_rad_s_diagnostic_range": [
+        0.45,
+        2.75
+      ],
+      "switch_roll_pitch_bucket": "rp_2",
+      "switch_roll_pitch_deg": 32.556443,
+      "wind_bucket": "wind_0",
+      "wind_speed_m_s": 1.065036
+    },
+    "state_contam_status": "available via state-contam subspace"
+  },
+  "timing": {
+    "approach_start_s": 12.0,
+    "controller_switch_s": 54.0,
+    "external_mode_id": 23,
+    "mission_end_s": 68.0,
+    "mode_command_repeat_s": 0.5,
+    "mode_command_timeout_s": 8.0,
+    "px4_shutdown_margin_s": 8.0,
+    "px4_shutdown_wall_slack_s": 22.0,
+    "trajectory_start_s": 16.0
+  }
+}

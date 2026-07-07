@@ -31,8 +31,14 @@ from validity_automation import reproduction_margins
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_RUN_ROOT = REPO_ROOT / "runs" / "campaigns"
 CHECKPOINT_SCHEMA_VERSION = 1
-STRATEGIES = ["guided", "map-elites", "random", "grid"]
-CANONICAL_STRATEGIES = {"guided": "guided", "map-elites": "guided", "random": "random", "grid": "grid"}
+STRATEGIES = ["guided", "map-elites", "random", "grid", "guided_abs"]
+CANONICAL_STRATEGIES = {
+    "guided": "guided",
+    "map-elites": "guided",
+    "guided_abs": "guided",
+    "random": "random",
+    "grid": "grid",
+}
 CONFIRM_SEEDS = m2_map_elites.CONFIRM_SEEDS
 
 Evaluator = Callable[..., m2_map_elites.EvalResult]
@@ -62,6 +68,7 @@ class CampaignConfig:
     max_confirm_candidates: int = 3
     crossover: bool = False
     crossover_rate: float = 0.25
+    fitness_mode: str = "diff"
     sut: str = "mcnn"
 
     @property
@@ -88,6 +95,7 @@ def config_from_json(data: dict[str, Any]) -> CampaignConfig:
     values["thresholds_json"] = Path(thresholds) if thresholds else None
     values["strategy"] = CANONICAL_STRATEGIES[str(values.get("strategy", "guided"))]
     values.setdefault("resolved_target_properties", m2_map_elites.parse_target_properties(values.get("target_properties")))
+    values.setdefault("fitness_mode", "diff")
     values.setdefault("sut", "mcnn")
     return CampaignConfig(**values)
 
@@ -198,6 +206,7 @@ def make_metadata(config: CampaignConfig) -> dict[str, Any]:
             "relative degradation differential requires neural rho > 0 and gap beyond that margin; "
             f"primary_bug is reserved for decontaminated classical S0 versus {selected_sut.controller} S3 severity"
         ),
+        "fitness_mode": config.fitness_mode,
         "sut": config.sut,
         "neural_controller": selected_sut.neural_label,
         "neural_controller_key": selected_sut.controller,
@@ -524,6 +533,7 @@ def evaluate_one(
             selected_parent_quality=selected_parent_quality,
             mock_evaluator=config.mock_evaluator,
             target_properties=config.resolved_target_properties,
+            fitness_mode=config.fitness_mode,
             sut=config.sut,
         )
     except Exception as exc:  # keep a single bad eval from killing the campaign
@@ -859,6 +869,7 @@ def confirm_args(config: CampaignConfig) -> argparse.Namespace:
         resolved_target_properties=config.resolved_target_properties,
         sim_speed_factor=config.sim_speed_factor,
         thresholds_json=config.thresholds_json,
+        fitness_mode=config.fitness_mode,
         sut=config.sut,
     )
 
@@ -933,6 +944,7 @@ def merge_resume_config(saved: CampaignConfig, requested: CampaignConfig, state:
         "mock_evaluator",
         "crossover",
         "crossover_rate",
+        "fitness_mode",
         "sut",
     ]
     for field in invariant_fields:
@@ -963,14 +975,17 @@ def merge_resume_config(saved: CampaignConfig, requested: CampaignConfig, state:
         max_confirm_candidates=requested.max_confirm_candidates,
         crossover=saved.crossover,
         crossover_rate=saved.crossover_rate,
+        fitness_mode=saved.fitness_mode,
         sut=saved.sut,
     )
 
 
 def resolve_new_config(args: argparse.Namespace) -> CampaignConfig:
     run_id = args.run_id or datetime.now(timezone.utc).strftime("campaign_%Y%m%dT%H%M%SZ")
-    strategy = CANONICAL_STRATEGIES[args.strategy or "guided"]
+    requested_strategy = args.strategy or "guided"
+    strategy = CANONICAL_STRATEGIES[requested_strategy]
     target_properties = args.target_properties or "auto"
+    fitness_mode = args.fitness_mode or ("absolute_severity" if requested_strategy == "guided_abs" else "diff")
     sut = args.sut or "mcnn"
     return CampaignConfig(
         run_id=run_id,
@@ -995,6 +1010,7 @@ def resolve_new_config(args: argparse.Namespace) -> CampaignConfig:
         max_confirm_candidates=args.max_confirm_candidates if args.max_confirm_candidates is not None else 3,
         crossover=bool(args.crossover),
         crossover_rate=args.crossover_rate if args.crossover_rate is not None else 0.25,
+        fitness_mode=fitness_mode,
         sut=sut,
     )
 
@@ -1028,6 +1044,7 @@ def resolve_resume_config(args: argparse.Namespace, state: dict[str, Any]) -> Ca
         else saved.max_confirm_candidates,
         crossover=args.crossover if args.crossover is not None else saved.crossover,
         crossover_rate=args.crossover_rate if args.crossover_rate is not None else saved.crossover_rate,
+        fitness_mode=args.fitness_mode if args.fitness_mode is not None else saved.fitness_mode,
         sut=args.sut if args.sut is not None else saved.sut,
     )
 
@@ -1056,6 +1073,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--max-confirm-candidates", type=int)
     parser.add_argument("--crossover", action="store_true", default=None)
     parser.add_argument("--crossover-rate", type=float)
+    parser.add_argument("--fitness-mode", choices=m2_map_elites.FITNESS_MODES)
     parser.add_argument("--sut", choices=m2_map_elites.SUTS)
     return parser
 

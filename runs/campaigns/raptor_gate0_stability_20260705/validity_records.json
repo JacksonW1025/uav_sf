@@ -1,0 +1,1864 @@
+[
+  {
+    "error": null,
+    "eval": 0,
+    "returncode": 0,
+    "seed": 2026070500,
+    "tag": "raptor_gate0_stability_20260705_e0000",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.234438,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.530303955078125,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.737025,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.549224853515625,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "min_target_nav_fraction": 0.8,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10075,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11929,
+          "raptor_status_active_samples": 10068,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8155339805825242,
+          "target_nav_state_samples": 84
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 1,
+    "returncode": 0,
+    "seed": 2026070501,
+    "tag": "raptor_gate0_stability_20260705_e0001",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 47.261215,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.674407958984375,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 47.199044,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.41412353515625,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "min_target_nav_fraction": 0.8,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9445,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11354,
+          "raptor_status_active_samples": 9438,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8210526315789474,
+          "target_nav_state_samples": 78
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 2,
+    "returncode": 0,
+    "seed": 2026070502,
+    "tag": "raptor_gate0_stability_20260705_e0002",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.934085,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.541290283203125,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.919552,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.571258544921875,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "min_target_nav_fraction": 0.8,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10015,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11913,
+          "raptor_status_active_samples": 10007,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8235294117647058,
+          "target_nav_state_samples": 84
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 3,
+    "returncode": 0,
+    "seed": 2026070503,
+    "tag": "raptor_gate0_stability_20260705_e0003",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.703956,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.38079833984375,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.745515,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.565948486328125,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "min_target_nav_fraction": 0.8,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10097,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11921,
+          "raptor_status_active_samples": 10091,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8235294117647058,
+          "target_nav_state_samples": 84
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 4,
+    "returncode": 0,
+    "seed": 2026070504,
+    "tag": "raptor_gate0_stability_20260705_e0004",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.789503,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.401275634765625,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.720204,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.457550048828125,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "min_target_nav_fraction": 0.8,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10042,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11941,
+          "raptor_status_active_samples": 10031,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 5,
+    "returncode": 0,
+    "seed": 2026070505,
+    "tag": "raptor_gate0_stability_20260705_e0005",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.831908,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.599761962890625,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.709972,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.6622314453125,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "min_target_nav_fraction": 0.8,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10074,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11944,
+          "raptor_status_active_samples": 10064,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8235294117647058,
+          "target_nav_state_samples": 84
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 6,
+    "returncode": 0,
+    "seed": 2026070506,
+    "tag": "raptor_gate0_stability_20260705_e0006",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.762432,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.568115234375,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.693328,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.551177978515625,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "min_target_nav_fraction": 0.8,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10008,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11920,
+          "raptor_status_active_samples": 10002,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 7,
+    "returncode": 0,
+    "seed": 2026070507,
+    "tag": "raptor_gate0_stability_20260705_e0007",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.610987,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.652435302734375,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.556503,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.499603271484375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "min_target_nav_fraction": 0.8,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10031,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11920,
+          "raptor_status_active_samples": 10025,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 8,
+    "returncode": 0,
+    "seed": 2026070508,
+    "tag": "raptor_gate0_stability_20260705_e0008",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.891438,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.6556396484375,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.722022,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.3934326171875,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "min_target_nav_fraction": 0.8,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10086,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11976,
+          "raptor_status_active_samples": 10076,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8235294117647058,
+          "target_nav_state_samples": 84
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 9,
+    "returncode": 0,
+    "seed": 2026070509,
+    "tag": "raptor_gate0_stability_20260705_e0009",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 48.894107,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.35797119140625,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.663202,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.3909912109375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "min_target_nav_fraction": 0.8,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10025,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11949,
+          "raptor_status_active_samples": 10021,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8137254901960784,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 10,
+    "returncode": 0,
+    "seed": 2026070510,
+    "tag": "raptor_gate0_stability_20260705_e0010",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.91302,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.577423095703125,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.209287,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.4674072265625,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "min_target_nav_fraction": 0.8,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9910,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11826,
+          "raptor_status_active_samples": 9896,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.82,
+          "target_nav_state_samples": 82
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 11,
+    "returncode": 0,
+    "seed": 2026070511,
+    "tag": "raptor_gate0_stability_20260705_e0011",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.682195,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.294189453125,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.653637,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.593963623046875,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "min_target_nav_fraction": 0.8,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9988,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11927,
+          "raptor_status_active_samples": 9975,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 12,
+    "returncode": 0,
+    "seed": 2026070512,
+    "tag": "raptor_gate0_stability_20260705_e0012",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.823542,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.572906494140625,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.73806,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.568572998046875,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "min_target_nav_fraction": 0.8,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10045,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11960,
+          "raptor_status_active_samples": 10039,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8137254901960784,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 13,
+    "returncode": 0,
+    "seed": 2026070513,
+    "tag": "raptor_gate0_stability_20260705_e0013",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.9161,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.586639404296875,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.745397,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.399566650390625,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "min_target_nav_fraction": 0.8,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10080,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11918,
+          "raptor_status_active_samples": 10074,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8235294117647058,
+          "target_nav_state_samples": 84
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 14,
+    "returncode": 0,
+    "seed": 2026070514,
+    "tag": "raptor_gate0_stability_20260705_e0014",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.743865,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.701080322265625,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.721831,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.553314208984375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "min_target_nav_fraction": 0.8,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10055,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11975,
+          "raptor_status_active_samples": 10047,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8137254901960784,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 15,
+    "returncode": 0,
+    "seed": 2026070515,
+    "tag": "raptor_gate0_stability_20260705_e0015",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.808157,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.528076171875,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.72589,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.706787109375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "min_target_nav_fraction": 0.8,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10037,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11925,
+          "raptor_status_active_samples": 10034,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8137254901960784,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 16,
+    "returncode": 0,
+    "seed": 2026070516,
+    "tag": "raptor_gate0_stability_20260705_e0016",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.825386,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.58367919921875,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.740213,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.627410888671875,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "min_target_nav_fraction": 0.8,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9991,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11858,
+          "raptor_status_active_samples": 9983,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8235294117647058,
+          "target_nav_state_samples": 84
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 17,
+    "returncode": 0,
+    "seed": 2026070517,
+    "tag": "raptor_gate0_stability_20260705_e0017",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.814337,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.585693359375,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.725459,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.53814697265625,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "min_target_nav_fraction": 0.8,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9998,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11884,
+          "raptor_status_active_samples": 9989,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8235294117647058,
+          "target_nav_state_samples": 84
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 18,
+    "returncode": 0,
+    "seed": 2026070518,
+    "tag": "raptor_gate0_stability_20260705_e0018",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.87303,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.516632080078125,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.719863,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.6378173828125,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "min_target_nav_fraction": 0.8,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10061,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11942,
+          "raptor_status_active_samples": 10055,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8235294117647058,
+          "target_nav_state_samples": 84
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 19,
+    "returncode": 0,
+    "seed": 2026070519,
+    "tag": "raptor_gate0_stability_20260705_e0019",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.723881,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.5325927734375,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.6892,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.40606689453125,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "min_target_nav_fraction": 0.8,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10029,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11941,
+          "raptor_status_active_samples": 10020,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 20,
+    "returncode": 0,
+    "seed": 2026070520,
+    "tag": "raptor_gate0_stability_20260705_e0020",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.672534,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.386016845703125,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.662346,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.399932861328125,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "min_target_nav_fraction": 0.8,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9992,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11880,
+          "raptor_status_active_samples": 9985,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 21,
+    "returncode": 0,
+    "seed": 2026070521,
+    "tag": "raptor_gate0_stability_20260705_e0021",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.864164,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.49859619140625,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.741421,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.65753173828125,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "min_target_nav_fraction": 0.8,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10101,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11940,
+          "raptor_status_active_samples": 10094,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8235294117647058,
+          "target_nav_state_samples": 84
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 22,
+    "returncode": 0,
+    "seed": 2026070522,
+    "tag": "raptor_gate0_stability_20260705_e0022",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.787442,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.62384033203125,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.728816,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.6072998046875,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "min_target_nav_fraction": 0.8,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10067,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11969,
+          "raptor_status_active_samples": 10064,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8137254901960784,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 23,
+    "returncode": 0,
+    "seed": 2026070523,
+    "tag": "raptor_gate0_stability_20260705_e0023",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.769733,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.45574951171875,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.723252,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.5450439453125,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "min_target_nav_fraction": 0.8,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10000,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11915,
+          "raptor_status_active_samples": 9991,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8137254901960784,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 24,
+    "returncode": 0,
+    "seed": 2026070524,
+    "tag": "raptor_gate0_stability_20260705_e0024",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.842848,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.670867919921875,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.745062,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.580963134765625,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "min_target_nav_fraction": 0.8,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10003,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11893,
+          "raptor_status_active_samples": 9989,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8155339805825242,
+          "target_nav_state_samples": 84
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 25,
+    "returncode": 0,
+    "seed": 2026070525,
+    "tag": "raptor_gate0_stability_20260705_e0025",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 48.795302,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.42633056640625,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.645211,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.745574951171875,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "min_target_nav_fraction": 0.8,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9993,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11895,
+          "raptor_status_active_samples": 9989,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 26,
+    "returncode": 0,
+    "seed": 2026070526,
+    "tag": "raptor_gate0_stability_20260705_e0026",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.651401,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.500457763671875,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 48.705319,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.389923095703125,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "min_target_nav_fraction": 0.8,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9770,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11676,
+          "raptor_status_active_samples": 9760,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8181818181818182,
+          "target_nav_state_samples": 81
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 27,
+    "returncode": 0,
+    "seed": 2026070527,
+    "tag": "raptor_gate0_stability_20260705_e0027",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.786527,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.586395263671875,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.715955,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.51702880859375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "min_target_nav_fraction": 0.8,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10032,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11930,
+          "raptor_status_active_samples": 10020,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8137254901960784,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": "validity_gate_failed: raptor_identity:target_nav_state_fraction_low",
+    "eval": 28,
+    "returncode": 2,
+    "seed": 2026070528,
+    "tag": "raptor_gate0_stability_20260705_e0028",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 43.40055,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.693634033203125,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 42.531548,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.532562255859375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "min_target_nav_fraction": 0.8,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 7796,
+          "raptor_input_present": true,
+          "raptor_input_samples": 10217,
+          "raptor_status_active_samples": 7792,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.7558139534883721,
+          "target_nav_state_samples": 65
+        },
+        "passed": false,
+        "reasons": [
+          "target_nav_state_fraction_low"
+        ]
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 29,
+    "returncode": 0,
+    "seed": 2026070529,
+    "tag": "raptor_gate0_stability_20260705_e0029",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.725074,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.55828857421875,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.718688,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.52020263671875,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "min_target_nav_fraction": 0.8,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10009,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11905,
+          "raptor_status_active_samples": 10002,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  }
+]

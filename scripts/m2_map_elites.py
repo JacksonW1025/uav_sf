@@ -27,6 +27,7 @@ import theta_genome
 from m1_compare import property_only_result
 from property_fitness import (
     FITNESS_FLOOR,
+    absolute_severity_fitness,
     differential_property_fitness,
     driver_target_properties,
     normalize_target_properties,
@@ -75,6 +76,7 @@ TARGET_PRESETS: dict[str, list[str] | None] = {
     "route-a-catastrophic": ["P1", "P2"],
     "validation": ["P1", "P2", "P4", "P5", "P6", "P7"],
 }
+FITNESS_MODES = ["diff", "absolute_severity"]
 SUTS = ["mcnn", "raptor"]
 SUBSPACES = ["full", "route-a-switching", "steady-wind-physics", "state-contam"]
 STRATEGIES = ["map-elites", "random"]
@@ -1381,6 +1383,7 @@ def evaluate_theta(
     selected_parent_quality: float | None = None,
     mock_evaluator: bool = False,
     target_properties: list[str] | None = None,
+    fitness_mode: str = "diff",
     sut: str = "mcnn",
 ) -> EvalResult:
     selected_sut = sut_config(sut)
@@ -1521,11 +1524,20 @@ def evaluate_theta(
             error = "validity_gate_failed: " + ";".join(gate_failures)
             returncode = 2
         else:
-            fitness = differential_property_fitness(
-                classical_property,
-                neural_property,
-                target_properties=target_properties,
-            )
+            if fitness_mode == "diff":
+                fitness = differential_property_fitness(
+                    classical_property,
+                    neural_property,
+                    target_properties=target_properties,
+                )
+            elif fitness_mode == "absolute_severity":
+                fitness = absolute_severity_fitness(
+                    classical_property,
+                    neural_property,
+                    target_properties=target_properties,
+                )
+            else:
+                raise ValueError(f"unknown fitness_mode {fitness_mode!r}; expected one of {FITNESS_MODES}")
             fitness["sut"] = selected_sut.key
             fitness["neural_controller"] = selected_sut.controller
             comparison = property_only_result(theta, classical_property, neural_property)
@@ -1718,6 +1730,7 @@ def search(args: argparse.Namespace) -> tuple[Path, list[EvalResult], list[dict[
             "relative-degradation findings require both controllers controlled and gap beyond the same margin; "
             f"primary_bug is reserved for decontaminated classical S0 versus {selected_sut.controller} S3 severity"
         ),
+        "fitness_mode": args.fitness_mode,
         "target_property_override": args.target_properties,
         "resolved_target_properties": args.resolved_target_properties,
         "driver_target_properties": {
@@ -1802,6 +1815,7 @@ def search(args: argparse.Namespace) -> tuple[Path, list[EvalResult], list[dict[
             selected_parent_quality=selected_parent_quality,
             mock_evaluator=args.mock_evaluator,
             target_properties=args.resolved_target_properties,
+            fitness_mode=args.fitness_mode,
             sut=selected_sut.key,
         )
         results.append(result)
@@ -2010,6 +2024,7 @@ def confirm_candidates(
                 selected_parent_quality=float(candidate["result"]["quality"]),
                 mock_evaluator=args.mock_evaluator,
                 target_properties=args.resolved_target_properties,
+                fitness_mode=getattr(args, "fitness_mode", "diff"),
                 sut=getattr(args, "sut", "mcnn"),
             )
             result_record = result.as_dict()
@@ -2173,6 +2188,7 @@ def main() -> int:
     )
     parser.add_argument("--crossover", action="store_true")
     parser.add_argument("--crossover-rate", type=float, default=0.25)
+    parser.add_argument("--fitness-mode", choices=FITNESS_MODES, default="diff")
     parser.add_argument("--sut", choices=SUTS, default="mcnn")
     args = parser.parse_args()
     args.resolved_target_properties = parse_target_properties(args.target_properties)

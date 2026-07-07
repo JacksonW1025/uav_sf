@@ -1,0 +1,5930 @@
+[
+  {
+    "error": null,
+    "eval": 0,
+    "returncode": 0,
+    "seed": 2026062910,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0000",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.847568,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.5023193359375,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.936652,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.588958740234375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10111,
+          "raptor_input_present": true,
+          "raptor_input_samples": 12006,
+          "raptor_status_active_samples": 10101,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8235294117647058,
+          "target_nav_state_samples": 84
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 1,
+    "returncode": 0,
+    "seed": 2026062911,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0001",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.665591,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.6761474609375,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 48.644464,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.350311279296875,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9702,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11626,
+          "raptor_status_active_samples": 9697,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8181818181818182,
+          "target_nav_state_samples": 81
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 2,
+    "returncode": 0,
+    "seed": 2026062912,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0002",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.691029,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.555206298828125,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 48.662492,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.3896484375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9730,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11649,
+          "raptor_status_active_samples": 9718,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.81,
+          "target_nav_state_samples": 81
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 3,
+    "returncode": 0,
+    "seed": 2026062913,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0003",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.851964,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.4892578125,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.71456,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.57061767578125,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10004,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11908,
+          "raptor_status_active_samples": 9993,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 4,
+    "returncode": 0,
+    "seed": 2026062914,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0004",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.80953,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.423095703125,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.72313,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.5445556640625,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10039,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11941,
+          "raptor_status_active_samples": 10027,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8137254901960784,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 5,
+    "returncode": 0,
+    "seed": 2026062915,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0005",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.815445,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.36669921875,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.730351,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.483245849609375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10046,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11969,
+          "raptor_status_active_samples": 10034,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8137254901960784,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 6,
+    "returncode": 0,
+    "seed": 2026062916,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0006",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.860617,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.60382080078125,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.713612,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.39434814453125,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9993,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11899,
+          "raptor_status_active_samples": 9984,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 7,
+    "returncode": 0,
+    "seed": 2026062917,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0007",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.911803,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.554046630859375,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.722809,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.416351318359375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10038,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11903,
+          "raptor_status_active_samples": 10034,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8235294117647058,
+          "target_nav_state_samples": 84
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 8,
+    "returncode": 0,
+    "seed": 2026062918,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0008",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 29.338586,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 1.960418701171875,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 37.303766,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.729034423828125,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 6511,
+          "raptor_input_present": true,
+          "raptor_input_samples": 8932,
+          "raptor_status_active_samples": 6505,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.72,
+          "target_nav_state_samples": 54
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": "RuntimeError: task node failed rc=3 for classical",
+    "eval": 9,
+    "returncode": 1,
+    "seed": 2026062919,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0009",
+    "validity": {}
+  },
+  {
+    "error": null,
+    "eval": 10,
+    "returncode": 0,
+    "seed": 2026062920,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0010",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 44.622971,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.646240234375,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 33.424515,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 1.889801025390625,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 5045,
+          "raptor_input_present": true,
+          "raptor_input_samples": 8018,
+          "raptor_status_active_samples": 5040,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.6176470588235294,
+          "target_nav_state_samples": 42
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 11,
+    "returncode": 0,
+    "seed": 2026062921,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0011",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 43.261616,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.70281982421875,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 41.265926,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.917633056640625,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 7525,
+          "raptor_input_present": true,
+          "raptor_input_samples": 9896,
+          "raptor_status_active_samples": 7519,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.75,
+          "target_nav_state_samples": 63
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 12,
+    "returncode": 0,
+    "seed": 2026062922,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0012",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.70024,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.60833740234375,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.617103,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.718170166015625,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10005,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11923,
+          "raptor_status_active_samples": 9997,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 13,
+    "returncode": 0,
+    "seed": 2026062923,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0013",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.654267,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.5096435546875,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.641982,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.4813232421875,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10021,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11959,
+          "raptor_status_active_samples": 10011,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8137254901960784,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 14,
+    "returncode": 0,
+    "seed": 2026062924,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0014",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 29.359862,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 1.77215576171875,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 38.491407,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.167755126953125,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 6818,
+          "raptor_input_present": true,
+          "raptor_input_samples": 9261,
+          "raptor_status_active_samples": 6812,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.7307692307692307,
+          "target_nav_state_samples": 57
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": "RuntimeError: task node failed rc=3 for classical",
+    "eval": 15,
+    "returncode": 1,
+    "seed": 2026062925,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0015",
+    "validity": {}
+  },
+  {
+    "error": "RuntimeError: task node failed rc=3 for classical",
+    "eval": 16,
+    "returncode": 1,
+    "seed": 2026062926,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0016",
+    "validity": {}
+  },
+  {
+    "error": null,
+    "eval": 17,
+    "returncode": 0,
+    "seed": 2026062927,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0017",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 33.458843,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 1.868896484375,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 42.322029,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.971221923828125,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 7716,
+          "raptor_input_present": true,
+          "raptor_input_samples": 10161,
+          "raptor_status_active_samples": 7708,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.7529411764705882,
+          "target_nav_state_samples": 64
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 18,
+    "returncode": 0,
+    "seed": 2026062928,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0018",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 40.595384,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 3.194061279296875,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.234225,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.47906494140625,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9918,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11792,
+          "raptor_status_active_samples": 9914,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 19,
+    "returncode": 0,
+    "seed": 2026062929,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0019",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.693657,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.550262451171875,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.680981,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.566436767578125,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10046,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11928,
+          "raptor_status_active_samples": 10039,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 20,
+    "returncode": 0,
+    "seed": 2026062930,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0020",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.720078,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.54791259765625,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.584096,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.419891357421875,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9959,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11872,
+          "raptor_status_active_samples": 9950,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 21,
+    "returncode": 0,
+    "seed": 2026062931,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0021",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.439184,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.436065673828125,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 38.309861,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 1.89739990234375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 6854,
+          "raptor_input_present": true,
+          "raptor_input_samples": 9253,
+          "raptor_status_active_samples": 6842,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.7307692307692307,
+          "target_nav_state_samples": 57
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 22,
+    "returncode": 0,
+    "seed": 2026062932,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0022",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.517132,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.255859375,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.644284,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.753753662109375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10012,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11910,
+          "raptor_status_active_samples": 10004,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": "RuntimeError: task node failed rc=3 for classical",
+    "eval": 23,
+    "returncode": 1,
+    "seed": 2026062933,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0023",
+    "validity": {}
+  },
+  {
+    "error": null,
+    "eval": 24,
+    "returncode": 0,
+    "seed": 2026062934,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0024",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.917487,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.37054443359375,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.731006,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.47601318359375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10003,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11889,
+          "raptor_status_active_samples": 9996,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8155339805825242,
+          "target_nav_state_samples": 84
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 25,
+    "returncode": 0,
+    "seed": 2026062935,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0025",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.63889,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.38916015625,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.671411,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.524261474609375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10010,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11928,
+          "raptor_status_active_samples": 10001,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8137254901960784,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": "RuntimeError: task node failed rc=3 for classical",
+    "eval": 26,
+    "returncode": 1,
+    "seed": 2026062936,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0026",
+    "validity": {}
+  },
+  {
+    "error": null,
+    "eval": 27,
+    "returncode": 0,
+    "seed": 2026062937,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0027",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 48.467506,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.414215087890625,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 44.609074,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.570892333984375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 8265,
+          "raptor_input_present": true,
+          "raptor_input_samples": 10724,
+          "raptor_status_active_samples": 8259,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.7666666666666667,
+          "target_nav_state_samples": 69
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 28,
+    "returncode": 0,
+    "seed": 2026062938,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0028",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 43.19458,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.577056884765625,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 29.605248,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 1.911773681640625,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 4150,
+          "raptor_input_present": true,
+          "raptor_input_samples": 7126,
+          "raptor_status_active_samples": 4146,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.5833333333333334,
+          "target_nav_state_samples": 35
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": "RuntimeError: task node failed rc=3 for raptor",
+    "eval": 29,
+    "returncode": 1,
+    "seed": 2026062939,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0029",
+    "validity": {}
+  },
+  {
+    "error": "RuntimeError: task node failed rc=3 for classical",
+    "eval": 30,
+    "returncode": 1,
+    "seed": 2026062940,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0030",
+    "validity": {}
+  },
+  {
+    "error": null,
+    "eval": 31,
+    "returncode": 0,
+    "seed": 2026062941,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0031",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 38.450155,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 1.92724609375,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 33.33808,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 1.97027587890625,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 5051,
+          "raptor_input_present": true,
+          "raptor_input_samples": 8061,
+          "raptor_status_active_samples": 5046,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.6268656716417911,
+          "target_nav_state_samples": 42
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 32,
+    "returncode": 0,
+    "seed": 2026062942,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0032",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.585632,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.5411376953125,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.403903,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.372589111328125,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9953,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11862,
+          "raptor_status_active_samples": 9949,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 33,
+    "returncode": 0,
+    "seed": 2026062943,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0033",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.853759,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.494720458984375,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.733295,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.605712890625,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10017,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11870,
+          "raptor_status_active_samples": 10013,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8235294117647058,
+          "target_nav_state_samples": 84
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": "RuntimeError: task node failed rc=3 for classical",
+    "eval": 34,
+    "returncode": 1,
+    "seed": 2026062944,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0034",
+    "validity": {}
+  },
+  {
+    "error": null,
+    "eval": 35,
+    "returncode": 0,
+    "seed": 2026062945,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0035",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.51886,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.533905029296875,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.495105,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.535675048828125,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9913,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11812,
+          "raptor_status_active_samples": 9909,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 36,
+    "returncode": 0,
+    "seed": 2026062946,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0036",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.697118,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.587066650390625,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.687564,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.669158935546875,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9981,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11906,
+          "raptor_status_active_samples": 9978,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 37,
+    "returncode": 0,
+    "seed": 2026062947,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0037",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.805817,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.590911865234375,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.706468,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.5040283203125,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10013,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11897,
+          "raptor_status_active_samples": 9997,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8137254901960784,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 38,
+    "returncode": 0,
+    "seed": 2026062948,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0038",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.727323,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.44232177734375,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.728629,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.5333251953125,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10038,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11945,
+          "raptor_status_active_samples": 10030,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 39,
+    "returncode": 0,
+    "seed": 2026062949,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0039",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.79955,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.391387939453125,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.645389,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.6734619140625,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10025,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11939,
+          "raptor_status_active_samples": 10016,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 40,
+    "returncode": 0,
+    "seed": 2026062950,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0040",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.521818,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.592010498046875,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 44.646339,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.709442138671875,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 8380,
+          "raptor_input_present": true,
+          "raptor_input_samples": 10776,
+          "raptor_status_active_samples": 8377,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.7752808988764045,
+          "target_nav_state_samples": 69
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 41,
+    "returncode": 0,
+    "seed": 2026062951,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0041",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.940622,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.582275390625,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.919518,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.410247802734375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10030,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11940,
+          "raptor_status_active_samples": 10020,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8235294117647058,
+          "target_nav_state_samples": 84
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": "RuntimeError: task node failed rc=3 for classical",
+    "eval": 42,
+    "returncode": 1,
+    "seed": 2026062952,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0042",
+    "validity": {}
+  },
+  {
+    "error": null,
+    "eval": 43,
+    "returncode": 0,
+    "seed": 2026062953,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0043",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.771327,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.476348876953125,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.738347,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.40911865234375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10038,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11958,
+          "raptor_status_active_samples": 10030,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8137254901960784,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": "RuntimeError: task node failed rc=3 for classical",
+    "eval": 44,
+    "returncode": 1,
+    "seed": 2026062954,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0044",
+    "validity": {}
+  },
+  {
+    "error": null,
+    "eval": 45,
+    "returncode": 0,
+    "seed": 2026062955,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0045",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.688663,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.362823486328125,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.687043,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.55767822265625,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10008,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11917,
+          "raptor_status_active_samples": 9998,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8137254901960784,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": "RuntimeError: task node failed rc=3 for classical",
+    "eval": 46,
+    "returncode": 1,
+    "seed": 2026062956,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0046",
+    "validity": {}
+  },
+  {
+    "error": null,
+    "eval": 47,
+    "returncode": 0,
+    "seed": 2026062957,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0047",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.427737,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.552642822265625,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 43.341914,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.79669189453125,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 8011,
+          "raptor_input_present": true,
+          "raptor_input_samples": 10459,
+          "raptor_status_active_samples": 8004,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.7586206896551724,
+          "target_nav_state_samples": 66
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 48,
+    "returncode": 0,
+    "seed": 2026062958,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0048",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.826227,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.66387939453125,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.723179,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.55096435546875,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10037,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11952,
+          "raptor_status_active_samples": 10028,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 49,
+    "returncode": 0,
+    "seed": 2026062959,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0049",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 33.492612,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.29364013671875,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 29.434324,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 1.90399169921875,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 4126,
+          "raptor_input_present": true,
+          "raptor_input_samples": 7072,
+          "raptor_status_active_samples": 4124,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.5737704918032787,
+          "target_nav_state_samples": 35
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 50,
+    "returncode": 0,
+    "seed": 2026062960,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0050",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 42.441502,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.32696533203125,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 38.298982,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 1.829833984375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 6782,
+          "raptor_input_present": true,
+          "raptor_input_samples": 9197,
+          "raptor_status_active_samples": 6776,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.7307692307692307,
+          "target_nav_state_samples": 57
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 51,
+    "returncode": 0,
+    "seed": 2026062961,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0051",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.735475,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.395233154296875,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.724067,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.540557861328125,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10040,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11953,
+          "raptor_status_active_samples": 10028,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8137254901960784,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": "RuntimeError: task node failed rc=3 for classical",
+    "eval": 52,
+    "returncode": 1,
+    "seed": 2026062962,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0052",
+    "validity": {}
+  },
+  {
+    "error": null,
+    "eval": 53,
+    "returncode": 0,
+    "seed": 2026062963,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0053",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.825279,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.624725341796875,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.725787,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.5303955078125,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10021,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11910,
+          "raptor_status_active_samples": 10013,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8137254901960784,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 54,
+    "returncode": 0,
+    "seed": 2026062964,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0054",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.848366,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.56964111328125,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.709487,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.509521484375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10084,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11984,
+          "raptor_status_active_samples": 10069,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8137254901960784,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 55,
+    "returncode": 0,
+    "seed": 2026062965,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0055",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.806916,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.54718017578125,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.632502,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.365570068359375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10015,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11922,
+          "raptor_status_active_samples": 10008,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 56,
+    "returncode": 0,
+    "seed": 2026062966,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0056",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.662277,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.53851318359375,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.628585,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.52642822265625,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9983,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11876,
+          "raptor_status_active_samples": 9977,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": "RuntimeError: task node failed rc=3 for classical",
+    "eval": 57,
+    "returncode": 1,
+    "seed": 2026062967,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0057",
+    "validity": {}
+  },
+  {
+    "error": null,
+    "eval": 58,
+    "returncode": 0,
+    "seed": 2026062968,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0058",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 47.058657,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.462860107421875,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 48.665611,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.3333740234375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9792,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11704,
+          "raptor_status_active_samples": 9789,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8181818181818182,
+          "target_nav_state_samples": 81
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 59,
+    "returncode": 0,
+    "seed": 2026062969,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0059",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.91139,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.57049560546875,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.728791,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.557708740234375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9988,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11869,
+          "raptor_status_active_samples": 9981,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8155339805825242,
+          "target_nav_state_samples": 84
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 60,
+    "returncode": 0,
+    "seed": 2026062970,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0060",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.741729,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.587677001953125,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.731149,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.5936279296875,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10003,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11897,
+          "raptor_status_active_samples": 9998,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8137254901960784,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 61,
+    "returncode": 0,
+    "seed": 2026062971,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0061",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.813024,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.581451416015625,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.73152,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.5440673828125,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10102,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11989,
+          "raptor_status_active_samples": 10098,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8155339805825242,
+          "target_nav_state_samples": 84
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 62,
+    "returncode": 0,
+    "seed": 2026062972,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0062",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.639821,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.5545654296875,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.529178,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.460784912109375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9954,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11885,
+          "raptor_status_active_samples": 9941,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": "RuntimeError: task node failed rc=3 for raptor",
+    "eval": 63,
+    "returncode": 1,
+    "seed": 2026062973,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0063",
+    "validity": {}
+  },
+  {
+    "error": null,
+    "eval": 64,
+    "returncode": 0,
+    "seed": 2026062974,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0064",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.753654,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.269561767578125,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.718634,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.597869873046875,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10045,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11932,
+          "raptor_status_active_samples": 10040,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8235294117647058,
+          "target_nav_state_samples": 84
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 65,
+    "returncode": 0,
+    "seed": 2026062975,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0065",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.481097,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.660797119140625,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.626211,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.66546630859375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10004,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11918,
+          "raptor_status_active_samples": 9999,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": "RuntimeError: task node failed rc=3 for classical",
+    "eval": 66,
+    "returncode": 1,
+    "seed": 2026062976,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0066",
+    "validity": {}
+  },
+  {
+    "error": "RuntimeError: task node failed rc=3 for classical",
+    "eval": 67,
+    "returncode": 1,
+    "seed": 2026062977,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0067",
+    "validity": {}
+  },
+  {
+    "error": null,
+    "eval": 68,
+    "returncode": 0,
+    "seed": 2026062978,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0068",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.653841,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.23291015625,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.657318,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.56475830078125,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10055,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11991,
+          "raptor_status_active_samples": 10043,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": "RuntimeError: task node failed rc=3 for classical",
+    "eval": 69,
+    "returncode": 1,
+    "seed": 2026062979,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0069",
+    "validity": {}
+  },
+  {
+    "error": null,
+    "eval": 70,
+    "returncode": 0,
+    "seed": 2026062980,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0070",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.838306,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.628509521484375,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.710229,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.547576904296875,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10055,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11938,
+          "raptor_status_active_samples": 10049,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8235294117647058,
+          "target_nav_state_samples": 84
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 71,
+    "returncode": 0,
+    "seed": 2026062981,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0071",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.831308,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.579376220703125,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.722436,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.571929931640625,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10009,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11911,
+          "raptor_status_active_samples": 10000,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8137254901960784,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 72,
+    "returncode": 0,
+    "seed": 2026062982,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0072",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.566739,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.68280029296875,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.670442,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.543121337890625,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10011,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11927,
+          "raptor_status_active_samples": 9999,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 73,
+    "returncode": 0,
+    "seed": 2026062983,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0073",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.64477,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.497344970703125,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.531512,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.40045166015625,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9946,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11886,
+          "raptor_status_active_samples": 9942,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": "RuntimeError: task node failed rc=3 for classical",
+    "eval": 74,
+    "returncode": 1,
+    "seed": 2026062984,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0074",
+    "validity": {}
+  },
+  {
+    "error": null,
+    "eval": 75,
+    "returncode": 0,
+    "seed": 2026062985,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0075",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.82916,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.5836181640625,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.708568,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.547271728515625,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10110,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11947,
+          "raptor_status_active_samples": 10098,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8235294117647058,
+          "target_nav_state_samples": 84
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 76,
+    "returncode": 0,
+    "seed": 2026062986,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0076",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.884652,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.576080322265625,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.728526,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.46875,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10049,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11964,
+          "raptor_status_active_samples": 10042,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8137254901960784,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 77,
+    "returncode": 0,
+    "seed": 2026062987,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0077",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.626762,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.5826416015625,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.522952,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.2523193359375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9906,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11809,
+          "raptor_status_active_samples": 9900,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 78,
+    "returncode": 0,
+    "seed": 2026062988,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0078",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.670785,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.473388671875,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.654952,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.57177734375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9961,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11861,
+          "raptor_status_active_samples": 9950,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": "RuntimeError: task node failed rc=3 for classical",
+    "eval": 79,
+    "returncode": 1,
+    "seed": 2026062989,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0079",
+    "validity": {}
+  },
+  {
+    "error": "RuntimeError: task node failed rc=3 for classical",
+    "eval": 80,
+    "returncode": 1,
+    "seed": 2026062990,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0080",
+    "validity": {}
+  },
+  {
+    "error": null,
+    "eval": 81,
+    "returncode": 0,
+    "seed": 2026062991,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0081",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.696684,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.537078857421875,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.666084,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.627410888671875,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10023,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11939,
+          "raptor_status_active_samples": 10014,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": "RuntimeError: task node failed rc=3 for classical",
+    "eval": 82,
+    "returncode": 1,
+    "seed": 2026062992,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0082",
+    "validity": {}
+  },
+  {
+    "error": null,
+    "eval": 83,
+    "returncode": 0,
+    "seed": 2026062993,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0083",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.759026,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.55712890625,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.713014,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.565704345703125,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10037,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11958,
+          "raptor_status_active_samples": 10029,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 84,
+    "returncode": 0,
+    "seed": 2026062994,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0084",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.674481,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.40447998046875,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.641501,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.426849365234375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9948,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11571,
+          "raptor_status_active_samples": 9941,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8415841584158416,
+          "target_nav_state_samples": 85
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 85,
+    "returncode": 0,
+    "seed": 2026062995,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0085",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.851494,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.54095458984375,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.711809,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.581573486328125,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10103,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11931,
+          "raptor_status_active_samples": 10096,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8235294117647058,
+          "target_nav_state_samples": 84
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": "RuntimeError: task node failed rc=3 for classical",
+    "eval": 86,
+    "returncode": 1,
+    "seed": 2026062996,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0086",
+    "validity": {}
+  },
+  {
+    "error": "RuntimeError: task node failed rc=3 for classical",
+    "eval": 87,
+    "returncode": 1,
+    "seed": 2026062997,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0087",
+    "validity": {}
+  },
+  {
+    "error": null,
+    "eval": 88,
+    "returncode": 0,
+    "seed": 2026062998,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0088",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.870887,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.565093994140625,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.727153,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.3720703125,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10015,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11931,
+          "raptor_status_active_samples": 10006,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 89,
+    "returncode": 0,
+    "seed": 2026062999,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0089",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.563427,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.59930419921875,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.549706,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.4197998046875,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9949,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11868,
+          "raptor_status_active_samples": 9940,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 90,
+    "returncode": 0,
+    "seed": 2026063000,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0090",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 48.388927,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.430511474609375,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 47.165782,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.68475341796875,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9432,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11365,
+          "raptor_status_active_samples": 9422,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8210526315789474,
+          "target_nav_state_samples": 78
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 91,
+    "returncode": 0,
+    "seed": 2026063001,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0091",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.787229,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.551177978515625,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.686388,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.550506591796875,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10043,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11944,
+          "raptor_status_active_samples": 10037,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8137254901960784,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 92,
+    "returncode": 0,
+    "seed": 2026063002,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0092",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.804764,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.5211181640625,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.721223,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.68621826171875,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10013,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11954,
+          "raptor_status_active_samples": 10007,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 93,
+    "returncode": 0,
+    "seed": 2026063003,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0093",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.890976,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.562286376953125,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.71474,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.532806396484375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 10023,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11919,
+          "raptor_status_active_samples": 10020,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8217821782178217,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 94,
+    "returncode": 0,
+    "seed": 2026063004,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0094",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.845061,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.569427490234375,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.722231,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.59039306640625,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9734,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11352,
+          "raptor_status_active_samples": 9728,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8333333333333334,
+          "target_nav_state_samples": 85
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 95,
+    "returncode": 0,
+    "seed": 2026063005,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0095",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.898968,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.49542236328125,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.700754,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.578765869140625,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9735,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11268,
+          "raptor_status_active_samples": 9734,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8415841584158416,
+          "target_nav_state_samples": 85
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 96,
+    "returncode": 0,
+    "seed": 2026063006,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0096",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.796926,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.719940185546875,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.695539,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.664306640625,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9714,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11325,
+          "raptor_status_active_samples": 9711,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8415841584158416,
+          "target_nav_state_samples": 85
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 97,
+    "returncode": 0,
+    "seed": 2026063007,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0097",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.696568,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.228851318359375,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 48.688075,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.01873779296875,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9559,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11134,
+          "raptor_status_active_samples": 9556,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8469387755102041,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 98,
+    "returncode": 0,
+    "seed": 2026063008,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0098",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.687025,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.576385498046875,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.580965,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.451263427734375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9658,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11255,
+          "raptor_status_active_samples": 9649,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8415841584158416,
+          "target_nav_state_samples": 85
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 99,
+    "returncode": 0,
+    "seed": 2026063009,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0099",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.604912,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.566802978515625,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.574985,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.499114990234375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9688,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11302,
+          "raptor_status_active_samples": 9682,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8415841584158416,
+          "target_nav_state_samples": 85
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": "RuntimeError: task node failed rc=3 for classical",
+    "eval": 100,
+    "returncode": 1,
+    "seed": 2026063010,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0100",
+    "validity": {}
+  },
+  {
+    "error": null,
+    "eval": 101,
+    "returncode": 0,
+    "seed": 2026063011,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0101",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.894837,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.654693603515625,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.705554,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.282867431640625,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9691,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11256,
+          "raptor_status_active_samples": 9686,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8415841584158416,
+          "target_nav_state_samples": 85
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 102,
+    "returncode": 0,
+    "seed": 2026063012,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0102",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.81058,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.513824462890625,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.696481,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.541900634765625,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9781,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11374,
+          "raptor_status_active_samples": 9776,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8415841584158416,
+          "target_nav_state_samples": 85
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 103,
+    "returncode": 0,
+    "seed": 2026063013,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0103",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.783592,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.5308837890625,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.710355,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.7884521484375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9716,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11313,
+          "raptor_status_active_samples": 9703,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.85,
+          "target_nav_state_samples": 85
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 104,
+    "returncode": 0,
+    "seed": 2026063014,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0104",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.765806,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.539794921875,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.650877,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.417083740234375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9752,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11339,
+          "raptor_status_active_samples": 9746,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8333333333333334,
+          "target_nav_state_samples": 85
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": "RuntimeError: task node failed rc=3 for classical",
+    "eval": 105,
+    "returncode": 1,
+    "seed": 2026063015,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0105",
+    "validity": {}
+  },
+  {
+    "error": null,
+    "eval": 106,
+    "returncode": 0,
+    "seed": 2026063016,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0106",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.8366,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.59698486328125,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.881393,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.4942626953125,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9741,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11322,
+          "raptor_status_active_samples": 9731,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.85,
+          "target_nav_state_samples": 85
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": "RuntimeError: task node failed rc=3 for classical",
+    "eval": 107,
+    "returncode": 1,
+    "seed": 2026063017,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0107",
+    "validity": {}
+  },
+  {
+    "error": null,
+    "eval": 108,
+    "returncode": 0,
+    "seed": 2026063018,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0108",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.783337,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.125244140625,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.724721,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.172088623046875,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9723,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11317,
+          "raptor_status_active_samples": 9717,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8415841584158416,
+          "target_nav_state_samples": 85
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 109,
+    "returncode": 0,
+    "seed": 2026063019,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0109",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.624686,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.57342529296875,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.634995,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.493133544921875,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9766,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11285,
+          "raptor_status_active_samples": 9764,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8514851485148515,
+          "target_nav_state_samples": 86
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 110,
+    "returncode": 0,
+    "seed": 2026063020,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0110",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 39.141601,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 1.500335693359375,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 45.75997,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.91607666015625,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 8811,
+          "raptor_input_present": true,
+          "raptor_input_samples": 10431,
+          "raptor_status_active_samples": 8801,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8369565217391305,
+          "target_nav_state_samples": 77
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 111,
+    "returncode": 0,
+    "seed": 2026063021,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0111",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 33.45633,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 1.814788818359375,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 45.181237,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.659210205078125,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 8745,
+          "raptor_input_present": true,
+          "raptor_input_samples": 10319,
+          "raptor_status_active_samples": 8735,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8351648351648352,
+          "target_nav_state_samples": 76
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 112,
+    "returncode": 0,
+    "seed": 2026063022,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0112",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.653964,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.28509521484375,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 48.719261,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.214019775390625,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9488,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11083,
+          "raptor_status_active_samples": 9481,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8469387755102041,
+          "target_nav_state_samples": 83
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 113,
+    "returncode": 0,
+    "seed": 2026063023,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0113",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.673404,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.386444091796875,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.509387,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.531341552734375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9650,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11250,
+          "raptor_status_active_samples": 9645,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8415841584158416,
+          "target_nav_state_samples": 85
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 114,
+    "returncode": 0,
+    "seed": 2026063024,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0114",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.665569,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.507354736328125,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.499786,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.468231201171875,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9708,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11299,
+          "raptor_status_active_samples": 9700,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.85,
+          "target_nav_state_samples": 85
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 115,
+    "returncode": 0,
+    "seed": 2026063025,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0115",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.440229,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.90216064453125,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.47329,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.508758544921875,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9665,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11237,
+          "raptor_status_active_samples": 9658,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.8415841584158416,
+          "target_nav_state_samples": 85
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": "RuntimeError: task node failed rc=3 for classical",
+    "eval": 116,
+    "returncode": 1,
+    "seed": 2026063026,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0116",
+    "validity": {}
+  },
+  {
+    "error": null,
+    "eval": 117,
+    "returncode": 0,
+    "seed": 2026063027,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0117",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.691358,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.344024658203125,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.516275,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.505859375,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9707,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11314,
+          "raptor_status_active_samples": 9701,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.85,
+          "target_nav_state_samples": 85
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": null,
+    "eval": 118,
+    "returncode": 0,
+    "seed": 2026063028,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0118",
+    "validity": {
+      "decontamination": {
+        "classical": {
+          "control_duration_s": 49.78005,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.54931640625,
+          "terminal_class": "NONE"
+        },
+        "raptor": {
+          "control_duration_s": 49.760173,
+          "cut_at_infrastructure_terminal": false,
+          "min_recovery_height_m": 1.0,
+          "passed": true,
+          "reasons": [],
+          "start_agl_m": 2.56121826171875,
+          "terminal_class": "NONE"
+        }
+      },
+      "raptor_identity": {
+        "criteria": {
+          "min_active_samples": 100,
+          "min_input_samples": 100,
+          "neural_control_absent_required": true,
+          "policy_tar_staged_required": true,
+          "target_nav_fraction": "diagnostic_only_window_may_include_pre_switch_offboard",
+          "target_nav_state": 23
+        },
+        "evidence": {
+          "neural_control_present": false,
+          "policy_tar_staged": true,
+          "raptor_input_active_samples": 9720,
+          "raptor_input_present": true,
+          "raptor_input_samples": 11295,
+          "raptor_status_active_samples": 9714,
+          "raptor_status_present": true,
+          "target_nav_state": 23,
+          "target_nav_state_fraction": 0.85,
+          "target_nav_state_samples": 85
+        },
+        "passed": true,
+        "reasons": []
+      },
+      "rho_jitter_reproduction_margins": {
+        "P1": 0.0255863354,
+        "P2": 0.187036041,
+        "P3": 0.02,
+        "P4": 0.0285933258,
+        "P5": 0.5669702594,
+        "P6": 0.0273949962,
+        "P7": 0.4484874426
+      }
+    }
+  },
+  {
+    "error": "RuntimeError: task node failed rc=3 for classical",
+    "eval": 119,
+    "returncode": 1,
+    "seed": 2026063029,
+    "tag": "raptor_switch_severity_guided_0_20260705_e0119",
+    "validity": {}
+  }
+]

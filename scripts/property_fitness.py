@@ -325,6 +325,90 @@ def differential_property_fitness(
     }
 
 
+def absolute_severity_fitness(
+    classical_property: dict[str, Any],
+    neural_property: dict[str, Any],
+    *,
+    target_properties: Iterable[str] | None = None,
+    explicit_margins: dict[str, float] | None = None,
+    explicit_reproduction_margins: dict[str, float] | None = None,
+) -> dict[str, Any]:
+    """Search-only fitness that scores neural violation depth without differencing.
+
+    This is for the RQ2 fitness ablation arm. It deliberately leaves the
+    primary predicate (`strict_s0_vs_s3`) and policy/finding fields on the same
+    severity+sign discipline as the differential fitness, but the archive
+    quality is absolute neural target violation: max(0, -rho_neural).
+    """
+
+    result = differential_property_fitness(
+        classical_property,
+        neural_property,
+        target_properties=target_properties,
+        explicit_margins=explicit_margins,
+        explicit_reproduction_margins=explicit_reproduction_margins,
+    )
+    reference_diff_fitness = {
+        "fitness": result["fitness"],
+        "best_property": result["best_property"],
+        "valid_property_count": result["valid_property_count"],
+        "target_exclusion_reasons": dict(result["target_exclusion_reasons"]),
+        "fitness_semantics": result["fitness_semantics"],
+    }
+    targets = normalize_target_properties(target_properties)
+    neural_rho = neural_property.get("rho", {})
+    if not isinstance(neural_rho, dict):
+        raise ValueError("property results must contain rho objects")
+
+    scores: list[tuple[str, float]] = []
+    target_exclusion_reasons: dict[str, str] = {}
+    for prop in PROPERTY_ORDER:
+        n = _finite_number(neural_rho.get(prop))
+        target = prop in targets
+        vacuous = property_is_vacuous(classical_property, neural_property, prop)
+        available = n is not None
+        valid_for_fitness = bool(target and available and not vacuous)
+        score = max(0.0, -float(n)) if valid_for_fitness and n is not None else None
+
+        record = result["per_property"][prop]
+        record["absolute_severity_score"] = score
+        record["absolute_severity_valid_for_fitness"] = valid_for_fitness
+        if target:
+            record["valid_for_fitness"] = valid_for_fitness
+            if not available:
+                reason = "missing_or_nonfinite_neural_rho"
+            elif vacuous:
+                reason = "vacuous_property"
+            else:
+                reason = None
+            if reason:
+                record["excluded_reason"] = reason
+                target_exclusion_reasons[prop] = reason
+            else:
+                record.pop("excluded_reason", None)
+        if score is not None:
+            scores.append((prop, score))
+
+    if scores:
+        best_property, fitness = max(scores, key=lambda item: item[1])
+    else:
+        best_property, fitness = None, FITNESS_FLOOR
+
+    result["fitness"] = float(fitness)
+    result["fitness_mode"] = "absolute_severity"
+    result["fitness_semantics"] = (
+        "max max(0, -rho_neural) over non-vacuous target properties; "
+        "does not subtract classical rho and does not require classical S0 for search fitness"
+    )
+    result["catastrophic_fitness_requires_classical_s0"] = False
+    result["absolute_severity_fitness_ignores_classical_s0"] = True
+    result["reference_diff_fitness"] = reference_diff_fitness
+    result["best_property"] = best_property
+    result["valid_property_count"] = len(scores)
+    result["target_exclusion_reasons"] = target_exclusion_reasons
+    return result
+
+
 def policy_differential_findings(
     classical_property: dict[str, Any],
     neural_property: dict[str, Any],

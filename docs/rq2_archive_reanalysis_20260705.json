@@ -1,0 +1,904 @@
+{
+  "aggregate": {
+    "archive_attitude_bands": {
+      "36-<40": 5,
+      "40-<42": 3,
+      "42-45": 11,
+      "45-<48": 5,
+      ">=48": 6
+    },
+    "archive_attitude_deg": {
+      "max": 50.0,
+      "median": 43.22493367582499,
+      "min": 38.74788429661587
+    },
+    "archive_delay_bands": {
+      "0.03-<0.06": 3,
+      "0.06-<0.09": 4,
+      "0.09-<0.12": 3,
+      "0.12-<0.15": 3,
+      "0.15-0.18": 12,
+      "<0.03": 5
+    },
+    "archive_delay_s": {
+      "max": 0.18,
+      "median": 0.1265635192505195,
+      "min": 0.0
+    },
+    "archive_elites": 30,
+    "archive_eval_index": {
+      "max": 119.0,
+      "median": 75.0,
+      "min": 10.0
+    },
+    "archive_primary_elites": 30,
+    "archive_quality": {
+      "max": 21.98177600920704,
+      "median": 19.836168574903038,
+      "min": 9.786908614173203
+    },
+    "archive_rate_bands": {
+      "<1.45": 30
+    },
+    "archive_rate_rad_s": {
+      "max": 1.203299797412933,
+      "median": 1.075767836944609,
+      "min": 0.9831530544880448
+    },
+    "archive_wind_bands": {
+      "0-<1": 6,
+      "1-<2": 6,
+      "2-<3": 3,
+      "3-<4": 5,
+      "4-<5": 4,
+      "5-6": 6
+    },
+    "archive_wind_m_s": {
+      "max": 5.333734924774308,
+      "median": 3.008079096222617,
+      "min": 9.681830194696595e-05
+    },
+    "boundary_feature_count": 5,
+    "boundary_feature_fraction": 0.4,
+    "boundary_feature_score": 2.0,
+    "evals": 360,
+    "primary_evals": 179,
+    "valid": 307
+  },
+  "dense_axis_summary": {
+    "approach_phase_rad": {
+      "0.0": {
+        "classical_severity_counts": {
+          "0": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 0.6666666666666666,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "0": 1,
+          "3": 2
+        },
+        "strict_hits": 2,
+        "valid": 3
+      },
+      "0.7853981633974483": {
+        "classical_severity_counts": {
+          "0": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 1.0,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "3": 3
+        },
+        "strict_hits": 3,
+        "valid": 3
+      },
+      "1.5707963267948966": {
+        "classical_severity_counts": {
+          "0": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 1.0,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "3": 3
+        },
+        "strict_hits": 3,
+        "valid": 3
+      },
+      "2.356194490192345": {
+        "classical_severity_counts": {
+          "0": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 0.6666666666666666,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "0": 1,
+          "3": 2
+        },
+        "strict_hits": 2,
+        "valid": 3
+      },
+      "3.141592653589793": {
+        "classical_severity_counts": {
+          "0": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 1.0,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "3": 3
+        },
+        "strict_hits": 3,
+        "valid": 3
+      },
+      "3.9269908169872414": {
+        "classical_severity_counts": {
+          "0": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 0.6666666666666666,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "0": 1,
+          "3": 2
+        },
+        "strict_hits": 2,
+        "valid": 3
+      },
+      "4.71238898038469": {
+        "classical_severity_counts": {
+          "0": 2,
+          "1": 1
+        },
+        "evals": 3,
+        "hit_rate_valid": 0.6666666666666666,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "3": 3
+        },
+        "strict_hits": 2,
+        "valid": 3
+      },
+      "5.497787143782138": {
+        "classical_severity_counts": {
+          "0": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 0.6666666666666666,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "0": 1,
+          "3": 2
+        },
+        "strict_hits": 2,
+        "valid": 3
+      }
+    },
+    "attitude_deg": {
+      "28.0": {
+        "classical_severity_counts": {
+          "1": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 0.0,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "1": 3
+        },
+        "strict_hits": 0,
+        "valid": 3
+      },
+      "31.0": {
+        "classical_severity_counts": {
+          "1": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 0.0,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "1": 3
+        },
+        "strict_hits": 0,
+        "valid": 3
+      },
+      "34.0": {
+        "classical_severity_counts": {
+          "1": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 0.0,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "1": 3
+        },
+        "strict_hits": 0,
+        "valid": 3
+      },
+      "36.0": {
+        "classical_severity_counts": {
+          "1": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 0.0,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "1": 1,
+          "3": 2
+        },
+        "strict_hits": 0,
+        "valid": 3
+      },
+      "38.0": {
+        "classical_severity_counts": {
+          "1": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 0.0,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "1": 1,
+          "3": 2
+        },
+        "strict_hits": 0,
+        "valid": 3
+      },
+      "40.0": {
+        "classical_severity_counts": {
+          "0": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 0.6666666666666666,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "0": 1,
+          "3": 2
+        },
+        "strict_hits": 2,
+        "valid": 3
+      },
+      "42.0": {
+        "classical_severity_counts": {
+          "0": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 1.0,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "3": 3
+        },
+        "strict_hits": 3,
+        "valid": 3
+      },
+      "45.0": {
+        "classical_severity_counts": {
+          "0": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 1.0,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "3": 3
+        },
+        "strict_hits": 3,
+        "valid": 3
+      },
+      "48.0": {
+        "classical_severity_counts": {
+          "0": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 0.3333333333333333,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "0": 2,
+          "3": 1
+        },
+        "strict_hits": 1,
+        "valid": 3
+      }
+    },
+    "requested_rate_rad_s": {
+      "0.55": {
+        "classical_severity_counts": {
+          "0": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 1.0,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "3": 3
+        },
+        "strict_hits": 3,
+        "valid": 3
+      },
+      "0.75": {
+        "classical_severity_counts": {
+          "0": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 1.0,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "3": 3
+        },
+        "strict_hits": 3,
+        "valid": 3
+      },
+      "0.95": {
+        "classical_severity_counts": {
+          "0": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 1.0,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "3": 3
+        },
+        "strict_hits": 3,
+        "valid": 3
+      },
+      "1.15": {
+        "classical_severity_counts": {
+          "0": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 1.0,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "3": 3
+        },
+        "strict_hits": 3,
+        "valid": 3
+      },
+      "1.35": {
+        "classical_severity_counts": {
+          "0": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 1.0,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "3": 3
+        },
+        "strict_hits": 3,
+        "valid": 3
+      },
+      "1.55": {
+        "classical_severity_counts": {
+          "0": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 0.3333333333333333,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "0": 2,
+          "3": 1
+        },
+        "strict_hits": 1,
+        "valid": 3
+      },
+      "1.75": {
+        "classical_severity_counts": {
+          "0": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 1.0,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "3": 3
+        },
+        "strict_hits": 3,
+        "valid": 3
+      },
+      "2.05": {
+        "classical_severity_counts": {
+          "0": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 0.6666666666666666,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "0": 1,
+          "3": 2
+        },
+        "strict_hits": 2,
+        "valid": 3
+      },
+      "2.35": {
+        "classical_severity_counts": {
+          "0": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 1.0,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "3": 3
+        },
+        "strict_hits": 3,
+        "valid": 3
+      }
+    },
+    "switch_delay_s": {
+      "0.0": {
+        "classical_severity_counts": {
+          "0": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 1.0,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "3": 3
+        },
+        "strict_hits": 3,
+        "valid": 3
+      },
+      "0.03": {
+        "classical_severity_counts": {
+          "0": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 1.0,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "3": 3
+        },
+        "strict_hits": 3,
+        "valid": 3
+      },
+      "0.06": {
+        "classical_severity_counts": {
+          "0": 2,
+          "1": 1
+        },
+        "evals": 3,
+        "hit_rate_valid": 0.3333333333333333,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "0": 1,
+          "3": 2
+        },
+        "strict_hits": 1,
+        "valid": 3
+      },
+      "0.09": {
+        "classical_severity_counts": {
+          "0": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 1.0,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "3": 3
+        },
+        "strict_hits": 3,
+        "valid": 3
+      },
+      "0.12": {
+        "classical_severity_counts": {
+          "0": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 0.3333333333333333,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "0": 2,
+          "3": 1
+        },
+        "strict_hits": 1,
+        "valid": 3
+      },
+      "0.15": {
+        "classical_severity_counts": {
+          "0": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 1.0,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "3": 3
+        },
+        "strict_hits": 3,
+        "valid": 3
+      },
+      "0.18": {
+        "classical_severity_counts": {
+          "0": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 1.0,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "3": 3
+        },
+        "strict_hits": 3,
+        "valid": 3
+      }
+    },
+    "wind_m_s": {
+      "0.0": {
+        "classical_severity_counts": {
+          "0": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 1.0,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "3": 3
+        },
+        "strict_hits": 3,
+        "valid": 3
+      },
+      "1.0": {
+        "classical_severity_counts": {
+          "0": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 1.0,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "3": 3
+        },
+        "strict_hits": 3,
+        "valid": 3
+      },
+      "2.0": {
+        "classical_severity_counts": {
+          "0": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 1.0,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "3": 3
+        },
+        "strict_hits": 3,
+        "valid": 3
+      },
+      "3.0": {
+        "classical_severity_counts": {
+          "0": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 1.0,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "3": 3
+        },
+        "strict_hits": 3,
+        "valid": 3
+      },
+      "4.0": {
+        "classical_severity_counts": {
+          "0": 2,
+          "1": 1
+        },
+        "evals": 3,
+        "hit_rate_valid": 0.0,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "0": 3
+        },
+        "strict_hits": 0,
+        "valid": 3
+      },
+      "5.0": {
+        "classical_severity_counts": {
+          "0": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 0.0,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "0": 3
+        },
+        "strict_hits": 0,
+        "valid": 3
+      },
+      "6.0": {
+        "classical_severity_counts": {
+          "0": 3
+        },
+        "evals": 3,
+        "hit_rate_valid": 0.0,
+        "invalid": 0,
+        "neural_severity_counts": {
+          "0": 3
+        },
+        "strict_hits": 0,
+        "valid": 3
+      }
+    }
+  },
+  "eval_counts": {
+    "attitude": {
+      "36-<40": {
+        "evals": 62,
+        "primary": 17,
+        "primary_rate": 0.2833333333333333,
+        "valid": 60
+      },
+      "40-<42": {
+        "evals": 39,
+        "primary": 30,
+        "primary_rate": 0.7894736842105263,
+        "valid": 38
+      },
+      "42-45": {
+        "evals": 74,
+        "primary": 57,
+        "primary_rate": 0.7808219178082192,
+        "valid": 73
+      },
+      "45-<48": {
+        "evals": 58,
+        "primary": 53,
+        "primary_rate": 0.9137931034482759,
+        "valid": 58
+      },
+      "<36": {
+        "evals": 49,
+        "primary": 0,
+        "primary_rate": 0.0,
+        "valid": 48
+      },
+      ">=48": {
+        "evals": 78,
+        "primary": 22,
+        "primary_rate": 0.7333333333333333,
+        "valid": 30
+      }
+    },
+    "delay": {
+      "0.03-<0.06": {
+        "evals": 33,
+        "primary": 17,
+        "primary_rate": 0.6296296296296297,
+        "valid": 27
+      },
+      "0.06-<0.09": {
+        "evals": 47,
+        "primary": 22,
+        "primary_rate": 0.5789473684210527,
+        "valid": 38
+      },
+      "0.09-<0.12": {
+        "evals": 48,
+        "primary": 25,
+        "primary_rate": 0.5555555555555556,
+        "valid": 45
+      },
+      "0.12-<0.15": {
+        "evals": 53,
+        "primary": 26,
+        "primary_rate": 0.5416666666666666,
+        "valid": 48
+      },
+      "0.15-0.18": {
+        "evals": 121,
+        "primary": 66,
+        "primary_rate": 0.6346153846153846,
+        "valid": 104
+      },
+      "<0.03": {
+        "evals": 58,
+        "primary": 23,
+        "primary_rate": 0.5111111111111111,
+        "valid": 45
+      }
+    },
+    "rate": {
+      "1.45-<1.65": {
+        "evals": 2,
+        "primary": 0,
+        "primary_rate": 0.0,
+        "valid": 2
+      },
+      "1.65-<1.85": {
+        "evals": 1,
+        "primary": 0,
+        "primary_rate": 0.0,
+        "valid": 1
+      },
+      "<1.45": {
+        "evals": 357,
+        "primary": 179,
+        "primary_rate": 0.5888157894736842,
+        "valid": 304
+      }
+    },
+    "wind": {
+      "0-<1": {
+        "evals": 73,
+        "primary": 40,
+        "primary_rate": 0.6349206349206349,
+        "valid": 63
+      },
+      "1-<2": {
+        "evals": 88,
+        "primary": 52,
+        "primary_rate": 0.6666666666666666,
+        "valid": 78
+      },
+      "2-<3": {
+        "evals": 54,
+        "primary": 27,
+        "primary_rate": 0.5625,
+        "valid": 48
+      },
+      "3-<4": {
+        "evals": 46,
+        "primary": 18,
+        "primary_rate": 0.43902439024390244,
+        "valid": 41
+      },
+      "4-<5": {
+        "evals": 52,
+        "primary": 19,
+        "primary_rate": 0.4523809523809524,
+        "valid": 42
+      },
+      "5-6": {
+        "evals": 47,
+        "primary": 23,
+        "primary_rate": 0.6571428571428571,
+        "valid": 35
+      }
+    }
+  },
+  "feature_assessments": [
+    {
+      "archive_evidence": "final elite min attitude 38.75 deg; 36-<40 eval bucket 17/60 (28.3%); the search archive does not supply a controlled lower-safe side",
+      "core": true,
+      "dense_evidence": "38:0/3, 40:2/3, 42:3/3",
+      "feature": "attitude onset near 40 deg",
+      "score": 0.5,
+      "status": "partial"
+    },
+    {
+      "archive_evidence": "11/30 final elites are in 42-45 deg; eval bucket 57/73 (78.1%)",
+      "core": true,
+      "dense_evidence": "42:3/3, 45:3/3",
+      "feature": "42-45 deg stable strict band",
+      "score": 1.0,
+      "status": "strong"
+    },
+    {
+      "archive_evidence": "6 final elites remain primary at >=48 deg; eval bucket 22/30 (73.3%) versus 45-<48 bucket 53/58 (91.4%)",
+      "core": true,
+      "dense_evidence": "45:3/3, 48:1/3",
+      "feature": "48 deg partial recovery",
+      "score": 0.5,
+      "status": "partial"
+    },
+    {
+      "archive_evidence": "archive actual rate range 0.983-1.203 rad/s; high-rate final elites >=1.45 rad/s: 0/30",
+      "core": true,
+      "dense_evidence": "1.55:1/3, 1.75:3/3",
+      "feature": "rate 1.55 hole / 1.75 recovery",
+      "score": 0.0,
+      "status": "not_shown"
+    },
+    {
+      "archive_evidence": "archive keeps 10 primary elites at wind >=4 m/s; eval buckets 4-<5 19/42 (45.2%), 5-6 23/35 (65.7%)",
+      "core": true,
+      "dense_evidence": "0:3/3, 3:3/3, 4:0/3, 6:0/3",
+      "feature": "wind 0-3 exposure / 4-6 recovery at fixed baseline",
+      "score": 0.0,
+      "status": "not_shown"
+    },
+    {
+      "archive_evidence": "archive has 7 elites in the dense-sweep hole-adjacent delay buckets; eval buckets 0.06-<0.09 22/38 (57.9%), 0.12-<0.15 26/48 (54.2%)",
+      "core": false,
+      "dense_evidence": "0.06:1/3, 0.12:1/3",
+      "feature": "delay 0.06/0.12 temporal holes",
+      "score": 0.0,
+      "status": "not_shown"
+    }
+  ],
+  "guided_runs": [
+    {
+      "archive_bins": 10,
+      "archive_primary_elites": 10,
+      "evals": 120,
+      "first_primary_eval": 2,
+      "invalid": 16,
+      "primary_cell_list": [
+        "switching:rp_3:wind_0",
+        "switching:rp_3:wind_1",
+        "switching:rp_3:wind_2",
+        "switching:rp_3:wind_3",
+        "switching:rp_3:wind_4",
+        "switching:rp_4:wind_0",
+        "switching:rp_4:wind_1",
+        "switching:rp_4:wind_2",
+        "switching:rp_4:wind_3",
+        "switching:rp_4:wind_4"
+      ],
+      "primary_cell_milestones": {
+        "1": 2,
+        "3": 11,
+        "5": 14,
+        "8": 35,
+        "10": 44
+      },
+      "primary_cells": 10,
+      "primary_evals": 65,
+      "qd_score": 197.4828814793507,
+      "run_id": "switch_severity_guided_0_20260629",
+      "valid": 104
+    },
+    {
+      "archive_bins": 10,
+      "archive_primary_elites": 10,
+      "evals": 120,
+      "first_primary_eval": 9,
+      "invalid": 16,
+      "primary_cell_list": [
+        "switching:rp_3:wind_0",
+        "switching:rp_3:wind_1",
+        "switching:rp_3:wind_2",
+        "switching:rp_3:wind_3",
+        "switching:rp_3:wind_4",
+        "switching:rp_4:wind_0",
+        "switching:rp_4:wind_1",
+        "switching:rp_4:wind_2",
+        "switching:rp_4:wind_3",
+        "switching:rp_4:wind_4"
+      ],
+      "primary_cell_milestones": {
+        "1": 9,
+        "3": 11,
+        "5": 17,
+        "8": 40,
+        "10": 61
+      },
+      "primary_cells": 10,
+      "primary_evals": 54,
+      "qd_score": 192.58844896193912,
+      "run_id": "switch_severity_guided_1_20260630",
+      "valid": 104
+    },
+    {
+      "archive_bins": 10,
+      "archive_primary_elites": 10,
+      "evals": 120,
+      "first_primary_eval": 5,
+      "invalid": 21,
+      "primary_cell_list": [
+        "switching:rp_3:wind_0",
+        "switching:rp_3:wind_1",
+        "switching:rp_3:wind_2",
+        "switching:rp_3:wind_3",
+        "switching:rp_3:wind_4",
+        "switching:rp_4:wind_0",
+        "switching:rp_4:wind_1",
+        "switching:rp_4:wind_2",
+        "switching:rp_4:wind_3",
+        "switching:rp_4:wind_4"
+      ],
+      "primary_cell_milestones": {
+        "1": 5,
+        "3": 14,
+        "5": 17,
+        "8": 32,
+        "10": 88
+      },
+      "primary_cells": 10,
+      "primary_evals": 60,
+      "qd_score": 176.3422532369786,
+      "run_id": "switch_severity_guided_2_20260630",
+      "valid": 99
+    }
+  ],
+  "source_artifacts": {
+    "dense_sweep": "runs/campaigns/switch_severity_dense_sweep_20260630/sweep_results.jsonl",
+    "guided_runs": [
+      "runs/campaigns/switch_severity_guided_0_20260629",
+      "runs/campaigns/switch_severity_guided_1_20260630",
+      "runs/campaigns/switch_severity_guided_2_20260630"
+    ]
+  }
+}
