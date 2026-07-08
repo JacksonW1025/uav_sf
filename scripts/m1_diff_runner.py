@@ -245,7 +245,9 @@ def run_one(
 ) -> dict[str, Path]:
     tag = theta["tag"]
     px4_dir = repo / "external/PX4-Autopilot"
-    build_dir = px4_dir / "build/px4_sitl_raptor_sih"
+    build_dir = Path(env.get("PX4_RAPTOR_BUILD_DIR", str(px4_dir / "build/px4_sitl_raptor_sih")))
+    if not build_dir.is_absolute():
+        build_dir = px4_dir / build_dir
     run_root = build_dir
     log_root = run_root / "log"
 

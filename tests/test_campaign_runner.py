@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import importlib
 import random
 import sys
 import tempfile
@@ -9,6 +10,7 @@ import unittest
 from dataclasses import replace
 from pathlib import Path
 from typing import Any
+from unittest import mock
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -141,6 +143,7 @@ class CampaignRunnerTest(unittest.TestCase):
         config = m2_map_elites.sut_config("raptor")
 
         self.assertEqual("raptor", config.controller)
+        self.assertTrue(config.input_clipping)
         self.assertEqual("scripts/build_px4_raptor_sih.sh", str(config.build_script.relative_to(REPO_ROOT)))
         installer_paths = {str(path.relative_to(REPO_ROOT)) for path in config.skip_build_installers}
         self.assertIn("scripts/install_raptor_sih_board.sh", installer_paths)
@@ -151,6 +154,45 @@ class CampaignRunnerTest(unittest.TestCase):
         self.assertNotIn("CONFIG_MODULES_MC_NN_CONTROL=y", board)
         build_script = (REPO_ROOT / "scripts/build_px4_raptor_sih.sh").read_text(encoding="utf-8")
         self.assertIn("install_fuzz1b_dds_groundtruth.sh", build_script)
+
+    def test_raptor_unclipped_sut_config_uses_distinct_board_and_raptor_identity(self) -> None:
+        config = m2_map_elites.sut_config("raptor_unclipped")
+
+        self.assertIn("raptor_unclipped", m2_map_elites.SUTS)
+        self.assertEqual("raptor_unclipped", config.key)
+        self.assertEqual("raptor", config.controller)
+        self.assertEqual("raptor_identity", config.identity_key)
+        self.assertFalse(config.input_clipping)
+        self.assertIn("UNCLIPPED inputs", config.neural_label)
+        self.assertEqual("scripts/build_px4_raptor_unclipped_sih.sh", str(config.build_script.relative_to(REPO_ROOT)))
+        self.assertEqual("PX4_RAPTOR_UNCLIPPED_SIH_BUILD_LOG", config.build_log_env)
+        installer_paths = {str(path.relative_to(REPO_ROOT)) for path in config.skip_build_installers}
+        self.assertIn("scripts/install_raptor_unclipped_sih_board.sh", installer_paths)
+        self.assertIn("scripts/install_fuzz1b_dds_groundtruth.sh", installer_paths)
+        self.assertIn("scripts/install_m2b_state_shim.sh", installer_paths)
+
+    def test_run_one_for_sut_dispatches_unclipped_raptor_by_controller(self) -> None:
+        config = m2_map_elites.sut_config("raptor_unclipped")
+
+        with mock.patch.object(m2_map_elites.m1, "run_one", return_value={"ulog": Path("u"), "task": Path("t")}) as run_one:
+            result = m2_map_elites.run_one_for_sut(
+                config,
+                Path("theta.json"),
+                {"tag": "unit"},
+                "raptor",
+                Path("docs"),
+                {},
+                10,
+                None,
+            )
+
+        self.assertEqual({"ulog": Path("u"), "task": Path("t")}, result)
+        run_one.assert_called_once()
+        dispatched_env = run_one.call_args.args[5]
+        self.assertEqual(
+            str(REPO_ROOT / "external/PX4-Autopilot/build/px4_sitl_raptor_unclipped_sih"),
+            dispatched_env["PX4_RAPTOR_BUILD_DIR"],
+        )
 
     def test_ros_environment_skips_incompatible_repo_overlay_when_ros_exists(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -258,6 +300,119 @@ class CampaignRunnerTest(unittest.TestCase):
         self.assertIn("raptor", result.evidence["property_paths"])
         self.assertIn("raptor_identity", result.evidence["validity"])
         self.assertNotIn("mcnn_identity", result.evidence["validity"])
+
+    def test_evaluate_theta_mock_raptor_unclipped_keeps_raptor_controller_and_marks_input_clipping(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            genome = m2_map_elites.random_candidate_genome("route-a-switching", random.Random(20260707))
+            theta = theta_genome.theta_from_genome(genome, "unit_raptor_unclipped_selector", 20260707)
+            result = m2_map_elites.evaluate_theta(
+                theta,
+                root / "theta.json",
+                root / "eval",
+                0,
+                10,
+                {},
+                m2_map_elites.load_thresholds(None),
+                mock_evaluator=True,
+                target_properties=m2_map_elites.parse_target_properties("route-a-catastrophic"),
+                sut="raptor_unclipped",
+            )
+            comparison = load_json(result.compare_path)
+
+        self.assertEqual(0, result.returncode)
+        self.assertEqual("raptor_unclipped", result.sut)
+        self.assertEqual("raptor", result.neural_controller)
+        self.assertTrue(result.neural_confirmed)
+        self.assertFalse(result.evidence["input_clipping"])
+        self.assertEqual("raptor", comparison["property_oracle"]["neural"]["controller"])
+        self.assertEqual("raptor_unclipped", comparison["property_oracle"]["fitness"]["sut"])
+        self.assertFalse(comparison["property_oracle"]["fitness"]["input_clipping"])
+        self.assertIn("raptor", result.evidence["property_paths"])
+        self.assertIn("raptor_identity", result.evidence["validity"])
+        self.assertNotIn("mcnn_identity", result.evidence["validity"])
+
+    def test_raptor_unclipped_ablation_plan_has_four_anchors_four_attitudes_and_three_seeds(self) -> None:
+        ablation = importlib.import_module("run_raptor_unclipped_ablation")
+
+        points = ablation.planned_theta_points()
+        plan = ablation.planned_evals(points)
+
+        self.assertEqual(8, len(points))
+        self.assertEqual(24, len(plan))
+        self.assertEqual(["pair1", "pair2", "pair4", "pair5"], [point.theta_id for point in points[:4]])
+        self.assertEqual(
+            ["attitude_deg_40", "attitude_deg_42", "attitude_deg_45", "attitude_deg_48"],
+            [point.theta_id for point in points[4:]],
+        )
+        self.assertEqual({2026062940, 2026062941, 2026062942}, {item.seed for item in plan})
+
+    def test_raptor_unclipped_ablation_cached_classical_runs_single_raptor_eval(self) -> None:
+        ablation = importlib.import_module("run_raptor_unclipped_ablation")
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            point = ablation.ThetaPoint(
+                theta_id="pair1",
+                kind="route_a_anchor",
+                base_theta={"tag": "template", "seed": 1},
+                source_artifact="runs/campaigns/source/anchor_plan.json",
+                source_theta_path="runs/campaigns/source/theta/template.json",
+                clipped_records=({"classical_severity": 0, "neural_severity": 0},),
+                plan_metadata={"anchor": "pair1"},
+            )
+            item = ablation.PlannedEval(index=0, point=point, seed=2026062940, tag="unit_pair1_s2026062940")
+            policy = root / "policy.tar"
+            policy.write_text("policy", encoding="utf-8")
+            task = root / "task.json"
+            task.write_text("{}", encoding="utf-8")
+            fake_outputs = {"ulog": root / "raptor.ulg", "task": task, "policy_tar": policy}
+            fake_property = {
+                "severity": {"severity": 3, "label": "S3_uncontrolled_tumble_or_spin"},
+                "window": {
+                    "decontamination": {
+                        "valid": True,
+                        "invalid_reasons": [],
+                        "terminal": {"terminal_class": "NONE"},
+                        "cut_at_infrastructure_terminal": False,
+                        "control_duration_s": 48.0,
+                        "start_agl_m": 2.5,
+                        "min_recovery_height_m": 1.0,
+                    }
+                },
+                "controller_identity": {
+                    "controller": "raptor",
+                    "raptor_status_present": True,
+                    "raptor_status_active_samples": 4200,
+                    "raptor_input_present": True,
+                    "raptor_input_samples": 4200,
+                    "raptor_input_active_samples": 4200,
+                    "target_nav_state": 23,
+                    "target_nav_state_samples": 80,
+                    "target_nav_state_fraction": 0.8,
+                    "neural_control_present": False,
+                },
+            }
+            with mock.patch.object(ablation.m2, "run_one_for_sut", return_value=fake_outputs) as run_one, mock.patch.object(
+                ablation.m2, "evaluate_ulog", return_value=fake_property
+            ):
+                record = ablation.evaluate_with_cached_classical(
+                    item=item,
+                    theta={"tag": item.tag, "seed": item.seed},
+                    theta_path=root / "theta.json",
+                    eval_dir=root / "eval",
+                    env={},
+                    thresholds={},
+                    run_timeout_s=10,
+                    sut="raptor_unclipped",
+                )
+
+        self.assertEqual(0, record["returncode"])
+        self.assertTrue(record["valid"])
+        self.assertEqual("cached", record["classical_source"])
+        self.assertEqual(0, record["classical_severity"])
+        self.assertEqual(3, record["unclipped_raptor_severity"])
+        self.assertTrue(record["strict_s0_vs_s3_hit"])
+        run_one.assert_called_once()
 
     def test_resume_matches_uninterrupted_mock_guided_sequence(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:

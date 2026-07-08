@@ -77,7 +77,7 @@ TARGET_PRESETS: dict[str, list[str] | None] = {
     "validation": ["P1", "P2", "P4", "P5", "P6", "P7"],
 }
 FITNESS_MODES = ["diff", "absolute_severity"]
-SUTS = ["mcnn", "raptor"]
+SUTS = ["mcnn", "raptor", "raptor_unclipped"]
 SUBSPACES = ["full", "route-a-switching", "steady-wind-physics", "state-contam"]
 STRATEGIES = ["map-elites", "random"]
 ROUTE_A_ROLL_PITCH_RANGE = (16.0, 50.0)
@@ -91,11 +91,13 @@ class SUTConfig:
     key: str
     controller: str
     neural_label: str
+    input_clipping: bool | None
     build_script: Path
     build_log_env: str
     build_log_name: str
     skip_build_installers: tuple[Path, ...]
     identity_key: str
+    runner_build_dir: Path | None = None
 
 
 def sut_config(sut: str = "mcnn") -> SUTConfig:
@@ -105,6 +107,7 @@ def sut_config(sut: str = "mcnn") -> SUTConfig:
             key="mcnn",
             controller="mcnn",
             neural_label="mc_nn_control mode 23",
+            input_clipping=None,
             build_script=REPO_ROOT / "scripts/build_px4_mcnn_sih.sh",
             build_log_env="PX4_MCNN_SIH_BUILD_LOG",
             build_log_name="px4_mcnn_sih_build.log",
@@ -119,6 +122,7 @@ def sut_config(sut: str = "mcnn") -> SUTConfig:
             key="raptor",
             controller="raptor",
             neural_label="RAPTOR mc_raptor mode 23 (original clipped inputs)",
+            input_clipping=True,
             build_script=REPO_ROOT / "scripts/build_px4_raptor_sih.sh",
             build_log_env="PX4_RAPTOR_SIH_BUILD_LOG",
             build_log_name="px4_raptor_sih_build.log",
@@ -129,6 +133,25 @@ def sut_config(sut: str = "mcnn") -> SUTConfig:
                 REPO_ROOT / "scripts/install_m2b_state_shim.sh",
             ),
             identity_key="raptor_identity",
+            runner_build_dir=REPO_ROOT / "external/PX4-Autopilot/build/px4_sitl_raptor_sih",
+        )
+    if key == "raptor_unclipped":
+        return SUTConfig(
+            key="raptor_unclipped",
+            controller="raptor",
+            neural_label="RAPTOR mc_raptor mode 23 (UNCLIPPED inputs)",
+            input_clipping=False,
+            build_script=REPO_ROOT / "scripts/build_px4_raptor_unclipped_sih.sh",
+            build_log_env="PX4_RAPTOR_UNCLIPPED_SIH_BUILD_LOG",
+            build_log_name="px4_raptor_unclipped_sih_build.log",
+            skip_build_installers=(
+                REPO_ROOT / "scripts/install_raptor_unclipped_sih_board.sh",
+                REPO_ROOT / "scripts/install_m1_sih_x500.sh",
+                REPO_ROOT / "scripts/install_fuzz1b_dds_groundtruth.sh",
+                REPO_ROOT / "scripts/install_m2b_state_shim.sh",
+            ),
+            identity_key="raptor_identity",
+            runner_build_dir=REPO_ROOT / "external/PX4-Autopilot/build/px4_sitl_raptor_unclipped_sih",
         )
     raise ValueError(f"unknown SUT {sut!r}; expected one of {SUTS}")
 
@@ -154,14 +177,17 @@ def run_one_for_sut(
             run_timeout_s,
             safety_config,
         )
-    if config.key == "raptor":
+    if config.controller == "raptor":
+        run_env = env.copy()
+        if config.runner_build_dir is not None:
+            run_env["PX4_RAPTOR_BUILD_DIR"] = str(config.runner_build_dir)
         return m1.run_one(
             REPO_ROOT,
             theta_path,
             theta,
             controller,
             docs_dir,
-            env,
+            run_env,
             run_timeout_s,
             safety_config,
         )
@@ -1407,6 +1433,7 @@ def evaluate_theta(
         "sut": selected_sut.key,
         "neural_controller": selected_sut.controller,
         "neural_controller_label": selected_sut.neural_label,
+        "input_clipping": selected_sut.input_clipping,
         "theta_path": str(theta_path),
         "docs_dir": str(docs_dir),
         "ulog_paths": {},
@@ -1460,7 +1487,7 @@ def evaluate_theta(
                 task=load_json(outputs[selected_sut.controller]["task"]),
                 thresholds=thresholds,
             )
-            if selected_sut.key == "raptor":
+            if selected_sut.controller == "raptor":
                 identity = neural_property.setdefault("controller_identity", {})
                 policy_path = outputs[selected_sut.controller].get("policy_tar")
                 identity["policy_tar_staged"] = bool(policy_path is not None and policy_path.exists())
@@ -1540,6 +1567,7 @@ def evaluate_theta(
                 raise ValueError(f"unknown fitness_mode {fitness_mode!r}; expected one of {FITNESS_MODES}")
             fitness["sut"] = selected_sut.key
             fitness["neural_controller"] = selected_sut.controller
+            fitness["input_clipping"] = selected_sut.input_clipping
             comparison = property_only_result(theta, classical_property, neural_property)
             comparison["property_oracle"]["fitness"] = fitness
             write_json(compare_path, comparison)
@@ -1741,6 +1769,7 @@ def search(args: argparse.Namespace) -> tuple[Path, list[EvalResult], list[dict[
         "sut": selected_sut.key,
         "neural_controller": selected_sut.neural_label,
         "neural_controller_key": selected_sut.controller,
+        "input_clipping": selected_sut.input_clipping,
         "mode_23_identity_required": True,
         "validity_automation": {
             "symmetric_decontamination": True,
