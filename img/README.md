@@ -1,6 +1,6 @@
 # 投稿图表说明
 
-这些图只使用已提交 campaign 报告中的聚合表格数字，外加图 D 的本地条件项 ULOG。未使用 `docs/smoke_2p3_*/archive.json` 或 `docs/validity_automation_*/archive.json` 里的 smoke/mock 数据。每个 `make_*.py` 运行时都会向 stdout 打印 `SOURCE` 和解析出的具体数值。
+这些图只使用已提交 campaign 报告中的聚合表格数字，外加锚点轨迹图的本地条件项 ULOG。未使用 `docs/smoke_2p3_*/archive.json` 或 `docs/validity_automation_*/archive.json` 里的 smoke/mock 数据。每个 `make_*.py` 运行时都会向 stdout 打印 `SOURCE` 和解析出的具体数值。
 
 ## `fig_multipolicy_severity_convergence.pdf` / `.png`
 
@@ -32,6 +32,16 @@
 - 建议放哪节：RQ3。
 - 状态 / caveat：已出图。每个点约 3 seed，n 小；报告表名是 requested rate，实际角速率仍受 circle profile 可达性约束。
 
+## `fig_two_sut_dense_sweep_boundary.pdf` / `.png`
+
+- 生成脚本：`img/make_fig_two_sut_dense_sweep_boundary.py`
+- 说明什么：在同一 route-A 切换密扫轴网格和同一 strict S0/S3 差分 oracle 下，`mc_nn` 呈现非单调、带洞的灾难失效边界，而 RAPTOR 在四条共享轴上全部为 0 strict hit。该图支撑 oracle 的区分力：它在脆弱的 `mc_nn` 上 fire，在受控的 RAPTOR 上正确沉默。
+- 怎么读：四个子图分别是 attitude、requested rate、wind、delay；y 轴是 strict hit fraction。朱红线是 `mc_nn`，绿线是 RAPTOR；灰色区沿用 RQ3 图标出洞或恢复区。RAPTOR 绿线全程贴近 0，说明没有 strict S0/S3 命中。
+- 数据来源：`docs/switch_severity_campaign_20260629.md` 的 `## RQ3: Controlled Dense Sweep` 四张表，以及 `runs/campaigns/raptor_switch_severity_dense_sweep_20260705/summary.json` 的 `axes` 聚合。解析值：`mc_nn` 同 `fig_rq3_holed_nonmonotonic_boundary`：attitude `0/3,0/3,0/3,0/3,0/3,2/3,3/3,3/3,1/3`；requested rate `3/3,3/3,3/3,3/3,3/3,1/3,3/3,2/3,3/3`；wind `3/3,3/3,3/3,3/3,0/3,0/3,0/3`；delay `3/3,3/3,1/3,3/3,1/3,3/3,3/3`。RAPTOR 在这四条轴逐点均为 `0/3`，seeds `2026062940/2026062941/2026062942`，最高 neural severity 为 S1。
+- 草稿 caption：Under an identical dense sweep grid and the same differential oracle, mc_nn exhibits a non-monotonic holed catastrophic boundary while RAPTOR stays at zero strict S0/S3 across every axis point (max neural severity S1) -- the oracle fires on the fragile controller and correctly stays silent on the robust one.
+- 建议放哪节：RQ4 / two-SUT external validity，或 discriminative-power 小节。
+- 状态 / caveat：已出图，CI 可复现。只画与 `mc_nn` RQ3 完全对齐的四条共享轴；RAPTOR summary 里的 approach phase 轴不纳入本图。
+
 ## `fig_anchor_trace_classical_vs_mcnn.pdf` / `.png`
 
 - 生成脚本：`img/make_fig_anchor_trace_classical_vs_mcnn.py`
@@ -41,6 +51,16 @@
 - 草稿 caption：In the same pair2 switch-transient anchor, the classical controller remains below the catastrophic attitude and angular-rate thresholds, while `mc_nn` crosses both S3 thresholds after the switch.
 - 建议放哪节：Method / motivating example。
 - 状态 / caveat：当前工作区已找到 pair2 的本地 ULOG 并已出图；pair1 本地目录缺 `mc_nn` ULOG，因此不用 pair1。ULOG 和 runs 产物不会被提交。若在干净 clone 或 CI 中没有该本地目录，脚本会打印 `BLOCKED`，需要提供锚点 ULOG 或定向重跑。
+
+## `fig_anchor_trace_three_way.pdf` / `.png`
+
+- 生成脚本：`img/make_fig_anchor_trace_three_way.py`
+- 说明什么：方法/动机图的 two-SUT 版。同一个 `rp48_62_rate2p45_2p90_w6_r6_f045_confirm1` switch-transient anchor 下，classical 干净恢复，`mc_nn` 越过 S3 姿态和角速率阈值，RAPTOR 保持在两个阈值以下。
+- 怎么读：横轴按各自 switch 事件对齐到 0 s。上图是 attitude tilt，下图是 angular-rate norm；虚线分别标出 90 deg 和 8 rad/s。蓝色 classical 与绿色 RAPTOR 都低于阈值，朱红虚线 `mc_nn` 在 switch 后约 22 s 先后越过两条阈值。
+- 数据来源：classical/`mc_nn` 读取本地目录 `runs/route_a_anchor_regression/route_a_anchor_regression_20260629/evals/route_a_anchor_regression_20260629_rp48_62_rate2p45_2p90_w6_r6_f045_confirm1_s20261901/` 下的 `.ulg`、`*_task.json`、`*_metrics.json`、`classical_record.json` / `mcnn_record.json`；RAPTOR 读取 `runs/campaigns/raptor_gate0_anchor_recheck_20260705/evals/raptor_gate0_anchor_recheck_20260705_pair2_rp48_62_rate2p45_2p90_w6_r6_f045_confirm1_s20261901/` 下的 `.ulg`、`*_task.json`、`*_metrics.json`、`*_raptor_property.json`。解析值：classical seed `20261901`，severity `0 / S0_clean_recovery`，max attitude `58.851 deg`，max rate `4.019 rad/s`，未越过 90 deg 或 8 rad/s；`mc_nn` seed `20261901`，severity `3 / S3_uncontrolled_tumble_or_loc`，max attitude `178.748 deg`，max rate `20.090 rad/s`，first 90 deg crossing `22.332 s`，first 8 rad/s crossing `22.488 s`；RAPTOR seed `20261901`，severity `0 / S0_clean_recovery`，max attitude `57.355 deg`，max rate `4.124 rad/s`，未越过 90 deg 或 8 rad/s。
+- 草稿 caption：In the identical rp48_62 switch-transient anchor, classical recovers cleanly (S0) and mc_nn crosses both S3 thresholds (tumble), while RAPTOR stays below both thresholds -- a three-way trace of the oracle's discriminative power across two learned controllers.
+- 建议放哪节：Method / motivating example 的 two-SUT 版。
+- 状态 / caveat：当前工作区已找到所需本地 ULOG 并已出图；ULOG 和 runs 产物不会被提交。若在干净 clone 或 CI 中没有这些 gitignored 本地目录，脚本会打印 `BLOCKED` 并干净退出。
 
 ## `fig_wave2_estimation_contam_negative.pdf` / `.png`
 
@@ -54,5 +74,5 @@
 
 ## 暂时画不了的图（及原因）
 
-- 两 SUT 对照图（RAPTOR vs `mc_nn` 在锚点处）：暂时不画。阻塞原因是 RAPTOR 全量 route-A / switch-transient campaign 尚无已提交结果，当前仓库只有未提交 recon/本地 runs 线索，不能据此画可投稿的对照结果图。
+- 两 SUT 对照图（RAPTOR vs `mc_nn` 在锚点处）：已解锁，见 `fig_two_sut_dense_sweep_boundary` / `fig_anchor_trace_three_way`。RAPTOR 全量 campaign 已入库（`aba86101`）。
 - 图 D 在当前工作区不阻塞，已用 pair2 本地 ULOG 出图；但它依赖 gitignored `runs/` 产物。若要在只含已提交文件的环境中复现，需要补充锚点 ULOG 或按 pair2 定向重跑 classical 与 `mc_nn`。
