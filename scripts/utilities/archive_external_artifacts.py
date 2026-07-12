@@ -20,6 +20,19 @@ RESEARCH_ROOTS = (
 )
 
 
+def classify_ignored(relative: str) -> str:
+    value = relative.lower()
+    if "raptor_unclipped" in value:
+        return "RAPTOR-S2"
+    if "raptor" in value:
+        return "RAPTOR-S1"
+    if "route_a_anchor" in value or "fuzz1c" in value or "mcnn_gonogo" in value:
+        return "F1"
+    if "switch_severity" in value:
+        return "F2"
+    return "UNC-HISTORICAL-IGNORED"
+
+
 def sha256_path(path: Path) -> str:
     digest = hashlib.sha256()
     if path.is_symlink():
@@ -48,6 +61,32 @@ def selected_paths(repo: Path) -> list[tuple[Path, str]]:
                 if path.is_file() or path.is_symlink():
                     selected[path] = experiment_id
     return sorted(selected.items(), key=lambda item: item[0].as_posix())
+
+
+def ignored_research_paths(repo: Path) -> list[tuple[Path, str]]:
+    proc = subprocess.run(
+        [
+            "git", "-C", str(repo), "ls-files", "--others", "--ignored",
+            "--exclude-standard", "-z", "--", "docs", "runs",
+            "tier05_fork_20260712T090728Z",
+        ],
+        check=True,
+        capture_output=True,
+    )
+    selected: list[tuple[Path, str]] = []
+    for value in proc.stdout.split(b"\0"):
+        if not value:
+            continue
+        relative = value.decode("utf-8", errors="surrogateescape")
+        path = repo / relative
+        if path.is_file() or path.is_symlink():
+            selected.append((path, classify_ignored(relative)))
+        elif path.is_dir():
+            for nested in path.rglob("*"):
+                if nested.is_file() or nested.is_symlink():
+                    nested_relative = nested.relative_to(repo).as_posix()
+                    selected.append((nested, classify_ignored(nested_relative)))
+    return selected
 
 
 def tracked_selected(repo: Path, paths: Iterable[Path]) -> list[str]:
@@ -107,6 +146,11 @@ def parse_args() -> argparse.Namespace:
         default=Path("data/manifests/EXTERNAL_RAW_FILE_MANIFEST.tsv"),
     )
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument(
+        "--all-ignored-research",
+        action="store_true",
+        help="archive every remaining ignored/untracked file under docs, runs, and the Tier-0.5 root",
+    )
     return parser.parse_args()
 
 
@@ -118,7 +162,7 @@ def main() -> int:
     if repo == external_root or repo in external_root.parents:
         raise SystemExit("--external-root must be outside the repository")
 
-    selected = selected_paths(repo)
+    selected = ignored_research_paths(repo) if args.all_ignored_research else selected_paths(repo)
     tracked = tracked_selected(repo, (path for path, _ in selected))
     if tracked:
         print("Refusing to move tracked files:", file=sys.stderr)

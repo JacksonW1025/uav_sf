@@ -85,15 +85,18 @@ def tracked_rows(repo: Path, output_relative: str) -> list[dict[str, str]]:
     return rows
 
 
-def external_rows(repo: Path, manifest_relative: str) -> list[dict[str, str]]:
-    manifest = repo / manifest_relative
-    if not manifest.exists():
-        return []
+def external_rows(repo: Path, manifest_relatives: list[str]) -> list[dict[str, str]]:
     groups: dict[str, list[dict[str, str]]] = {}
-    with manifest.open(encoding="utf-8", newline="") as stream:
-        for row in csv.DictReader(stream, dialect="excel-tab"):
-            groups.setdefault(row["experiment_id"], []).append(row)
-    commit = latest_commit(repo, manifest_relative)
+    commits: dict[str, str] = {}
+    for manifest_relative in manifest_relatives:
+        manifest = repo / manifest_relative
+        if not manifest.exists():
+            continue
+        commits[manifest_relative] = latest_commit(repo, manifest_relative)
+        with manifest.open(encoding="utf-8", newline="") as stream:
+            for row in csv.DictReader(stream, dialect="excel-tab"):
+                row["_manifest"] = manifest_relative
+                groups.setdefault(row["experiment_id"], []).append(row)
     output: list[dict[str, str]] = []
     for exp_id, rows in sorted(groups.items()):
         digest = hashlib.sha256()
@@ -112,9 +115,9 @@ def external_rows(repo: Path, manifest_relative: str) -> list[dict[str, str]]:
                 "type": "external_raw_collection",
                 "size": str(sum(int(row["size"]) for row in rows)),
                 "sha256": digest.hexdigest(),
-                "git_commit": commit,
+                "git_commit": ";".join(sorted({commits[row["_manifest"]] for row in rows})),
                 "status": "external_preserved",
-                "notes": f"{len(rows)} files; per-file hashes and original paths in {manifest_relative}",
+                "notes": f"{len(rows)} files; per-file manifests: {','.join(sorted({row['_manifest'] for row in rows}))}",
             }
         )
     return output
@@ -124,10 +127,15 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", type=Path, default=Path(__file__).resolve().parents[2])
     parser.add_argument("--output", default="docs/indexes/ARTIFACT_MANIFEST.tsv")
-    parser.add_argument("--external-manifest", default="data/manifests/EXTERNAL_RAW_FILE_MANIFEST.tsv")
+    parser.add_argument("--external-manifest", action="append", dest="external_manifests")
     args = parser.parse_args()
     repo = args.repo.resolve()
-    rows = tracked_rows(repo, args.output) + external_rows(repo, args.external_manifest)
+    external_manifests = args.external_manifests or [
+        "data/manifests/EXTERNAL_RAW_FILE_MANIFEST.tsv",
+        "data/manifests/HISTORICAL_IGNORED_FILE_MANIFEST.tsv",
+        "data/manifests/HISTORICAL_IGNORED_NESTED_CACHE_MANIFEST.tsv",
+    ]
+    rows = tracked_rows(repo, args.output) + external_rows(repo, external_manifests)
     rows.sort(key=lambda row: (row["experiment_id"], row["path"]))
     fields = ["artifact_id", "experiment_id", "path", "type", "size", "sha256", "git_commit", "status", "notes"]
     output = repo / args.output

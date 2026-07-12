@@ -25,5 +25,6 @@ Statuses: `confirmed`, `mechanism_observed`, `planned`, `legacy_unverified`, `ne
 | BATON-S3 | failsafe transition | S3 | Fallback | trigger, behavior | unknown | hardened planned | `planned` | unknown | unknown | current narrative | experiment design only | no physical experiment |
 | BATON-S4 | repeated switching | S4 | Handover, Residual, Fallback | history, behavior | unknown | hardened planned | `planned` | unknown | unknown | current narrative | experiment design only | no physical experiment |
 | UNC-EQUIVARIANCE-20260708 | equivariance/metamorphic probe | unknown | unknown | behavior | unknown | unknown | `needs_review` | checkpoint `c41b293` | unknown | `docs/equivariance_*` | retained without BATON conclusion | scenario, clause, harness, outcome unverified |
+| UNC-HISTORICAL-IGNORED | historical local raw, ignored evals | unknown | unknown | unknown | unknown | unknown | `needs_review` | unknown | external archive; see historical ignored manifest | `docs/ARTIFACT_INDEX.md` | retained without inferred conclusion | per-file ownership requires report/provenance review |
 
 The old aliases `S1` and `S2` used by RAPTOR work are preserved but namespaced here to avoid confusing them with BATON scenarios S1 and S2. Negative and uncertain experiments are intentionally present.

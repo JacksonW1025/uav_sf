@@ -68,7 +68,7 @@ python3 scripts/tier05_fork_finalize.py --help
 python3 scripts/px4_race_r4_experiment.py --help
 ```
 
-The Tier-0.5 report and structured 144-run ledger remain at `tier05_fork_20260712T090728Z/`. Raw ULogs and runtime roots are externally archived because this repository has no Git LFS support; their hashes and external locations are recorded in the artifact manifests.
+The Tier-0.5 report and structured 144-run ledger remain at `tier05_fork_20260712T090728Z/`. Raw ULogs, runtime roots, and historical files previously hidden by ignore rules are externally archived because this repository has no Git LFS support; their hashes and external locations are recorded in the artifact manifests.
 
 ## Evidence discipline
 

@@ -80,7 +80,9 @@ The complete mapping is in `docs/indexes/REPOSITORY_MAP.md`. Key mappings:
 - `docs/indexes/EXPERIMENT_INDEX.md`: canonical experiment/negative/uncertain/planned index.
 - `docs/indexes/REPOSITORY_MAP.md`: directory roles, lookup procedure, and legacy mapping.
 - `docs/indexes/ARTIFACT_MANIFEST.tsv`: SHA-256, size, commit, status, and notes for major artifacts and aggregate external raw collections.
-- `data/manifests/EXTERNAL_RAW_FILE_MANIFEST.tsv`: 28,500 per-file original/external paths, sizes, SHA-256 values, and preservation statuses.
+- `data/manifests/EXTERNAL_RAW_FILE_MANIFEST.tsv`: 28,500 new-work per-file original/external paths, sizes, SHA-256 values, and preservation statuses.
+- `data/manifests/HISTORICAL_IGNORED_FILE_MANIFEST.tsv`: 95,297 historical files that had been hidden by the prior ignore policy.
+- `data/manifests/HISTORICAL_IGNORED_NESTED_CACHE_MANIFEST.tsv`: 90 files from a nested-Git build-cache backup that Git represented as one ignored directory.
 - `docs/evidence/claim_audit.md`: evidence-grade boundary for current claims.
 - Legacy `docs/ARTIFACT_INDEX.md` is retained unchanged as historical lookup evidence.
 
@@ -127,11 +129,13 @@ The first pre-fix `tier05_fork_finalize.py --help` probe exposed that the script
 ## 13. Large files and LFS
 
 - `git lfs` is not installed; the repository has no LFS rules or LFS objects.
-- Tier-0.5 and Round-4 raw/runtime material selected: 28,500 files, `9,807,496,903` bytes.
-- Safely externalized to `/home/car/uav_sf_external_artifacts/pre_baton_reorg_20260712/`.
-- Post-move verification recomputed size and SHA-256 for every file; all manifest rows are `external_preserved`.
+- Tier-0.5 and Round-4 raw/runtime material selected: 28,500 files, `9,807,496,903` bytes, safely externalized to `/home/car/uav_sf_external_artifacts/pre_baton_reorg_20260712/`.
+- A final all-history audit then found 95,297 ignored research files totaling `205,062,189,148` bytes; these were safely externalized to `/mnt/nvme/px4_work/uav_sf_baton_external_20260712/`.
+- One nested-Git build-cache directory collapsed by Git's ignored listing contained another 90 files (`1,078,960` bytes); these were externalized to the same NVMe archive and separately manifested.
+- Total externalized in this reorganization: 123,887 files, `214,870,765,011` bytes.
+- Post-move verification recomputed size and SHA-256 for every file; all rows in all three manifests are `external_preserved`.
 - Tracked JSON/CSV/reports were not moved. Raw `.ulg`/`.log` files are absent from the repository after archival.
-- Empty ignored `px4_roots` directories may remain on disk; they contain no files and do not appear in Git.
+- Empty ignored directory shells may remain on disk; they contain no files and do not appear in Git.
 
 ## 14. Sensitive files
 
@@ -149,7 +153,7 @@ After the final report/manifest commit, `git status --porcelain` is required and
 
 After the final push, `git rev-list --count @{u}..HEAD` is required and verified as `0`.
 
-`git ls-files --others --exclude-standard` is also required and verified empty; ignored local dependencies/caches are not research-only untracked deliverables.
+`git ls-files --others --exclude-standard` is also required and verified empty. A separate `git ls-files --others --ignored --exclude-standard -- docs runs tier05_fork_20260712T090728Z` audit is verified empty after historical externalization.
 
 ## 17. Manual review still needed
 
@@ -159,7 +163,7 @@ After the final push, `git rev-list --count @{u}..HEAD` is required and verified
 - Rerun any legacy wall-clock boundary/search claim before promoting it from `legacy_unverified`.
 - Determine exact historical artifact ownership for D1 and D2.
 - Decide whether the equivariance probe becomes an optional BATON checker evaluation.
-- Back up or relocate the local external raw archive if `/home/car` is not the desired long-term institutional storage location; its per-file hashes and paths are committed.
+- Back up or relocate the two local external archives if `/home/car` and `/mnt/nvme/px4_work` are not the desired long-term institutional storage locations; their per-file hashes and paths are committed.
 
 ## Completion statement
 

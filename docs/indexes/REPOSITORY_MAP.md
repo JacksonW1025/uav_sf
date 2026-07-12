@@ -33,6 +33,7 @@
 2. Open the linked `experiments/**/experiment.yaml` for SUT, scenario, clause, harness, runner, config, data, report, and limitation fields.
 3. Use `ARTIFACT_MANIFEST.tsv` to verify size/SHA-256 and the commit containing a tracked artifact.
 4. For externally archived raw files, use `data/manifests/EXTERNAL_RAW_FILE_MANIFEST.tsv`; paths record both the original repository location and external location.
+5. For historical files previously hidden by ignore rules, use `data/manifests/HISTORICAL_IGNORED_FILE_MANIFEST.tsv`.
 
 ## Data and execution
 
@@ -63,6 +64,7 @@
 | actuator attribution/single-writer repair | `experiments/mechanism/single_writer/` |
 | guard/reply initialization | `experiments/mechanism/admission/` |
 | equivariance probe | `experiments/uncategorized/equivariance_probe_20260708/` |
+| historical ignored/raw evaluation files | `experiments/uncategorized/historical_ignored_artifacts/` plus the historical ignored manifest |
 | flat `scripts/*.py` and `scripts/*.sh` | category maps under `scripts/{runners,analysis,monitors,diagnostics,utilities}/` |
 | `config/` | retained stable path, documented by `configs/README.md` |
 | `boards/` + `patches/` + installers | documented by `px4_overlay/README.md` |
