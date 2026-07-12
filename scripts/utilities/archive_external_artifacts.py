@@ -83,7 +83,9 @@ def write_manifest(path: Path, rows: list[dict[str, str]]) -> None:
         "notes",
     ]
     with temp.open("w", encoding="utf-8", newline="") as stream:
-        writer = csv.DictWriter(stream, fieldnames=fields, dialect="excel-tab")
+        writer = csv.DictWriter(
+            stream, fieldnames=fields, dialect="excel-tab", lineterminator="\n"
+        )
         writer.writeheader()
         writer.writerows(rows)
     temp.replace(path)

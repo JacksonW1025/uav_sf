@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import collections
+import argparse
 import datetime as dt
 import hashlib
 import json
@@ -135,6 +136,8 @@ def all_records() -> list[tuple[str, dict, Path]]:
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.parse_args()
     indexed = all_records()
     index_rows = []
     for stage, record, record_path in indexed:
