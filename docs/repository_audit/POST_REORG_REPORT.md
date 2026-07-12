@@ -17,7 +17,7 @@ The branch was already a dedicated Tier-0.5 experiment branch, so it was retaine
 
 ## 3. Final commit
 
-- Last completed content/index commit before this report: `ea4335d` (`docs: rebuild experiment index repository map and artifact manifest`).
+- Last completed content/archive commit before the final manifest: `eac8eab` (`chore: archive and index all historical ignored research artifacts`).
 - The final repository commit is the pushed `HEAD` containing the final report/manifest hygiene update; resolve it with `git rev-parse HEAD`. A commit cannot embed its own SHA-1 without changing that SHA-1.
 
 ## 4. Remote branch
@@ -129,6 +129,7 @@ The first pre-fix `tier05_fork_finalize.py --help` probe exposed that the script
 ## 13. Large files and LFS
 
 - `git lfs` is not installed; the repository has no LFS rules or LFS objects.
+- GitHub accepted the 54.07 MiB historical TSV manifest with a recommendation warning because it exceeds 50 MiB; it remains below GitHub's 100 MiB hard file limit.
 - Tier-0.5 and Round-4 raw/runtime material selected: 28,500 files, `9,807,496,903` bytes, safely externalized to `/home/car/uav_sf_external_artifacts/pre_baton_reorg_20260712/`.
 - A final all-history audit then found 95,297 ignored research files totaling `205,062,189,148` bytes; these were safely externalized to `/mnt/nvme/px4_work/uav_sf_baton_external_20260712/`.
 - One nested-Git build-cache directory collapsed by Git's ignored listing contained another 90 files (`1,078,960` bytes); these were externalized to the same NVMe archive and separately manifested.
