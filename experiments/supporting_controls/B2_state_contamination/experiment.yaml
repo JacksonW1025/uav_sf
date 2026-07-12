@@ -1,0 +1,20 @@
+id: B2
+aliases: [state_contamination, wave2]
+title: State-contamination supporting control
+status: legacy_unverified
+sut: PX4 classical control and mc_nn_control
+scenario: S1
+contract_clauses: [residual, handover]
+differential_types: [behavior, history]
+harness: legacy_wall_clock
+source_commits: [unknown]
+runner: scripts/m2b_state_map_elites.py
+configs: [config/m2b_state_map_elites.json]
+raw_data: [unknown]
+processed_data: [unknown]
+reports: [docs/wave2_statecontam_campaign_20260703.md, docs/wave2_gateA_diagnostic_20260703.md]
+expected_outputs: [unknown]
+observed_result: "Retained negative/diagnostic scope result."
+evidence: [docs/wave2_statecontam_campaign_20260703.md]
+limitations: "Legacy harness; does not confirm a residual-state physical effect."
+notes: negative_result_retained

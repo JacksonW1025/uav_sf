@@ -1,0 +1,20 @@
+id: UNC-EQUIVARIANCE-20260708
+aliases: [equivariance_probe, metamorphic_probe]
+title: Equivariance/metamorphic oracle probe
+status: needs_review
+sut: unknown
+scenario: unknown
+contract_clauses: [unknown]
+differential_types: [behavior]
+harness: unknown
+source_commits: [c41b29347f21e38eedbc6e241e5c04af47b75f17]
+runner: scripts/run_equivariance_probe.py
+configs: [unknown]
+raw_data: [unknown]
+processed_data: [unknown]
+reports: [docs/equivariance_probe_preflight_20260708.md, docs/equivariance_probe_results_20260708.md, docs/equivariance_stage01_analysis_20260709.md]
+expected_outputs: [unknown]
+observed_result: unknown
+evidence: [unknown]
+limitations: "BATON scenario, clause, harness, and final claim role are unverified."
+notes: "Preserved under uncategorized rather than inferred from filenames."

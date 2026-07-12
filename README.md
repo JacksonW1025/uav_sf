@@ -1,85 +1,92 @@
-# uav_sf
+# UAV Software Fuzzing: BATON
 
-This repository contains the PX4 SITL harness, controller overlays, and experiment artifacts for scenario fuzzing of learned UAV flight controllers.
+This repository studies the PX4 software subsystem that transfers actuator authority between the classical control stack and learned controllers. The research question is not merely whether a neural controller can fly: it is whether admission, handover, residual-state, and fallback behavior satisfy an explicit control-authority contract.
 
-The project tests learned low-level controllers against a tuned classical controller under matched scenarios. The core oracle is differential: report only cases where the classical controller remains safe and the learned controller becomes unsafe.
+The canonical project narrative is [`docs/narrative/CURRENT_NARRATIVE.md`](docs/narrative/CURRENT_NARRATIVE.md). Historical narrative files remain available under [`docs/narrative/history/`](docs/narrative/history/) and at their legacy paths for traceability.
 
-The authoritative project state is `docs/PROJECT_NARRATIVE_CONTEXT_v8 (1).md` (Narrative v8, rev. 2026-07-07b). It supersedes v7 and the older RAPTOR/M0/M1/M2 handoff material. Treat earlier narrative docs as history or supporting evidence unless V8 explicitly cites them.
+## Contract and scenarios
 
-## Current State
+BATON organizes the subsystem around four clauses:
 
-- The headline finding is a robust switch-transient differential failure in PX4 `mc_nn_control`: mode-23 handoff states where classical control gives S0 clean recovery while `mc_nn_control` reaches S3 loss of control/tumble. Anchor pairs 1/2/4 reproduce 3/3; pair 5 is an 8/9 probabilistic boundary anchor.
-- The switch-severity campaign is complete for RQ1/RQ2/RQ3: guided search produced 179 primary findings and about 10 confirmed cells; guided improves hit rate, archive density, and consistency, but not the count of 3/3 confirmed bugs versus random. Controlled dense sweeps show a high-dimensional, non-monotonic boundary with rate holes, delay holes, and high-wind recovery.
-- The boundary is deliberately narrow: multi-policy P1-P7 reanalysis, wind+physics wave-1, and state-contamination wave-2 are clean or diagnostic negatives. The robust differential failure is pinned to catastrophic P1/P2 switch transients, not steady non-switch axes or independent gradual behavior-policy degradation.
-- RAPTOR is now a completed second-SUT contrast. The full original clipped RAPTOR campaign is a clean negative: dense sweep 120/120 valid with 0 strict findings, seven-arm search 840 evals with 0 confirmed primary, gate/anchor checks negative, and about 926 successful evals with 0 S3/S4 loss-of-control events.
-- RAPTOR's negative result supports oracle discrimination and harness external validity. It does not support learned-specificity; the learned-specific claim is carried only by the `mc_nn_control` versus classical comparison.
-- The unclipped RAPTOR ablation is also complete. Removing RAPTOR input clipping still produced 24/24 valid, 0 strict S0-vs-S3 cases in the known failure band, so clipping is excluded as the main robustness cause there. This does not upgrade RAPTOR into a clean single-variable causal control because architecture, recurrence, input dimension, and training source remain confounded.
-- Current strategic decision in V8: scope closure plus paper writing. Optional or postponed items are RQ2 statistical strengthening plus fitness ablation, a metamorphic/equivariance oracle, and a dedicated unclipped-ablation report.
+- **Admission**: a controller may acquire authority only when its prerequisites and replies are valid.
+- **Handover**: the intended writer becomes active and conflicting actuator writers stop.
+- **Residual**: persistent state is reset, preserved, or transferred deliberately.
+- **Fallback**: commanded and failsafe exits return authority through a defined safety path.
 
-## What Is Tracked
+The mode-transition space is:
 
-- Harness code under `scripts/`, board overlays under `boards/`, PX4 install/build helpers, configs, and patches.
-- Board and patch support for `px4_sitl_mcnn_sih`, `px4_sitl_raptor_sih`, and `px4_sitl_raptor_unclipped_sih`.
-- Current narrative and summary artifacts under `docs/`.
-- Structured result summaries such as `results.json`, `results.jsonl`, `criteria.json`, `severity_thresholds.json`, campaign summaries, candidate lists, and theta files.
-- The V8 RAPTOR full-campaign review exception: selected top-level `runs/campaigns/raptor_*_20260705/` artifacts were force-tracked for review reproducibility.
+- **S1 commanded switch-in**: Classical → Learned.
+- **S2 active fallback**: Learned → Classical.
+- **S3 failsafe-triggered transition**: Learned → Return / Land / Classical safety pipeline.
+- **S4 repeated switching**: Classical → Learned → Classical → Learned …
 
-Raw run output is intentionally not tracked:
+## Current evidence
 
-- `*.ulg`
-- `*.log`
-- `docs/**/evals/`
-- `runs/**/evals/`
-- scratch checkpoints and local campaign work directories unless explicitly force-tracked as review artifacts
+Confirmed or directly observed evidence is deliberately separated from planned work:
 
-Those files may exist locally as ignored evidence, but the repository state is kept to code plus compact reports and structured summaries.
+- PX4 external-mode allocation configuration is repeatedly rejected as stale because of freshness timestamp semantics.
+- The classical `control_allocator` remains active after learned-mode activation, producing silent dual writes to `actuator_motors`.
+- admission replies have incompletely initialized fields.
+- deployed `mc_nn_control` has a catastrophic S1 differential at candidate states where the classical branch recovers.
+- the hardened sim-time/lockstep harness reproduces preregistered anchors 100/100 and improves trigger-state convergence by approximately 85×.
+- old wall-clock claims about a non-monotonic, holed boundary are `legacy_unverified` until repeated on the hardened harness.
+- RAPTOR supports behavioral discrimination and a second-controller applicability check, but data-plane writer attribution is not yet closed.
+- residual-state and fallback consequences are planned; allocation/single-writer repair is the immediate mechanism differential.
 
-## Key Docs
+See [`docs/evidence/claim_audit.md`](docs/evidence/claim_audit.md) for the claim-by-claim boundary.
 
-- `docs/PROJECT_NARRATIVE_CONTEXT_v8 (1).md`: current narrative, experiment state, contribution framing, threat model, and next decisions.
-- `docs/ARTIFACT_INDEX.md`: retained artifact map.
-- `docs/switch_severity_campaign_20260629.md`: switch-severity RQ1/RQ2/RQ3 campaign.
-- `docs/multipolicy_differential_20260703.md`: P1-P7 differential spectrum and failure-convergence result.
-- `docs/wave1_windphysics_20260627.md`: wind+physics negative.
-- `docs/wave2_statecontam_campaign_20260703.md`: state-contamination negative.
-- `docs/wave2_gateA_diagnostic_20260703.md`: boundary-anchor randomness and gate-methodology diagnostic.
-- `docs/rq2_archive_reanalysis_20260705.md`: archive reanalysis showing guided search as fast boundary localization, not complete causal characterization.
-- `docs/raptor_external_ai_review_2026-07-07.md`: RAPTOR full-campaign report and external review packet.
-- `docs/raptor_unclipped_ablation_preflight_20260707.md`: unclipped RAPTOR ablation preflight and result.
-- `docs/fuzz1c_decontam_20260625.md` and `docs/fuzz1c_severity_20260625.md`: strict differential rejudgment and severity lineage.
-- `docs/mcnn_gonogo*.md`: `mc_nn_control` bring-up and gate results.
+## Quick start
 
-## Environment
-
-Use the container path; do not rely on host PX4 binaries:
+The environment uses the `uav_sf:phase1` container, PX4 commit `3042f906abaab7ab59ae838ad5a530a9ef3df9a6`, and tracked overlays/patches in this repository.
 
 ```bash
-sg docker -c 'cd /mnt/nvme/uav_sf && CONTAINER_NAME=<name> ./docker/run.sh bash -lc "source /opt/ros/jazzy/setup.bash && source ros2_ws/install/setup.bash && <cmd>"'
+./docker/build.sh
+./scripts/clone_px4.sh
+./scripts/setup_ros2_ws.sh
+sg docker -c 'cd /mnt/nvme/uav_sf && CONTAINER_NAME=uav-sf ./docker/run.sh bash'
 ```
 
-PX4 source and ROS workspace are ignored local dependencies:
+Build scripts under `scripts/` install the relevant tracked board, airframe, DDS, and PX4 patch assets before compiling. Do not treat an arbitrary dirty `external/PX4-Autopilot` tree as the source of truth.
 
-- `external/PX4-Autopilot`
-- `ros2_ws`
+## Repository navigation
 
-Tracked overlays, patches, and installers are the source of truth for regenerating those trees.
+- [`docs/indexes/EXPERIMENT_INDEX.md`](docs/indexes/EXPERIMENT_INDEX.md): canonical lookup from experiment ID/alias to scenario, code, data, and report.
+- [`docs/indexes/REPOSITORY_MAP.md`](docs/indexes/REPOSITORY_MAP.md): directory roles and legacy-to-canonical mappings.
+- [`docs/indexes/ARTIFACT_MANIFEST.tsv`](docs/indexes/ARTIFACT_MANIFEST.tsv): hashes and provenance for major artifacts.
+- [`docs/study_design/`](docs/study_design/): research questions, contract, differential diagnosis, and scenario space.
+- [`experiments/`](experiments/): BATON metadata and pointers; historical artifacts stay at stable legacy paths where moving would break reproducibility.
+- `scripts/`: executable implementation, classified in [`scripts/README.md`](scripts/README.md) while legacy paths remain stable.
+- `boards/` and `patches/px4/`: reproducible PX4 overlays and patches.
+- `config/`: legacy stable configuration path; [`configs/README.md`](configs/README.md) is the canonical map.
 
-## Execution Notes
+## Reproduction entry points
 
-- PX4 is pinned to `3042f906abaab7ab59ae838ad5a530a9ef3df9a6`.
-- Use positive controller identity gates for mode-23 work: `mcnn_identity_gate` for `mc_nn_control`, `raptor_identity_gate` for RAPTOR.
-- `raptor` keeps original input clipping semantics. `raptor_unclipped` is a separate SUT backed by `patches/px4/raptor_unclipped.patch` and `px4_sitl_raptor_unclipped_sih`.
-- RAPTOR runs require `policy.tar` staging and a ROS overlay matching the runtime to avoid stale message import failures.
-- Campaign throughput is serial: `N=1` at `PX4_SIM_SPEED_FACTOR=1.25` is about 22-23 eval/h. Parallel campaign execution is not considered reliable because offboard setpoints are wall-clock ROS timers rather than lockstep.
+```bash
+python3 scripts/m1_diff_runner.py --help
+python3 scripts/tier05_fork_campaign.py --help
+python3 scripts/tier05_fork_finalize.py --help
+python3 scripts/px4_race_r4_experiment.py --help
+```
 
-## Validation Before Commit
+The Tier-0.5 report and structured 144-run ledger remain at `tier05_fork_20260712T090728Z/`. Raw ULogs and runtime roots are externally archived because this repository has no Git LFS support; their hashes and external locations are recorded in the artifact manifests.
 
-Use the lightweight checks before committing:
+## Evidence discipline
+
+Use only these status terms: `confirmed`, `mechanism_observed`, `planned`, `legacy_unverified`, and `needs_review`. Missing metadata is `unknown`; old negative results and failed gates are retained. Do not promote a mechanism observation to a physical-causality claim, and do not use the legacy boundary shape as confirmed evidence.
+
+## Current priorities
+
+1. execute original-PX4 versus repaired allocation/single-writer mechanism differentials on hardened anchors;
+2. close independent writer attribution for both `mc_nn_control` and RAPTOR;
+3. test S2/S3 fallback and S4 repeated switching;
+4. test preserved versus reset residual controller state;
+5. rerun any retained legacy boundary/search claim before using it as confirmed evidence.
+
+## Validation
 
 ```bash
 python3 -m py_compile scripts/*.py
 bash -n scripts/*.sh docker/*.sh
 git ls-files '*.json' | xargs -r jq empty
-git diff --check
-git diff --cached --check
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH="$PWD" python3 -m pytest -q tests
 ```

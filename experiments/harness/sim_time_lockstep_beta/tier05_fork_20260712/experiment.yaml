@@ -1,0 +1,20 @@
+id: HARNESS-BETA-TIER05
+aliases: [Tier-0.5, THE_FORK, beta, 100_of_100]
+title: Sim-time/lockstep harness hardening campaign
+status: confirmed
+sut: PX4/SIH plus ROS event-clock harness
+scenario: S1
+contract_clauses: [handover]
+differential_types: [harness]
+harness: sim_time_lockstep_beta
+source_commits: ["4dff034bde781fd3b9e1b7c7e78a01337a92d795 (dirty worktree captured by checkpoint c41b293)"]
+runner: scripts/tier05_fork_campaign.py
+configs: [unknown]
+raw_data: ["external archive; see data/manifests/EXTERNAL_RAW_FILE_MANIFEST.tsv"]
+processed_data: [tier05_fork_20260712T090728Z]
+reports: [tier05_fork_20260712T090728Z/REPORT.md]
+expected_outputs: [verdict.json, stage4_analysis.json, run_index.jsonl]
+observed_result: "100/100 hardened anchor outcomes were S3; pair-1 trigger span improved 84.8×."
+evidence: [tier05_fork_20260712T090728Z/verdict.json]
+limitations: "No parallel campaign validation; applies to preregistered anchors/current rebuilt SUT."
+notes: unknown

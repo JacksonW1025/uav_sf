@@ -1,0 +1,20 @@
+id: HARNESS-LEGACY
+aliases: [wall_clock, GATE_FAIL, legacy_nondeterminism]
+title: Legacy wall-clock harness evidence
+status: legacy_unverified
+sut: ROS wall-clock orchestration with PX4/SIH sim time
+scenario: S1
+contract_clauses: [handover]
+differential_types: [harness]
+harness: legacy_wall_clock
+source_commits: [unknown]
+runner: scripts/m1_offboard_task.py
+configs: [unknown]
+raw_data: ["external archive; see data/manifests/EXTERNAL_RAW_FILE_MANIFEST.tsv"]
+processed_data: [tier05_fork_20260712T090728Z/stage0_legacy/gate_results.json]
+reports: [tier05_fork_20260712T090728Z/REPORT.md, docs/px4_race_causality_verdict_20260709.md]
+expected_outputs: [unknown]
+observed_result: "Wall-clock scheduling polluted trigger-state alignment and historical outcome consistency."
+evidence: [tier05_fork_20260712T090728Z/stage4_analysis.json]
+limitations: "Retained for methodology comparison; not valid for confirmed boundary geometry."
+notes: unknown

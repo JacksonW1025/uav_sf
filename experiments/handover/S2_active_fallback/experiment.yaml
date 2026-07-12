@@ -1,0 +1,20 @@
+id: BATON-S2
+aliases: []
+title: Active commanded fallback
+status: planned
+sut: unknown
+scenario: S2
+contract_clauses: [fallback, residual]
+differential_types: [behavior, trigger, history]
+harness: sim_time_lockstep_beta
+source_commits: [unknown]
+runner: unknown
+configs: [unknown]
+raw_data: [unknown]
+processed_data: [unknown]
+reports: [docs/narrative/CURRENT_NARRATIVE.md]
+expected_outputs: [unknown]
+observed_result: unknown
+evidence: [docs/study_design/scenario_space.md]
+limitations: "No completed physical experiment."
+notes: planned

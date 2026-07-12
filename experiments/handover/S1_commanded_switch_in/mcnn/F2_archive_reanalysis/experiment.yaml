@@ -1,0 +1,20 @@
+id: F2a
+aliases: [F2_archive_reanalysis, rq2_archive_reanalysis]
+title: Historical archive reanalysis
+status: legacy_unverified
+sut: PX4 classical control and mc_nn_control
+scenario: S1
+contract_clauses: [handover]
+differential_types: [behavior, harness]
+harness: legacy_wall_clock
+source_commits: [unknown]
+runner: scripts/rq2_archive_reanalysis.py
+configs: [unknown]
+raw_data: [unknown]
+processed_data: [docs/rq2_archive_reanalysis_20260705.json]
+reports: [docs/rq2_archive_reanalysis_20260705.md]
+expected_outputs: [docs/rq2_archive_reanalysis_20260705.json]
+observed_result: "Archive supports a historical search-efficiency analysis, not a hardened boundary claim."
+evidence: [docs/rq2_archive_reanalysis_20260705.md]
+limitations: "Legacy harness; rerun required for confirmed search/boundary conclusions."
+notes: unknown

@@ -1,0 +1,20 @@
+id: MECH-ADMISSION
+aliases: [guard_slot_audit, reply_initialization]
+title: Admission guard and reply initialization audit
+status: mechanism_observed
+sut: PX4 external-mode admission path
+scenario: S1
+contract_clauses: [admission]
+differential_types: [mechanism]
+harness: static_and_minimal_SITL
+source_commits: [unknown]
+runner: unknown
+configs: [unknown]
+raw_data: [unknown]
+processed_data: [unknown]
+reports: [docs/px4_guard_slot_audit_20260709.md, docs/px4_provenance_and_handoff_audit_20260709.md]
+expected_outputs: [unknown]
+observed_result: "Reply initialization and guard coverage defects are confirmed at code/minimal-reproduction level."
+evidence: [docs/evidence/upstream_issues.md]
+limitations: "Physical consequence is not confirmed."
+notes: unknown
