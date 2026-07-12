@@ -88,7 +88,13 @@ class Event:
 
 
 class M1OffboardTask(Node):
-    def __init__(self, theta: dict[str, Any], controller: str, result_json: Path | None):
+    def __init__(
+        self,
+        theta: dict[str, Any],
+        controller: str,
+        result_json: Path | None,
+        timing_mode: str = "legacy",
+    ):
         super().__init__("m1_offboard_task")
         if controller not in {"classical", "raptor", "mcnn"}:
             raise ValueError(f"controller must be classical, raptor, or mcnn, got {controller}")
@@ -96,6 +102,9 @@ class M1OffboardTask(Node):
         self.theta = theta
         self.controller = controller
         self.result_json = result_json
+        if timing_mode not in {"legacy", "hardened"}:
+            raise ValueError(f"timing_mode must be legacy or hardened, got {timing_mode}")
+        self.timing_mode = timing_mode
         self.events: list[Event] = []
 
         timing = theta["timing"]
@@ -117,6 +126,15 @@ class M1OffboardTask(Node):
         max_wall_timer_hz = float(setpoint.get("max_wall_timer_hz", 800.0))
         if max_wall_timer_hz > 0:
             self.wall_timer_hz = min(self.wall_timer_hz, max_wall_timer_hz)
+        self.hardened_period_us = max(1, int(round(1e6 / self.rate_hz)))
+        self.hardened_last_source_us: int | None = None
+        self.hardened_last_tick_us: int | None = None
+        self.hardened_next_tick_us: int | None = None
+        self.hardened_source_count = 0
+        self.hardened_tick_count = 0
+        self.hardened_duplicate_count = 0
+        self.hardened_out_of_order_count = 0
+        self.hardened_source_gap_us_max = 0
         self.hover_ned = finite_triplet(setpoint["hover_ned"])
         self.yaw_rad = float(setpoint.get("yaw_rad", 0.0))
         self.setpoint_type = str(setpoint.get("type", "step"))
@@ -137,6 +155,13 @@ class M1OffboardTask(Node):
         self.circle_z_amplitude_m = float(circle.get("z_amplitude_m", 0.0))
         self.circle_z_frequency_hz = float(circle.get("z_frequency_hz", self.circle_frequency_hz))
         self.feedforward = bool(setpoint.get("feedforward", False))
+        diagnostic_probe = setpoint.get("diagnostic_probe") or {}
+        self.diagnostic_probe_offsets_s = [
+            float(value)
+            for value in diagnostic_probe.get("relative_times_s", [])
+            if math.isfinite(float(value)) and float(value) >= 0.0
+        ]
+        self.diagnostic_probe_recorded: set[int] = set()
         post_switch = setpoint.get("post_switch", {})
         if post_switch is None:
             post_switch = {}
@@ -196,28 +221,36 @@ class M1OffboardTask(Node):
             self.create_subscription(VehicleAngularVelocity, topic, self.truth_rates_cb, qos_sub)
         self.create_subscription(RaptorStatus, "/fmu/out/raptor_status", self.raptor_status_cb, qos_sub)
 
-        self.timer = self.create_timer(1.0 / self.wall_timer_hz, self.tick)
+        self.timer = None
+        if self.timing_mode == "legacy":
+            self.timer = self.create_timer(1.0 / self.wall_timer_hz, self.tick)
         self.get_logger().info(
             f"M1 task started controller={controller} tag={theta.get('tag')} "
-            f"rate_hz={self.rate_hz} wall_timer_hz={self.wall_timer_hz} "
+            f"timing_mode={self.timing_mode} rate_hz={self.rate_hz} wall_timer_hz={self.wall_timer_hz} "
             f"PX4_SIM_SPEED_FACTOR={self.sim_speed_factor}"
         )
 
     def status_cb(self, msg: VehicleStatus) -> None:
         self.last_status = msg
-        self.update_time(int(msg.timestamp))
+        if self.timing_mode == "legacy":
+            self.update_time(int(msg.timestamp))
 
     def local_position_cb(self, msg: VehicleLocalPosition) -> None:
         self.last_local_position = msg
-        self.update_time(int(msg.timestamp))
+        if self.timing_mode == "legacy":
+            self.update_time(int(msg.timestamp))
 
     def truth_attitude_cb(self, msg: VehicleAttitude) -> None:
         self.last_truth_attitude = msg
-        self.update_time(int(msg.timestamp))
+        if self.timing_mode == "legacy":
+            self.update_time(int(msg.timestamp))
 
     def truth_rates_cb(self, msg: VehicleAngularVelocity) -> None:
         self.last_truth_rates = msg
-        self.update_time(int(msg.timestamp))
+        timestamp_us = int(msg.timestamp)
+        self.update_time(timestamp_us)
+        if self.timing_mode == "hardened":
+            self.hardened_source_tick(timestamp_us)
 
     def raptor_status_cb(self, msg: RaptorStatus) -> None:
         self.last_raptor_status = msg
@@ -234,7 +267,35 @@ class M1OffboardTask(Node):
                     self.raptor_internal_reference_max = [
                         max(a, b) for a, b in zip(self.raptor_internal_reference_max or values, values)
                     ]
-        self.update_time(int(msg.timestamp))
+        if self.timing_mode == "legacy":
+            self.update_time(int(msg.timestamp))
+
+    def hardened_source_tick(self, timestamp_us: int) -> None:
+        """Advance from PX4 ground-truth rate samples, divided down in PX4 time."""
+        if timestamp_us <= 0 or self.finished:
+            return
+        self.hardened_source_count += 1
+        if self.hardened_last_source_us is not None:
+            if timestamp_us == self.hardened_last_source_us:
+                self.hardened_duplicate_count += 1
+                return
+            if timestamp_us < self.hardened_last_source_us:
+                self.hardened_out_of_order_count += 1
+                return
+            self.hardened_source_gap_us_max = max(
+                self.hardened_source_gap_us_max,
+                timestamp_us - self.hardened_last_source_us,
+            )
+        self.hardened_last_source_us = timestamp_us
+        if self.hardened_next_tick_us is None:
+            self.hardened_next_tick_us = timestamp_us
+        if timestamp_us < self.hardened_next_tick_us:
+            return
+        while self.hardened_next_tick_us <= timestamp_us:
+            self.hardened_next_tick_us += self.hardened_period_us
+        self.hardened_last_tick_us = timestamp_us
+        self.hardened_tick_count += 1
+        self.tick()
 
     def update_time(self, timestamp_us: int) -> None:
         if timestamp_us <= 0:
@@ -260,6 +321,57 @@ class M1OffboardTask(Node):
 
     def current_setpoint(self, elapsed_s: float) -> list[float]:
         return self.current_trajectory(elapsed_s)[0]
+
+    def diagnostic_trajectory_at(self, elapsed_s: float) -> tuple[list[float], list[float], list[float]]:
+        sp = self.hover_ned.copy()
+        if elapsed_s < self.trajectory_start_s:
+            return sp, [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]
+        if self.setpoint_type != "circle":
+            return self.current_trajectory(elapsed_s)
+        t = elapsed_s - self.trajectory_start_s
+        omega = 2.0 * math.pi * self.circle_frequency_hz
+        omega_t = omega * t + self.circle_phase_rad
+        sp[0] += self.circle_radius_m * math.sin(omega_t)
+        sp[1] += self.circle_radius_m * math.cos(omega_t)
+        velocity = [0.0, 0.0, 0.0]
+        acceleration = [0.0, 0.0, 0.0]
+        if self.feedforward:
+            velocity[0] = self.circle_radius_m * omega * math.cos(omega_t)
+            velocity[1] = -self.circle_radius_m * omega * math.sin(omega_t)
+            acceleration[0] = -self.circle_radius_m * omega * omega * math.sin(omega_t)
+            acceleration[1] = -self.circle_radius_m * omega * omega * math.cos(omega_t)
+        if self.circle_z_amplitude_m:
+            z_omega = 2.0 * math.pi * self.circle_z_frequency_hz
+            z_phase = z_omega * t + self.circle_phase_rad
+            sp[2] += self.circle_z_amplitude_m * math.sin(z_phase)
+            if self.feedforward:
+                velocity[2] = self.circle_z_amplitude_m * z_omega * math.cos(z_phase)
+                acceleration[2] = -self.circle_z_amplitude_m * z_omega * z_omega * math.sin(z_phase)
+        return sp, velocity, acceleration
+
+    def maybe_record_diagnostic_probe(self, elapsed_s: float) -> None:
+        if not self.diagnostic_probe_offsets_s:
+            return
+        for index, offset_s in enumerate(self.diagnostic_probe_offsets_s):
+            if index in self.diagnostic_probe_recorded:
+                continue
+            target_elapsed_s = self.trajectory_start_s + offset_s
+            if elapsed_s < target_elapsed_s:
+                continue
+            sp, velocity, acceleration = self.diagnostic_trajectory_at(target_elapsed_s)
+            self.diagnostic_probe_recorded.add(index)
+            self.record_event(
+                "setpoint_probe",
+                {
+                    "offset_s": offset_s,
+                    "target_elapsed_s": target_elapsed_s,
+                    "actual_elapsed_s": elapsed_s,
+                    "position_ned": sp,
+                    "velocity_ned": velocity,
+                    "acceleration_ned": acceleration,
+                    "yaw_rad": self.yaw_rad,
+                },
+            )
 
     def current_trajectory(self, elapsed_s: float) -> tuple[list[float], list[float], list[float]]:
         if self.post_switch_enabled and self.state_trigger_fired and elapsed_s >= self.switch_s:
@@ -553,6 +665,7 @@ class M1OffboardTask(Node):
         elapsed = self.elapsed_s()
         self.maybe_fire_state_trigger(elapsed)
         sp, velocity, acceleration = self.current_trajectory(elapsed)
+        self.maybe_record_diagnostic_probe(elapsed)
 
         self.publish_offboard_control_mode()
         self.publish_trajectory_setpoint(sp, velocity, acceleration)
@@ -602,8 +715,18 @@ class M1OffboardTask(Node):
                 "controller": self.controller,
                 "exit_code": exit_code,
                 "sim_speed_factor": self.sim_speed_factor,
+                "timing_mode": self.timing_mode,
                 "setpoint_rate_hz": self.rate_hz,
                 "wall_timer_hz": self.wall_timer_hz,
+                "hardened_clock": {
+                    "source": "vehicle_angular_velocity_groundtruth",
+                    "period_us": self.hardened_period_us,
+                    "source_count": self.hardened_source_count,
+                    "tick_count": self.hardened_tick_count,
+                    "duplicate_count": self.hardened_duplicate_count,
+                    "out_of_order_count": self.hardened_out_of_order_count,
+                    "source_gap_us_max": self.hardened_source_gap_us_max,
+                },
                 "origin_us": self.origin_us,
                 "approach_start_s": self.approach_start_s,
                 "approach_active_us": self.approach_active_us,
@@ -644,11 +767,12 @@ def main() -> int:
     parser.add_argument("--theta", type=Path, required=True)
     parser.add_argument("--controller", choices=["classical", "raptor", "mcnn"], required=True)
     parser.add_argument("--result-json", type=Path)
+    parser.add_argument("--timing-mode", choices=["legacy", "hardened"], default="legacy")
     args = parser.parse_args()
 
     theta = load_json(args.theta)
     rclpy.init()
-    node = M1OffboardTask(theta, args.controller, args.result_json)
+    node = M1OffboardTask(theta, args.controller, args.result_json, timing_mode=args.timing_mode)
     try:
         rclpy.spin(node)
     except SystemExit as exc:

@@ -1,0 +1,468 @@
+{
+  "analysis": {
+    "actuator_rate_hz": 241.50110375275938,
+    "actuator_total_counts": {
+      "allocator_value_residual": 1427,
+      "neural_value": 13692,
+      "unknown": 197
+    },
+    "allocator_fraction_critical_actuator": {
+      "count": 23,
+      "fraction": 0.06725146198830409,
+      "total": 342
+    },
+    "allocator_fraction_critical_output": {
+      "count": 20,
+      "fraction": 0.058997050147492625,
+      "total": 339
+    },
+    "allocator_fraction_full_actuator": {
+      "count": 1427,
+      "fraction": 0.09317054061112562,
+      "total": 15316
+    },
+    "allocator_fraction_full_output": {
+      "count": 1308,
+      "fraction": 0.08637654361751304,
+      "total": 15143
+    },
+    "exact_switch_state": {
+      "angular_rate_norm_rad_s": 0.9443299829604012,
+      "angular_rate_xyz_rad_s": [
+        0.3412497937679291,
+        -0.8639665246009827,
+        0.16991038620471954
+      ],
+      "angular_velocity_dt_ms": 0.0,
+      "angular_velocity_timestamp_us": 26636000,
+      "angular_velocity_topic": "vehicle_angular_velocity_groundtruth",
+      "attitude_dt_ms": 0.0,
+      "attitude_timestamp_us": 26636000,
+      "attitude_topic": "vehicle_attitude_groundtruth",
+      "local_position_dt_ms": 0.0,
+      "local_position_timestamp_us": 26636000,
+      "local_position_topic": "vehicle_local_position_groundtruth",
+      "pitch_deg": 11.092789499007191,
+      "pitch_rate_abs_rad_s": 0.8639665246009827,
+      "position_ned_m": [
+        -0.6457809209823608,
+        -3.3364429473876953,
+        -2.340240478515625
+      ],
+      "roll_deg": 34.58088746477447,
+      "roll_pitch_abs_deg": 34.58088746477447,
+      "roll_rate_abs_rad_s": 0.3412497937679291,
+      "switch_us": 26636000,
+      "velocity_ned_m_s": [
+        -3.4047579765319824,
+        0.9384509921073914,
+        0.12018375098705292
+      ],
+      "velocity_norm_m_s": 3.5337672924722736,
+      "yaw_rate_abs_rad_s": 0.16991038620471954
+    },
+    "first_loss_us": 28192000,
+    "loss_dt_s": 1.416,
+    "loss_reason": "rate>8",
+    "mcnn_value_selfcheck": {
+      "actuator_samples": 15316,
+      "all_allocator_signature_residuals": 1427,
+      "exact_neural_value_matches": 13692,
+      "no_simultaneous_neural_timestamp_allocator_signature_residuals": 470,
+      "simultaneous_neural_timestamp_nonmatches_with_allocator_signature": 957,
+      "with_simultaneous_neural_control_timestamp": 14649
+    },
+    "nav23_duration_s": 63.42,
+    "nav23_end_us": 90196000,
+    "nav23_start_us": 26776000,
+    "output_rate_hz": 238.77325764742983,
+    "output_total_counts": {
+      "allocator_value_residual": 1308,
+      "neural_value": 13644,
+      "unknown": 191
+    },
+    "severity": {
+      "controlled": false,
+      "evidence": {
+        "active_motor_nonfinite": {
+          "first_nonfinite": null,
+          "nan_count": 0,
+          "neginf_count": 0,
+          "nonfinite_count": 0,
+          "posinf_count": 0,
+          "samples": 15357
+        },
+        "active_motor_saturation_count": 19658,
+        "active_motor_saturation_ratio": 0.32001693039005014,
+        "analysis_start_us": 26776000,
+        "angular_velocity_topic": "vehicle_angular_velocity_groundtruth",
+        "attitude_quaternion_finite": true,
+        "attitude_topic": "vehicle_attitude_groundtruth",
+        "console": {
+          "fault": false,
+          "matches": [],
+          "px4_timeout_rc": false
+        },
+        "controller": "mcnn",
+        "controller_active_us": 26776000,
+        "final_error_to_hover_m": 5.831997780294335,
+        "last_angular_rate_norm_rad_s": 7.625331540764046,
+        "last_pitch_deg": -13.943438348618496,
+        "last_position_ned_m": [
+          -5.183721542358398,
+          0.9016726016998291,
+          0.015594482421875
+        ],
+        "last_roll_deg": 81.72555577135213,
+        "last_window_angular_rate_max_rad_s": 11.387177718015401,
+        "last_window_roll_pitch_max_deg": 169.88624082760438,
+        "local_position_topic": "vehicle_local_position_groundtruth",
+        "mission_end_reached": true,
+        "mission_end_us": 90360000,
+        "mode_confirmed": true,
+        "network_output_nonfinite": {
+          "first_nonfinite": null,
+          "nan_count": 0,
+          "neginf_count": 0,
+          "nonfinite_count": 0,
+          "posinf_count": 0,
+          "samples": 14705
+        },
+        "neural_control_samples": 14705,
+        "observation_nonfinite": {
+          "first_nonfinite": null,
+          "nan_count": 0,
+          "neginf_count": 0,
+          "nonfinite_count": 0,
+          "posinf_count": 0,
+          "samples": 14705
+        },
+        "post_switch_angular_rate_max_rad_s": 18.43649232540645,
+        "post_switch_disarmed": false,
+        "post_switch_error_to_hover_max_m": 5.847200144417522,
+        "post_switch_failsafe": false,
+        "post_switch_hover_ned": [
+          0.0,
+          0.0,
+          -2.5
+        ],
+        "post_switch_min_altitude_agl_m": -0.016571044921875,
+        "post_switch_nav_states": [
+          14,
+          23
+        ],
+        "post_switch_roll_pitch_max_deg": 179.9686741827859,
+        "switch_us": 26636000,
+        "task_exit_code": 0
+      },
+      "reasons": [
+        "angular_rate_loss_of_control",
+        "attitude_tumble_over_90deg"
+      ],
+      "severity": 3,
+      "severity_label": "S3_uncontrolled_tumble_or_loc",
+      "thresholds": {
+        "method_a_rate_tolerance_rad_s": 0.45,
+        "method_a_roll_pitch_tolerance_deg": 8.0,
+        "s0_angular_rate_rad_s": 1.0,
+        "s0_final_error_m": 1.5,
+        "s0_last_window_s": 2.0,
+        "s0_min_altitude_agl_m": 1.0,
+        "s0_roll_pitch_deg": 40.0,
+        "s2_ground_contact_agl_m": 0.25,
+        "s3_angular_rate_rad_s": 8.0,
+        "s3_roll_pitch_deg": 90.0
+      },
+      "uncontrolled": true
+    },
+    "state_trigger": {
+      "event": {
+        "detail": {
+          "controller_switch_s": 18.356293,
+          "state": {
+            "angular_rate_norm_rad_s": 0.9443299829604012,
+            "angular_rate_xyz_rad_s": [
+              0.3412497937679291,
+              -0.8639665246009827,
+              0.16991038620471954
+            ],
+            "angular_velocity_timestamp_us": 1783857913230260,
+            "attitude_timestamp_us": 1783857913230260,
+            "elapsed_s": 18.266293,
+            "pitch_deg": 11.092789499007191,
+            "pitch_rate_abs_rad_s": 0.8639665246009827,
+            "roll_deg": 34.58088746477447,
+            "roll_pitch_abs_deg": 34.58088746477447,
+            "roll_rate_abs_rad_s": 0.3412497937679291,
+            "timestamp_us": 1783857913230260,
+            "yaw_deg": -4.684952725156086,
+            "yaw_rate_abs_rad_s": 0.16991038620471954
+          },
+          "trigger": {
+            "angular_rate_norm_max_rad_s": 1.3278,
+            "angular_rate_norm_min_rad_s": 0.6278,
+            "deadline_s": 54.0,
+            "enabled": true,
+            "max_topic_age_s": 0.25,
+            "method": "SIH groundtruth threshold crossing",
+            "roll_pitch_abs_max_deg": 42.5,
+            "roll_pitch_abs_min_deg": 34.5,
+            "start_s": 18.0,
+            "switch_delay_s": 0.09
+          }
+        },
+        "elapsed_s": 18.266293,
+        "name": "state_trigger",
+        "timestamp_us": 1783857913230260
+      },
+      "fired": true,
+      "match": {
+        "angular_rate_error_norm_rad_s": 0.0,
+        "matched": true,
+        "pitch_error_deg": 0.0,
+        "roll_error_deg": 0.0,
+        "score": 0.0,
+        "switch_us": 26636000
+      },
+      "task_exit_code": 0
+    },
+    "task": "tier05_fork_20260712T090728Z/stage3_adaptive_dense_41_60/evals/dense_low_modal_H_rep42_switch_severity_dense_sweep_20260630_wind_m_s_0_s2026062942/mcnn_gate3_switch_severity_dense_sweep_20260630_wind_m_s_0_s2026062942_mcnn_task.json",
+    "ulog": "tier05_fork_20260712T090728Z/stage3_adaptive_dense_41_60/evals/dense_low_modal_H_rep42_switch_severity_dense_sweep_20260630_wind_m_s_0_s2026062942/mcnn_gate3_switch_severity_dense_sweep_20260630_wind_m_s_0_s2026062942_mcnn.ulg"
+  },
+  "arm": "H",
+  "case_label": "dense_low_modal",
+  "outputs": {
+    "agent": "tier05_fork_20260712T090728Z/stage3_adaptive_dense_41_60/evals/dense_low_modal_H_rep42_switch_severity_dense_sweep_20260630_wind_m_s_0_s2026062942/mcnn_gate3_switch_severity_dense_sweep_20260630_wind_m_s_0_s2026062942_mcnn_agent.log",
+    "console": "tier05_fork_20260712T090728Z/stage3_adaptive_dense_41_60/evals/dense_low_modal_H_rep42_switch_severity_dense_sweep_20260630_wind_m_s_0_s2026062942/mcnn_gate3_switch_severity_dense_sweep_20260630_wind_m_s_0_s2026062942_mcnn_px4_console.log",
+    "metrics": "tier05_fork_20260712T090728Z/stage3_adaptive_dense_41_60/evals/dense_low_modal_H_rep42_switch_severity_dense_sweep_20260630_wind_m_s_0_s2026062942/mcnn_gate3_switch_severity_dense_sweep_20260630_wind_m_s_0_s2026062942_mcnn_metrics.json",
+    "task": "tier05_fork_20260712T090728Z/stage3_adaptive_dense_41_60/evals/dense_low_modal_H_rep42_switch_severity_dense_sweep_20260630_wind_m_s_0_s2026062942/mcnn_gate3_switch_severity_dense_sweep_20260630_wind_m_s_0_s2026062942_mcnn_task.json",
+    "topics": "tier05_fork_20260712T090728Z/stage3_adaptive_dense_41_60/evals/dense_low_modal_H_rep42_switch_severity_dense_sweep_20260630_wind_m_s_0_s2026062942/mcnn_gate3_switch_severity_dense_sweep_20260630_wind_m_s_0_s2026062942_mcnn_topics.log",
+    "ulog": "tier05_fork_20260712T090728Z/stage3_adaptive_dense_41_60/evals/dense_low_modal_H_rep42_switch_severity_dense_sweep_20260630_wind_m_s_0_s2026062942/mcnn_gate3_switch_severity_dense_sweep_20260630_wind_m_s_0_s2026062942_mcnn.ulg"
+  },
+  "rep": 42,
+  "run_error": null,
+  "runner_meta": {
+    "boot_airframe": "tier05_fork_20260712T090728Z/stage3_adaptive_dense_41_60/px4_roots/dense_low_modal_H_rep42_px4_root/etc/init.d-posix/airframes/10046_sihsim_x500_v2",
+    "build_dir": "external/PX4-Autopilot/build/px4_sitl_mcnn_sih_r4",
+    "extra_params": {},
+    "metrics_rc": 0,
+    "px4_rc": 0,
+    "run_root": "tier05_fork_20260712T090728Z/stage3_adaptive_dense_41_60/px4_roots/dense_low_modal_H_rep42_px4_root",
+    "task_rc": 0,
+    "timing_mode": "hardened",
+    "ulog_copied": true
+  },
+  "tag": "switch_severity_dense_sweep_20260630_wind_m_s_0_s2026062942",
+  "theta": {
+    "airframe": {
+      "model": "sihsim_x500_v2",
+      "sim": "sih",
+      "sys_autostart": 10046
+    },
+    "boot_px4_params": {
+      "MC_NN_EN": 0,
+      "MC_NN_MANL_CTRL": 0,
+      "MPC_THR_HOVER": 0.57358357,
+      "SIH_IXX": 0.0216667,
+      "SIH_IYY": 0.0216667,
+      "SIH_IZZ": 0.04,
+      "SIH_KDV": 1.0,
+      "SIH_KDW": 0.025,
+      "SIH_L_PITCH": 0.13,
+      "SIH_L_ROLL": 0.21,
+      "SIH_MASS": 2.0,
+      "SIH_Q_MAX": 0.136777,
+      "SIH_T_MAX": 8.54858,
+      "SIH_T_TAU": 0.02,
+      "SIH_WIND_E": 0.0,
+      "SIH_WIND_N": 0.0
+    },
+    "dense_sweep": {
+      "axis": "wind_m_s",
+      "base": {
+        "approach_phase_rad": 0.0,
+        "requested_rate_rad_s": 1.15,
+        "roll_pitch_deg": 38.5,
+        "switch_delay_s": 0.09,
+        "wind_speed_m_s": 0.0
+      },
+      "point_id": "wind_m_s_0",
+      "run_id": "switch_severity_dense_sweep_20260630",
+      "value": 0.0
+    },
+    "description": "Tier 0.5 property-oracle theta generated from scripts/theta_genome.py. Circle approach with Method-A groundtruth-triggered controller handoff.",
+    "divergence_thresholds": {
+      "position_divergence_m": 2.0
+    },
+    "environment": {
+      "inertia_pitch_scale": 1.0,
+      "inertia_roll_scale": 1.0,
+      "inertia_yaw_scale": 1.0,
+      "mass_scale": 1.0,
+      "route": "SIH/headless/lockstep",
+      "sih_wind_e": 0.0,
+      "sih_wind_n": 0.0,
+      "switching": {
+        "expected_tilt_deg": 38.5,
+        "reachability": "trigger window is cross-constrained to the selected circle approach"
+      },
+      "thrust_to_weight_ratio": 1.7434,
+      "twr_scale": 1.0,
+      "uses_state_shim": false
+    },
+    "faults": [],
+    "px4_params": {
+      "CA_FAILURE_MODE": 1,
+      "COM_DISARM_LAND": -1,
+      "COM_OF_LOSS_T": 5.0,
+      "COM_RCL_EXCEPT": 8,
+      "COM_RC_IN_MODE": 4,
+      "IMU_GYRO_RATEMAX": 400,
+      "MC_NN_MANL_CTRL": 0,
+      "MPC_THR_HOVER": 0.57358357,
+      "NAV_DLL_ACT": 0,
+      "SIH_IXX": 0.0216667,
+      "SIH_IYY": 0.0216667,
+      "SIH_IZZ": 0.04,
+      "SIH_KDV": 1.0,
+      "SIH_KDW": 0.025,
+      "SIH_L_PITCH": 0.13,
+      "SIH_L_ROLL": 0.21,
+      "SIH_MASS": 2.0,
+      "SIH_Q_MAX": 0.136777,
+      "SIH_T_MAX": 8.54858,
+      "SIH_T_TAU": 0.02,
+      "SIH_WIND_E": 0.0,
+      "SIH_WIND_N": 0.0,
+      "SYS_FAILURE_EN": 1
+    },
+    "safe_thresholds": {
+      "angular_rate_max_rad_s": 8.0,
+      "final_error_m": 3.0,
+      "min_altitude_agl_m": 0.25,
+      "motor_saturation_ratio_max": 0.85,
+      "roll_pitch_max_deg": 75.0,
+      "tracking_error_max_m": 8.0,
+      "tracking_error_rms_m": 4.0
+    },
+    "seed": 2026062942,
+    "sensor_perturbations": [],
+    "setpoint": {
+      "activation_trigger": {
+        "angular_rate_norm_max_rad_s": 1.3278,
+        "angular_rate_norm_min_rad_s": 0.6278,
+        "deadline_s": 54.0,
+        "enabled": true,
+        "max_topic_age_s": 0.25,
+        "method": "SIH groundtruth threshold crossing",
+        "roll_pitch_abs_max_deg": 42.5,
+        "roll_pitch_abs_min_deg": 34.5,
+        "start_s": 18.0,
+        "switch_delay_s": 0.09
+      },
+      "circle": {
+        "frequency_hz": 0.25,
+        "phase_rad": 0.0,
+        "radius_m": 3.1614,
+        "z_amplitude_m": 0.0
+      },
+      "feedforward": true,
+      "hover_ned": [
+        0.0,
+        0.0,
+        -2.5
+      ],
+      "max_wall_timer_hz": 800.0,
+      "post_switch": {
+        "hover_ned": [
+          0.0,
+          0.0,
+          -2.5
+        ],
+        "type": "hover"
+      },
+      "rate_hz": 80.0,
+      "step": {
+        "delta_ned": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "type": "circle",
+      "yaw_rad": 0.0
+    },
+    "tag": "switch_severity_dense_sweep_20260630_wind_m_s_0_s2026062942",
+    "theta_genome": {
+      "excluded": {
+        "c_tier_setpoint_amplitude_attack": "excluded by design; step axis is moderate P5 settling stimulus only",
+        "motor_or_sensor_faults": "deferred to Gazebo route after SIH support boundary is verified"
+      },
+      "generator": "scripts/theta_genome.py",
+      "genome": {
+        "approach_frequency_hz": 0.25,
+        "approach_phase_rad": 0.0,
+        "approach_radius_m": 3.1614485505942156,
+        "disturbance_type": "switching",
+        "fake_angular_rate_bias_rad_s": 0.0,
+        "fake_velocity_bias_m_s": 0.0,
+        "inertia_pitch_scale": 1.0,
+        "inertia_roll_scale": 1.0,
+        "inertia_yaw_scale": 1.0,
+        "mass_scale": 1.0,
+        "mission_end_s": 54.0,
+        "position_estimate_jump_m": 0.0,
+        "setpoint_rate_hz": 80.0,
+        "step_axis": "x",
+        "step_magnitude_m": 0.75,
+        "step_sign": 1,
+        "step_time_s": 32.0,
+        "switch_delay_s": 0.09,
+        "switch_rate_rad_s": 0.9778437046064324,
+        "switch_roll_pitch_deg": 38.5,
+        "twr_scale": 1.0,
+        "wind_direction_rad": 0.0,
+        "wind_speed_m_s": 0.0
+      },
+      "map_elites": {
+        "amplitude_bucket": "rp_3:wind_0",
+        "disturbance_type": "switching",
+        "feature_dimensions": [
+          "switch_roll_pitch_bucket",
+          "wind_bucket"
+        ],
+        "severity": 0.616279,
+        "switch_descriptor_bucket_count": 5,
+        "switch_descriptor_roll_pitch_range_deg": [
+          16.0,
+          50.0
+        ],
+        "switch_descriptor_wind_range_m_s": [
+          0.0,
+          6.0
+        ],
+        "switch_rate_rad_s": 0.977844,
+        "switch_rate_rad_s_diagnostic_range": [
+          0.45,
+          2.75
+        ],
+        "switch_roll_pitch_bucket": "rp_3",
+        "switch_roll_pitch_deg": 38.5,
+        "wind_bucket": "wind_0",
+        "wind_speed_m_s": 0.0
+      },
+      "state_contam_status": "DEFERRED - pending m2b_state_shim.patch drift"
+    },
+    "timing": {
+      "approach_start_s": 12.0,
+      "controller_switch_s": 54.0,
+      "external_mode_id": 23,
+      "mission_end_s": 68.0,
+      "mode_command_repeat_s": 0.5,
+      "mode_command_timeout_s": 8.0,
+      "px4_shutdown_margin_s": 8.0,
+      "px4_shutdown_wall_slack_s": 22.0,
+      "trajectory_start_s": 16.0
+    }
+  }
+}

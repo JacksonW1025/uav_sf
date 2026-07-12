@@ -1,0 +1,249 @@
+{
+  "approach_active_us": 1783852757444395,
+  "approach_mode_confirmed": true,
+  "approach_start_s": 12.0,
+  "controller": "mcnn",
+  "controller_active_us": 1783852763804395,
+  "events": [
+    {
+      "detail": {
+        "source": "first_px4_topic"
+      },
+      "elapsed_s": 0.0,
+      "name": "clock_origin",
+      "timestamp_us": 1783852745399203
+    },
+    {
+      "detail": {
+        "controller": "classical",
+        "main": 6,
+        "phase": "approach"
+      },
+      "elapsed_s": 12.005192,
+      "name": "mode_command",
+      "timestamp_us": 1783852757404395
+    },
+    {
+      "detail": {
+        "nav_state": 14
+      },
+      "elapsed_s": 12.045192,
+      "name": "approach_active",
+      "timestamp_us": 1783852757444395
+    },
+    {
+      "detail": {
+        "type": "circle"
+      },
+      "elapsed_s": 16.005192,
+      "name": "trajectory_start",
+      "timestamp_us": 1783852761404395
+    },
+    {
+      "detail": {
+        "controller_switch_s": 18.375192,
+        "state": {
+          "angular_rate_norm_rad_s": 0.8419598482881624,
+          "angular_rate_xyz_rad_s": [
+            0.29091471433639526,
+            -0.756377637386322,
+            0.22838100790977478
+          ],
+          "angular_velocity_timestamp_us": 1783852763684395,
+          "attitude_timestamp_us": 1783852763684395,
+          "elapsed_s": 18.285192,
+          "pitch_deg": 8.318176157736108,
+          "pitch_rate_abs_rad_s": 0.756377637386322,
+          "roll_deg": 34.72999682970127,
+          "roll_pitch_abs_deg": 34.72999682970127,
+          "roll_rate_abs_rad_s": 0.29091471433639526,
+          "timestamp_us": 1783852763684395,
+          "yaw_deg": -9.086373645156916,
+          "yaw_rate_abs_rad_s": 0.22838100790977478
+        },
+        "trigger": {
+          "angular_rate_norm_max_rad_s": 1.3278,
+          "angular_rate_norm_min_rad_s": 0.6278,
+          "deadline_s": 54.0,
+          "enabled": true,
+          "max_topic_age_s": 0.25,
+          "method": "SIH groundtruth threshold crossing",
+          "roll_pitch_abs_max_deg": 42.5,
+          "roll_pitch_abs_min_deg": 34.5,
+          "start_s": 18.0,
+          "switch_delay_s": 0.09
+        }
+      },
+      "elapsed_s": 18.285192,
+      "name": "state_trigger",
+      "timestamp_us": 1783852763684395
+    },
+    {
+      "detail": {
+        "state_trigger": {
+          "angular_rate_norm_rad_s": 0.8419598482881624,
+          "angular_rate_xyz_rad_s": [
+            0.29091471433639526,
+            -0.756377637386322,
+            0.22838100790977478
+          ],
+          "angular_velocity_timestamp_us": 1783852763684395,
+          "attitude_timestamp_us": 1783852763684395,
+          "elapsed_s": 18.285192,
+          "pitch_deg": 8.318176157736108,
+          "pitch_rate_abs_rad_s": 0.756377637386322,
+          "roll_deg": 34.72999682970127,
+          "roll_pitch_abs_deg": 34.72999682970127,
+          "roll_rate_abs_rad_s": 0.29091471433639526,
+          "timestamp_us": 1783852763684395,
+          "yaw_deg": -9.086373645156916,
+          "yaw_rate_abs_rad_s": 0.22838100790977478
+        },
+        "type": "hover"
+      },
+      "elapsed_s": 18.381192,
+      "name": "post_switch_setpoint",
+      "timestamp_us": 1783852763780395
+    },
+    {
+      "detail": {
+        "controller": "mcnn",
+        "main": 4,
+        "mode_id": 23,
+        "phase": "final",
+        "sub": 11
+      },
+      "elapsed_s": 18.381192,
+      "name": "mode_command",
+      "timestamp_us": 1783852763780395
+    },
+    {
+      "detail": {
+        "nav_state": 23
+      },
+      "elapsed_s": 18.405192,
+      "name": "controller_active",
+      "timestamp_us": 1783852763804395
+    },
+    {
+      "detail": {
+        "setpoint_ned": [
+          0.0,
+          0.0,
+          -2.5
+        ]
+      },
+      "elapsed_s": 68.011585,
+      "name": "mission_end",
+      "timestamp_us": 1783852813410788
+    }
+  ],
+  "exit_code": 0,
+  "external_mode_id": 23,
+  "external_sub_mode": 11,
+  "hardened_clock": {
+    "duplicate_count": 0,
+    "out_of_order_count": 1312,
+    "period_us": 12500,
+    "source": "vehicle_angular_velocity_groundtruth",
+    "source_count": 8119,
+    "source_gap_us_max": 16000,
+    "tick_count": 5343
+  },
+  "last_nav_state": 23,
+  "last_position_ned": {
+    "x": -6.0535759925842285,
+    "y": -0.5867418646812439,
+    "z": -0.721466064453125
+  },
+  "mission_end_us": 1783852813410788,
+  "mode_confirmed": true,
+  "origin_us": 1783852745399203,
+  "raptor_internal_reference_max": null,
+  "raptor_internal_reference_min": null,
+  "setpoint_rate_hz": 80.0,
+  "sim_speed_factor": 1.25,
+  "state_trigger_enabled": true,
+  "state_trigger_fired": true,
+  "state_trigger_max_observed": {
+    "angular_rate_norm_rad_s": 0.8575412491211247,
+    "angular_rate_norm_state": {
+      "angular_rate_norm_rad_s": 0.8575412491211247,
+      "angular_rate_xyz_rad_s": [
+        0.400990754365921,
+        -0.7368014454841614,
+        0.17806470394134521
+      ],
+      "angular_velocity_timestamp_us": 1783852763624395,
+      "attitude_timestamp_us": 1783852763624395,
+      "elapsed_s": 18.225192,
+      "pitch_deg": 10.87029894677082,
+      "pitch_rate_abs_rad_s": 0.7368014454841614,
+      "roll_deg": 33.81200327705332,
+      "roll_pitch_abs_deg": 33.81200327705332,
+      "roll_rate_abs_rad_s": 0.400990754365921,
+      "timestamp_us": 1783852763624395,
+      "yaw_deg": -8.167312701899506,
+      "yaw_rate_abs_rad_s": 0.17806470394134521
+    },
+    "angular_rate_xyz_rad_s": [
+      0.5309674739837646,
+      -0.5695582032203674,
+      0.08987355977296829
+    ],
+    "angular_velocity_timestamp_us": 1783852763404395,
+    "attitude_timestamp_us": 1783852763404395,
+    "elapsed_s": 18.005192,
+    "pitch_deg": 18.773637005397614,
+    "pitch_rate_abs_rad_s": 0.5695582032203674,
+    "roll_deg": 29.103252119249024,
+    "roll_pitch_abs_deg": 34.72999682970127,
+    "roll_pitch_abs_state": {
+      "angular_rate_norm_rad_s": 0.8419598482881624,
+      "angular_rate_xyz_rad_s": [
+        0.29091471433639526,
+        -0.756377637386322,
+        0.22838100790977478
+      ],
+      "angular_velocity_timestamp_us": 1783852763684395,
+      "attitude_timestamp_us": 1783852763684395,
+      "elapsed_s": 18.285192,
+      "pitch_deg": 8.318176157736108,
+      "pitch_rate_abs_rad_s": 0.756377637386322,
+      "roll_deg": 34.72999682970127,
+      "roll_pitch_abs_deg": 34.72999682970127,
+      "roll_rate_abs_rad_s": 0.29091471433639526,
+      "timestamp_us": 1783852763684395,
+      "yaw_deg": -9.086373645156916,
+      "yaw_rate_abs_rad_s": 0.22838100790977478
+    },
+    "roll_rate_abs_rad_s": 0.5309674739837646,
+    "timestamp_us": 1783852763404395,
+    "yaw_deg": -4.944657642404977,
+    "yaw_rate_abs_rad_s": 0.08987355977296829
+  },
+  "state_trigger_state": {
+    "angular_rate_norm_rad_s": 0.8419598482881624,
+    "angular_rate_xyz_rad_s": [
+      0.29091471433639526,
+      -0.756377637386322,
+      0.22838100790977478
+    ],
+    "angular_velocity_timestamp_us": 1783852763684395,
+    "attitude_timestamp_us": 1783852763684395,
+    "elapsed_s": 18.285192,
+    "pitch_deg": 8.318176157736108,
+    "pitch_rate_abs_rad_s": 0.756377637386322,
+    "roll_deg": 34.72999682970127,
+    "roll_pitch_abs_deg": 34.72999682970127,
+    "roll_rate_abs_rad_s": 0.29091471433639526,
+    "timestamp_us": 1783852763684395,
+    "yaw_deg": -9.086373645156916,
+    "yaw_rate_abs_rad_s": 0.22838100790977478
+  },
+  "state_trigger_us": 1783852763684395,
+  "tag": "switch_severity_dense_sweep_20260630_wind_m_s_0_s2026062942",
+  "timing_mode": "hardened",
+  "trajectory_start_us": 1783852761404395,
+  "wall_timer_hz": 100.0
+}

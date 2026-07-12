@@ -6,8 +6,14 @@ log/
 runs/
 .ccache/
 __pycache__/
+.pytest_cache/
 *.pyc
 *.pyo
 *.ulg
 *.log
 docs/**/evals/
+**/px4_roots/
+
+# Local runtime links created by PX4 audit/runner scripts.
+/etc
+/test_data
