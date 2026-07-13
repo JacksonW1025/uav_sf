@@ -2,7 +2,7 @@
 
 This repository studies the PX4 software subsystem that transfers actuator authority between the classical control stack and learned controllers. The research question is not merely whether a neural controller can fly: it is whether admission, handover, residual-state, and fallback behavior satisfy an explicit control-authority contract.
 
-The canonical project narrative is [`docs/narrative/CURRENT_NARRATIVE.md`](docs/narrative/CURRENT_NARRATIVE.md). Historical narrative files remain available under [`docs/narrative/history/`](docs/narrative/history/) and at their legacy paths for traceability.
+The canonical project narrative is [`docs/NEW_NARRATIVE_v5.md`](docs/NEW_NARRATIVE_v5.md). The immediately preceding project context is retained as [`docs/PROJECT_NARRATIVE_CONTEXT_v8 (1).md`](docs/PROJECT_NARRATIVE_CONTEXT_v8%20%281%29.md); older narrative versions and duplicate history copies have been removed.
 
 ## Contract and scenarios
 

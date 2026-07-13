@@ -35,7 +35,7 @@ Important stages were pushed separately: checkpoint, BATON narrative/metadata, a
 
 ## 6. New directory structure
 
-- `docs/narrative/`: canonical narrative and immutable version copies.
+- `docs/NEW_NARRATIVE_v5.md`: canonical narrative; `docs/PROJECT_NARRATIVE_CONTEXT_v8 (1).md`: retained predecessor.
 - `docs/study_design/`: research questions, contract, differential diagnosis, and scenario space.
 - `docs/evidence/`: claim audit, contract anchors, and upstream issue ledger.
 - `docs/indexes/`: experiment index, repository map, and artifact manifest.
@@ -67,8 +67,8 @@ Its README records original paths, observed files, probable purpose, checkpoint,
 
 The complete mapping is in `docs/indexes/REPOSITORY_MAP.md`. Key mappings:
 
-- `docs/NEW_NARRATIVE_v5.md` → canonical copy `docs/narrative/CURRENT_NARRATIVE.md` and version copy under `history/`.
-- historical narratives → copies under `docs/narrative/history/`; legacy sources retained.
+- `docs/NEW_NARRATIVE_v5.md` remains the canonical narrative at its stable path.
+- `docs/PROJECT_NARRATIVE_CONTEXT_v8 (1).md` is the only retained predecessor; older versions and duplicate copies were removed in the subsequent repository-hygiene pass.
 - F1/F2/F2a, old RAPTOR S1/S2, B1/B2/B3/D1/D2 → matching experiment metadata directories.
 - wall-clock/GATE_FAIL and β/100-of-100 → separate harness metadata directories.
 - config-stale, writer attribution, and guard/reply issues → mechanism metadata directories.

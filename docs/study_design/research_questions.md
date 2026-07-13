@@ -1,6 +1,6 @@
 # Research Questions
 
-The canonical wording and evidence boundaries are in `docs/narrative/CURRENT_NARRATIVE.md`.
+The canonical wording and evidence boundaries are in `docs/NEW_NARRATIVE_v5.md`.
 
 ## RQ1 — Contract and compliance
 

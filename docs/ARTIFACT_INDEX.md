@@ -4,7 +4,8 @@ This index lists the retained artifacts after the Route-A cleanup. Raw logs, ULO
 
 ## Authoritative Context
 
-- `PROJECT_NARRATIVE_CONTEXT_v2.md`: current narrative and next-step context. This supersedes the old handoff and RAPTOR-only writeup.
+- `NEW_NARRATIVE_v5.md`: current narrative and next-step context.
+- `PROJECT_NARRATIVE_CONTEXT_v8 (1).md`: retained immediately preceding project context.
 
 ## Route A Evidence
 

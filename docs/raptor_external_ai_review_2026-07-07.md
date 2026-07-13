@@ -41,7 +41,7 @@ Important background files:
 - `docs/raptor_recon_2026-07-05.md`
 - `docs/raptor_reintegration_smoke_2026-07-05.md`
 - `docs/RAPTOR_closeout.md`
-- `docs/PROJECT_NARRATIVE_CONTEXT_v7.md`
+- `docs/PROJECT_NARRATIVE_CONTEXT_v8 (1).md`
 
 Key caveat from the background: old RAPTOR "robust" evidence was a low-evidence null relative to the later mc_nn campaign. The current evidence is stronger because it uses the same style of route-A campaign harness, but it still tests original clipped RAPTOR, not an unclipped ablation.
 
@@ -302,7 +302,7 @@ Review target: inspect whether rc=2/rc=3 task failures were excluded from candid
 - `docs/raptor_recon_2026-07-05.md`
 - `docs/raptor_reintegration_smoke_2026-07-05.md`
 - `docs/RAPTOR_closeout.md`
-- `docs/PROJECT_NARRATIVE_CONTEXT_v7.md`
+- `docs/PROJECT_NARRATIVE_CONTEXT_v8 (1).md`
 - `docs/rq2_archive_reanalysis_20260705.md`
 - `docs/rq2_archive_reanalysis_20260705.json`
 

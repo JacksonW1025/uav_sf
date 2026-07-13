@@ -6,7 +6,7 @@
 
 结论：当初 RAPTOR 线的“裁剪”是 **A 类 + B 类组合**，且下一步成本主要由 **B 类** 决定。
 
-- **B 类 1 - RAPTOR SUT 自身输入裁剪**：RAPTOR 在推理前硬裁剪观测误差。`external/PX4-Autopilot/src/modules/mc_raptor/mc_raptor.hpp` 定义 `max_position_error = 0.5`、`max_velocity_error = 1.0`；`mc_raptor.cpp` 的 `observe()` 对 position error 和 velocity error 调 `clip()` 后才写入 observation。`docs/PROJECT_NARRATIVE_CONTEXT_v2.md` 和 v6 也明确记录 M1 核心事实：RAPTOR 的 position ±0.5 m、velocity ±1.0 m clipping 使 setpoint 幅度攻击基本徒劳；mc_nn_control 没有这层观测误差裁剪。
+- **B 类 1 - RAPTOR SUT 自身输入裁剪**：RAPTOR 在推理前硬裁剪观测误差。`external/PX4-Autopilot/src/modules/mc_raptor/mc_raptor.hpp` 定义 `max_position_error = 0.5`、`max_velocity_error = 1.0`；`mc_raptor.cpp` 的 `observe()` 对 position error 和 velocity error 调 `clip()` 后才写入 observation。保留的 `docs/PROJECT_NARRATIVE_CONTEXT_v8 (1).md` 也记录了这一事实：RAPTOR 的 position ±0.5 m、velocity ±1.0 m clipping 使 setpoint 幅度攻击基本徒劳；mc_nn_control 没有这层观测误差裁剪。
 - **B 类 2 - RAPTOR 没有接入当前完整 mc_nn campaign harness**：`scripts/property_oracle.py`、`scripts/m1_compare.py`、`scripts/m1_metrics.py` 仍保留 RAPTOR 支持，但当前 `scripts/m2_map_elites.py` 和 `scripts/campaign_runner.py` 实际硬接 `mcnn_gate3_position_error_probe`、`controller="mcnn"`、`mcnn_identity_gate`、`mc_nn_control mode 23` 元数据和 classical-minus-mcnn fitness。也就是说，RAPTOR 可以走旧 M1/closeout 路径，但不是当前 RQ2/RQ3 的完整可比 SUT。
 - **A 类 - 测试覆盖也被裁剪**：RAPTOR closeout 明确是 lightweight closeout，不是大 campaign。历史 artifact 覆盖了 NaN/Inf 探针、Gazebo plant asymmetry、少量 activation transient、一个 finite-sensor reachability spot；没有对 RAPTOR 跑过当前 route-A `route-a-switching` genome、switch severity campaign、steady wind/physics campaign、state-contam campaign 或 dense/confirmation 流程。
 

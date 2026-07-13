@@ -2,7 +2,7 @@
 
 **Date**: 2026-06-26
 **状态**: 初步草案。所有数值阈值标 `⟨CAL⟩` = 待经验标定（用噪声地板 + 任务实测确定，标定纪律见 §2.3）。结构与判据已定，可直接据此实现。
-**关联**: `PROJECT_NARRATIVE_CONTEXT.md` §6（单 oracle → 多 oracle 转向）、§7（oracle 排序）。
+**关联**: `PROJECT_NARRATIVE_CONTEXT_v8 (1).md`（保留的项目上下文）。
 **SUT**: 同 PX4 `3042f906`、X500 v2、同任务；`mc_nn_control`（mode 23，15-D 观测 / 4-D 动作、前馈非 stateful）对经典级联。
 
 ---

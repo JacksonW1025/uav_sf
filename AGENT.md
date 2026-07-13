@@ -2,13 +2,13 @@
 
 新会话先读：
 
-1. `docs/narrative/CURRENT_NARRATIVE.md`
+1. `docs/NEW_NARRATIVE_v5.md`
 2. `docs/indexes/EXPERIMENT_INDEX.md`
 3. `docs/indexes/REPOSITORY_MAP.md`
 4. `docs/ARTIFACT_INDEX.md`（legacy artifact map）
 5. 本文件
 
-BATON `CURRENT_NARRATIVE.md` 是当前权威叙事，取代 V8、v7 以及旧 M0/M1/M2/M2b handoff、RAPTOR-only closeout 叙事。旧文档只能当历史证据或当前叙事引用的支撑材料，不要重新把它们当当前路线入口。
+`docs/NEW_NARRATIVE_v5.md` 是当前权威叙事；`docs/PROJECT_NARRATIVE_CONTEXT_v8 (1).md` 是保留的上一版项目上下文。更早的 narrative 已从仓库删除，不要重新把它们当当前路线入口。
 
 ## 当前状态
 

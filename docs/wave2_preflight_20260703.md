@@ -36,7 +36,7 @@ All visible untracked items were small `docs/` or `config/` artifacts. Ignored l
 | Path | Classification | Action | Rationale |
 |---|---|---:|---|
 | `config/m2_primary_bugs/*.json` | Reproducible theta artifact | tracked in `03f5155` | 20 switch severity primary-bug theta configs; JSON only; no ulog/checkpoint; each records `uses_state_shim: false` and `state_contam_status: DEFERRED`. |
-| `docs/PROJECT_NARRATIVE_CONTEXT_v5.md`, `docs/PROJECT_NARRATIVE_CONTEXT_v6.md` | Narrative/reproduction context | tracked in `03f5155` | Durable project state docs referenced by this task and future agents. |
+| `docs/PROJECT_NARRATIVE_CONTEXT_v8 (1).md` | Consolidated narrative/reproduction context | retained predecessor | Durable project state context referenced by this task and future agents. |
 | `docs/fullscale_fuzzing_preflight_checklist_v0_1 (1).md`, `docs/oracle_map_and_property_set_v0.1.md` | Design/report artifact | tracked in `03f5155` | Small markdown design/preflight docs. |
 | `docs/smoke_2p3_*_20260626/` | Report + theta artifact | tracked in `03f5155` | Summaries, metadata, archive/progress/evals JSONL, theta JSON; ignored `docs/**/evals/` payloads and logs were not added. |
 | `docs/validity_automation_*_20260627/` | Report + theta/confirmation artifact | tracked in `03f5155` | Small summary/metadata/progress/candidate/confirmation artifacts; no ulogs or run-root payloads. |

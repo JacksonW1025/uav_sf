@@ -7,12 +7,30 @@ runs/
 .ccache/
 __pycache__/
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+.venv/
+venv/
+*.egg-info/
 *.pyc
 *.pyo
+.coverage
+coverage.xml
+htmlcov/
 *.ulg
 *.log
 docs/**/evals/
 **/px4_roots/
+
+# Local secrets, editor state, and operating-system metadata.
+.env
+.env.*
+!.env.example
+.DS_Store
+.idea/
+.vscode/
 
 # Local runtime links created by PX4 audit/runner scripts.
 /etc

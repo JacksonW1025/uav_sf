@@ -2,7 +2,7 @@
 
 ## Canonical entry points
 
-- Current narrative: `docs/narrative/CURRENT_NARRATIVE.md`.
+- Current narrative: `docs/NEW_NARRATIVE_v5.md`; retained predecessor: `docs/PROJECT_NARRATIVE_CONTEXT_v8 (1).md`.
 - Experiment lookup: `docs/indexes/EXPERIMENT_INDEX.md`.
 - Evidence boundaries: `docs/evidence/claim_audit.md`.
 - Artifact hashes/provenance: `docs/indexes/ARTIFACT_MANIFEST.tsv`.
@@ -49,8 +49,8 @@
 
 | Legacy path or name | Canonical BATON location |
 |---|---|
-| `docs/NEW_NARRATIVE_v5.md` | `docs/narrative/CURRENT_NARRATIVE.md`; version copy in `docs/narrative/history/` |
-| `docs/PROJECT_NARRATIVE_CONTEXT_v*.md` | copies in `docs/narrative/history/`; legacy paths retained for citations |
+| `docs/NEW_NARRATIVE_v5.md` | canonical current narrative, retained at its stable path |
+| `docs/PROJECT_NARRATIVE_CONTEXT_v8 (1).md` | retained immediately preceding project context; older narrative versions removed |
 | `docs/ARTIFACT_INDEX.md` | legacy map retained; canonical lookup is `docs/indexes/EXPERIMENT_INDEX.md` and `ARTIFACT_MANIFEST.tsv` |
 | F1 | `experiments/handover/S1_commanded_switch_in/mcnn/F1_anchor/` |
 | F2 | `experiments/handover/S1_commanded_switch_in/mcnn/F2_campaign/` |

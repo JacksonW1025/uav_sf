@@ -1,8 +1,8 @@
 # 全量 Scenario Fuzzing 开工前准备清单（v0.1）
 
 **Date**: 2026-06-26
-**用途**: 放进新对话 + 配 `PROJECT_NARRATIVE_CONTEXT_v2.md` 一起给执行 agent 写 prompt。本文档**只管"全量搜索开工前还差哪些活"**,不复述项目叙事/idea——那部分读 narrative v2。
-**关联**: `PROJECT_NARRATIVE_CONTEXT_v2.md`（idea / 旅程 / 有效性纪律 §4.5 / 工程约定 §9）、`oracle_map_and_property_set_v0_2.md`(oracle 设计 + 性质集 P1–P8 + 实现清单 §2.6)。
+**用途**: 放进新对话 + 配 `PROJECT_NARRATIVE_CONTEXT_v8 (1).md` 一起给执行 agent 写 prompt。本文档**只管"全量搜索开工前还差哪些活"**,不复述项目叙事/idea——那部分读 narrative V8。
+**关联**: `PROJECT_NARRATIVE_CONTEXT_v8 (1).md`（项目上下文）、`oracle_map_and_property_set_v0_2.md`（oracle 设计 + 性质集 P1–P8 + 实现清单 §2.6）。
 **Repo / SUT**: `github.com/JacksonW1025/uav_sf`,工作区 `/mnt/nvme/uav_sf`,PX4 `3042f906`;X500 v2;`mc_nn_control`(mode 23) 对经典级联;SIH 主仿真(headless/lockstep/确定性)。
 
 ---
@@ -142,6 +142,6 @@
 
 ## 附:写 prompt 时如何用本文档
 
-- 本文档 = "**做什么 + 什么顺序 + 何时算完成**";idea/动机/已有结果在 `PROJECT_NARRATIVE_CONTEXT_v2.md`;oracle/性质细节在 `oracle_map_and_property_set_v0_2.md`。三者配套喂给执行 agent。
+- 本文档 = "**做什么 + 什么顺序 + 何时算完成**";idea/动机/已有结果在 `PROJECT_NARRATIVE_CONTEXT_v8 (1).md`;oracle/性质细节在 `oracle_map_and_property_set_v0_2.md`。三者配套喂给执行 agent。
 - 给 agent 派活时,建议**一次只派一个 Tier 0 子项**(如"实现 property_oracle.py 并用路线A ulog 自检"),用对应"完成判据"当验收;Tier 1 的 3.1/3.4 因为要改 harness,适合在 oracle 实现稳定后单独成轮。
 - §6 的方向性决策**必须写进搜索的 θ 优先级**,否则 agent 会沿用手挑模式直觉去盯 B 档切换带,错过宽差分主产区。
