@@ -4,8 +4,8 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
-IMAGE_NAME="${IMAGE_NAME:-uav_sf:phase1}"
-CONTAINER_NAME="${CONTAINER_NAME:-uav_sf_phase1}"
+IMAGE_NAME="${IMAGE_NAME:-uav_sf:family-a}"
+CONTAINER_NAME="${CONTAINER_NAME:-uav_sf_family_a}"
 
 docker_cmd=(docker)
 if ! docker info >/dev/null 2>&1; then

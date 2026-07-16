@@ -4,8 +4,12 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
-IMAGE_NAME="${IMAGE_NAME:-uav_sf:phase1}"
-BASE_IMAGE="${BASE_IMAGE:-public.ecr.aws/docker/library/ubuntu:24.04}"
+IMAGE_NAME="${IMAGE_NAME:-uav_sf:family-a}"
+LOCK_HELPER="${REPO_ROOT}/scripts/setup/verify_dependency_lock.py"
+LOCK_FILE="${DEPENDENCY_LOCK_FILE:-${REPO_ROOT}/config/dependencies.lock.yaml}"
+locked_image="$(python3 "${LOCK_HELPER}" --lock "${LOCK_FILE}" --get container.base_image)"
+locked_digest="$(python3 "${LOCK_HELPER}" --lock "${LOCK_FILE}" --get container.base_image_digest)"
+BASE_IMAGE="${BASE_IMAGE:-${locked_image}@${locked_digest}}"
 HOST_USER="${HOST_USER:-${SUDO_USER:-${USER:-}}}"
 if [[ -n "${HOST_USER}" ]] && id "${HOST_USER}" >/dev/null 2>&1; then
   default_uid="$(id -u "${HOST_USER}")"

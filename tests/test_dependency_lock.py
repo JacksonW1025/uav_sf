@@ -54,3 +54,12 @@ def test_family_a_clone_has_no_family_b_required_submodule() -> None:
     assert "mc_raptor" not in family_a
     assert "policy.tar" not in family_a
     assert "rl_tools" not in family_a
+
+
+def test_profile_boundaries_are_explicit() -> None:
+    family_a = (ROOT / "scripts" / "setup" / "bootstrap_family_a.sh").read_text(encoding="utf-8")
+    family_b = (ROOT / "scripts" / "setup" / "bootstrap_family_b.sh").read_text(encoding="utf-8")
+    assert "family_b/" not in family_a
+    assert "--profile family_a" in family_a
+    assert "bootstrap_family_a.sh" in family_b
+    assert "--profile family_b" in family_b
