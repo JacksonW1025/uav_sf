@@ -1,34 +1,36 @@
-# External mode and registration evidence
+# External Mode and registration evidence
 
-Status: `not_collected`
+Audit date: 2026-07-16. Primary revisions are PX4
+`4ae21a5e569d3d89c2f6366688cbacb3e93437c9` and px4-ros2-interface-lib
+`c3e410f035806e8c56246708432ded09c976434b`.
 
-Use this document for M2 source-backed evidence. Do not replace missing evidence with assumptions.
+| Repository | Exact commit | Source path | Symbol / class | Lifecycle stage | Supported claim | Control-plane signal | Data-plane signal | Route field | Official test coverage | Limitation |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Auterion/px4-ros2-interface-lib | `c3e410f035806e8c56246708432ded09c976434b` | `px4_ros2_cpp/src/components/registration.cpp` | `Registration::doRegister` | registration | registration is a request/reply transaction correlated by component name and random request ID; success installs assigned IDs | `RegisterExtComponentRequest/Reply`, API version, mode/executor/arming IDs | none | registration_state, producer_identity | registration is exercised by integration `mode.cpp` and `mode_executor.cpp` | success proves a registry entry, not activation or setpoint flow |
+| PX4/PX4-Autopilot | `4ae21a5e569d3d89c2f6366688cbacb3e93437c9` | `src/modules/commander/ModeManagement.cpp` | `ModeManagement::checkNewRegistrations` | registration | PX4 validates capacity and combinations, allocates external nav state/executor/check IDs, and can reject replacement conflicts | request/reply success and assigned IDs | none | registration_state, fallback_target | `ModeManagementTest.cpp` checks mode slot/hash lifecycle; ROS integration checks transaction | current PX4 unit test does not assert the complete request/reply path or data route |
+| Auterion/px4-ros2-interface-lib | `c3e410f035806e8c56246708432ded09c976434b` | `px4_ros2_cpp/src/components/mode.cpp` | `ModeBase::doRegister`, `checkSetpointCompatibilityAndRequirements` | registration / admission | message compatibility and each declared setpoint type are checked before usable registration; requirements are merged from PX4 replies | `SetpointConfig/Reply`, arming requirements | setpoint type declaration only | registration_state, setpoint_level | unit `modes.cpp::modeRequirements`; integration registration paths | configuration support is not evidence that later setpoints are fresh or consumed |
+| Auterion/px4-ros2-interface-lib | `c3e410f035806e8c56246708432ded09c976434b` | `px4_ros2_cpp/src/components/mode.cpp` | `ModeBase::vehicleStatusUpdated`, `callOnActivate`, `callOnDeactivate` | activation / deactivation | activation is separate from registration and follows assigned mode ID plus armed/disarmed policy | `VehicleStatus.nav_state`, arming state | update timer starts/stops and setpoint types deactivate | declared_mode, authority_source, setpoint_topic | integration `mode.cpp` asserts activation/deactivation counters and multiple setpoint updates | callbacks and nav_state do not identify final actuator writer |
+| Auterion/px4-ros2-interface-lib | `c3e410f035806e8c56246708432ded09c976434b` | `px4_ros2_cpp/src/components/mode.cpp` | `ModeBase::completed` | completion | a mode explicitly reports success/failure once; the executor can sequence on this result | `ModeCompleted` with mode ID and result | update timer may still need deactivation through nav-state change | declared_mode, fallback_target | executor integration observes scheduled mode completion/deactivation results | completion is a notification, not proof the successor route is installed |
+| Auterion/px4-ros2-interface-lib | `c3e410f035806e8c56246708432ded09c976434b` | `px4_ros2_cpp/src/components/mode_executor.cpp` | `ModeExecutorBase::scheduleMode`, `takeoff`, `rtl`, `waitUntilDisarmed` | execution | executor owns a mode and sequences internal/external modes with completion callbacks | vehicle commands, `ModeCompleted`, `VehicleStatus` | scheduled mode-specific setpoints | declared_mode, fallback_target | integration `mode_executor.cpp` covers normal in-charge and failsafe sequences | assertions focus on state/result callbacks rather than revocation, overlap, or writer installation |
+| PX4/PX4-Autopilot | `4ae21a5e569d3d89c2f6366688cbacb3e93437c9` | `src/modules/commander/ModeManagement.cpp` | `getNavStateReplacementIfValid`, `getReplacedModeIfAny` | replacement | an internal nav state can be mapped to a registered external mode; display/user intent can retain the internal meaning | replacement ID and external nav state | setpoint path comes from external mode configuration | declared_mode, authority_source, fallback_target | ROS integration `mode.cpp` replaces Descend and observes external nav state | mapped nav state does not prove the replacement's data route is complete |
+| PX4/PX4-Autopilot | `4ae21a5e569d3d89c2f6366688cbacb3e93437c9` | `src/modules/commander/HealthAndArmingChecks/checks/externalChecks.cpp` | `ExternalChecks::update`, `checkAndReport` | health / unresponsive detection | periodic arming-check replies are the component liveness mechanism; repeated missing replies mark a mode unresponsive | `ArmingCheckRequest/Reply`, valid mask, critical event, requirement bits | none directly | registration_state, failsafe_state | exercised indirectly by ROS mode/executor integration tests | heartbeat health can diverge from setpoint freshness; exact data-plane loss is not checked |
+| PX4/PX4-Autopilot | `4ae21a5e569d3d89c2f6366688cbacb3e93437c9` | `src/modules/commander/ModeManagement.cpp` | `ModeManagement::checkUnregistrations` | removal / fallback | explicit removal of an active external mode changes user intent to internal Hold | `UnregisterExtComponent`, intended nav state becomes AUTO_LOITER | target controller path is not checked here | revocation, fallback_target | integration `mode.cpp` destroys the replacement and observes internal Descend recovery; interface PR 175 covers shutdown unregister | Hold/Descend selection alone does not prove complete fallback installation |
+| Auterion/px4-ros2-interface-lib | `c3e410f035806e8c56246708432ded09c976434b` | `px4_ros2_cpp/src/components/registration.cpp` | destructor, pre-shutdown callback, `doUnregister` | shutdown / re-entry | graceful node shutdown attempts explicit unregistration and clears local registered state | `UnregisterExtComponent` | no direct revocation acknowledgement | registration_state, revocation | source change associated with upstream PR 175 | process crash cannot run the destructor; PX4 liveness timeout must handle it |
+| Auterion/px4-ros2-interface-lib | `c3e410f035806e8c56246708432ded09c976434b` | `px4_ros2_cpp/test/integration/mode.cpp` | `TestExecution::run`, `runModeTests` | replacement / failure / recovery | official integration flow observes replacement activation, arming-check rejection, failsafe activation, destruction, and internal Descend selection | nav-state callbacks and activation/deactivation/update counters | attitude setpoint updates only counted | registration_state, declared_mode, fallback_target | direct integration assertions in this file | no producer identity, setpoint freshness, module graph, allocator writer, overlap/gap, or output recovery assertion |
+| Auterion/px4-ros2-interface-lib | `c3e410f035806e8c56246708432ded09c976434b` | `px4_ros2_cpp/test/integration/mode_executor.cpp` | `TestExecutionFailsafe::run`, `runExecutorFailsafe` | executor failure / fallback | failsafe deactivates scheduled custom mode/executor and internal Descend lands/disarms | callback result `Deactivated`, nav-state callback, lifecycle counters | setpoint update count | activation, failsafe_state, fallback_target | direct assertions for failsafe triggered, land activated, lifecycle counts | full target route installation and final writer are not asserted |
+| PX4/PX4-Autopilot | `4ae21a5e569d3d89c2f6366688cbacb3e93437c9` | `src/modules/mc_nn_control/mc_nn_control.cpp`; `src/modules/mc_raptor/mc_raptor.cpp` | `RegisterNeuralFlightMode`; RAPTOR registration/reply loop | Family B association | in-FMU learned controllers reuse the same register/reply, arming-check, assigned mode ID, and unregister facility as companion External Modes | identical external-component uORB messages | Family B-specific setpoints and direct actuator path | registration_state, authority_source | no dedicated registration unit test found for either module | supplemental mechanism association only; not used by Family A or as current evidence |
 
-## Source record template
+## Related upstream records
 
-| Field | Value |
-|---|---|
-| Source URL or repository path | TBD |
-| Source version / commit | TBD |
-| Accessed date | TBD |
-| PX4 component | TBD |
-| Lifecycle stage | registration / activation / execution / cancellation / failure / recovery / re-entry |
-| Claim supported | TBD |
-| Control-plane signal | TBD |
-| Data-plane signal | TBD |
-| Route fields affected | TBD |
-| Existing official test | TBD |
-| Confidence / caveat | TBD |
+- PX4 PR [#20707](https://github.com/PX4/PX4-Autopilot/pull/20707): initial ROS 2 dynamic modes API.
+- PX4 PR [#22494](https://github.com/PX4/PX4-Autopilot/pull/22494): external-mode integration tests.
+- PX4 PR [#24249](https://github.com/PX4/PX4-Autopilot/pull/24249): registration-while-armed policy.
+- PX4 PR [#25453](https://github.com/PX4/PX4-Autopilot/pull/25453) and issue [#25707](https://github.com/PX4/PX4-Autopilot/issues/25707): executor/disarm and replacement interaction.
+- PX4 PR [#25969](https://github.com/PX4/PX4-Autopilot/pull/25969): user-selectable registration flag.
+- PX4 PR [#26949](https://github.com/PX4/PX4-Autopilot/pull/26949): Offboard setpoints for replacement modes; open PR [#26771](https://github.com/PX4/PX4-Autopilot/pull/26771) records a remaining MAVLink acceptance boundary.
+- Interface library PR [#160](https://github.com/Auterion/px4-ros2-interface-lib/pull/160): prevent an executor-owned mode replacing another mode.
+- Interface library PR [#175](https://github.com/Auterion/px4-ros2-interface-lib/pull/175): unregister before ROS shutdown.
+- Interface library PR [#190](https://github.com/Auterion/px4-ros2-interface-lib/pull/190): Ubuntu Noble / ROS Jazzy CI.
 
-## Questions to resolve
-
-- What makes an external mode/controller registered, eligible, active, and no longer active?
-- Which system owns authority at each lifecycle boundary?
-- What producer and writer identities should change during activation/cancellation/failure?
-- What timeouts and freshness requirements trigger revocation or fallback?
-- Does fallback selection prove that all target modules and writers were restored?
-- Can re-entry retain stale registrations, subscriptions, setpoints, or writer state?
-
-## Evidence log
-
-No entries collected yet.
+These records explain evolution and known boundaries; the source and official
+assertions at the locked commits remain the primary evidence.
