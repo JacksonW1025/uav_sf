@@ -1,0 +1,205 @@
+diff --git a/msg/CMakeLists.txt b/msg/CMakeLists.txt
+index 369ec75..3e1fe27 100644
+--- a/msg/CMakeLists.txt
++++ b/msg/CMakeLists.txt
+@@ -194,6 +194,7 @@ set(msg_files
+ 	RoverSteeringSetpoint.msg
+ 	RoverThrottleSetpoint.msg
+ 	Rpm.msg
++	RouteObservability.msg
+ 	RtlStatus.msg
+ 	RtlTimeEstimate.msg
+ 	SatelliteInfo.msg
+diff --git a/msg/RouteObservability.msg b/msg/RouteObservability.msg
+new file mode 100644
+index 0000000..b12ce1a
+--- /dev/null
++++ b/msg/RouteObservability.msg
+@@ -0,0 +1,26 @@
++# Observation-only route event. This topic must not feed control decisions.
++uint64 timestamp
++uint64 subject_timestamp
++uint32 sequence
++
++uint8 EVENT_SETPOINT_CONSUMED=1
++uint8 EVENT_ALLOCATOR_INPUT_PUBLISHED=2
++uint8 EVENT_ACTUATOR_OUTPUT_PUBLISHED=3
++
++uint8 SOURCE_EXTERNAL_TRAJECTORY=1
++uint8 SOURCE_MC_RATE_CONTROL=2
++uint8 SOURCE_CONTROL_ALLOCATOR=3
++
++uint8 TOPIC_TRAJECTORY_SETPOINT=1
++uint8 TOPIC_VEHICLE_TORQUE_SETPOINT=2
++uint8 TOPIC_ACTUATOR_MOTORS=3
++
++uint8 WRITER_UNKNOWN=0
++uint8 WRITER_MC_RATE_CONTROL=1
++uint8 WRITER_CONTROL_ALLOCATOR=2
++
++uint8 event_type
++uint8 source_id
++uint8 topic_id
++uint8 writer_id
++uint8 instance
+diff --git a/src/modules/control_allocator/ControlAllocator.cpp b/src/modules/control_allocator/ControlAllocator.cpp
+index de0c299..b23cfcd 100644
+--- a/src/modules/control_allocator/ControlAllocator.cpp
++++ b/src/modules/control_allocator/ControlAllocator.cpp
+@@ -743,6 +743,16 @@ ControlAllocator::publish_actuator_controls()
+ 
+ 	_actuator_motors_pub.publish(actuator_motors);
+ 
++	route_observability_s route_observation{};
++	route_observation.timestamp = hrt_absolute_time();
++	route_observation.subject_timestamp = actuator_motors.timestamp;
++	route_observation.sequence = _route_observability_sequence++;
++	route_observation.event_type = route_observability_s::EVENT_ACTUATOR_OUTPUT_PUBLISHED;
++	route_observation.source_id = route_observability_s::SOURCE_CONTROL_ALLOCATOR;
++	route_observation.topic_id = route_observability_s::TOPIC_ACTUATOR_MOTORS;
++	route_observation.writer_id = route_observability_s::WRITER_CONTROL_ALLOCATOR;
++	_route_observability_pub.publish(route_observation);
++
+ 	// servos
+ 	if (_num_actuators[1] > 0) {
+ 		int servos_idx;
+diff --git a/src/modules/control_allocator/ControlAllocator.hpp b/src/modules/control_allocator/ControlAllocator.hpp
+index a8ebb76..3fdfd87 100644
+--- a/src/modules/control_allocator/ControlAllocator.hpp
++++ b/src/modules/control_allocator/ControlAllocator.hpp
+@@ -75,6 +75,7 @@
+ #include <uORB/topics/actuator_servos_trim.h>
+ #include <uORB/topics/control_allocator_status.h>
+ #include <uORB/topics/parameter_update.h>
++#include <uORB/topics/route_observability.h>
+ #include <uORB/topics/vehicle_control_mode.h>
+ #include <uORB/topics/vehicle_torque_setpoint.h>
+ #include <uORB/topics/vehicle_thrust_setpoint.h>
+@@ -206,6 +207,7 @@ private:
+ 	uORB::Publication<actuator_motors_s>	_actuator_motors_pub{ORB_ID(actuator_motors)};
+ 	uORB::Publication<actuator_servos_s>	_actuator_servos_pub{ORB_ID(actuator_servos)};
+ 	uORB::Publication<actuator_servos_trim_s>	_actuator_servos_trim_pub{ORB_ID(actuator_servos_trim)};
++	uORB::Publication<route_observability_s> _route_observability_pub{ORB_ID(route_observability)};
+ 
+ 	uORB::SubscriptionInterval _parameter_update_sub{ORB_ID(parameter_update), 1_s};
+ 
+@@ -231,6 +233,7 @@ private:
+ 	hrt_abstime _last_run{0};
+ 	hrt_abstime _timestamp_sample{0};
+ 	hrt_abstime _last_status_pub{0};
++	uint32_t _route_observability_sequence{0};
+ 
+ 	ParamHandles _param_handles{};
+ 	Params _params{};
+diff --git a/src/modules/logger/logged_topics.cpp b/src/modules/logger/logged_topics.cpp
+index c893a85..d3da0d4 100644
+--- a/src/modules/logger/logged_topics.cpp
++++ b/src/modules/logger/logged_topics.cpp
+@@ -135,6 +135,7 @@ void LoggedTopics::add_default_topics()
+ 	add_optional_topic("tecs_status", 200);
+ 	add_optional_topic("tiltrotor_extra_controls", 100);
+ 	add_topic("trajectory_setpoint", 200);
++	add_topic("route_observability", 100);
+ 	add_topic("transponder_report");
+ 	add_topic("vehicle_acceleration", 50);
+ 	add_topic("vehicle_air_data", 200);
+diff --git a/src/modules/mc_pos_control/MulticopterPositionControl.cpp b/src/modules/mc_pos_control/MulticopterPositionControl.cpp
+index 5c6f147..e4c5056 100644
+--- a/src/modules/mc_pos_control/MulticopterPositionControl.cpp
++++ b/src/modules/mc_pos_control/MulticopterPositionControl.cpp
+@@ -438,7 +438,17 @@ void MulticopterPositionControl::Run()
+ 			_goto_control.update(dt, states.position, states.velocity, states.acceleration, states.yaw);
+ 		}
+ 
+-		_trajectory_setpoint_sub.update(&_setpoint);
++		if (_trajectory_setpoint_sub.update(&_setpoint)) {
++			route_observability_s route_observation{};
++			route_observation.timestamp = hrt_absolute_time();
++			route_observation.subject_timestamp = _setpoint.timestamp;
++			route_observation.sequence = _route_observability_sequence++;
++			route_observation.event_type = route_observability_s::EVENT_SETPOINT_CONSUMED;
++			route_observation.source_id = route_observability_s::SOURCE_EXTERNAL_TRAJECTORY;
++			route_observation.topic_id = route_observability_s::TOPIC_TRAJECTORY_SETPOINT;
++			route_observation.writer_id = route_observability_s::WRITER_UNKNOWN;
++			route_observability_pub.publish(route_observation);
++		}
+ 
+ 		adjustSetpointForEKFResets(vehicle_local_position, _setpoint);
+ 
+diff --git a/src/modules/mc_pos_control/MulticopterPositionControl.hpp b/src/modules/mc_pos_control/MulticopterPositionControl.hpp
+index 8268399..bf8d8dc 100644
+--- a/src/modules/mc_pos_control/MulticopterPositionControl.hpp
++++ b/src/modules/mc_pos_control/MulticopterPositionControl.hpp
+@@ -60,6 +60,7 @@
+ #include <uORB/SubscriptionCallback.hpp>
+ #include <uORB/topics/hover_thrust_estimate.h>
+ #include <uORB/topics/parameter_update.h>
++#include <uORB/topics/route_observability.h>
+ #include <uORB/topics/trajectory_setpoint.h>
+ #include <uORB/topics/vehicle_attitude_setpoint.h>
+ #include <uORB/topics/vehicle_constraints.h>
+@@ -100,6 +101,7 @@ private:
+ 	uORB::PublicationData<takeoff_status_s>              _takeoff_status_pub{ORB_ID(takeoff_status)};
+ 	uORB::Publication<vehicle_attitude_setpoint_s>	     _vehicle_attitude_setpoint_pub{ORB_ID(vehicle_attitude_setpoint)};
+ 	uORB::Publication<vehicle_local_position_setpoint_s> _local_pos_sp_pub{ORB_ID(vehicle_local_position_setpoint)};	/**< vehicle local position setpoint publication */
++	uORB::Publication<route_observability_s>              _route_observability_pub{ORB_ID(route_observability)};
+ 
+ 	uORB::SubscriptionCallbackWorkItem _local_pos_sub{this, ORB_ID(vehicle_local_position)};	/**< vehicle local position */
+ 
+@@ -117,6 +119,7 @@ private:
+ 	trajectory_setpoint_s _setpoint{PositionControl::empty_trajectory_setpoint};
+ 	trajectory_setpoint_s _last_valid_setpoint{PositionControl::empty_trajectory_setpoint};
+ 	vehicle_control_mode_s _vehicle_control_mode{};
++	uint32_t _route_observability_sequence{0};
+ 
+ 	vehicle_constraints_s _vehicle_constraints {
+ 		.timestamp = 0,
+diff --git a/src/modules/mc_rate_control/MulticopterRateControl.cpp b/src/modules/mc_rate_control/MulticopterRateControl.cpp
+index 7bfb830..c6ac22a 100644
+--- a/src/modules/mc_rate_control/MulticopterRateControl.cpp
++++ b/src/modules/mc_rate_control/MulticopterRateControl.cpp
+@@ -263,6 +263,16 @@ MulticopterRateControl::Run()
+ 			vehicle_torque_setpoint.timestamp = hrt_absolute_time();
+ 			_vehicle_torque_setpoint_pub.publish(vehicle_torque_setpoint);
+ 
++			route_observability_s route_observation{};
++			route_observation.timestamp = hrt_absolute_time();
++			route_observation.subject_timestamp = vehicle_torque_setpoint.timestamp;
++			route_observation.sequence = _route_observability_sequence++;
++			route_observation.event_type = route_observability_s::EVENT_ALLOCATOR_INPUT_PUBLISHED;
++			route_observation.source_id = route_observability_s::SOURCE_MC_RATE_CONTROL;
++			route_observation.topic_id = route_observability_s::TOPIC_VEHICLE_TORQUE_SETPOINT;
++			route_observation.writer_id = route_observability_s::WRITER_MC_RATE_CONTROL;
++			_route_observability_pub.publish(route_observation);
++
+ 			updateActuatorControlsStatus(vehicle_torque_setpoint, dt);
+ 
+ 		}
+diff --git a/src/modules/mc_rate_control/MulticopterRateControl.hpp b/src/modules/mc_rate_control/MulticopterRateControl.hpp
+index 44c6c13..e7b0b84 100644
+--- a/src/modules/mc_rate_control/MulticopterRateControl.hpp
++++ b/src/modules/mc_rate_control/MulticopterRateControl.hpp
+@@ -53,6 +53,7 @@
+ #include <uORB/topics/manual_control_setpoint.h>
+ #include <uORB/topics/parameter_update.h>
+ #include <uORB/topics/rate_ctrl_status.h>
++#include <uORB/topics/route_observability.h>
+ #include <uORB/topics/vehicle_angular_velocity.h>
+ #include <uORB/topics/vehicle_control_mode.h>
+ #include <uORB/topics/vehicle_land_detected.h>
+@@ -111,6 +112,7 @@ private:
+ 	uORB::Publication<vehicle_rates_setpoint_s>	_vehicle_rates_setpoint_pub{ORB_ID(vehicle_rates_setpoint)};
+ 	uORB::Publication<vehicle_thrust_setpoint_s>	_vehicle_thrust_setpoint_pub;
+ 	uORB::Publication<vehicle_torque_setpoint_s>	_vehicle_torque_setpoint_pub;
++	uORB::Publication<route_observability_s> _route_observability_pub{ORB_ID(route_observability)};
+ 
+ 	vehicle_control_mode_s	_vehicle_control_mode{};
+ 	vehicle_status_s	_vehicle_status{};
+@@ -131,6 +133,7 @@ private:
+ 
+ 	float _energy_integration_time{0.0f};
+ 	float _control_energy[4] {};
++	uint32_t _route_observability_sequence{0};
+ 
+ 	AlphaFilter<float> _output_lpf_yaw;
+ 

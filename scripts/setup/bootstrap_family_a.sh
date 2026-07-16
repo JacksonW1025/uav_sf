@@ -43,6 +43,7 @@ if ((UPDATE_LOCK)); then update_arg=(--update-lock); fi
   echo "# Family A bootstrap"
   date -u +'%Y-%m-%dT%H:%M:%SZ'
   "${REPO_ROOT}/scripts/setup/clone_px4.sh" --profile family_a "${update_arg[@]}"
+  "${REPO_ROOT}/scripts/setup/prepare_observability_px4.sh"
   "${REPO_ROOT}/scripts/setup/build_microxrce_agent.sh" "${update_arg[@]}"
 
   sudo rosdep install --from-paths "${REPO_ROOT}/ros2_ws/src" --ignore-src -r -y --rosdistro jazzy
@@ -51,10 +52,11 @@ if ((UPDATE_LOCK)); then update_arg=(--update-lock); fi
   python3 "${REPO_ROOT}/ros2_ws/src/px4_ros2_interface_lib/scripts/check-message-compatibility.py" \
     "${REPO_ROOT}/ros2_ws/src/px4_msgs" "${REPO_ROOT}/external/PX4-Autopilot"
 
-  cmake --build "${REPO_ROOT}/external/PX4-Autopilot/build/px4_sitl_default" --parallel "$(nproc)" 2>/dev/null || \
-    make -C "${REPO_ROOT}/external/PX4-Autopilot" -j"$(nproc)" px4_sitl_default
+  px4_observability_dir="${REPO_ROOT}/external/PX4-Autopilot-route-observability"
+  cmake --build "${px4_observability_dir}/build/px4_sitl_default" --parallel "$(nproc)" 2>/dev/null || \
+    make -C "${px4_observability_dir}" -j"$(nproc)" px4_sitl_default
 
-  test -x "${REPO_ROOT}/external/PX4-Autopilot/build/px4_sitl_default/bin/px4"
+  test -x "${px4_observability_dir}/build/px4_sitl_default/bin/px4"
   required_binaries=(
     example_mode_goto
     example_mode_with_executor
