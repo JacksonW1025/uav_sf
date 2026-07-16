@@ -2,109 +2,55 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+# shellcheck source=dependency_lock_lib.sh
+source "${REPO_ROOT}/scripts/setup/dependency_lock_lib.sh"
+
 PX4_DIR="${PX4_DIR:-${REPO_ROOT}/external/PX4-Autopilot}"
-PX4_REPO="${PX4_REPO:-https://github.com/PX4/PX4-Autopilot.git}"
-PX4_REF="${PX4_REF:-main}"
-PX4_SUBMODULE_MODE="${PX4_SUBMODULE_MODE:-required}"
-PX4_SUBMODULE_JOBS="${PX4_SUBMODULE_JOBS:-2}"
 LOG_DIR="${REPO_ROOT}/runs/setup"
+PROFILE="family_a"
+UPDATE_LOCK=0
 
-mkdir -p "${LOG_DIR}" "$(dirname "${PX4_DIR}")"
-
-git_retry() {
-  local attempt
-  for attempt in 1 2 3 4 5; do
-    if git -c http.version=HTTP/1.1 "$@"; then
-      return 0
-    fi
-    echo "git $* failed on attempt ${attempt}, retrying..." >&2
-    sleep $((attempt * 5))
-  done
-  git -c http.version=HTTP/1.1 "$@"
-}
+while (($#)); do
+  case "$1" in
+    --profile) PROFILE="$2"; shift 2 ;;
+    --update-lock) UPDATE_LOCK=1; shift ;;
+    *) echo "unknown argument: $1" >&2; exit 2 ;;
+  esac
+done
+if [[ "${PROFILE}" != "family_a" && "${PROFILE}" != "family_b" ]]; then
+  echo "profile must be family_a or family_b" >&2
+  exit 2
+fi
+if ((UPDATE_LOCK)); then
+  python3 "${LOCK_HELPER}" --lock "${DEPENDENCY_LOCK_FILE}" --update-lock px4_autopilot
+fi
+lock_verify
+mkdir -p "${LOG_DIR}"
 
 {
-  echo "# PX4 clone"
-  date -Is
-  echo "PX4_REPO=${PX4_REPO}"
-  echo "PX4_REF=${PX4_REF}"
-  echo "PX4_DIR=${PX4_DIR}"
-  echo "PX4_SUBMODULE_MODE=${PX4_SUBMODULE_MODE}"
+  echo "# PX4 locked checkout"
+  date -u +'%Y-%m-%dT%H:%M:%SZ'
+  echo "PROFILE=${PROFILE}"
+  checkout_locked_repository px4_autopilot "${PX4_DIR}"
 
-  if [[ ! -d "${PX4_DIR}/.git" ]]; then
-    git_retry clone "${PX4_REPO}" "${PX4_DIR}"
-  fi
-
-  git_retry -C "${PX4_DIR}" fetch origin "${PX4_REF}"
-  git -C "${PX4_DIR}" fetch --tags origin || echo "WARNING: tag fetch failed; continuing with commit pin"
-  git -C "${PX4_DIR}" checkout "${PX4_REF}"
-  if [[ "${PX4_SUBMODULE_MODE}" == "full" ]]; then
-    git_retry -C "${PX4_DIR}" submodule update --init --recursive --jobs "${PX4_SUBMODULE_JOBS}"
-  else
-    required_submodules=(
-      Tools/simulation/gz
-      platforms/nuttx/NuttX/apps
-      platforms/nuttx/NuttX/nuttx
-      src/drivers/gps/devices
-      src/lib/cdrstream/cyclonedds
-      src/lib/cdrstream/rosidl
-      src/lib/crypto/libtomcrypt
-      src/lib/crypto/libtommath
-      src/lib/crypto/monocypher
-      src/lib/events/libevents
-      src/lib/heatshrink/heatshrink
-      src/lib/rl_tools/rl_tools
-      src/modules/mavlink/mavlink
-      src/modules/mc_raptor/blob
-      src/modules/simulation/gz_plugins/optical_flow/PX4-OpticalFlow
-      src/modules/uxrce_dds_client/Micro-XRCE-DDS-Client
-      src/modules/uxrce_dds_client/Micro-XRCE-DDS-Client-v3
-    )
-    git_retry -C "${PX4_DIR}" submodule update --init --recursive --jobs "${PX4_SUBMODULE_JOBS}" "${required_submodules[@]}"
-  fi
-
-  required_files=(
-    Tools/simulation/gz/models/x500/model.sdf
-    Tools/simulation/gz/worlds/default.sdf
-    platforms/nuttx/NuttX/apps/Makefile
-    platforms/nuttx/NuttX/nuttx/Makefile
-    src/drivers/gps/devices/src/crc.cpp
-    src/lib/heatshrink/heatshrink/heatshrink_decoder.c
-    src/lib/rl_tools/rl_tools/include/rl_tools/rl_tools.h
-    src/modules/mavlink/mavlink/message_definitions/v1.0/common.xml
-    src/modules/mc_raptor/blob/policy.tar
-    src/modules/uxrce_dds_client/Micro-XRCE-DDS-Client/CMakeLists.txt
-    src/modules/uxrce_dds_client/Micro-XRCE-DDS-Client-v3/CMakeLists.txt
+  family_a_submodules=(
+    Tools/simulation/gz
+    src/lib/cdrstream/cyclonedds
+    src/lib/cdrstream/rosidl
+    src/lib/events/libevents
+    src/lib/heatshrink/heatshrink
+    src/modules/mavlink/mavlink
+    src/modules/simulation/gz_plugins/optical_flow/PX4-OpticalFlow
+    src/modules/uxrce_dds_client/Micro-XRCE-DDS-Client
+    src/modules/uxrce_dds_client/Micro-XRCE-DDS-Client-v3
   )
-  for relpath in "${required_files[@]}"; do
-    if [[ ! -s "${PX4_DIR}/${relpath}" ]]; then
-      echo "MISSING_REQUIRED_FILE=${relpath}"
-      exit 4
-    fi
-  done
+  git -c http.version=HTTP/1.1 -C "${PX4_DIR}" submodule update --init --recursive --jobs 2 "${family_a_submodules[@]}"
 
-  px4_sha="$(git -C "${PX4_DIR}" rev-parse HEAD)"
-  echo "PX4_SHA=${px4_sha}"
-  git -C "${PX4_DIR}" describe --tags --always --dirty || true
-
-  if [[ -d "${PX4_DIR}/src/modules/mc_raptor" ]]; then
-    echo "RAPTOR_MODULE=present"
-  else
-    echo "RAPTOR_MODULE=missing"
-    exit 2
+  if [[ "${PROFILE}" == "family_b" ]]; then
+    git -c http.version=HTTP/1.1 -C "${PX4_DIR}" submodule update --init --recursive --jobs 2 \
+      src/lib/rl_tools/rl_tools src/modules/mc_raptor/blob
   fi
 
-  policy="${PX4_DIR}/src/modules/mc_raptor/blob/policy.tar"
-  if [[ -s "${policy}" ]]; then
-    echo "RAPTOR_POLICY=${policy}"
-    wc -c "${policy}"
-    file "${policy}"
-    tar -tf "${policy}" | sed -n '1,20p' || true
-  else
-    echo "RAPTOR_POLICY=missing_or_empty"
-    ls -la "${PX4_DIR}/src/modules/mc_raptor/blob" || true
-    exit 3
-  fi
-
-  printf '%s\n' "${px4_sha}" > "${LOG_DIR}/px4_commit.txt"
+  verify_clean_repository "${PX4_DIR}"
+  log_repository_identity PX4 "${PX4_DIR}"
 } | tee "${LOG_DIR}/px4_clone.log"

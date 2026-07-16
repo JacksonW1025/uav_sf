@@ -1,0 +1,46 @@
+schema_version: "1.0"
+generated_at: "2026-07-16T19:00:00Z"
+generated_by: "Phase A upstream audit"
+
+px4_autopilot:
+  repository: "https://github.com/PX4/PX4-Autopilot.git"
+  commit: "4ae21a5e569d3d89c2f6366688cbacb3e93437c9"
+  describe: "4ae21a5"
+  source: "origin HEAD observed at task start"
+  selection_reason: "Locks the audited upstream default branch before any experiment setup."
+
+px4_msgs:
+  repository: "https://github.com/PX4/px4_msgs.git"
+  commit: "18ecff03041c6f8d8a0012fbc63af0b23dd60af1"
+  source: "origin HEAD observed at task start"
+  selection_reason: "Latest audited message definitions; compatibility check passes against the locked PX4 messages."
+
+px4_ros2_interface_lib:
+  repository: "https://github.com/Auterion/px4-ros2-interface-lib.git"
+  commit: "c3e410f035806e8c56246708432ded09c976434b"
+  describe: "2.1.1-9-gc3e410f"
+  source: "origin HEAD observed at task start; the official repository is under Auterion"
+  selection_reason: "Contains the audited Dynamic External Mode, Mode Executor, replacement, examples, and tests."
+
+micro_xrce_dds_agent:
+  repository: "https://github.com/eProsima/Micro-XRCE-DDS-Agent.git"
+  commit: "73622810d984349b80bbac0ef55fc0b694d62222"
+  describe: "v2.4.3"
+  source: "existing clean local checkout and signed upstream release tag"
+  selection_reason: "Retains the already audited PX4-compatible release instead of silently moving the transport agent."
+
+container:
+  base_image: "ubuntu:24.04"
+  base_image_digest: "sha256:4fbb8e6a8395de5a7550b33509421a2bafbc0aab6c06ba2cef9ebffbc7092d90"
+  platform_digest: "sha256:7f622ca8766bccb22f04242ecb6f19f770b2f08827dc4b8c707de5e78a6da7ab"
+  ros_distro: "jazzy"
+  gazebo_distribution: "harmonic"
+
+experiment_environment:
+  architecture: "aarch64"
+  compiler: "gcc 11.4.0 (Ubuntu 11.4.0-1ubuntu1~22.04.3)"
+  cmake: "3.22.1"
+  python: "3.10.12"
+  package_snapshot: "data/processed/environment/package_versions.txt"
+  python_snapshot: "data/processed/environment/python_packages.txt"
+  toolchain_snapshot: "data/processed/environment/toolchain_versions.txt"

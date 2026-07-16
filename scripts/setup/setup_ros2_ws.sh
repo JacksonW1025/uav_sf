@@ -2,48 +2,54 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-WS_DIR="${ROS2_WS_DIR:-${REPO_ROOT}/ros2_ws}"
-PX4_MSGS_REPO="${PX4_MSGS_REPO:-https://github.com/PX4/px4_msgs.git}"
-PX4_MSGS_REF="${PX4_MSGS_REF:-main}"
-LOG_DIR="${REPO_ROOT}/runs/setup"
+# shellcheck source=dependency_lock_lib.sh
+source "${REPO_ROOT}/scripts/setup/dependency_lock_lib.sh"
 
+WS_DIR="${ROS2_WS_DIR:-${REPO_ROOT}/ros2_ws}"
+LOG_DIR="${REPO_ROOT}/runs/setup"
+UPDATE_LOCK=0
+SKIP_BUILD=0
+while (($#)); do
+  case "$1" in
+    --update-lock) UPDATE_LOCK=1; shift ;;
+    --skip-build) SKIP_BUILD=1; shift ;;
+    *) echo "unknown argument: $1" >&2; exit 2 ;;
+  esac
+done
+if ((UPDATE_LOCK)); then
+  python3 "${LOCK_HELPER}" --lock "${DEPENDENCY_LOCK_FILE}" \
+    --update-lock px4_msgs --update-lock px4_ros2_interface_lib
+fi
+lock_verify
 mkdir -p "${LOG_DIR}" "${WS_DIR}/src"
 
-git_retry() {
-  local attempt
-  for attempt in 1 2 3 4 5; do
-    if git -c http.version=HTTP/1.1 "$@"; then
-      return 0
-    fi
-    echo "git $* failed on attempt ${attempt}, retrying..." >&2
-    sleep $((attempt * 5))
-  done
-  git -c http.version=HTTP/1.1 "$@"
-}
-
+ROS_DISTRO_LOCKED="$(lock_get container.ros_distro)"
+ROS_SETUP="/opt/ros/${ROS_DISTRO_LOCKED}/setup.bash"
+if [[ ! -f "${ROS_SETUP}" ]]; then
+  echo "missing locked ROS installation: ${ROS_SETUP}" >&2
+  exit 30
+fi
 set +u
-source /opt/ros/jazzy/setup.bash
+source "${ROS_SETUP}"
 set -u
 
 {
-  echo "# ROS 2 workspace setup"
-  date -Is
+  echo "# ROS 2 locked workspace"
+  date -u +'%Y-%m-%dT%H:%M:%SZ'
   echo "ROS_DISTRO=${ROS_DISTRO:-}"
-  echo "WS_DIR=${WS_DIR}"
-  echo "PX4_MSGS_REF=${PX4_MSGS_REF}"
+  checkout_locked_repository px4_msgs "${WS_DIR}/src/px4_msgs"
+  checkout_locked_repository px4_ros2_interface_lib "${WS_DIR}/src/px4_ros2_interface_lib"
 
-  if [[ ! -d "${WS_DIR}/src/px4_msgs/.git" ]]; then
-    git_retry clone "${PX4_MSGS_REPO}" "${WS_DIR}/src/px4_msgs"
+  if ((SKIP_BUILD == 0)); then
+    colcon --log-base "${WS_DIR}/log" build \
+      --base-paths "${WS_DIR}/src" \
+      --build-base "${WS_DIR}/build" \
+      --install-base "${WS_DIR}/install" \
+      --cmake-args -DBUILD_TESTING=ON
   fi
 
-  git -C "${WS_DIR}/src/px4_msgs" config http.version HTTP/1.1
-  git_retry -C "${WS_DIR}/src/px4_msgs" fetch --tags origin
-  git -C "${WS_DIR}/src/px4_msgs" checkout "${PX4_MSGS_REF}"
-
-  colcon --log-base "${WS_DIR}/log" build \
-    --base-paths "${WS_DIR}/src" \
-    --build-base "${WS_DIR}/build" \
-    --install-base "${WS_DIR}/install"
-
-  git -C "${WS_DIR}/src/px4_msgs" rev-parse HEAD | tee "${LOG_DIR}/px4_msgs_commit.txt"
+  verify_clean_repository "${WS_DIR}/src/px4_msgs"
+  verify_clean_repository "${WS_DIR}/src/px4_ros2_interface_lib"
+  log_repository_identity PX4_MSGS "${WS_DIR}/src/px4_msgs"
+  log_repository_identity PX4_ROS2_INTERFACE_LIB "${WS_DIR}/src/px4_ros2_interface_lib"
 } | tee "${LOG_DIR}/ros2_ws_build.log"
