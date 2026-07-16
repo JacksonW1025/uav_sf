@@ -7,6 +7,8 @@ data/manifests/HISTORICAL_IGNORED_NESTED_CACHE_MANIFEST.tsv	1	EXTERNALIZE_RAW	le
 artifacts/**	5	DELETE_GENERATED	mapping-only category layer	data policy and repository map
 configs/README.md	1	DELETE_GENERATED	mapping-only duplicate of config	config/README.md
 px4_overlay/README.md	1	DELETE_GENERATED	mapping-only duplicate	boards/README.md patches/README.md config/README.md
+data/raw/README.md	1	DELETE_GENERATED	obsolete raw-data mapping	data/README.md and data/traces/README.md
+scripts/{README,analysis/README,diagnostics/README,monitors/README,runners/README,utilities/README}.md	6	DELETE_GENERATED	mapping-only script category layer	scripts/README.md and SCRIPT_INVENTORY.tsv
 external/PX4-Autopilot/build/**	0	DELETE_GENERATED	reproducible ignored build output	setup scripts and tracked overlays
 external/PX4-Autopilot (dirty ignored clone)	0	DELETE_GENERATED	all research changes covered by tracked patch/board/installer; clone was not canonical	external diagnostic diff/status plus tracked overlays
 external/Micro-XRCE-DDS-Agent/build/**	0	DELETE_GENERATED	reproducible ignored build output	build script

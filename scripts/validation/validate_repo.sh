@@ -4,6 +4,12 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "${REPO_ROOT}"
 
+cleanup_validation_caches() {
+  find scripts tests -type d -name '__pycache__' -prune -exec rm -rf {} +
+  rm -rf .pytest_cache
+}
+trap cleanup_validation_caches EXIT
+
 echo "[1/10] Python compilation"
 python3 -m compileall -q scripts tests
 
@@ -39,7 +45,7 @@ echo "[5/10] Active Markdown links"
 python3 scripts/validation/check_markdown_links.py
 
 echo "[6/10] Unit tests"
-PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH="${REPO_ROOT}" python3 -m pytest -q tests
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH="${REPO_ROOT}" python3 -m pytest -q -p no:cacheprovider tests
 
 echo "[7/10] Whitespace errors"
 git diff --check
