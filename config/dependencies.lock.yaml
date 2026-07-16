@@ -1,5 +1,5 @@
 schema_version: "1.0"
-generated_at: "2026-07-16T19:00:00Z"
+generated_at: "2026-07-16"
 generated_by: "Phase A upstream audit"
 
 px4_autopilot:
@@ -30,17 +30,17 @@ micro_xrce_dds_agent:
   selection_reason: "Retains the already audited PX4-compatible release instead of silently moving the transport agent."
 
 container:
-  base_image: "ubuntu:24.04"
-  base_image_digest: "sha256:4fbb8e6a8395de5a7550b33509421a2bafbc0aab6c06ba2cef9ebffbc7092d90"
-  platform_digest: "sha256:7f622ca8766bccb22f04242ecb6f19f770b2f08827dc4b8c707de5e78a6da7ab"
+  base_image: "public.ecr.aws/docker/library/ubuntu"
+  base_image_digest: "sha256:786a8b558f7be160c6c8c4a54f9a57274f3b4fb1491cf65146521ae77ff1dc54"
+  platform_digest: "sha256:786a8b558f7be160c6c8c4a54f9a57274f3b4fb1491cf65146521ae77ff1dc54"
   ros_distro: "jazzy"
   gazebo_distribution: "harmonic"
 
 experiment_environment:
   architecture: "aarch64"
-  compiler: "gcc 11.4.0 (Ubuntu 11.4.0-1ubuntu1~22.04.3)"
-  cmake: "3.22.1"
-  python: "3.10.12"
+  compiler: "gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0"
+  cmake: "3.28.3"
+  python: "3.12.3"
   package_snapshot: "data/processed/environment/package_versions.txt"
   python_snapshot: "data/processed/environment/python_packages.txt"
   toolchain_snapshot: "data/processed/environment/toolchain_versions.txt"

@@ -1,8 +1,9 @@
-# Host toolchain snapshot, generated 2026-07-16 UTC
-aarch64
-gcc (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0
-g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0
-cmake version 3.22.1
-Python 3.10.12
-git version 2.34.1
-Docker version 29.3.0, build 5927d80
+architecture=aarch64
+os_release=Ubuntu 24.04.4 LTS
+compiler=gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+cxx_compiler=g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+cmake=cmake version 3.28.3
+python=Python 3.12.3
+ros_distro=jazzy
+gazebo=8.14.0
+micro_xrce_dds_agent=v2.4.3

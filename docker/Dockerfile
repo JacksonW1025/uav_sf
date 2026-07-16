@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=ubuntu:24.04@sha256:4fbb8e6a8395de5a7550b33509421a2bafbc0aab6c06ba2cef9ebffbc7092d90
+ARG BASE_IMAGE=public.ecr.aws/docker/library/ubuntu@sha256:786a8b558f7be160c6c8c4a54f9a57274f3b4fb1491cf65146521ae77ff1dc54
 FROM ${BASE_IMAGE}
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -150,12 +150,12 @@ RUN if ! getent group "${USER_GID}" >/dev/null; then groupadd --gid "${USER_GID}
     && echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" > "/etc/sudoers.d/${USERNAME}" \
     && chmod 0440 "/etc/sudoers.d/${USERNAME}"
 
-RUN rosdep init || true
+RUN rosdep init
 
 USER ${USERNAME}
 WORKDIR /workspace
 
-RUN rosdep update || true \
+RUN rosdep update \
     && printf '\nsource /opt/ros/jazzy/setup.bash\nexport PX4_DIR=/workspace/external/PX4-Autopilot\n' >> "${HOME}/.bashrc"
 
 ENV PX4_DIR=/workspace/external/PX4-Autopilot

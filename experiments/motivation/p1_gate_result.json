@@ -1,0 +1,69 @@
+{
+  "blocking_items": [],
+  "criteria": [
+    {
+      "description": "All 14 route fields have one allowed observability status.",
+      "evidence": "docs/design/OBSERVABILITY_MATRIX.tsv",
+      "id": "route_fields_classified",
+      "status": "PASS"
+    },
+    {
+      "description": "Every DIRECT/DERIVED field identifies source and collection implementation.",
+      "evidence": "OBSERVABILITY_MATRIX.tsv + scripts/tracing/route_trace_collector.py",
+      "id": "direct_derived_collectors",
+      "status": "PASS"
+    },
+    {
+      "description": "Required observation-only patch applies and its PX4 SITL binary is built.",
+      "evidence": "patches/px4/route_observability/route_observability_topics.patch + patched bin/px4",
+      "id": "instrumentation_applies_and_builds",
+      "status": "PASS"
+    },
+    {
+      "description": "Timestamp model defines offsets/clock bridge and sortable ULog/PX4 domains.",
+      "evidence": "docs/design/TIMESTAMP_MODEL.md",
+      "id": "timestamp_event_ordering",
+      "status": "PASS"
+    },
+    {
+      "description": "Collector separates producer publication from PX4 setpoint consumption.",
+      "evidence": "scripts/tracing/route_trace_collector.py + tests/test_route_trace_schema.py",
+      "id": "producer_vs_consumer",
+      "status": "PASS"
+    },
+    {
+      "description": "Final actuator writer has explicit, built instrumentation and a collector mapping.",
+      "evidence": "route_observability patch + actuator_writer_collector.py",
+      "id": "final_actuator_writer",
+      "status": "PASS"
+    },
+    {
+      "description": "Unified Family A bootstrap completed.",
+      "evidence": "runs/setup/family_a_bootstrap.log",
+      "id": "family_a_build",
+      "status": "PASS"
+    },
+    {
+      "description": "Official External Mode basic example compiled.",
+      "evidence": "ros2_ws/install/**/example_mode_goto",
+      "id": "external_mode_basic_build",
+      "status": "PASS"
+    },
+    {
+      "description": "Official Mode Executor example compiled.",
+      "evidence": "ros2_ws/install/**/example_mode_with_executor",
+      "id": "mode_executor_build",
+      "status": "PASS"
+    },
+    {
+      "description": "Route trace schema and collector contract are loadable and valid.",
+      "evidence": "route_trace.schema.json + tests/test_route_trace_schema.py",
+      "id": "trace_schema_collector",
+      "status": "PASS"
+    }
+  ],
+  "px4_commit": "4ae21a5e569d3d89c2f6366688cbacb3e93437c9",
+  "px4_msgs_commit": "18ecff03041c6f8d8a0012fbc63af0b23dd60af1",
+  "px4_ros2_interface_lib_commit": "c3e410f035806e8c56246708432ded09c976434b",
+  "status": "PASS"
+}

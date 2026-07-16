@@ -28,13 +28,17 @@ if [[ "${INSIDE}" != "1" ]]; then
   args=(--inside)
   if ((UPDATE_LOCK)); then args+=(--update-lock); fi
   UAV_SF_BOOTSTRAP_INSIDE=1 "${REPO_ROOT}/docker/run.sh" \
-    "${REPO_ROOT}/scripts/setup/bootstrap_family_a.sh" "${args[@]}"
+    "/workspace/scripts/setup/bootstrap_family_a.sh" "${args[@]}"
   exit $?
 fi
 
 set +u
 source /opt/ros/jazzy/setup.bash
 set -u
+if [[ ! -s /etc/ros/rosdep/sources.list.d/20-default.list ]]; then
+  sudo rosdep init
+fi
+rosdep update
 mkdir -p "${LOG_DIR}"
 update_arg=()
 if ((UPDATE_LOCK)); then update_arg=(--update-lock); fi
@@ -46,7 +50,7 @@ if ((UPDATE_LOCK)); then update_arg=(--update-lock); fi
   "${REPO_ROOT}/scripts/setup/prepare_observability_px4.sh"
   "${REPO_ROOT}/scripts/setup/build_microxrce_agent.sh" "${update_arg[@]}"
 
-  sudo rosdep install --from-paths "${REPO_ROOT}/ros2_ws/src" --ignore-src -r -y --rosdistro jazzy
+  rosdep install --from-paths "${REPO_ROOT}/ros2_ws/src" --ignore-src -r -y --rosdistro jazzy
   "${REPO_ROOT}/scripts/setup/setup_ros2_ws.sh" "${update_arg[@]}"
 
   python3 "${REPO_ROOT}/ros2_ws/src/px4_ros2_interface_lib/scripts/check-message-compatibility.py" \

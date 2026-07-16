@@ -16,14 +16,16 @@ new remote HEAD and requires all validation and build evidence to be repeated.
 
 The interface library's official compatibility checker reported all required
 message definitions compatible between the locked px4_msgs and PX4 commits.
-The Ubuntu 24.04 multi-platform manifest digest is
-`sha256:4fbb8e6a8395de5a7550b33509421a2bafbc0aab6c06ba2cef9ebffbc7092d90`;
-the audited arm64 platform manifest is
-`sha256:7f622ca8766bccb22f04242ecb6f19f770b2f08827dc4b8c707de5e78a6da7ab`.
+The Ubuntu 24.04 Docker Official Image mirror is
+`public.ecr.aws/docker/library/ubuntu`; the locally inspected arm64 repository
+digest is
+`sha256:786a8b558f7be160c6c8c4a54f9a57274f3b4fb1491cf65146521ae77ff1dc54`.
+The mirror was selected after Docker Hub's registry endpoint timed out; the
+experiment still consumes an immutable digest rather than a floating tag.
 
-The tracked package, Python, and toolchain snapshots describe the aarch64 host
-used to generate the lock. The container file defines the repeatable Ubuntu
-24.04 / ROS 2 Jazzy / Gazebo Harmonic build baseline. Package repositories can
+The tracked package, Python, and toolchain snapshots describe the successfully
+built aarch64 Family A experiment container. The container file defines the
+repeatable Ubuntu 24.04 / ROS 2 Jazzy / Gazebo Harmonic build baseline. Package repositories can
 change independently of the base-image digest, so the version snapshot remains
 part of each run's provenance and must be regenerated after an explicit lock or
 image update.

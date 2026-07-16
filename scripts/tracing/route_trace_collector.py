@@ -229,6 +229,7 @@ def rows_from_ulog(path: Path) -> Iterator[tuple[float, str, dict[str, object]]]
             continue
         for index, timestamp in enumerate(dataset.data["timestamp"]):
             payload = {key: values[index].item() for key, values in dataset.data.items()}
+            payload["instance"] = dataset.multi_id
             rows.append((float(timestamp), dataset.name, payload))
     yield from sorted(rows, key=lambda item: item[0])
 
