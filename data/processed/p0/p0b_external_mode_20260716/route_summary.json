@@ -1,0 +1,106 @@
+{
+  "baseline": {
+    "armed_seen": true,
+    "duration_s": 38.312,
+    "external_mode_id": 23,
+    "final_arming_state": 1,
+    "final_nav_state": 23,
+    "reason": "normal route handoff completed and vehicle disarmed",
+    "runner_scenario": "external",
+    "scenario": "external",
+    "schema_version": "1.0",
+    "status": "PASS"
+  },
+  "duration_us": 41640000.0,
+  "event_type_counts": {
+    "actuator_motors": 415,
+    "actuator_output_published": 415,
+    "allocator_input_published": 415,
+    "external_mode_activated": 1,
+    "external_mode_completed": 1,
+    "external_mode_deactivated": 1,
+    "external_mode_registered": 2,
+    "failsafe_flags": 79,
+    "probe_finished": 1,
+    "probe_state_transition": 5,
+    "producer_still_publishing": 8,
+    "px4_setpoint_consumed": 404,
+    "px4_setpoint_received": 205,
+    "runner_started": 1,
+    "vehicle_command": 29,
+    "vehicle_control_mode": 103,
+    "vehicle_status": 103
+  },
+  "first_timestamp_us": 6384000.0,
+  "last_timestamp_us": 48024000.0,
+  "lifecycle_evidence": [
+    "producer_jsonl:external_mode_registration_observed",
+    "ros_structured_log:external_mode.log",
+    "ros_structured_log:external_mode.log:result=success",
+    "ros_structured_log:external_mode.log:sequence=160"
+  ],
+  "max_message_age_s": 0.008,
+  "nav_state_transitions": [
+    4,
+    17,
+    23,
+    5,
+    23
+  ],
+  "producer_consumer_evidence": {
+    "domains_require_clock_bridge": true,
+    "producer_publish_events": 8,
+    "px4_consume_events": 404
+  },
+  "registration_transitions": [
+    {
+      "mode_id": 23,
+      "name": "Route Transition",
+      "registered": true
+    }
+  ],
+  "run_id": "p0b_external_mode_20260716",
+  "schema_version": "1.0",
+  "source_artifacts": [
+    {
+      "bytes": 9780948,
+      "name": "flight.ulg",
+      "sha256": "0c3464c7c198b2e278cd3ed63f21800e93036041c75bffc129d5e4d1079ba510"
+    },
+    {
+      "bytes": 5998,
+      "name": "producer_events.jsonl",
+      "sha256": "6c16b81d0db795538aebfae20758fe9377aeab6d28cee3736ceff843252c954a"
+    },
+    {
+      "bytes": 3115,
+      "name": "external_mode.log",
+      "sha256": "9b84049ceaddd3634d9ec6b37dbf2d8112392fd5d05076999c66e62bf523ec1d"
+    }
+  ],
+  "timestamp_domains": {
+    "ros_node_ns": {
+      "duration": 38301499904.0,
+      "event_count": 49,
+      "first": 1.784202390619447e+18,
+      "last": 1.784202428920947e+18
+    },
+    "ulog_us": {
+      "duration": 41640000.0,
+      "event_count": 2139,
+      "first": 6384000.0,
+      "last": 48024000.0
+    }
+  },
+  "trace_event_count": 2188,
+  "writer_attribution": {
+    "actuator_output_events": 415,
+    "actuator_writers": [
+      "control_allocator"
+    ],
+    "allocator_input_writers": [
+      "mc_rate_control"
+    ],
+    "status": "ATTRIBUTED"
+  }
+}

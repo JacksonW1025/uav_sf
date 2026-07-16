@@ -1,0 +1,89 @@
+{
+  "baseline": {
+    "armed_seen": true,
+    "duration_s": 35.514,
+    "external_mode_id": null,
+    "final_arming_state": 1,
+    "final_nav_state": 4,
+    "reason": "normal route handoff completed and vehicle disarmed",
+    "runner_scenario": "offboard",
+    "scenario": "offboard",
+    "schema_version": "1.0",
+    "status": "PASS"
+  },
+  "duration_us": 38824000.0,
+  "event_type_counts": {
+    "actuator_motors": 387,
+    "actuator_output_published": 386,
+    "allocator_input_published": 386,
+    "failsafe_flags": 74,
+    "internal_hold_requested": 2,
+    "offboard_mode_requested": 2,
+    "probe_finished": 1,
+    "probe_state_transition": 6,
+    "producer_still_publishing": 183,
+    "px4_setpoint_consumed": 387,
+    "px4_setpoint_received": 194,
+    "runner_started": 1,
+    "vehicle_command": 24,
+    "vehicle_control_mode": 99,
+    "vehicle_status": 99
+  },
+  "first_timestamp_us": 6284000.0,
+  "last_timestamp_us": 45108000.0,
+  "lifecycle_evidence": [],
+  "max_message_age_s": 0.006597,
+  "nav_state_transitions": [
+    4,
+    17,
+    14,
+    4,
+    5,
+    4
+  ],
+  "producer_consumer_evidence": {
+    "domains_require_clock_bridge": true,
+    "producer_publish_events": 183,
+    "px4_consume_events": 387
+  },
+  "registration_transitions": [],
+  "run_id": "p0a_offboard_20260716",
+  "schema_version": "1.0",
+  "source_artifacts": [
+    {
+      "bytes": 9114735,
+      "name": "flight.ulg",
+      "sha256": "4eff85ce5331763182672f32ef2ab21e0cf0d69e4090254aea2b13efd17e16d0"
+    },
+    {
+      "bytes": 66417,
+      "name": "producer_events.jsonl",
+      "sha256": "9f74aef19cf839bff436c5e4e16723ff36f5dbed70e1a0d3728e1aa378a3682a"
+    }
+  ],
+  "timestamp_domains": {
+    "ros_node_ns": {
+      "duration": 35500884224.0,
+      "event_count": 219,
+      "first": 1.784201881377941e+18,
+      "last": 1.7842019168788252e+18
+    },
+    "ulog_us": {
+      "duration": 38824000.0,
+      "event_count": 2012,
+      "first": 6284000.0,
+      "last": 45108000.0
+    }
+  },
+  "trace_event_count": 2231,
+  "writer_attribution": {
+    "actuator_output_events": 386,
+    "actuator_writers": [
+      "control_allocator"
+    ],
+    "allocator_input_writers": [
+      "mc_rate_control"
+    ],
+    "status": "ATTRIBUTED"
+  }
+}

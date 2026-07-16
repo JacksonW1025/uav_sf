@@ -1,3 +1,6 @@
-# Motivation experiments
+# Motivation gate
 
-No experiment has been run here. Add only small, reviewable plans or adapters that implement a row from `docs/motivation/`, and write runtime output under ignored `runs/motivation/`.
+`p1_gate_result.json` records the completed 10-criterion gate. It passed on the
+locked dependency set and authorized only the low-risk P0 normal-flow
+baselines. Runtime output remains under ignored `runs/`; this result does not
+authorize later fault or random campaigns.

@@ -1,13 +1,21 @@
 # Motivation Study workspace
 
-This directory is the only active entry point for Motivation Study M1–M5. It contains schemas and evidence-collection guidance only; cleanup did not populate empirical results.
+This directory is the active entry point for the completed Phase A Motivation
+Study. It contains the P-1 feasibility result, M2 source audit, M4 official-test
+coverage audit, and the gated P0 normal-flow baselines.
 
-## Immediate priorities
+## Completed work
 
-1. **P-1 Route Observability Feasibility:** determine which route fields can be observed without modifying PX4 and which require tracked instrumentation.
-2. **M2 External Mode and Registration Importance:** collect official design, lifecycle, issue, and registration evidence.
-3. **M4 Official Test Coverage Gap:** map official tests to revocation, installation, writer identity, overlap/gap, residue, and full recovery obligations.
-4. **P0 Official Handoff Flow:** capture one documented handoff path before designing probes.
+1. **P-1 Route Observability Feasibility:** 14/14 fields classified; 4 DIRECT,
+   7 DERIVED, 3 INSTRUMENTATION_REQUIRED, 0 UNOBSERVABLE.
+2. **M2 External Mode and Registration Importance:** 13 locked-source evidence
+   entries distinguish registration, activation, completion, loss, fallback,
+   and replacement.
+3. **M4 Official Test Coverage Gap:** 15 official test/example rows show that
+   state/lifecycle coverage does not establish writer identity, revocation,
+   installation, overlap/gap, residue, or full recovery.
+4. **P0 Official Handoff Flow:** three legal normal-flow baselines ran after the
+   P-1 gate passed.
 
 ## Files
 
@@ -17,6 +25,7 @@ This directory is the only active entry point for Motivation Study M1–M5. It c
 - `OFFICIAL_TEST_COVERAGE.tsv`: official-test coverage against route obligations.
 - `WORKLOAD_CANDIDATES.tsv`: candidate supported workloads and replay cost.
 - `../design/OBSERVABILITY_MATRIX.tsv`: field-level signal feasibility.
+- `P0_OFFICIAL_HANDOFF_BASELINE_REPORT.md`: P0-A/B/C results and limitations.
 
 ## Evidence rules
 
@@ -26,4 +35,5 @@ This directory is the only active entry point for Motivation Study M1–M5. It c
 - Do not import legacy Family B results into a Family A evidence row without a new, explicit validation link.
 - Put raw captures under ignored `runs/` or the external archive, never in this directory.
 
-No Motivation experiment has been run as part of repository cleanup.
+Phase A stops here. Do not treat P0 as authorization to start a fault campaign,
+random search, full fuzzer, or later-phase probes.

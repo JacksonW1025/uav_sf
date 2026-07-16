@@ -20,3 +20,9 @@ Reusable tracing code must record evidence source and timestamp domain; it must
 not infer producer or writer identity from a mode label. Runtime output goes to
 ignored `runs/`, while compact validated summaries may be promoted to
 `data/processed/`.
+
+`probes/run_p0_scenario.sh` is the single normal-flow P0 entry point. It joins
+producer JSONL and structured External Mode/Executor lifecycle records with
+the patched ULog through `tracing/route_trace_collector.py`; the analysis step
+keeps ROS nanoseconds and ULog microseconds in separate domains and records raw
+artifact hashes.

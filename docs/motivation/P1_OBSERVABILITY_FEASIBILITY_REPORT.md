@@ -48,9 +48,9 @@ remain outside the gate.
 
 The static observability design is sufficient in scope for the three normal P0
 flows only after the patched PX4 and official ROS examples compile and the
-collector/schema tests pass. Gate status is machine-readable in
-`experiments/motivation/p1_gate_result.json`; this report does not predeclare a
-pass.
+collector/schema tests pass. Those checks completed and the machine-readable
+gate in `experiments/motivation/p1_gate_result.json` reports PASS for all ten
+criteria.
 
 Later oracles must treat missing writer/consumer events, broken sequences,
 clock-bridge resets, and incomplete module flags as unknown evidence. Coverage

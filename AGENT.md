@@ -14,10 +14,10 @@ The current narrative and dependency lock are authoritative.
 
 ## Current boundary
 
-Family A is primary. Work in this phase is limited to dependency locking,
-Family A bootstrap, P-1 observability, M2 registration evidence, M4 official
-test coverage, and a gated normal-flow P0 baseline. Do not start a complete
-fuzzer, random search, fault campaign, or later-phase probe.
+Family A is primary. Phase A dependency locking, bootstrap, P-1 observability,
+M2 registration evidence, M4 official-test coverage, and gated normal-flow P0
+are complete. Do not infer authorization to start a complete fuzzer, random
+search, fault campaign, or later-phase probe from these results.
 
 Treat a route as the declared mode plus registration, authority source,
 producer identity, setpoint interface and freshness, controller/module path,

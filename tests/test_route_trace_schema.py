@@ -7,7 +7,12 @@ import pytest
 from jsonschema import Draft202012Validator, ValidationError
 
 from scripts.tracing.actuator_writer_collector import summarize
-from scripts.tracing.route_trace_collector import RouteEventReducer, RouteTraceWriter
+from scripts.tracing.route_trace_collector import (
+    RouteEventReducer,
+    RouteTraceWriter,
+    lifecycle_events,
+    producer_events,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -43,3 +48,35 @@ def test_invalid_event_is_rejected(tmp_path: Path) -> None:
     del event["timestamp_domain"]
     with pytest.raises(ValidationError):
         RouteTraceWriter(tmp_path / "bad.jsonl", SCHEMA).write([event])
+
+
+def test_producer_and_lifecycle_sidecars_preserve_ros_clock_domain(tmp_path: Path) -> None:
+    producer = tmp_path / "producer.jsonl"
+    producer.write_text(
+        json.dumps(
+            {
+                "event_type": "adapter_event",
+                "ros_time_ns": 123,
+                "adapter_event": {
+                    "event_type": "offboard_publish",
+                    "producer_identity": "node-a",
+                    "behavior_phase": "hover",
+                },
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    [producer_event] = list(producer_events(producer, "run-sidecar"))
+    assert producer_event["event_type"] == "producer_still_publishing"
+    assert producer_event["timestamp_domain"] == "ros_node_ns"
+    assert producer_event["producer_identity"] == "node-a"
+
+    lifecycle = tmp_path / "mode.log"
+    lifecycle.write_text(
+        '[INFO] [1000.25] [mode]: {"event_type":"external_mode_registered","mode_id":23}\n',
+        encoding="utf-8",
+    )
+    [registration] = list(lifecycle_events(lifecycle, "run-sidecar"))
+    assert registration["registration_state"]["mode_id"] == 23
+    assert registration["timestamp"] == 1_000_250_000_000.0

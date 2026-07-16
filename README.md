@@ -19,8 +19,8 @@ fallback) is retained only as a future cross-family case under `family_b/`.
 
 ## Current phase
 
-Phase A locks dependencies and establishes route observability before any
-large experiment. The ordered deliverables are:
+Phase A locked dependencies and established route observability before any
+large experiment. The completed deliverables are:
 
 1. Family A dependency lock and reproducible bootstrap;
 2. P-1 route-observability feasibility;
@@ -29,6 +29,8 @@ large experiment. The ordered deliverables are:
 5. P0 normal handoff baselines, only if the P-1 gate passes.
 
 This phase does not develop a complete fuzzer or start random campaigns.
+The P-1 gate passed 10/10 and all three legal P0 normal-flow baselines passed;
+see the [P0 report](docs/motivation/P0_OFFICIAL_HANDOFF_BASELINE_REPORT.md).
 
 ## Quick start
 

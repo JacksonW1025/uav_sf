@@ -14,8 +14,21 @@ class P0Executor final : public px4_ros2::ModeExecutorBase {
 
   void onActivate() override
   {
-    log("executor_activated", "takeoff");
-    takeoff([this](px4_ros2::Result result) { afterTakeoff(result); });
+    if (started_) {
+      log("executor_reactivated", "ignored_after_baseline_start");
+      return;
+    }
+    started_ = true;
+    log("executor_activated", "wait_ready_to_arm");
+    waitReadyToArm([this](px4_ros2::Result ready_result) {
+      if (!requireSuccess("ready_to_arm", ready_result)) return;
+      log("executor_transition", "arm");
+      arm([this](px4_ros2::Result arm_result) {
+        if (!requireSuccess("arm_complete", arm_result)) return;
+        log("executor_transition", "takeoff");
+        takeoff([this](px4_ros2::Result result) { afterTakeoff(result); });
+      });
+    });
   }
 
   void onDeactivate(DeactivateReason reason) override
@@ -56,6 +69,8 @@ class P0Executor final : public px4_ros2::ModeExecutorBase {
     RCLCPP_INFO(node().get_logger(),
                 "{\"event_type\":\"%s\",\"stage\":\"%s\"}", event, stage);
   }
+
+  bool started_{false};
 };
 
 }  // namespace uav_sf

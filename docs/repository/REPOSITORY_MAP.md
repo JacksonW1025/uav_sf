@@ -17,7 +17,7 @@
 | `data/schemas/` | machine-readable contracts | tested |
 | `data/processed/` | compact reproducible outputs | source provenance required |
 | `experiments/motivation/` | gate result | machine readable |
-| `experiments/probes/p0/` | P0 procedure | run only after gate pass |
+| `experiments/probes/p0/` | reproducible P0 procedure | gate passed; normal flow only |
 | `external/`, `ros2_ws/`, `runs/` | ignored dependencies/build/raw runtime | never tracked |
 
 The former in-tree legacy archive is intentionally absent. Use

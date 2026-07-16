@@ -24,6 +24,7 @@ class RouteTransitionMode final : public px4_ros2::ModeBase {
   {
     activation_time_ = node().get_clock()->now();
     sequence_ = 0;
+    completion_reported_ = false;
     RCLCPP_INFO(node().get_logger(),
                 "{\"event_type\":\"external_mode_activated\",\"mode_id\":%u}", id());
   }
@@ -49,15 +50,13 @@ class RouteTransitionMode final : public px4_ros2::ModeBase {
     if (elapsed_s >= 3.0 && elapsed_s < 8.0) {
       velocity = Eigen::Vector3f{0.5f, 0.f, 0.f};
       phase = "straight_line";
-    } else if (elapsed_s >= 8.0 && elapsed_s < 12.0) {
-      const float angle = 0.15f * static_cast<float>(elapsed_s - 8.0);
-      velocity = Eigen::Vector3f{0.3f * std::cos(angle), 0.3f * std::sin(angle), 0.f};
-      yaw = angle;
-      phase = "low_speed_turn";
-    } else if (elapsed_s >= 12.0) {
-      RCLCPP_INFO(node().get_logger(),
-                  "{\"event_type\":\"external_mode_completed\",\"result\":\"success\"}");
-      completed(px4_ros2::Result::Success);
+    } else if (elapsed_s >= 8.0) {
+      if (!completion_reported_) {
+        completion_reported_ = true;
+        RCLCPP_INFO(node().get_logger(),
+                    "{\"event_type\":\"external_mode_completed\",\"result\":\"success\"}");
+        completed(px4_ros2::Result::Success);
+      }
       return;
     }
 
@@ -72,6 +71,8 @@ class RouteTransitionMode final : public px4_ros2::ModeBase {
  private:
   void reportFailure(const char* reason)
   {
+    if (completion_reported_) return;
+    completion_reported_ = true;
     RCLCPP_ERROR(node().get_logger(),
                  "{\"event_type\":\"external_mode_failure\",\"reason\":\"%s\"}", reason);
     completed(px4_ros2::Result::ModeFailureOther);
@@ -80,6 +81,7 @@ class RouteTransitionMode final : public px4_ros2::ModeBase {
   rclcpp::Time activation_time_{};
   std::shared_ptr<px4_ros2::TrajectorySetpointType> trajectory_setpoint_;
   uint64_t sequence_{0};
+  bool completion_reported_{false};
 };
 
 }  // namespace uav_sf

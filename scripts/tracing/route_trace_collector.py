@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Iterable, Iterator, Optional
@@ -234,9 +235,130 @@ def rows_from_ulog(path: Path) -> Iterator[tuple[float, str, dict[str, object]]]
     yield from sorted(rows, key=lambda item: item[0])
 
 
-def collect_ulog(path: Path, output: Path, run_id: str) -> int:
+def producer_events(path: Path, run_id: str) -> Iterator[dict[str, object]]:
+    """Normalize the probe's producer-side JSONL without mixing clock domains."""
+    state = RouteState(run_id=run_id)
+    with path.open("r", encoding="utf-8") as handle:
+        for line in handle:
+            record = json.loads(line)
+            timestamp = float(record["ros_time_ns"])
+            payload = record.get("adapter_event")
+            event_type = str(record.get("event_type", "producer_event"))
+            confidence = "MEDIUM"
+
+            if isinstance(payload, dict):
+                adapter_type = str(payload.get("event_type", payload.get("event", "adapter_event")))
+                event_type = adapter_type
+                identity = payload.get("producer_identity")
+                if identity:
+                    state.producer_identity = str(identity)
+                if adapter_type == "offboard_publish":
+                    event_type = "producer_still_publishing"
+                    state.authority_source = "ros2_offboard"
+                    state.setpoint_topic = "trajectory_setpoint"
+                    state.setpoint_level = str(payload.get("behavior_phase", "velocity"))
+                    confidence = "HIGH"
+            elif event_type == "external_mode_registration_observed":
+                mode_id = int(record["mode_id"])
+                state.registration_state = {
+                    "registered": True,
+                    "name": str(record.get("name", "")),
+                    "mode_id": mode_id,
+                }
+                state.producer_identity = "registered_component:Route Transition"
+                event_type = "external_mode_registered"
+                confidence = "HIGH"
+            elif event_type == "state_transition":
+                event_type = "probe_state_transition"
+            elif event_type == "runner_finished":
+                event_type = "probe_finished"
+
+            yield state.event(
+                timestamp,
+                "ros_node_ns",
+                event_type,
+                f"producer_jsonl:{record.get('event_type', 'unknown')}",
+                confidence,
+            )
+
+
+STRUCTURED_LOG_EVENT = re.compile(r"\[(?P<timestamp>[0-9]+(?:\.[0-9]+)?)\].*?(?P<json>\{\"event_type\".*\})")
+
+
+def lifecycle_events(path: Path, run_id: str) -> Iterator[dict[str, object]]:
+    """Extract the adapter/executor's structured ROS lifecycle records."""
+    state = RouteState(run_id=run_id)
+    with path.open("r", encoding="utf-8", errors="replace") as handle:
+        for line in handle:
+            match = STRUCTURED_LOG_EVENT.search(line)
+            if not match:
+                continue
+            payload = json.loads(match.group("json"))
+            event_type = str(payload["event_type"])
+            timestamp_ns = float(match.group("timestamp")) * 1_000_000_000.0
+            confidence = "HIGH"
+
+            if event_type == "external_mode_registered":
+                mode_id = int(payload["mode_id"])
+                state.registration_state = {
+                    "registered": True,
+                    "name": "Route Transition",
+                    "mode_id": mode_id,
+                }
+                state.producer_identity = "registered_component:Route Transition"
+            elif event_type == "external_mode_activated":
+                state.declared_mode = int(payload["mode_id"])
+                state.authority_source = "dynamic_external_mode"
+                state.producer_identity = "registered_component:Route Transition"
+                state.setpoint_topic = "trajectory_setpoint"
+                state.setpoint_level = "velocity"
+            elif event_type == "external_mode_setpoint":
+                event_type = "producer_still_publishing"
+                state.authority_source = "dynamic_external_mode"
+                state.producer_identity = "registered_component:Route Transition"
+                state.setpoint_topic = "trajectory_setpoint"
+                state.setpoint_level = "velocity"
+            elif event_type == "external_mode_deactivated":
+                state.authority_source = None
+            elif event_type.startswith("executor_") or event_type == "mode_executor_registered":
+                if state.producer_identity is None:
+                    state.producer_identity = "mode_executor:Route Transition"
+                confidence = "MEDIUM" if event_type == "executor_transition" else "HIGH"
+
+            details = ",".join(
+                f"{key}={payload[key]}"
+                for key in ("stage", "result", "phase", "sequence")
+                if key in payload
+            )
+            evidence_source = f"ros_structured_log:{path.name}"
+            if details:
+                evidence_source += f":{details}"
+
+            yield state.event(
+                timestamp_ns,
+                "ros_node_ns",
+                event_type,
+                evidence_source,
+                confidence,
+            )
+
+
+def collect_ulog(
+    path: Path,
+    output: Path,
+    run_id: str,
+    producer_path: Optional[Path] = None,
+    lifecycle_path: Optional[Path] = None,
+) -> int:
     reducer = RouteEventReducer(run_id)
-    events = (reducer.reduce(source, payload, timestamp, "ulog_us") for timestamp, source, payload in rows_from_ulog(path))
+    events = [
+        reducer.reduce(source, payload, timestamp, "ulog_us")
+        for timestamp, source, payload in rows_from_ulog(path)
+    ]
+    if producer_path is not None:
+        events.extend(producer_events(producer_path, run_id))
+    if lifecycle_path is not None:
+        events.extend(lifecycle_events(lifecycle_path, run_id))
     return RouteTraceWriter(output).write(events)
 
 
@@ -245,8 +367,16 @@ def main() -> int:
     parser.add_argument("--ulog", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--run-id", required=True)
+    parser.add_argument("--producer-events", type=Path)
+    parser.add_argument("--lifecycle-log", type=Path)
     args = parser.parse_args()
-    count = collect_ulog(args.ulog, args.output, args.run_id)
+    count = collect_ulog(
+        args.ulog,
+        args.output,
+        args.run_id,
+        producer_path=args.producer_events,
+        lifecycle_path=args.lifecycle_log,
+    )
     print(json.dumps({"status": "PASS", "events": count, "output": str(args.output)}))
     return 0
 

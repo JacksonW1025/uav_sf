@@ -1,0 +1,121 @@
+{
+  "baseline": {
+    "armed_seen": true,
+    "duration_s": 35.115,
+    "external_mode_id": 23,
+    "final_arming_state": 1,
+    "final_nav_state": 23,
+    "reason": "armed-to-disarmed sequence observed",
+    "runner_scenario": "monitor",
+    "scenario": "executor",
+    "schema_version": "1.0",
+    "status": "PASS"
+  },
+  "duration_us": 38636000.0,
+  "event_type_counts": {
+    "actuator_motors": 385,
+    "actuator_output_published": 385,
+    "allocator_input_published": 385,
+    "executor_activated": 1,
+    "executor_result": 6,
+    "executor_transition": 5,
+    "external_mode_activated": 1,
+    "external_mode_completed": 1,
+    "external_mode_deactivated": 1,
+    "external_mode_registered": 1,
+    "failsafe_flags": 74,
+    "mode_executor_registered": 1,
+    "probe_finished": 1,
+    "producer_still_publishing": 8,
+    "px4_setpoint_consumed": 382,
+    "px4_setpoint_received": 193,
+    "runner_started": 1,
+    "vehicle_control_mode": 87,
+    "vehicle_status": 87
+  },
+  "first_timestamp_us": 6380000.0,
+  "last_timestamp_us": 45016000.0,
+  "lifecycle_evidence": [
+    "producer_jsonl:external_mode_registration_observed",
+    "ros_structured_log:external_mode_executor.log",
+    "ros_structured_log:external_mode_executor.log:stage=wait_ready_to_arm",
+    "ros_structured_log:external_mode_executor.log:stage=ready_to_arm,result=Success",
+    "ros_structured_log:external_mode_executor.log:stage=arm",
+    "ros_structured_log:external_mode_executor.log:stage=arm_complete,result=Success",
+    "ros_structured_log:external_mode_executor.log:stage=takeoff",
+    "ros_structured_log:external_mode_executor.log:stage=takeoff_complete,result=Success",
+    "ros_structured_log:external_mode_executor.log:stage=custom_external_mode",
+    "ros_structured_log:external_mode_executor.log:result=success",
+    "ros_structured_log:external_mode_executor.log:stage=external_mode_complete,result=Success",
+    "ros_structured_log:external_mode_executor.log:stage=rtl",
+    "ros_structured_log:external_mode_executor.log:sequence=160",
+    "ros_structured_log:external_mode_executor.log:stage=rtl_complete,result=Success",
+    "ros_structured_log:external_mode_executor.log:stage=wait_until_disarmed",
+    "ros_structured_log:external_mode_executor.log:stage=wait_until_disarmed_complete,result=Success"
+  ],
+  "max_message_age_s": 0.008,
+  "nav_state_transitions": [
+    4,
+    23,
+    17,
+    23,
+    5,
+    23
+  ],
+  "producer_consumer_evidence": {
+    "domains_require_clock_bridge": true,
+    "producer_publish_events": 8,
+    "px4_consume_events": 382
+  },
+  "registration_transitions": [
+    {
+      "mode_id": 23,
+      "name": "Route Transition",
+      "registered": true
+    }
+  ],
+  "run_id": "p0c_mode_executor_20260716",
+  "schema_version": "1.0",
+  "source_artifacts": [
+    {
+      "bytes": 9060156,
+      "name": "flight.ulg",
+      "sha256": "8d4b4c49564685b571b5c8202111d6dd83e5cb2d68996d56b7f607792819e6d4"
+    },
+    {
+      "bytes": 701,
+      "name": "producer_events.jsonl",
+      "sha256": "7d69dc5353ad576ecae29a4a9c9171dce8d642f60365551ce51db680ae3cfdc9"
+    },
+    {
+      "bytes": 5130,
+      "name": "external_mode_executor.log",
+      "sha256": "ebbc806a1845007d41f8cd0c573c1d0f8f3bda7cf1c769f3e358c0e753095a22"
+    }
+  ],
+  "timestamp_domains": {
+    "ros_node_ns": {
+      "duration": 35100884736.0,
+      "event_count": 27,
+      "first": 1.7842024656906452e+18,
+      "last": 1.78420250079153e+18
+    },
+    "ulog_us": {
+      "duration": 38636000.0,
+      "event_count": 1978,
+      "first": 6380000.0,
+      "last": 45016000.0
+    }
+  },
+  "trace_event_count": 2005,
+  "writer_attribution": {
+    "actuator_output_events": 385,
+    "actuator_writers": [
+      "control_allocator"
+    ],
+    "allocator_input_writers": [
+      "mc_rate_control"
+    ],
+    "status": "ATTRIBUTED"
+  }
+}
