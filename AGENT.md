@@ -1,49 +1,51 @@
 # Agent guide
 
-## First-read order
+## Required first-read order
 
 1. `docs/narrative/CURRENT_NARRATIVE.md`
-2. `docs/motivation/README.md`
-3. `docs/design/ROUTE_MODEL.md`
-4. `docs/design/OBSERVABILITY_MATRIX.tsv`
-5. `docs/repository/REPOSITORY_MAP.md`
-6. `AGENT.md`
+2. `config/dependencies.lock.yaml`
+3. `docs/motivation/README.md`
+4. `docs/design/ROUTE_MODEL.md`
+5. `docs/design/OBSERVABILITY_MATRIX.tsv`
+6. `docs/repository/REPOSITORY_MAP.md`
+7. `AGENT.md`
 
-## Current tasks
+The current narrative and dependency lock are authoritative.
 
-Work is currently limited to:
+## Current boundary
 
-- **P-1 Route Observability Feasibility**
-- **M2 External Mode and Registration Importance**
-- **M4 Official Test Coverage Gap**
-- **P0 Official Handoff Flow**
+Family A is primary. Work in this phase is limited to dependency locking,
+Family A bootstrap, P-1 observability, M2 registration evidence, M4 official
+test coverage, and a gated normal-flow P0 baseline. Do not start a complete
+fuzzer, random search, fault campaign, or later-phase probe.
 
-Family A is the primary subject. Family B is retained as a deep-route representative case and future cross-family validation source.
+Treat a route as the declared mode plus registration, authority source,
+producer identity, setpoint interface and freshness, controller/module path,
+allocator input, actuator writer/output, failsafe state, and fallback target.
+A mode label or waypoint update alone is not a route transition.
 
-## Route semantics
+## Evidence rules
 
-A route is a runtime tuple, not a mode label. At minimum, reason about declared mode, registration state, authority source, producer identity, setpoint level/topic/freshness, enabled and bypassed modules, allocator input, actuator writer/output, failsafe state, and fallback target.
-
-A trajectory update within the same authority/producer/module path is not a handoff. A declared mode is not sufficient evidence that the intended data-plane route was installed.
+- Separate requested mode, registration, activation, data consumption,
+  fallback selection, and complete fallback installation.
+- Preserve exact repository commit, source path, symbol, assertion, timestamp
+  domain, and collection method.
+- Use only the enumerations defined by the TSV/schema contracts.
+- Mark unknowns honestly. Never turn a template, example, or old result into an
+  observation.
+- Family B material is optional and isolated in `family_b/`; it is not used by
+  the default bootstrap or Motivation Study.
+- Historical conclusions require a new route-aware reproduction before reuse.
 
 ## Repository rules
 
-- Keep all work on `main` unless the user explicitly changes the policy.
-- Do not start large-scale fuzzing immediately after cleanup.
-- Do not treat old BATON conclusions as Family A evidence.
-- Do not count an ordinary trajectory update as a route handoff.
-- Do not treat mode state as the complete runtime route.
-- Do not commit raw logs, ULogs, runtime trees, checkpoints, or build/install output.
-- Do not retain unreproducible changes inside ignored PX4 source trees. Capture changes as tracked patches, overlays, or installers.
-- Use `runs/` only for ignored runtime output and `data/processed/` only for compact, reviewable derived summaries.
-- Record unknowns as `TBD`, `NEEDS_REVIEW`, or `not_collected`; never invent Motivation Study observations.
+- Keep generated dependencies in ignored `external/` and `ros2_ws/` trees.
+- Keep raw runtime artifacts in ignored `runs/`; track compact summaries only.
+- Represent PX4 source changes as commit-pinned, idempotent patches.
+- Keep Common Behavior Core independent of ROS 2, PX4 messages, and Family B.
+- Keep Family A code free of learned-controller and old campaign types.
+- Preserve unrelated user changes and inspect `git status` before edits.
 
-## Canonical commands
-
-```bash
-./scripts/setup/clone_px4.sh
-./scripts/setup/setup_ros2_ws.sh
-./scripts/validation/validate_repo.sh
-```
-
-Legacy commands and old experiment paths are provenance under `archive/pre_v4_baton/`; they are not current entry points.
+Run `./scripts/validation/validate_repo.sh` before each handoff. A completed
+change has passing tests, no unexpected untracked or ignored tracked files, no
+tracked raw runs, no file larger than 10 MiB, and a clean synchronized branch.

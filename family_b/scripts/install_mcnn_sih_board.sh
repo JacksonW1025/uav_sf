@@ -4,7 +4,7 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 PX4_DIR="${PX4_DIR:-${REPO_ROOT}/external/PX4-Autopilot}"
 
-src="${REPO_ROOT}/boards/px4/sitl/mcnn_sih.px4board"
+src="${REPO_ROOT}/family_b/boards/mcnn_sih.px4board"
 dst="${PX4_DIR}/boards/px4/sitl/mcnn_sih.px4board"
 
 if [[ ! -f "${src}" ]]; then

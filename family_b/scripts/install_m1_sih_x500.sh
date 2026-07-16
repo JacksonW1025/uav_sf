@@ -4,7 +4,7 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 PX4_DIR="${PX4_DIR:-${REPO_ROOT}/external/PX4-Autopilot}"
 
-airframe_src="${REPO_ROOT}/config/px4/init.d-posix/airframes/10046_sihsim_x500_v2"
+airframe_src="${REPO_ROOT}/family_b/config/px4/init.d-posix/airframes/10046_sihsim_x500_v2"
 airframe_dst="${PX4_DIR}/ROMFS/px4fmu_common/init.d-posix/airframes/10046_sihsim_x500_v2"
 cmake_file="${PX4_DIR}/ROMFS/px4fmu_common/init.d-posix/airframes/CMakeLists.txt"
 

@@ -1,65 +1,68 @@
 # Testing Route-Replacing Authority Transitions in PX4
 
-This repository studies what happens when PX4 declares that the primary control path has moved from Route A to Route B. A route-replacing authority transition is more than a mode-label change: the old producer/path must be revoked, the new path must be completely installed, the transition window must remain exclusive and continuous, and a failure must restore the complete intended safe route.
+This repository tests whether PX4's declared transition from Route A to Route B
+matches the complete runtime control route. A transition is correct only when
+the old route is revoked, the target route is fully installed, the transition
+is exclusive and continuous, and a failure restores the complete safe route.
 
-The four core questions are:
+Family A is the primary subject:
 
-1. Was the old route revoked in time?
-2. Was the new route fully installed?
-3. Was the transition window exclusive and gap-free?
-4. Was the safe fallback route fully restored after failure?
+```text
+PX4 Internal Route
+↔ ROS 2 Offboard
+↔ Dynamic External Mode
+↔ Internal Fallback / RTL / Land / RC takeover
+```
 
-## Subject families
-
-- **Family A (primary):** PX4 Internal Route ↔ ROS 2 Offboard ↔ Dynamic External Mode ↔ Internal Fallback / RTL / Land / RC takeover.
-- **Family B (deep representative case):** PX4 Classical Cascade ↔ Registered Learned Controller ↔ Classical Fallback.
-
-The existing mc_nn, RAPTOR, and classical-controller evidence is preserved as legacy Family B material. It does not count as direct evidence for Family A until it is revalidated with the route-oriented harness.
+Family B (classical cascade ↔ registered learned controller ↔ classical
+fallback) is retained only as a future cross-family case under `family_b/`.
 
 ## Current phase
 
-The repository is in the **Motivation Study** phase. The immediate gate is **P-1 Route Observability Feasibility**, followed by M1–M5 evidence collection and focused probes. Large-scale fuzzing and full fuzzer development are out of scope for this phase.
+Phase A locks dependencies and establishes route observability before any
+large experiment. The ordered deliverables are:
 
-Start here:
+1. Family A dependency lock and reproducible bootstrap;
+2. P-1 route-observability feasibility;
+3. M2 External Mode registration evidence;
+4. M4 official-test coverage audit;
+5. P0 normal handoff baselines, only if the P-1 gate passes.
 
-1. [Current narrative](docs/narrative/CURRENT_NARRATIVE.md)
-2. [Motivation Study workspace](docs/motivation/README.md)
-3. [Route model](docs/design/ROUTE_MODEL.md)
-4. [Observability matrix](docs/design/OBSERVABILITY_MATRIX.tsv)
-5. [Repository map](docs/repository/REPOSITORY_MAP.md)
+This phase does not develop a complete fuzzer or start random campaigns.
 
-## Environment bootstrap
+## Quick start
 
-Docker is the supported baseline. The clone/setup scripts accept environment-variable overrides and keep build/runtime logs under ignored `runs/` paths.
+The canonical environment is Ubuntu 24.04, ROS 2 Jazzy, and Gazebo Harmonic.
+All source repositories are checked out at the exact revisions in
+`config/dependencies.lock.yaml`.
 
 ```bash
-./docker/build.sh
-./scripts/setup/clone_px4.sh
-./scripts/setup/setup_ros2_ws.sh
-./docker/run.sh bash
+./scripts/setup/bootstrap_family_a.sh
 ```
 
-The PX4 and ROS 2 source/build trees under `external/` and `ros2_ws/` are local dependencies, not canonical research artifacts. PX4 changes must be reproduced from tracked [boards](boards/), [patches](patches/), and installer scripts.
+Dependency sources and builds live in ignored `external/`, `ros2_ws/`, and
+`runs/` trees. Only compact processed summaries belong in Git.
 
-## Repository navigation
+## Start here
 
-- `docs/narrative/`: sole current narrative and scope.
-- `docs/motivation/`: M1–M5 inventories and evidence templates.
-- `docs/design/`: route semantics, observability fields, and route-profile schema.
-- `experiments/`: Motivation Study, probe, and testcase templates only.
-- `scripts/`: active setup, tracing, probes, analysis, and validation tools.
-- `boards/`, `patches/`, `config/`: reproducible PX4 overlays and the minimal Family B profile.
-- `data/`: compact manifests, processed summaries, and trace policy.
-- `archive/pre_v4_baton/`: prior BATON narratives, experiments, reports, scripts, configs, figures, and indexes.
+1. [Current narrative](docs/narrative/CURRENT_NARRATIVE.md)
+2. [Dependency lock](config/dependencies.lock.yaml)
+3. [Motivation study](docs/motivation/README.md)
+4. [Route model](docs/design/ROUTE_MODEL.md)
+5. [Observability matrix](docs/design/OBSERVABILITY_MATRIX.tsv)
+6. [Repository map](docs/repository/REPOSITORY_MAP.md)
+7. [Agent guide](AGENT.md)
 
-## Data policy
+## Data and validation
 
-Do not commit ULogs, runtime logs, checkpoints, per-evaluation trees, build/install output, or large raw traces. Store them outside the repository and add a compact aggregate entry to [the external archive manifest](data/manifests/PRE_V4_EXTERNAL_ARCHIVE.tsv). `runs/` is runtime-only and remains ignored.
-
-## Validation
-
-Use one command before committing:
+Raw ULogs, build output, logs, and runtime traces stay in ignored `runs/` or
+external storage. Commit only compact, source-identified summaries under
+`data/processed/`.
 
 ```bash
 ./scripts/validation/validate_repo.sh
 ```
+
+Historical material is recoverable from the protected Git tag described in
+[legacy recovery](docs/repository/LEGACY_RECOVERY.md); it is not current
+Family A evidence.

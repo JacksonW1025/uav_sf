@@ -3,7 +3,7 @@ set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 PX4_DIR="${PX4_DIR:-${REPO_ROOT}/external/PX4-Autopilot}"
-PATCH_FILE="${REPO_ROOT}/patches/px4/m2b_state_shim.patch"
+PATCH_FILE="${REPO_ROOT}/family_b/patches/state_input_shim.patch"
 
 if [[ ! -d "${PX4_DIR}/.git" ]]; then
   echo "Missing PX4 git tree: ${PX4_DIR}" >&2
