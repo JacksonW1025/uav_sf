@@ -1,0 +1,15 @@
+route_field	semantic_definition	expected_source	available_signal	collection_method	timestamp_domain	writer_attribution	requires_instrumentation	family_a	family_b	status	notes
+declared_mode	control-plane mode PX4 reports as selected	PX4 commander/mode manager	TBD	TBD	TBD	no	TBD	yes	yes	not_collected	Mode declaration is not a complete route.
+registration_state	whether an external mode/controller is registered and eligible	PX4 mode registration/executor	TBD	TBD	TBD	no	TBD	yes	yes	not_collected	Distinguish registration from activation.
+authority_source	entity currently authorized to command the primary path	commander/mode executor/offboard/RC arbitration	TBD	TBD	TBD	partial	TBD	yes	yes	not_collected	Must identify arbitration outcome, not request intent.
+producer_identity	concrete process/module/node publishing authority-bearing input	uORB/ROS 2 writer metadata	TBD	TBD	TBD	yes	TBD	yes	yes	not_collected	Multiple producers require instance-level identity.
+setpoint_level	position/velocity/attitude/rate/actuator abstraction level	message type and active controller path	TBD	TBD	TBD	no	TBD	yes	yes	not_collected	Level changes can replace downstream modules.
+setpoint_topic	topic or interface carrying the authoritative setpoint	uORB/ROS 2 graph	TBD	TBD	TBD	partial	TBD	yes	yes	not_collected	Record topic instance and bridge direction.
+message_freshness	age of the last authority-bearing message at consumption	publisher and consumer timestamps	TBD	TBD	TBD	partial	TBD	yes	yes	not_collected	Requires justified clock-domain mapping.
+enabled_modules	control modules executing in the selected route	PX4 module/task state	TBD	TBD	TBD	no	TBD	yes	yes	not_collected	Running does not necessarily mean influencing output.
+bypassed_modules	nominal modules intentionally skipped by the selected route	controller/vehicle-control-mode state	TBD	TBD	TBD	no	TBD	yes	yes	not_collected	Check expected bypass against actual data flow.
+allocator_input	message and producer feeding control allocation	control allocator subscriptions/uORB	TBD	TBD	TBD	yes	TBD	yes	yes	not_collected	Key boundary between controller path and output path.
+actuator_writer	final module/process writing actuator command	actuator topic publication metadata	TBD	TBD	TBD	yes	TBD	yes	yes	not_collected	Needed for overlap and stale-writer detection.
+actuator_output	actual commanded actuator values and validity	actuator_motors/actuator_outputs	TBD	TBD	TBD	partial	TBD	yes	yes	not_collected	Correlate with allocator input and safety state.
+failsafe_state	active failure/failsafe classification and trigger	commander/failsafe flags	TBD	TBD	TBD	no	TBD	yes	yes	not_collected	Record trigger and latched/cleared state.
+fallback_target	route that should replace the failed primary route	mode executor/commander/failsafe policy	TBD	TBD	TBD	no	TBD	yes	yes	not_collected	Verify the target is fully installed after selection.

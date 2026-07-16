@@ -4,7 +4,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 PATCH_PATH = REPO_ROOT / "patches" / "px4" / "m2b_state_shim.patch"
-MCNN_BUILD_SCRIPT = REPO_ROOT / "scripts" / "build_px4_mcnn_sih.sh"
+MCNN_BUILD_SCRIPT = REPO_ROOT / "scripts" / "setup" / "build_px4_mcnn_sih.sh"
 
 
 class M2BStateShimPatchTest(unittest.TestCase):

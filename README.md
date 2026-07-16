@@ -1,92 +1,65 @@
-# UAV Software Fuzzing: BATON
+# Testing Route-Replacing Authority Transitions in PX4
 
-This repository studies the PX4 software subsystem that transfers actuator authority between the classical control stack and learned controllers. The research question is not merely whether a neural controller can fly: it is whether admission, handover, residual-state, and fallback behavior satisfy an explicit control-authority contract.
+This repository studies what happens when PX4 declares that the primary control path has moved from Route A to Route B. A route-replacing authority transition is more than a mode-label change: the old producer/path must be revoked, the new path must be completely installed, the transition window must remain exclusive and continuous, and a failure must restore the complete intended safe route.
 
-The canonical project narrative is [`docs/NEW_NARRATIVE_v5.md`](docs/NEW_NARRATIVE_v5.md). The immediately preceding project context is retained as [`docs/PROJECT_NARRATIVE_CONTEXT_v8 (1).md`](docs/PROJECT_NARRATIVE_CONTEXT_v8%20%281%29.md); older narrative versions and duplicate history copies have been removed.
+The four core questions are:
 
-## Contract and scenarios
+1. Was the old route revoked in time?
+2. Was the new route fully installed?
+3. Was the transition window exclusive and gap-free?
+4. Was the safe fallback route fully restored after failure?
 
-BATON organizes the subsystem around four clauses:
+## Subject families
 
-- **Admission**: a controller may acquire authority only when its prerequisites and replies are valid.
-- **Handover**: the intended writer becomes active and conflicting actuator writers stop.
-- **Residual**: persistent state is reset, preserved, or transferred deliberately.
-- **Fallback**: commanded and failsafe exits return authority through a defined safety path.
+- **Family A (primary):** PX4 Internal Route ↔ ROS 2 Offboard ↔ Dynamic External Mode ↔ Internal Fallback / RTL / Land / RC takeover.
+- **Family B (deep representative case):** PX4 Classical Cascade ↔ Registered Learned Controller ↔ Classical Fallback.
 
-The mode-transition space is:
+The existing mc_nn, RAPTOR, and classical-controller evidence is preserved as legacy Family B material. It does not count as direct evidence for Family A until it is revalidated with the route-oriented harness.
 
-- **S1 commanded switch-in**: Classical → Learned.
-- **S2 active fallback**: Learned → Classical.
-- **S3 failsafe-triggered transition**: Learned → Return / Land / Classical safety pipeline.
-- **S4 repeated switching**: Classical → Learned → Classical → Learned …
+## Current phase
 
-## Current evidence
+The repository is in the **Motivation Study** phase. The immediate gate is **P-1 Route Observability Feasibility**, followed by M1–M5 evidence collection and focused probes. Large-scale fuzzing and full fuzzer development are out of scope for this phase.
 
-Confirmed or directly observed evidence is deliberately separated from planned work:
+Start here:
 
-- PX4 external-mode allocation configuration is repeatedly rejected as stale because of freshness timestamp semantics.
-- The classical `control_allocator` remains active after learned-mode activation, producing silent dual writes to `actuator_motors`.
-- admission replies have incompletely initialized fields.
-- deployed `mc_nn_control` has a catastrophic S1 differential at candidate states where the classical branch recovers.
-- the hardened sim-time/lockstep harness reproduces preregistered anchors 100/100 and improves trigger-state convergence by approximately 85×.
-- old wall-clock claims about a non-monotonic, holed boundary are `legacy_unverified` until repeated on the hardened harness.
-- RAPTOR supports behavioral discrimination and a second-controller applicability check, but data-plane writer attribution is not yet closed.
-- residual-state and fallback consequences are planned; allocation/single-writer repair is the immediate mechanism differential.
+1. [Current narrative](docs/narrative/CURRENT_NARRATIVE.md)
+2. [Motivation Study workspace](docs/motivation/README.md)
+3. [Route model](docs/design/ROUTE_MODEL.md)
+4. [Observability matrix](docs/design/OBSERVABILITY_MATRIX.tsv)
+5. [Repository map](docs/repository/REPOSITORY_MAP.md)
 
-See [`docs/evidence/claim_audit.md`](docs/evidence/claim_audit.md) for the claim-by-claim boundary.
+## Environment bootstrap
 
-## Quick start
-
-The environment uses the `uav_sf:phase1` container, PX4 commit `3042f906abaab7ab59ae838ad5a530a9ef3df9a6`, and tracked overlays/patches in this repository.
+Docker is the supported baseline. The clone/setup scripts accept environment-variable overrides and keep build/runtime logs under ignored `runs/` paths.
 
 ```bash
 ./docker/build.sh
-./scripts/clone_px4.sh
-./scripts/setup_ros2_ws.sh
-sg docker -c 'cd /mnt/nvme/uav_sf && CONTAINER_NAME=uav-sf ./docker/run.sh bash'
+./scripts/setup/clone_px4.sh
+./scripts/setup/setup_ros2_ws.sh
+./docker/run.sh bash
 ```
 
-Build scripts under `scripts/` install the relevant tracked board, airframe, DDS, and PX4 patch assets before compiling. Do not treat an arbitrary dirty `external/PX4-Autopilot` tree as the source of truth.
+The PX4 and ROS 2 source/build trees under `external/` and `ros2_ws/` are local dependencies, not canonical research artifacts. PX4 changes must be reproduced from tracked [boards](boards/), [patches](patches/), and installer scripts.
 
 ## Repository navigation
 
-- [`docs/indexes/EXPERIMENT_INDEX.md`](docs/indexes/EXPERIMENT_INDEX.md): canonical lookup from experiment ID/alias to scenario, code, data, and report.
-- [`docs/indexes/REPOSITORY_MAP.md`](docs/indexes/REPOSITORY_MAP.md): directory roles and legacy-to-canonical mappings.
-- [`docs/indexes/ARTIFACT_MANIFEST.tsv`](docs/indexes/ARTIFACT_MANIFEST.tsv): hashes and provenance for major artifacts.
-- [`docs/study_design/`](docs/study_design/): research questions, contract, differential diagnosis, and scenario space.
-- [`experiments/`](experiments/): BATON metadata and pointers; historical artifacts stay at stable legacy paths where moving would break reproducibility.
-- `scripts/`: executable implementation, classified in [`scripts/README.md`](scripts/README.md) while legacy paths remain stable.
-- `boards/` and `patches/px4/`: reproducible PX4 overlays and patches.
-- `config/`: legacy stable configuration path; [`configs/README.md`](configs/README.md) is the canonical map.
+- `docs/narrative/`: sole current narrative and scope.
+- `docs/motivation/`: M1–M5 inventories and evidence templates.
+- `docs/design/`: route semantics, observability fields, and route-profile schema.
+- `experiments/`: Motivation Study, probe, and testcase templates only.
+- `scripts/`: active setup, tracing, probes, analysis, and validation tools.
+- `boards/`, `patches/`, `config/`: reproducible PX4 overlays and the minimal Family B profile.
+- `data/`: compact manifests, processed summaries, and trace policy.
+- `archive/pre_v4_baton/`: prior BATON narratives, experiments, reports, scripts, configs, figures, and indexes.
 
-## Reproduction entry points
+## Data policy
 
-```bash
-python3 scripts/m1_diff_runner.py --help
-python3 scripts/tier05_fork_campaign.py --help
-python3 scripts/tier05_fork_finalize.py --help
-python3 scripts/px4_race_r4_experiment.py --help
-```
-
-The Tier-0.5 report and structured 144-run ledger remain at `tier05_fork_20260712T090728Z/`. Raw ULogs, runtime roots, and historical files previously hidden by ignore rules are externally archived because this repository has no Git LFS support; their hashes and external locations are recorded in the artifact manifests.
-
-## Evidence discipline
-
-Use only these status terms: `confirmed`, `mechanism_observed`, `planned`, `legacy_unverified`, and `needs_review`. Missing metadata is `unknown`; old negative results and failed gates are retained. Do not promote a mechanism observation to a physical-causality claim, and do not use the legacy boundary shape as confirmed evidence.
-
-## Current priorities
-
-1. execute original-PX4 versus repaired allocation/single-writer mechanism differentials on hardened anchors;
-2. close independent writer attribution for both `mc_nn_control` and RAPTOR;
-3. test S2/S3 fallback and S4 repeated switching;
-4. test preserved versus reset residual controller state;
-5. rerun any retained legacy boundary/search claim before using it as confirmed evidence.
+Do not commit ULogs, runtime logs, checkpoints, per-evaluation trees, build/install output, or large raw traces. Store them outside the repository and add a compact aggregate entry to [the external archive manifest](data/manifests/PRE_V4_EXTERNAL_ARCHIVE.tsv). `runs/` is runtime-only and remains ignored.
 
 ## Validation
 
+Use one command before committing:
+
 ```bash
-python3 -m py_compile scripts/*.py
-bash -n scripts/*.sh docker/*.sh
-git ls-files '*.json' | xargs -r jq empty
-PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH="$PWD" python3 -m pytest -q tests
+./scripts/validation/validate_repo.sh
 ```

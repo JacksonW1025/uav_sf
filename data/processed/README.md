@@ -1,3 +1,3 @@
 # Processed data
 
-Processed data currently remains at stable historical paths to preserve scripts and report links. Use the experiment index to locate it.
+Store only compact, reproducible summaries here. Each addition must identify its source data, producer command/version, timestamp domain, and source SHA-256. Legacy summaries are under `archive/pre_v4_baton/experiments/`.
