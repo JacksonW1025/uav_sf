@@ -1,5 +1,3 @@
-# NEW_NARRATIVE_v4
-
 # Testing Route-Replacing Authority Transitions in PX4
 
 ## 0. 本文叙事是什么
