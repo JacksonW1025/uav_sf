@@ -42,7 +42,7 @@ set -u
 
   if ((SKIP_BUILD == 0)); then
     colcon --log-base "${WS_DIR}/log" build \
-      --base-paths "${WS_DIR}/src" \
+      --base-paths "${WS_DIR}/src" "${REPO_ROOT}/scripts/adapters/external_mode_adapter" \
       --build-base "${WS_DIR}/build" \
       --install-base "${WS_DIR}/install" \
       --cmake-args -DBUILD_TESTING=ON
