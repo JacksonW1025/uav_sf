@@ -1,0 +1,145 @@
+{
+  "clauses": {
+    "continuity": {
+      "evidence": [],
+      "metrics": {
+        "allowed_gap_ms": 24.0,
+        "first_target_valid_influence_us": 35172000.0,
+        "last_old_valid_influence_us": 35172000.0,
+        "maximum_unowned_window_ms": 0.0,
+        "valid_fallback_output": true
+      },
+      "reasons": [],
+      "status": "PASS"
+    },
+    "exclusivity": {
+      "evidence": [],
+      "metrics": {
+        "candidate_writers": [
+          "control_allocator"
+        ],
+        "competing_window_count": 0,
+        "critical_window": {
+          "coverage_verdict": "COMPLETE",
+          "end_us": 35672000.0,
+          "event_count": 120,
+          "from_mode": 14,
+          "from_route": 14,
+          "maximum_gap_ms": 16.0,
+          "observed_writers": [
+            "control_allocator"
+          ],
+          "sequence_gap_count": 0,
+          "start_us": 34672000.0,
+          "timestamp_us": 35172000.0,
+          "to_mode": 4,
+          "to_route": 4,
+          "uninstrumented_candidate_writers": [],
+          "window_end": 35672000.0,
+          "window_start": 34672000.0
+        },
+        "critical_window_quality": "COMPLETE",
+        "detectable_resolution_ms": 0.0,
+        "observation_hole_count": 1,
+        "observed_writers": [
+          "control_allocator"
+        ],
+        "resolution_verdict": null,
+        "sequence_gap_count": 0,
+        "uninstrumented_candidates": []
+      },
+      "reasons": [],
+      "status": "PASS"
+    },
+    "installation": {
+      "evidence": [],
+      "metrics": {
+        "checks": {
+          "allocator_input": true,
+          "declared_mode": true,
+          "enabled_modules": true,
+          "final_writer": true,
+          "fresh_consumption": true,
+          "registration_or_activation": true,
+          "setpoint_configuration": true
+        },
+        "first_target_consumption_us": 35176000.0,
+        "first_target_writer_us": 35172000.0
+      },
+      "reasons": [],
+      "status": "PASS"
+    },
+    "recovery": {
+      "evidence": [],
+      "metrics": {
+        "automatic_old_route_reentry_observed": false,
+        "checks": {
+          "fallback_modules_installed": true,
+          "fallback_selected": true,
+          "fallback_writer_active": true,
+          "old_consumer_stopped": true,
+          "old_producer_stopped": true,
+          "old_writer_stopped": true
+        }
+      },
+      "reasons": [],
+      "status": "PASS"
+    },
+    "revocation": {
+      "evidence": [],
+      "metrics": {
+        "declared_route_exit_us": 35172000.0,
+        "last_old_route_consumption_us": 34164000.0,
+        "last_old_writer_event_us": 35164000.0,
+        "last_producer_publish_us": 34842926.35804948,
+        "post_revocation_consumption_count": 0,
+        "post_revocation_writer_count": 0,
+        "revocation_latency_ms": -8.0
+      },
+      "reasons": [],
+      "status": "PASS"
+    }
+  },
+  "clock_bridge": {
+    "clock_bridge_id": "clock-b45f517a42c74219",
+    "discarded_initial_backlog_samples": 2,
+    "offset_ns": 1784287924085245119,
+    "rate_ratio": 1.0391589258047553,
+    "reasons": [],
+    "reference_px4_us": 25256000,
+    "reference_ros_ns": 1784287949341245119,
+    "reset_count": 0,
+    "residual_max_ns": 39253074,
+    "residual_median_ns": 6342091,
+    "sample_count": 31,
+    "schema_version": "1.0",
+    "segment_count": 1,
+    "status": "VALID",
+    "thresholds": {
+      "degraded_residual_max_ns": 250000000,
+      "maximum_round_trip_time_ns": 20000000,
+      "maximum_timesync_offset_span_ns": 5000000,
+      "minimum_sample_count": 20,
+      "residual_max_ns": 100000000,
+      "segment_jump_ns": 50000000
+    },
+    "timestamp_domains": {
+      "source": "px4_boot_us",
+      "target": "ros_node_ns"
+    },
+    "uncertainty_ns": 43253074,
+    "valid_from": 12908000,
+    "valid_until": 34876000
+  },
+  "route_oracle_version": "0.2",
+  "run_id": "p3_offboard_hb_off_sp_off_r4_20260717",
+  "schema_version": "1.1",
+  "status": "PASS",
+  "transition": {
+    "source_mode": 14,
+    "source_route_epoch_id": 3,
+    "target_mode": 4,
+    "timestamp_domain": "ulog_us",
+    "timestamp_us": 35172000.0
+  }
+}

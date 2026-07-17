@@ -50,6 +50,7 @@ fi
   "${cpu_args[@]}" \
   "${env_args[@]}" \
   -v "${REPO_ROOT}:/workspace" \
+  -v "${REPO_ROOT}:${REPO_ROOT}" \
   -w /workspace \
   "${IMAGE_NAME}" \
   "$@"

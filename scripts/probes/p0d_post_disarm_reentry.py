@@ -19,11 +19,20 @@ if str(ROOT) not in sys.path:
 from scripts.probes.p0_route_runner import _name, _versioned_topic
 
 
-def run(output: Path, shutdown_request: Path, shutdown_done: Path, timeout_s: float) -> int:
+def run(
+    output: Path,
+    shutdown_request: Path,
+    shutdown_done: Path,
+    timeout_s: float,
+    *,
+    select_internal_before_rearm: bool = False,
+    scenario_label: str = "p0d_post_disarm_reentry",
+) -> int:
     try:
         import rclpy
         from px4_msgs.msg import (
             RegisterExtComponentReply,
+            TimesyncStatus,
             UnregisterExtComponent,
             VehicleCommand,
             VehicleLocalPosition,
@@ -58,12 +67,19 @@ def run(output: Path, shutdown_request: Path, shutdown_done: Path, timeout_s: fl
             self.rearm_recovered_after_internal_request = False
             self.pre_rearm_nav_state: Optional[int] = None
             self.exit_code: Optional[int] = None
+            self.timesync_status: Optional[Any] = None
 
             qos = QoSProfile(
                 history=HistoryPolicy.KEEP_LAST,
                 depth=10,
                 reliability=ReliabilityPolicy.BEST_EFFORT,
                 durability=DurabilityPolicy.VOLATILE,
+            )
+            self.create_subscription(
+                TimesyncStatus,
+                _versioned_topic("/fmu/out/timesync_status", TimesyncStatus),
+                self._timesync,
+                qos,
             )
             self.create_subscription(
                 VehicleStatus,
@@ -152,6 +168,22 @@ def run(output: Path, shutdown_request: Path, shutdown_done: Path, timeout_s: fl
                 arming_check_id=int(getattr(message, "arming_check_id", -1)),
             )
 
+        def _timesync(self, message: Any) -> None:
+            self.timesync_status = message
+            offset = int(message.estimated_offset)
+            self._event(
+                "clock_bridge_sample",
+                sample_source="timesync_status",
+                px4_outbound_timestamp_us=int(message.timestamp),
+                px4_boot_timestamp_us=int(message.timestamp) + offset,
+                ros_receive_ns=self.get_clock().now().nanoseconds,
+                monotonic_receive_ns=time.monotonic_ns(),
+                timesync_source_protocol=int(message.source_protocol),
+                timesync_estimated_offset_us=offset,
+                timesync_round_trip_time_us=int(message.round_trip_time),
+                timesync_converged=int(message.source_protocol) == 2,
+            )
+
         def _command(self, command: int, **params: float) -> None:
             message = VehicleCommand()
             message.timestamp = self.get_clock().now().nanoseconds // 1000
@@ -182,7 +214,7 @@ def run(output: Path, shutdown_request: Path, shutdown_done: Path, timeout_s: fl
                 return
             result = {
                 "schema_version": "1.0",
-                "scenario": "p0d_post_disarm_reentry",
+                "scenario": scenario_label,
                 "status": status,
                 "reason": reason,
                 "duration_s": round(time.monotonic() - self.started, 3),
@@ -249,7 +281,11 @@ def run(output: Path, shutdown_request: Path, shutdown_done: Path, timeout_s: fl
                 return
             if self.state == "WAIT_UNREGISTER":
                 if shutdown_done.exists() and now - self.state_started >= 3.0:
-                    self._transition("REARM")
+                    self._transition(
+                        "REQUEST_INTERNAL_BEFORE_RETRY"
+                        if select_internal_before_rearm
+                        else "REARM"
+                    )
                 return
             if self.state == "REARM":
                 self._periodic(VehicleCommand.VEHICLE_CMD_COMPONENT_ARM_DISARM, param1=1.0)
@@ -271,11 +307,13 @@ def run(output: Path, shutdown_request: Path, shutdown_done: Path, timeout_s: fl
                 self._periodic(
                     VehicleCommand.VEHICLE_CMD_DO_SET_MODE,
                     param1=1.0,
-                    param2=3.0,
+                    param2=4.0,
+                    param3=3.0,
                 )
                 if (
                     self.status is not None
-                    and int(self.status.nav_state) == int(VehicleStatus.NAVIGATION_STATE_POSCTL)
+                    and int(self.status.nav_state)
+                    == int(VehicleStatus.NAVIGATION_STATE_AUTO_LOITER)
                 ) or now - self.state_started >= 3.0:
                     self._transition("REARM_AFTER_INTERNAL_REQUEST")
                 return
@@ -290,24 +328,30 @@ def run(output: Path, shutdown_request: Path, shutdown_done: Path, timeout_s: fl
                 elif now - self.state_started >= 15.0:
                     self._finish(
                         "FAIL",
-                        "rearm remained denied after graceful unregister and explicit internal Position selection",
+                        "rearm remained denied after graceful unregister and explicit internal Hold selection",
                     )
                 return
             if self.state == "REQUEST_HOLD":
                 self._periodic(
                     VehicleCommand.VEHICLE_CMD_DO_SET_MODE,
                     param1=1.0,
-                    param2=3.0,
+                    param2=4.0,
+                    param3=3.0,
                 )
                 if now - self.state_started >= 1.0:
                     self._transition("OBSERVE_REENTRY")
                 return
             if self.state == "OBSERVE_REENTRY":
                 if now - self.state_started >= 5.0:
-                    self._transition("DISARM")
+                    self._transition("TAKEOFF_REENTRY")
                 return
-            if self.state == "DISARM":
-                self._periodic(VehicleCommand.VEHICLE_CMD_COMPONENT_ARM_DISARM, param1=0.0)
+            if self.state == "TAKEOFF_REENTRY":
+                self._periodic(VehicleCommand.VEHICLE_CMD_NAV_TAKEOFF)
+                if self.local_position is not None and float(self.local_position.z) < -2.0:
+                    self._transition("LAND_REENTRY")
+                return
+            if self.state == "LAND_REENTRY":
+                self._periodic(VehicleCommand.VEHICLE_CMD_NAV_LAND)
                 if not self._armed():
                     self._finish("PASS", "post-disarm retention and explicit internal re-entry observed")
 

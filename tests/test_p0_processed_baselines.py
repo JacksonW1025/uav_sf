@@ -40,8 +40,9 @@ def test_p0_summaries_have_route_and_provenance_evidence() -> None:
         assert summary["producer_consumer_evidence"]["producer_publish_events"] > 0
         assert summary["producer_consumer_evidence"]["px4_consume_events"] > 0
         assert summary["producer_consumer_evidence"]["domains_require_clock_bridge"] is True
+        assert summary["schema_version"] == "1.2"
+        assert summary["superseded_by_phase_a2_measurement"] is True
         if run_id in CURRENT:
-            assert summary["schema_version"] == "1.1"
             assert summary["execution_status"] == "PASS"
             assert summary["route_verdict"] == "UNKNOWN"
             assert summary["writer_attribution"]["status"] == "SEQUENCE_GAP"

@@ -45,10 +45,11 @@ remain unknown even if the average rate exceeds 100 Hz.
 
 ROS/DDS and PX4 timestamps are not subtracted directly. At run start and after
 every time-sync reset, record pairs `(ros_receive_ns, px4_message_timestamp_us)`
-from a PX4 outbound message. Estimate `offset_ns = ros_receive_ns -
-1000*px4_us`, keep the median of a stable window, and retain residual range.
+from a PX4 outbound message. Recover PX4 boot time using the reported DDS
+offset, fit an affine rate and reference pair, and retain residual range.
 Declare a bridge valid only after DDS time-sync convergence and a bounded,
-non-jumping residual. Each bridge segment has its own ID and uncertainty.
+non-jumping residual. Each bridge segment has its own ID and uncertainty. The
+implementation and thresholds are in `CLOCK_BRIDGE_IMPLEMENTATION.md`.
 
 ## Freshness, overlap, and gap
 
@@ -61,9 +62,9 @@ non-jumping residual. Each bridge segment has its own ID and uncertainty.
 - Gap is the interval from old-route revocation to the first valid target-route
   consumption/writer event when no valid safe output exists.
 - Negative ages beyond bridge uncertainty invalidate the sample.
-- The measured TRANSITION trace has a maximum recorded writer gap of 20 ms and
-  sequence loss. It can detect observed competing writers at that scale, but
-  cannot exclude shorter overlap or no-owner gaps inside a missing sequence.
+- With q4, target critical windows have 12–16 ms maximum gaps and no sequence
+  loss in all three controlled repeats. q1 remains the bounded negative control
+  and cannot exclude overlap inside its missing sequences.
 - Logger stop/start at disarm creates multiple ULog files in the same PX4 boot.
   P0-D merges all segments on the common PX4 timestamp axis; selecting only the
   last file would erase the pre-disarm transition.

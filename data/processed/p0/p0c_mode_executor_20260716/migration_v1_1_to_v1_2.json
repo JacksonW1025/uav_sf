@@ -1,0 +1,10 @@
+{
+  "event_count": 2005,
+  "identity_policy": "all new identity fields are null because schema 1.1 cannot establish them",
+  "migration": "route_trace_1.1_to_1.2",
+  "output": "data/processed/p0/p0c_mode_executor_20260716/route_trace.jsonl",
+  "output_sha256": "975c3e1fcd3d5174f8b84db13238ed65f6f40e3a773a719ad2992984b4b8c005",
+  "schema_version": "1.0",
+  "source": "data/processed/p0/p0c_mode_executor_20260716/route_trace.jsonl",
+  "source_sha256": "6ca379e1a00a72b4d668ca85a0ed195af38cdea4802d37b31ab667c0f7e35cc8"
+}

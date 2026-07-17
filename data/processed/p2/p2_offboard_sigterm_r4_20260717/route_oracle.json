@@ -1,0 +1,145 @@
+{
+  "clauses": {
+    "continuity": {
+      "evidence": [],
+      "metrics": {
+        "allowed_gap_ms": 24.0,
+        "first_target_valid_influence_us": 22444000.0,
+        "last_old_valid_influence_us": 22444000.0,
+        "maximum_unowned_window_ms": 0.0,
+        "valid_fallback_output": true
+      },
+      "reasons": [],
+      "status": "PASS"
+    },
+    "exclusivity": {
+      "evidence": [],
+      "metrics": {
+        "candidate_writers": [
+          "control_allocator"
+        ],
+        "competing_window_count": 0,
+        "critical_window": {
+          "coverage_verdict": "COMPLETE",
+          "end_us": 22944000.0,
+          "event_count": 124,
+          "from_mode": 14,
+          "from_route": 14,
+          "maximum_gap_ms": 12.0,
+          "observed_writers": [
+            "control_allocator"
+          ],
+          "sequence_gap_count": 0,
+          "start_us": 21944000.0,
+          "timestamp_us": 22444000.0,
+          "to_mode": 4,
+          "to_route": 4,
+          "uninstrumented_candidate_writers": [],
+          "window_end": 22944000.0,
+          "window_start": 21944000.0
+        },
+        "critical_window_quality": "COMPLETE",
+        "detectable_resolution_ms": 0.0,
+        "observation_hole_count": 2,
+        "observed_writers": [
+          "control_allocator"
+        ],
+        "resolution_verdict": null,
+        "sequence_gap_count": 0,
+        "uninstrumented_candidates": []
+      },
+      "reasons": [],
+      "status": "PASS"
+    },
+    "installation": {
+      "evidence": [],
+      "metrics": {
+        "checks": {
+          "allocator_input": true,
+          "declared_mode": true,
+          "enabled_modules": true,
+          "final_writer": true,
+          "fresh_consumption": true,
+          "registration_or_activation": true,
+          "setpoint_configuration": true
+        },
+        "first_target_consumption_us": 22452000.0,
+        "first_target_writer_us": 22444000.0
+      },
+      "reasons": [],
+      "status": "PASS"
+    },
+    "recovery": {
+      "evidence": [],
+      "metrics": {
+        "automatic_old_route_reentry_observed": false,
+        "checks": {
+          "fallback_modules_installed": true,
+          "fallback_selected": true,
+          "fallback_writer_active": true,
+          "old_consumer_stopped": true,
+          "old_producer_stopped": true,
+          "old_writer_stopped": true
+        }
+      },
+      "reasons": [],
+      "status": "PASS"
+    },
+    "revocation": {
+      "evidence": [],
+      "metrics": {
+        "declared_route_exit_us": 22444000.0,
+        "last_old_route_consumption_us": 22380000.0,
+        "last_old_writer_event_us": 22436000.0,
+        "last_producer_publish_us": 22362197.75186693,
+        "post_revocation_consumption_count": 0,
+        "post_revocation_writer_count": 0,
+        "revocation_latency_ms": -8.0
+      },
+      "reasons": [],
+      "status": "PASS"
+    }
+  },
+  "clock_bridge": {
+    "clock_bridge_id": "clock-b7f0478160ee4ec3",
+    "discarded_initial_backlog_samples": 4,
+    "offset_ns": 1784284368644088252,
+    "rate_ratio": 1.0416387655844752,
+    "reasons": [],
+    "reference_px4_us": 25186000,
+    "reference_ros_ns": 1784284393830088252,
+    "reset_count": 0,
+    "residual_max_ns": 54631364,
+    "residual_median_ns": 15481528,
+    "sample_count": 26,
+    "schema_version": "1.0",
+    "segment_count": 1,
+    "status": "VALID",
+    "thresholds": {
+      "degraded_residual_max_ns": 250000000,
+      "maximum_round_trip_time_ns": 20000000,
+      "maximum_timesync_offset_span_ns": 5000000,
+      "minimum_sample_count": 20,
+      "residual_max_ns": 100000000,
+      "segment_jump_ns": 50000000
+    },
+    "timestamp_domains": {
+      "source": "px4_boot_us",
+      "target": "ros_node_ns"
+    },
+    "uncertainty_ns": 56631364,
+    "valid_from": 14892000,
+    "valid_until": 31844000
+  },
+  "route_oracle_version": "0.2",
+  "run_id": "p2_offboard_sigterm_r4_20260717",
+  "schema_version": "1.1",
+  "status": "PASS",
+  "transition": {
+    "source_mode": 14,
+    "source_route_epoch_id": 3,
+    "target_mode": 4,
+    "timestamp_domain": "ulog_us",
+    "timestamp_us": 22444000.0
+  }
+}

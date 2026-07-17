@@ -15,7 +15,7 @@
     "schema_version": "1.0",
     "status": "PASS"
   },
-  "duration_us": 38636000.0,
+  "duration_us": 38636000,
   "event_type_counts": {
     "actuator_motors": 385,
     "actuator_output_published": 385,
@@ -37,8 +37,8 @@
     "vehicle_control_mode": 87,
     "vehicle_status": 87
   },
-  "first_timestamp_us": 6380000.0,
-  "last_timestamp_us": 45016000.0,
+  "first_timestamp_us": 6380000,
+  "last_timestamp_us": 45016000,
   "lifecycle_evidence": [
     "producer_jsonl:external_mode_registration_observed",
     "ros_structured_log:external_mode_executor.log",
@@ -79,7 +79,7 @@
     }
   ],
   "run_id": "p0c_mode_executor_20260716",
-  "schema_version": "1.0",
+  "schema_version": "1.2",
   "source_artifacts": [
     {
       "bytes": 9060156,
@@ -99,16 +99,16 @@
   ],
   "timestamp_domains": {
     "ros_node_ns": {
-      "duration": 35100884736.0,
+      "duration": 35100884736,
       "event_count": 27,
-      "first": 1.7842024656906452e+18,
-      "last": 1.78420250079153e+18
+      "first": 1784202465690645200,
+      "last": 1784202500791530000
     },
     "ulog_us": {
-      "duration": 38636000.0,
+      "duration": 38636000,
       "event_count": 1978,
-      "first": 6380000.0,
-      "last": 45016000.0
+      "first": 6380000,
+      "last": 45016000
     }
   },
   "trace_event_count": 2005,
@@ -121,5 +121,6 @@
       "mc_rate_control"
     ],
     "status": "ATTRIBUTED"
-  }
+  },
+  "superseded_by_phase_a2_measurement": true
 }

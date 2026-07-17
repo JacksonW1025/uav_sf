@@ -1,0 +1,63 @@
+{
+  "clock_bridge": {
+    "clock_bridge_id": "clock-0b5003d3c87c36c5",
+    "fault_px4_time_interval": {
+      "lower_us": 23218509.890848782,
+      "midpoint_us": 23265280.850075066,
+      "upper_us": 23312051.80930135
+    },
+    "status": "VALID",
+    "uncertainty_ns": 48685010
+  },
+  "experiment_kind": "p2",
+  "failure_and_fallback": {
+    "automatic_fallback_observed": true,
+    "detection_latency_ms": 1360.398637,
+    "expected_fallback": true,
+    "fallback_epoch_started_us": 24560000.0,
+    "fallback_nav_state": 5,
+    "fallback_route_epoch_id": 4,
+    "first_fallback_allocator_event_us": 24568000.0,
+    "first_fallback_consumption_us": 24560000.0,
+    "first_fallback_writer_event_us": 24560000.0,
+    "post_revocation_old_epoch_consumption_count": 0,
+    "post_revocation_old_epoch_writer_count": 0
+  },
+  "fault_class": "sigstop_sigcont",
+  "heartbeat_or_health_enabled": true,
+  "object": "external",
+  "physical_recovery": {
+    "altitude_loss_m": 0.12074494361877441,
+    "angular_rate_measurement_status": "UNKNOWN_NOT_PUBLISHED_BY_LOCKED_DDS_CONFIG",
+    "angular_rate_sample_count": 0,
+    "attitude_measurement_status": "AVAILABLE",
+    "initial_altitude_m": 1.9156532287597656,
+    "landed_and_disarmed": true,
+    "maximum_altitude_m": 1.9128713607788086,
+    "minimum_altitude_m": 1.7949082851409912,
+    "peak_angular_rate_rad_s": null,
+    "peak_tilt_rad": 0.017503234216076177
+  },
+  "reasons": [],
+  "route_oracle_clauses": {
+    "continuity": "PASS",
+    "exclusivity": "PASS",
+    "installation": "PASS",
+    "recovery": "PASS",
+    "revocation": "PASS"
+  },
+  "route_oracle_version": "0.2",
+  "schema_version": "1.0",
+  "setpoint_enabled": true,
+  "source_route": {
+    "last_allocator_event_us": 24536000.0,
+    "last_producer_heartbeat_ros_ns": null,
+    "last_producer_setpoint_ros_ns": 1.7842859761410706e+18,
+    "last_px4_consumption_us": 23224000.0,
+    "last_writer_event_us": 24552000.0,
+    "mode": 23,
+    "producer_heartbeat_measurement_status": "UNKNOWN_EXTERNAL_HEALTH_REPLY_NOT_LOGGED",
+    "route_epoch_id": 3
+  },
+  "verdict": "PASS"
+}

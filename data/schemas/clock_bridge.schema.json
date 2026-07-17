@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uav-sf.local/schemas/clock_bridge.schema.json",
+  "title": "ROS to PX4 clock bridge segment",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "clock_bridge_id",
+    "status",
+    "offset_ns",
+    "rate_ratio",
+    "reference_px4_us",
+    "reference_ros_ns",
+    "uncertainty_ns",
+    "residual_median_ns",
+    "residual_max_ns",
+    "sample_count",
+    "valid_from",
+    "valid_until",
+    "timestamp_domains",
+    "thresholds",
+    "segment_count",
+    "reset_count",
+    "reasons"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "clock_bridge_id": {"type": "string", "minLength": 1},
+    "status": {"enum": ["VALID", "INVALID", "DEGRADED"]},
+    "offset_ns": {"type": ["integer", "null"]},
+    "rate_ratio": {"type": ["number", "null"], "exclusiveMinimum": 0},
+    "reference_px4_us": {"type": ["integer", "null"], "minimum": 0},
+    "reference_ros_ns": {"type": ["integer", "null"], "minimum": 0},
+    "uncertainty_ns": {"type": ["integer", "null"], "minimum": 0},
+    "residual_median_ns": {"type": ["integer", "null"], "minimum": 0},
+    "residual_max_ns": {"type": ["integer", "null"], "minimum": 0},
+    "sample_count": {"type": "integer", "minimum": 0},
+    "valid_from": {"type": ["integer", "null"], "minimum": 0},
+    "valid_until": {"type": ["integer", "null"], "minimum": 0},
+    "timestamp_domains": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "target"],
+      "properties": {
+        "source": {"const": "px4_boot_us"},
+        "target": {"const": "ros_node_ns"}
+      }
+    },
+    "thresholds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "minimum_sample_count",
+        "residual_max_ns",
+        "degraded_residual_max_ns",
+        "maximum_round_trip_time_ns",
+        "maximum_timesync_offset_span_ns",
+        "segment_jump_ns"
+      ],
+      "properties": {
+        "minimum_sample_count": {"type": "integer", "minimum": 2},
+        "residual_max_ns": {"type": "integer", "minimum": 0},
+        "degraded_residual_max_ns": {"type": "integer", "minimum": 0},
+        "maximum_round_trip_time_ns": {"type": "integer", "minimum": 0},
+        "maximum_timesync_offset_span_ns": {"type": "integer", "minimum": 0},
+        "segment_jump_ns": {"type": "integer", "minimum": 1}
+      }
+    },
+    "segment_count": {"type": "integer", "minimum": 0},
+    "reset_count": {"type": "integer", "minimum": 0},
+    "discarded_initial_backlog_samples": {"type": "integer", "minimum": 0},
+    "reasons": {"type": "array", "items": {"type": "string"}}
+  }
+}

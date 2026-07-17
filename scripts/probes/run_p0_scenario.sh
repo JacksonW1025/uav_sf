@@ -14,14 +14,19 @@ source /opt/ros/jazzy/setup.bash
 source "${REPO_ROOT}/ros2_ws/install/setup.bash"
 set -u
 
-PX4_DIR="${REPO_ROOT}/external/PX4-Autopilot-route-observability"
+PX4_DIR="${PX4_OBSERVABILITY_DIR:-${REPO_ROOT}/external/PX4-Autopilot-route-observability}"
 PX4_BUILD="${PX4_DIR}/build/px4_sitl_default"
 AGENT_PREFIX="${REPO_ROOT}/external/install/microxrce_agent"
-RAW_DIR="${REPO_ROOT}/runs/p0/${RUN_ID}/raw"
-PROCESSED_DIR="${REPO_ROOT}/data/processed/p0/${RUN_ID}"
+RAW_DIR="${P0_RUN_ROOT:-${REPO_ROOT}/runs/p0}/${RUN_ID}/raw"
+PROCESSED_DIR="${P0_PROCESSED_ROOT:-${REPO_ROOT}/data/processed/p0}/${RUN_ID}"
 mkdir -p "${RAW_DIR}" "${PROCESSED_DIR}"
 START_MARKER="${RAW_DIR}/run.start"
 touch "${START_MARKER}"
+# PX4 persists reboot-required logger parameters in the generated SITL rootfs.
+# Start each controlled repeat from the locked defaults, then apply this script's
+# explicit scenario parameters, so a prior D-gate run cannot contaminate P0.
+rm -f "${PX4_BUILD}/rootfs/0/parameters.bson" \
+  "${PX4_BUILD}/rootfs/0/parameters_backup.bson"
 
 PX4_PID=""
 AGENT_PID=""
@@ -83,7 +88,7 @@ AGENT_PID=$!
 
 (
   cd "${PX4_DIR}"
-  HEADLESS=1 PX4_SIM_MODEL=gz_x500 \
+  PX4_PARAM_SDLOG_MODE=0 PX4_PARAM_SDLOG_PROFILE=1 HEADLESS=1 PX4_SIM_MODEL=gz_x500 \
     "${PX4_BUILD}/bin/px4" -i 0 <"${FIFO}"
 ) >"${RAW_DIR}/px4.log" 2>&1 &
 PX4_PID=$!
@@ -108,10 +113,16 @@ echo "param set COM_ARM_WO_GPS 1" >&3
 sleep 2
 
 RESULT_FILE="${RAW_DIR}/runner_result.json"
+runner_args=(--scenario offboard --output "${RESULT_FILE}" --timeout 180)
+if [[ -n "${P0_ACTIVE_DURATION_S:-}" ]]; then
+  runner_args+=(--active-duration "${P0_ACTIVE_DURATION_S}")
+fi
+if [[ "${P0_HOVER_ONLY:-0}" == "1" ]]; then
+  runner_args+=(--hover-only)
+fi
 case "${SCENARIO}" in
   offboard)
-    python3 "${REPO_ROOT}/scripts/probes/p0_route_runner.py" \
-      --scenario offboard --output "${RESULT_FILE}" --timeout 180 \
+    python3 "${REPO_ROOT}/scripts/probes/p0_route_runner.py" "${runner_args[@]}" \
       >"${RAW_DIR}/runner.log" 2>&1
     ;;
   external)
@@ -170,6 +181,10 @@ elif [[ -f "${RAW_DIR}/external_mode_executor.log" ]]; then
   collector_args+=(--lifecycle-log "${RAW_DIR}/external_mode_executor.log")
 fi
 python3 "${REPO_ROOT}/scripts/tracing/route_trace_collector.py" "${collector_args[@]}"
+CLOCK_BRIDGE="${PROCESSED_DIR}/clock_bridge.json"
+python3 "${REPO_ROOT}/scripts/tracing/clock_bridge_collector.py" \
+  --samples "${RAW_DIR}/producer_events.jsonl" \
+  --output "${CLOCK_BRIDGE}" || true
 summary_args=(
   --trace "${PROCESSED_DIR}/route_trace.jsonl"
   --result "${RESULT_FILE}"
@@ -177,15 +192,26 @@ summary_args=(
   --scenario-label "${SCENARIO}"
   --source "${RAW_DIR}/flight.ulg"
   --source "${RAW_DIR}/producer_events.jsonl"
+  --clock-bridge "${CLOCK_BRIDGE}"
 )
 if [[ -f "${RAW_DIR}/external_mode.log" ]]; then
   summary_args+=(--source "${RAW_DIR}/external_mode.log")
 elif [[ -f "${RAW_DIR}/external_mode_executor.log" ]]; then
   summary_args+=(--source "${RAW_DIR}/external_mode_executor.log")
 fi
+if [[ -n "${P0_OBSERVATION_PROFILE:-}" ]]; then
+  summary_args+=(--observation-profile "${P0_OBSERVATION_PROFILE}")
+fi
+if [[ -n "${P0_UORB_QUEUE_LENGTH:-}" ]]; then
+  summary_args+=(--uorb-queue-length "${P0_UORB_QUEUE_LENGTH}")
+fi
+if [[ -n "${P0_BUILD_PROVENANCE:-}" ]]; then
+  summary_args+=(--build-provenance "${P0_BUILD_PROVENANCE}")
+fi
 python3 "${REPO_ROOT}/scripts/analysis/summarize_route_trace.py" "${summary_args[@]}"
 python3 "${REPO_ROOT}/scripts/oracles/route_oracle_v0.py" \
   --trace "${PROCESSED_DIR}/route_trace.jsonl" \
+  --clock-bridge "${CLOCK_BRIDGE}" \
   --output "${PROCESSED_DIR}/route_oracle.json"
 
 echo "P0_SCENARIO=PASS scenario=${SCENARIO} run_id=${RUN_ID}"

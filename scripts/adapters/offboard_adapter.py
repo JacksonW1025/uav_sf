@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import math
 import time
+import uuid
 from dataclasses import dataclass
 from typing import Callable, Optional
 
@@ -25,15 +26,21 @@ class OffboardPublication:
     proof_of_life: dict[str, object]
     trajectory_setpoint: dict[str, object]
     expected_route_event: Optional[str]
+    producer_session_id: str
 
 
 class OffboardAdapterContract:
     """Pure contract layer; ROS message construction is a separate concern."""
 
-    def __init__(self, producer_identity: str = "uav_sf.offboard_adapter") -> None:
+    def __init__(
+        self,
+        producer_identity: str = "uav_sf.offboard_adapter",
+        producer_session_id: Optional[str] = None,
+    ) -> None:
         if not producer_identity.strip():
             raise ValueError("producer_identity is required")
         self.producer_identity = producer_identity
+        self.producer_session_id = producer_session_id or f"offboard-{uuid.uuid4()}"
         self._sequence = 0
 
     @property
@@ -69,6 +76,7 @@ class OffboardAdapterContract:
             proof_of_life={"timestamp": producer_timestamp_us, **controls},
             trajectory_setpoint=setpoint,
             expected_route_event=command.expected_route_event,
+            producer_session_id=self.producer_session_id,
         )
         self._sequence += 1
         return publication
@@ -118,6 +126,22 @@ class Px4OffboardAdapter:
         self._command_pub = node.create_publisher(VehicleCommand, "/fmu/in/vehicle_command", 10)
 
     def publish(self, command: CanonicalCommand, producer_timestamp_us: Optional[int] = None) -> int:
+        return self.publish_channels(
+            command,
+            producer_timestamp_us=producer_timestamp_us,
+            heartbeat_enabled=True,
+            setpoint_enabled=True,
+        )
+
+    def publish_channels(
+        self,
+        command: CanonicalCommand,
+        *,
+        producer_timestamp_us: Optional[int] = None,
+        heartbeat_enabled: bool,
+        setpoint_enabled: bool,
+    ) -> int:
+        """Publish heartbeat and setpoint independently for deterministic P3 cases."""
         timestamp_us = producer_timestamp_us if producer_timestamp_us is not None else time.monotonic_ns() // 1000
         publication = self.contract.publication_for(command, timestamp_us)
         OffboardControlMode, TrajectorySetpoint, _ = self._types
@@ -132,16 +156,21 @@ class Px4OffboardAdapter:
         setpoint.velocity = list(publication.trajectory_setpoint["velocity"])
         setpoint.acceleration = list(publication.trajectory_setpoint["acceleration"])
         setpoint.yaw = publication.trajectory_setpoint["yaw"]
-        self._control_mode_pub.publish(control)
-        self._setpoint_pub.publish(setpoint)
+        if heartbeat_enabled:
+            self._control_mode_pub.publish(control)
+        if setpoint_enabled:
+            self._setpoint_pub.publish(setpoint)
         self._event_sink(
             {
                 "event_type": "offboard_publish",
                 "producer_timestamp": timestamp_us,
                 "publish_sequence": publication.publish_sequence,
                 "producer_identity": self.contract.producer_identity,
+                "producer_session_id": publication.producer_session_id,
                 "behavior_phase": command.behavior_phase,
                 "setpoint_level": command.setpoint_level,
+                "heartbeat_enabled": heartbeat_enabled,
+                "setpoint_enabled": setpoint_enabled,
             }
         )
         return publication.publish_sequence
@@ -162,7 +191,13 @@ class Px4OffboardAdapter:
         message.source_component = 1
         message.from_external = True
         self._command_pub.publish(message)
-        self._event_sink({**plan, "producer_identity": self.contract.producer_identity})
+        self._event_sink(
+            {
+                **plan,
+                "producer_identity": self.contract.producer_identity,
+                "producer_session_id": self.contract.producer_session_id,
+            }
+        )
 
     def release(self, producer_timestamp_us: Optional[int] = None) -> None:
         self.request_mode(release=True, producer_timestamp_us=producer_timestamp_us)

@@ -14,6 +14,7 @@ from scripts.tracing.route_trace_collector import (
     producer_events,
 )
 from scripts.tracing.migrate_route_trace_v1_0_to_v1_1 import migrate_event
+from scripts.tracing.migrate_route_trace_v1_1_to_v1_2 import migrate_event as migrate_v1_2_event
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -23,16 +24,21 @@ SCHEMA = json.loads((ROOT / "data" / "schemas" / "route_trace.schema.json").read
 def test_schema_is_valid_and_requires_all_route_fields() -> None:
     Draft202012Validator.check_schema(SCHEMA)
     required = set(SCHEMA["required"])
-    assert len(required) == 23
+    assert len(required) == 28
     assert {
         "producer_identity",
         "actuator_writer",
         "fallback_target",
         "behavior_phase",
+        "route_epoch_id",
+        "route_activation_id",
+        "producer_session_id",
+        "registration_instance_id",
+        "route_change_source",
         "observation",
         "evidence_source",
     } <= required
-    assert SCHEMA["properties"]["schema_version"]["const"] == "1.1"
+    assert SCHEMA["properties"]["schema_version"]["const"] == "1.2"
 
 
 def test_reducer_distinguishes_publish_consume_and_writer(tmp_path: Path) -> None:
@@ -140,3 +146,28 @@ def test_v1_migration_moves_old_phase_without_inventing_level() -> None:
     assert migrated["behavior_phase"] == "straight_line"
     assert migrated["setpoint_level"] == "unknown"
     assert migrated["observation"] is None
+
+
+def test_v1_1_to_v1_2_migration_does_not_invent_identities() -> None:
+    old = RouteEventReducer("migration-v12").reduce("vehicle_status", {"nav_state": 14}, 1.0)
+    old["schema_version"] = "1.1"
+    for field in (
+        "route_epoch_id",
+        "route_activation_id",
+        "producer_session_id",
+        "registration_instance_id",
+        "route_change_source",
+    ):
+        old.pop(field)
+    migrated = migrate_v1_2_event(old)
+    assert migrated["schema_version"] == "1.2"
+    assert all(
+        migrated[field] is None
+        for field in (
+            "route_epoch_id",
+            "route_activation_id",
+            "producer_session_id",
+            "registration_instance_id",
+            "route_change_source",
+        )
+    )

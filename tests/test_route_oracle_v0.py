@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from jsonschema import Draft202012Validator
 
-from scripts.oracles.route_oracle_v0 import RESULT_SCHEMA, evaluate
+from scripts.oracles.route_oracle_v0 import RESULT_SCHEMA, _mode_transition, evaluate
 
 
 def _event(
@@ -13,7 +13,7 @@ def _event(
     **extra: object,
 ) -> dict[str, object]:
     return {
-        "schema_version": "1.1",
+        "schema_version": "1.2",
         "run_id": "oracle-test",
         "timestamp": timestamp,
         "timestamp_domain": domain,
@@ -28,14 +28,14 @@ def _event(
 def _complete_events() -> list[dict[str, object]]:
     return [
         _event(0, "vehicle_status", 14),
-        _event(5_000, "producer_still_publishing", 14, route_epoch_id="old-route"),
-        _event(10_000, "px4_setpoint_consumed", 14, route_epoch_id="old-route"),
+        _event(5_000, "producer_still_publishing", 14, route_epoch_id=1),
+        _event(10_000, "px4_setpoint_consumed", 14, route_epoch_id=1),
         _event(
             95_000,
             "actuator_output_published",
             14,
             actuator_writer="control_allocator",
-            route_epoch_id="old-route",
+            route_epoch_id=1,
         ),
         _event(100_000, "vehicle_status", 5),
         _event(
@@ -43,9 +43,9 @@ def _complete_events() -> list[dict[str, object]]:
             "actuator_output_published",
             5,
             actuator_writer="control_allocator",
-            route_epoch_id="target-route",
+            route_epoch_id=2,
         ),
-        _event(110_000, "px4_setpoint_consumed", 5, route_epoch_id="target-route"),
+        _event(110_000, "px4_setpoint_consumed", 5, route_epoch_id=2),
         _event(115_000, "allocator_input_published", 5),
     ]
 
@@ -60,6 +60,22 @@ def _writer(status: str = "EXCLUSIVE") -> dict[str, object]:
         "competing_windows": [] if status != "COMPETING_WRITERS" else [{}],
         "observation_holes": [],
         "expected_period_ms": 0,
+        "transition_windows": [
+            {
+                "timestamp_us": 100_000,
+                "from_mode": 14,
+                "to_mode": 5,
+                "start_us": 50_000,
+                "end_us": 150_000,
+                "observed_writers": (
+                    ["control_allocator", "rover_ackermann"]
+                    if status == "COMPETING_WRITERS"
+                    else ["control_allocator"]
+                ),
+                "coverage_verdict": "COMPLETE",
+                "maximum_gap_ms": 10.0,
+            }
+        ],
     }
 
 
@@ -115,3 +131,18 @@ def test_no_transition_is_not_applicable() -> None:
     assert all(
         clause["status"] == "NOT_APPLICABLE" for clause in result["clauses"].values()
     )
+
+
+def test_executor_bookkeeping_exit_without_consumption_is_skipped() -> None:
+    events = [
+        _event(0, "vehicle_status", 4, route_epoch_id=1),
+        _event(100, "vehicle_status", 23, route_epoch_id=2),
+        _event(200, "vehicle_status", 17, route_epoch_id=3),
+        _event(300, "vehicle_status", 23, route_epoch_id=4),
+        _event(400, "px4_setpoint_consumed", 23, route_epoch_id=4),
+        _event(500, "vehicle_status", 5, route_epoch_id=5),
+    ]
+    transition = _mode_transition(events)
+    assert transition is not None
+    assert transition["timestamp_us"] == 500
+    assert transition["source_route_epoch_id"] == 4

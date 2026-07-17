@@ -81,7 +81,8 @@ int main(int argc, char* argv[])
   using Node = px4_ros2::NodeWithModeExecutor<uav_sf::P0Executor, uav_sf::RouteTransitionMode>;
   auto node = std::make_shared<Node>("p0_external_mode_executor", true);
   RCLCPP_INFO(node->get_logger(),
-              "{\"event_type\":\"mode_executor_registered\",\"scenario\":\"takeoff_external_rtl_disarm\"}");
+              "{\"event_type\":\"mode_executor_registered\",\"registration_instance_id\":%llu,\"scenario\":\"takeoff_external_rtl_disarm\"}",
+              static_cast<unsigned long long>(node->getMode().registrationInstanceId()));
   rclcpp::spin(node);
   rclcpp::shutdown();
   return 0;

@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "gate": "phase_a2_measurement",
+  "status": "PASS",
+  "evaluated_at_utc": "2026-07-17T10:15:00Z",
+  "criteria": {
+    "M1": {"status": "PASS", "evidence": "locked PX4 4ae21a5e observation patch applies to a clean worktree and q4 px4_sitl_default build passed"},
+    "M2": {"status": "PASS", "evidence": "15-run queue study in data/processed/phase_a2/queue_benchmark.tsv"},
+    "M3": {"status": "PASS", "evidence": "all nine accepted P0 target critical windows have zero sequence gaps and COMPLETE local coverage"},
+    "M4": {"status": "PASS", "evidence": "control_allocator is the locked multicopter final writer candidate and is instrumented"},
+    "M5": {"status": "PASS", "evidence": "route_epoch_id is emitted by control-plane epoch events and carried by consumption, allocator, and writer observations"},
+    "M6": {"status": "PASS", "evidence": "Offboard producer_session_id plus External registration_instance_id and activation_id are present"},
+    "M7": {"status": "PASS", "evidence": "all nine accepted P0 clock bridges are VALID under preregistered thresholds"},
+    "M8": {"status": "PASS", "evidence": "all accepted and migrated traces validate as route trace schema 1.2"},
+    "M9": {"status": "PASS", "evidence": "Route Oracle 0.2 unit and processed-baseline tests pass"},
+    "M10": {"status": "PASS", "evidence": "P0-A, P0-B, and P0-C each have three valid accepted runs"},
+    "M11": {"status": "PASS", "evidence": "repository validator passed with 59 tests before P2 execution"}
+  },
+  "selected_uorb_queue_length": 4,
+  "blocking_items": [],
+  "controls": ["P2", "P3"]
+}

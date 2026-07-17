@@ -1,0 +1,48 @@
+{
+  "compact_event_count": 1002,
+  "compact_event_type_counts": {
+    "actuator_motors": 30,
+    "actuator_output_published": 273,
+    "allocator_input_published": 76,
+    "clock_bridge_sample": 12,
+    "failsafe_flags": 42,
+    "offboard_mode_requested": 1,
+    "offboard_producer_started": 1,
+    "process_fault_injected": 1,
+    "producer_still_publishing": 286,
+    "px4_setpoint_consumed": 112,
+    "px4_setpoint_received": 20,
+    "route_epoch_changed": 6,
+    "vehicle_control_mode": 71,
+    "vehicle_status": 71
+  },
+  "full_event_count": 5169,
+  "full_event_type_counts": {
+    "actuator_motors": 218,
+    "actuator_output_published": 2650,
+    "allocator_input_published": 664,
+    "clock_bridge_sample": 12,
+    "failsafe_flags": 42,
+    "offboard_mode_requested": 1,
+    "offboard_producer_started": 1,
+    "process_fault_injected": 1,
+    "producer_still_publishing": 286,
+    "px4_setpoint_consumed": 1039,
+    "px4_setpoint_received": 107,
+    "route_epoch_changed": 6,
+    "vehicle_control_mode": 71,
+    "vehicle_status": 71
+  },
+  "high_rate_event_types": [
+    "actuator_motors",
+    "actuator_output_published",
+    "allocator_input_published",
+    "px4_setpoint_consumed",
+    "px4_setpoint_received"
+  ],
+  "output_sha256": "ba30bbf7f8d1f1ab3202a507e180dd884e31ffb85cda52b2051dd4158f95e509",
+  "policy": "retain all control/lifecycle events; retain first, every Nth, and last high-rate event per epoch/domain",
+  "schema_version": "1.0",
+  "source_sha256": "877fd1a3ada8860e3f31b47c5c98240447bdb250181999b351e3386b3b69b55c",
+  "stride": 10
+}

@@ -1,0 +1,88 @@
+{
+  "actual_event_count": 9386,
+  "average_actuator_writer_rate_hz": 121.99091132399901,
+  "coverage_ratio": 1.0,
+  "cpu_load_max": 0.30188679695129395,
+  "cpu_load_mean": 0.26606379878340347,
+  "expected_event_count": 9386,
+  "expected_period_ms": [
+    0.0,
+    8.0
+  ],
+  "groups": [
+    {
+      "actual_event_count": 1416,
+      "average_rate_hz": 43.468911280412875,
+      "coverage_ratio": 1.0,
+      "event_type": 1,
+      "expected_event_count": 1416,
+      "first_sequence": 40,
+      "instance": 0,
+      "last_sequence": 1455,
+      "logger_dropped_samples": 0,
+      "maximum_event_gap_ms": 64.0,
+      "sequence_gaps": [],
+      "source_id": 1,
+      "writer_id": 0
+    },
+    {
+      "actual_event_count": 3990,
+      "average_rate_hz": 122.48219110783592,
+      "coverage_ratio": 1.0,
+      "event_type": 2,
+      "expected_event_count": 3990,
+      "first_sequence": 119,
+      "instance": 0,
+      "last_sequence": 4108,
+      "logger_dropped_samples": 0,
+      "maximum_event_gap_ms": 20.0,
+      "sequence_gaps": [],
+      "source_id": 2,
+      "writer_id": 1
+    },
+    {
+      "actual_event_count": 3974,
+      "average_rate_hz": 121.99091132399901,
+      "coverage_ratio": 1.0,
+      "event_type": 3,
+      "expected_event_count": 3974,
+      "first_sequence": 118,
+      "instance": 0,
+      "last_sequence": 4091,
+      "logger_dropped_samples": 0,
+      "maximum_event_gap_ms": 20.0,
+      "sequence_gaps": [],
+      "source_id": 3,
+      "writer_id": 2
+    },
+    {
+      "actual_event_count": 6,
+      "average_rate_hz": 0.1496468334730037,
+      "coverage_ratio": 1.0,
+      "event_type": 4,
+      "expected_event_count": 6,
+      "first_sequence": 0,
+      "instance": 0,
+      "last_sequence": 5,
+      "logger_dropped_samples": 0,
+      "maximum_event_gap_ms": 10668.0,
+      "sequence_gaps": [],
+      "source_id": 0,
+      "writer_id": 0
+    }
+  ],
+  "logger_dropped_samples": 0,
+  "logger_write_dropout_count": 0,
+  "maximum_event_gap_ms": 10668.0,
+  "observation_profiles": [
+    "TRANSITION"
+  ],
+  "per_publication_complete": true,
+  "run_id": "queue_q4_r1_20260717",
+  "schema_version": "1.0",
+  "sequence_gaps": [],
+  "transition_gate_passed": true,
+  "ulog": "/workspace/runs/phase_a2/queue_benchmark/q4/repeat1/raw/queue_q4_r1_20260717/raw/flight.ulg",
+  "ulog_size_bytes": 8247557,
+  "uorb_queue_length": 4
+}

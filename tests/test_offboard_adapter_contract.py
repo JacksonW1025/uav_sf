@@ -7,7 +7,7 @@ from scripts.behavior.common_behavior_core import CommonBehaviorCore
 
 
 def test_proof_of_life_setpoint_and_sequence_are_coupled() -> None:
-    contract = OffboardAdapterContract("test.producer")
+    contract = OffboardAdapterContract("test.producer", "session-1")
     command = CommonBehaviorCore().command_at(3.5, 1.25)
     first = contract.publication_for(command, 10_000)
     second = contract.publication_for(command, 20_000)
@@ -19,6 +19,7 @@ def test_proof_of_life_setpoint_and_sequence_are_coupled() -> None:
     assert first.trajectory_setpoint["producer_identity"] == "test.producer"
     assert first.trajectory_setpoint["behavior_phase"] == "straight_line"
     assert first.trajectory_setpoint["setpoint_level"] == "velocity"
+    assert first.producer_session_id == "session-1"
     assert all(math.isnan(value) for value in first.trajectory_setpoint["position"])
 
 

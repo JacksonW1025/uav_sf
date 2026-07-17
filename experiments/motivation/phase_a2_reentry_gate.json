@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "gate": "phase_a2_reentry",
+  "status": "PASS",
+  "evaluated_at_utc": "2026-07-17T10:15:00Z",
+  "criteria": {
+    "R1": {"status": "PASS", "evidence": "p0d0_internal_rearm_r4_20260717"},
+    "R2": {"status": "PASS", "evidence": "p0d1_lifecycle_r2_20260717"},
+    "R3": {"status": "PASS", "evidence": "p0d2_full_reentry_r3_20260717 concluded clean_reentry"}
+  },
+  "blocking_items": [],
+  "controls": ["clean re-entry claim", "complete re-entry recovery claim"]
+}

@@ -32,6 +32,10 @@ def summarize(
     result: Path,
     scenario_label: str | None = None,
     sources: list[Path] | None = None,
+    clock_bridge: Path | None = None,
+    observation_profile: str | None = None,
+    uorb_queue_length: int | None = None,
+    build_provenance: Path | None = None,
 ) -> dict[str, object]:
     counts: Counter[str] = Counter()
     nav_states: list[int] = []
@@ -72,12 +76,28 @@ def summarize(
     if scenario_label is not None:
         baseline["runner_scenario"] = baseline.get("scenario")
         baseline["scenario"] = scenario_label
-    oracle = run_oracle(trace)
+    bridge = (
+        json.loads(clock_bridge.read_text(encoding="utf-8"))
+        if clock_bridge is not None
+        else None
+    )
+    oracle = run_oracle(trace, bridge)
+    provenance = (
+        json.loads(build_provenance.read_text(encoding="utf-8"))
+        if build_provenance is not None
+        else None
+    )
     return {
-        "schema_version": "1.1",
+        "schema_version": "1.2",
         "run_id": trace.parent.name,
         "execution_status": baseline.get("status", "UNKNOWN"),
         "route_verdict": oracle["status"],
+        "clock_bridge": bridge,
+        "experiment_configuration": {
+            "observation_profile": observation_profile,
+            "uorb_queue_length": uorb_queue_length,
+            "build_provenance": provenance,
+        },
         "baseline": baseline,
         "trace_event_count": event_count,
         "event_type_counts": dict(sorted(counts.items())),
@@ -102,6 +122,15 @@ def summarize(
             "px4_consume_events": counts["px4_setpoint_consumed"],
             "domains_require_clock_bridge": len(domain_ranges) > 1,
         },
+        "route_epochs": sorted(
+            {
+                int(event["route_epoch_id"])
+                for line in trace.read_text(encoding="utf-8").splitlines()
+                if line.strip()
+                for event in (json.loads(line),)
+                if event.get("route_epoch_id") is not None
+            }
+        ),
         "lifecycle_evidence": lifecycle_evidence,
         "source_artifacts": [_artifact_identity(path) for path in (sources or [])],
         "processed_trace_policy": {
@@ -119,11 +148,24 @@ def main() -> int:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--scenario-label")
     parser.add_argument("--source", action="append", type=Path, default=[])
+    parser.add_argument("--clock-bridge", type=Path)
+    parser.add_argument("--observation-profile", choices=("BASELINE", "TRANSITION"))
+    parser.add_argument("--uorb-queue-length", type=int, choices=(1, 4, 8, 16, 32))
+    parser.add_argument("--build-provenance", type=Path)
     args = parser.parse_args()
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(
         json.dumps(
-            summarize(args.trace, args.result, args.scenario_label, args.source),
+            summarize(
+                args.trace,
+                args.result,
+                args.scenario_label,
+                args.source,
+                args.clock_bridge,
+                args.observation_profile,
+                args.uorb_queue_length,
+                args.build_provenance,
+            ),
             indent=2,
             sort_keys=True,
         )

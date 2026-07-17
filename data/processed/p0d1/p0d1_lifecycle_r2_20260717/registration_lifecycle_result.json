@@ -1,0 +1,40 @@
+{
+  "arming_check_slot_removed_count": 2,
+  "checks": {
+    "arming_check_slots_removed": true,
+    "executor_slot_status_explicit": true,
+    "fresh_registration_instances": true,
+    "immediate_post_publish_exit_completed": true,
+    "mode_slots_removed": true,
+    "no_active_registration_at_end": true,
+    "normal_graceful_shutdown_completed": true,
+    "two_registration_successes": true,
+    "two_unregister_requests_processed": true
+  },
+  "executor_registration_ids": [
+    -1,
+    -1
+  ],
+  "executor_slot_removed_count": 0,
+  "mode_slot_removed_count": 2,
+  "process_results": {
+    "immediate_exit": true,
+    "immediate_signal": "SIGTERM",
+    "normal_graceful_exit": true,
+    "normal_signal": "SIGINT"
+  },
+  "reason": "registration resources were removed and the component re-registered cleanly",
+  "registration_count": 2,
+  "registration_instance_ids": [
+    3376327467908964,
+    3376338600927064
+  ],
+  "registration_mode_ids": [
+    23,
+    23
+  ],
+  "scenario": "p0d1_registration_lifecycle",
+  "schema_version": "1.0",
+  "status": "PASS",
+  "unregister_processed_count": 2
+}

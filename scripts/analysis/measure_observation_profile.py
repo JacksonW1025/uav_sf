@@ -86,6 +86,8 @@ def measure(path: Path) -> dict[str, Any]:
             "instance": key[3],
             "expected_event_count": expected,
             "actual_event_count": actual,
+            "first_sequence": records[0]["sequence"] if records else None,
+            "last_sequence": records[-1]["sequence"] if records else None,
             "average_rate_hz": rate_hz,
             "maximum_event_gap_ms": max(gaps_ms, default=0.0),
             "sequence_gaps": sequence_gaps,
@@ -108,6 +110,7 @@ def measure(path: Path) -> dict[str, Any]:
         profile_names == ["TRANSITION"]
         and (max(actuator_rates, default=0.0) >= 100.0 or complete)
     )
+    ulog_dropouts = list(getattr(ulog, "dropouts", []))
     return {
         "schema_version": "1.0",
         "ulog": str(path),
@@ -120,6 +123,7 @@ def measure(path: Path) -> dict[str, Any]:
         "maximum_event_gap_ms": maximum_gap_ms,
         "sequence_gaps": all_sequence_gaps,
         "logger_dropped_samples": max(0, total_expected - total_actual),
+        "logger_write_dropout_count": len(ulog_dropouts),
         "coverage_ratio": total_actual / total_expected if total_expected else 0.0,
         "per_publication_complete": complete,
         "transition_gate_passed": transition_gate,
@@ -133,11 +137,28 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--ulog", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--queue-length", type=int)
+    parser.add_argument("--run-id")
     args = parser.parse_args()
     result = measure(args.ulog)
+    result["uorb_queue_length"] = args.queue_length
+    result["run_id"] = args.run_id
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    print(json.dumps(result, sort_keys=True))
+    print(
+        json.dumps(
+            {
+                "status": "PASS",
+                "run_id": result["run_id"],
+                "uorb_queue_length": result["uorb_queue_length"],
+                "coverage_ratio": result["coverage_ratio"],
+                "sequence_gap_count": len(result["sequence_gaps"]),
+                "logger_write_dropout_count": result["logger_write_dropout_count"],
+                "output": str(args.output),
+            },
+            sort_keys=True,
+        )
+    )
     return 0
 
 

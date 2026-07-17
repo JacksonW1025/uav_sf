@@ -12,19 +12,31 @@ index 369ec7538ad7f22f7f3c78ca42c751e5cbabfb03..3e1fe27cc8d57827cd5d19efef609caf
  	SatelliteInfo.msg
 diff --git a/msg/RouteObservability.msg b/msg/RouteObservability.msg
 new file mode 100644
-index 0000000000000000000000000000000000000000..603bc9828675ecb289eb96226d358eed76cc3897
+index 0000000000000000000000000000000000000000..75535be5aefa6f70bd7a0863d42a443ea9d6a77e
 --- /dev/null
 +++ b/msg/RouteObservability.msg
-@@ -0,0 +1,47 @@
+@@ -0,0 +1,88 @@
 +# Observation-only route event. This topic must not feed control decisions.
 +uint64 timestamp
 +uint64 subject_timestamp
 +uint32 sequence
 +uint32 expected_period_us
++uint64 route_epoch_id
++uint64 failed_check_mask
++uint32 component_hash
++
++uint8 ORB_QUEUE_LENGTH = 4
 +
 +uint8 EVENT_SETPOINT_CONSUMED=1
 +uint8 EVENT_ALLOCATOR_INPUT_PUBLISHED=2
 +uint8 EVENT_ACTUATOR_OUTPUT_PUBLISHED=3
++uint8 EVENT_ROUTE_EPOCH_CHANGED=4
++uint8 EVENT_UNREGISTER_REQUEST_PROCESSED=5
++uint8 EVENT_EXTERNAL_MODE_SLOT_REMOVED=6
++uint8 EVENT_EXECUTOR_SLOT_REMOVED=7
++uint8 EVENT_ARMING_CHECK_SLOT_REMOVED=8
++uint8 EVENT_ARMING_REQUEST_REJECTED=9
++uint8 EVENT_REGISTRATION_PROCESSED=10
 +
 +uint8 SOURCE_EXTERNAL_TRAJECTORY=1
 +uint8 SOURCE_MC_RATE_CONTROL=2
@@ -57,18 +69,47 @@ index 0000000000000000000000000000000000000000..603bc9828675ecb289eb96226d358eed
 +uint8 PROFILE_BASELINE=1
 +uint8 PROFILE_TRANSITION=2
 +
++uint8 CHANGE_SOURCE_UNKNOWN=0
++uint8 CHANGE_SOURCE_USER_OR_EXECUTOR=1
++uint8 CHANGE_SOURCE_FAILSAFE=2
++uint8 CHANGE_SOURCE_REGISTRATION_LIFECYCLE=3
++uint8 CHANGE_SOURCE_ARMING_LIFECYCLE=4
++uint8 CHANGE_SOURCE_STARTUP=5
++
++uint8 RESULT_UNKNOWN=0
++uint8 RESULT_SUCCESS=1
++uint8 RESULT_REJECTED=2
++uint8 RESULT_NOT_PRESENT=3
++
++uint8 REASON_NONE=0
++uint8 REASON_HEALTH_CHECK=1
++uint8 REASON_CALIBRATING=2
++uint8 REASON_THROTTLE=3
++uint8 REASON_INVALID_REGISTRATION=4
++
 +uint8 event_type
 +uint8 source_id
 +uint8 topic_id
 +uint8 writer_id
 +uint8 profile
 +uint8 instance
++int8 previous_nav_state
++int8 new_nav_state
++uint8 change_source
++int8 registration_mode_id
++int8 executor_in_charge
++int8 arming_check_id
++int8 result
++uint8 reason_code
++bool armed
++bool active_at_event
++int8 fallback_nav_state
 diff --git a/src/lib/route_observability/RouteObservability.hpp b/src/lib/route_observability/RouteObservability.hpp
 new file mode 100644
-index 0000000000000000000000000000000000000000..9eaa853e7ee43122cab8ea528f74f77c366fce31
+index 0000000000000000000000000000000000000000..51ae465bff3cf370cec3604fdb12237146b2cdcc
 --- /dev/null
 +++ b/src/lib/route_observability/RouteObservability.hpp
-@@ -0,0 +1,48 @@
+@@ -0,0 +1,111 @@
 +/****************************************************************************
 + *
 + * Observation-only route event helper. No control code reads this topic.
@@ -116,7 +157,278 @@ index 0000000000000000000000000000000000000000..9eaa853e7ee43122cab8ea528f74f77c
 +	publisher.publish(observation);
 +}
 +
++inline uint32_t componentHash(const char *name)
++{
++	uint32_t hash = 2166136261u;
++
++	for (const char *character = name; character != nullptr && *character != '\0'; ++character) {
++		hash ^= static_cast<uint8_t>(*character);
++		hash *= 16777619u;
++	}
++
++	return hash;
++}
++
++inline void publishRouteEpoch(uORB::PublicationMulti<route_observability_s> &publisher,
++			       uint32_t &sequence, uint64_t route_epoch_id,
++			       int8_t previous_nav_state, int8_t new_nav_state,
++			       uint8_t change_source, int8_t registration_mode_id,
++			       int8_t executor_in_charge, bool armed)
++{
++	route_observability_s observation{};
++	observation.timestamp = hrt_absolute_time();
++	observation.subject_timestamp = observation.timestamp;
++	observation.sequence = sequence++;
++	observation.expected_period_us = 0;
++	observation.route_epoch_id = route_epoch_id;
++	observation.event_type = route_observability_s::EVENT_ROUTE_EPOCH_CHANGED;
++	observation.profile = profile;
++	observation.previous_nav_state = previous_nav_state;
++	observation.new_nav_state = new_nav_state;
++	observation.change_source = change_source;
++	observation.registration_mode_id = registration_mode_id;
++	observation.executor_in_charge = executor_in_charge;
++	observation.armed = armed;
++	publisher.publish(observation);
++}
++
++inline void publishLifecycle(uORB::PublicationMulti<route_observability_s> &publisher,
++			      uint32_t &sequence, uint8_t event_type,
++			      const char *component_name, int8_t mode_id,
++			      int8_t executor_id, int8_t arming_check_id,
++			      int8_t result, bool active_at_event,
++			      int8_t fallback_nav_state,
++			      uint8_t reason_code = route_observability_s::REASON_NONE,
++			      uint64_t failed_check_mask = 0)
++{
++	route_observability_s observation{};
++	observation.timestamp = hrt_absolute_time();
++	observation.subject_timestamp = observation.timestamp;
++	observation.sequence = sequence++;
++	observation.expected_period_us = 0;
++	observation.failed_check_mask = failed_check_mask;
++	observation.component_hash = componentHash(component_name);
++	observation.event_type = event_type;
++	observation.profile = profile;
++	observation.registration_mode_id = mode_id;
++	observation.executor_in_charge = executor_id;
++	observation.arming_check_id = arming_check_id;
++	observation.result = result;
++	observation.reason_code = reason_code;
++	observation.active_at_event = active_at_event;
++	observation.fallback_nav_state = fallback_nav_state;
++	publisher.publish(observation);
++}
++
 +} // namespace route_observability
+diff --git a/src/modules/commander/Commander.cpp b/src/modules/commander/Commander.cpp
+index b03d6a9de9c1ba6c17cbf24d0371b90c17c4b2b4..339a66f9f3838b5f4e5d8d5c25d39b3435a5c5f3 100644
+--- a/src/modules/commander/Commander.cpp
++++ b/src/modules/commander/Commander.cpp
+@@ -1116,6 +1116,21 @@ Commander::handle_command(const vehicle_command_s &cmd)
+ 
+ 				if (arming_res == TRANSITION_DENIED) {
+ 					cmd_result = vehicle_command_ack_s::VEHICLE_CMD_RESULT_TEMPORARILY_REJECTED;
++					if (arming_action == vehicle_command_s::ARMING_ACTION_ARM) {
++						health_report_s health_report{};
++						_health_and_arming_checks.getHealthReport(health_report);
++						const uint64_t failed_checks = health_report.arming_check_error_flags
++								       | health_report.health_error_flags;
++						route_observability::publishLifecycle(
++							_route_observability_pub, _route_observability_sequence,
++							route_observability_s::EVENT_ARMING_REQUEST_REJECTED,
++							"commander", static_cast<int8_t>(_vehicle_status.nav_state),
++							static_cast<int8_t>(_vehicle_status.executor_in_charge), -1,
++							route_observability_s::RESULT_REJECTED, false,
++							static_cast<int8_t>(_vehicle_status.nav_state),
++							failed_checks ? route_observability_s::REASON_HEALTH_CHECK
++							: route_observability_s::REASON_NONE, failed_checks);
++					}
+ 
+ 				} else {
+ 					cmd_result = vehicle_command_ack_s::VEHICLE_CMD_RESULT_ACCEPTED;
+@@ -2549,6 +2564,30 @@ bool Commander::handleModeIntentionAndFailsafe()
+ 	_vehicle_status.failsafe = _failsafe.inFailsafe();
+ 	_vehicle_status.failsafe_and_user_took_over = _failsafe.userTakeoverActive();
+ 
++	if (!_route_epoch_initialized || prev_nav_state != _vehicle_status.nav_state) {
++		const bool startup = !_route_epoch_initialized;
++		_route_epoch_initialized = true;
++		++_route_epoch_id;
++		uint8_t change_source = route_observability_s::CHANGE_SOURCE_USER_OR_EXECUTOR;
++
++		if (startup) {
++			change_source = route_observability_s::CHANGE_SOURCE_STARTUP;
++
++		} else if (prev_failsafe_action != _failsafe.selectedAction() || _failsafe.inFailsafe()) {
++			change_source = route_observability_s::CHANGE_SOURCE_FAILSAFE;
++		}
++
++		const int8_t registration_mode_id =
++			(_vehicle_status.nav_state >= vehicle_status_s::NAVIGATION_STATE_EXTERNAL1
++			 && _vehicle_status.nav_state <= vehicle_status_s::NAVIGATION_STATE_EXTERNAL8)
++			? static_cast<int8_t>(_vehicle_status.nav_state) : -1;
++		route_observability::publishRouteEpoch(
++			_route_observability_pub, _route_observability_sequence, _route_epoch_id,
++			static_cast<int8_t>(prev_nav_state), static_cast<int8_t>(_vehicle_status.nav_state),
++			change_source, registration_mode_id,
++			static_cast<int8_t>(_vehicle_status.executor_in_charge), isArmed());
++	}
++
+ 	if (prev_nav_state != _vehicle_status.nav_state) {
+ 		_vehicle_status.nav_state_timestamp = hrt_absolute_time();
+ 	}
+diff --git a/src/modules/commander/Commander.hpp b/src/modules/commander/Commander.hpp
+index 7d6f27a6c4f85e2b20297e650f72e7bada63d181..f38bfdffcfce87bd753abd78abe0e8b146035eda 100644
+--- a/src/modules/commander/Commander.hpp
++++ b/src/modules/commander/Commander.hpp
+@@ -47,6 +47,7 @@
+ #include <lib/hysteresis/hysteresis.h>
+ #include <lib/mathlib/mathlib.h>
+ #include <lib/perf/perf_counter.h>
++#include <lib/route_observability/RouteObservability.hpp>
+ #include <px4_platform_common/module.h>
+ #include <px4_platform_common/module_params.h>
+ 
+@@ -289,6 +290,9 @@ private:
+ 	bool _have_taken_off_since_arming{false};
+ 	bool _status_changed{true};
+ 	bool _mission_in_progress{false};
++	bool _route_epoch_initialized{false};
++	uint32_t _route_observability_sequence{0};
++	uint64_t _route_epoch_id{0};
+ 
+ 	vehicle_land_detected_s	_vehicle_land_detected{};
+ 
+@@ -326,6 +330,7 @@ private:
+ 	uORB::Publication<vehicle_command_s>			_vehicle_command_pub{ORB_ID(vehicle_command)};
+ 	uORB::Publication<vehicle_control_mode_s>		_vehicle_control_mode_pub{ORB_ID(vehicle_control_mode)};
+ 	uORB::Publication<vehicle_status_s>			_vehicle_status_pub{ORB_ID(vehicle_status)};
++	uORB::PublicationMulti<route_observability_s>		_route_observability_pub{ORB_ID(route_observability)};
+ 
+ 	orb_advert_t _mavlink_log_pub{nullptr};
+ 
+diff --git a/src/modules/commander/HealthAndArmingChecks/HealthAndArmingChecks.hpp b/src/modules/commander/HealthAndArmingChecks/HealthAndArmingChecks.hpp
+index 0d8e14308a77ea6bb27edf44dacad6f5f4329b08..a9337dcbe97d59191e1154bbf25f2bda142e5ec8 100644
+--- a/src/modules/commander/HealthAndArmingChecks/HealthAndArmingChecks.hpp
++++ b/src/modules/commander/HealthAndArmingChecks/HealthAndArmingChecks.hpp
+@@ -107,6 +107,7 @@ public:
+ 	 * Whether switching into a given navigation mode is possible
+ 	 */
+ 	bool canRun(uint8_t nav_state) const { return _reporter.canRun(nav_state); }
++	void getHealthReport(health_report_s &report) const { _reporter.getHealthReport(report); }
+ 
+ 	/**
+ 	 * Query the mode requirements: check if a mode prevents arming
+diff --git a/src/modules/commander/ModeManagement.cpp b/src/modules/commander/ModeManagement.cpp
+index ba1aef789e166ec43d8a33ad8e5332e12bb3b12b..fa23396ac7127f032fbcd8c3070ab9b0699415a4 100644
+--- a/src/modules/commander/ModeManagement.cpp
++++ b/src/modules/commander/ModeManagement.cpp
+@@ -334,6 +334,13 @@ void ModeManagement::checkNewRegistrations(UpdateRequest &update_request)
+ 
+ 		reply.timestamp = hrt_absolute_time();
+ 		_register_ext_component_reply_pub.publish(reply);
++		route_observability::publishLifecycle(
++			_route_observability_pub, _route_observability_sequence,
++			route_observability_s::EVENT_REGISTRATION_PROCESSED,
++			request.name, reply.mode_id, reply.mode_executor_id, reply.arming_check_id,
++			reply.success ? route_observability_s::RESULT_SUCCESS : route_observability_s::RESULT_REJECTED,
++			false, -1, reply.success ? route_observability_s::REASON_NONE
++			: route_observability_s::REASON_INVALID_REGISTRATION);
+ 	}
+ }
+ 
+@@ -348,16 +355,50 @@ void ModeManagement::checkUnregistrations(uint8_t user_intended_nav_state, Updat
+ 		request.name[sizeof(request.name) - 1] = '\0';
+ 		PX4_DEBUG("got unregistration request: %s arming: %i mode: %i executor: %i", request.name,
+ 			  (int)request.arming_check_id, (int)request.mode_id, (int)request.mode_executor_id);
++		const bool active_at_removal = user_intended_nav_state == request.mode_id;
++		bool arming_removed = request.arming_check_id == -1;
++		bool mode_removed = request.mode_id == -1;
++		bool executor_removed = request.mode_executor_id == -1;
+ 
+ 		if (request.arming_check_id != -1) {
+-			_external_checks.removeRegistration(request.arming_check_id, request.mode_id);
++			arming_removed = _external_checks.removeRegistration(request.arming_check_id, request.mode_id);
++			route_observability::publishLifecycle(
++				_route_observability_pub, _route_observability_sequence,
++				route_observability_s::EVENT_ARMING_CHECK_SLOT_REMOVED,
++				request.name, request.mode_id, request.mode_executor_id, request.arming_check_id,
++				arming_removed ? route_observability_s::RESULT_SUCCESS : route_observability_s::RESULT_NOT_PRESENT,
++				active_at_removal, active_at_removal ? vehicle_status_s::NAVIGATION_STATE_AUTO_LOITER : -1,
++				arming_removed ? route_observability_s::REASON_NONE
++				: route_observability_s::REASON_INVALID_REGISTRATION);
+ 		}
+ 
+ 		if (request.mode_id != -1) {
+-			if (_modes.removeExternalMode(request.mode_id, request.name)) {
++			mode_removed = _modes.removeExternalMode(request.mode_id, request.name);
++
++			if (mode_removed) {
++				executor_removed = request.mode_executor_id == -1
++						   || _mode_executors.valid(request.mode_executor_id);
+ 				removeModeExecutor(request.mode_executor_id);
+ 				// else: if the mode was already removed (due to a timeout), the executor was also removed already
+ 			}
++			route_observability::publishLifecycle(
++				_route_observability_pub, _route_observability_sequence,
++				route_observability_s::EVENT_EXTERNAL_MODE_SLOT_REMOVED,
++				request.name, request.mode_id, request.mode_executor_id, request.arming_check_id,
++				mode_removed ? route_observability_s::RESULT_SUCCESS : route_observability_s::RESULT_NOT_PRESENT,
++				active_at_removal, active_at_removal ? vehicle_status_s::NAVIGATION_STATE_AUTO_LOITER : -1,
++				mode_removed ? route_observability_s::REASON_NONE
++				: route_observability_s::REASON_INVALID_REGISTRATION);
++
++			if (request.mode_executor_id != -1) {
++				route_observability::publishLifecycle(
++					_route_observability_pub, _route_observability_sequence,
++					route_observability_s::EVENT_EXECUTOR_SLOT_REMOVED,
++					request.name, request.mode_id, request.mode_executor_id, request.arming_check_id,
++					executor_removed ? route_observability_s::RESULT_SUCCESS
++					: route_observability_s::RESULT_NOT_PRESENT,
++					active_at_removal, active_at_removal ? vehicle_status_s::NAVIGATION_STATE_AUTO_LOITER : -1);
++			}
+ 
+ 			// If the removed mode is currently active, switch to Hold
+ 			if (user_intended_nav_state == request.mode_id) {
+@@ -365,6 +399,16 @@ void ModeManagement::checkUnregistrations(uint8_t user_intended_nav_state, Updat
+ 				update_request.user_intended_nav_state = vehicle_status_s::NAVIGATION_STATE_AUTO_LOITER;
+ 			}
+ 		}
++
++		const bool request_success = arming_removed && mode_removed && executor_removed;
++		route_observability::publishLifecycle(
++			_route_observability_pub, _route_observability_sequence,
++			route_observability_s::EVENT_UNREGISTER_REQUEST_PROCESSED,
++			request.name, request.mode_id, request.mode_executor_id, request.arming_check_id,
++			request_success ? route_observability_s::RESULT_SUCCESS : route_observability_s::RESULT_REJECTED,
++			active_at_removal, active_at_removal ? vehicle_status_s::NAVIGATION_STATE_AUTO_LOITER : -1,
++			request_success ? route_observability_s::REASON_NONE
++			: route_observability_s::REASON_INVALID_REGISTRATION);
+ 	}
+ }
+ 
+diff --git a/src/modules/commander/ModeManagement.hpp b/src/modules/commander/ModeManagement.hpp
+index d1703592d1d29611177b06810a81b3ef8923e7b3..834e62a379e436e9bcf494432be724bf925fe046 100644
+--- a/src/modules/commander/ModeManagement.hpp
++++ b/src/modules/commander/ModeManagement.hpp
+@@ -47,6 +47,7 @@
+ #include <uORB/topics/config_overrides.h>
+ 
+ #include <lib/modes/ui.hpp>
++#include <lib/route_observability/RouteObservability.hpp>
+ #include "UserModeIntention.hpp"
+ #include "HealthAndArmingChecks/checks/externalChecks.hpp"
+ #include "ModeUtil/setpoint_types.hpp"
+@@ -182,6 +183,8 @@ private:
+ 	uORB::Publication<config_overrides_s> _config_overrides_pub{ORB_ID(config_overrides)};
+ 	uORB::Subscription _config_overrides_request_sub{ORB_ID(config_overrides_request)};
+ 	uORB::Publication<config_overrides_s> _config_overrides_confirm_pub{ORB_ID(config_overrides_confirm)};
++	uORB::PublicationMulti<route_observability_s> _route_observability_pub{ORB_ID(route_observability)};
++	uint32_t _route_observability_sequence{0};
+ 
+ 	ExternalChecks &_external_checks;
+ 	ModeExecutors _mode_executors;
 diff --git a/src/modules/control_allocator/ControlAllocator.cpp b/src/modules/control_allocator/ControlAllocator.cpp
 index de0c2993ad7183dd6204782a1a1103de618b35c4..d6b41673cae6316b5c9c7b27c7ace72bc6a6aaa2 100644
 --- a/src/modules/control_allocator/ControlAllocator.cpp

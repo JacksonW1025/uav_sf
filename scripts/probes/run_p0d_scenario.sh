@@ -13,14 +13,20 @@ source /opt/ros/jazzy/setup.bash
 source "${REPO_ROOT}/ros2_ws/install/setup.bash"
 set -u
 
-PX4_DIR="${REPO_ROOT}/external/PX4-Autopilot-route-observability"
+PX4_DIR="${PX4_OBSERVABILITY_DIR:-${REPO_ROOT}/external/PX4-Autopilot-route-observability}"
 PX4_BUILD="${PX4_DIR}/build/px4_sitl_default"
 AGENT_PREFIX="${REPO_ROOT}/external/install/microxrce_agent"
-RAW_DIR="${REPO_ROOT}/runs/p0d/${RUN_ID}/raw"
-PROCESSED_DIR="${REPO_ROOT}/data/processed/p0d/${RUN_ID}"
+RAW_DIR="${P0D_RUN_ROOT:-${REPO_ROOT}/runs/p0d/${RUN_ID}/raw}"
+PROCESSED_DIR="${P0D_PROCESSED_ROOT:-${REPO_ROOT}/data/processed/p0d/${RUN_ID}}"
+RUNNER="${P0D_RUNNER:-${REPO_ROOT}/scripts/probes/p0d_post_disarm_reentry.py}"
+SCENARIO_LABEL="${P0D_SCENARIO_LABEL:-p0d}"
 mkdir -p "${RAW_DIR}" "${PROCESSED_DIR}"
 START_MARKER="${RAW_DIR}/run.start"
 touch "${START_MARKER}"
+LOGGER_TOPICS_TARGET="${PX4_BUILD}/rootfs/0/etc/logging/logger_topics.txt"
+if [[ -n "${P0D_LOGGER_TOPICS_FILE:-}" ]]; then
+  install -D -m 0644 "${P0D_LOGGER_TOPICS_FILE}" "${LOGGER_TOPICS_TARGET}"
+fi
 
 PX4_PID=""
 AGENT_PID=""
@@ -61,6 +67,7 @@ cleanup() {
   stop_process "${AGENT_PID}" TERM
   exec 3>&-
   rm -f "${FIFO}"
+  if [[ -n "${P0D_LOGGER_TOPICS_FILE:-}" ]]; then rm -f "${LOGGER_TOPICS_TARGET}"; fi
 }
 trap cleanup EXIT
 
@@ -69,7 +76,8 @@ AGENT_PID=$!
 
 (
   cd "${PX4_DIR}"
-  HEADLESS=1 PX4_SIM_MODEL=gz_x500 "${PX4_BUILD}/bin/px4" -i 0 <"${FIFO}"
+  PX4_PARAM_SDLOG_MODE=2 PX4_PARAM_SDLOG_PROFILE="${P0D_SDLOG_PROFILE:-1}" \
+    HEADLESS=1 PX4_SIM_MODEL=gz_x500 "${PX4_BUILD}/bin/px4" -i 0 <"${FIFO}"
 ) >"${RAW_DIR}/px4.log" 2>&1 &
 PX4_PID=$!
 
@@ -83,12 +91,13 @@ echo "param set COM_RC_IN_MODE 4" >&3
 echo "param set NAV_RCL_ACT 0" >&3
 echo "param set NAV_DLL_ACT 0" >&3
 echo "param set COM_ARM_WO_GPS 1" >&3
+echo "param set SDLOG_MODE 2" >&3
 echo "param set RTL_RETURN_ALT 3" >&3
 echo "param set RTL_DESCEND_ALT 2" >&3
 sleep 2
 
 RESULT_FILE="${RAW_DIR}/runner_result.json"
-python3 "${REPO_ROOT}/scripts/probes/p0d_post_disarm_reentry.py"   --output "${RESULT_FILE}"   --shutdown-request "${SHUTDOWN_REQUEST}"   --shutdown-done "${SHUTDOWN_DONE}"   --timeout 240 >"${RAW_DIR}/runner.log" 2>&1 &
+python3 "${RUNNER}"   --output "${RESULT_FILE}"   --shutdown-request "${SHUTDOWN_REQUEST}"   --shutdown-done "${SHUTDOWN_DONE}"   --timeout 240 >"${RAW_DIR}/runner.log" 2>&1 &
 RUNNER_PID=$!
 "${REPO_ROOT}/ros2_ws/install/route_transition_external_mode/lib/route_transition_external_mode/route_transition_external_mode"   >"${RAW_DIR}/external_mode.log" 2>&1 &
 MODE_PID=$!
@@ -129,7 +138,12 @@ for index in "${!ULOGS[@]}"; do
 done
 
 python3 "${REPO_ROOT}/scripts/tracing/route_trace_collector.py"   "${collector_ulogs[@]}"   --output "${PROCESSED_DIR}/route_trace.jsonl"   --run-id "${RUN_ID}"   --producer-events "${RAW_DIR}/producer_events.jsonl"   --lifecycle-log "${RAW_DIR}/external_mode.log"
-python3 "${REPO_ROOT}/scripts/analysis/summarize_route_trace.py"   --trace "${PROCESSED_DIR}/route_trace.jsonl"   --result "${RESULT_FILE}"   --output "${PROCESSED_DIR}/route_summary.json"   --scenario-label p0d   "${summary_sources[@]}"   --source "${RAW_DIR}/producer_events.jsonl"   --source "${RAW_DIR}/external_mode.log"
-python3 "${REPO_ROOT}/scripts/oracles/route_oracle_v0.py"   --trace "${PROCESSED_DIR}/route_trace.jsonl"   --output "${PROCESSED_DIR}/route_oracle.json"
+python3 "${REPO_ROOT}/scripts/tracing/clock_bridge_collector.py" --samples "${RAW_DIR}/producer_events.jsonl" --output "${PROCESSED_DIR}/clock_bridge.json" || true
+if [[ -n "${P0D_POST_ANALYZER:-}" ]]; then
+  python3 "${P0D_POST_ANALYZER}" --runner-result "${RESULT_FILE}" --trace "${PROCESSED_DIR}/route_trace.jsonl" --output "${RESULT_FILE}"
+fi
+python3 "${REPO_ROOT}/scripts/analysis/summarize_route_trace.py"   --trace "${PROCESSED_DIR}/route_trace.jsonl"   --result "${RESULT_FILE}"   --output "${PROCESSED_DIR}/route_summary.json"   --scenario-label "${SCENARIO_LABEL}"   "${summary_sources[@]}"   --source "${RAW_DIR}/producer_events.jsonl"   --source "${RAW_DIR}/external_mode.log" --clock-bridge "${PROCESSED_DIR}/clock_bridge.json" --observation-profile TRANSITION --uorb-queue-length "${P0D_UORB_QUEUE_LENGTH:-16}"
+python3 "${REPO_ROOT}/scripts/oracles/route_oracle_v0.py"   --trace "${PROCESSED_DIR}/route_trace.jsonl" --clock-bridge "${PROCESSED_DIR}/clock_bridge.json"   --output "${PROCESSED_DIR}/route_oracle.json"
 
 echo "P0D_SCENARIO=$([[ "${RUNNER_RC}" -eq 0 ]] && echo PASS || echo FAIL) run_id=${RUN_ID}"
+exit "${RUNNER_RC}"

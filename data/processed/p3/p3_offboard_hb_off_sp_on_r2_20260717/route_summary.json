@@ -1,0 +1,357 @@
+{
+  "baseline": {
+    "active_seen": true,
+    "automatic_fallback_observed": true,
+    "duration_s": 26.869,
+    "experiment_kind": "p3",
+    "experiment_window_monotonic_ns": 3383719680387711,
+    "experiment_window_ros_time_ns": 1784287565422887403,
+    "external_mode_id": null,
+    "failure_detection_latency_ms": null,
+    "fallback_monotonic_ns": 3383720715266155,
+    "fallback_nav_state": 4,
+    "fallback_ros_time_ns": 1784287566457760567,
+    "fault": null,
+    "fault_class": null,
+    "heartbeat_or_health_enabled": false,
+    "nav_state_transitions": [
+      {
+        "failsafe": false,
+        "from": null,
+        "monotonic_ns": 3383696695348656,
+        "ros_time_ns": 1784287542437849948,
+        "to": 4
+      },
+      {
+        "failsafe": false,
+        "from": 4,
+        "monotonic_ns": 3383697096206345,
+        "ros_time_ns": 1784287542838709076,
+        "to": 17
+      },
+      {
+        "failsafe": false,
+        "from": 17,
+        "monotonic_ns": 3383704635036681,
+        "ros_time_ns": 1784287550377538581,
+        "to": 14
+      },
+      {
+        "failsafe": true,
+        "from": 14,
+        "monotonic_ns": 3383720715128526,
+        "ros_time_ns": 1784287566457629306,
+        "to": 4
+      }
+    ],
+    "object": "offboard",
+    "physical_recovery": {
+      "altitude_loss_m": 0.0030028820037841797,
+      "initial_altitude_m": 1.566981315612793,
+      "landed": false,
+      "landed_and_disarmed": false,
+      "maximum_altitude_m": 1.5750528573989868,
+      "minimum_altitude_m": 1.5639784336090088,
+      "peak_angular_rate_rad_s": 0.0,
+      "peak_tilt_rad": 0.0005655287403329222
+    },
+    "reason": "P3 observation completed and internal Hold installed",
+    "runner_scenario": null,
+    "scenario": "p3_offboard",
+    "schema_version": "1.0",
+    "setpoint_enabled": true,
+    "source_mode": 14,
+    "status": "PASS"
+  },
+  "clock_bridge": {
+    "clock_bridge_id": "clock-d9761463fe4f1053",
+    "discarded_initial_backlog_samples": 2,
+    "offset_ns": 1784287530920995256,
+    "rate_ratio": 1.0374862451914422,
+    "reasons": [],
+    "reference_px4_us": 25404000,
+    "reference_ros_ns": 1784287556324995256,
+    "reset_count": 0,
+    "residual_max_ns": 43843758,
+    "residual_median_ns": 12048943,
+    "sample_count": 31,
+    "schema_version": "1.0",
+    "segment_count": 1,
+    "status": "VALID",
+    "thresholds": {
+      "degraded_residual_max_ns": 250000000,
+      "maximum_round_trip_time_ns": 20000000,
+      "maximum_timesync_offset_span_ns": 5000000,
+      "minimum_sample_count": 20,
+      "residual_max_ns": 100000000,
+      "segment_jump_ns": 50000000
+    },
+    "timestamp_domains": {
+      "source": "px4_boot_us",
+      "target": "ros_node_ns"
+    },
+    "uncertainty_ns": 43843758,
+    "valid_from": 13056000,
+    "valid_until": 35004000
+  },
+  "duration_us": 30284000.0,
+  "event_type_counts": {
+    "actuator_motors": 238,
+    "actuator_output_published": 2899,
+    "allocator_input_published": 726,
+    "clock_bridge_sample": 32,
+    "failsafe_flags": 46,
+    "internal_hold_requested": 8,
+    "offboard_mode_requested": 1,
+    "offboard_producer_finished": 1,
+    "offboard_producer_started": 1,
+    "producer_still_publishing": 533,
+    "px4_setpoint_consumed": 802,
+    "px4_setpoint_received": 120,
+    "route_epoch_changed": 4,
+    "vehicle_control_mode": 68,
+    "vehicle_status": 68
+  },
+  "execution_status": "PASS",
+  "experiment_configuration": {
+    "build_provenance": {
+      "build_requested": true,
+      "patch_sha256": "4ac3b87e6e932573017de0c05481906e349e2762ec77ac222b2252234a9aac89",
+      "profile": "TRANSITION",
+      "px4_commit": "4ae21a5e569d3d89c2f6366688cbacb3e93437c9",
+      "px4_worktree": "/workspace/external/PX4-Autopilot-route-observability-q4-transition",
+      "schema_version": "1.0",
+      "uorb_queue_length": 4
+    },
+    "observation_profile": "TRANSITION",
+    "uorb_queue_length": 4
+  },
+  "first_timestamp_us": 5484000.0,
+  "full_trace_event_count": 5547,
+  "last_timestamp_us": 35768000.0,
+  "lifecycle_evidence": [],
+  "max_message_age_s": 0.043611,
+  "nav_state_transitions": [
+    4,
+    17,
+    14,
+    4
+  ],
+  "processed_trace_policy": {
+    "actuator_output_stride": 1,
+    "allocator_input_stride": 4,
+    "compact_trace_sha256": "6bb38883f0d3f7ce3b1dec9326c4fec00fd30a99cd4a386e95280c664a0a82e2",
+    "complete_source": "source_artifacts ULog",
+    "full_trace_sha256": "418f2dc32f3c402b63dcfbc60fffab59093fbbe8b43bd3b16e8595bfc2fc7e37",
+    "post_analysis_compaction_stride": 10
+  },
+  "producer_consumer_evidence": {
+    "domains_require_clock_bridge": true,
+    "producer_publish_events": 533,
+    "px4_consume_events": 802
+  },
+  "registration_transitions": [],
+  "route_epochs": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "route_verdict": "PASS",
+  "run_id": "p3_offboard_hb_off_sp_on_r2_20260717",
+  "schema_version": "1.2",
+  "source_artifacts": [
+    {
+      "bytes": 5794368,
+      "name": "flight.ulg",
+      "sha256": "ac67b6f5cf227197d93991aa805df526179f352fb7cd5c94d768d7b7310872a8"
+    },
+    {
+      "bytes": 257921,
+      "name": "producer_events.jsonl",
+      "sha256": "842723ad2c34ff6be8a80909598b182e91b6a9017fcf90c06b3d44cabd52510c"
+    },
+    {
+      "bytes": 22942,
+      "name": "monitor_events.jsonl",
+      "sha256": "af5c8efe96fd9b9254db676350761d36f0543133572aaaf013301cd2890c856e"
+    }
+  ],
+  "timestamp_domains": {
+    "ros_node_ns": {
+      "duration": 27051032576.0,
+      "event_count": 576,
+      "first": 1.7842875398034854e+18,
+      "last": 1.784287566854518e+18
+    },
+    "ulog_us": {
+      "duration": 30284000.0,
+      "event_count": 4971,
+      "first": 5484000.0,
+      "last": 35768000.0
+    }
+  },
+  "trace_event_count": 1269,
+  "writer_attribution": {
+    "actual_rate_hz": 122.56809338521401,
+    "actuator_output_events": 2899,
+    "actuator_writers": [
+      "control_allocator"
+    ],
+    "allocator_input_writers": [
+      "mc_rate_control"
+    ],
+    "candidate_writers": [
+      "control_allocator"
+    ],
+    "competing_windows": [],
+    "coverage_ratio": 1.0,
+    "critical_transition_windows": [
+      {
+        "coverage_verdict": "COMPLETE",
+        "end_us": 20064000.0,
+        "event_count": 122,
+        "from_mode": 17,
+        "from_route": 17,
+        "maximum_gap_ms": 16.0,
+        "observed_writers": [
+          "control_allocator"
+        ],
+        "sequence_gap_count": 0,
+        "start_us": 19064000.0,
+        "timestamp_us": 19564000.0,
+        "to_mode": 14,
+        "to_route": 14,
+        "uninstrumented_candidate_writers": [],
+        "window_end": 20064000.0,
+        "window_start": 19064000.0
+      },
+      {
+        "coverage_verdict": "COMPLETE",
+        "end_us": 35692000.0,
+        "event_count": 122,
+        "from_mode": 14,
+        "from_route": 14,
+        "maximum_gap_ms": 12.0,
+        "observed_writers": [
+          "control_allocator"
+        ],
+        "sequence_gap_count": 0,
+        "start_us": 34692000.0,
+        "timestamp_us": 35192000.0,
+        "to_mode": 4,
+        "to_route": 4,
+        "uninstrumented_candidate_writers": [],
+        "window_end": 35692000.0,
+        "window_start": 34692000.0
+      }
+    ],
+    "critical_window_quality": {
+      "detectable_resolution_ms": 0.0,
+      "maximum_gap_ms": 16.0,
+      "sequence_gap_count": 0,
+      "status": "COMPLETE"
+    },
+    "event_count": 2899,
+    "expected_period_ms": 8.0,
+    "global_capture_quality": {
+      "coverage_ratio": 1.0,
+      "maximum_gap_ms": 16.0,
+      "missing_sequence_count": 0,
+      "sequence_gap_count": 0,
+      "status": "COMPLETE"
+    },
+    "maximum_event_gap_ms": 16.0,
+    "observation_holes": [
+      {
+        "coverage_verdict": "BOUNDED",
+        "end_us": 12760000.0,
+        "event_count": 80,
+        "from_mode": 4,
+        "from_route": 4,
+        "maximum_gap_ms": 364.0,
+        "observed_writers": [
+          "control_allocator"
+        ],
+        "sequence_gap_count": 0,
+        "start_us": 11760000.0,
+        "timestamp_us": 12260000.0,
+        "to_mode": 17,
+        "to_route": 17,
+        "uninstrumented_candidate_writers": [],
+        "window_end": 12760000.0,
+        "window_start": 11760000.0
+      }
+    ],
+    "observation_profiles": [
+      "TRANSITION"
+    ],
+    "observed_writers": [
+      "control_allocator"
+    ],
+    "per_publication_complete": false,
+    "rate_gate_passed": true,
+    "sequence_gaps": [],
+    "status": "EXCLUSIVE",
+    "transition_windows": [
+      {
+        "coverage_verdict": "BOUNDED",
+        "end_us": 12760000.0,
+        "event_count": 80,
+        "from_mode": 4,
+        "from_route": 4,
+        "maximum_gap_ms": 364.0,
+        "observed_writers": [
+          "control_allocator"
+        ],
+        "sequence_gap_count": 0,
+        "start_us": 11760000.0,
+        "timestamp_us": 12260000.0,
+        "to_mode": 17,
+        "to_route": 17,
+        "uninstrumented_candidate_writers": [],
+        "window_end": 12760000.0,
+        "window_start": 11760000.0
+      },
+      {
+        "coverage_verdict": "COMPLETE",
+        "end_us": 20064000.0,
+        "event_count": 122,
+        "from_mode": 17,
+        "from_route": 17,
+        "maximum_gap_ms": 16.0,
+        "observed_writers": [
+          "control_allocator"
+        ],
+        "sequence_gap_count": 0,
+        "start_us": 19064000.0,
+        "timestamp_us": 19564000.0,
+        "to_mode": 14,
+        "to_route": 14,
+        "uninstrumented_candidate_writers": [],
+        "window_end": 20064000.0,
+        "window_start": 19064000.0
+      },
+      {
+        "coverage_verdict": "COMPLETE",
+        "end_us": 35692000.0,
+        "event_count": 122,
+        "from_mode": 14,
+        "from_route": 14,
+        "maximum_gap_ms": 12.0,
+        "observed_writers": [
+          "control_allocator"
+        ],
+        "sequence_gap_count": 0,
+        "start_us": 34692000.0,
+        "timestamp_us": 35192000.0,
+        "to_mode": 4,
+        "to_route": 4,
+        "uninstrumented_candidate_writers": [],
+        "window_end": 35692000.0,
+        "window_start": 34692000.0
+      }
+    ],
+    "uninstrumented_candidates": []
+  }
+}

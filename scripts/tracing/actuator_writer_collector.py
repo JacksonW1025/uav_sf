@@ -15,6 +15,10 @@ P0_CANDIDATE_WRITERS = ("control_allocator",)
 P0_INSTRUMENTED_WRITERS = ("control_allocator",)
 
 
+def _is_external_route(mode: object) -> bool:
+    return isinstance(mode, int) and (mode == 14 or 23 <= mode <= 30)
+
+
 def _maximum_gap_ms(timestamps: list[float]) -> float:
     if len(timestamps) < 2:
         return 0.0
@@ -109,6 +113,8 @@ def summarize(
                         "next_sequence": sequence,
                         "missing_count": max(0, sequence - previous_sequence - 1),
                         "timestamp_us": timestamp,
+                        "previous_timestamp_us": previous_time,
+                        "next_timestamp_us": timestamp,
                         "gap_ms": (timestamp - previous_time) / 1000.0,
                     }
                 )
@@ -163,35 +169,97 @@ def summarize(
         max_gap = _maximum_gap_ms([start, *window_timestamps, end])
         window = {
             **change,
+            "window_start": start,
+            "window_end": end,
+            "from_route": change["from_mode"],
+            "to_route": change["to_mode"],
             "start_us": start,
             "end_us": end,
             "event_count": len(in_window),
             "observed_writers": writers,
             "maximum_gap_ms": max_gap,
+            "sequence_gap_count": sum(
+                float(gap["previous_timestamp_us"]) <= end
+                and float(gap["next_timestamp_us"]) >= start
+                for gap in sequence_gaps
+            ),
+            "uninstrumented_candidate_writers": uninstrumented,
         }
+        if uninstrumented or not in_window:
+            window["coverage_verdict"] = "INSUFFICIENT"
+        elif window["sequence_gap_count"] or max_gap * 1000.0 > allowed_gap_us:
+            window["coverage_verdict"] = "BOUNDED"
+        else:
+            window["coverage_verdict"] = "COMPLETE"
         transition_windows.append(window)
         if len(writers) > 1:
             competing_windows.append(window)
         if not in_window or max_gap * 1000.0 > allowed_gap_us:
             observation_holes.append(window)
 
+    critical_windows = [
+        window
+        for window in transition_windows
+        if _is_external_route(window.get("from_mode"))
+        or _is_external_route(window.get("to_mode"))
+    ]
+
     if not writer_events:
         status = "NO_EVIDENCE"
     elif uninstrumented or missing_sequence_evidence:
         status = "INSUFFICIENT_COVERAGE"
-    elif sequence_gaps:
-        status = "SEQUENCE_GAP"
     elif competing_windows or len(observed_writers) > 1:
         status = "COMPETING_WRITERS"
-    elif not changes or observation_holes or not rate_gate or coverage_ratio < 1.0:
+    elif not critical_windows or any(
+        window["coverage_verdict"] == "INSUFFICIENT" for window in critical_windows
+    ) or not rate_gate:
         status = "INSUFFICIENT_COVERAGE"
+    elif any(window["coverage_verdict"] == "BOUNDED" for window in critical_windows):
+        status = "SEQUENCE_GAP"
     elif len(observed_writers) == 1:
         status = "EXCLUSIVE"
     else:
         status = "NO_EVIDENCE"
 
+    if not writer_events or uninstrumented or missing_sequence_evidence:
+        global_status = "INSUFFICIENT"
+    elif sequence_gaps or coverage_ratio < 1.0:
+        global_status = "DEGRADED"
+    else:
+        global_status = "COMPLETE"
+
+    window_verdicts = [str(window["coverage_verdict"]) for window in critical_windows]
+    if not window_verdicts or "INSUFFICIENT" in window_verdicts:
+        critical_status = "INSUFFICIENT"
+    elif "BOUNDED" in window_verdicts:
+        critical_status = "BOUNDED"
+    else:
+        critical_status = "COMPLETE"
+    critical_sequence_gap_count = sum(
+        int(window["sequence_gap_count"]) for window in critical_windows
+    )
+    critical_maximum_gap_ms = max(
+        (float(window["maximum_gap_ms"]) for window in critical_windows),
+        default=0.0,
+    )
+
     return {
         "status": status,
+        "global_capture_quality": {
+            "status": global_status,
+            "sequence_gap_count": len(sequence_gaps),
+            "missing_sequence_count": sum(int(gap["missing_count"]) for gap in sequence_gaps),
+            "coverage_ratio": coverage_ratio,
+            "maximum_gap_ms": maximum_gap_ms,
+        },
+        "critical_window_quality": {
+            "status": critical_status,
+            "sequence_gap_count": critical_sequence_gap_count,
+            "maximum_gap_ms": critical_maximum_gap_ms,
+            "detectable_resolution_ms": (
+                critical_maximum_gap_ms if critical_status == "BOUNDED" else 0.0
+            ),
+        },
         "observed_writers": observed_writers,
         "candidate_writers": candidates,
         "uninstrumented_candidates": uninstrumented,
@@ -203,6 +271,7 @@ def summarize(
         "coverage_ratio": coverage_ratio,
         "observation_profiles": sorted(profiles),
         "transition_windows": transition_windows,
+        "critical_transition_windows": critical_windows,
         "competing_windows": competing_windows,
         "observation_holes": observation_holes,
         "per_publication_complete": publication_complete,

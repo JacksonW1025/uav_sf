@@ -1,0 +1,63 @@
+{
+  "clock_bridge": {
+    "clock_bridge_id": "clock-c7eca8b6b0ee0bb6",
+    "fault_px4_time_interval": {
+      "lower_us": 22832277.34315323,
+      "midpoint_us": 22870134.62018987,
+      "upper_us": 22907991.897226512
+    },
+    "status": "VALID",
+    "uncertainty_ns": 39435806
+  },
+  "experiment_kind": "p2",
+  "failure_and_fallback": {
+    "automatic_fallback_observed": true,
+    "detection_latency_ms": 236.907226,
+    "expected_fallback": true,
+    "fallback_epoch_started_us": 22920000.0,
+    "fallback_nav_state": 4,
+    "fallback_route_epoch_id": 4,
+    "first_fallback_allocator_event_us": 22928000.0,
+    "first_fallback_consumption_us": 22936000.0,
+    "first_fallback_writer_event_us": 22924000.0,
+    "post_revocation_old_epoch_consumption_count": 0,
+    "post_revocation_old_epoch_writer_count": 0
+  },
+  "fault_class": "sigterm",
+  "heartbeat_or_health_enabled": true,
+  "object": "offboard",
+  "physical_recovery": {
+    "altitude_loss_m": 0.013710379600524902,
+    "angular_rate_measurement_status": "UNKNOWN_NOT_PUBLISHED_BY_LOCKED_DDS_CONFIG",
+    "angular_rate_sample_count": 0,
+    "attitude_measurement_status": "AVAILABLE",
+    "initial_altitude_m": 1.705962061882019,
+    "landed_and_disarmed": true,
+    "maximum_altitude_m": 1.7047466039657593,
+    "minimum_altitude_m": 1.6922516822814941,
+    "peak_angular_rate_rad_s": null,
+    "peak_tilt_rad": 0.0007449894400536619
+  },
+  "reasons": [],
+  "route_oracle_clauses": {
+    "continuity": "PASS",
+    "exclusivity": "PASS",
+    "installation": "PASS",
+    "recovery": "PASS",
+    "revocation": "PASS"
+  },
+  "route_oracle_version": "0.2",
+  "schema_version": "1.0",
+  "setpoint_enabled": true,
+  "source_route": {
+    "last_allocator_event_us": 22896000.0,
+    "last_producer_heartbeat_ros_ns": 1.7842841034612265e+18,
+    "last_producer_setpoint_ros_ns": 1.7842841034612265e+18,
+    "last_px4_consumption_us": 22864000.0,
+    "last_writer_event_us": 22916000.0,
+    "mode": 14,
+    "producer_heartbeat_measurement_status": "AVAILABLE",
+    "route_epoch_id": 3
+  },
+  "verdict": "PASS"
+}

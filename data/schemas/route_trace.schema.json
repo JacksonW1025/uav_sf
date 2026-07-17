@@ -14,6 +14,11 @@
     "registration_state",
     "authority_source",
     "producer_identity",
+    "route_epoch_id",
+    "route_activation_id",
+    "producer_session_id",
+    "registration_instance_id",
+    "route_change_source",
     "setpoint_level",
     "behavior_phase",
     "setpoint_topic",
@@ -30,7 +35,7 @@
     "confidence"
   ],
   "properties": {
-    "schema_version": {"const": "1.1"},
+    "schema_version": {"const": "1.2"},
     "run_id": {"type": "string", "minLength": 1},
     "timestamp": {"type": "number", "minimum": 0},
     "timestamp_domain": {
@@ -41,6 +46,11 @@
     "registration_state": {"type": ["string", "object", "null"]},
     "authority_source": {"type": ["string", "null"]},
     "producer_identity": {"type": ["string", "null"]},
+    "route_epoch_id": {"type": ["integer", "null"], "minimum": 0},
+    "route_activation_id": {"type": ["integer", "string", "null"]},
+    "producer_session_id": {"type": ["string", "null"]},
+    "registration_instance_id": {"type": ["integer", "string", "null"]},
+    "route_change_source": {"type": ["string", "null"]},
     "setpoint_level": {
       "enum": [
         "position",

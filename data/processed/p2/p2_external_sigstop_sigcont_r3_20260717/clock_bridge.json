@@ -1,0 +1,31 @@
+{
+  "clock_bridge_id": "clock-d412ecaa4a4b9e24",
+  "discarded_initial_backlog_samples": 3,
+  "offset_ns": 1784285999347236590,
+  "rate_ratio": 1.0339723212487042,
+  "reasons": [],
+  "reference_px4_us": 24474000,
+  "reference_ros_ns": 1784286023821236590,
+  "reset_count": 0,
+  "residual_max_ns": 32291930,
+  "residual_median_ns": 7516767,
+  "sample_count": 26,
+  "schema_version": "1.0",
+  "segment_count": 1,
+  "status": "VALID",
+  "thresholds": {
+    "degraded_residual_max_ns": 250000000,
+    "maximum_round_trip_time_ns": 20000000,
+    "maximum_timesync_offset_span_ns": 5000000,
+    "minimum_sample_count": 20,
+    "residual_max_ns": 100000000,
+    "segment_jump_ns": 50000000
+  },
+  "timestamp_domains": {
+    "source": "px4_boot_us",
+    "target": "ros_node_ns"
+  },
+  "uncertainty_ns": 34291930,
+  "valid_from": 14184000,
+  "valid_until": 31120000
+}

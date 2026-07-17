@@ -1,0 +1,63 @@
+{
+  "clock_bridge": {
+    "clock_bridge_id": "clock-fd037a2059c96056",
+    "fault_px4_time_interval": {
+      "lower_us": 22843214.892906107,
+      "midpoint_us": 22871875.13792453,
+      "upper_us": 22900535.382942952
+    },
+    "status": "VALID",
+    "uncertainty_ns": 29799281
+  },
+  "experiment_kind": "p2",
+  "failure_and_fallback": {
+    "automatic_fallback_observed": true,
+    "detection_latency_ms": 1220.838056,
+    "expected_fallback": true,
+    "fallback_epoch_started_us": 23892000.0,
+    "fallback_nav_state": 4,
+    "fallback_route_epoch_id": 4,
+    "first_fallback_allocator_event_us": 23892000.0,
+    "first_fallback_consumption_us": 23912000.0,
+    "first_fallback_writer_event_us": 23892000.0,
+    "post_revocation_old_epoch_consumption_count": 0,
+    "post_revocation_old_epoch_writer_count": 0
+  },
+  "fault_class": "sigstop_sigcont",
+  "heartbeat_or_health_enabled": true,
+  "object": "offboard",
+  "physical_recovery": {
+    "altitude_loss_m": 0.009250164031982422,
+    "angular_rate_measurement_status": "UNKNOWN_NOT_PUBLISHED_BY_LOCKED_DDS_CONFIG",
+    "angular_rate_sample_count": 0,
+    "attitude_measurement_status": "AVAILABLE",
+    "initial_altitude_m": 1.866955041885376,
+    "landed_and_disarmed": true,
+    "maximum_altitude_m": 1.8663556575775146,
+    "minimum_altitude_m": 1.8577048778533936,
+    "peak_angular_rate_rad_s": null,
+    "peak_tilt_rad": 0.004317089606195278
+  },
+  "reasons": [],
+  "route_oracle_clauses": {
+    "continuity": "PASS",
+    "exclusivity": "PASS",
+    "installation": "PASS",
+    "recovery": "PASS",
+    "revocation": "PASS"
+  },
+  "route_oracle_version": "0.2",
+  "schema_version": "1.0",
+  "setpoint_enabled": true,
+  "source_route": {
+    "last_allocator_event_us": 23856000.0,
+    "last_producer_heartbeat_ros_ns": 1.7842852185119619e+18,
+    "last_producer_setpoint_ros_ns": 1.7842852185119619e+18,
+    "last_px4_consumption_us": 22828000.0,
+    "last_writer_event_us": 23884000.0,
+    "mode": 14,
+    "producer_heartbeat_measurement_status": "AVAILABLE",
+    "route_epoch_id": 3
+  },
+  "verdict": "PASS"
+}

@@ -1,0 +1,59 @@
+{
+  "clock_bridge": {
+    "clock_bridge_id": "clock-cf5afad19321a9d2",
+    "fault_px4_time_interval": null,
+    "status": "VALID",
+    "uncertainty_ns": 70576222
+  },
+  "experiment_kind": "p3",
+  "failure_and_fallback": {
+    "automatic_fallback_observed": false,
+    "detection_latency_ms": null,
+    "expected_fallback": false,
+    "fallback_epoch_started_us": 38248000.0,
+    "fallback_nav_state": 4,
+    "fallback_route_epoch_id": 4,
+    "first_fallback_allocator_event_us": 38276000.0,
+    "first_fallback_consumption_us": 38260000.0,
+    "first_fallback_writer_event_us": 38252000.0,
+    "post_revocation_old_epoch_consumption_count": 0,
+    "post_revocation_old_epoch_writer_count": 0
+  },
+  "fault_class": null,
+  "heartbeat_or_health_enabled": true,
+  "object": "external",
+  "physical_recovery": {
+    "altitude_loss_m": 0.07268679141998291,
+    "angular_rate_measurement_status": "UNKNOWN_NOT_PUBLISHED_BY_LOCKED_DDS_CONFIG",
+    "angular_rate_sample_count": 0,
+    "attitude_measurement_status": "AVAILABLE",
+    "initial_altitude_m": 1.8709862232208252,
+    "landed": false,
+    "landed_and_disarmed": false,
+    "maximum_altitude_m": 1.9084982872009277,
+    "minimum_altitude_m": 1.7982994318008423,
+    "peak_angular_rate_rad_s": null,
+    "peak_tilt_rad": 0.002004003045238849
+  },
+  "reasons": [],
+  "route_oracle_clauses": {
+    "continuity": "UNKNOWN",
+    "exclusivity": "UNKNOWN",
+    "installation": "PASS",
+    "recovery": "PASS",
+    "revocation": "PASS"
+  },
+  "route_oracle_version": "0.2",
+  "schema_version": "1.0",
+  "setpoint_enabled": true,
+  "source_route": {
+    "last_allocator_event_us": 38244000.0,
+    "last_producer_heartbeat_ros_ns": 1.784288236923748e+18,
+    "last_producer_setpoint_ros_ns": 1.784288236923748e+18,
+    "last_px4_consumption_us": 38208000.0,
+    "last_writer_event_us": 38244000.0,
+    "mode": 23,
+    "route_epoch_id": 3
+  },
+  "verdict": "PASS"
+}

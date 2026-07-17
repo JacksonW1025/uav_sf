@@ -9,6 +9,15 @@ WS_DIR="${ROS2_WS_DIR:-${REPO_ROOT}/ros2_ws}"
 LOG_DIR="${REPO_ROOT}/runs/setup"
 UPDATE_LOCK=0
 SKIP_BUILD=0
+INTERFACE_PATCH_APPLIED=0
+restore_interface_patch() {
+  if ((INTERFACE_PATCH_APPLIED)); then
+    PX4_ROS2_INTERFACE_DIR="${WS_DIR}/src/px4_ros2_interface_lib" \
+      "${REPO_ROOT}/scripts/setup/apply_interface_experiment_patch.sh" revert
+    INTERFACE_PATCH_APPLIED=0
+  fi
+}
+trap restore_interface_patch EXIT
 while (($#)); do
   case "$1" in
     --update-lock) UPDATE_LOCK=1; shift ;;
@@ -41,11 +50,15 @@ set -u
   checkout_locked_repository px4_ros2_interface_lib "${WS_DIR}/src/px4_ros2_interface_lib"
 
   if ((SKIP_BUILD == 0)); then
+    PX4_ROS2_INTERFACE_DIR="${WS_DIR}/src/px4_ros2_interface_lib" \
+      "${REPO_ROOT}/scripts/setup/apply_interface_experiment_patch.sh" apply
+    INTERFACE_PATCH_APPLIED=1
     colcon --log-base "${WS_DIR}/log" build \
       --base-paths "${WS_DIR}/src" "${REPO_ROOT}/scripts/adapters/external_mode_adapter" \
       --build-base "${WS_DIR}/build" \
       --install-base "${WS_DIR}/install" \
       --cmake-args -DBUILD_TESTING=ON
+    restore_interface_patch
   fi
 
   verify_clean_repository "${WS_DIR}/src/px4_msgs"

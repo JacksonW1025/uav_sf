@@ -37,10 +37,22 @@ def _versioned_topic(base: str, message_type: object) -> str:
     return f"{base}_v{version}" if version else base
 
 
-def run(scenario: str, output: Path, timeout_s: float) -> int:
+def run(
+    scenario: str,
+    output: Path,
+    timeout_s: float,
+    active_duration_s: float | None = None,
+    hover_only: bool = False,
+) -> int:
     try:
         import rclpy
-        from px4_msgs.msg import RegisterExtComponentReply, VehicleCommand, VehicleLocalPosition, VehicleStatus
+        from px4_msgs.msg import (
+            RegisterExtComponentReply,
+            TimesyncStatus,
+            VehicleCommand,
+            VehicleLocalPosition,
+            VehicleStatus,
+        )
         from rclpy.node import Node
         from rclpy.qos import DurabilityPolicy, HistoryPolicy, QoSProfile, ReliabilityPolicy
     except ImportError as exc:  # pragma: no cover - requires the ROS environment
@@ -66,6 +78,9 @@ def run(scenario: str, output: Path, timeout_s: float) -> int:
             self.exit_code: Optional[int] = None
             self.core = CommonBehaviorCore()
             self.active_started = 0.0
+            self.active_duration_s = active_duration_s
+            self.hover_only = hover_only
+            self.timesync_status: Optional[Any] = None
 
             qos = QoSProfile(
                 history=HistoryPolicy.KEEP_LAST,
@@ -77,6 +92,12 @@ def run(scenario: str, output: Path, timeout_s: float) -> int:
                 VehicleStatus,
                 _versioned_topic("/fmu/out/vehicle_status", VehicleStatus),
                 self._status,
+                qos,
+            )
+            self.create_subscription(
+                TimesyncStatus,
+                _versioned_topic("/fmu/out/timesync_status", TimesyncStatus),
+                self._timesync,
                 qos,
             )
             self.create_subscription(
@@ -135,6 +156,28 @@ def run(scenario: str, output: Path, timeout_s: float) -> int:
             if bool(message.success) and name == "Route Transition" and int(message.mode_id) >= 0:
                 self.external_mode_id = int(message.mode_id)
                 self._event("external_mode_registration_observed", name=name, mode_id=self.external_mode_id)
+
+        def _timesync(self, message: Any) -> None:
+            self.timesync_status = message
+            self._clock_sample(int(message.timestamp), sample_source="timesync_status")
+
+        def _clock_sample(self, outbound_timestamp_us: int, *, sample_source: str) -> None:
+            assert self.timesync_status is not None
+            receive_ros_ns = self.get_clock().now().nanoseconds
+            receive_monotonic_ns = time.monotonic_ns()
+            estimated_offset_us = int(self.timesync_status.estimated_offset)
+            self._event(
+                "clock_bridge_sample",
+                sample_source=sample_source,
+                px4_outbound_timestamp_us=outbound_timestamp_us,
+                px4_boot_timestamp_us=outbound_timestamp_us + estimated_offset_us,
+                ros_receive_ns=receive_ros_ns,
+                monotonic_receive_ns=receive_monotonic_ns,
+                timesync_source_protocol=int(self.timesync_status.source_protocol),
+                timesync_estimated_offset_us=estimated_offset_us,
+                timesync_round_trip_time_us=int(self.timesync_status.round_trip_time),
+                timesync_converged=int(self.timesync_status.source_protocol) == 2,
+            )
 
         def _timestamp_us(self) -> int:
             return self.get_clock().now().nanoseconds // 1000
@@ -233,8 +276,14 @@ def run(scenario: str, output: Path, timeout_s: float) -> int:
                 if int(self.status.nav_state) != int(VehicleStatus.NAVIGATION_STATE_OFFBOARD):
                     self._finish("FAIL", "Offboard route exited before release")
                     return
-                if elapsed < self.core.hover_seconds + self.core.straight_seconds:
-                    self.offboard.publish(self.core.command_at(elapsed, elapsed), self._timestamp_us())
+                active_duration = self.active_duration_s or (
+                    self.core.hover_seconds + self.core.straight_seconds
+                )
+                if elapsed < active_duration:
+                    command_elapsed = 0.0 if self.hover_only else elapsed
+                    self.offboard.publish(
+                        self.core.command_at(command_elapsed, elapsed), self._timestamp_us()
+                    )
                 else:
                     self.offboard.publish(self.core.mission_complete(elapsed), self._timestamp_us())
                     self.offboard.release(self._timestamp_us())
@@ -287,8 +336,16 @@ def main() -> int:
     parser.add_argument("--scenario", choices=("offboard", "external", "monitor"), required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--timeout", type=float, default=180.0)
+    parser.add_argument("--active-duration", type=float)
+    parser.add_argument("--hover-only", action="store_true")
     args = parser.parse_args()
-    return run(args.scenario, args.output, args.timeout)
+    return run(
+        args.scenario,
+        args.output,
+        args.timeout,
+        active_duration_s=args.active_duration,
+        hover_only=args.hover_only,
+    )
 
 
 if __name__ == "__main__":

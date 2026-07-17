@@ -33,6 +33,11 @@ class RouteState:
     registration_state: object = None
     authority_source: Optional[str] = None
     producer_identity: Optional[str] = None
+    route_epoch_id: Optional[int] = None
+    route_activation_id: object = None
+    producer_session_id: Optional[str] = None
+    registration_instance_id: object = None
+    route_change_source: Optional[str] = None
     setpoint_level: str = "unknown"
     behavior_phase: Optional[str] = None
     setpoint_topic: Optional[str] = None
@@ -55,7 +60,7 @@ class RouteState:
         observation: Optional[dict[str, object]] = None,
     ) -> dict[str, object]:
         return {
-            "schema_version": "1.1",
+            "schema_version": "1.2",
             "run_id": self.run_id,
             "timestamp": timestamp,
             "timestamp_domain": timestamp_domain,
@@ -64,6 +69,11 @@ class RouteState:
             "registration_state": self.registration_state,
             "authority_source": self.authority_source,
             "producer_identity": self.producer_identity,
+            "route_epoch_id": self.route_epoch_id,
+            "route_activation_id": self.route_activation_id,
+            "producer_session_id": self.producer_session_id,
+            "registration_instance_id": self.registration_instance_id,
+            "route_change_source": self.route_change_source,
             "setpoint_level": self.setpoint_level,
             "behavior_phase": self.behavior_phase,
             "setpoint_topic": self.setpoint_topic,
@@ -228,6 +238,8 @@ class RouteEventReducer:
 
         elif source == "producer_publish":
             self.state.producer_identity = str(payload["producer_identity"])
+            session_id = payload.get("producer_session_id")
+            self.state.producer_session_id = str(session_id) if session_id is not None else None
             self.state.setpoint_topic = str(payload.get("setpoint_topic", "trajectory_setpoint"))
             self.state.setpoint_level = str(payload.get("setpoint_level", "unknown"))
             phase = payload.get("behavior_phase")
@@ -259,18 +271,83 @@ class RouteEventReducer:
                 "subject_timestamp": subject_timestamp,
             }
             self.state.message_age = max(0.0, (timestamp - subject_timestamp) / 1_000_000.0)
-            if event_id == 1:
+            event_epoch = int(payload.get("route_epoch_id", 0))
+            if event_id == 4:
+                self.state.route_epoch_id = event_epoch
+                self.state.declared_mode = int(payload.get("new_nav_state", self.state.declared_mode or 0))
+                change_source = int(payload.get("change_source", 0))
+                self.state.route_change_source = {
+                    1: "user_or_executor",
+                    2: "failsafe",
+                    3: "registration_lifecycle",
+                    4: "arming_lifecycle",
+                    5: "startup",
+                }.get(change_source, "unknown")
+                event_type = "route_epoch_changed"
+            elif event_id == 1:
+                if event_epoch:
+                    self.state.route_epoch_id = event_epoch
                 event_type = "px4_setpoint_consumed"
                 self.state.setpoint_topic = "trajectory_setpoint"
             elif event_id == 2:
+                if event_epoch:
+                    self.state.route_epoch_id = event_epoch
                 event_type = "allocator_input_published"
                 self.state.allocator_input = {
                     "topic": "vehicle_torque_setpoint",
                     "writer": WRITER_NAMES.get(writer_id, "unknown"),
                 }
             elif event_id == 3:
+                if event_epoch:
+                    self.state.route_epoch_id = event_epoch
                 event_type = "actuator_output_published"
                 self.state.actuator_writer = WRITER_NAMES.get(writer_id, "unknown")
+            elif event_id in {5, 6, 7, 8}:
+                lifecycle_names = {
+                    5: "unregister_request_processed",
+                    6: "external_mode_slot_removed",
+                    7: "executor_slot_removed",
+                    8: "arming_check_slot_removed",
+                }
+                event_type = lifecycle_names[event_id]
+                result = int(payload.get("result", 0))
+                self.state.registration_state = {
+                    "registered": False if result == 1 else None,
+                    "component_hash": int(payload.get("component_hash", 0)),
+                    "mode_id": int(payload.get("registration_mode_id", -1)),
+                    "mode_executor_id": int(payload.get("executor_in_charge", -1)),
+                    "arming_check_id": int(payload.get("arming_check_id", -1)),
+                    "processing_result": {
+                        1: "SUCCESS",
+                        2: "REJECTED",
+                        3: "NOT_PRESENT",
+                    }.get(result, "UNKNOWN"),
+                    "active_at_removal": bool(payload.get("active_at_event", False)),
+                    "fallback_nav_state": int(payload.get("fallback_nav_state", -1)),
+                    "reason_code": int(payload.get("reason_code", 0)),
+                }
+            elif event_id == 9:
+                event_type = "arming_request_rejected"
+                self.state.failsafe_state = {
+                    "arming_request_rejected": True,
+                    "reason_code": int(payload.get("reason_code", 0)),
+                    "failed_check_mask": int(payload.get("failed_check_mask", 0)),
+                }
+            elif event_id == 10:
+                event_type = "register_ext_component_reply"
+                result = int(payload.get("result", 0))
+                self.state.registration_state = {
+                    "registered": result == 1,
+                    "component_hash": int(payload.get("component_hash", 0)),
+                    "mode_id": int(payload.get("registration_mode_id", -1)),
+                    "mode_executor_id": int(payload.get("executor_in_charge", -1)),
+                    "arming_check_id": int(payload.get("arming_check_id", -1)),
+                    "processing_result": {
+                        1: "SUCCESS",
+                        2: "REJECTED",
+                    }.get(result, "UNKNOWN"),
+                    "reason_code": int(payload.get("reason_code", 0)),
+                }
             else:
                 event_type = "unknown_instrumentation_event"
                 confidence = "LOW"
@@ -324,6 +401,17 @@ def rows_from_ulog(path: Path) -> Iterator[tuple[float, str, dict[str, object]]]
     yield from sorted(rows, key=lambda item: item[0])
 
 
+def ulog_row_order(row: tuple[float, str, dict[str, object]]) -> tuple[float, int]:
+    """Order an epoch change before data events with the same PX4 timestamp."""
+    timestamp, source, payload = row
+    epoch_precedence = (
+        0
+        if source == "route_observability" and int(payload.get("event_type", 0)) == 4
+        else 1
+    )
+    return timestamp, epoch_precedence
+
+
 def producer_events(path: Path, run_id: str) -> Iterator[dict[str, object]]:
     """Normalize the probe's producer-side JSONL without mixing clock domains."""
     state = RouteState(run_id=run_id)
@@ -341,8 +429,12 @@ def producer_events(path: Path, run_id: str) -> Iterator[dict[str, object]]:
                 identity = payload.get("producer_identity")
                 if identity:
                     state.producer_identity = str(identity)
+                session_id = payload.get("producer_session_id")
+                if session_id is not None:
+                    state.producer_session_id = str(session_id)
                 if adapter_type == "offboard_publish":
                     event_type = "producer_still_publishing"
+                    state.declared_mode = 14
                     state.authority_source = "ros2_offboard"
                     state.setpoint_topic = "trajectory_setpoint"
                     state.setpoint_level = str(payload.get("setpoint_level", "unknown"))
@@ -357,6 +449,8 @@ def producer_events(path: Path, run_id: str) -> Iterator[dict[str, object]]:
                     "mode_id": mode_id,
                 }
                 state.producer_identity = "registered_component:Route Transition"
+                instance_id = record.get("registration_instance_id")
+                state.registration_instance_id = instance_id
                 event_type = "external_mode_registered"
                 confidence = "HIGH"
             elif event_type == "state_transition":
@@ -397,12 +491,15 @@ def lifecycle_events(path: Path, run_id: str) -> Iterator[dict[str, object]]:
                     "mode_id": mode_id,
                 }
                 state.producer_identity = "registered_component:Route Transition"
+                state.registration_instance_id = payload.get("registration_instance_id")
             elif event_type == "external_mode_activated":
                 state.declared_mode = int(payload["mode_id"])
                 state.authority_source = "dynamic_external_mode"
                 state.producer_identity = "registered_component:Route Transition"
                 state.setpoint_topic = "trajectory_setpoint"
                 state.setpoint_level = "velocity"
+                state.route_activation_id = payload.get("activation_id")
+                state.registration_instance_id = payload.get("registration_instance_id")
             elif event_type == "external_mode_setpoint":
                 event_type = "producer_still_publishing"
                 state.authority_source = "dynamic_external_mode"
@@ -420,7 +517,14 @@ def lifecycle_events(path: Path, run_id: str) -> Iterator[dict[str, object]]:
 
             details = ",".join(
                 f"{key}={payload[key]}"
-                for key in ("stage", "result", "phase", "sequence")
+                for key in (
+                    "stage",
+                    "result",
+                    "phase",
+                    "sequence",
+                    "activation_id",
+                    "registration_instance_id",
+                )
                 if key in payload
             )
             evidence_source = f"ros_structured_log:{path.name}"
@@ -442,6 +546,7 @@ def collect_ulogs(
     run_id: str,
     producer_path: Optional[Path] = None,
     lifecycle_path: Optional[Path] = None,
+    lifecycle_paths: Optional[Iterable[Path]] = None,
 ) -> int:
     reducer = RouteEventReducer(run_id)
     rows = (
@@ -451,12 +556,15 @@ def collect_ulogs(
     )
     events = [
         reducer.reduce(source, payload, timestamp, "ulog_us")
-        for timestamp, source, payload in sorted(rows, key=lambda item: item[0])
+        for timestamp, source, payload in sorted(rows, key=ulog_row_order)
     ]
     if producer_path is not None:
         events.extend(producer_events(producer_path, run_id))
+    selected_lifecycle_paths = list(lifecycle_paths or [])
     if lifecycle_path is not None:
-        events.extend(lifecycle_events(lifecycle_path, run_id))
+        selected_lifecycle_paths.append(lifecycle_path)
+    for selected_lifecycle_path in selected_lifecycle_paths:
+        events.extend(lifecycle_events(selected_lifecycle_path, run_id))
     return RouteTraceWriter(output).write(processed_trace_events(events))
 
 
@@ -485,14 +593,14 @@ def main() -> int:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--run-id", required=True)
     parser.add_argument("--producer-events", type=Path)
-    parser.add_argument("--lifecycle-log", type=Path)
+    parser.add_argument("--lifecycle-log", action="append", type=Path, default=[])
     args = parser.parse_args()
     count = collect_ulogs(
         args.ulog,
         args.output,
         args.run_id,
         producer_path=args.producer_events,
-        lifecycle_path=args.lifecycle_log,
+        lifecycle_paths=args.lifecycle_log,
     )
     print(json.dumps({"status": "PASS", "events": count, "output": str(args.output)}))
     return 0

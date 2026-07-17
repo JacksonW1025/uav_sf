@@ -53,6 +53,8 @@ def test_single_writer_complete_continuous(tmp_path: Path) -> None:
     assert result["coverage_ratio"] == 1.0
     assert result["actual_rate_hz"] >= 100
     assert result["sequence_gaps"] == []
+    assert result["global_capture_quality"]["status"] == "COMPLETE"
+    assert result["critical_window_quality"]["status"] == "COMPLETE"
 
 
 def test_two_writers_overlap(tmp_path: Path) -> None:
@@ -78,6 +80,7 @@ def test_sequence_gap(tmp_path: Path) -> None:
     result = summarize(_write(tmp_path / "trace.jsonl", events), window_padding_ms=50)
     assert result["status"] == "SEQUENCE_GAP"
     assert result["sequence_gaps"]
+    assert result["global_capture_quality"]["status"] == "DEGRADED"
 
 
 def test_missing_candidate_instrumentation(tmp_path: Path) -> None:

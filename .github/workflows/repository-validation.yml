@@ -31,15 +31,22 @@ jobs:
       - name: Dependency lock validation
         run: python scripts/setup/verify_dependency_lock.py
 
-      - name: Patch textual completeness and route schemas
+      - name: Phase A.2 patch, queue, epoch, clock, lifecycle, gate, and oracle tests
         env:
           PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
           PYTHONPATH: ${{ github.workspace }}
         run: >-
           python -m pytest -q -p no:cacheprovider
           tests/test_px4_observability_patches.py
+          tests/test_route_observability_queue.py
+          tests/test_route_epoch.py
+          tests/test_clock_bridge.py
+          tests/test_interface_experiment_patch.py
           tests/test_route_trace_schema.py
           tests/test_route_oracle_v0.py
+          tests/test_registration_lifecycle.py
+          tests/test_p0d_gate_logic.py
+          tests/test_route_experiment_matrices.py
 
       - name: JSON YAML TSV Markdown legacy and large-file audit
         env:

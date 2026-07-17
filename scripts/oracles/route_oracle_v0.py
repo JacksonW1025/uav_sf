@@ -40,6 +40,7 @@ def _clause(
 
 def _mode_transition(events: list[dict[str, Any]]) -> dict[str, Any] | None:
     previous: Any = None
+    previous_epoch: Any = None
     initialized = False
     changes: list[dict[str, Any]] = []
     for event in events:
@@ -52,29 +53,61 @@ def _mode_transition(events: list[dict[str, Any]]) -> dict[str, Any] | None:
                     "timestamp_us": float(event["timestamp"]),
                     "source_mode": previous,
                     "target_mode": mode,
+                    "source_route_epoch_id": previous_epoch,
                     "timestamp_domain": "ulog_us",
                 }
             )
         previous = mode
+        previous_epoch = event.get("route_epoch_id")
         initialized = True
-    for change in changes:
-        if change["source_mode"] in EXTERNAL_MODES and change["target_mode"] not in EXTERNAL_MODES:
+    external_exits = [
+        change
+        for change in changes
+        if change["source_mode"] in EXTERNAL_MODES
+        and change["target_mode"] not in EXTERNAL_MODES
+    ]
+    for change in external_exits:
+        if any(
+            event.get("timestamp_domain") == "ulog_us"
+            and event.get("event_type") == "px4_setpoint_consumed"
+            and event.get("declared_mode") == change["source_mode"]
+            and event.get("route_epoch_id") == change["source_route_epoch_id"]
+            and float(event["timestamp"]) <= float(change["timestamp_us"])
+            for event in events
+        ):
             return change
+    if external_exits:
+        return external_exits[0]
     return changes[0] if changes else None
 
 
 def _valid_bridge(bridge: dict[str, Any] | None) -> bool:
     if bridge is None:
         return False
-    required = {"clock_bridge_id", "offset", "uncertainty", "validity_interval"}
+    required = {
+        "clock_bridge_id",
+        "status",
+        "offset_ns",
+        "rate_ratio",
+        "reference_px4_us",
+        "reference_ros_ns",
+        "uncertainty_ns",
+        "valid_from",
+        "valid_until",
+    }
     return (
         required <= set(bridge)
+        and bridge["status"] == "VALID"
         and isinstance(bridge["clock_bridge_id"], str)
-        and isinstance(bridge["offset"], (int, float))
-        and isinstance(bridge["uncertainty"], (int, float))
-        and float(bridge["uncertainty"]) >= 0
-        and isinstance(bridge["validity_interval"], list)
-        and len(bridge["validity_interval"]) == 2
+        and isinstance(bridge["offset_ns"], (int, float))
+        and isinstance(bridge["rate_ratio"], (int, float))
+        and float(bridge["rate_ratio"]) > 0
+        and isinstance(bridge["reference_px4_us"], (int, float))
+        and isinstance(bridge["reference_ros_ns"], (int, float))
+        and isinstance(bridge["uncertainty_ns"], (int, float))
+        and float(bridge["uncertainty_ns"]) >= 0
+        and isinstance(bridge["valid_from"], (int, float))
+        and isinstance(bridge["valid_until"], (int, float))
     )
 
 
@@ -84,7 +117,11 @@ def _px4_time(event: dict[str, Any], bridge: dict[str, Any] | None) -> float | N
     if domain in {"ulog_us", "px4_boot_us", "px4_uorb_us"}:
         return timestamp
     if domain == "ros_node_ns" and _valid_bridge(bridge):
-        return (timestamp - float(bridge["offset"])) / 1000.0
+        mapped = float(bridge["reference_px4_us"]) + (
+            timestamp - float(bridge["reference_ros_ns"])
+        ) / (1000.0 * float(bridge["rate_ratio"]))
+        if float(bridge["valid_from"]) <= mapped <= float(bridge["valid_until"]):
+            return mapped
     return None
 
 
@@ -112,8 +149,8 @@ def evaluate(
             for name in ("revocation", "installation", "exclusivity", "continuity", "recovery")
         }
         return {
-            "schema_version": "1.0",
-            "route_oracle_version": "0.1",
+            "schema_version": "1.1",
+            "route_oracle_version": "0.2",
             "run_id": run_id,
             "status": "NOT_APPLICABLE",
             "transition": None,
@@ -282,16 +319,38 @@ def evaluate(
         reasons=[f"missing target-route evidence: {name}" for name in missing_installation],
     )
 
+    local_windows = [
+        window
+        for window in writer_summary.get("transition_windows", [])
+        if window.get("from_mode") == source_mode
+        and window.get("to_mode") == target_mode
+        and float(window.get("start_us", 0)) <= exit_time <= float(window.get("end_us", 0))
+    ]
+    local_window = min(
+        local_windows,
+        key=lambda window: abs(float(window.get("timestamp_us", 0)) - exit_time),
+        default=None,
+    )
+    local_quality = (
+        str(local_window.get("coverage_verdict"))
+        if local_window is not None
+        else "INSUFFICIENT"
+    )
+    local_writers = list(local_window.get("observed_writers", [])) if local_window else []
+    local_competing = len(local_writers) > 1
     writer_status = writer_summary.get("status")
-    if writer_status == "EXCLUSIVE":
+    if local_competing:
+        exclusivity_status = "VIOLATION"
+        exclusivity_reasons = ["multiple stable writer IDs occurred in the target critical window"]
+    elif local_quality == "COMPLETE" and len(local_writers) == 1:
         exclusivity_status = "PASS"
         exclusivity_reasons: list[str] = []
-    elif writer_status == "COMPETING_WRITERS":
-        exclusivity_status = "VIOLATION"
-        exclusivity_reasons = ["multiple actuator writers occurred in an exclusivity window"]
+    elif local_quality == "BOUNDED":
+        exclusivity_status = "UNKNOWN"
+        exclusivity_reasons = ["critical-window capture is bounded; overlap below the resolution cannot be excluded"]
     else:
         exclusivity_status = "UNKNOWN"
-        exclusivity_reasons = [f"writer coverage status is {writer_status}"]
+        exclusivity_reasons = ["target critical-window coverage is insufficient"]
     exclusivity = _clause(
         exclusivity_status,
         {
@@ -301,6 +360,18 @@ def evaluate(
             "sequence_gap_count": len(writer_summary.get("sequence_gaps", [])),
             "competing_window_count": len(writer_summary.get("competing_windows", [])),
             "observation_hole_count": len(writer_summary.get("observation_holes", [])),
+            "critical_window_quality": local_quality,
+            "critical_window": local_window,
+            "detectable_resolution_ms": (
+                float(local_window.get("maximum_gap_ms", 0))
+                if local_quality == "BOUNDED" and local_window is not None
+                else 0.0
+            ),
+            "resolution_verdict": (
+                "PASS_ABOVE_RESOLUTION"
+                if local_quality == "BOUNDED" and not local_competing
+                else None
+            ),
         },
         reasons=exclusivity_reasons,
     )
@@ -322,9 +393,9 @@ def evaluate(
     )
     expected_period_ms = float(writer_summary.get("expected_period_ms", 0.0))
     allowed_gap_ms = max(20.0, 3.0 * expected_period_ms)
-    if writer_status != "EXCLUSIVE" or gap_ms is None:
+    if local_quality != "COMPLETE" or gap_ms is None:
         continuity_status = "UNKNOWN"
-        continuity_reasons = ["continuous, fully covered writer evidence is unavailable"]
+        continuity_reasons = ["complete target critical-window writer evidence is unavailable"]
     elif gap_ms > allowed_gap_ms:
         continuity_status = "VIOLATION"
         continuity_reasons = ["maximum no-owner window exceeds the observation contract"]
@@ -391,8 +462,8 @@ def evaluate(
         overall = "UNKNOWN"
 
     return {
-        "schema_version": "1.0",
-        "route_oracle_version": "0.1",
+        "schema_version": "1.1",
+        "route_oracle_version": "0.2",
         "run_id": run_id,
         "status": overall,
         "transition": transition,

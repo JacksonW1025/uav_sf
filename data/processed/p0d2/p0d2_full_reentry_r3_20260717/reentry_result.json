@@ -1,0 +1,38 @@
+{
+  "arming_check_slot_removed_count": 1,
+  "automatic_external_after_rearm": false,
+  "checks": {
+    "arming_check_slot_removed_success": true,
+    "flight_and_internal_reentry_completed": true,
+    "internal_rearm_observed": true,
+    "mode_slot_removed_success": true,
+    "no_automatic_external_reentry": true,
+    "no_old_epoch_data_plane_residue": true,
+    "unregister_processed_success": true,
+    "unregister_request_observed": true
+  },
+  "conclusion": "clean_reentry",
+  "disarm_nav_state": 23,
+  "duration_s": 63.263,
+  "external_mode_id": 23,
+  "mode_slot_removal_evidence": true,
+  "mode_slot_removed_count": 1,
+  "old_external_epoch_ids": [
+    3,
+    5
+  ],
+  "post_disarm_nav_states": [
+    23
+  ],
+  "post_removal_old_epoch_event_count": 0,
+  "pre_rearm_nav_state": null,
+  "rearm_initial_attempt_blocked": false,
+  "rearm_initial_nav_state": 4,
+  "rearm_recovered_after_internal_request": true,
+  "reason": "clean_reentry",
+  "scenario": "p0d2_full_external_reentry",
+  "schema_version": "1.0",
+  "status": "PASS",
+  "unregister_processed_count": 1,
+  "unregister_request_count": 1
+}

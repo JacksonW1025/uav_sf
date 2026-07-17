@@ -44,7 +44,7 @@ def _constants(message: str) -> dict[str, int]:
     for line in message.splitlines():
         if "=" in line and line.startswith("uint8 "):
             name, value = line.split(None, 1)[1].split("=", 1)
-            result[name] = int(value)
+            result[name.strip()] = int(value)
     return result
 
 
@@ -56,18 +56,37 @@ def test_patch_is_self_contained_and_message_complete() -> None:
         "subject_timestamp",
         "sequence",
         "expected_period_us",
+        "route_epoch_id",
+        "failed_check_mask",
+        "component_hash",
         "event_type",
         "source_id",
         "topic_id",
         "writer_id",
         "profile",
         "instance",
+        "previous_nav_state",
+        "new_nav_state",
+        "change_source",
+        "registration_mode_id",
+        "executor_in_charge",
+        "arming_check_id",
+        "result",
+        "reason_code",
+        "armed",
+        "active_at_event",
+        "fallback_nav_state",
     ):
         assert f" {field}" in message
     constants = _constants(message)
     assert constants["EVENT_SETPOINT_CONSUMED"] == 1
     assert constants["EVENT_ALLOCATOR_INPUT_PUBLISHED"] == 2
     assert constants["EVENT_ACTUATOR_OUTPUT_PUBLISHED"] == 3
+    assert constants["EVENT_ROUTE_EPOCH_CHANGED"] == 4
+    assert constants["EVENT_UNREGISTER_REQUEST_PROCESSED"] == 5
+    assert constants["EVENT_ARMING_REQUEST_REJECTED"] == 9
+    assert constants["EVENT_REGISTRATION_PROCESSED"] == 10
+    assert constants["ORB_QUEUE_LENGTH"] == 4
     assert constants["WRITER_UNKNOWN"] == 0
     assert constants["WRITER_MC_RATE_CONTROL"] == 1
     assert constants["WRITER_CONTROL_ALLOCATOR"] == 2
@@ -91,6 +110,11 @@ def test_patch_is_observation_only_and_scoped() -> None:
         "msg/CMakeLists.txt",
         "msg/RouteObservability.msg",
         "src/lib/route_observability/RouteObservability.hpp",
+        "src/modules/commander/Commander.cpp",
+        "src/modules/commander/Commander.hpp",
+        "src/modules/commander/HealthAndArmingChecks/HealthAndArmingChecks.hpp",
+        "src/modules/commander/ModeManagement.cpp",
+        "src/modules/commander/ModeManagement.hpp",
         "src/modules/control_allocator/ControlAllocator.cpp",
         "src/modules/control_allocator/ControlAllocator.hpp",
         "src/modules/logger/logged_topics.cpp",
