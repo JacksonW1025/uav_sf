@@ -169,6 +169,9 @@ case "${SCENARIO}" in
     ;;
 esac
 
+stop_process "${MODE_PID}" INT
+MODE_PID=""
+
 echo shutdown >&3
 for _ in $(seq 1 200); do
   kill -0 "${PX4_PID}" 2>/dev/null || break
