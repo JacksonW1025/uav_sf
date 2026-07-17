@@ -22,6 +22,7 @@ AGENT_LIBRARY_PATH="${MICROXRCE_AGENT_LD_LIBRARY_PATH:-${AGENT_PREFIX}/lib}"
 EXTERNAL_MODE_BIN="${ROUTE_EXTERNAL_MODE_BIN:-${REPO_ROOT}/ros2_ws/install/route_transition_external_mode/lib/route_transition_external_mode/route_transition_external_mode}"
 LOGGER_PROFILE="${P0_SDLOG_PROFILE:-1}"
 LOGGER_TOPICS_FILE="${P0_LOGGER_TOPICS_FILE:-}"
+SIMULATION_SEED="${P0_SIMULATION_SEED:-1}"
 RAW_DIR="${P0_RUN_ROOT:-${REPO_ROOT}/runs/p0}/${RUN_ID}/raw"
 PROCESSED_DIR="${P0_PROCESSED_ROOT:-${REPO_ROOT}/data/processed/p0}/${RUN_ID}"
 mkdir -p "${RAW_DIR}" "${PROCESSED_DIR}"
@@ -41,6 +42,8 @@ PX4_PID=""
 AGENT_PID=""
 MODE_PID=""
 RUNNER_PID=""
+GZ_PID=""
+GZ_PARTITION_NAME="uav_sf_${RUN_ID//[^a-zA-Z0-9_]/_}"
 FIFO="${RAW_DIR}/px4.stdin"
 rm -f "${FIFO}"
 mkfifo "${FIFO}"
@@ -84,6 +87,7 @@ finish_processes() {
   while read -r gz_pid; do
     stop_process "${gz_pid}" TERM
   done < <(pgrep -P "$$" -f '^gz sim ' 2>/dev/null || true)
+  stop_process "${GZ_PID}" TERM
   stop_process "${AGENT_PID}" TERM
   exec 3>&-
   rm -f "${FIFO}"
@@ -97,10 +101,30 @@ LD_LIBRARY_PATH="${AGENT_LIBRARY_PATH}" \
 AGENT_PID=$!
 
 (
+  export GZ_SIM_RESOURCE_PATH=
+  export GZ_SIM_SYSTEM_PLUGIN_PATH=
+  export GZ_SIM_SERVER_CONFIG_PATH=
+  set +u
+  source "${PX4_BUILD}/rootfs/gz_env.sh"
+  set -u
+  exec env GZ_PARTITION="${GZ_PARTITION_NAME}" gz sim --seed "${SIMULATION_SEED}" \
+    --verbose=1 -r -s "${PX4_DIR}/Tools/simulation/gz/worlds/default.sdf"
+) >"${RAW_DIR}/gazebo.log" 2>&1 &
+GZ_PID=$!
+for _ in $(seq 1 100); do
+  GZ_PARTITION="${GZ_PARTITION_NAME}" gz topic -l 2>/dev/null | grep -q '/world/default/clock' && break
+  kill -0 "${GZ_PID}" 2>/dev/null || { echo "Gazebo exited before readiness" >&2; exit 10; }
+  sleep 0.1
+done
+GZ_PARTITION="${GZ_PARTITION_NAME}" gz topic -l 2>/dev/null \
+  | grep -q '/world/default/clock' || { echo "Gazebo readiness timeout" >&2; exit 10; }
+
+(
   cd "${PX4_DIR}"
   # Do not let a caller's Gazebo resource path select a model from another PX4
   # checkout. px4-rc.gzsim adds this checkout's locked model/world paths.
-  GZ_SIM_RESOURCE_PATH= PX4_PARAM_SDLOG_MODE=0 PX4_PARAM_SDLOG_PROFILE="${LOGGER_PROFILE}" \
+  GZ_PARTITION="${GZ_PARTITION_NAME}" PX4_GZ_STANDALONE=1 GZ_SIM_RESOURCE_PATH= \
+    PX4_PARAM_SDLOG_MODE=0 PX4_PARAM_SDLOG_PROFILE="${LOGGER_PROFILE}" \
     HEADLESS=1 PX4_SIM_MODEL=gz_x500 \
     "${PX4_BUILD}/bin/px4" -i 0 <"${FIFO}"
 ) >"${RAW_DIR}/px4.log" 2>&1 &

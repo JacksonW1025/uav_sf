@@ -129,6 +129,7 @@ def environment_for(row: dict[str, Any], campaign_root: Path, attempt_root: Path
             "ROUTE_EXPERIMENT_FAULT_OFFSET_S": str(row["fault_offset_s"]),
             "ROUTE_EXPERIMENT_MIN_CLOCK_SAMPLES": "25",
             "ROUTE_EXPERIMENT_BEHAVIOR_CONTEXT": str(row["context"]),
+            "ROUTE_EXPERIMENT_SIMULATION_SEED": str(row["simulation_seed"]),
             "ROUTE_EXPERIMENT_SDLOG_PROFILE": "0",
             "ROUTE_EXPERIMENT_LOGGER_TOPICS_FILE": str(MINIMAL_LOGGER_TOPICS),
             "ROUTE_EXPERIMENT_RAW_ROOT": str(attempt_root / "raw"),
@@ -139,6 +140,7 @@ def environment_for(row: dict[str, Any], campaign_root: Path, attempt_root: Path
             "P0_LOGGER_TOPICS_FILE": str(MINIMAL_LOGGER_TOPICS),
             "P0_OBSERVATION_PROFILE": "TRANSITION",
             "P0_UORB_QUEUE_LENGTH": "4",
+            "P0_SIMULATION_SEED": str(row["simulation_seed"]),
         }
     )
     if row["transition_class"] == "T1":
