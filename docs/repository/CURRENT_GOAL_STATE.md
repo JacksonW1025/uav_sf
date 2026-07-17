@@ -18,9 +18,11 @@
 - Pending paired cells: 33 untouched pairs plus the invalid/missing Dynamic
   sides above; no v3 side may be reused in a later adapter revision
 - Known environment failures: three recovered Dynamic T1 PX4
-  abort/incomplete attempts; preserved as environment evidence, never SUT or
-  Oracle violations
-- Next exact action: run one identity-stamped strengthened Dynamic T5 pilot
-  using adapter binary `af5a02a2...`; if it passes, create the next campaign
-  version and execute at most the first two missing sides
-- Last update: 2026-07-17T12:59:28-07:00
+  abort/incomplete attempts plus v4 pilot attempt 1, which failed before PX4
+  readiness because a relative artifact root was resolved inside the PX4
+  subshell; all are preserved as environment evidence, never SUT or Oracle
+  violations
+- Next exact action: commit the campaign-root canonicalization fix, then run
+  only pilot attempt 2 with adapter binary `af5a02a2...`; if it passes, create
+  the next campaign version and execute at most the first two missing sides
+- Last update: 2026-07-17T13:04:30-07:00

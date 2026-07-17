@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections import Counter, defaultdict
+import os
 from pathlib import Path
 
 import yaml
@@ -219,3 +220,28 @@ def test_campaign_batch_caps_environment_attempts_and_new_sides(
     first_attempts = list((tmp_path / rows[0]["run_id"]).glob("**/attempt_result.json"))
     assert len(first_attempts) == 3
     assert not (tmp_path / rows[1]["run_id"]).exists()
+
+
+def test_campaign_root_is_canonicalized_before_environment_creation(
+    tmp_path: Path, monkeypatch
+) -> None:
+    row = next(
+        row
+        for row in execution_plan(load_matrix())
+        if row["transition_class"] == "T5" and row["mechanism"] == "legacy_offboard"
+    )
+    observed: list[Path] = []
+    monkeypatch.setattr(p5_runner, "ROOT", tmp_path)
+    monkeypatch.setattr(p5_runner, "campaign_identity_snapshot", lambda: {"revision": "test"})
+    monkeypatch.setattr(p5_runner, "command_for", lambda _row: ["/bin/true"])
+
+    def environment(_row, campaign_root, _attempt_root):
+        observed.append(campaign_root)
+        return {}
+
+    monkeypatch.setattr(p5_runner, "environment_for", environment)
+    relative = Path(os.path.relpath(tmp_path / "campaign", Path.cwd()))
+    p5_runner.execute_plan(
+        [row], relative, 1, max_new_sides=1, max_environment_attempts=1
+    )
+    assert observed == [(tmp_path / "campaign").resolve()]

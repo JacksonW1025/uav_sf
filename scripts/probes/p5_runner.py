@@ -449,6 +449,7 @@ def execute_plan(
     disposition = load_disposition()
     matched = set(disposition["matched_cells"])
     results: list[dict[str, Any]] = []
+    campaign_root = campaign_root.resolve()
     campaign_root.mkdir(parents=True, exist_ok=True)
     batch_started = time.monotonic()
     new_sides = 0
