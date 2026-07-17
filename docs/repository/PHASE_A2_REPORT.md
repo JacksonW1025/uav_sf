@@ -6,8 +6,10 @@
 - Locked PX4 commit: `4ae21a5e569d3d89c2f6366688cbacb3e93437c9`.
 - Locked `px4_msgs`: `18ecff03041c6f8d8a0012fbc63af0b23dd60af1`.
 - Locked `px4_ros2_interface_lib`: `c3e410f035806e8c56246708432ded09c976434b`.
-- Final implementation commit: recorded in the terminal handoff after the
-  validated content is committed; a commit cannot embed its own hash.
+- Validated Phase A.2 implementation commit:
+  `e7718e2de6b7ada4472fcbc1fc428cb84da39e92`.
+- Final report-publication commit: recorded in the terminal handoff after
+  push; a commit cannot embed its own hash.
 
 Only `main` was used. Raw runs and failed attempts remain ignored under
 `runs/phase_a2/`, `runs/p0*`, `runs/p2/`, and `runs/p3/`.
@@ -138,7 +140,8 @@ starts after the fixed channel window closes.
 
 ## Tests and CI
 
-The final local validator covers Python syntax, shell syntax, dependency locks,
+The final local validator passed all 15 stages and 63 tests, covering Python
+syntax, shell syntax, dependency locks,
 JSON/YAML/TSV parsing, Markdown links, patch scope/applicability, queue rules,
 epoch ordering, schema 1.2, clock schema/segmentation, lifecycle logic, D gates,
 Oracle 0.2, accepted P2/P3 matrix cardinality, ignored/raw boundaries, and the
