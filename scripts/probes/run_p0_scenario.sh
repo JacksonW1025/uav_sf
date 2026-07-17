@@ -150,6 +150,9 @@ case "${SCENARIO}" in
     python3 "${REPO_ROOT}/scripts/probes/p0_route_runner.py" "${external_runner_args[@]}" \
       >"${RAW_DIR}/runner.log" 2>&1 &
     RUNNER_PID=$!
+    # RegisterExtComponentReply is volatile. Let the runner establish its DDS
+    # subscription before the mode emits the one-shot registration reply.
+    sleep 1.0
     "${EXTERNAL_MODE_BIN}" \
       >"${RAW_DIR}/external_mode.log" 2>&1 &
     MODE_PID=$!
