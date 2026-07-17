@@ -172,7 +172,13 @@ def selected_modes(row: dict[str, Any], trace: Path) -> tuple[int, int]:
     external = 14 if row["mechanism"] == "legacy_offboard" else _external_mode_id(trace)
     if row["transition_class"] == "T1":
         return 17, external
-    return external, 4
+    if row["transition_class"] == "T2":
+        return external, 4
+    monitor = _json(trace.parent / "raw/monitor_result.json")
+    observed_fallback = monitor.get("fallback_nav_state")
+    if not isinstance(observed_fallback, int):
+        raise ValueError("independently observed fallback route is unavailable")
+    return external, observed_fallback
 
 
 def run_selected_oracle(row: dict[str, Any], attempt_root: Path) -> dict[str, Any]:
@@ -319,6 +325,37 @@ def execute_plan(
         if accepted_record.exists():
             results.append(_json(accepted_record))
             continue
+        # A corrected validity rule may make a preserved, fully collected attempt
+        # acceptable without rerunning SITL. Never promote a nonzero-return attempt.
+        for prior_result_path in sorted(logical_root.glob("**/attempt_result.json")):
+            prior = _json(prior_result_path)
+            if int(prior.get("return_code", 1)) != 0:
+                continue
+            prior_root = prior_result_path.parent
+            prior_validity, prior_reasons, prior_oracle = classify_attempt(row, prior_root, 0)
+            if prior_validity != "VALID" or prior_oracle is None:
+                continue
+            attempt_number = int(prior["attempt"])
+            accepted = {
+                **row,
+                "validity": "VALID",
+                "accepted_attempt": attempt_number,
+                "environment_retry_count": attempt_number - 1,
+                "artifact_root": str(prior_root.resolve().relative_to(ROOT)),
+                "clock_status": "VALID",
+                "critical_window": "COMPLETE",
+                "observed_fallback_nav_state": prior_oracle["transition"]["target_mode"],
+                "accepted_after_classifier_correction": True,
+                **_metric_row(row, prior_root, prior_oracle),
+            }
+            accepted_record.parent.mkdir(parents=True, exist_ok=True)
+            accepted_record.write_text(
+                json.dumps(accepted, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+            )
+            results.append(accepted)
+            break
+        if accepted_record.exists():
+            continue
         attempts: list[dict[str, Any]] = []
         existing_attempt_numbers = []
         for path in logical_root.glob("**/*attempt_*"):
@@ -376,6 +413,7 @@ def execute_plan(
                     "artifact_root": str(attempt_root.resolve().relative_to(ROOT)),
                     "clock_status": "VALID",
                     "critical_window": "COMPLETE",
+                    "observed_fallback_nav_state": oracle["transition"]["target_mode"],
                     **_metric_row(row, attempt_root, oracle),
                 }
                 accepted_record.parent.mkdir(parents=True, exist_ok=True)
@@ -413,7 +451,11 @@ def execute_plan(
 
 def write_results(rows: list[dict[str, Any]], output: Path) -> None:
     output.parent.mkdir(parents=True, exist_ok=True)
-    fieldnames = list(rows[0]) if rows else []
+    fieldnames: list[str] = []
+    for row in rows:
+        for key in row:
+            if key not in fieldnames:
+                fieldnames.append(key)
     with output.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fieldnames, delimiter="\t")
         writer.writeheader()
