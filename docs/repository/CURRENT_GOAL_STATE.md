@@ -18,13 +18,14 @@
 - Completed paired cells: v5 `p5_t1_hover_pair_r1` through
   `p5_t1_hover_pair_r5`; T1 now has all five preregistered repeats, with all
   excluded attempts preserved; T2 straight repeats 1 through 4 are complete
-- Partial/invalid paired cells: none in v5; T2 r3 accepted Offboard attempt 4
-  after preserving its three excluded attempts; v4 history remains preserved
+- Partial/invalid paired cells: v5 T2 r5 has valid Dynamic attempt 1 and
+  Offboard attempt 1 preserved as a degraded-clock exclusion; T2 r3's three
+  excluded attempts and v4 history remain preserved
   `p5_t1_hover_pair_r1` (Offboard valid; Dynamic
   attempts 1 and 2 are measurement-unknown with 18 and 17 retained clock
   samples); no v4 pair is accepted
-- Pending paired cells: 26 untouched pairs beginning with
-  `p5_t2_straight_pair_r5`; no v3 or v4
+- Pending paired cells: first missing side is T2 r5 Offboard attempt 2, then
+  25 untouched pairs beginning with T4; no v3 or v4
   side is reused across the observation-capture revision
 - Known environment failures: three recovered v3 Dynamic T1 PX4
   abort/incomplete attempts plus v4 pilot attempt 1, which failed before PX4
@@ -32,6 +33,6 @@
   subshell, plus v5 r4 Offboard attempt 1 (`timeout in TAKEOFF`, PX4 SIGABRT);
   v5 T2 r3 Offboard attempt 2 timed out in `RELEASE_OFFBOARD`; all are
   preserved as environment evidence, never SUT or Oracle violations
-- Next exact action: checkpoint the complete T2 r4 pair, then run both missing
-  sides of `p5_t2_straight_pair_r5` as the next bounded v5 matrix batch
-- Last update: 2026-07-17T14:36:36-07:00
+- Next exact action: checkpoint the T2 r5 partial pair, then retry only its
+  Offboard side as attempt 2; do not rerun valid Dynamic attempt 1
+- Last update: 2026-07-17T14:39:58-07:00
