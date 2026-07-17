@@ -12,6 +12,7 @@ from scripts.probes.p5_runner import (
     execution_plan,
     load_matrix,
 )
+from scripts.analysis.p5_compare import compare
 
 
 def test_p5_core_matrix_has_five_matched_pairs_for_t1_through_t9() -> None:
@@ -87,3 +88,43 @@ def test_p5_uncertainty_model_keeps_physical_units(tmp_path) -> None:
     assert metrics["altitude_loss_m_uncertainty"] == 0.01
     assert metrics["peak_tilt_rad_uncertainty"] == 0.001
     assert PHYSICAL_METRICS == {"altitude_loss_m", "peak_tilt_rad", "position_error_m"}
+
+
+def test_p5_adaptive_repeat_rule_records_both_trigger_types() -> None:
+    rows = []
+    for repeat, (legacy, dynamic) in enumerate(((10, 11), (10, 13)), start=1):
+        for mechanism, value in (("legacy_offboard", legacy), ("dynamic_external_mode", dynamic)):
+            rows.append(
+                {
+                    "validity": "VALID",
+                    "pair_id": f"pair-{repeat}",
+                    "cell_id": "cell",
+                    "mechanism": mechanism,
+                    "metric_ms": str(value),
+                    "metric_ms_uncertainty": "5",
+                }
+            )
+    config = {
+        "metrics": ["metric_ms"],
+        "confidence_interval": {"resamples": 100},
+        "adaptation": {
+            "initial_paired_repeats": 5,
+            "maximum_paired_repeats": 10,
+            "increase_when_coefficient_of_variation_exceeds": 0.2,
+            "increase_when_difference_below_combined_uncertainty": True,
+        },
+    }
+    result = compare(rows, config)
+    comparison = result["comparisons"][0]
+    assert comparison["adaptive_repeat_trigger"] is True
+    assert comparison["difference_below_combined_uncertainty"] is True
+    assert comparison["coefficient_of_variation"] > 0.2
+    assert result["adaptive_repeat_decision"]["triggered_cells"] == [
+        {
+            "cell_id": "cell",
+            "reasons": [
+                "coefficient_of_variation",
+                "difference_below_combined_uncertainty",
+            ],
+        }
+    ]

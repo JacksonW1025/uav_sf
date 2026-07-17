@@ -1,0 +1,29 @@
+schema_version: "1.0"
+paired_repeats: 10
+mechanisms: [legacy_offboard, dynamic_external_mode]
+adaptation_provenance:
+  initial_matrix: experiments/probes/p5/scenario_matrix.yaml
+  initial_paired_repeats: 5
+  decision: experiments/probes/p5/adaptive_repeat_decision.json
+  rule: CV greater than 20 percent or paired difference below combined uncertainty
+locked_execution:
+  behavior_core: CommonBehaviorCore
+  vehicle: x500
+  world: default
+  observation_profile: TRANSITION
+  queue_length: 4
+  fallback_mode: HOLD
+  fault_offset_s: 2.0
+  maximum_duration_s: 150
+cells:
+  - {cell_id: p5_t1_hover, transition_class: T1, context: hover, action: admission, applicable: both}
+  - {cell_id: p5_t2_straight, transition_class: T2, context: straight, action: completion_hold, applicable: both}
+  - {cell_id: p5_t3_descent, transition_class: T3, context: descent, action: completion_land, applicable: both}
+  - {cell_id: p5_t4_turn, transition_class: T4, context: turn, action: graceful_shutdown, applicable: both}
+  - {cell_id: p5_t5_hover, transition_class: T5, context: hover, action: process_crash, applicable: both}
+  - {cell_id: p5_t6_straight, transition_class: T6, context: straight, action: process_pause, applicable: both}
+  - {cell_id: p5_t7_turn, transition_class: T7, context: turn, action: liveness_on_setpoint_off, applicable: both}
+  - {cell_id: p5_t8_descent, transition_class: T8, context: descent, action: liveness_off_setpoint_on, applicable: both}
+  - {cell_id: p5_t9_hover, transition_class: T9, context: hover, action: graceful_release_reentry, applicable: both}
+extensions:
+  - {transition_class: T10, context: hover, action: repeated_a_b_a, gate_blocking: false}

@@ -1,0 +1,62 @@
+{
+  "analysis_config": "experiments/probes/p5/pre_registered_analysis.yaml",
+  "analysis_config_sha256": "b9b6c4c1974f88dd6ed08d727cadb06ad4c0a433121d7b2683211da371303979",
+  "decision": "INCREASE_TRIGGERED_CELLS_TO_MAXIMUM",
+  "initial_complete_pair_count": 35,
+  "initial_paired_repeats": 5,
+  "input_results": "runs/p5/accepted_seeded_v2.tsv",
+  "input_results_sha256": "381b5441a3f070f48050d86c691839966f907df6d3a2069d6358bf70e6984b24",
+  "maximum_paired_repeats": 10,
+  "schema_version": "1.0",
+  "triggered_cells": [
+    {
+      "cell_id": "p5_t1_hover",
+      "reasons": [
+        "coefficient_of_variation",
+        "difference_below_combined_uncertainty"
+      ]
+    },
+    {
+      "cell_id": "p5_t2_straight",
+      "reasons": [
+        "coefficient_of_variation",
+        "difference_below_combined_uncertainty"
+      ]
+    },
+    {
+      "cell_id": "p5_t4_turn",
+      "reasons": [
+        "coefficient_of_variation",
+        "difference_below_combined_uncertainty"
+      ]
+    },
+    {
+      "cell_id": "p5_t5_hover",
+      "reasons": [
+        "coefficient_of_variation",
+        "difference_below_combined_uncertainty"
+      ]
+    },
+    {
+      "cell_id": "p5_t6_straight",
+      "reasons": [
+        "coefficient_of_variation",
+        "difference_below_combined_uncertainty"
+      ]
+    },
+    {
+      "cell_id": "p5_t7_turn",
+      "reasons": [
+        "coefficient_of_variation",
+        "difference_below_combined_uncertainty"
+      ]
+    },
+    {
+      "cell_id": "p5_t8_descent",
+      "reasons": [
+        "coefficient_of_variation",
+        "difference_below_combined_uncertainty"
+      ]
+    }
+  ]
+}
