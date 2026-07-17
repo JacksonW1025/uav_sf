@@ -86,7 +86,9 @@ def execution_plan(matrix: dict) -> list[dict]:
 def write_plan(rows: list[dict], output: Path) -> None:
     output.parent.mkdir(parents=True, exist_ok=True)
     with output.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(rows[0]), delimiter="\t")
+        writer = csv.DictWriter(
+            handle, fieldnames=list(rows[0]), delimiter="\t", lineterminator="\n"
+        )
         writer.writeheader()
         writer.writerows(rows)
 
@@ -131,7 +133,10 @@ def environment_for(row: dict[str, Any], campaign_root: Path, attempt_root: Path
                 / "ros2_ws_humble_live/install/route_transition_external_mode/lib/route_transition_external_mode/route_transition_external_mode"
             ),
             "ROUTE_EXPERIMENT_FAULT_OFFSET_S": str(row["fault_offset_s"]),
-            "ROUTE_EXPERIMENT_MIN_CLOCK_SAMPLES": "25",
+            # The bridge discards startup backlog before fitting. Forty monitor
+            # samples leave at least the preregistered 20 usable fit samples even
+            # for Hold-replacement runs with a shorter post-takeoff lifecycle.
+            "ROUTE_EXPERIMENT_MIN_CLOCK_SAMPLES": "40",
             "ROUTE_EXPERIMENT_BEHAVIOR_CONTEXT": str(row["context"]),
             "ROUTE_EXPERIMENT_SIMULATION_SEED": str(row["simulation_seed"]),
             "ROUTE_EXPERIMENT_SDLOG_PROFILE": "0",
@@ -480,7 +485,9 @@ def write_results(rows: list[dict[str, Any]], output: Path) -> None:
             if key not in fieldnames:
                 fieldnames.append(key)
     with output.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fieldnames, delimiter="\t")
+        writer = csv.DictWriter(
+            handle, fieldnames=fieldnames, delimiter="\t", lineterminator="\n"
+        )
         writer.writeheader()
         writer.writerows(rows)
 

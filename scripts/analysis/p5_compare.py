@@ -184,7 +184,9 @@ def main() -> int:
         "effect_direction", "interpretation",
     ]
     with args.paired_output.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fieldnames, delimiter="\t")
+        writer = csv.DictWriter(
+            handle, fieldnames=fieldnames, delimiter="\t", lineterminator="\n"
+        )
         writer.writeheader()
         writer.writerows(result["comparisons"])
     args.summary.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")

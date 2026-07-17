@@ -9,6 +9,7 @@ from scripts.probes.p5_runner import (
     PHYSICAL_METRICS,
     _metric_row,
     command_for,
+    environment_for,
     execution_plan,
     load_matrix,
 )
@@ -136,3 +137,13 @@ def test_dynamic_adapter_replaces_hold_for_matched_internal_fallback() -> None:
         root / "scripts/adapters/external_mode_adapter/include/route_transition_mode.hpp"
     ).read_text(encoding="utf-8")
     assert ".replaceInternalMode(ModeBase::kModeIDLoiter)" in header
+
+
+def test_p5_runtime_collects_clock_samples_after_backlog_discard(tmp_path) -> None:
+    row = next(
+        row
+        for row in execution_plan(load_matrix())
+        if row["transition_class"] == "T5" and row["mechanism"] == "dynamic_external_mode"
+    )
+    environment = environment_for(row, tmp_path / "campaign", tmp_path / "attempt")
+    assert environment["ROUTE_EXPERIMENT_MIN_CLOCK_SAMPLES"] == "40"
