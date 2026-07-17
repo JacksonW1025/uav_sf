@@ -19,6 +19,16 @@ acceptance:
 interpretation:
   measurable_difference_requires_exceeding_combined_uncertainty: true
   global_safety_ranking_forbidden: true
+uncertainty_model:
+  timing:
+    source: per_run_clock_bridge_uncertainty
+    unit: ms
+  physical_resolution:
+    source: conservative_locked_monitor_resolution
+    altitude_loss_m: 0.01
+    peak_tilt_rad: 0.001
+    position_error_m: 0.01
+  note: Physical quantities use same-unit resolution bounds and never inherit timing uncertainty.
 metrics:
   - registration_admission_latency_ms
   - activation_latency_ms

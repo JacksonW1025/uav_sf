@@ -5,7 +5,13 @@ from pathlib import Path
 
 import yaml
 
-from scripts.probes.p5_runner import command_for, execution_plan, load_matrix
+from scripts.probes.p5_runner import (
+    PHYSICAL_METRICS,
+    _metric_row,
+    command_for,
+    execution_plan,
+    load_matrix,
+)
 
 
 def test_p5_core_matrix_has_five_matched_pairs_for_t1_through_t9() -> None:
@@ -55,3 +61,29 @@ def test_p5_dispatch_preserves_preregistered_fault_and_channel_actions() -> None
     assert command_for(by_class["T8"])[-3:-1] == ["off", "on"]
     assert command_for(by_class["T3"]) is None
     assert command_for(by_class["T9"]) is None
+
+
+def test_p5_uncertainty_model_keeps_physical_units(tmp_path) -> None:
+    (tmp_path / "clock_bridge.json").write_text(
+        '{"uncertainty_ns": 42000000}\n', encoding="utf-8"
+    )
+    (tmp_path / "raw").mkdir()
+    (tmp_path / "raw/monitor_result.json").write_text(
+        '{"failure_detection_latency_ms": 10, "physical_recovery": '
+        '{"altitude_loss_m": 0.2, "peak_tilt_rad": 0.03}}\n',
+        encoding="utf-8",
+    )
+    oracle = {
+        "transition": {"timestamp_us": 1000},
+        "clauses": {
+            "installation": {"metrics": {"first_target_consumption_us": 2000, "first_target_writer_us": 2000, "installation_latency_ms": 1}},
+            "revocation": {"metrics": {"revocation_latency_ms": 1}},
+            "continuity": {"metrics": {"maximum_unowned_window_ms": 1}},
+            "exclusivity": {"metrics": {"old_new_epoch_overlap": False}},
+        },
+    }
+    metrics = _metric_row({"transition_class": "T5"}, tmp_path, oracle)
+    assert metrics["failure_detection_latency_ms_uncertainty"] == 42.0
+    assert metrics["altitude_loss_m_uncertainty"] == 0.01
+    assert metrics["peak_tilt_rad_uncertainty"] == 0.001
+    assert PHYSICAL_METRICS == {"altitude_loss_m", "peak_tilt_rad", "position_error_m"}

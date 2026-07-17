@@ -20,6 +20,7 @@ ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_MATRIX = ROOT / "experiments" / "probes" / "p5" / "scenario_matrix.yaml"
 DEFAULT_DISPOSITION = ROOT / "experiments" / "probes" / "p5" / "preflight_disposition.yaml"
 DEFAULT_RUN_ROOT = ROOT / "runs" / "p5" / "campaign"
+ANALYSIS = ROOT / "experiments" / "probes" / "p5" / "pre_registered_analysis.yaml"
 MINIMAL_LOGGER_TOPICS = ROOT / "config" / "phase_a2_minimal_logger_topics.txt"
 METRICS = (
     "registration_admission_latency_ms",
@@ -40,6 +41,8 @@ METRICS = (
     "position_error_m",
     "recovery_duration_ms",
 )
+
+PHYSICAL_METRICS = {"altitude_loss_m", "peak_tilt_rad", "position_error_m"}
 
 
 def load_matrix(path: Path = DEFAULT_MATRIX) -> dict:
@@ -305,9 +308,29 @@ def _metric_row(
             output["altitude_loss_m"] = float(physical["altitude_loss_m"])
         if physical.get("peak_tilt_rad") is not None:
             output["peak_tilt_rad"] = float(physical["peak_tilt_rad"])
+    analysis = yaml.safe_load(ANALYSIS.read_text(encoding="utf-8"))
+    physical_resolution = analysis["uncertainty_model"]["physical_resolution"]
     for metric in METRICS:
-        output[f"{metric}_uncertainty"] = uncertainty_ms if output[metric] != "" else ""
+        if output[metric] == "":
+            output[f"{metric}_uncertainty"] = ""
+        elif metric in PHYSICAL_METRICS:
+            output[f"{metric}_uncertainty"] = float(physical_resolution[metric])
+        else:
+            output[f"{metric}_uncertainty"] = uncertainty_ms
     return output
+
+
+def _refresh_accepted_metrics(
+    row: dict[str, Any], accepted: dict[str, Any]
+) -> dict[str, Any]:
+    """Recompute derived metrics without changing which preserved attempt was accepted."""
+    attempt_root = ROOT / str(accepted["artifact_root"])
+    oracle = run_selected_oracle(row, attempt_root)
+    refreshed = {**accepted, **_metric_row(row, attempt_root, oracle)}
+    (attempt_root.parent / "accepted_result.json").write_text(
+        json.dumps(refreshed, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    return refreshed
 
 
 def execute_plan(
@@ -323,7 +346,7 @@ def execute_plan(
         logical_root = campaign_root / row["run_id"]
         accepted_record = logical_root / "accepted_result.json"
         if accepted_record.exists():
-            results.append(_json(accepted_record))
+            results.append(_refresh_accepted_metrics(row, _json(accepted_record)))
             continue
         # A corrected validity rule may make a preserved, fully collected attempt
         # acceptable without rerunning SITL. Never promote a nonzero-return attempt.
