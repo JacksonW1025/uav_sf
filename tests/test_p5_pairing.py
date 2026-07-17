@@ -5,7 +5,7 @@ from pathlib import Path
 
 import yaml
 
-from scripts.probes.p5_runner import execution_plan, load_matrix
+from scripts.probes.p5_runner import command_for, execution_plan, load_matrix
 
 
 def test_p5_core_matrix_has_five_matched_pairs_for_t1_through_t9() -> None:
@@ -41,3 +41,17 @@ def test_p5_preflight_disposition_covers_every_preregistered_cell() -> None:
     assert matched.isdisjoint(not_applicable)
     assert matched | not_applicable == planned
     assert all(item["mechanism_basis"] for item in disposition["not_applicable"])
+
+
+def test_p5_dispatch_preserves_preregistered_fault_and_channel_actions() -> None:
+    rows = execution_plan(load_matrix())
+    by_class = {}
+    for row in rows:
+        by_class.setdefault(row["transition_class"], row)
+    assert command_for(by_class["T4"])[-2] == "sigterm"
+    assert command_for(by_class["T5"])[-2] == "sigkill"
+    assert command_for(by_class["T6"])[-2] == "sigstop_sigcont"
+    assert command_for(by_class["T7"])[-3:-1] == ["on", "off"]
+    assert command_for(by_class["T8"])[-3:-1] == ["off", "on"]
+    assert command_for(by_class["T3"]) is None
+    assert command_for(by_class["T9"]) is None
