@@ -11,6 +11,7 @@ SETPOINT="${ROUTE_EXPERIMENT_SETPOINT:-on}"
 FAULT_OFFSET_S="${ROUTE_EXPERIMENT_FAULT_OFFSET_S:-0.0}"
 MIN_CLOCK_SAMPLES="${ROUTE_EXPERIMENT_MIN_CLOCK_SAMPLES:-0}"
 BEHAVIOR_CONTEXT="${ROUTE_EXPERIMENT_BEHAVIOR_CONTEXT:-hover}"
+POST_OBSERVATION_CAPTURE_S="${ROUTE_EXPERIMENT_POST_OBSERVATION_CAPTURE_S:-0.75}"
 LOGGER_PROFILE="${ROUTE_EXPERIMENT_SDLOG_PROFILE:-1}"
 LOGGER_TOPICS_FILE="${ROUTE_EXPERIMENT_LOGGER_TOPICS_FILE:-}"
 SIMULATION_SEED="${ROUTE_EXPERIMENT_SIMULATION_SEED:-1}"
@@ -224,6 +225,12 @@ wait "${MONITOR_PID}"
 MONITOR_STATUS=$?
 set -e
 MONITOR_PID=""
+if [[ "${EXPERIMENT_KIND}" == "p3" ]] && ((MONITOR_STATUS == 0)); then
+  # The monitor closes physical measurement before requesting Hold.  Preserve a
+  # full post-transition writer window before process and PX4 teardown so the
+  # fixed +/-500 ms route-oracle window is evidence-complete.
+  sleep "${POST_OBSERVATION_CAPTURE_S}"
+fi
 touch "${CONTROL_DIR}/stop"
 stop_process "${PRODUCER_PID}" INT
 PRODUCER_PID=""
