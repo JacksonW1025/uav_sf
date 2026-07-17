@@ -48,11 +48,10 @@ source /opt/ros/humble/setup.bash
 source "${REPO_ROOT}/ros2_ws_humble_live/install/setup.bash"
 set -u
 
-colcon build \
+colcon --log-base "${WORKSPACE}/log" build \
   --base-paths "${AS2_DIR}" "${WORKSPACE}/src/as2_platform_pixhawk" \
   --build-base "${WORKSPACE}/build" \
   --install-base "${WORKSPACE}/install" \
-  --log-base "${WORKSPACE}/log" \
   --packages-up-to as2_platform_pixhawk \
   --cmake-args -DBUILD_TESTING=OFF
 
