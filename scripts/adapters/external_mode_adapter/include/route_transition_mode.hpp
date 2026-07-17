@@ -9,6 +9,7 @@
 #include <memory>
 #include <px4_ros2/components/mode.hpp>
 #include <px4_ros2/control/setpoint_types/experimental/trajectory.hpp>
+#include <px4_msgs/msg/vehicle_command.hpp>
 #include <rclcpp/rclcpp.hpp>
 
 namespace uav_sf {
@@ -20,6 +21,8 @@ class RouteTransitionMode final : public px4_ros2::ModeBase {
   {
     modeRequirements().local_position = true;
     trajectory_setpoint_ = std::make_shared<px4_ros2::TrajectorySetpointType>(*this);
+    command_publisher_ =
+        node.create_publisher<px4_msgs::msg::VehicleCommand>("/fmu/in/vehicle_command", 10);
     setSetpointUpdateRate(20.f);
   }
 
@@ -49,6 +52,13 @@ class RouteTransitionMode final : public px4_ros2::ModeBase {
 
   uint64_t registrationInstanceId() const { return registration_instance_id_; }
 
+  void requestGracefulShutdown() { graceful_shutdown_requested_ = true; }
+
+  bool gracefulShutdownComplete() const
+  {
+    return graceful_shutdown_requested_ && !isActive();
+  }
+
   void updateSetpoint(float dt_s) override
   {
     if (!std::isfinite(dt_s) || dt_s < 0.f) {
@@ -56,6 +66,16 @@ class RouteTransitionMode final : public px4_ros2::ModeBase {
       return;
     }
     const double elapsed_s = (node().get_clock()->now() - activation_time_).seconds();
+    if (graceful_shutdown_requested_) {
+      requestInternalHold();
+      if (!completion_reported_) {
+        completion_reported_ = true;
+        RCLCPP_INFO(node().get_logger(),
+                    "{\"event_type\":\"external_mode_completed\",\"result\":\"success\",\"reason\":\"sigterm_graceful_shutdown\"}");
+        completed(px4_ros2::Result::Success);
+      }
+      return;
+    }
     const char* selected_context = std::getenv("UAV_SF_BEHAVIOR_CONTEXT");
     if (selected_context == nullptr && std::getenv("UAV_SF_HOVER_ONLY") != nullptr) {
       selected_context = "hover";
@@ -164,8 +184,25 @@ class RouteTransitionMode final : public px4_ros2::ModeBase {
     completed(px4_ros2::Result::ModeFailureOther);
   }
 
+  void requestInternalHold()
+  {
+    px4_msgs::msg::VehicleCommand command{};
+    command.timestamp = static_cast<uint64_t>(node().get_clock()->now().nanoseconds() / 1000);
+    command.command = px4_msgs::msg::VehicleCommand::VEHICLE_CMD_DO_SET_MODE;
+    command.param1 = 1.f;
+    command.param2 = 4.f;
+    command.param3 = 3.f;
+    command.target_system = 1;
+    command.target_component = 1;
+    command.source_system = 1;
+    command.source_component = 191;
+    command.from_external = true;
+    command_publisher_->publish(command);
+  }
+
   rclcpp::Time activation_time_{};
   std::shared_ptr<px4_ros2::TrajectorySetpointType> trajectory_setpoint_;
+  rclcpp::Publisher<px4_msgs::msg::VehicleCommand>::SharedPtr command_publisher_;
   uint64_t sequence_{0};
   const uint64_t registration_instance_id_{
       static_cast<uint64_t>(std::chrono::steady_clock::now().time_since_epoch().count())};
@@ -173,6 +210,7 @@ class RouteTransitionMode final : public px4_ros2::ModeBase {
   bool completion_reported_{false};
   bool last_health_reply_enabled_{true};
   bool last_setpoint_enabled_{true};
+  bool graceful_shutdown_requested_{false};
 };
 
 }  // namespace uav_sf
