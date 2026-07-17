@@ -15,19 +15,19 @@
 - Current pilots: v4 Dynamic T5 attempt 2 remains revision-matched and valid;
   v5 Dynamic T1 capture attempt 1 is valid with 21 retained clock samples, a
   complete selected critical window, and a passing P5 Oracle verdict
-- Completed paired cells: v5 `p5_t1_hover_pair_r1` and
-  `p5_t1_hover_pair_r2`; all four sides were valid on attempt 1 with matched
+- Completed paired cells: v5 `p5_t1_hover_pair_r1` through
+  `p5_t1_hover_pair_r3`; all six sides were valid on attempt 1 with matched
   seed and scenario identities
 - Partial paired cells: none in v5; v4 `p5_t1_hover_pair_r1` (Offboard valid; Dynamic
   attempts 1 and 2 are measurement-unknown with 18 and 17 retained clock
   samples); no v4 pair is accepted
-- Pending paired cells: 33 v5 pairs beginning with `p5_t1_hover_pair_r3`; no v3 or v4
+- Pending paired cells: 32 v5 pairs beginning with `p5_t1_hover_pair_r4`; no v3 or v4
   side is reused across the observation-capture revision
 - Known environment failures: three recovered v3 Dynamic T1 PX4
   abort/incomplete attempts plus v4 pilot attempt 1, which failed before PX4
   readiness because a relative artifact root was resolved inside the PX4
   subshell; all are preserved as environment evidence, never SUT or Oracle
   violations
-- Next exact action: after checkpointing the second valid pair, run both missing
-  sides of `p5_t1_hover_pair_r3` as the next bounded v5 matrix batch
-- Last update: 2026-07-17T13:34:48-07:00
+- Next exact action: after checkpointing the third valid pair, run both missing
+  sides of `p5_t1_hover_pair_r4` as the next bounded v5 matrix batch
+- Last update: 2026-07-17T13:37:59-07:00
