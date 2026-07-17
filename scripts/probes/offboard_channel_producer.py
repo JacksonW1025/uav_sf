@@ -154,9 +154,14 @@ def run(events_path: Path, control_dir: Path, timeout_s: float) -> int:
 
             heartbeat_enabled = not (control_dir / "heartbeat.off").exists()
             setpoint_enabled = not (control_dir / "setpoint.off").exists()
+            active_context = (
+                self.behavior_context
+                if (control_dir / "context.active").exists()
+                else "hover"
+            )
             self.adapter.publish_channels(
                 self.core.command_for_context(
-                    self.behavior_context, now - self.started, now - self.started
+                    active_context, now - self.started, now - self.started
                 ),
                 producer_timestamp_us=timestamp_us,
                 heartbeat_enabled=heartbeat_enabled,

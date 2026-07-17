@@ -62,6 +62,7 @@ class RouteTransitionMode final : public px4_ros2::ModeBase {
     }
     const char* duration_value = std::getenv("UAV_SF_ACTIVE_DURATION_S");
     const double completion_s = duration_value == nullptr ? 16.0 : std::strtod(duration_value, nullptr);
+    const bool context_active = contextMarkerActive();
     const bool log_every_setpoint = std::getenv("UAV_SF_LOG_EVERY_SETPOINT") != nullptr;
     const bool health_reply_enabled = channelEnabled("health_reply.off");
     const bool setpoint_enabled = channelEnabled("setpoint.off");
@@ -79,15 +80,15 @@ class RouteTransitionMode final : public px4_ros2::ModeBase {
     const char* phase = "hover";
     std::optional<float> yaw = 0.f;
 
-    if (selected_context != nullptr && std::strcmp(selected_context, "straight") == 0) {
+    if (context_active && selected_context != nullptr && std::strcmp(selected_context, "straight") == 0) {
       velocity = Eigen::Vector3f{0.5f, 0.f, 0.f};
       phase = "straight_line";
-    } else if (selected_context != nullptr && std::strcmp(selected_context, "turn") == 0) {
+    } else if (context_active && selected_context != nullptr && std::strcmp(selected_context, "turn") == 0) {
       const float selected_yaw = 0.15f * static_cast<float>(elapsed_s);
       velocity = Eigen::Vector3f{0.3f * std::cos(selected_yaw), 0.3f * std::sin(selected_yaw), 0.f};
       yaw = selected_yaw;
       phase = "low_speed_turn";
-    } else if (selected_context != nullptr && std::strcmp(selected_context, "descent") == 0) {
+    } else if (context_active && selected_context != nullptr && std::strcmp(selected_context, "descent") == 0) {
       velocity = Eigen::Vector3f{0.f, 0.f, 0.2f};
       phase = "stable_descent";
     } else if (selected_context == nullptr && elapsed_s >= 3.0 && elapsed_s < 8.0) {
@@ -130,6 +131,13 @@ class RouteTransitionMode final : public px4_ros2::ModeBase {
     const char* directory = std::getenv("UAV_SF_CHANNEL_CONTROL_DIR");
     return directory == nullptr
            || !std::filesystem::exists(std::filesystem::path(directory) / disabled_marker);
+  }
+
+  bool contextMarkerActive() const
+  {
+    const char* directory = std::getenv("UAV_SF_CHANNEL_CONTROL_DIR");
+    return directory == nullptr
+           || std::filesystem::exists(std::filesystem::path(directory) / "context.active");
   }
 
   void reportFailure(const char* reason)

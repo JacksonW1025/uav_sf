@@ -405,6 +405,7 @@ def run(args: argparse.Namespace) -> int:
                     self.ready_monotonic_ns = time.monotonic_ns()
                     self.ready_ros_time_ns = self.get_clock().now().nanoseconds
                     self.initial_altitude_m = -float(self.position.z) if self.position else None
+                    (args.control_dir / "context.active").touch()
                     if args.experiment_kind == "p3":
                         self._enable_test_channels()
                     args.ready_marker.touch()
