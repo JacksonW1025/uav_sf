@@ -163,6 +163,7 @@ else
   PRODUCER_PID=$!
   (
     while [[ ! -f "${CONTROL_DIR}/stop" ]]; do sleep 0.1; done
+    sleep 1.0
     kill -INT "${PRODUCER_PID}" 2>/dev/null || true
   ) &
   STOP_WATCHER_PID=$!

@@ -67,6 +67,15 @@ class RouteTransitionMode final : public px4_ros2::ModeBase {
     const bool health_reply_enabled = channelEnabled("health_reply.off");
     const bool setpoint_enabled = channelEnabled("setpoint.off");
     setArmingCheckReplyEnabled(health_reply_enabled);
+    if (controlMarkerExists("stop")) {
+      if (!completion_reported_) {
+        completion_reported_ = true;
+        RCLCPP_INFO(node().get_logger(),
+                    "{\"event_type\":\"external_mode_completed\",\"result\":\"success\",\"reason\":\"controlled_cleanup\"}");
+        completed(px4_ros2::Result::Success);
+      }
+      return;
+    }
     if (health_reply_enabled != last_health_reply_enabled_
         || setpoint_enabled != last_setpoint_enabled_) {
       RCLCPP_INFO(node().get_logger(),
@@ -128,9 +137,7 @@ class RouteTransitionMode final : public px4_ros2::ModeBase {
  private:
   bool channelEnabled(const char* disabled_marker) const
   {
-    const char* directory = std::getenv("UAV_SF_CHANNEL_CONTROL_DIR");
-    return directory == nullptr
-           || !std::filesystem::exists(std::filesystem::path(directory) / disabled_marker);
+    return !controlMarkerExists(disabled_marker);
   }
 
   bool contextMarkerActive() const
@@ -138,6 +145,13 @@ class RouteTransitionMode final : public px4_ros2::ModeBase {
     const char* directory = std::getenv("UAV_SF_CHANNEL_CONTROL_DIR");
     return directory == nullptr
            || std::filesystem::exists(std::filesystem::path(directory) / "context.active");
+  }
+
+  bool controlMarkerExists(const char* marker) const
+  {
+    const char* directory = std::getenv("UAV_SF_CHANNEL_CONTROL_DIR");
+    return directory != nullptr
+           && std::filesystem::exists(std::filesystem::path(directory) / marker);
   }
 
   void reportFailure(const char* reason)
