@@ -158,6 +158,9 @@ if [[ "${P0_HOVER_ONLY:-0}" == "1" ]]; then
   runner_args+=(--hover-only)
   export UAV_SF_BEHAVIOR_CONTEXT=hover
 fi
+if [[ -n "${P0_POST_DISARM_CAPTURE_S:-}" ]]; then
+  runner_args+=(--post-disarm-capture "${P0_POST_DISARM_CAPTURE_S}")
+fi
 if [[ -n "${P0_ACTIVE_DURATION_S:-}" ]]; then
   export UAV_SF_ACTIVE_DURATION_S="${P0_ACTIVE_DURATION_S}"
 fi
@@ -170,6 +173,9 @@ case "${SCENARIO}" in
     external_runner_args=(--scenario external --output "${RESULT_FILE}" --timeout 180)
     if [[ -n "${P0_ACTIVE_DURATION_S:-}" ]]; then
       external_runner_args+=(--active-duration "${P0_ACTIVE_DURATION_S}")
+    fi
+    if [[ -n "${P0_POST_DISARM_CAPTURE_S:-}" ]]; then
+      external_runner_args+=(--post-disarm-capture "${P0_POST_DISARM_CAPTURE_S}")
     fi
     python3 "${REPO_ROOT}/scripts/probes/p0_route_runner.py" "${external_runner_args[@]}" \
       >"${RAW_DIR}/runner.log" 2>&1 &

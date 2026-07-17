@@ -167,6 +167,7 @@ def environment_for(row: dict[str, Any], campaign_root: Path, attempt_root: Path
             "P0_OBSERVATION_PROFILE": "TRANSITION",
             "P0_UORB_QUEUE_LENGTH": "4",
             "P0_SIMULATION_SEED": str(row["simulation_seed"]),
+            "P0_POST_DISARM_CAPTURE_S": "4",
         }
     )
     if row["transition_class"] == "T1":

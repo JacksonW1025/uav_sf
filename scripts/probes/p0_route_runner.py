@@ -43,6 +43,7 @@ def run(
     timeout_s: float,
     active_duration_s: float | None = None,
     hover_only: bool = False,
+    post_disarm_capture_s: float = 0.0,
 ) -> int:
     try:
         import rclpy
@@ -80,6 +81,7 @@ def run(
             self.active_started = 0.0
             self.active_duration_s = active_duration_s
             self.hover_only = hover_only
+            self.post_disarm_capture_s = post_disarm_capture_s
             self.timesync_status: Optional[Any] = None
 
             qos = QoSProfile(
@@ -333,7 +335,18 @@ def run(
             if self.state == "RTL":
                 self._command_periodic(VehicleCommand.VEHICLE_CMD_NAV_RETURN_TO_LAUNCH)
                 if self.armed_seen and not armed:
-                    self._finish("PASS", "normal route handoff completed and vehicle disarmed")
+                    if self.post_disarm_capture_s > 0.0:
+                        self._transition("POST_DISARM_CLOCK_CAPTURE")
+                    else:
+                        self._finish("PASS", "normal route handoff completed and vehicle disarmed")
+                return
+
+            if self.state == "POST_DISARM_CLOCK_CAPTURE":
+                if now - self.state_started >= self.post_disarm_capture_s:
+                    self._finish(
+                        "PASS",
+                        "normal route handoff completed, vehicle disarmed, and clock capture extended",
+                    )
 
     rclpy.init()
     node = Runner()
@@ -352,6 +365,7 @@ def main() -> int:
     parser.add_argument("--timeout", type=float, default=180.0)
     parser.add_argument("--active-duration", type=float)
     parser.add_argument("--hover-only", action="store_true")
+    parser.add_argument("--post-disarm-capture", type=float, default=0.0)
     args = parser.parse_args()
     return run(
         args.scenario,
@@ -359,6 +373,7 @@ def main() -> int:
         args.timeout,
         active_duration_s=args.active_duration,
         hover_only=args.hover_only,
+        post_disarm_capture_s=args.post_disarm_capture,
     )
 
 

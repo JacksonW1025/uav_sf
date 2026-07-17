@@ -157,6 +157,7 @@ def test_p5_runtime_collects_clock_samples_after_backlog_discard(tmp_path) -> No
     assert environment["P0_BUILD_PROVENANCE"].endswith(
         "experiments/probes/p5/canonical_control_build_provenance.json"
     )
+    assert environment["P0_POST_DISARM_CAPTURE_S"] == "4"
 
 
 def test_p5_exact_run_selector_rejects_unknown_ids() -> None:
