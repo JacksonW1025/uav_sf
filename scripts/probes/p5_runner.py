@@ -348,7 +348,7 @@ def execute_plan(
             validity, reasons, oracle = classify_attempt(row, attempt_root, completed.returncode)
             attempt_record = {
                 "attempt": attempt,
-                "artifact_root": str(attempt_root.relative_to(ROOT)),
+                "artifact_root": str(attempt_root.resolve().relative_to(ROOT)),
                 "return_code": completed.returncode,
                 "started_time_ns": started,
                 "finished_time_ns": time.time_ns(),
@@ -366,7 +366,7 @@ def execute_plan(
                     "validity": validity,
                     "accepted_attempt": attempt,
                     "environment_retry_count": attempt - 1,
-                    "artifact_root": str(attempt_root.relative_to(ROOT)),
+                    "artifact_root": str(attempt_root.resolve().relative_to(ROOT)),
                     "clock_status": "VALID",
                     "critical_window": "COMPLETE",
                     **_metric_row(row, attempt_root, oracle),
