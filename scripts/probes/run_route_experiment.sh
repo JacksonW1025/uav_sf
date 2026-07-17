@@ -140,7 +140,8 @@ start_monitor() {
 }
 
 if [[ "${OBJECT}" == "offboard" ]]; then
-  python3 "${REPO_ROOT}/scripts/probes/offboard_channel_producer.py" \
+  UAV_SF_BEHAVIOR_CONTEXT="${BEHAVIOR_CONTEXT}" \
+    python3 "${REPO_ROOT}/scripts/probes/offboard_channel_producer.py" \
     --events "${PRODUCER_EVENTS}" --control-dir "${CONTROL_DIR}" --timeout 150 \
     >"${RAW_DIR}/producer.log" 2>&1 &
   PRODUCER_PID=$!
