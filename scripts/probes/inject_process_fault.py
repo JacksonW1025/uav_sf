@@ -26,6 +26,7 @@ def main() -> int:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--event-log", type=Path, required=True)
     parser.add_argument("--pause-seconds", type=float, default=2.0)
+    parser.add_argument("--delay-seconds", type=float, default=0.0)
     parser.add_argument("--timeout", type=float, default=60.0)
     args = parser.parse_args()
 
@@ -34,6 +35,11 @@ def main() -> int:
         if time.monotonic() >= deadline:
             raise SystemExit("fault-ready marker timeout")
         time.sleep(0.05)
+
+    ready_observed_monotonic_ns = time.monotonic_ns()
+    if args.delay_seconds < 0:
+        raise SystemExit("fault delay must be non-negative")
+    time.sleep(args.delay_seconds)
 
     ros_time_ns = time.time_ns()
     monotonic_ns = time.monotonic_ns()
@@ -50,6 +56,8 @@ def main() -> int:
         "ros_time_ns": ros_time_ns,
         "host_monotonic_time": monotonic_ns,
         "monotonic_ns": monotonic_ns,
+        "ready_observed_monotonic_ns": ready_observed_monotonic_ns,
+        "requested_delay_seconds": args.delay_seconds,
         "pause_seconds": args.pause_seconds if args.fault == "sigstop_sigcont" else None,
     }
     if args.fault == "sigstop_sigcont":

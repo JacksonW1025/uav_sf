@@ -8,6 +8,8 @@ RUN_ID="${ROUTE_EXPERIMENT_RUN_ID:?ROUTE_EXPERIMENT_RUN_ID is required}"
 FAULT_CLASS="${ROUTE_EXPERIMENT_FAULT_CLASS:-}"
 HEARTBEAT_OR_HEALTH="${ROUTE_EXPERIMENT_HEARTBEAT_OR_HEALTH:-on}"
 SETPOINT="${ROUTE_EXPERIMENT_SETPOINT:-on}"
+FAULT_OFFSET_S="${ROUTE_EXPERIMENT_FAULT_OFFSET_S:-0.0}"
+MIN_CLOCK_SAMPLES="${ROUTE_EXPERIMENT_MIN_CLOCK_SAMPLES:-0}"
 
 set +u
 source "${ROS_DISTRO_SETUP:-/opt/ros/jazzy/setup.bash}"
@@ -123,6 +125,7 @@ monitor_args=(
   --ready-marker "${READY_MARKER}"
   --heartbeat-or-health "${HEARTBEAT_OR_HEALTH}"
   --setpoint "${SETPOINT}"
+  --minimum-clock-samples "${MIN_CLOCK_SAMPLES}"
   --timeout 150
 )
 if [[ "${EXPERIMENT_KIND}" == "p2" ]]; then
@@ -159,6 +162,7 @@ fi
 if [[ "${EXPERIMENT_KIND}" == "p2" ]]; then
   python3 "${REPO_ROOT}/scripts/probes/inject_process_fault.py" \
     --pid "${PRODUCER_PID}" --fault "${FAULT_CLASS}" --ready "${READY_MARKER}" \
+    --delay-seconds "${FAULT_OFFSET_S}" \
     --output "${FAULT_RECORD}" --event-log "${FAULT_EVENTS}"
 fi
 

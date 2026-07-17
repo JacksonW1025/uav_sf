@@ -88,6 +88,7 @@ def run(args: argparse.Namespace) -> int:
             self.attitude_sample_count = 0
             self.peak_angular_rate_rad_s: float | None = None
             self.angular_rate_sample_count = 0
+            self.clock_sample_count = 0
             self.physical_measurement_closed = False
             self.exit_code: int | None = None
             qos = QoSProfile(
@@ -228,6 +229,7 @@ def run(args: argparse.Namespace) -> int:
                 )
 
         def _timesync(self, message: Any) -> None:
+            self.clock_sample_count += 1
             receive_ros_ns = self.get_clock().now().nanoseconds
             receive_monotonic_ns = time.monotonic_ns()
             outbound_us = int(message.timestamp)
@@ -399,7 +401,7 @@ def run(args: argparse.Namespace) -> int:
                     self._finish("FAIL", "source route exited before injection window")
                 elif now - self.state_started >= (
                     15.0 if args.experiment_kind == "p3" else 3.0
-                ):
+                ) and self.clock_sample_count >= args.minimum_clock_samples:
                     self.ready_monotonic_ns = time.monotonic_ns()
                     self.ready_ros_time_ns = self.get_clock().now().nanoseconds
                     self.initial_altitude_m = -float(self.position.z) if self.position else None
@@ -479,10 +481,13 @@ def main() -> int:
     parser.add_argument("--heartbeat-or-health", choices=("on", "off"), default="on")
     parser.add_argument("--setpoint", choices=("on", "off"), default="on")
     parser.add_argument("--observe-seconds", type=float, default=4.0)
+    parser.add_argument("--minimum-clock-samples", type=int, default=0)
     parser.add_argument("--timeout", type=float, default=150.0)
     args = parser.parse_args()
     if args.experiment_kind == "p2" and (args.fault_record is None or args.fault_class is None):
         parser.error("P2 requires --fault-record and --fault-class")
+    if args.minimum_clock_samples < 0:
+        parser.error("--minimum-clock-samples must be non-negative")
     return run(args)
 
 
