@@ -4,7 +4,7 @@
 - Current gate: P5 Differential Gate, initial five-pair matrix incomplete
 - Current campaign: `campaign_seeded_v5` — `INITIAL_MATRIX_IN_PROGRESS`; v3 and
   v4 are preserved and closed
-- Repository checkpoint commit: `1c22484552acfa41ad1f13f078a05209e6b96726`
+- Repository checkpoint commit: `246df27693419f7bdb8de53a19443ad0a52c438a`
 - Campaign revision identities: PX4 `4ae21a5e...`; PX4 binary `931320a0...`;
   observation patch `73555576...`; adapter `a02fc11` / binary `af5a02a2...`;
   Route Oracle `0.3`; trace schema `1.2`; threshold profile
@@ -34,4 +34,4 @@
   all are preserved as environment evidence, never SUT or Oracle violations
 - Next exact action: checkpoint the partial r5 evidence, then retry only its
   Offboard side as attempt 2; do not rerun valid Dynamic attempt 1
-- Last update: 2026-07-17T13:55:46-07:00
+- Last update: 2026-07-17T13:57:35-07:00
