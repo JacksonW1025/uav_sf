@@ -426,9 +426,6 @@ def run(args: argparse.Namespace) -> int:
                     self.fallback_monotonic_ns is not None or elapsed >= required
                 ):
                     self.physical_measurement_closed = True
-                    # Producer shutdown is cleanup after the fixed observation
-                    # window, never the mechanism used to create a P3 channel state.
-                    (args.control_dir / "stop").touch()
                     self.monitor_hold_requested = True
                     self._transition("REQUEST_HOLD")
                 return
@@ -444,11 +441,15 @@ def run(args: argparse.Namespace) -> int:
                     and int(self.status.nav_state)
                     == int(VehicleStatus.NAVIGATION_STATE_AUTO_LOITER)
                 ):
+                    # Stop the producer only after the internal route is observed;
+                    # cleanup must not create or widen the measured P3 handoff.
+                    (args.control_dir / "stop").touch()
                     if args.experiment_kind == "p3":
                         self._finish("PASS", "P3 observation completed and internal Hold installed")
                     else:
                         self._transition("CLEANUP_LAND")
                 elif now - self.state_started >= 2.0:
+                    (args.control_dir / "stop").touch()
                     if args.experiment_kind == "p3":
                         self._finish("PASS", "P3 observation completed after bounded cleanup handoff")
                     else:
