@@ -1,0 +1,14 @@
+schema_version: "1.0"
+seeds:
+  - {case_id: p0-a-offboard-admission, seed_id: p0.a.offboard, source: p0, source_case: P0-A, mechanism: legacy_offboard, transition_class: T1, context: hover, simulation_seed: 60101}
+  - {case_id: p0-b-dynamic-admission, seed_id: p0.b.dynamic, source: p0, source_case: P0-B, mechanism: dynamic_external_mode, transition_class: T1, context: straight, simulation_seed: 60102}
+  - {case_id: p0-c-dynamic-completion, seed_id: p0.c.dynamic, source: p0, source_case: P0-C, mechanism: dynamic_external_mode, transition_class: T2, context: descent, simulation_seed: 60103}
+  - {case_id: p2-offboard-sigterm, seed_id: p2.offboard.sigterm, source: p2, source_case: P2-SIGTERM-OFFBOARD, mechanism: legacy_offboard, transition_class: T4, context: turn, simulation_seed: 60201}
+  - {case_id: p2-dynamic-sigkill, seed_id: p2.dynamic.sigkill, source: p2, source_case: P2-SIGKILL-DYNAMIC, mechanism: dynamic_external_mode, transition_class: T5, context: hover, simulation_seed: 60202}
+  - {case_id: p2-dynamic-pause, seed_id: p2.dynamic.pause, source: p2, source_case: P2-PAUSE-DYNAMIC, mechanism: dynamic_external_mode, transition_class: T6, context: straight, simulation_seed: 60203}
+  - {case_id: p3-dynamic-setpoint-off, seed_id: p3.dynamic.setpoint_off, source: p3, source_case: P3-LIVENESS-ON-SETPOINT-OFF, mechanism: dynamic_external_mode, transition_class: T7, context: turn, simulation_seed: 60301}
+  - {case_id: p3-offboard-liveness-off, seed_id: p3.offboard.liveness_off, source: p3, source_case: P3-LIVENESS-OFF-SETPOINT-ON, mechanism: legacy_offboard, transition_class: T8, context: descent, simulation_seed: 60302}
+  - {case_id: p5-dynamic-turn-shutdown, seed_id: p5.dynamic.turn.shutdown, source: p5, source_case: P5-T4-TURN, mechanism: dynamic_external_mode, transition_class: T4, context: turn, simulation_seed: 60401}
+  - {case_id: mutant-install-delay-500, seed_id: mutant.install_delay.500, source: oracle_live_mutant, source_case: M-InstallDelay-500, mechanism: dynamic_external_mode, transition_class: T1, context: hover, simulation_seed: 60901, profile: oracle_validation_mutant, validation_only: true}
+  - {case_id: mutant-recovery-incomplete, seed_id: mutant.recovery_incomplete, source: oracle_live_mutant, source_case: M-RecoveryIncomplete, mechanism: dynamic_external_mode, transition_class: T5, context: hover, simulation_seed: 60902, profile: oracle_validation_mutant, validation_only: true}
+  - {case_id: mutant-old-route-late, seed_id: mutant.old_route_late, source: oracle_live_mutant, source_case: M-OldRouteLateConsumption, mechanism: legacy_offboard, transition_class: T2, context: hover, simulation_seed: 60903, profile: oracle_validation_mutant, validation_only: true}

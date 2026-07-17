@@ -5,6 +5,7 @@ from pathlib import Path
 
 import yaml
 
+from scripts.probes import p5_runner
 from scripts.probes.p5_runner import (
     PHYSICAL_METRICS,
     _metric_row,
@@ -13,6 +14,7 @@ from scripts.probes.p5_runner import (
     execution_plan,
     load_matrix,
 )
+from scripts.probes.p5_campaign_manifest import reconstruct
 from scripts.analysis.p5_compare import compare
 
 
@@ -147,3 +149,51 @@ def test_p5_runtime_collects_clock_samples_after_backlog_discard(tmp_path) -> No
     )
     environment = environment_for(row, tmp_path / "campaign", tmp_path / "attempt")
     assert environment["ROUTE_EXPERIMENT_MIN_CLOCK_SAMPLES"] == "40"
+
+
+def test_dynamic_adapter_unregisters_after_successful_completion() -> None:
+    root = Path(__file__).resolve().parents[1]
+    header = (
+        root / "scripts/adapters/external_mode_adapter/include/route_transition_mode.hpp"
+    ).read_text(encoding="utf-8")
+    source = (
+        root / "scripts/adapters/external_mode_adapter/src/external_mode.cpp"
+    ).read_text(encoding="utf-8")
+    assert "bool completionReported() const" in header
+    assert "node->getMode().completionReported()" in source
+    assert source.index("node.reset();") < source.index("rclcpp::shutdown();")
+
+
+def test_empty_campaign_reconstruction_has_only_pending_pairs(tmp_path: Path) -> None:
+    state = reconstruct(tmp_path)
+    assert state["planned_applicable_sides"] == 70
+    assert state["planned_applicable_pairs"] == 35
+    assert state["completed_cells"] == []
+    assert state["partially_completed_cells"] == []
+    assert len(state["pending_cells"]) == 35
+
+
+def test_campaign_batch_caps_environment_attempts_and_new_sides(
+    tmp_path: Path, monkeypatch
+) -> None:
+    rows = [
+        row
+        for row in execution_plan(load_matrix())
+        if row["transition_class"] in {"T5", "T6"}
+        and row["mechanism"] == "legacy_offboard"
+    ][:2]
+    monkeypatch.setattr(p5_runner, "command_for", lambda _row: ["/bin/true"])
+    monkeypatch.setattr(p5_runner, "ROOT", tmp_path)
+    results = p5_runner.execute_plan(
+        rows,
+        tmp_path,
+        5,
+        max_new_sides=1,
+        max_environment_attempts=3,
+        batch_time_limit_seconds=1200,
+    )
+    assert len(results) == 1
+    assert results[0]["validity"] == "BLOCKED_ENVIRONMENT"
+    first_attempts = list((tmp_path / rows[0]["run_id"]).glob("**/attempt_result.json"))
+    assert len(first_attempts) == 3
+    assert not (tmp_path / rows[1]["run_id"]).exists()

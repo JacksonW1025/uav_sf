@@ -61,6 +61,8 @@ class RouteTransitionMode final : public px4_ros2::ModeBase {
     return graceful_shutdown_requested_ && !isActive();
   }
 
+  bool completionReported() const { return completion_reported_; }
+
   void updateSetpoint(float dt_s) override
   {
     if (!std::isfinite(dt_s) || dt_s < 0.f) {

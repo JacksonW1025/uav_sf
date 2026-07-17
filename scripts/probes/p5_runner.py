@@ -231,6 +231,20 @@ def classify_attempt(
         if not path.is_file():
             reasons.append(f"missing_artifact:{path.name}")
     if reasons:
+        px4_log = attempt_root / "raw/px4.log"
+        px4_text = (
+            px4_log.read_text(encoding="utf-8", errors="replace")
+            if px4_log.exists()
+            else ""
+        )
+        runner_result_path = attempt_root / "raw/runner_result.json"
+        runner_result = _json(runner_result_path) if runner_result_path.exists() else {}
+        if (
+            runner_result.get("reason") == "timeout in REQUEST_HOLD_AFTER_COMPLETION"
+            and "stack smashing detected" not in px4_text
+            and " Aborted " not in px4_text
+        ):
+            return "CAMPAIGN_CONFIGURATION_FAILURE", reasons, None
         return "ENVIRONMENT_FAILURE", reasons, None
     clock = _json(attempt_root / "clock_bridge.json")
     if clock.get("status") != "VALID":
@@ -339,12 +353,20 @@ def _refresh_accepted_metrics(
 
 
 def execute_plan(
-    rows: list[dict[str, Any]], campaign_root: Path, max_attempts: int
+    rows: list[dict[str, Any]],
+    campaign_root: Path,
+    max_attempts: int,
+    *,
+    max_new_sides: int = 2,
+    max_environment_attempts: int = 3,
+    batch_time_limit_seconds: float = 1200.0,
 ) -> list[dict[str, Any]]:
     disposition = load_disposition()
     matched = set(disposition["matched_cells"])
     results: list[dict[str, Any]] = []
     campaign_root.mkdir(parents=True, exist_ok=True)
+    batch_started = time.monotonic()
+    new_sides = 0
     for row in rows:
         if row["cell_id"] not in matched:
             continue
@@ -386,11 +408,42 @@ def execute_plan(
             continue
         attempts: list[dict[str, Any]] = []
         existing_attempt_numbers = []
+        existing_environment_attempts = 0
         for path in logical_root.glob("**/*attempt_*"):
             match = re.search(r"attempt_(\d+)$", path.name)
             if path.is_dir() and match:
                 existing_attempt_numbers.append(int(match.group(1)))
+        for path in logical_root.glob("**/attempt_result.json"):
+            prior = _json(path)
+            validity, _, _ = classify_attempt(
+                row, path.parent, int(prior.get("return_code", 1))
+            )
+            if validity == "ENVIRONMENT_FAILURE":
+                existing_environment_attempts += 1
+        if existing_environment_attempts >= max_environment_attempts:
+            results.append(
+                {
+                    **row,
+                    "validity": "BLOCKED_ENVIRONMENT",
+                    "accepted_attempt": "",
+                    "environment_retry_count": existing_environment_attempts,
+                    "artifact_root": "",
+                    "clock_status": "",
+                    "critical_window": "",
+                    **{key: "" for key in METRICS},
+                    **{f"{key}_uncertainty": "" for key in METRICS},
+                }
+            )
+            continue
+        if new_sides >= max_new_sides or (
+            time.monotonic() - batch_started >= batch_time_limit_seconds
+        ):
+            break
+        new_sides += 1
         first_attempt = max(existing_attempt_numbers, default=0) + 1
+        accepted_this_side = False
+        terminal_validity = "ENVIRONMENT_FAILURE"
+        environment_attempts = existing_environment_attempts
         for attempt in range(first_attempt, first_attempt + max_attempts):
             attempt_root = logical_root / f"attempt_{attempt}"
             attempt_root.mkdir(parents=True, exist_ok=True)
@@ -449,14 +502,23 @@ def execute_plan(
                     json.dumps(accepted, indent=2, sort_keys=True) + "\n", encoding="utf-8"
                 )
                 results.append(accepted)
+                accepted_this_side = True
                 break
-        else:
+            terminal_validity = validity
+            if validity == "ENVIRONMENT_FAILURE":
+                environment_attempts += 1
+                if environment_attempts >= max_environment_attempts:
+                    terminal_validity = "BLOCKED_ENVIRONMENT"
+                    break
+            elif validity == "CAMPAIGN_CONFIGURATION_FAILURE":
+                break
+        if not accepted_this_side:
             results.append(
                 {
                     **row,
-                    "validity": "ENVIRONMENT_FAILURE",
+                    "validity": terminal_validity,
                     "accepted_attempt": "",
-                    "environment_retry_count": first_attempt + max_attempts - 1,
+                    "environment_retry_count": environment_attempts,
                     "artifact_root": "",
                     "clock_status": "",
                     "critical_window": "",
@@ -502,12 +564,29 @@ def main() -> int:
     parser.add_argument("--campaign-root", type=Path, default=DEFAULT_RUN_ROOT)
     parser.add_argument("--results", type=Path, default=ROOT / "runs/p5/accepted_runs.tsv")
     parser.add_argument("--max-attempts", type=int, default=2)
+    parser.add_argument(
+        "--max-new-sides",
+        type=int,
+        default=2,
+        help="maximum previously incomplete mechanism sides to attempt in this batch",
+    )
+    parser.add_argument("--max-environment-attempts", type=int, default=3)
+    parser.add_argument("--batch-time-limit-seconds", type=float, default=1200.0)
     args = parser.parse_args()
     matrix = load_matrix(args.matrix)
     rows = execution_plan(matrix)
     write_plan(rows, args.output)
     if args.execute:
-        results = execute_plan(rows, args.campaign_root, args.max_attempts)
+        if args.max_attempts < 1 or args.max_new_sides < 1:
+            parser.error("--max-attempts and --max-new-sides must be positive")
+        results = execute_plan(
+            rows,
+            args.campaign_root,
+            args.max_attempts,
+            max_new_sides=args.max_new_sides,
+            max_environment_attempts=args.max_environment_attempts,
+            batch_time_limit_seconds=args.batch_time_limit_seconds,
+        )
         write_results(results, args.results)
         print(
             json.dumps(

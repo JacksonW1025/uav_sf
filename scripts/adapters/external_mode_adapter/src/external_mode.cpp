@@ -43,9 +43,18 @@ int main(int argc, char* argv[])
             || std::chrono::steady_clock::now() >= shutdown_deadline)) {
       break;
     }
+    // This mode replaces internal Hold. A successful mode completion alone
+    // therefore cannot select Hold while this component remains registered:
+    // PX4 maps the request straight back to this replacement mode. Destroy the
+    // node while the FMU is still alive so Registration publishes the explicit
+    // unregister message and PX4 can restore internal Hold before P0 cleanup.
+    if (node->getMode().completionReported()) {
+      break;
+    }
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
   }
   executor.remove_node(node);
+  node.reset();
   rclcpp::shutdown();
   return 0;
 }

@@ -1,0 +1,121 @@
+{
+  "PX4_build_hash": "sha256:931320a07585dabf36ca9c8ba994756b93ee7d154cd9c8930b2171548d978993",
+  "PX4_commit": "4ae21a5e569d3d89c2f6366688cbacb3e93437c9",
+  "Route_Oracle_version": "0.3",
+  "accepted_attempt_count": 2,
+  "adapter_revision": {
+    "binary_sha256": "103fcdc89049ae23938ea537a3c1d36d0575716d8089b9ea1b92745dff026774",
+    "fallback_replacement_mode": "Hold",
+    "header_sha256": "d72724177325f0159159e0cc8d932d64a9d6c45aae21424f5736f3c81f037316",
+    "implementation_commit": "bdeb30341ac12a8f56e71bb961563163c4fbcead",
+    "source_sha256": "c700cc36630ebaf94f431d7faabf4535710069d48eb74bcf44cfa1de3a31e5fe"
+  },
+  "campaign_configuration_failure_count": 2,
+  "campaign_id": "campaign_seeded_v3",
+  "campaign_start_time": "2026-07-17T12:24:52-07:00",
+  "campaign_status": "CLOSED_REVISION_CHANGE_REQUIRED",
+  "close_reason": "Dynamic External Mode replaces internal Hold but remains registered after successful completion, so T1/T2 cannot hand off to Hold. Two clean reproductions ended in REQUEST_HOLD_AFTER_COMPLETION with nav_state 23; continuing requires an adapter lifecycle change.",
+  "completed_cells": [],
+  "dirty_tree_hash": null,
+  "dirty_tree_note": "The campaign started from committed repository revision 2dd06f1. Unrelated local work was present but was not part of the campaign identity; no start-time dirty-tree digest was recorded.",
+  "environment_failure_count": 3,
+  "excluded_attempt_count": 2,
+  "fallback_parameter_snapshot": {
+    "COM_OBL_RC_ACT": 5,
+    "COM_OF_LOSS_T": 1.0,
+    "COM_RC_IN_MODE": 4,
+    "NAV_DLL_ACT": 0,
+    "NAV_RCL_ACT": 0,
+    "dynamic_replacement_mode": "Hold",
+    "expected_fallback_nav_state": 4
+  },
+  "fault_marker_revision": {
+    "commit": "c50a9ea6495c8ca5d7facb0361816ce98d36020d",
+    "sha256": "00d6c700694eeb28b450014c17fd57fcdf7c044832d62dc033180455b4fc0bf4"
+  },
+  "last_checkpoint_time": "2026-07-17T12:55:58-07:00",
+  "observation_patch_hash": "sha256:735555764c175ebd0a318723d4e76b8898965c4728ee4cab9b05b6c34d5e8b7c",
+  "observation_profile": "TRANSITION",
+  "parent_campaign": "campaign_seeded_v2",
+  "parent_exclusion_reason": "PRESERVED_EXCLUDED_REVISION_MISMATCH: v2 used an earlier Dynamic adapter/fallback behavior and earlier observation/capture revisions.",
+  "partially_completed_cells": [
+    {
+      "classification": "INVALID_PAIR_CAMPAIGN_CONFIGURATION",
+      "pair_id": "p5_t1_hover_pair_r1",
+      "sides": {
+        "dynamic_external_mode": "CAMPAIGN_CONFIGURATION_FAILURE",
+        "legacy_offboard": "COMPLETE_VALID_SIDE"
+      }
+    },
+    {
+      "classification": "PARTIAL_PAIR",
+      "pair_id": "p5_t1_hover_pair_r2",
+      "sides": {
+        "dynamic_external_mode": "ENVIRONMENT_FAILURE",
+        "legacy_offboard": "COMPLETE_VALID_SIDE"
+      }
+    }
+  ],
+  "pending_cells": [
+    "p5_t1_hover_pair_r3",
+    "p5_t1_hover_pair_r4",
+    "p5_t1_hover_pair_r5",
+    "p5_t2_straight_pair_r1",
+    "p5_t2_straight_pair_r2",
+    "p5_t2_straight_pair_r3",
+    "p5_t2_straight_pair_r4",
+    "p5_t2_straight_pair_r5",
+    "p5_t4_turn_pair_r1",
+    "p5_t4_turn_pair_r2",
+    "p5_t4_turn_pair_r3",
+    "p5_t4_turn_pair_r4",
+    "p5_t4_turn_pair_r5",
+    "p5_t5_hover_pair_r1",
+    "p5_t5_hover_pair_r2",
+    "p5_t5_hover_pair_r3",
+    "p5_t5_hover_pair_r4",
+    "p5_t5_hover_pair_r5",
+    "p5_t6_straight_pair_r1",
+    "p5_t6_straight_pair_r2",
+    "p5_t6_straight_pair_r3",
+    "p5_t6_straight_pair_r4",
+    "p5_t6_straight_pair_r5",
+    "p5_t7_turn_pair_r1",
+    "p5_t7_turn_pair_r2",
+    "p5_t7_turn_pair_r3",
+    "p5_t7_turn_pair_r4",
+    "p5_t7_turn_pair_r5",
+    "p5_t8_descent_pair_r1",
+    "p5_t8_descent_pair_r2",
+    "p5_t8_descent_pair_r3",
+    "p5_t8_descent_pair_r4",
+    "p5_t8_descent_pair_r5"
+  ],
+  "pilot": {
+    "artifact": "runs/p5/hold_replacement_pilot/p5_t5_hover_pair_r1_dynamic_external_mode/attempt_5",
+    "behavioral_verdict": "VALID",
+    "campaign_acceptance": "EXCLUDED_PROVENANCE_METADATA_CONFLICT",
+    "expected_fallback": "Hold",
+    "observed_fallback": "Hold",
+    "reason": "The log names the canonical control worktree, but embedded build metadata records observation patch 4ac3b87e... instead of the v3 identity 73555576...."
+  },
+  "repository_commit": "2dd06f1ef65d9a993aaa24e04d1466f4f650d516",
+  "resume_history": [
+    {
+      "event": "Externally interrupted Goal recovered; live runner stopped at the bounded execution limit; no duplicate runner launched.",
+      "time": "2026-07-17T12:46:00-07:00"
+    },
+    {
+      "event": "v3 closed after recovered attempts proved a campaign-blocking Dynamic Hold-replacement lifecycle incompatibility.",
+      "time": "2026-07-17T12:49:52-07:00"
+    },
+    {
+      "event": "Recovered interrupted runner; classified preserved attempts; closed campaign pending adapter lifecycle revision.",
+      "time": "2026-07-17T12:51:02-07:00"
+    }
+  ],
+  "route_trace_schema_version": "1.2",
+  "scenario_matrix_hash": "sha256:8a39d52fae162478ca50aebb690b1ab29525c52664dc7b3e27c55bc72ce0738a",
+  "schema_version": "1.0",
+  "threshold_profile_id": "route-oracle-v0.3-default"
+}
