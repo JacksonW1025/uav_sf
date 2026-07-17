@@ -13,7 +13,6 @@ from typing import Any
 
 HIGH_RATE_EVENTS = {
     "actuator_motors",
-    "actuator_output_published",
     "allocator_input_published",
     "px4_setpoint_consumed",
     "px4_setpoint_received",
@@ -59,7 +58,7 @@ def compact(source: Path, output: Path, stride: int) -> dict[str, Any]:
     )
     return {
         "schema_version": "1.0",
-        "policy": "retain all control/lifecycle events; retain first, every Nth, and last high-rate event per epoch/domain",
+        "policy": "retain every final-writer/control/lifecycle event; retain first, every Nth, and last non-writer high-rate event per epoch/domain",
         "high_rate_event_types": sorted(HIGH_RATE_EVENTS),
         "stride": stride,
         "source_sha256": source_sha256,

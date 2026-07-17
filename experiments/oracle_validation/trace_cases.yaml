@@ -1,0 +1,276 @@
+schema_version: "1.0"
+oracle_validation_profile: trace-mutation-v1
+threshold_profile:
+  id: oracle-validation-preregistered-v1
+  thresholds:
+    installation_deadline_ms: 300.0
+    recovery_deadline_ms: 300.0
+    minimum_continuity_gap_ms: 20.0
+    continuity_period_multiplier: 3.0
+
+cases:
+  - case_id: pass_p0_external_reference
+    base_trace: data/processed/oracle_validation/reference_traces/p0/route_trace.jsonl
+    base_clock_bridge: null
+    case_class: PASS
+    target_clause: installation
+    source_artifact_complete: true
+    operations: [{operator: identity}]
+    expected_clauses: {installation: PASS}
+
+  - case_id: pass_p2_process_loss_reference
+    base_trace: data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl
+    base_clock_bridge: data/processed/p2/p2_external_sigkill_r1_20260717/clock_bridge.json
+    case_class: PASS
+    target_clause: all
+    source_artifact_complete: true
+    operations: [{operator: identity}]
+    expected_clauses:
+      revocation: PASS
+      installation: PASS
+      exclusivity: PASS
+      continuity: PASS
+      recovery: PASS
+
+  - case_id: pass_p3_channel_reference
+    base_trace: data/processed/oracle_validation/reference_traces/p3/route_trace.jsonl
+    base_clock_bridge: data/processed/p3/p3_external_health_off_sp_off_r1_20260717/clock_bridge.json
+    case_class: PASS
+    target_clause: all
+    source_artifact_complete: true
+    operations: [{operator: identity}]
+    expected_clauses:
+      revocation: PASS
+      installation: PASS
+      exclusivity: PASS
+      continuity: PASS
+      recovery: PASS
+
+  - case_id: violation_revocation_consumption
+    base_trace: data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl
+    base_clock_bridge: data/processed/p2/p2_external_sigkill_r1_20260717/clock_bridge.json
+    case_class: VIOLATION
+    target_clause: revocation
+    source_artifact_complete: true
+    operations:
+      - operator: insert_old_epoch_event
+        event_type: px4_setpoint_consumed
+        offset_us: 1000
+    expected_clauses: {revocation: VIOLATION}
+
+  - case_id: violation_revocation_allocator
+    base_trace: data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl
+    base_clock_bridge: data/processed/p2/p2_external_sigkill_r1_20260717/clock_bridge.json
+    case_class: VIOLATION
+    target_clause: revocation
+    source_artifact_complete: true
+    operations:
+      - operator: insert_old_epoch_event
+        event_type: allocator_input_published
+        offset_us: 1000
+    expected_clauses: {revocation: VIOLATION}
+
+  - case_id: violation_revocation_writer
+    base_trace: data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl
+    base_clock_bridge: data/processed/p2/p2_external_sigkill_r1_20260717/clock_bridge.json
+    case_class: VIOLATION
+    target_clause: revocation
+    source_artifact_complete: true
+    operations:
+      - operator: insert_old_epoch_event
+        event_type: actuator_output_published
+        offset_us: 1000
+    expected_clauses: {revocation: VIOLATION}
+
+  - case_id: violation_installation_registration
+    base_trace: data/processed/oracle_validation/reference_traces/p0/route_trace.jsonl
+    base_clock_bridge: null
+    case_class: VIOLATION
+    target_clause: installation
+    source_artifact_complete: true
+    operations:
+      - {operator: retain_transition, source_mode: 17, target_mode: 23, padding_us: 500000}
+      - {operator: delete_target_evidence, evidence: registration_or_activation}
+    expected_clauses: {installation: VIOLATION}
+
+  - case_id: violation_installation_consumption_missing
+    base_trace: data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl
+    base_clock_bridge: data/processed/p2/p2_external_sigkill_r1_20260717/clock_bridge.json
+    case_class: VIOLATION
+    target_clause: installation
+    source_artifact_complete: true
+    operations: [{operator: delete_target_evidence, evidence: fresh_consumption}]
+    expected_clauses: {installation: VIOLATION}
+
+  - case_id: violation_installation_consumption_delayed
+    base_trace: data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl
+    base_clock_bridge: data/processed/p2/p2_external_sigkill_r1_20260717/clock_bridge.json
+    case_class: VIOLATION
+    target_clause: installation
+    source_artifact_complete: true
+    operations:
+      - operator: delay_target_evidence
+        event_types: [px4_setpoint_consumed]
+        delay_us: 500000
+    expected_clauses: {installation: VIOLATION}
+
+  - case_id: violation_installation_modules
+    base_trace: data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl
+    base_clock_bridge: data/processed/p2/p2_external_sigkill_r1_20260717/clock_bridge.json
+    case_class: VIOLATION
+    target_clause: installation
+    source_artifact_complete: true
+    operations: [{operator: delete_target_evidence, evidence: enabled_modules}]
+    expected_clauses: {installation: VIOLATION}
+
+  - case_id: violation_installation_allocator
+    base_trace: data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl
+    base_clock_bridge: data/processed/p2/p2_external_sigkill_r1_20260717/clock_bridge.json
+    case_class: VIOLATION
+    target_clause: installation
+    source_artifact_complete: true
+    operations: [{operator: delete_target_evidence, evidence: allocator_input}]
+    expected_clauses: {installation: VIOLATION}
+
+  - case_id: violation_installation_writer
+    base_trace: data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl
+    base_clock_bridge: data/processed/p2/p2_external_sigkill_r1_20260717/clock_bridge.json
+    case_class: VIOLATION
+    target_clause: installation
+    source_artifact_complete: true
+    operations: [{operator: delete_target_evidence, evidence: final_writer}]
+    expected_clauses: {installation: VIOLATION}
+
+  - case_id: violation_exclusivity_competing_writer
+    base_trace: data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl
+    base_clock_bridge: data/processed/p2/p2_external_sigkill_r1_20260717/clock_bridge.json
+    case_class: VIOLATION
+    target_clause: exclusivity
+    source_artifact_complete: true
+    candidate_writers: [control_allocator, test_competing_writer]
+    instrumented_candidates: [control_allocator, test_competing_writer]
+    operations: [{operator: add_competing_writer, writer: test_competing_writer}]
+    expected_clauses: {exclusivity: VIOLATION}
+
+  - case_id: violation_exclusivity_epoch_overlap
+    base_trace: data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl
+    base_clock_bridge: data/processed/p2/p2_external_sigkill_r1_20260717/clock_bridge.json
+    case_class: VIOLATION
+    target_clause: exclusivity
+    source_artifact_complete: true
+    operations:
+      - operator: insert_old_epoch_event
+        event_type: actuator_output_published
+        offset_us: 1000
+    expected_clauses: {exclusivity: VIOLATION}
+
+  - case_id: violation_continuity_gap
+    base_trace: data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl
+    base_clock_bridge: data/processed/p2/p2_external_sigkill_r1_20260717/clock_bridge.json
+    case_class: VIOLATION
+    target_clause: continuity
+    source_artifact_complete: true
+    operations: [{operator: make_continuity_gap, delay_us: 250000}]
+    expected_clauses: {continuity: VIOLATION}
+
+  - case_id: violation_recovery_incomplete
+    base_trace: data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl
+    base_clock_bridge: data/processed/p2/p2_external_sigkill_r1_20260717/clock_bridge.json
+    case_class: VIOLATION
+    target_clause: recovery
+    source_artifact_complete: true
+    operations: [{operator: delete_target_evidence, evidence: final_writer}]
+    expected_clauses: {recovery: VIOLATION}
+
+  - case_id: violation_recovery_old_epoch
+    base_trace: data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl
+    base_clock_bridge: data/processed/p2/p2_external_sigkill_r1_20260717/clock_bridge.json
+    case_class: VIOLATION
+    target_clause: recovery
+    source_artifact_complete: true
+    operations:
+      - operator: insert_old_epoch_event
+        event_type: px4_setpoint_consumed
+        offset_us: 1000
+    expected_clauses: {recovery: VIOLATION}
+
+  - case_id: unknown_truncated_critical_window
+    base_trace: data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl
+    base_clock_bridge: data/processed/p2/p2_external_sigkill_r1_20260717/clock_bridge.json
+    case_class: UNKNOWN
+    target_clause: exclusivity
+    source_artifact_complete: false
+    operations: [{operator: truncate_critical_window, after_us: 5000}]
+    expected_clauses: {exclusivity: UNKNOWN, continuity: UNKNOWN}
+
+  - case_id: unknown_writer_sequence_missing
+    base_trace: data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl
+    base_clock_bridge: data/processed/p2/p2_external_sigkill_r1_20260717/clock_bridge.json
+    case_class: UNKNOWN
+    target_clause: exclusivity
+    source_artifact_complete: false
+    operations: [{operator: drop_writer_sequence}]
+    expected_clauses: {exclusivity: UNKNOWN, continuity: UNKNOWN}
+
+  - case_id: unknown_candidate_writer_uninstrumented
+    base_trace: data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl
+    base_clock_bridge: data/processed/p2/p2_external_sigkill_r1_20260717/clock_bridge.json
+    case_class: UNKNOWN
+    target_clause: exclusivity
+    source_artifact_complete: true
+    candidate_writers: [control_allocator, possible_direct_writer]
+    instrumented_candidates: [control_allocator]
+    operations: [{operator: identity}]
+    expected_clauses: {exclusivity: UNKNOWN, continuity: UNKNOWN}
+
+  - case_id: unknown_clock_bridge_missing
+    base_trace: data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl
+    base_clock_bridge: data/processed/p2/p2_external_sigkill_r1_20260717/clock_bridge.json
+    omit_clock_bridge: true
+    case_class: UNKNOWN
+    target_clause: revocation
+    source_artifact_complete: true
+    operations: [{operator: identity}]
+    expected_clauses: {revocation: UNKNOWN, recovery: UNKNOWN}
+
+  - case_id: unknown_route_epoch_missing
+    base_trace: data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl
+    base_clock_bridge: data/processed/p2/p2_external_sigkill_r1_20260717/clock_bridge.json
+    case_class: UNKNOWN
+    target_clause: revocation
+    source_artifact_complete: true
+    operations: [{operator: drop_source_route_epoch}]
+    expected_clauses: {revocation: UNKNOWN, recovery: UNKNOWN}
+
+  - case_id: unknown_source_artifact_incomplete
+    base_trace: data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl
+    base_clock_bridge: data/processed/p2/p2_external_sigkill_r1_20260717/clock_bridge.json
+    case_class: UNKNOWN
+    target_clause: installation
+    source_artifact_complete: false
+    operations: [{operator: delete_target_evidence, evidence: final_writer}]
+    expected_clauses: {installation: UNKNOWN, recovery: UNKNOWN}
+
+  - case_id: not_applicable_no_transition
+    base_trace: data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl
+    base_clock_bridge: data/processed/p2/p2_external_sigkill_r1_20260717/clock_bridge.json
+    case_class: NOT_APPLICABLE
+    target_clause: all
+    source_artifact_complete: true
+    operations: [{operator: retain_no_transition}]
+    expected_clauses:
+      revocation: NOT_APPLICABLE
+      installation: NOT_APPLICABLE
+      exclusivity: NOT_APPLICABLE
+      continuity: NOT_APPLICABLE
+      recovery: NOT_APPLICABLE
+
+  - case_id: not_applicable_recovery_external_target
+    base_trace: data/processed/oracle_validation/reference_traces/p0/route_trace.jsonl
+    base_clock_bridge: null
+    case_class: NOT_APPLICABLE
+    target_clause: recovery
+    source_artifact_complete: true
+    operations:
+      - {operator: retain_transition, source_mode: 17, target_mode: 23, padding_us: 500000}
+    expected_clauses: {recovery: NOT_APPLICABLE}

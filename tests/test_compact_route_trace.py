@@ -19,8 +19,8 @@ def test_compaction_preserves_lifecycle_and_epoch_boundaries(tmp_path) -> None:
     source.write_text("".join(json.dumps(event) + "\n" for event in events))
     report = compact(source, output, stride=5)
     retained = [json.loads(line) for line in output.read_text().splitlines()]
-    assert [event["sequence"] for event in retained if "sequence" in event] == [0, 5, 10]
+    assert [event["sequence"] for event in retained if "sequence" in event] == list(range(11))
     assert retained[0]["event_type"] == "route_epoch_changed"
     assert retained[-1]["event_type"] == "unregister_request_processed"
     assert report["full_event_count"] == 13
-    assert report["compact_event_count"] == 5
+    assert report["compact_event_count"] == 13

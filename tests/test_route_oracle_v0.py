@@ -30,6 +30,7 @@ def _complete_events() -> list[dict[str, object]]:
         _event(0, "vehicle_status", 14),
         _event(5_000, "producer_still_publishing", 14, route_epoch_id=1),
         _event(10_000, "px4_setpoint_consumed", 14, route_epoch_id=1),
+        _event(90_000, "allocator_input_published", 14, route_epoch_id=1),
         _event(
             95_000,
             "actuator_output_published",
@@ -87,6 +88,9 @@ def test_complete_same_boot_evidence_passes() -> None:
         clause["status"] in {"PASS", "NOT_APPLICABLE"}
         for clause in result["clauses"].values()
     )
+    assert result["route_oracle_version"] == "0.3"
+    assert result["schema_version"] == "1.2"
+    assert result["threshold_profile_id"] == "route-oracle-v0.3-default"
     assert result["clauses"]["revocation"]["metrics"]["post_revocation_consumption_count"] == 0
 
 
@@ -111,8 +115,8 @@ def test_competing_writer_is_violation() -> None:
 
 def test_shared_writer_without_route_epoch_is_unknown_not_violation() -> None:
     events = _complete_events()
-    events[3].pop("route_epoch_id")
-    events[5].pop("route_epoch_id")
+    events[4].pop("route_epoch_id")
+    events[6].pop("route_epoch_id")
     events.extend(
         [
             _event(200_000, "vehicle_status", 14),
@@ -123,6 +127,26 @@ def test_shared_writer_without_route_epoch_is_unknown_not_violation() -> None:
     assert result["status"] == "UNKNOWN"
     assert result["clauses"]["revocation"]["status"] == "UNKNOWN"
     assert result["clauses"]["revocation"]["metrics"]["post_revocation_writer_count"] is None
+
+
+def test_complete_artifact_turns_missing_installation_into_violation() -> None:
+    events = [
+        event
+        for event in _complete_events()
+        if not (event["event_type"] == "px4_setpoint_consumed" and event["declared_mode"] == 5)
+    ]
+    result = evaluate(events, _writer(), source_artifact_complete=True)
+    assert result["clauses"]["installation"]["status"] == "VIOLATION"
+
+
+def test_incomplete_artifact_keeps_missing_installation_unknown() -> None:
+    events = [
+        event
+        for event in _complete_events()
+        if not (event["event_type"] == "px4_setpoint_consumed" and event["declared_mode"] == 5)
+    ]
+    result = evaluate(events, _writer(), source_artifact_complete=False)
+    assert result["clauses"]["installation"]["status"] == "UNKNOWN"
 
 
 def test_no_transition_is_not_applicable() -> None:

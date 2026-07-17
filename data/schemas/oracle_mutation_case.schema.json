@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uav-sf.local/schemas/oracle_mutation_case.schema.json",
+  "title": "Route Oracle trace mutation validation case",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "case_id",
+    "base_trace",
+    "base_clock_bridge",
+    "case_class",
+    "target_clause",
+    "source_artifact_complete",
+    "operations",
+    "expected_clauses"
+  ],
+  "properties": {
+    "case_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]+$"},
+    "base_trace": {"type": "string", "minLength": 1},
+    "base_clock_bridge": {"type": ["string", "null"]},
+    "case_class": {"enum": ["PASS", "VIOLATION", "UNKNOWN", "NOT_APPLICABLE"]},
+    "target_clause": {"enum": ["revocation", "installation", "exclusivity", "continuity", "recovery", "all"]},
+    "source_artifact_complete": {"type": "boolean"},
+    "omit_clock_bridge": {"type": "boolean"},
+    "candidate_writers": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "instrumented_candidates": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "operations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["operator"],
+        "properties": {"operator": {"type": "string", "minLength": 1}},
+        "additionalProperties": true
+      }
+    },
+    "expected_clauses": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "revocation": {"enum": ["PASS", "VIOLATION", "UNKNOWN", "NOT_APPLICABLE"]},
+        "installation": {"enum": ["PASS", "VIOLATION", "UNKNOWN", "NOT_APPLICABLE"]},
+        "exclusivity": {"enum": ["PASS", "VIOLATION", "UNKNOWN", "NOT_APPLICABLE"]},
+        "continuity": {"enum": ["PASS", "VIOLATION", "UNKNOWN", "NOT_APPLICABLE"]},
+        "recovery": {"enum": ["PASS", "VIOLATION", "UNKNOWN", "NOT_APPLICABLE"]}
+      }
+    }
+  }
+}

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://uav-sf.local/schemas/route_oracle_result.schema.json",
-  "title": "Route Oracle v0 result",
+  "title": "Route Oracle v0.3 result",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -11,11 +11,15 @@
     "status",
     "transition",
     "clock_bridge",
-    "clauses"
+    "clauses",
+    "ground_truth_case_id",
+    "oracle_validation_profile",
+    "threshold_profile_id",
+    "evidence_completeness"
   ],
   "properties": {
-    "schema_version": {"const": "1.1"},
-    "route_oracle_version": {"const": "0.2"},
+    "schema_version": {"const": "1.2"},
+    "route_oracle_version": {"const": "0.3"},
     "run_id": {"type": "string", "minLength": 1},
     "status": {"enum": ["PASS", "VIOLATION", "UNKNOWN", "NOT_APPLICABLE"]},
     "transition": {
@@ -25,6 +29,29 @@
     "clock_bridge": {
       "type": ["object", "null"],
       "additionalProperties": true
+    },
+    "ground_truth_case_id": {"type": ["string", "null"]},
+    "oracle_validation_profile": {"type": "string", "minLength": 1},
+    "threshold_profile_id": {"type": "string", "minLength": 1},
+    "evidence_completeness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_artifact",
+        "critical_window",
+        "writer_sequence",
+        "candidate_writer_coverage",
+        "clock_bridge",
+        "route_epoch"
+      ],
+      "properties": {
+        "source_artifact": {"enum": ["COMPLETE", "INCOMPLETE", "UNKNOWN"]},
+        "critical_window": {"enum": ["COMPLETE", "BOUNDED", "INSUFFICIENT", "NOT_APPLICABLE"]},
+        "writer_sequence": {"enum": ["COMPLETE", "INCOMPLETE", "UNKNOWN", "NOT_APPLICABLE"]},
+        "candidate_writer_coverage": {"enum": ["COMPLETE", "INCOMPLETE", "UNKNOWN", "NOT_APPLICABLE"]},
+        "clock_bridge": {"enum": ["VALID", "INVALID", "MISSING", "NOT_REQUIRED"]},
+        "route_epoch": {"enum": ["COMPLETE", "INCOMPLETE", "UNKNOWN", "NOT_APPLICABLE"]}
+      }
     },
     "clauses": {
       "type": "object",

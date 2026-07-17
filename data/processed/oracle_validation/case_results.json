@@ -1,0 +1,1046 @@
+{
+  "all_expected_predictions_match": true,
+  "case_count": 25,
+  "cases": [
+    {
+      "case_class": "PASS",
+      "case_id": "pass_p0_external_reference",
+      "correct": true,
+      "cross_clause_side_effects": [],
+      "evidence_completeness": {
+        "candidate_writer_coverage": "COMPLETE",
+        "clock_bridge": "MISSING",
+        "critical_window": "BOUNDED",
+        "route_epoch": "INCOMPLETE",
+        "source_artifact": "COMPLETE",
+        "writer_sequence": "INCOMPLETE"
+      },
+      "expected_clauses": {
+        "installation": "PASS"
+      },
+      "mutation_report": {
+        "base_sha256_after": "b9b90561e4a3482af09e57d3da21c294c66fcc9627ce25d6a2edbf81c1842d1e",
+        "base_sha256_before": "b9b90561e4a3482af09e57d3da21c294c66fcc9627ce25d6a2edbf81c1842d1e",
+        "base_trace": "/mnt/nvme/uav_sf/data/processed/oracle_validation/reference_traces/p0/route_trace.jsonl",
+        "case_id": "pass_p0_external_reference",
+        "event_count": 5609,
+        "mutated_sha256": "b0548510a8830a4294319910d891e041ef371c2bc45e9411284ad709b1bfe725",
+        "mutated_trace": "/mnt/nvme/uav_sf/runs/oracle_validation/trace_mutations/pass_p0_external_reference/route_trace.jsonl",
+        "operators": [
+          "identity"
+        ]
+      },
+      "oracle_status": "UNKNOWN",
+      "predicted_clauses": {
+        "continuity": "PASS",
+        "exclusivity": "PASS",
+        "installation": "PASS",
+        "recovery": "UNKNOWN",
+        "revocation": "UNKNOWN"
+      },
+      "raw_result": "runs/oracle_validation/trace_mutations/pass_p0_external_reference/route_oracle.json",
+      "target_clause": "installation"
+    },
+    {
+      "case_class": "PASS",
+      "case_id": "pass_p2_process_loss_reference",
+      "correct": true,
+      "cross_clause_side_effects": [],
+      "evidence_completeness": {
+        "candidate_writer_coverage": "COMPLETE",
+        "clock_bridge": "VALID",
+        "critical_window": "COMPLETE",
+        "route_epoch": "COMPLETE",
+        "source_artifact": "COMPLETE",
+        "writer_sequence": "COMPLETE"
+      },
+      "expected_clauses": {
+        "continuity": "PASS",
+        "exclusivity": "PASS",
+        "installation": "PASS",
+        "recovery": "PASS",
+        "revocation": "PASS"
+      },
+      "mutation_report": {
+        "base_sha256_after": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_sha256_before": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_trace": "/mnt/nvme/uav_sf/data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl",
+        "case_id": "pass_p2_process_loss_reference",
+        "event_count": 3172,
+        "mutated_sha256": "a3b13907fe46029044fc3681200a2ccce6ac74d856e96b3134ca6e8cc181bdef",
+        "mutated_trace": "/mnt/nvme/uav_sf/runs/oracle_validation/trace_mutations/pass_p2_process_loss_reference/route_trace.jsonl",
+        "operators": [
+          "identity"
+        ]
+      },
+      "oracle_status": "PASS",
+      "predicted_clauses": {
+        "continuity": "PASS",
+        "exclusivity": "PASS",
+        "installation": "PASS",
+        "recovery": "PASS",
+        "revocation": "PASS"
+      },
+      "raw_result": "runs/oracle_validation/trace_mutations/pass_p2_process_loss_reference/route_oracle.json",
+      "target_clause": "all"
+    },
+    {
+      "case_class": "PASS",
+      "case_id": "pass_p3_channel_reference",
+      "correct": true,
+      "cross_clause_side_effects": [],
+      "evidence_completeness": {
+        "candidate_writer_coverage": "COMPLETE",
+        "clock_bridge": "VALID",
+        "critical_window": "COMPLETE",
+        "route_epoch": "COMPLETE",
+        "source_artifact": "COMPLETE",
+        "writer_sequence": "COMPLETE"
+      },
+      "expected_clauses": {
+        "continuity": "PASS",
+        "exclusivity": "PASS",
+        "installation": "PASS",
+        "recovery": "PASS",
+        "revocation": "PASS"
+      },
+      "mutation_report": {
+        "base_sha256_after": "3ac27958e1e31f2466f5f6df40f5ade0a101eceaffeaaf89c7ba2d3b24700a18",
+        "base_sha256_before": "3ac27958e1e31f2466f5f6df40f5ade0a101eceaffeaaf89c7ba2d3b24700a18",
+        "base_trace": "/mnt/nvme/uav_sf/data/processed/oracle_validation/reference_traces/p3/route_trace.jsonl",
+        "case_id": "pass_p3_channel_reference",
+        "event_count": 3689,
+        "mutated_sha256": "84c2f1fb6c3951e4395a9228564e72052f30b11ea0e7547bcd01f1d076938e42",
+        "mutated_trace": "/mnt/nvme/uav_sf/runs/oracle_validation/trace_mutations/pass_p3_channel_reference/route_trace.jsonl",
+        "operators": [
+          "identity"
+        ]
+      },
+      "oracle_status": "PASS",
+      "predicted_clauses": {
+        "continuity": "PASS",
+        "exclusivity": "PASS",
+        "installation": "PASS",
+        "recovery": "PASS",
+        "revocation": "PASS"
+      },
+      "raw_result": "runs/oracle_validation/trace_mutations/pass_p3_channel_reference/route_oracle.json",
+      "target_clause": "all"
+    },
+    {
+      "case_class": "VIOLATION",
+      "case_id": "violation_revocation_consumption",
+      "correct": true,
+      "cross_clause_side_effects": [
+        "recovery"
+      ],
+      "evidence_completeness": {
+        "candidate_writer_coverage": "COMPLETE",
+        "clock_bridge": "VALID",
+        "critical_window": "COMPLETE",
+        "route_epoch": "COMPLETE",
+        "source_artifact": "COMPLETE",
+        "writer_sequence": "COMPLETE"
+      },
+      "expected_clauses": {
+        "revocation": "VIOLATION"
+      },
+      "mutation_report": {
+        "base_sha256_after": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_sha256_before": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_trace": "/mnt/nvme/uav_sf/data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl",
+        "case_id": "violation_revocation_consumption",
+        "event_count": 3173,
+        "mutated_sha256": "b7e3863b5aa18844ebd18980daac6c43427748c22230df64541cdff14da7bc2e",
+        "mutated_trace": "/mnt/nvme/uav_sf/runs/oracle_validation/trace_mutations/violation_revocation_consumption/route_trace.jsonl",
+        "operators": [
+          "insert_old_epoch_event"
+        ]
+      },
+      "oracle_status": "VIOLATION",
+      "predicted_clauses": {
+        "continuity": "PASS",
+        "exclusivity": "PASS",
+        "installation": "PASS",
+        "recovery": "VIOLATION",
+        "revocation": "VIOLATION"
+      },
+      "raw_result": "runs/oracle_validation/trace_mutations/violation_revocation_consumption/route_oracle.json",
+      "target_clause": "revocation"
+    },
+    {
+      "case_class": "VIOLATION",
+      "case_id": "violation_revocation_allocator",
+      "correct": true,
+      "cross_clause_side_effects": [
+        "recovery"
+      ],
+      "evidence_completeness": {
+        "candidate_writer_coverage": "COMPLETE",
+        "clock_bridge": "VALID",
+        "critical_window": "COMPLETE",
+        "route_epoch": "COMPLETE",
+        "source_artifact": "COMPLETE",
+        "writer_sequence": "COMPLETE"
+      },
+      "expected_clauses": {
+        "revocation": "VIOLATION"
+      },
+      "mutation_report": {
+        "base_sha256_after": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_sha256_before": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_trace": "/mnt/nvme/uav_sf/data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl",
+        "case_id": "violation_revocation_allocator",
+        "event_count": 3173,
+        "mutated_sha256": "048c337c4097e4909020656d51cfa8dd9db8006a1458293d27f541c692ff4e50",
+        "mutated_trace": "/mnt/nvme/uav_sf/runs/oracle_validation/trace_mutations/violation_revocation_allocator/route_trace.jsonl",
+        "operators": [
+          "insert_old_epoch_event"
+        ]
+      },
+      "oracle_status": "VIOLATION",
+      "predicted_clauses": {
+        "continuity": "PASS",
+        "exclusivity": "PASS",
+        "installation": "PASS",
+        "recovery": "VIOLATION",
+        "revocation": "VIOLATION"
+      },
+      "raw_result": "runs/oracle_validation/trace_mutations/violation_revocation_allocator/route_oracle.json",
+      "target_clause": "revocation"
+    },
+    {
+      "case_class": "VIOLATION",
+      "case_id": "violation_revocation_writer",
+      "correct": true,
+      "cross_clause_side_effects": [
+        "exclusivity",
+        "recovery"
+      ],
+      "evidence_completeness": {
+        "candidate_writer_coverage": "COMPLETE",
+        "clock_bridge": "VALID",
+        "critical_window": "COMPLETE",
+        "route_epoch": "COMPLETE",
+        "source_artifact": "COMPLETE",
+        "writer_sequence": "COMPLETE"
+      },
+      "expected_clauses": {
+        "revocation": "VIOLATION"
+      },
+      "mutation_report": {
+        "base_sha256_after": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_sha256_before": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_trace": "/mnt/nvme/uav_sf/data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl",
+        "case_id": "violation_revocation_writer",
+        "event_count": 3173,
+        "mutated_sha256": "74f087564bde0434cc9e28dcc1fee1d2568fdc1effca77dc3f2dd3d62613d36b",
+        "mutated_trace": "/mnt/nvme/uav_sf/runs/oracle_validation/trace_mutations/violation_revocation_writer/route_trace.jsonl",
+        "operators": [
+          "insert_old_epoch_event"
+        ]
+      },
+      "oracle_status": "VIOLATION",
+      "predicted_clauses": {
+        "continuity": "PASS",
+        "exclusivity": "VIOLATION",
+        "installation": "PASS",
+        "recovery": "VIOLATION",
+        "revocation": "VIOLATION"
+      },
+      "raw_result": "runs/oracle_validation/trace_mutations/violation_revocation_writer/route_oracle.json",
+      "target_clause": "revocation"
+    },
+    {
+      "case_class": "VIOLATION",
+      "case_id": "violation_installation_registration",
+      "correct": true,
+      "cross_clause_side_effects": [],
+      "evidence_completeness": {
+        "candidate_writer_coverage": "COMPLETE",
+        "clock_bridge": "NOT_REQUIRED",
+        "critical_window": "COMPLETE",
+        "route_epoch": "INCOMPLETE",
+        "source_artifact": "COMPLETE",
+        "writer_sequence": "COMPLETE"
+      },
+      "expected_clauses": {
+        "installation": "VIOLATION"
+      },
+      "mutation_report": {
+        "base_sha256_after": "b9b90561e4a3482af09e57d3da21c294c66fcc9627ce25d6a2edbf81c1842d1e",
+        "base_sha256_before": "b9b90561e4a3482af09e57d3da21c294c66fcc9627ce25d6a2edbf81c1842d1e",
+        "base_trace": "/mnt/nvme/uav_sf/data/processed/oracle_validation/reference_traces/p0/route_trace.jsonl",
+        "case_id": "violation_installation_registration",
+        "event_count": 140,
+        "mutated_sha256": "35361617309e4bb4461041f4045924a6e72995e9df3b906aadbbc626671d4584",
+        "mutated_trace": "/mnt/nvme/uav_sf/runs/oracle_validation/trace_mutations/violation_installation_registration/route_trace.jsonl",
+        "operators": [
+          "retain_transition",
+          "delete_target_evidence"
+        ]
+      },
+      "oracle_status": "VIOLATION",
+      "predicted_clauses": {
+        "continuity": "PASS",
+        "exclusivity": "PASS",
+        "installation": "VIOLATION",
+        "recovery": "NOT_APPLICABLE",
+        "revocation": "UNKNOWN"
+      },
+      "raw_result": "runs/oracle_validation/trace_mutations/violation_installation_registration/route_oracle.json",
+      "target_clause": "installation"
+    },
+    {
+      "case_class": "VIOLATION",
+      "case_id": "violation_installation_consumption_missing",
+      "correct": true,
+      "cross_clause_side_effects": [],
+      "evidence_completeness": {
+        "candidate_writer_coverage": "COMPLETE",
+        "clock_bridge": "VALID",
+        "critical_window": "COMPLETE",
+        "route_epoch": "COMPLETE",
+        "source_artifact": "COMPLETE",
+        "writer_sequence": "COMPLETE"
+      },
+      "expected_clauses": {
+        "installation": "VIOLATION"
+      },
+      "mutation_report": {
+        "base_sha256_after": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_sha256_before": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_trace": "/mnt/nvme/uav_sf/data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl",
+        "case_id": "violation_installation_consumption_missing",
+        "event_count": 3121,
+        "mutated_sha256": "a199a4a714c4ac64c1196687ced45975726a3f1db3f5ee9937c3278767487107",
+        "mutated_trace": "/mnt/nvme/uav_sf/runs/oracle_validation/trace_mutations/violation_installation_consumption_missing/route_trace.jsonl",
+        "operators": [
+          "delete_target_evidence"
+        ]
+      },
+      "oracle_status": "VIOLATION",
+      "predicted_clauses": {
+        "continuity": "PASS",
+        "exclusivity": "PASS",
+        "installation": "VIOLATION",
+        "recovery": "PASS",
+        "revocation": "PASS"
+      },
+      "raw_result": "runs/oracle_validation/trace_mutations/violation_installation_consumption_missing/route_oracle.json",
+      "target_clause": "installation"
+    },
+    {
+      "case_class": "VIOLATION",
+      "case_id": "violation_installation_consumption_delayed",
+      "correct": true,
+      "cross_clause_side_effects": [
+        "recovery"
+      ],
+      "evidence_completeness": {
+        "candidate_writer_coverage": "COMPLETE",
+        "clock_bridge": "VALID",
+        "critical_window": "COMPLETE",
+        "route_epoch": "COMPLETE",
+        "source_artifact": "COMPLETE",
+        "writer_sequence": "COMPLETE"
+      },
+      "expected_clauses": {
+        "installation": "VIOLATION"
+      },
+      "mutation_report": {
+        "base_sha256_after": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_sha256_before": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_trace": "/mnt/nvme/uav_sf/data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl",
+        "case_id": "violation_installation_consumption_delayed",
+        "event_count": 3172,
+        "mutated_sha256": "39791f7dd1ae2c4b98b5f1900274369a4a10e58c77ed9e0deec64205df19a98b",
+        "mutated_trace": "/mnt/nvme/uav_sf/runs/oracle_validation/trace_mutations/violation_installation_consumption_delayed/route_trace.jsonl",
+        "operators": [
+          "delay_target_evidence"
+        ]
+      },
+      "oracle_status": "VIOLATION",
+      "predicted_clauses": {
+        "continuity": "PASS",
+        "exclusivity": "PASS",
+        "installation": "VIOLATION",
+        "recovery": "VIOLATION",
+        "revocation": "PASS"
+      },
+      "raw_result": "runs/oracle_validation/trace_mutations/violation_installation_consumption_delayed/route_oracle.json",
+      "target_clause": "installation"
+    },
+    {
+      "case_class": "VIOLATION",
+      "case_id": "violation_installation_modules",
+      "correct": true,
+      "cross_clause_side_effects": [
+        "recovery"
+      ],
+      "evidence_completeness": {
+        "candidate_writer_coverage": "COMPLETE",
+        "clock_bridge": "VALID",
+        "critical_window": "COMPLETE",
+        "route_epoch": "COMPLETE",
+        "source_artifact": "COMPLETE",
+        "writer_sequence": "COMPLETE"
+      },
+      "expected_clauses": {
+        "installation": "VIOLATION"
+      },
+      "mutation_report": {
+        "base_sha256_after": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_sha256_before": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_trace": "/mnt/nvme/uav_sf/data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl",
+        "case_id": "violation_installation_modules",
+        "event_count": 3172,
+        "mutated_sha256": "74816f0f1d6f3108bc64e00eac897ad108549f4e5352533d13bf950e007fc360",
+        "mutated_trace": "/mnt/nvme/uav_sf/runs/oracle_validation/trace_mutations/violation_installation_modules/route_trace.jsonl",
+        "operators": [
+          "delete_target_evidence"
+        ]
+      },
+      "oracle_status": "VIOLATION",
+      "predicted_clauses": {
+        "continuity": "PASS",
+        "exclusivity": "PASS",
+        "installation": "VIOLATION",
+        "recovery": "VIOLATION",
+        "revocation": "PASS"
+      },
+      "raw_result": "runs/oracle_validation/trace_mutations/violation_installation_modules/route_oracle.json",
+      "target_clause": "installation"
+    },
+    {
+      "case_class": "VIOLATION",
+      "case_id": "violation_installation_allocator",
+      "correct": true,
+      "cross_clause_side_effects": [],
+      "evidence_completeness": {
+        "candidate_writer_coverage": "COMPLETE",
+        "clock_bridge": "VALID",
+        "critical_window": "COMPLETE",
+        "route_epoch": "COMPLETE",
+        "source_artifact": "COMPLETE",
+        "writer_sequence": "COMPLETE"
+      },
+      "expected_clauses": {
+        "installation": "VIOLATION"
+      },
+      "mutation_report": {
+        "base_sha256_after": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_sha256_before": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_trace": "/mnt/nvme/uav_sf/data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl",
+        "case_id": "violation_installation_allocator",
+        "event_count": 3140,
+        "mutated_sha256": "9487a1a80aa7b3cecfa1612f6cf4986a091a20b0714bdfdb1c543e015e5c532b",
+        "mutated_trace": "/mnt/nvme/uav_sf/runs/oracle_validation/trace_mutations/violation_installation_allocator/route_trace.jsonl",
+        "operators": [
+          "delete_target_evidence"
+        ]
+      },
+      "oracle_status": "VIOLATION",
+      "predicted_clauses": {
+        "continuity": "PASS",
+        "exclusivity": "PASS",
+        "installation": "VIOLATION",
+        "recovery": "PASS",
+        "revocation": "PASS"
+      },
+      "raw_result": "runs/oracle_validation/trace_mutations/violation_installation_allocator/route_oracle.json",
+      "target_clause": "installation"
+    },
+    {
+      "case_class": "VIOLATION",
+      "case_id": "violation_installation_writer",
+      "correct": true,
+      "cross_clause_side_effects": [
+        "continuity",
+        "recovery"
+      ],
+      "evidence_completeness": {
+        "candidate_writer_coverage": "COMPLETE",
+        "clock_bridge": "VALID",
+        "critical_window": "BOUNDED",
+        "route_epoch": "COMPLETE",
+        "source_artifact": "COMPLETE",
+        "writer_sequence": "COMPLETE"
+      },
+      "expected_clauses": {
+        "installation": "VIOLATION"
+      },
+      "mutation_report": {
+        "base_sha256_after": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_sha256_before": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_trace": "/mnt/nvme/uav_sf/data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl",
+        "case_id": "violation_installation_writer",
+        "event_count": 2004,
+        "mutated_sha256": "d1a2503f9ba38f864eeb287b7edca3da63ef5151a57016a65af770289bf7451d",
+        "mutated_trace": "/mnt/nvme/uav_sf/runs/oracle_validation/trace_mutations/violation_installation_writer/route_trace.jsonl",
+        "operators": [
+          "delete_target_evidence"
+        ]
+      },
+      "oracle_status": "VIOLATION",
+      "predicted_clauses": {
+        "continuity": "VIOLATION",
+        "exclusivity": "UNKNOWN",
+        "installation": "VIOLATION",
+        "recovery": "VIOLATION",
+        "revocation": "PASS"
+      },
+      "raw_result": "runs/oracle_validation/trace_mutations/violation_installation_writer/route_oracle.json",
+      "target_clause": "installation"
+    },
+    {
+      "case_class": "VIOLATION",
+      "case_id": "violation_exclusivity_competing_writer",
+      "correct": true,
+      "cross_clause_side_effects": [],
+      "evidence_completeness": {
+        "candidate_writer_coverage": "COMPLETE",
+        "clock_bridge": "VALID",
+        "critical_window": "COMPLETE",
+        "route_epoch": "COMPLETE",
+        "source_artifact": "COMPLETE",
+        "writer_sequence": "COMPLETE"
+      },
+      "expected_clauses": {
+        "exclusivity": "VIOLATION"
+      },
+      "mutation_report": {
+        "base_sha256_after": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_sha256_before": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_trace": "/mnt/nvme/uav_sf/data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl",
+        "case_id": "violation_exclusivity_competing_writer",
+        "event_count": 3173,
+        "mutated_sha256": "153c464498abef162471c3bad4c3e2c9f78d86ae39b27731eece96a1e8569e2a",
+        "mutated_trace": "/mnt/nvme/uav_sf/runs/oracle_validation/trace_mutations/violation_exclusivity_competing_writer/route_trace.jsonl",
+        "operators": [
+          "add_competing_writer"
+        ]
+      },
+      "oracle_status": "VIOLATION",
+      "predicted_clauses": {
+        "continuity": "PASS",
+        "exclusivity": "VIOLATION",
+        "installation": "PASS",
+        "recovery": "PASS",
+        "revocation": "PASS"
+      },
+      "raw_result": "runs/oracle_validation/trace_mutations/violation_exclusivity_competing_writer/route_oracle.json",
+      "target_clause": "exclusivity"
+    },
+    {
+      "case_class": "VIOLATION",
+      "case_id": "violation_exclusivity_epoch_overlap",
+      "correct": true,
+      "cross_clause_side_effects": [
+        "recovery",
+        "revocation"
+      ],
+      "evidence_completeness": {
+        "candidate_writer_coverage": "COMPLETE",
+        "clock_bridge": "VALID",
+        "critical_window": "COMPLETE",
+        "route_epoch": "COMPLETE",
+        "source_artifact": "COMPLETE",
+        "writer_sequence": "COMPLETE"
+      },
+      "expected_clauses": {
+        "exclusivity": "VIOLATION"
+      },
+      "mutation_report": {
+        "base_sha256_after": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_sha256_before": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_trace": "/mnt/nvme/uav_sf/data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl",
+        "case_id": "violation_exclusivity_epoch_overlap",
+        "event_count": 3173,
+        "mutated_sha256": "a109d47f237960ebb03b0cc3711654b49e897718c22eb3bfb4dcf77aaefdd851",
+        "mutated_trace": "/mnt/nvme/uav_sf/runs/oracle_validation/trace_mutations/violation_exclusivity_epoch_overlap/route_trace.jsonl",
+        "operators": [
+          "insert_old_epoch_event"
+        ]
+      },
+      "oracle_status": "VIOLATION",
+      "predicted_clauses": {
+        "continuity": "PASS",
+        "exclusivity": "VIOLATION",
+        "installation": "PASS",
+        "recovery": "VIOLATION",
+        "revocation": "VIOLATION"
+      },
+      "raw_result": "runs/oracle_validation/trace_mutations/violation_exclusivity_epoch_overlap/route_oracle.json",
+      "target_clause": "exclusivity"
+    },
+    {
+      "case_class": "VIOLATION",
+      "case_id": "violation_continuity_gap",
+      "correct": true,
+      "cross_clause_side_effects": [],
+      "evidence_completeness": {
+        "candidate_writer_coverage": "COMPLETE",
+        "clock_bridge": "VALID",
+        "critical_window": "BOUNDED",
+        "route_epoch": "COMPLETE",
+        "source_artifact": "COMPLETE",
+        "writer_sequence": "COMPLETE"
+      },
+      "expected_clauses": {
+        "continuity": "VIOLATION"
+      },
+      "mutation_report": {
+        "base_sha256_after": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_sha256_before": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_trace": "/mnt/nvme/uav_sf/data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl",
+        "case_id": "violation_continuity_gap",
+        "event_count": 3172,
+        "mutated_sha256": "c20d0b1c1ae7f9df2688498d12c6c7854c9a6f94a7bb20e5b599d8b753af02ff",
+        "mutated_trace": "/mnt/nvme/uav_sf/runs/oracle_validation/trace_mutations/violation_continuity_gap/route_trace.jsonl",
+        "operators": [
+          "make_continuity_gap"
+        ]
+      },
+      "oracle_status": "VIOLATION",
+      "predicted_clauses": {
+        "continuity": "VIOLATION",
+        "exclusivity": "UNKNOWN",
+        "installation": "PASS",
+        "recovery": "PASS",
+        "revocation": "PASS"
+      },
+      "raw_result": "runs/oracle_validation/trace_mutations/violation_continuity_gap/route_oracle.json",
+      "target_clause": "continuity"
+    },
+    {
+      "case_class": "VIOLATION",
+      "case_id": "violation_recovery_incomplete",
+      "correct": true,
+      "cross_clause_side_effects": [
+        "continuity",
+        "installation"
+      ],
+      "evidence_completeness": {
+        "candidate_writer_coverage": "COMPLETE",
+        "clock_bridge": "VALID",
+        "critical_window": "BOUNDED",
+        "route_epoch": "COMPLETE",
+        "source_artifact": "COMPLETE",
+        "writer_sequence": "COMPLETE"
+      },
+      "expected_clauses": {
+        "recovery": "VIOLATION"
+      },
+      "mutation_report": {
+        "base_sha256_after": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_sha256_before": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_trace": "/mnt/nvme/uav_sf/data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl",
+        "case_id": "violation_recovery_incomplete",
+        "event_count": 2004,
+        "mutated_sha256": "56ea6d6bf43bb17cd9cc3aa6bfc6c76e59110da4cfaa08c53bff5b04f1f4c5ba",
+        "mutated_trace": "/mnt/nvme/uav_sf/runs/oracle_validation/trace_mutations/violation_recovery_incomplete/route_trace.jsonl",
+        "operators": [
+          "delete_target_evidence"
+        ]
+      },
+      "oracle_status": "VIOLATION",
+      "predicted_clauses": {
+        "continuity": "VIOLATION",
+        "exclusivity": "UNKNOWN",
+        "installation": "VIOLATION",
+        "recovery": "VIOLATION",
+        "revocation": "PASS"
+      },
+      "raw_result": "runs/oracle_validation/trace_mutations/violation_recovery_incomplete/route_oracle.json",
+      "target_clause": "recovery"
+    },
+    {
+      "case_class": "VIOLATION",
+      "case_id": "violation_recovery_old_epoch",
+      "correct": true,
+      "cross_clause_side_effects": [
+        "revocation"
+      ],
+      "evidence_completeness": {
+        "candidate_writer_coverage": "COMPLETE",
+        "clock_bridge": "VALID",
+        "critical_window": "COMPLETE",
+        "route_epoch": "COMPLETE",
+        "source_artifact": "COMPLETE",
+        "writer_sequence": "COMPLETE"
+      },
+      "expected_clauses": {
+        "recovery": "VIOLATION"
+      },
+      "mutation_report": {
+        "base_sha256_after": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_sha256_before": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_trace": "/mnt/nvme/uav_sf/data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl",
+        "case_id": "violation_recovery_old_epoch",
+        "event_count": 3173,
+        "mutated_sha256": "e2ee1eb95154e1b0c8dc5ab773a83f530f6bd98d8c3662e33b3dd69e9516f5a5",
+        "mutated_trace": "/mnt/nvme/uav_sf/runs/oracle_validation/trace_mutations/violation_recovery_old_epoch/route_trace.jsonl",
+        "operators": [
+          "insert_old_epoch_event"
+        ]
+      },
+      "oracle_status": "VIOLATION",
+      "predicted_clauses": {
+        "continuity": "PASS",
+        "exclusivity": "PASS",
+        "installation": "PASS",
+        "recovery": "VIOLATION",
+        "revocation": "VIOLATION"
+      },
+      "raw_result": "runs/oracle_validation/trace_mutations/violation_recovery_old_epoch/route_oracle.json",
+      "target_clause": "recovery"
+    },
+    {
+      "case_class": "UNKNOWN",
+      "case_id": "unknown_truncated_critical_window",
+      "correct": true,
+      "cross_clause_side_effects": [],
+      "evidence_completeness": {
+        "candidate_writer_coverage": "COMPLETE",
+        "clock_bridge": "NOT_REQUIRED",
+        "critical_window": "BOUNDED",
+        "route_epoch": "COMPLETE",
+        "source_artifact": "INCOMPLETE",
+        "writer_sequence": "COMPLETE"
+      },
+      "expected_clauses": {
+        "continuity": "UNKNOWN",
+        "exclusivity": "UNKNOWN"
+      },
+      "mutation_report": {
+        "base_sha256_after": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_sha256_before": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_trace": "/mnt/nvme/uav_sf/data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl",
+        "case_id": "unknown_truncated_critical_window",
+        "event_count": 1585,
+        "mutated_sha256": "a07d16f48fc2209a430759ae19b05e1f36f9ab1f0c595058dc0d2e2fe444d0a9",
+        "mutated_trace": "/mnt/nvme/uav_sf/runs/oracle_validation/trace_mutations/unknown_truncated_critical_window/route_trace.jsonl",
+        "operators": [
+          "truncate_critical_window"
+        ]
+      },
+      "oracle_status": "UNKNOWN",
+      "predicted_clauses": {
+        "continuity": "UNKNOWN",
+        "exclusivity": "UNKNOWN",
+        "installation": "UNKNOWN",
+        "recovery": "UNKNOWN",
+        "revocation": "PASS"
+      },
+      "raw_result": "runs/oracle_validation/trace_mutations/unknown_truncated_critical_window/route_oracle.json",
+      "target_clause": "exclusivity"
+    },
+    {
+      "case_class": "UNKNOWN",
+      "case_id": "unknown_writer_sequence_missing",
+      "correct": true,
+      "cross_clause_side_effects": [],
+      "evidence_completeness": {
+        "candidate_writer_coverage": "COMPLETE",
+        "clock_bridge": "VALID",
+        "critical_window": "BOUNDED",
+        "route_epoch": "COMPLETE",
+        "source_artifact": "INCOMPLETE",
+        "writer_sequence": "INCOMPLETE"
+      },
+      "expected_clauses": {
+        "continuity": "UNKNOWN",
+        "exclusivity": "UNKNOWN"
+      },
+      "mutation_report": {
+        "base_sha256_after": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_sha256_before": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_trace": "/mnt/nvme/uav_sf/data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl",
+        "case_id": "unknown_writer_sequence_missing",
+        "event_count": 3172,
+        "mutated_sha256": "8e416868c78819e2a5aa73ff1ab092d3fd8802fe9e7aaace7adcae65342d46ae",
+        "mutated_trace": "/mnt/nvme/uav_sf/runs/oracle_validation/trace_mutations/unknown_writer_sequence_missing/route_trace.jsonl",
+        "operators": [
+          "drop_writer_sequence"
+        ]
+      },
+      "oracle_status": "UNKNOWN",
+      "predicted_clauses": {
+        "continuity": "UNKNOWN",
+        "exclusivity": "UNKNOWN",
+        "installation": "PASS",
+        "recovery": "PASS",
+        "revocation": "PASS"
+      },
+      "raw_result": "runs/oracle_validation/trace_mutations/unknown_writer_sequence_missing/route_oracle.json",
+      "target_clause": "exclusivity"
+    },
+    {
+      "case_class": "UNKNOWN",
+      "case_id": "unknown_candidate_writer_uninstrumented",
+      "correct": true,
+      "cross_clause_side_effects": [],
+      "evidence_completeness": {
+        "candidate_writer_coverage": "INCOMPLETE",
+        "clock_bridge": "VALID",
+        "critical_window": "INSUFFICIENT",
+        "route_epoch": "COMPLETE",
+        "source_artifact": "COMPLETE",
+        "writer_sequence": "INCOMPLETE"
+      },
+      "expected_clauses": {
+        "continuity": "UNKNOWN",
+        "exclusivity": "UNKNOWN"
+      },
+      "mutation_report": {
+        "base_sha256_after": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_sha256_before": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_trace": "/mnt/nvme/uav_sf/data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl",
+        "case_id": "unknown_candidate_writer_uninstrumented",
+        "event_count": 3172,
+        "mutated_sha256": "60dc9768b5eb4e6374aadaf0db6d24a0b8b731a8cf8326a97a6e795de4c68f4f",
+        "mutated_trace": "/mnt/nvme/uav_sf/runs/oracle_validation/trace_mutations/unknown_candidate_writer_uninstrumented/route_trace.jsonl",
+        "operators": [
+          "identity"
+        ]
+      },
+      "oracle_status": "UNKNOWN",
+      "predicted_clauses": {
+        "continuity": "UNKNOWN",
+        "exclusivity": "UNKNOWN",
+        "installation": "PASS",
+        "recovery": "PASS",
+        "revocation": "PASS"
+      },
+      "raw_result": "runs/oracle_validation/trace_mutations/unknown_candidate_writer_uninstrumented/route_oracle.json",
+      "target_clause": "exclusivity"
+    },
+    {
+      "case_class": "UNKNOWN",
+      "case_id": "unknown_clock_bridge_missing",
+      "correct": true,
+      "cross_clause_side_effects": [],
+      "evidence_completeness": {
+        "candidate_writer_coverage": "COMPLETE",
+        "clock_bridge": "MISSING",
+        "critical_window": "COMPLETE",
+        "route_epoch": "COMPLETE",
+        "source_artifact": "COMPLETE",
+        "writer_sequence": "COMPLETE"
+      },
+      "expected_clauses": {
+        "recovery": "UNKNOWN",
+        "revocation": "UNKNOWN"
+      },
+      "mutation_report": {
+        "base_sha256_after": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_sha256_before": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_trace": "/mnt/nvme/uav_sf/data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl",
+        "case_id": "unknown_clock_bridge_missing",
+        "event_count": 3172,
+        "mutated_sha256": "1755b37ab61fa432b9ff8ecf9eac2241be0dd8f238b3f729affbfa08ee225d6e",
+        "mutated_trace": "/mnt/nvme/uav_sf/runs/oracle_validation/trace_mutations/unknown_clock_bridge_missing/route_trace.jsonl",
+        "operators": [
+          "identity"
+        ]
+      },
+      "oracle_status": "UNKNOWN",
+      "predicted_clauses": {
+        "continuity": "PASS",
+        "exclusivity": "PASS",
+        "installation": "PASS",
+        "recovery": "UNKNOWN",
+        "revocation": "UNKNOWN"
+      },
+      "raw_result": "runs/oracle_validation/trace_mutations/unknown_clock_bridge_missing/route_oracle.json",
+      "target_clause": "revocation"
+    },
+    {
+      "case_class": "UNKNOWN",
+      "case_id": "unknown_route_epoch_missing",
+      "correct": true,
+      "cross_clause_side_effects": [],
+      "evidence_completeness": {
+        "candidate_writer_coverage": "COMPLETE",
+        "clock_bridge": "VALID",
+        "critical_window": "COMPLETE",
+        "route_epoch": "INCOMPLETE",
+        "source_artifact": "COMPLETE",
+        "writer_sequence": "COMPLETE"
+      },
+      "expected_clauses": {
+        "recovery": "UNKNOWN",
+        "revocation": "UNKNOWN"
+      },
+      "mutation_report": {
+        "base_sha256_after": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_sha256_before": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_trace": "/mnt/nvme/uav_sf/data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl",
+        "case_id": "unknown_route_epoch_missing",
+        "event_count": 3172,
+        "mutated_sha256": "674239115f1d21f24cc90cbeafa0335c7efe4658f395d4ecb84242f60d8362fb",
+        "mutated_trace": "/mnt/nvme/uav_sf/runs/oracle_validation/trace_mutations/unknown_route_epoch_missing/route_trace.jsonl",
+        "operators": [
+          "drop_source_route_epoch"
+        ]
+      },
+      "oracle_status": "UNKNOWN",
+      "predicted_clauses": {
+        "continuity": "PASS",
+        "exclusivity": "PASS",
+        "installation": "PASS",
+        "recovery": "UNKNOWN",
+        "revocation": "UNKNOWN"
+      },
+      "raw_result": "runs/oracle_validation/trace_mutations/unknown_route_epoch_missing/route_oracle.json",
+      "target_clause": "revocation"
+    },
+    {
+      "case_class": "UNKNOWN",
+      "case_id": "unknown_source_artifact_incomplete",
+      "correct": true,
+      "cross_clause_side_effects": [
+        "continuity"
+      ],
+      "evidence_completeness": {
+        "candidate_writer_coverage": "COMPLETE",
+        "clock_bridge": "VALID",
+        "critical_window": "BOUNDED",
+        "route_epoch": "COMPLETE",
+        "source_artifact": "INCOMPLETE",
+        "writer_sequence": "COMPLETE"
+      },
+      "expected_clauses": {
+        "installation": "UNKNOWN",
+        "recovery": "UNKNOWN"
+      },
+      "mutation_report": {
+        "base_sha256_after": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_sha256_before": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_trace": "/mnt/nvme/uav_sf/data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl",
+        "case_id": "unknown_source_artifact_incomplete",
+        "event_count": 2004,
+        "mutated_sha256": "1970dde0848d9b5cad137ebe43a3dcea440ee949dbc6c511a96db15bac970841",
+        "mutated_trace": "/mnt/nvme/uav_sf/runs/oracle_validation/trace_mutations/unknown_source_artifact_incomplete/route_trace.jsonl",
+        "operators": [
+          "delete_target_evidence"
+        ]
+      },
+      "oracle_status": "VIOLATION",
+      "predicted_clauses": {
+        "continuity": "VIOLATION",
+        "exclusivity": "UNKNOWN",
+        "installation": "UNKNOWN",
+        "recovery": "UNKNOWN",
+        "revocation": "PASS"
+      },
+      "raw_result": "runs/oracle_validation/trace_mutations/unknown_source_artifact_incomplete/route_oracle.json",
+      "target_clause": "installation"
+    },
+    {
+      "case_class": "NOT_APPLICABLE",
+      "case_id": "not_applicable_no_transition",
+      "correct": true,
+      "cross_clause_side_effects": [],
+      "evidence_completeness": {
+        "candidate_writer_coverage": "NOT_APPLICABLE",
+        "clock_bridge": "NOT_REQUIRED",
+        "critical_window": "NOT_APPLICABLE",
+        "route_epoch": "NOT_APPLICABLE",
+        "source_artifact": "COMPLETE",
+        "writer_sequence": "NOT_APPLICABLE"
+      },
+      "expected_clauses": {
+        "continuity": "NOT_APPLICABLE",
+        "exclusivity": "NOT_APPLICABLE",
+        "installation": "NOT_APPLICABLE",
+        "recovery": "NOT_APPLICABLE",
+        "revocation": "NOT_APPLICABLE"
+      },
+      "mutation_report": {
+        "base_sha256_after": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_sha256_before": "c4786224f63f69c908728366e0076daeae190249eecb4d44808fe12e237cad19",
+        "base_trace": "/mnt/nvme/uav_sf/data/processed/oracle_validation/reference_traces/p2/route_trace.jsonl",
+        "case_id": "not_applicable_no_transition",
+        "event_count": 71,
+        "mutated_sha256": "a9ba59bea2577bd16e3cb57115298cf0f9cb3e8d93b168c17a00740600768313",
+        "mutated_trace": "/mnt/nvme/uav_sf/runs/oracle_validation/trace_mutations/not_applicable_no_transition/route_trace.jsonl",
+        "operators": [
+          "retain_no_transition"
+        ]
+      },
+      "oracle_status": "NOT_APPLICABLE",
+      "predicted_clauses": {
+        "continuity": "NOT_APPLICABLE",
+        "exclusivity": "NOT_APPLICABLE",
+        "installation": "NOT_APPLICABLE",
+        "recovery": "NOT_APPLICABLE",
+        "revocation": "NOT_APPLICABLE"
+      },
+      "raw_result": "runs/oracle_validation/trace_mutations/not_applicable_no_transition/route_oracle.json",
+      "target_clause": "all"
+    },
+    {
+      "case_class": "NOT_APPLICABLE",
+      "case_id": "not_applicable_recovery_external_target",
+      "correct": true,
+      "cross_clause_side_effects": [
+        "installation"
+      ],
+      "evidence_completeness": {
+        "candidate_writer_coverage": "COMPLETE",
+        "clock_bridge": "NOT_REQUIRED",
+        "critical_window": "COMPLETE",
+        "route_epoch": "INCOMPLETE",
+        "source_artifact": "COMPLETE",
+        "writer_sequence": "COMPLETE"
+      },
+      "expected_clauses": {
+        "recovery": "NOT_APPLICABLE"
+      },
+      "mutation_report": {
+        "base_sha256_after": "b9b90561e4a3482af09e57d3da21c294c66fcc9627ce25d6a2edbf81c1842d1e",
+        "base_sha256_before": "b9b90561e4a3482af09e57d3da21c294c66fcc9627ce25d6a2edbf81c1842d1e",
+        "base_trace": "/mnt/nvme/uav_sf/data/processed/oracle_validation/reference_traces/p0/route_trace.jsonl",
+        "case_id": "not_applicable_recovery_external_target",
+        "event_count": 140,
+        "mutated_sha256": "f23e9b53df59c0eb1863f6634ad02dda0e6a18c7f0266687ff988401fe619c5a",
+        "mutated_trace": "/mnt/nvme/uav_sf/runs/oracle_validation/trace_mutations/not_applicable_recovery_external_target/route_trace.jsonl",
+        "operators": [
+          "retain_transition"
+        ]
+      },
+      "oracle_status": "VIOLATION",
+      "predicted_clauses": {
+        "continuity": "PASS",
+        "exclusivity": "PASS",
+        "installation": "VIOLATION",
+        "recovery": "NOT_APPLICABLE",
+        "revocation": "UNKNOWN"
+      },
+      "raw_result": "runs/oracle_validation/trace_mutations/not_applicable_recovery_external_target/route_oracle.json",
+      "target_clause": "recovery"
+    }
+  ],
+  "correct_clause_count": 43,
+  "incomplete_evidence_unknown_count": 12,
+  "manifest": "experiments/oracle_validation/trace_cases.yaml",
+  "mutant_detection_count": 14,
+  "mutant_miss_count": 0,
+  "normal_case_false_positive_count": 0,
+  "oracle_validation_profile": "trace-mutation-v1",
+  "oracle_version": "0.3",
+  "schema_version": "1.0",
+  "scored_clause_count": 43,
+  "threshold_profile": {
+    "id": "oracle-validation-preregistered-v1",
+    "thresholds": {
+      "continuity_period_multiplier": 3.0,
+      "installation_deadline_ms": 300.0,
+      "minimum_continuity_gap_ms": 20.0,
+      "recovery_deadline_ms": 300.0
+    }
+  },
+  "unexpected_unknown_count": 0
+}

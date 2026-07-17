@@ -1,0 +1,125 @@
+diff --git a/src/modules/mc_pos_control/MulticopterPositionControl.hpp b/src/modules/mc_pos_control/MulticopterPositionControl.hpp
+index 83da7cc..031a916 100644
+--- a/src/modules/mc_pos_control/MulticopterPositionControl.hpp
++++ b/src/modules/mc_pos_control/MulticopterPositionControl.hpp
+@@ -119,6 +119,19 @@ private:
+ 	trajectory_setpoint_s _setpoint{PositionControl::empty_trajectory_setpoint};
+ 	trajectory_setpoint_s _last_valid_setpoint{PositionControl::empty_trajectory_setpoint};
+ 	vehicle_control_mode_s _vehicle_control_mode{};
++
++	// TEST-ONLY ORACLE VALIDATION MUTANT -- DO NOT USE AS CANONICAL SUT.
++	enum class OracleValidationMutant : uint8_t {
++		Disabled = 0,
++		InstallDelay,
++		RecoveryIncomplete,
++		OldRouteLateConsumption,
++	};
++
++	OracleValidationMutant _oracle_validation_mutant{OracleValidationMutant::Disabled};
++	hrt_abstime _oracle_validation_block_until{0};
++	uint64_t _oracle_validation_delay_us{0};
++
+ 	uint32_t _route_observability_sequence{0};
+ 	hrt_abstime _last_route_observability_pub{0};
+ 
+diff --git a/src/modules/mc_pos_control/MulticopterPositionControl.cpp b/src/modules/mc_pos_control/MulticopterPositionControl.cpp
+index 431499a..d1aa800 100644
+--- a/src/modules/mc_pos_control/MulticopterPositionControl.cpp
++++ b/src/modules/mc_pos_control/MulticopterPositionControl.cpp
+@@ -35,6 +35,8 @@
+ 
+ #include "MulticopterPositionControl.hpp"
+ 
++#include <cstdlib>
++#include <cstring>
+ #include <float.h>
+ #include <lib/mathlib/mathlib.h>
+ #include <lib/matrix/matrix/math.hpp>
+@@ -53,6 +55,31 @@ MulticopterPositionControl::MulticopterPositionControl(bool vtol) :
+ 	_tilt_limit_slew_rate.setSlewRate(.2f);
+ 	_takeoff_status_pub.advertise();
++
++	// TEST-ONLY ORACLE VALIDATION MUTANT -- DO NOT USE AS CANONICAL SUT.
++	const char *mutant_mode = std::getenv("UAV_SF_ORACLE_MUTANT_MODE");
++	const char *delay_ms = std::getenv("UAV_SF_ORACLE_MUTANT_DELAY_MS");
++
++	if (mutant_mode != nullptr && std::strcmp(mutant_mode, "install_delay") == 0) {
++		_oracle_validation_mutant = OracleValidationMutant::InstallDelay;
++
++	} else if (mutant_mode != nullptr && std::strcmp(mutant_mode, "recovery_incomplete") == 0) {
++		_oracle_validation_mutant = OracleValidationMutant::RecoveryIncomplete;
++
++	} else if (mutant_mode != nullptr && std::strcmp(mutant_mode, "old_route_late_consumption") == 0) {
++		_oracle_validation_mutant = OracleValidationMutant::OldRouteLateConsumption;
++	}
++
++	if (_oracle_validation_mutant != OracleValidationMutant::Disabled) {
++		const unsigned long configured_delay_ms = delay_ms != nullptr ? std::strtoul(delay_ms, nullptr, 10) : 500UL;
++		_oracle_validation_delay_us = static_cast<uint64_t>(configured_delay_ms) * 1000ULL;
++		PX4_WARN("TEST-ONLY ORACLE VALIDATION MUTANT active mode=%s delay_ms=%lu",
++			 mutant_mode, configured_delay_ms);
++	}
+ }
+ 
+ MulticopterPositionControl::~MulticopterPositionControl()
+@@ -401,9 +428,32 @@ void MulticopterPositionControl::Run()
+ 		_sample_interval_s.update(dt);
+ 
+ 		if (_vehicle_control_mode_sub.updated()) {
++			const bool previous_offboard_enabled = _vehicle_control_mode.flag_control_offboard_enabled;
+ 			const bool previous_position_control_enabled = _vehicle_control_mode.flag_multicopter_position_control_enabled;
+ 
+ 			if (_vehicle_control_mode_sub.copy(&_vehicle_control_mode)) {
++				const bool entering_offboard = !previous_offboard_enabled
++								&& _vehicle_control_mode.flag_control_offboard_enabled;
++				const bool leaving_offboard = previous_offboard_enabled
++							       && !_vehicle_control_mode.flag_control_offboard_enabled;
++
++				if ((_oracle_validation_mutant == OracleValidationMutant::InstallDelay && entering_offboard)
++				    || ((_oracle_validation_mutant == OracleValidationMutant::RecoveryIncomplete
++					 || _oracle_validation_mutant == OracleValidationMutant::OldRouteLateConsumption)
++					&& leaving_offboard)) {
++					_oracle_validation_block_until = hrt_absolute_time() + _oracle_validation_delay_us;
++
++					if (_oracle_validation_mutant != OracleValidationMutant::OldRouteLateConsumption) {
++						_setpoint = PositionControl::empty_trajectory_setpoint;
++						_control.setInputSetpoint(_setpoint);
++					}
++				}
++
+ 				if (!previous_position_control_enabled && _vehicle_control_mode.flag_multicopter_position_control_enabled) {
+ 					_time_position_control_enabled = _vehicle_control_mode.timestamp;
+ 
+@@ -438,14 +488,27 @@ void MulticopterPositionControl::Run()
+ 			_goto_control.update(dt, states.position, states.velocity, states.acceleration, states.yaw);
+ 		}
+ 
+-		if (_trajectory_setpoint_sub.update(&_setpoint)) {
+-			route_observability::publish(
+-				_route_observability_pub, _route_observability_sequence, _last_route_observability_pub,
+-				route_observability_s::EVENT_SETPOINT_CONSUMED,
+-				route_observability_s::SOURCE_EXTERNAL_TRAJECTORY,
+-				route_observability_s::TOPIC_TRAJECTORY_SETPOINT,
+-				route_observability_s::WRITER_UNKNOWN, _setpoint.timestamp);
++		trajectory_setpoint_s candidate_setpoint{};
++		const bool candidate_updated = _trajectory_setpoint_sub.update(&candidate_setpoint);
++		const bool oracle_validation_blocked = hrt_absolute_time() < _oracle_validation_block_until;
++
++		if (candidate_updated && !oracle_validation_blocked) {
++			_setpoint = candidate_setpoint;
++		}
++
++		if ((candidate_updated && !oracle_validation_blocked)
++		    || (_oracle_validation_mutant == OracleValidationMutant::OldRouteLateConsumption
++			&& oracle_validation_blocked && _setpoint.timestamp != 0)) {
++			// TEST-ONLY mutant republishes cached consumption evidence only when the cached setpoint
++			// remains the actual PositionControl input.
++			route_observability::publish(
++				_route_observability_pub, _route_observability_sequence, _last_route_observability_pub,
++				route_observability_s::EVENT_SETPOINT_CONSUMED,
++				route_observability_s::SOURCE_EXTERNAL_TRAJECTORY,
++				route_observability_s::TOPIC_TRAJECTORY_SETPOINT,
++				route_observability_s::WRITER_UNKNOWN, _setpoint.timestamp);
+ 		}
+ 
+ 		adjustSetpointForEKFResets(vehicle_local_position, _setpoint);
