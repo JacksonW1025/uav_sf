@@ -25,6 +25,7 @@ class BehaviorPhase(str, Enum):
 class CanonicalCommand:
     timestamp: float
     behavior_phase: str
+    setpoint_level: str
     position: Optional[Vector3]
     velocity: Optional[Vector3]
     acceleration: Optional[Vector3]
@@ -35,6 +36,8 @@ class CanonicalCommand:
     def __post_init__(self) -> None:
         if not math.isfinite(self.timestamp):
             raise ValueError("timestamp must be finite")
+        if self.setpoint_level not in {"velocity", "unknown"}:
+            raise ValueError("the current behavior core emits only velocity or unknown setpoints")
         for field_name in ("position", "velocity", "acceleration"):
             value = getattr(self, field_name)
             if value is not None and (len(value) != 3 or not all(math.isfinite(v) for v in value)):
@@ -83,6 +86,7 @@ class CommonBehaviorCore:
         return CanonicalCommand(
             timestamp=timestamp,
             behavior_phase=BehaviorPhase.TAKEOFF_MARKER.value,
+            setpoint_level="unknown",
             position=None,
             velocity=None,
             acceleration=None,
@@ -118,6 +122,7 @@ class CommonBehaviorCore:
         return CanonicalCommand(
             timestamp=timestamp,
             behavior_phase=BehaviorPhase.MISSION_COMPLETE.value,
+            setpoint_level="velocity",
             position=None,
             velocity=(0.0, 0.0, 0.0),
             acceleration=None,
@@ -130,6 +135,7 @@ class CommonBehaviorCore:
         return CanonicalCommand(
             timestamp=timestamp,
             behavior_phase=BehaviorPhase.CANCELLED.value,
+            setpoint_level="velocity",
             position=None,
             velocity=(0.0, 0.0, 0.0),
             acceleration=None,
@@ -145,6 +151,7 @@ class CommonBehaviorCore:
         return CanonicalCommand(
             timestamp=timestamp,
             behavior_phase=phase.value,
+            setpoint_level="velocity",
             position=None,
             velocity=(float(velocity[0]), float(velocity[1]), float(velocity[2])),
             acceleration=None,

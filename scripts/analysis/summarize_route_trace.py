@@ -15,6 +15,8 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from scripts.tracing.actuator_writer_collector import summarize as summarize_writers
+from scripts.oracles.route_oracle_v0 import run as run_oracle
+from scripts.tracing.route_trace_collector import PROCESSED_ALLOCATOR_INPUT_STRIDE
 
 
 def _artifact_identity(path: Path) -> dict[str, object]:
@@ -70,9 +72,12 @@ def summarize(
     if scenario_label is not None:
         baseline["runner_scenario"] = baseline.get("scenario")
         baseline["scenario"] = scenario_label
+    oracle = run_oracle(trace)
     return {
-        "schema_version": "1.0",
+        "schema_version": "1.1",
         "run_id": trace.parent.name,
+        "execution_status": baseline.get("status", "UNKNOWN"),
+        "route_verdict": oracle["status"],
         "baseline": baseline,
         "trace_event_count": event_count,
         "event_type_counts": dict(sorted(counts.items())),
@@ -99,6 +104,11 @@ def summarize(
         },
         "lifecycle_evidence": lifecycle_evidence,
         "source_artifacts": [_artifact_identity(path) for path in (sources or [])],
+        "processed_trace_policy": {
+            "actuator_output_stride": 1,
+            "allocator_input_stride": PROCESSED_ALLOCATOR_INPUT_STRIDE,
+            "complete_source": "source_artifacts ULog",
+        },
     }
 
 

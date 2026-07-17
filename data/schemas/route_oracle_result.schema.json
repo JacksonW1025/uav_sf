@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uav-sf.local/schemas/route_oracle_result.schema.json",
+  "title": "Route Oracle v0 result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "route_oracle_version",
+    "run_id",
+    "status",
+    "transition",
+    "clock_bridge",
+    "clauses"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "route_oracle_version": {"const": "0.1"},
+    "run_id": {"type": "string", "minLength": 1},
+    "status": {"enum": ["PASS", "VIOLATION", "UNKNOWN", "NOT_APPLICABLE"]},
+    "transition": {
+      "type": ["object", "null"],
+      "additionalProperties": true
+    },
+    "clock_bridge": {
+      "type": ["object", "null"],
+      "additionalProperties": true
+    },
+    "clauses": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["revocation", "installation", "exclusivity", "continuity", "recovery"],
+      "properties": {
+        "revocation": {"$ref": "#/$defs/clause"},
+        "installation": {"$ref": "#/$defs/clause"},
+        "exclusivity": {"$ref": "#/$defs/clause"},
+        "continuity": {"$ref": "#/$defs/clause"},
+        "recovery": {"$ref": "#/$defs/clause"}
+      }
+    }
+  },
+  "$defs": {
+    "clause": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "metrics", "evidence", "reasons"],
+      "properties": {
+        "status": {"enum": ["PASS", "VIOLATION", "UNKNOWN", "NOT_APPLICABLE"]},
+        "metrics": {"type": "object"},
+        "evidence": {"type": "array", "items": {"type": "object"}},
+        "reasons": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  }
+}

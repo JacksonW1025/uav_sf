@@ -17,6 +17,8 @@ def test_proof_of_life_setpoint_and_sequence_are_coupled() -> None:
     assert first.proof_of_life["position"] is False
     assert first.trajectory_setpoint["timestamp"] == first.producer_timestamp_us
     assert first.trajectory_setpoint["producer_identity"] == "test.producer"
+    assert first.trajectory_setpoint["behavior_phase"] == "straight_line"
+    assert first.trajectory_setpoint["setpoint_level"] == "velocity"
     assert all(math.isnan(value) for value in first.trajectory_setpoint["position"])
 
 

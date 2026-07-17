@@ -1,0 +1,10 @@
+module	source_path	symbol	topic_instance	compiled_in_px4_sitl_default	route_family	writer_id	instrumented	observation_profile	notes
+control_allocator	src/modules/control_allocator/ControlAllocator.cpp	ControlAllocator::_actuator_motors_pub	0	true	multicopter/fixed-wing/vtol	2	true	BASELINE|TRANSITION	Current x500 P0 candidate; explicit publish call.
+rover_ackermann	src/modules/rover_ackermann/AckermannActControl/AckermannActControl.cpp	AckermannActControl::_actuator_motors_pub	0	true	rover_ackermann	3	true	BASELINE|TRANSITION	Compiled in default but not started by x500 P0 airframe.
+rover_differential	src/modules/rover_differential/DifferentialActControl/DifferentialActControl.cpp	DifferentialActControl::_actuator_motors_pub	0	true	rover_differential	4	true	BASELINE|TRANSITION	Compiled in default but not started by x500 P0 airframe.
+rover_mecanum	src/modules/rover_mecanum/MecanumActControl/MecanumActControl.cpp	MecanumActControl::_actuator_motors_pub	0	true	rover_mecanum	5	true	BASELINE|TRANSITION	Compiled in default but not started by x500 P0 airframe.
+mc_raptor	src/modules/mc_raptor/mc_raptor.cpp	Raptor::_actuator_motors_pub	0	false	multicopter_raptor	6	false	NONE	Only px4_sitl_raptor; oracle must return INSUFFICIENT_COVERAGE if selected.
+mc_nn_control	src/modules/mc_nn_control/mc_nn_control.cpp	Mc_nn_control::_actuator_motors_pub	0	false	multicopter_neural	7	false	NONE	Only px4_sitl_neural; oracle must return INSUFFICIENT_COVERAGE if selected.
+uavcannode	src/drivers/uavcannode/Subscribers/ESCRawCommand.hpp	uavcannode::ESCRawCommand::_actuator_motors_pub	0	false	uavcan_esc_raw	8	false	NONE	Driver disabled in px4_sitl_default.
+spacecraft	src/modules/spacecraft/SpacecraftHandler.hpp	SpacecraftHandler::_actuator_motors_pub	multi	false	spacecraft	9	false	NONE	Declaration found; no publish call at locked commit; spacecraft board only.
+mixer_module_tests	src/lib/mixer_module/mixer_module_tests.cpp	MixerTest::_actuator_motors_pub	0	false	unit_test	10	false	NONE	Test-only publisher; not in px4 SITL runtime binary.

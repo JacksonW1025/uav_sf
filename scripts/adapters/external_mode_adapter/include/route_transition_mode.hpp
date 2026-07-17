@@ -63,7 +63,7 @@ class RouteTransitionMode final : public px4_ros2::ModeBase {
     trajectory_setpoint_->update(velocity, {}, yaw, {});
     if ((sequence_++ % 20U) == 0U) {
       RCLCPP_INFO(node().get_logger(),
-                  "{\"event_type\":\"external_mode_setpoint\",\"phase\":\"%s\",\"sequence\":%llu}",
+                  "{\"event_type\":\"external_mode_setpoint\",\"behavior_phase\":\"%s\",\"setpoint_level\":\"velocity\",\"sequence\":%llu}",
                   phase, static_cast<unsigned long long>(sequence_ - 1U));
     }
   }

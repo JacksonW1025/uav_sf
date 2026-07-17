@@ -1,0 +1,114 @@
+{
+  "status": "FAIL",
+  "criteria": [
+    {
+      "id": 1,
+      "status": "PASS",
+      "criterion": "patch includes RouteObservability.msg",
+      "evidence": "new-file diff section, fields, constants, and CMake entry validated"
+    },
+    {
+      "id": 2,
+      "status": "PASS",
+      "criterion": "patch applies and builds in a fresh locked worktree",
+      "evidence": "locked commit 4ae21a5e569d3d89c2f6366688cbacb3e93437c9; generated header and px4 binary verified"
+    },
+    {
+      "id": 3,
+      "status": "PASS",
+      "criterion": "TRANSITION profile reaches 100 Hz or records every publication",
+      "evidence": "121.709 Hz final-writer average; rate alternative passed; per-publication completeness did not pass"
+    },
+    {
+      "id": 4,
+      "status": "PASS",
+      "criterion": "writer candidate inventory complete",
+      "evidence": "9 locked-source publishers inventoried"
+    },
+    {
+      "id": 5,
+      "status": "PASS",
+      "criterion": "current P0 candidate writers instrumented",
+      "evidence": "x500 current candidate control_allocator instrumented; all 4 px4_sitl_default compiled candidates instrumented"
+    },
+    {
+      "id": 6,
+      "status": "PASS",
+      "criterion": "writer collector checks sequence and coverage",
+      "evidence": "collector tests cover exclusive, competing, gaps, candidates, holes, and no evidence"
+    },
+    {
+      "id": 7,
+      "status": "PASS",
+      "criterion": "schema 1.1 separates setpoint_level and behavior_phase",
+      "evidence": "schema and producer tests passed"
+    },
+    {
+      "id": 8,
+      "status": "PASS",
+      "criterion": "Route Oracle v0 tests pass",
+      "evidence": "version 0.1 unit tests passed"
+    },
+    {
+      "id": 9,
+      "status": "PASS",
+      "criterion": "new P0-A/B/C traces validate against schema 1.1",
+      "evidence": "all three traces validated; execution PASS and route verdict UNKNOWN"
+    },
+    {
+      "id": 10,
+      "status": "FAIL",
+      "criterion": "P0-D completes with a bounded conclusion",
+      "evidence": "bounded post-disarm retention was observed, but re-arm was denied and clean re-entry/slot-removal evidence was not obtained"
+    },
+    {
+      "id": 11,
+      "status": "PASS",
+      "criterion": "M1 complete",
+      "evidence": "26 inventory rows"
+    },
+    {
+      "id": 12,
+      "status": "PASS",
+      "criterion": "M3 complete",
+      "evidence": "12 issue/PR/commit rows"
+    },
+    {
+      "id": 13,
+      "status": "PASS",
+      "criterion": "M5 complete",
+      "evidence": "3 candidates; Aerostack2 primary and MRS UAV System backup"
+    },
+    {
+      "id": 14,
+      "status": "PASS",
+      "criterion": "full repository validator passes",
+      "evidence": "15-step staged-tree repository validator passed; 39 project tests passed"
+    }
+  ],
+  "blocking_items": [
+    "P0-D could not re-arm after graceful external-mode shutdown because PX4 system-health checks denied arming; clean re-entry and registry-slot removal remain insufficient evidence.",
+    "TRANSITION logging exceeded 100 Hz but final-writer streams still contained sequence gaps (19 in P0-A, 20 in P0-B, 24 in P0-C), so full-window exclusivity and continuity remain UNKNOWN."
+  ],
+  "p0_runs": [
+    {
+      "run_id": "p0a_offboard_phase_a1_20260716T0710",
+      "execution_status": "PASS",
+      "route_verdict": "UNKNOWN"
+    },
+    {
+      "run_id": "p0b_external_mode_phase_a1_20260716T0720",
+      "execution_status": "PASS",
+      "route_verdict": "UNKNOWN"
+    },
+    {
+      "run_id": "p0c_executor_phase_a1_20260716T0730",
+      "execution_status": "PASS",
+      "route_verdict": "UNKNOWN"
+    }
+  ],
+  "p0d_result": "post-disarm nav-state retention; insufficient evidence for clean re-entry; no data-plane residue established",
+  "route_oracle_version": "0.1",
+  "p2": "NOT_RUN_GATE_FAIL",
+  "p3": "NOT_RUN_GATE_FAIL"
+}

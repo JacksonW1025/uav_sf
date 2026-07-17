@@ -1,42 +1,21 @@
 # Writer attribution model
 
-Basis: locked PX4 commit `4ae21a5e569d3d89c2f6366688cbacb3e93437c9`.
+Basis: locked PX4 `4ae21a5e569d3d89c2f6366688cbacb3e93437c9`.
 
-uORB identifies a topic and optional instance, not the publishing module in
-each sample. `PublicationMulti` allocates instances, but an instance is not a
-stable writer identity contract. Several modules can advertise
-`actuator_motors`; instance 0 therefore does not prove which module wrote a
-logged value.
+uORB topic instance is not writer identity. `PublicationMulti` assigns instances, but multiple modules can advertise `actuator_motors`, and instance allocation can change with startup order. ULog preserves topic, multi-instance, fields, and timestamps; it does not add module identity.
 
-ULog records topic name, multi-instance ID, message fields, and timestamps. It
-does not add the uORB publisher's process/module identity. Timestamp equality
-or a distinctive value pattern is correlation evidence, not attribution.
+The source inventory found nine publisher/declaration families. Four are compiled into `px4_sitl_default`: `control_allocator`, `rover_ackermann`, `rover_differential`, and `rover_mecanum`; all four are instrumented. The x500 P0 runtime candidate is `control_allocator`. Five stable IDs are reserved for non-default or test families (`mc_raptor`, `mc_nn_control`, `uavcannode`, `spacecraft`, and mixer tests) but those sources are not instrumented by this patch. Their selection therefore produces `INSUFFICIENT_COVERAGE`, never an inferred writer.
 
-For the locked multicopter P0 route:
+Each publisher emits an observation event containing writer ID, source/topic ID, uORB subject timestamp, profile, expected period, and a publisher-local monotonic sequence. BASELINE is about 10 Hz. TRANSITION is configured for 8 ms and measured at about 122 Hz. The logger records all topic instances with interval zero.
 
-- `mc_rate_control` publishes `vehicle_torque_setpoint` and
-  `vehicle_thrust_setpoint`;
-- `control_allocator` subscribes to those topics and publishes
-  `actuator_motors`;
-- other compiled modules, including direct-controller paths, can also publish
-  `actuator_motors`, so source inspection alone does not establish the runtime
-  writer.
+`actuator_writer_collector.py` returns exactly one of:
 
-ROS 2 publisher GIDs can distinguish DDS endpoints inside ROS tooling, but PX4
-uORB messages do not carry that GID through the XRCE bridge. The adapter
-therefore records a stable producer identity and publish sequence on the ROS
-side. Registration replies associate an External Mode name with assigned mode,
-executor, and arming-check IDs. Offboard lacks that registration association.
+- `EXCLUSIVE`: all configured candidates are instrumented, a transition window exists, sequences are continuous, rate/coverage is adequate, there is no observation hole, and only one writer is observed;
+- `COMPETING_WRITERS`: multiple stable writer IDs occur in one exclusivity window;
+- `INSUFFICIENT_COVERAGE`: candidate instrumentation, rate, transition, or window coverage is missing;
+- `SEQUENCE_GAP`: publisher sequence proves logger loss;
+- `NO_EVIDENCE`: no writer observations exist.
 
-The minimal patch adds a `route_observability` uORB topic with explicit event,
-source, topic, writer, subject timestamp, and per-publisher sequence fields.
-It records trajectory consumption, the classical multicopter allocator-input
-writer, and the final control-allocator motor writer. It is logged, structured,
-low overhead, and never read by control code. This is sufficient for the
-normal P0 multicopter path, but broader tests must add writer IDs at every
-candidate publisher rather than infer them from uORB instance numbers.
+The Phase A.1 P0 traces observe only `control_allocator`, but contain writer sequence gaps and post-disarm logger holes. Their status is `SEQUENCE_GAP`; they do not prove whole-window writer exclusivity.
 
-The collector reports `UNKNOWN`/`INSUFFICIENT_EVIDENCE` if patched writer
-events are absent, sequence continuity is broken, or two writer IDs occur in a
-window whose route contract permits only one. It never promotes a mode label or
-ULog instance to writer identity.
+Finally, a writer module may be shared by old and target routes. Even perfectly identifying `control_allocator` cannot attribute a post-transition motor publication to one upstream route. Route Oracle v0 therefore requires a `route_epoch_id` for old-writer revocation; absent that causal identifier, revocation/recovery writer claims are `UNKNOWN` rather than treating continued allocator output as old-route residue.

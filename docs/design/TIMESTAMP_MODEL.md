@@ -35,6 +35,14 @@ setpoint received → setpoint consumed → allocator input published
 → actuator output published → actuator output observed
 ```
 
+`RouteObservability` records `timestamp`, `subject_timestamp`, publisher-local
+`sequence`, profile, and expected period. BASELINE is expected every 100 ms
+(about 10 Hz). TRANSITION is configured every 8 ms and measured at 121.71 Hz
+for the final writer. Logger interval `0` means every uORB update in the PX4
+logger API and is not a frequency in hertz. A sequence discontinuity proves
+that an event was produced but is absent from ULog; the missing interval must
+remain unknown even if the average rate exceeds 100 Hz.
+
 ROS/DDS and PX4 timestamps are not subtracted directly. At run start and after
 every time-sync reset, record pairs `(ros_receive_ns, px4_message_timestamp_us)`
 from a PX4 outbound message. Estimate `offset_ns = ros_receive_ns -
@@ -53,6 +61,12 @@ non-jumping residual. Each bridge segment has its own ID and uncertainty.
 - Gap is the interval from old-route revocation to the first valid target-route
   consumption/writer event when no valid safe output exists.
 - Negative ages beyond bridge uncertainty invalidate the sample.
+- The measured TRANSITION trace has a maximum recorded writer gap of 20 ms and
+  sequence loss. It can detect observed competing writers at that scale, but
+  cannot exclude shorter overlap or no-owner gaps inside a missing sequence.
+- Logger stop/start at disarm creates multiple ULog files in the same PX4 boot.
+  P0-D merges all segments on the common PX4 timestamp axis; selecting only the
+  last file would erase the pre-disarm transition.
 
 ## Replay and accelerated simulation
 

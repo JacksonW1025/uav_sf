@@ -15,11 +15,13 @@ def test_behavior_sequence_and_markers() -> None:
     core = CommonBehaviorCore()
     assert core.takeoff_marker(1.0).behavior_phase == BehaviorPhase.TAKEOFF_MARKER.value
     assert core.command_at(0.0, 2.0).behavior_phase == BehaviorPhase.HOVER.value
+    assert core.command_at(0.0, 2.0).setpoint_level == "velocity"
     assert core.command_at(3.0, 3.0).behavior_phase == BehaviorPhase.STRAIGHT_LINE.value
     assert core.command_at(8.0, 4.0).behavior_phase == BehaviorPhase.LOW_SPEED_TURN.value
     completed = core.command_at(core.duration_seconds, 5.0)
     assert completed.termination_event == "mission_complete"
     assert core.cancel(6.0).termination_event == "cancel"
+    assert core.takeoff_marker(1.0).setpoint_level == "unknown"
 
 
 def test_commands_are_finite_and_low_speed() -> None:

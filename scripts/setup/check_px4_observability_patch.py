@@ -8,10 +8,20 @@ import json
 import subprocess
 from pathlib import Path
 
+import yaml
+
 
 ROOT = Path(__file__).resolve().parents[2]
 PATCH = ROOT / "patches" / "px4" / "route_observability" / "route_observability_topics.patch"
-LOCKED_COMMIT = "4ae21a5e569d3d89c2f6366688cbacb3e93437c9"
+LOCK = ROOT / "config" / "dependencies.lock.yaml"
+
+
+def locked_commit() -> str:
+    value = yaml.safe_load(LOCK.read_text(encoding="utf-8"))
+    commit = value["px4_autopilot"]["commit"]
+    if not isinstance(commit, str) or len(commit) != 40:
+        raise ValueError("config/dependencies.lock.yaml has an invalid PX4 commit")
+    return commit
 
 
 def check(px4_dir: Path) -> dict[str, object]:
@@ -21,8 +31,9 @@ def check(px4_dir: Path) -> dict[str, object]:
         text=True,
         capture_output=True,
     ).stdout.strip()
-    if head != LOCKED_COMMIT:
-        return {"status": "WRONG_BASE", "head": head, "expected": LOCKED_COMMIT}
+    expected = locked_commit()
+    if head != expected:
+        return {"status": "WRONG_BASE", "head": head, "expected": expected}
 
     forward = subprocess.run(
         ["git", "-C", str(px4_dir), "apply", "--check", str(PATCH)],

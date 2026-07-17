@@ -59,6 +59,7 @@ class OffboardAdapterContract:
             "acceleration": command.acceleration or (math.nan, math.nan, math.nan),
             "yaw": command.yaw if command.yaw is not None else math.nan,
             "behavior_phase": command.behavior_phase,
+            "setpoint_level": command.setpoint_level,
             "termination_event": command.termination_event,
             "producer_identity": self.producer_identity,
         }
@@ -140,6 +141,7 @@ class Px4OffboardAdapter:
                 "publish_sequence": publication.publish_sequence,
                 "producer_identity": self.contract.producer_identity,
                 "behavior_phase": command.behavior_phase,
+                "setpoint_level": command.setpoint_level,
             }
         )
         return publication.publish_sequence

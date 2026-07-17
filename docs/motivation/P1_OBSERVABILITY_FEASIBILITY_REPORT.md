@@ -2,57 +2,31 @@
 
 Locked PX4: `4ae21a5e569d3d89c2f6366688cbacb3e93437c9`.
 
-## Result
+## Phase A.1 correction
 
-All 14 route fields have an explicit status and source/collector contract:
+The prior feasibility statement was too strong. The old patch rate-limited allocator/writer observations with a 100 ms elapsed-time check, which is about 10 Hz, not 100 Hz. It also referenced `RouteObservability.msg` from CMake without carrying the new-file patch segment. Phase A.1 recovered the used message definition, assigned stable IDs from source/generated-header/ULog evidence, and made the patch self-contained.
 
-| Status | Count | Fields |
-|---|---:|---|
-| DIRECT | 4 | declared mode, registration state, actuator output, failsafe state |
-| DERIVED | 7 | authority source, setpoint level/topic/freshness, enabled/bypassed modules, fallback target |
-| INSTRUMENTATION_REQUIRED | 3 | producer identity, allocator input, actuator writer |
-| UNOBSERVABLE | 0 | — |
+The final profiles are:
 
-The exact source paths, symbols, messages, timestamp sources, collection
-methods, confidence, and limits are in `docs/design/OBSERVABILITY_MATRIX.tsv`.
+| Measurement | BASELINE evidence | TRANSITION evidence |
+|---|---:|---:|
+| expected period | 100 ms | 8 ms |
+| measured final-writer rate | 10.00 Hz | 121.71 Hz |
+| final-writer actual/expected events | 386/386 | 4495/4514 |
+| maximum recorded final-writer gap | 100 ms | 20 ms |
+| final-writer sequence loss | 0 | 19 |
+| all-observation coverage | 47.00% (old unthrottled consumer was heavily lost) | 99.64% |
+| mean/max recorded CPU load | 36.30% / 42.00% | 26.71% / 30.00% |
+| ULog size | 9,114,735 bytes | 9,022,240 bytes |
 
-## Feasible collection
+CPU and ULog figures come from different short normal-flow runs and are descriptive, not a controlled causal overhead estimate. The transition frequency gate passes because final-writer rate is ≥100 Hz. Per-publication completeness fails, so exclusivity and continuity remain unknown where sequences or logger segments have holes. The minimum defensible recorded writer-gap scale is 20 ms; shorter missed overlap/gap cannot be excluded.
 
-`route_trace_collector.py` reduces ROS/ULog signals into the versioned route
-trace schema. Producer publications and PX4 consumption are separate event
-types. `actuator_writer_collector.py` accepts attribution only from explicit
-instrumentation. The route state is reconstructed from `vehicle_status`,
-registration replies, `vehicle_control_mode`, setpoint receipt/consumption,
-failsafe flags, allocator/writer events, and actuator output.
+## Coverage
 
-The three native gaps have one minimal PX4 patch. It adds a logged structured
-topic at the multicopter trajectory consumer, classical rate-controller
-allocator input, and control-allocator motor output. It applies cleanly to the
-locked commit and does not modify a control value or decision. It intentionally
-does not cover every PX4 vehicle/controller family.
+The patch instruments every `actuator_motors` candidate compiled into `px4_sitl_default`, and all current x500 P0 candidates. It does not instrument non-default neural/RAPTOR/UAVCAN/spacecraft/test writers. The machine-readable inventory makes this a precondition rather than an assumption.
 
-## Risks
+The canonical 1.1 trace separates producer-side behavior phase from setpoint level, keeps ROS and PX4 clocks separate, and records observation profile/sequence. The strengthened writer collector rejects exclusive attribution for missing candidates, sequence discontinuity, inadequate frequency, absent windows, or holes. Route Oracle v0 uses `UNKNOWN` for missing clock bridges and route-epoch causality.
 
-PX4 boot/uORB/ULog timestamps are directly orderable inside one boot. ROS,
-DDS-receive, simulation, and wall clocks require explicit bridge segments.
-Accelerated simulation invalidates wall-time flight deadlines. A time-sync
-configuration is not proof of convergence.
+## Feasibility conclusion
 
-Native uORB and ULog do not preserve writer identity. ROS publisher identity is
-also lost at the XRCE-to-uORB boundary. P0 is constrained to one declared ROS
-producer per route, records that producer locally, and uses the PX4 consumption
-event to distinguish publication from influence. Multi-producer Offboard tests
-remain outside the gate.
-
-## P0 readiness and later-oracle risk
-
-The static observability design is sufficient in scope for the three normal P0
-flows only after the patched PX4 and official ROS examples compile and the
-collector/schema tests pass. Those checks completed and the machine-readable
-gate in `experiments/motivation/p1_gate_result.json` reports PASS for all ten
-criteria.
-
-Later oracles must treat missing writer/consumer events, broken sequences,
-clock-bridge resets, and incomplete module flags as unknown evidence. Coverage
-must be expanded before direct-actuator, VTOL, rover, concurrent-producer, or
-Family B experiments.
+The infrastructure is feasible for deterministic normal-flow execution and high-rate observation, but the measured logger loss prevents full-window exclusivity/continuity proof in the current P0 runs. It is not yet sufficient for direct-actuator, non-default writer families, or cross-domain latency without added instrumentation and a valid clock bridge.

@@ -11,11 +11,17 @@ from scripts.probes.p0_route_runner import _name, _versioned_topic
 ROOT = Path(__file__).resolve().parents[1]
 P0 = ROOT / "data" / "processed" / "p0"
 SCHEMA = json.loads((ROOT / "data" / "schemas" / "route_trace.schema.json").read_text())
-EXPECTED = {
+SUPERSEDED = {
     "p0a_offboard_20260716": {"scenario": "offboard", "nav_states": {14, 5}},
     "p0b_external_mode_20260716": {"scenario": "external", "nav_states": {23, 5}},
     "p0c_mode_executor_20260716": {"scenario": "executor", "nav_states": {17, 23, 5}},
 }
+CURRENT = {
+    "p0a_offboard_phase_a1_20260716T0710": {"scenario": "offboard", "nav_states": {14, 5}},
+    "p0b_external_mode_phase_a1_20260716T0720": {"scenario": "external", "nav_states": {23, 5}},
+    "p0c_executor_phase_a1_20260716T0730": {"scenario": "executor", "nav_states": {17, 23, 5}},
+}
+EXPECTED = SUPERSEDED | CURRENT
 
 
 def test_p0_runner_handles_px4_message_versions_and_fixed_names() -> None:
@@ -34,7 +40,19 @@ def test_p0_summaries_have_route_and_provenance_evidence() -> None:
         assert summary["producer_consumer_evidence"]["producer_publish_events"] > 0
         assert summary["producer_consumer_evidence"]["px4_consume_events"] > 0
         assert summary["producer_consumer_evidence"]["domains_require_clock_bridge"] is True
-        assert summary["writer_attribution"]["status"] == "ATTRIBUTED"
+        if run_id in CURRENT:
+            assert summary["schema_version"] == "1.1"
+            assert summary["execution_status"] == "PASS"
+            assert summary["route_verdict"] == "UNKNOWN"
+            assert summary["writer_attribution"]["status"] == "SEQUENCE_GAP"
+            assert summary["writer_attribution"]["rate_gate_passed"] is True
+            assert summary["writer_attribution"]["actual_rate_hz"] >= 100
+            oracle = json.loads((P0 / run_id / "route_oracle.json").read_text())
+            assert oracle["route_oracle_version"] == "0.1"
+            assert oracle["status"] == "UNKNOWN"
+        else:
+            assert summary["superseded_measurement_v1"] is True
+            assert summary["writer_attribution"]["status"] == "ATTRIBUTED"
         assert summary["writer_attribution"]["actuator_writers"] == ["control_allocator"]
         assert summary["writer_attribution"]["allocator_input_writers"] == ["mc_rate_control"]
         assert {"ulog_us", "ros_node_ns"} == set(summary["timestamp_domains"])

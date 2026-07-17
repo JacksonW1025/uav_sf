@@ -1,5 +1,5 @@
 diff --git a/msg/CMakeLists.txt b/msg/CMakeLists.txt
-index 369ec75..3e1fe27 100644
+index 369ec7538ad7f22f7f3c78ca42c751e5cbabfb03..3e1fe27cc8d57827cd5d19efef609caf6be5e320 100644
 --- a/msg/CMakeLists.txt
 +++ b/msg/CMakeLists.txt
 @@ -194,6 +194,7 @@ set(msg_files
@@ -10,42 +10,142 @@ index 369ec75..3e1fe27 100644
  	RtlStatus.msg
  	RtlTimeEstimate.msg
  	SatelliteInfo.msg
-diff --git a/src/modules/control_allocator/ControlAllocator.cpp b/src/modules/control_allocator/ControlAllocator.cpp
-index de0c299..5b99593 100644
---- a/src/modules/control_allocator/ControlAllocator.cpp
-+++ b/src/modules/control_allocator/ControlAllocator.cpp
-@@ -743,6 +743,19 @@ ControlAllocator::publish_actuator_controls()
- 
- 	_actuator_motors_pub.publish(actuator_motors);
- 
-+	if (hrt_elapsed_time(&_last_route_observability_pub) >= 100_ms) {
-+		_last_route_observability_pub = hrt_absolute_time();
-+		route_observability_s route_observation{};
-+		route_observation.timestamp = _last_route_observability_pub;
-+		route_observation.subject_timestamp = actuator_motors.timestamp;
-+		route_observation.sequence = _route_observability_sequence++;
-+		route_observation.event_type = route_observability_s::EVENT_ACTUATOR_OUTPUT_PUBLISHED;
-+		route_observation.source_id = route_observability_s::SOURCE_CONTROL_ALLOCATOR;
-+		route_observation.topic_id = route_observability_s::TOPIC_ACTUATOR_MOTORS;
-+		route_observation.writer_id = route_observability_s::WRITER_CONTROL_ALLOCATOR;
-+		_route_observability_pub.publish(route_observation);
+diff --git a/msg/RouteObservability.msg b/msg/RouteObservability.msg
+new file mode 100644
+index 0000000000000000000000000000000000000000..603bc9828675ecb289eb96226d358eed76cc3897
+--- /dev/null
++++ b/msg/RouteObservability.msg
+@@ -0,0 +1,47 @@
++# Observation-only route event. This topic must not feed control decisions.
++uint64 timestamp
++uint64 subject_timestamp
++uint32 sequence
++uint32 expected_period_us
++
++uint8 EVENT_SETPOINT_CONSUMED=1
++uint8 EVENT_ALLOCATOR_INPUT_PUBLISHED=2
++uint8 EVENT_ACTUATOR_OUTPUT_PUBLISHED=3
++
++uint8 SOURCE_EXTERNAL_TRAJECTORY=1
++uint8 SOURCE_MC_RATE_CONTROL=2
++uint8 SOURCE_CONTROL_ALLOCATOR=3
++uint8 SOURCE_ROVER_ACKERMANN=4
++uint8 SOURCE_ROVER_DIFFERENTIAL=5
++uint8 SOURCE_ROVER_MECANUM=6
++uint8 SOURCE_MC_RAPTOR=7
++uint8 SOURCE_MC_NN_CONTROL=8
++uint8 SOURCE_UAVCANNODE_ESC_RAW=9
++uint8 SOURCE_SPACECRAFT=10
++uint8 SOURCE_MIXER_TEST=11
++
++uint8 TOPIC_TRAJECTORY_SETPOINT=1
++uint8 TOPIC_VEHICLE_TORQUE_SETPOINT=2
++uint8 TOPIC_ACTUATOR_MOTORS=3
++
++uint8 WRITER_UNKNOWN=0
++uint8 WRITER_MC_RATE_CONTROL=1
++uint8 WRITER_CONTROL_ALLOCATOR=2
++uint8 WRITER_ROVER_ACKERMANN=3
++uint8 WRITER_ROVER_DIFFERENTIAL=4
++uint8 WRITER_ROVER_MECANUM=5
++uint8 WRITER_MC_RAPTOR=6
++uint8 WRITER_MC_NN_CONTROL=7
++uint8 WRITER_UAVCANNODE_ESC_RAW=8
++uint8 WRITER_SPACECRAFT=9
++uint8 WRITER_MIXER_TEST=10
++
++uint8 PROFILE_BASELINE=1
++uint8 PROFILE_TRANSITION=2
++
++uint8 event_type
++uint8 source_id
++uint8 topic_id
++uint8 writer_id
++uint8 profile
++uint8 instance
+diff --git a/src/lib/route_observability/RouteObservability.hpp b/src/lib/route_observability/RouteObservability.hpp
+new file mode 100644
+index 0000000000000000000000000000000000000000..9eaa853e7ee43122cab8ea528f74f77c366fce31
+--- /dev/null
++++ b/src/lib/route_observability/RouteObservability.hpp
+@@ -0,0 +1,48 @@
++/****************************************************************************
++ *
++ * Observation-only route event helper. No control code reads this topic.
++ *
++ ****************************************************************************/
++
++#pragma once
++
++#include <drivers/drv_hrt.h>
++#include <uORB/PublicationMulti.hpp>
++#include <uORB/topics/route_observability.h>
++
++namespace route_observability
++{
++
++#if defined(ROUTE_OBSERVABILITY_TRANSITION)
++static constexpr uint32_t expected_period_us = 8000;
++static constexpr uint8_t profile = route_observability_s::PROFILE_TRANSITION;
++#else
++static constexpr uint32_t expected_period_us = 100000;
++static constexpr uint8_t profile = route_observability_s::PROFILE_BASELINE;
++#endif
++
++inline void publish(uORB::PublicationMulti<route_observability_s> &publisher,
++		    uint32_t &sequence, hrt_abstime &last_publication,
++		    uint8_t event_type, uint8_t source_id, uint8_t topic_id,
++		    uint8_t writer_id, uint64_t subject_timestamp, uint8_t instance = 0)
++{
++	if (expected_period_us != 0 && hrt_elapsed_time(&last_publication) < expected_period_us) {
++		return;
 +	}
 +
++	last_publication = hrt_absolute_time();
++	route_observability_s observation{};
++	observation.timestamp = last_publication;
++	observation.subject_timestamp = subject_timestamp;
++	observation.sequence = sequence++;
++	observation.expected_period_us = expected_period_us;
++	observation.event_type = event_type;
++	observation.source_id = source_id;
++	observation.topic_id = topic_id;
++	observation.writer_id = writer_id;
++	observation.profile = profile;
++	observation.instance = instance;
++	publisher.publish(observation);
++}
++
++} // namespace route_observability
+diff --git a/src/modules/control_allocator/ControlAllocator.cpp b/src/modules/control_allocator/ControlAllocator.cpp
+index de0c2993ad7183dd6204782a1a1103de618b35c4..d6b41673cae6316b5c9c7b27c7ace72bc6a6aaa2 100644
+--- a/src/modules/control_allocator/ControlAllocator.cpp
++++ b/src/modules/control_allocator/ControlAllocator.cpp
+@@ -742,6 +742,12 @@ ControlAllocator::publish_actuator_controls()
+ 	}
+ 
+ 	_actuator_motors_pub.publish(actuator_motors);
++	route_observability::publish(
++		_route_observability_pub, _route_observability_sequence, _last_route_observability_pub,
++		route_observability_s::EVENT_ACTUATOR_OUTPUT_PUBLISHED,
++		route_observability_s::SOURCE_CONTROL_ALLOCATOR,
++		route_observability_s::TOPIC_ACTUATOR_MOTORS,
++		route_observability_s::WRITER_CONTROL_ALLOCATOR, actuator_motors.timestamp);
+ 
  	// servos
  	if (_num_actuators[1] > 0) {
- 		int servos_idx;
 diff --git a/src/modules/control_allocator/ControlAllocator.hpp b/src/modules/control_allocator/ControlAllocator.hpp
-index a8ebb76..eec00ce 100644
+index a8ebb762f3a45cf3dc69563dde3d3d757a240846..930cadb64b7a64e3cbca55f9e396af0dbd8cfd8b 100644
 --- a/src/modules/control_allocator/ControlAllocator.hpp
 +++ b/src/modules/control_allocator/ControlAllocator.hpp
-@@ -75,6 +75,7 @@
- #include <uORB/topics/actuator_servos_trim.h>
- #include <uORB/topics/control_allocator_status.h>
- #include <uORB/topics/parameter_update.h>
-+#include <uORB/topics/route_observability.h>
- #include <uORB/topics/vehicle_control_mode.h>
- #include <uORB/topics/vehicle_torque_setpoint.h>
- #include <uORB/topics/vehicle_thrust_setpoint.h>
+@@ -62,6 +62,7 @@
+ 
+ #include <lib/matrix/matrix/math.hpp>
+ #include <lib/perf/perf_counter.h>
++#include <lib/route_observability/RouteObservability.hpp>
+ #include <px4_platform_common/px4_config.h>
+ #include <px4_platform_common/module.h>
+ #include <px4_platform_common/module_params.h>
 @@ -206,6 +207,7 @@ private:
  	uORB::Publication<actuator_motors_s>	_actuator_motors_pub{ORB_ID(actuator_motors)};
  	uORB::Publication<actuator_servos_s>	_actuator_servos_pub{ORB_ID(actuator_servos)};
@@ -64,58 +164,51 @@ index a8ebb76..eec00ce 100644
  	ParamHandles _param_handles{};
  	Params _params{};
 diff --git a/src/modules/logger/logged_topics.cpp b/src/modules/logger/logged_topics.cpp
-index c893a85..23ca25c 100644
+index c893a854a8a249adccb3d6ee3e80805cd585fc05..02a59462ca7d51abad635d7f0482daee6fe7eea9 100644
 --- a/src/modules/logger/logged_topics.cpp
 +++ b/src/modules/logger/logged_topics.cpp
-@@ -135,6 +135,7 @@ void LoggedTopics::add_default_topics()
+@@ -135,6 +135,8 @@ void LoggedTopics::add_default_topics()
  	add_optional_topic("tecs_status", 200);
  	add_optional_topic("tiltrotor_extra_controls", 100);
  	add_topic("trajectory_setpoint", 200);
-+	add_topic_multi("route_observability", 100, 3);
++	// interval 0 means every update; the publisher applies the selected observation profile.
++	add_topic_multi("route_observability", 0, 8);
  	add_topic("transponder_report");
  	add_topic("vehicle_acceleration", 50);
  	add_topic("vehicle_air_data", 200);
 diff --git a/src/modules/mc_pos_control/MulticopterPositionControl.cpp b/src/modules/mc_pos_control/MulticopterPositionControl.cpp
-index 5c6f147..fa206a0 100644
+index 5c6f147ff68c5ae5e7fd1d8bea5c6e3b6f166392..9a5c5bd6138d2244f34b728faf6051fec2051a0e 100644
 --- a/src/modules/mc_pos_control/MulticopterPositionControl.cpp
 +++ b/src/modules/mc_pos_control/MulticopterPositionControl.cpp
-@@ -438,7 +438,17 @@ void MulticopterPositionControl::Run()
+@@ -438,7 +438,14 @@ void MulticopterPositionControl::Run()
  			_goto_control.update(dt, states.position, states.velocity, states.acceleration, states.yaw);
  		}
  
 -		_trajectory_setpoint_sub.update(&_setpoint);
 +		if (_trajectory_setpoint_sub.update(&_setpoint)) {
-+			route_observability_s route_observation{};
-+			route_observation.timestamp = hrt_absolute_time();
-+			route_observation.subject_timestamp = _setpoint.timestamp;
-+			route_observation.sequence = _route_observability_sequence++;
-+			route_observation.event_type = route_observability_s::EVENT_SETPOINT_CONSUMED;
-+			route_observation.source_id = route_observability_s::SOURCE_EXTERNAL_TRAJECTORY;
-+			route_observation.topic_id = route_observability_s::TOPIC_TRAJECTORY_SETPOINT;
-+			route_observation.writer_id = route_observability_s::WRITER_UNKNOWN;
-+			_route_observability_pub.publish(route_observation);
++			route_observability::publish(
++				_route_observability_pub, _route_observability_sequence, _last_route_observability_pub,
++				route_observability_s::EVENT_SETPOINT_CONSUMED,
++				route_observability_s::SOURCE_EXTERNAL_TRAJECTORY,
++				route_observability_s::TOPIC_TRAJECTORY_SETPOINT,
++				route_observability_s::WRITER_UNKNOWN, _setpoint.timestamp);
 +		}
  
  		adjustSetpointForEKFResets(vehicle_local_position, _setpoint);
  
 diff --git a/src/modules/mc_pos_control/MulticopterPositionControl.hpp b/src/modules/mc_pos_control/MulticopterPositionControl.hpp
-index 8268399..0f20948 100644
+index 8268399753c646857f770d3e1b701f0ea0685464..7932283dcdfead269e7bcec947f8d666c3525abe 100644
 --- a/src/modules/mc_pos_control/MulticopterPositionControl.hpp
 +++ b/src/modules/mc_pos_control/MulticopterPositionControl.hpp
-@@ -56,10 +56,12 @@
- #include <px4_platform_common/posix.h>
- #include <px4_platform_common/tasks.h>
- #include <uORB/Publication.hpp>
-+#include <uORB/PublicationMulti.hpp>
- #include <uORB/Subscription.hpp>
- #include <uORB/SubscriptionCallback.hpp>
- #include <uORB/topics/hover_thrust_estimate.h>
- #include <uORB/topics/parameter_update.h>
-+#include <uORB/topics/route_observability.h>
- #include <uORB/topics/trajectory_setpoint.h>
- #include <uORB/topics/vehicle_attitude_setpoint.h>
- #include <uORB/topics/vehicle_constraints.h>
-@@ -100,6 +102,7 @@ private:
+@@ -46,6 +46,7 @@
+ #include <lib/mathlib/math/filter/NotchFilter.hpp>
+ #include <lib/mathlib/math/WelfordMean.hpp>
+ #include <lib/perf/perf_counter.h>
++#include <lib/route_observability/RouteObservability.hpp>
+ #include <lib/slew_rate/SlewRateYaw.hpp>
+ #include <lib/systemlib/mavlink_log.h>
+ #include <px4_platform_common/px4_config.h>
+@@ -100,6 +101,7 @@ private:
  	uORB::PublicationData<takeoff_status_s>              _takeoff_status_pub{ORB_ID(takeoff_status)};
  	uORB::Publication<vehicle_attitude_setpoint_s>	     _vehicle_attitude_setpoint_pub{ORB_ID(vehicle_attitude_setpoint)};
  	uORB::Publication<vehicle_local_position_setpoint_s> _local_pos_sp_pub{ORB_ID(vehicle_local_position_setpoint)};	/**< vehicle local position setpoint publication */
@@ -123,50 +216,44 @@ index 8268399..0f20948 100644
  
  	uORB::SubscriptionCallbackWorkItem _local_pos_sub{this, ORB_ID(vehicle_local_position)};	/**< vehicle local position */
  
-@@ -117,6 +120,7 @@ private:
+@@ -117,6 +119,8 @@ private:
  	trajectory_setpoint_s _setpoint{PositionControl::empty_trajectory_setpoint};
  	trajectory_setpoint_s _last_valid_setpoint{PositionControl::empty_trajectory_setpoint};
  	vehicle_control_mode_s _vehicle_control_mode{};
 +	uint32_t _route_observability_sequence{0};
++	hrt_abstime _last_route_observability_pub{0};
  
  	vehicle_constraints_s _vehicle_constraints {
  		.timestamp = 0,
 diff --git a/src/modules/mc_rate_control/MulticopterRateControl.cpp b/src/modules/mc_rate_control/MulticopterRateControl.cpp
-index 7bfb830..04da466 100644
+index 7bfb83037b272bdb666d6ea8eb8c323cf9d55ef4..a6991f93d13d7ac1febfcdb8e057977b8ab9a854 100644
 --- a/src/modules/mc_rate_control/MulticopterRateControl.cpp
 +++ b/src/modules/mc_rate_control/MulticopterRateControl.cpp
-@@ -263,6 +263,19 @@ MulticopterRateControl::Run()
+@@ -262,6 +262,12 @@ MulticopterRateControl::Run()
+ 			vehicle_torque_setpoint.timestamp_sample = angular_velocity.timestamp_sample;
  			vehicle_torque_setpoint.timestamp = hrt_absolute_time();
  			_vehicle_torque_setpoint_pub.publish(vehicle_torque_setpoint);
++			route_observability::publish(
++				_route_observability_pub, _route_observability_sequence, _last_route_observability_pub,
++				route_observability_s::EVENT_ALLOCATOR_INPUT_PUBLISHED,
++				route_observability_s::SOURCE_MC_RATE_CONTROL,
++				route_observability_s::TOPIC_VEHICLE_TORQUE_SETPOINT,
++				route_observability_s::WRITER_MC_RATE_CONTROL, vehicle_torque_setpoint.timestamp);
  
-+			if (hrt_elapsed_time(&_last_route_observability_pub) >= 100_ms) {
-+				_last_route_observability_pub = hrt_absolute_time();
-+				route_observability_s route_observation{};
-+				route_observation.timestamp = _last_route_observability_pub;
-+				route_observation.subject_timestamp = vehicle_torque_setpoint.timestamp;
-+				route_observation.sequence = _route_observability_sequence++;
-+				route_observation.event_type = route_observability_s::EVENT_ALLOCATOR_INPUT_PUBLISHED;
-+				route_observation.source_id = route_observability_s::SOURCE_MC_RATE_CONTROL;
-+				route_observation.topic_id = route_observability_s::TOPIC_VEHICLE_TORQUE_SETPOINT;
-+				route_observation.writer_id = route_observability_s::WRITER_MC_RATE_CONTROL;
-+				_route_observability_pub.publish(route_observation);
-+			}
-+
  			updateActuatorControlsStatus(vehicle_torque_setpoint, dt);
  
- 		}
 diff --git a/src/modules/mc_rate_control/MulticopterRateControl.hpp b/src/modules/mc_rate_control/MulticopterRateControl.hpp
-index 44c6c13..e80e20f 100644
+index 44c6c13bc432491963cbf3647c272bfabb2fb781..9eefd480bb5ad3090baf396135a363418ab92054 100644
 --- a/src/modules/mc_rate_control/MulticopterRateControl.hpp
 +++ b/src/modules/mc_rate_control/MulticopterRateControl.hpp
-@@ -53,6 +53,7 @@
- #include <uORB/topics/manual_control_setpoint.h>
- #include <uORB/topics/parameter_update.h>
- #include <uORB/topics/rate_ctrl_status.h>
-+#include <uORB/topics/route_observability.h>
- #include <uORB/topics/vehicle_angular_velocity.h>
- #include <uORB/topics/vehicle_control_mode.h>
- #include <uORB/topics/vehicle_land_detected.h>
+@@ -37,6 +37,7 @@
+ #include <lib/mathlib/math/filter/AlphaFilter.hpp>
+ #include <lib/matrix/matrix/math.hpp>
+ #include <lib/perf/perf_counter.h>
++#include <lib/route_observability/RouteObservability.hpp>
+ #include <px4_platform_common/defines.h>
+ #include <px4_platform_common/module.h>
+ #include <px4_platform_common/module_params.h>
 @@ -111,6 +112,7 @@ private:
  	uORB::Publication<vehicle_rates_setpoint_s>	_vehicle_rates_setpoint_pub{ORB_ID(vehicle_rates_setpoint)};
  	uORB::Publication<vehicle_thrust_setpoint_s>	_vehicle_thrust_setpoint_pub;
@@ -184,3 +271,164 @@ index 44c6c13..e80e20f 100644
  
  	AlphaFilter<float> _output_lpf_yaw;
  
+diff --git a/src/modules/rover_ackermann/AckermannActControl/AckermannActControl.cpp b/src/modules/rover_ackermann/AckermannActControl/AckermannActControl.cpp
+index 391b197bd1b81fed2f7fd4c84e3cf1ec1a0f2ffa..c8a757970cf6c2bf80b20ca4b4c5af5bfefafb6d 100644
+--- a/src/modules/rover_ackermann/AckermannActControl/AckermannActControl.cpp
++++ b/src/modules/rover_ackermann/AckermannActControl/AckermannActControl.cpp
+@@ -76,6 +76,12 @@ void AckermannActControl::updateActControl()
+ 					     _param_ro_decel_limit.get(), _param_ro_max_thr_speed.get(), dt);
+ 		actuator_motors.timestamp = _timestamp;
+ 		_actuator_motors_pub.publish(actuator_motors);
++		route_observability::publish(
++			_route_observability_pub, _route_observability_sequence, _last_route_observability_pub,
++			route_observability_s::EVENT_ACTUATOR_OUTPUT_PUBLISHED,
++			route_observability_s::SOURCE_ROVER_ACKERMANN,
++			route_observability_s::TOPIC_ACTUATOR_MOTORS,
++			route_observability_s::WRITER_ROVER_ACKERMANN, actuator_motors.timestamp);
+ 
+ 	}
+ 
+@@ -118,6 +124,12 @@ void AckermannActControl::stopVehicle()
+ 	actuator_motors.control[0] = 0.f;
+ 	actuator_motors.timestamp = _timestamp;
+ 	_actuator_motors_pub.publish(actuator_motors);
++	route_observability::publish(
++		_route_observability_pub, _route_observability_sequence, _last_route_observability_pub,
++		route_observability_s::EVENT_ACTUATOR_OUTPUT_PUBLISHED,
++		route_observability_s::SOURCE_ROVER_ACKERMANN,
++		route_observability_s::TOPIC_ACTUATOR_MOTORS,
++		route_observability_s::WRITER_ROVER_ACKERMANN, actuator_motors.timestamp);
+ 	actuator_servos_s actuator_servos{};
+ 	actuator_servos.control[0] = 0.f;
+ 	actuator_servos.timestamp = _timestamp;
+diff --git a/src/modules/rover_ackermann/AckermannActControl/AckermannActControl.hpp b/src/modules/rover_ackermann/AckermannActControl/AckermannActControl.hpp
+index fb3630c13c74e2dd50d0375cc04f1969ce46e928..127e11692db7a48fee22b3bde23b488566c6c8f2 100644
+--- a/src/modules/rover_ackermann/AckermannActControl/AckermannActControl.hpp
++++ b/src/modules/rover_ackermann/AckermannActControl/AckermannActControl.hpp
+@@ -38,6 +38,7 @@
+ 
+ // Libraries
+ #include <lib/rover_control/RoverControl.hpp>
++#include <lib/route_observability/RouteObservability.hpp>
+ #include <lib/slew_rate/SlewRate.hpp>
+ #include <math.h>
+ 
+@@ -89,9 +90,12 @@ private:
+ 	// uORB publications
+ 	uORB::Publication<actuator_motors_s> 	     _actuator_motors_pub{ORB_ID(actuator_motors)};
+ 	uORB::Publication<actuator_servos_s> 	     _actuator_servos_pub{ORB_ID(actuator_servos)};
++	uORB::PublicationMulti<route_observability_s> _route_observability_pub{ORB_ID(route_observability)};
+ 
+ 	// Variables
+ 	hrt_abstime _timestamp{0};
++	hrt_abstime _last_route_observability_pub{0};
++	uint32_t _route_observability_sequence{0};
+ 	float _throttle_setpoint{NAN};
+ 	float _steering_setpoint{NAN};
+ 
+diff --git a/src/modules/rover_differential/DifferentialActControl/DifferentialActControl.cpp b/src/modules/rover_differential/DifferentialActControl/DifferentialActControl.cpp
+index f460aefa3a777bd841add63e8ee191aad3a815d5..cc785b8b91f7475cf4ed000514821712a3a8eeaf 100644
+--- a/src/modules/rover_differential/DifferentialActControl/DifferentialActControl.cpp
++++ b/src/modules/rover_differential/DifferentialActControl/DifferentialActControl.cpp
+@@ -80,6 +80,12 @@ void DifferentialActControl::updateActControl()
+ 		computeInverseKinematics(adjusted_throttle_setpoint, _speed_diff_setpoint).copyTo(actuator_motors.control);
+ 		actuator_motors.timestamp = _timestamp;
+ 		_actuator_motors_pub.publish(actuator_motors);
++		route_observability::publish(
++			_route_observability_pub, _route_observability_sequence, _last_route_observability_pub,
++			route_observability_s::EVENT_ACTUATOR_OUTPUT_PUBLISHED,
++			route_observability_s::SOURCE_ROVER_DIFFERENTIAL,
++			route_observability_s::TOPIC_ACTUATOR_MOTORS,
++			route_observability_s::WRITER_ROVER_DIFFERENTIAL, actuator_motors.timestamp);
+ 
+ 	}
+ 
+@@ -107,4 +113,10 @@ void DifferentialActControl::stopVehicle()
+ 	actuator_motors.control[1] = 0.f;
+ 	actuator_motors.timestamp = _timestamp;
+ 	_actuator_motors_pub.publish(actuator_motors);
++	route_observability::publish(
++		_route_observability_pub, _route_observability_sequence, _last_route_observability_pub,
++		route_observability_s::EVENT_ACTUATOR_OUTPUT_PUBLISHED,
++		route_observability_s::SOURCE_ROVER_DIFFERENTIAL,
++		route_observability_s::TOPIC_ACTUATOR_MOTORS,
++		route_observability_s::WRITER_ROVER_DIFFERENTIAL, actuator_motors.timestamp);
+ }
+diff --git a/src/modules/rover_differential/DifferentialActControl/DifferentialActControl.hpp b/src/modules/rover_differential/DifferentialActControl/DifferentialActControl.hpp
+index 2076542e4a9847a075b4be34dc804086a6d2eed1..b4137027e8a27a2f6fb44de6b2e13828e48263e6 100644
+--- a/src/modules/rover_differential/DifferentialActControl/DifferentialActControl.hpp
++++ b/src/modules/rover_differential/DifferentialActControl/DifferentialActControl.hpp
+@@ -38,6 +38,7 @@
+ 
+ // Libraries
+ #include <lib/rover_control/RoverControl.hpp>
++#include <lib/route_observability/RouteObservability.hpp>
+ #include <lib/slew_rate/SlewRate.hpp>
+ #include <math.h>
+ 
+@@ -94,9 +95,12 @@ private:
+ 
+ 	// uORB publications
+ 	uORB::Publication<actuator_motors_s> 	     _actuator_motors_pub{ORB_ID(actuator_motors)};
++	uORB::PublicationMulti<route_observability_s> _route_observability_pub{ORB_ID(route_observability)};
+ 
+ 	// Variables
+ 	hrt_abstime _timestamp{0};
++	hrt_abstime _last_route_observability_pub{0};
++	uint32_t _route_observability_sequence{0};
+ 	float _throttle_setpoint{NAN};
+ 	float _speed_diff_setpoint{NAN};
+ 
+diff --git a/src/modules/rover_mecanum/MecanumActControl/MecanumActControl.cpp b/src/modules/rover_mecanum/MecanumActControl/MecanumActControl.cpp
+index 2f3280e8531ba6affc85c14fa37e68447f7eac93..fd1782580787dbd2193bb59f53e59497be5cbe21 100644
+--- a/src/modules/rover_mecanum/MecanumActControl/MecanumActControl.cpp
++++ b/src/modules/rover_mecanum/MecanumActControl/MecanumActControl.cpp
+@@ -87,6 +87,12 @@ void MecanumActControl::updateActControl()
+ 					 _speed_diff_setpoint).copyTo(actuator_motors.control);
+ 		actuator_motors.timestamp = _timestamp;
+ 		_actuator_motors_pub.publish(actuator_motors);
++		route_observability::publish(
++			_route_observability_pub, _route_observability_sequence, _last_route_observability_pub,
++			route_observability_s::EVENT_ACTUATOR_OUTPUT_PUBLISHED,
++			route_observability_s::SOURCE_ROVER_MECANUM,
++			route_observability_s::TOPIC_ACTUATOR_MOTORS,
++			route_observability_s::WRITER_ROVER_MECANUM, actuator_motors.timestamp);
+ 
+ 	}
+ 
+@@ -126,4 +132,10 @@ void MecanumActControl::stopVehicle()
+ 	actuator_motors.control[3] = 0.f;
+ 	actuator_motors.timestamp = _timestamp;
+ 	_actuator_motors_pub.publish(actuator_motors);
++	route_observability::publish(
++		_route_observability_pub, _route_observability_sequence, _last_route_observability_pub,
++		route_observability_s::EVENT_ACTUATOR_OUTPUT_PUBLISHED,
++		route_observability_s::SOURCE_ROVER_MECANUM,
++		route_observability_s::TOPIC_ACTUATOR_MOTORS,
++		route_observability_s::WRITER_ROVER_MECANUM, actuator_motors.timestamp);
+ }
+diff --git a/src/modules/rover_mecanum/MecanumActControl/MecanumActControl.hpp b/src/modules/rover_mecanum/MecanumActControl/MecanumActControl.hpp
+index 63aa1550046ff041749c83d0afba9ded2e5f1582..d834e313d7992bc5e82855e9109396279ad765c2 100644
+--- a/src/modules/rover_mecanum/MecanumActControl/MecanumActControl.hpp
++++ b/src/modules/rover_mecanum/MecanumActControl/MecanumActControl.hpp
+@@ -38,6 +38,7 @@
+ 
+ // Libraries
+ #include <lib/rover_control/RoverControl.hpp>
++#include <lib/route_observability/RouteObservability.hpp>
+ #include <lib/slew_rate/SlewRate.hpp>
+ #include <math.h>
+ 
+@@ -94,9 +95,12 @@ private:
+ 
+ 	// uORB publications
+ 	uORB::Publication<actuator_motors_s> _actuator_motors_pub{ORB_ID(actuator_motors)};
++	uORB::PublicationMulti<route_observability_s> _route_observability_pub{ORB_ID(route_observability)};
+ 
+ 	// Variables
+ 	hrt_abstime _timestamp{0};
++	hrt_abstime _last_route_observability_pub{0};
++	uint32_t _route_observability_sequence{0};
+ 	float _throttle_x_setpoint{NAN};
+ 	float _throttle_y_setpoint{NAN};
+ 	float _speed_diff_setpoint{NAN};

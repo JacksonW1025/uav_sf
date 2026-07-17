@@ -119,7 +119,7 @@ case "${SCENARIO}" in
       --scenario external --output "${RESULT_FILE}" --timeout 180 \
       >"${RAW_DIR}/runner.log" 2>&1 &
     RUNNER_PID=$!
-    ros2 run route_transition_external_mode route_transition_external_mode \
+    "${REPO_ROOT}/ros2_ws/install/route_transition_external_mode/lib/route_transition_external_mode/route_transition_external_mode" \
       >"${RAW_DIR}/external_mode.log" 2>&1 &
     MODE_PID=$!
     wait "${RUNNER_PID}"
@@ -130,7 +130,7 @@ case "${SCENARIO}" in
       --scenario monitor --output "${RESULT_FILE}" --timeout 180 \
       >"${RAW_DIR}/runner.log" 2>&1 &
     RUNNER_PID=$!
-    ros2 run route_transition_external_mode p0_external_mode_executor \
+    "${REPO_ROOT}/ros2_ws/install/route_transition_external_mode/lib/route_transition_external_mode/p0_external_mode_executor" \
       >"${RAW_DIR}/external_mode_executor.log" 2>&1 &
     MODE_PID=$!
     wait "${RUNNER_PID}"
@@ -184,5 +184,8 @@ elif [[ -f "${RAW_DIR}/external_mode_executor.log" ]]; then
   summary_args+=(--source "${RAW_DIR}/external_mode_executor.log")
 fi
 python3 "${REPO_ROOT}/scripts/analysis/summarize_route_trace.py" "${summary_args[@]}"
+python3 "${REPO_ROOT}/scripts/oracles/route_oracle_v0.py" \
+  --trace "${PROCESSED_DIR}/route_trace.jsonl" \
+  --output "${PROCESSED_DIR}/route_oracle.json"
 
 echo "P0_SCENARIO=PASS scenario=${SCENARIO} run_id=${RUN_ID}"

@@ -1,0 +1,357 @@
+{
+  "baseline": {
+    "armed_seen": true,
+    "duration_s": 39.163,
+    "external_mode_id": 23,
+    "final_arming_state": 1,
+    "final_nav_state": 23,
+    "reason": "normal route handoff completed and vehicle disarmed",
+    "runner_scenario": "external",
+    "scenario": "external",
+    "schema_version": "1.0",
+    "status": "PASS"
+  },
+  "duration_us": 40748000.0,
+  "event_type_counts": {
+    "actuator_motors": 406,
+    "actuator_output_published": 4928,
+    "allocator_input_published": 1238,
+    "external_mode_activated": 1,
+    "external_mode_completed": 1,
+    "external_mode_deactivated": 1,
+    "external_mode_registered": 2,
+    "failsafe_flags": 78,
+    "probe_finished": 1,
+    "probe_state_transition": 5,
+    "producer_still_publishing": 8,
+    "px4_setpoint_consumed": 1726,
+    "px4_setpoint_received": 199,
+    "runner_started": 1,
+    "vehicle_command": 29,
+    "vehicle_control_mode": 96,
+    "vehicle_status": 96
+  },
+  "execution_status": "PASS",
+  "first_timestamp_us": 6128000.0,
+  "last_timestamp_us": 46876000.0,
+  "lifecycle_evidence": [
+    "producer_jsonl:external_mode_registration_observed",
+    "ros_structured_log:external_mode.log",
+    "ros_structured_log:external_mode.log:result=success",
+    "ros_structured_log:external_mode.log:sequence=160"
+  ],
+  "max_message_age_s": 0.008,
+  "nav_state_transitions": [
+    4,
+    17,
+    23,
+    5,
+    23
+  ],
+  "processed_trace_policy": {
+    "actuator_output_stride": 1,
+    "allocator_input_stride": 4,
+    "complete_source": "source_artifacts ULog"
+  },
+  "producer_consumer_evidence": {
+    "domains_require_clock_bridge": true,
+    "producer_publish_events": 8,
+    "px4_consume_events": 1726
+  },
+  "registration_transitions": [
+    {
+      "mode_id": 23,
+      "name": "Route Transition",
+      "registered": true
+    }
+  ],
+  "route_verdict": "UNKNOWN",
+  "run_id": "p0b_external_mode_phase_a1_20260716T0720",
+  "schema_version": "1.1",
+  "source_artifacts": [
+    {
+      "bytes": 9871534,
+      "name": "flight.ulg",
+      "sha256": "86b58765c9e44cca0bfe4774fae36bf748b5692a25b252d7bf3f763bae9b2ac3"
+    },
+    {
+      "bytes": 5998,
+      "name": "producer_events.jsonl",
+      "sha256": "f62619e50d6c333d19f24249e424633d89e5a15c160298d1daa9bac0ae92898c"
+    },
+    {
+      "bytes": 3411,
+      "name": "external_mode.log",
+      "sha256": "23f3ab0a644d3c4fab143367324a736fe577d700959ba821f0ea53a4872000ad"
+    }
+  ],
+  "timestamp_domains": {
+    "ros_node_ns": {
+      "duration": 39150885376.0,
+      "event_count": 49,
+      "first": 1.784269819005113e+18,
+      "last": 1.7842698581559985e+18
+    },
+    "ulog_us": {
+      "duration": 40748000.0,
+      "event_count": 8767,
+      "first": 6128000.0,
+      "last": 46876000.0
+    }
+  },
+  "trace_event_count": 8816,
+  "writer_attribution": {
+    "actual_rate_hz": 121.94337194337194,
+    "actuator_output_events": 4928,
+    "actuator_writers": [
+      "control_allocator"
+    ],
+    "allocator_input_writers": [
+      "mc_rate_control"
+    ],
+    "candidate_writers": [
+      "control_allocator"
+    ],
+    "competing_windows": [],
+    "coverage_ratio": 0.9959579628132579,
+    "event_count": 4928,
+    "expected_period_ms": 8.0,
+    "maximum_event_gap_ms": 16.0,
+    "observation_holes": [
+      {
+        "end_us": 47080000.0,
+        "event_count": 96,
+        "from_mode": 5,
+        "maximum_gap_ms": 208.0,
+        "observed_writers": [
+          "control_allocator"
+        ],
+        "start_us": 46080000.0,
+        "timestamp_us": 46580000.0,
+        "to_mode": 23
+      }
+    ],
+    "observation_profiles": [
+      "TRANSITION"
+    ],
+    "observed_writers": [
+      "control_allocator"
+    ],
+    "per_publication_complete": false,
+    "rate_gate_passed": true,
+    "sequence_gaps": [
+      {
+        "gap_ms": 16.0,
+        "missing_count": 1,
+        "next_sequence": 198,
+        "previous_sequence": 196,
+        "timestamp_us": 7076000.0,
+        "writer": "control_allocator"
+      },
+      {
+        "gap_ms": 16.0,
+        "missing_count": 1,
+        "next_sequence": 551,
+        "previous_sequence": 549,
+        "timestamp_us": 9952000.0,
+        "writer": "control_allocator"
+      },
+      {
+        "gap_ms": 16.0,
+        "missing_count": 1,
+        "next_sequence": 574,
+        "previous_sequence": 572,
+        "timestamp_us": 10140000.0,
+        "writer": "control_allocator"
+      },
+      {
+        "gap_ms": 16.0,
+        "missing_count": 1,
+        "next_sequence": 700,
+        "previous_sequence": 698,
+        "timestamp_us": 11180000.0,
+        "writer": "control_allocator"
+      },
+      {
+        "gap_ms": 16.0,
+        "missing_count": 1,
+        "next_sequence": 846,
+        "previous_sequence": 844,
+        "timestamp_us": 12388000.0,
+        "writer": "control_allocator"
+      },
+      {
+        "gap_ms": 16.0,
+        "missing_count": 1,
+        "next_sequence": 1060,
+        "previous_sequence": 1058,
+        "timestamp_us": 14128000.0,
+        "writer": "control_allocator"
+      },
+      {
+        "gap_ms": 16.0,
+        "missing_count": 1,
+        "next_sequence": 1708,
+        "previous_sequence": 1706,
+        "timestamp_us": 19420000.0,
+        "writer": "control_allocator"
+      },
+      {
+        "gap_ms": 16.0,
+        "missing_count": 1,
+        "next_sequence": 1797,
+        "previous_sequence": 1795,
+        "timestamp_us": 20144000.0,
+        "writer": "control_allocator"
+      },
+      {
+        "gap_ms": 16.0,
+        "missing_count": 1,
+        "next_sequence": 2368,
+        "previous_sequence": 2366,
+        "timestamp_us": 24804000.0,
+        "writer": "control_allocator"
+      },
+      {
+        "gap_ms": 16.0,
+        "missing_count": 1,
+        "next_sequence": 2664,
+        "previous_sequence": 2662,
+        "timestamp_us": 27220000.0,
+        "writer": "control_allocator"
+      },
+      {
+        "gap_ms": 16.0,
+        "missing_count": 1,
+        "next_sequence": 3392,
+        "previous_sequence": 3390,
+        "timestamp_us": 33120000.0,
+        "writer": "control_allocator"
+      },
+      {
+        "gap_ms": 16.0,
+        "missing_count": 1,
+        "next_sequence": 3624,
+        "previous_sequence": 3622,
+        "timestamp_us": 35044000.0,
+        "writer": "control_allocator"
+      },
+      {
+        "gap_ms": 16.0,
+        "missing_count": 1,
+        "next_sequence": 3776,
+        "previous_sequence": 3774,
+        "timestamp_us": 36292000.0,
+        "writer": "control_allocator"
+      },
+      {
+        "gap_ms": 16.0,
+        "missing_count": 1,
+        "next_sequence": 3815,
+        "previous_sequence": 3813,
+        "timestamp_us": 36604000.0,
+        "writer": "control_allocator"
+      },
+      {
+        "gap_ms": 16.0,
+        "missing_count": 1,
+        "next_sequence": 3831,
+        "previous_sequence": 3829,
+        "timestamp_us": 36732000.0,
+        "writer": "control_allocator"
+      },
+      {
+        "gap_ms": 16.0,
+        "missing_count": 1,
+        "next_sequence": 3906,
+        "previous_sequence": 3904,
+        "timestamp_us": 37340000.0,
+        "writer": "control_allocator"
+      },
+      {
+        "gap_ms": 16.0,
+        "missing_count": 1,
+        "next_sequence": 4538,
+        "previous_sequence": 4536,
+        "timestamp_us": 42516000.0,
+        "writer": "control_allocator"
+      },
+      {
+        "gap_ms": 16.0,
+        "missing_count": 1,
+        "next_sequence": 4846,
+        "previous_sequence": 4844,
+        "timestamp_us": 45028000.0,
+        "writer": "control_allocator"
+      },
+      {
+        "gap_ms": 16.0,
+        "missing_count": 1,
+        "next_sequence": 4948,
+        "previous_sequence": 4946,
+        "timestamp_us": 45864000.0,
+        "writer": "control_allocator"
+      },
+      {
+        "gap_ms": 16.0,
+        "missing_count": 1,
+        "next_sequence": 5057,
+        "previous_sequence": 5055,
+        "timestamp_us": 46764000.0,
+        "writer": "control_allocator"
+      }
+    ],
+    "status": "SEQUENCE_GAP",
+    "transition_windows": [
+      {
+        "end_us": 12864000.0,
+        "event_count": 123,
+        "from_mode": 4,
+        "maximum_gap_ms": 16.0,
+        "observed_writers": [
+          "control_allocator"
+        ],
+        "start_us": 11864000.0,
+        "timestamp_us": 12364000.0,
+        "to_mode": 17
+      },
+      {
+        "end_us": 20076000.0,
+        "event_count": 123,
+        "from_mode": 17,
+        "maximum_gap_ms": 16.0,
+        "observed_writers": [
+          "control_allocator"
+        ],
+        "start_us": 19076000.0,
+        "timestamp_us": 19576000.0,
+        "to_mode": 23
+      },
+      {
+        "end_us": 28880000.0,
+        "event_count": 123,
+        "from_mode": 23,
+        "maximum_gap_ms": 12.0,
+        "observed_writers": [
+          "control_allocator"
+        ],
+        "start_us": 27880000.0,
+        "timestamp_us": 28380000.0,
+        "to_mode": 5
+      },
+      {
+        "end_us": 47080000.0,
+        "event_count": 96,
+        "from_mode": 5,
+        "maximum_gap_ms": 208.0,
+        "observed_writers": [
+          "control_allocator"
+        ],
+        "start_us": 46080000.0,
+        "timestamp_us": 46580000.0,
+        "to_mode": 23
+      }
+    ],
+    "uninstrumented_candidates": []
+  }
+}

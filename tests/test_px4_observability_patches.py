@@ -5,11 +5,16 @@ import subprocess
 from pathlib import Path
 
 import pytest
+import yaml
+
+from scripts.tracing.route_trace_collector import WRITER_NAMES
 
 
 ROOT = Path(__file__).resolve().parents[1]
 PATCH = ROOT / "patches" / "px4" / "route_observability" / "route_observability_topics.patch"
 CHECKER = ROOT / "scripts" / "setup" / "check_px4_observability_patch.py"
+LOCK = ROOT / "config" / "dependencies.lock.yaml"
+REBUILD = ROOT / "scripts" / "validation" / "rebuild_observability_patch.sh"
 
 
 def load_checker():
@@ -20,11 +25,62 @@ def load_checker():
     return module
 
 
+def _new_file_text(patch_text: str, path: str) -> str:
+    marker = f"diff --git a/{path} b/{path}\n"
+    assert marker in patch_text
+    section = patch_text.split(marker, 1)[1].split("\ndiff --git ", 1)[0]
+    assert "new file mode" in section
+    assert "--- /dev/null" in section
+    assert f"+++ b/{path}" in section
+    return "\n".join(
+        line[1:]
+        for line in section.splitlines()
+        if line.startswith("+") and not line.startswith("+++")
+    )
+
+
+def _constants(message: str) -> dict[str, int]:
+    result: dict[str, int] = {}
+    for line in message.splitlines():
+        if "=" in line and line.startswith("uint8 "):
+            name, value = line.split(None, 1)[1].split("=", 1)
+            result[name] = int(value)
+    return result
+
+
+def test_patch_is_self_contained_and_message_complete() -> None:
+    text = PATCH.read_text(encoding="utf-8")
+    message = _new_file_text(text, "msg/RouteObservability.msg")
+    for field in (
+        "timestamp",
+        "subject_timestamp",
+        "sequence",
+        "expected_period_us",
+        "event_type",
+        "source_id",
+        "topic_id",
+        "writer_id",
+        "profile",
+        "instance",
+    ):
+        assert f" {field}" in message
+    constants = _constants(message)
+    assert constants["EVENT_SETPOINT_CONSUMED"] == 1
+    assert constants["EVENT_ALLOCATOR_INPUT_PUBLISHED"] == 2
+    assert constants["EVENT_ACTUATOR_OUTPUT_PUBLISHED"] == 3
+    assert constants["WRITER_UNKNOWN"] == 0
+    assert constants["WRITER_MC_RATE_CONTROL"] == 1
+    assert constants["WRITER_CONTROL_ALLOCATOR"] == 2
+    assert constants["WRITER_ROVER_ACKERMANN"] == 3
+    assert constants["WRITER_ROVER_DIFFERENTIAL"] == 4
+    assert constants["WRITER_ROVER_MECANUM"] == 5
+    assert constants["PROFILE_BASELINE"] == 1
+    assert constants["PROFILE_TRANSITION"] == 2
+    assert "+\tRouteObservability.msg" in text
+
+
 def test_patch_is_observation_only_and_scoped() -> None:
     text = PATCH.read_text(encoding="utf-8")
-    assert "RouteObservability.msg" in text
-    assert "EVENT_SETPOINT_CONSUMED" in text
-    assert "WRITER_CONTROL_ALLOCATOR" in text
     assert "printf(" not in text
     changed = {
         line[6:]
@@ -34,6 +90,7 @@ def test_patch_is_observation_only_and_scoped() -> None:
     assert changed <= {
         "msg/CMakeLists.txt",
         "msg/RouteObservability.msg",
+        "src/lib/route_observability/RouteObservability.hpp",
         "src/modules/control_allocator/ControlAllocator.cpp",
         "src/modules/control_allocator/ControlAllocator.hpp",
         "src/modules/logger/logged_topics.cpp",
@@ -41,7 +98,44 @@ def test_patch_is_observation_only_and_scoped() -> None:
         "src/modules/mc_pos_control/MulticopterPositionControl.hpp",
         "src/modules/mc_rate_control/MulticopterRateControl.cpp",
         "src/modules/mc_rate_control/MulticopterRateControl.hpp",
+        "src/modules/rover_ackermann/AckermannActControl/AckermannActControl.cpp",
+        "src/modules/rover_ackermann/AckermannActControl/AckermannActControl.hpp",
+        "src/modules/rover_differential/DifferentialActControl/DifferentialActControl.cpp",
+        "src/modules/rover_differential/DifferentialActControl/DifferentialActControl.hpp",
+        "src/modules/rover_mecanum/MecanumActControl/MecanumActControl.cpp",
+        "src/modules/rover_mecanum/MecanumActControl/MecanumActControl.hpp",
     }
+    additions = "\n".join(
+        line[1:]
+        for line in text.splitlines()
+        if line.startswith("+") and not line.startswith("+++")
+    )
+    for forbidden in (
+        "actuator_motors.control[",
+        "vehicle_control_mode.nav_state",
+        "ScheduleOnInterval",
+        "setControlAllocation",
+        "trajectory_setpoint.position",
+    ):
+        assert forbidden not in additions
+
+
+def test_collector_writer_ids_match_message_definition() -> None:
+    message = _new_file_text(PATCH.read_text(encoding="utf-8"), "msg/RouteObservability.msg")
+    constants = _constants(message)
+    expected = {
+        constants[name]: name.removeprefix("WRITER_").lower()
+        for name in constants
+        if name.startswith("WRITER_")
+    }
+    assert WRITER_NAMES == expected
+
+
+def test_checker_reads_the_shared_dependency_lock() -> None:
+    lock = yaml.safe_load(LOCK.read_text(encoding="utf-8"))
+    assert load_checker().locked_commit() == lock["px4_autopilot"]["commit"]
+    assert "LOCKED_COMMIT =" not in CHECKER.read_text(encoding="utf-8")
+    assert REBUILD.stat().st_mode & 0o111
 
 
 def test_patch_applies_to_locked_checkout() -> None:

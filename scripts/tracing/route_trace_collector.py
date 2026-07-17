@@ -16,6 +16,10 @@ from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parents[2]
 SCHEMA_PATH = ROOT / "data" / "schemas" / "route_trace.schema.json"
+OBSERVABILITY_PATCH_PATH = (
+    ROOT / "patches" / "px4" / "route_observability" / "route_observability_topics.patch"
+)
+PROCESSED_ALLOCATOR_INPUT_STRIDE = 4
 
 
 def load_schema() -> dict[str, Any]:
@@ -29,7 +33,8 @@ class RouteState:
     registration_state: object = None
     authority_source: Optional[str] = None
     producer_identity: Optional[str] = None
-    setpoint_level: Optional[str] = None
+    setpoint_level: str = "unknown"
+    behavior_phase: Optional[str] = None
     setpoint_topic: Optional[str] = None
     message_age: Optional[float] = None
     enabled_modules: list[str] = field(default_factory=list)
@@ -47,9 +52,10 @@ class RouteState:
         event_type: str,
         evidence_source: str,
         confidence: str,
+        observation: Optional[dict[str, object]] = None,
     ) -> dict[str, object]:
         return {
-            "schema_version": "1.0",
+            "schema_version": "1.1",
             "run_id": self.run_id,
             "timestamp": timestamp,
             "timestamp_domain": timestamp_domain,
@@ -59,6 +65,7 @@ class RouteState:
             "authority_source": self.authority_source,
             "producer_identity": self.producer_identity,
             "setpoint_level": self.setpoint_level,
+            "behavior_phase": self.behavior_phase,
             "setpoint_topic": self.setpoint_topic,
             "message_age": self.message_age,
             "enabled_modules": sorted(set(self.enabled_modules)),
@@ -68,6 +75,7 @@ class RouteState:
             "actuator_output_summary": self.actuator_output_summary,
             "failsafe_state": self.failsafe_state,
             "fallback_target": self.fallback_target,
+            "observation": observation,
             "evidence_source": evidence_source,
             "confidence": confidence,
         }
@@ -89,12 +97,58 @@ class RouteTraceWriter:
         return count
 
 
+def processed_trace_events(
+    events: Iterable[dict[str, object]],
+) -> Iterator[dict[str, object]]:
+    """Bound tracked trace size without thinning final-writer evidence.
+
+    Raw ULogs remain the complete source artifact. Allocator-input events are
+    installation evidence rather than final-writer continuity evidence, so the
+    compact processed trace retains one in four. Every actuator-output event is
+    retained and its publisher-local sequence remains auditable.
+    """
+    for event in events:
+        if event.get("event_type") == "allocator_input_published":
+            observation = event.get("observation")
+            if (
+                isinstance(observation, dict)
+                and int(observation.get("sequence", 0)) % PROCESSED_ALLOCATOR_INPUT_STRIDE
+            ):
+                continue
+        yield event
+
+
 CONTROL_MODULE_FLAGS = {
     "flag_multicopter_position_control_enabled": "mc_pos_control",
     "flag_control_attitude_enabled": "mc_att_control",
     "flag_control_rates_enabled": "mc_rate_control",
     "flag_control_allocation_enabled": "control_allocator",
 }
+
+def _writer_names() -> dict[int, str]:
+    patch = OBSERVABILITY_PATCH_PATH.read_text(encoding="utf-8")
+    return {
+        int(value): name.lower()
+        for name, value in re.findall(
+            r"^\+uint8 WRITER_([A-Z0-9_]+)\s*=\s*([0-9]+)$", patch, re.MULTILINE
+        )
+    }
+
+
+WRITER_NAMES = _writer_names()
+
+
+def _trajectory_level(payload: dict[str, object]) -> str:
+    components: list[str] = []
+    for name in ("position", "velocity", "acceleration"):
+        values = [payload.get(f"{name}[{index}]") for index in range(3)]
+        if any(isinstance(value, (int, float)) and math.isfinite(float(value)) for value in values):
+            components.append(name)
+    if components == ["position", "velocity", "acceleration"]:
+        return "position_velocity_acceleration"
+    if components == ["position", "velocity"]:
+        return "position_velocity"
+    return components[0] if len(components) == 1 else "unknown"
 
 
 class RouteEventReducer:
@@ -112,6 +166,7 @@ class RouteEventReducer:
     ) -> dict[str, object]:
         event_type = source
         confidence = "HIGH"
+        observation: Optional[dict[str, object]] = None
 
         if source == "vehicle_status":
             nav_state = int(payload["nav_state"])
@@ -142,27 +197,47 @@ class RouteEventReducer:
             all_modules = set(CONTROL_MODULE_FLAGS.values())
             self.state.enabled_modules = enabled
             self.state.bypassed_modules = sorted(all_modules - set(enabled))
-            if bool(payload.get("flag_control_position_enabled", False)):
-                self.state.setpoint_level = "position"
-            elif bool(payload.get("flag_control_velocity_enabled", False)):
-                self.state.setpoint_level = "velocity"
+            trajectory_components = [
+                name
+                for flag, name in (
+                    ("flag_control_position_enabled", "position"),
+                    ("flag_control_velocity_enabled", "velocity"),
+                    ("flag_control_acceleration_enabled", "acceleration"),
+                )
+                if bool(payload.get(flag, False))
+            ]
+            if trajectory_components == ["position", "velocity", "acceleration"]:
+                self.state.setpoint_level = "position_velocity_acceleration"
+            elif trajectory_components == ["position", "velocity"]:
+                self.state.setpoint_level = "position_velocity"
+            elif len(trajectory_components) == 1:
+                self.state.setpoint_level = trajectory_components[0]
             elif bool(payload.get("flag_control_attitude_enabled", False)):
                 self.state.setpoint_level = "attitude"
             elif bool(payload.get("flag_control_rates_enabled", False)):
                 self.state.setpoint_level = "body_rate"
             elif bool(payload.get("flag_control_allocation_enabled", False)):
                 self.state.setpoint_level = "thrust_and_torque"
-            self.state.setpoint_topic = "trajectory_setpoint" if self.state.setpoint_level in {"position", "velocity"} else None
+            self.state.setpoint_topic = (
+                "trajectory_setpoint"
+                if self.state.setpoint_level
+                in {"position", "velocity", "acceleration", "position_velocity", "position_velocity_acceleration"}
+                else None
+            )
             confidence = "MEDIUM"
 
         elif source == "producer_publish":
             self.state.producer_identity = str(payload["producer_identity"])
             self.state.setpoint_topic = str(payload.get("setpoint_topic", "trajectory_setpoint"))
+            self.state.setpoint_level = str(payload.get("setpoint_level", "unknown"))
+            phase = payload.get("behavior_phase")
+            self.state.behavior_phase = str(phase) if phase is not None else None
             event_type = "producer_still_publishing"
 
         elif source == "trajectory_setpoint":
             subject_timestamp = float(payload.get("timestamp", timestamp))
             self.state.setpoint_topic = "trajectory_setpoint"
+            self.state.setpoint_level = _trajectory_level(payload)
             self.state.message_age = max(0.0, (timestamp - subject_timestamp) / 1_000_000.0)
             event_type = "px4_setpoint_received"
             confidence = "MEDIUM"
@@ -171,6 +246,18 @@ class RouteEventReducer:
             event_id = int(payload["event_type"])
             writer_id = int(payload.get("writer_id", 0))
             subject_timestamp = float(payload.get("subject_timestamp", timestamp))
+            profile_id = int(payload.get("profile", 0))
+            observation = {
+                "sequence": int(payload.get("sequence", 0)),
+                "event_id": event_id,
+                "source_id": int(payload.get("source_id", 0)),
+                "topic_id": int(payload.get("topic_id", 0)),
+                "writer_id": writer_id,
+                "instance": int(payload.get("instance", 0)),
+                "profile": {1: "BASELINE", 2: "TRANSITION"}.get(profile_id, "UNKNOWN"),
+                "expected_period_us": int(payload.get("expected_period_us", 0)),
+                "subject_timestamp": subject_timestamp,
+            }
             self.state.message_age = max(0.0, (timestamp - subject_timestamp) / 1_000_000.0)
             if event_id == 1:
                 event_type = "px4_setpoint_consumed"
@@ -179,11 +266,11 @@ class RouteEventReducer:
                 event_type = "allocator_input_published"
                 self.state.allocator_input = {
                     "topic": "vehicle_torque_setpoint",
-                    "writer": "mc_rate_control" if writer_id == 1 else "unknown",
+                    "writer": WRITER_NAMES.get(writer_id, "unknown"),
                 }
             elif event_id == 3:
                 event_type = "actuator_output_published"
-                self.state.actuator_writer = "control_allocator" if writer_id == 2 else "unknown"
+                self.state.actuator_writer = WRITER_NAMES.get(writer_id, "unknown")
             else:
                 event_type = "unknown_instrumentation_event"
                 confidence = "LOW"
@@ -206,7 +293,9 @@ class RouteEventReducer:
         else:
             confidence = "UNKNOWN"
 
-        return self.state.event(timestamp, domain, event_type, f"collector:{source}", confidence)
+        return self.state.event(
+            timestamp, domain, event_type, f"collector:{source}", confidence, observation
+        )
 
 
 def rows_from_ulog(path: Path) -> Iterator[tuple[float, str, dict[str, object]]]:
@@ -256,7 +345,9 @@ def producer_events(path: Path, run_id: str) -> Iterator[dict[str, object]]:
                     event_type = "producer_still_publishing"
                     state.authority_source = "ros2_offboard"
                     state.setpoint_topic = "trajectory_setpoint"
-                    state.setpoint_level = str(payload.get("behavior_phase", "velocity"))
+                    state.setpoint_level = str(payload.get("setpoint_level", "unknown"))
+                    phase = payload.get("behavior_phase")
+                    state.behavior_phase = str(phase) if phase is not None else None
                     confidence = "HIGH"
             elif event_type == "external_mode_registration_observed":
                 mode_id = int(record["mode_id"])
@@ -318,6 +409,8 @@ def lifecycle_events(path: Path, run_id: str) -> Iterator[dict[str, object]]:
                 state.producer_identity = "registered_component:Route Transition"
                 state.setpoint_topic = "trajectory_setpoint"
                 state.setpoint_level = "velocity"
+                phase = payload.get("behavior_phase", payload.get("phase"))
+                state.behavior_phase = str(phase) if phase is not None else None
             elif event_type == "external_mode_deactivated":
                 state.authority_source = None
             elif event_type.startswith("executor_") or event_type == "mode_executor_registered":
@@ -343,6 +436,30 @@ def lifecycle_events(path: Path, run_id: str) -> Iterator[dict[str, object]]:
             )
 
 
+def collect_ulogs(
+    paths: Iterable[Path],
+    output: Path,
+    run_id: str,
+    producer_path: Optional[Path] = None,
+    lifecycle_path: Optional[Path] = None,
+) -> int:
+    reducer = RouteEventReducer(run_id)
+    rows = (
+        row
+        for path in paths
+        for row in rows_from_ulog(path)
+    )
+    events = [
+        reducer.reduce(source, payload, timestamp, "ulog_us")
+        for timestamp, source, payload in sorted(rows, key=lambda item: item[0])
+    ]
+    if producer_path is not None:
+        events.extend(producer_events(producer_path, run_id))
+    if lifecycle_path is not None:
+        events.extend(lifecycle_events(lifecycle_path, run_id))
+    return RouteTraceWriter(output).write(processed_trace_events(events))
+
+
 def collect_ulog(
     path: Path,
     output: Path,
@@ -350,27 +467,27 @@ def collect_ulog(
     producer_path: Optional[Path] = None,
     lifecycle_path: Optional[Path] = None,
 ) -> int:
-    reducer = RouteEventReducer(run_id)
-    events = [
-        reducer.reduce(source, payload, timestamp, "ulog_us")
-        for timestamp, source, payload in rows_from_ulog(path)
-    ]
-    if producer_path is not None:
-        events.extend(producer_events(producer_path, run_id))
-    if lifecycle_path is not None:
-        events.extend(lifecycle_events(lifecycle_path, run_id))
-    return RouteTraceWriter(output).write(events)
+    """Backward-compatible single-ULog entry point."""
+    return collect_ulogs(
+        [path], output, run_id, producer_path=producer_path, lifecycle_path=lifecycle_path
+    )
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--ulog", type=Path, required=True)
+    parser.add_argument(
+        "--ulog",
+        type=Path,
+        action="append",
+        required=True,
+        help="ULog segment; repeat for logger stop/start segments from one PX4 boot",
+    )
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--run-id", required=True)
     parser.add_argument("--producer-events", type=Path)
     parser.add_argument("--lifecycle-log", type=Path)
     args = parser.parse_args()
-    count = collect_ulog(
+    count = collect_ulogs(
         args.ulog,
         args.output,
         args.run_id,

@@ -1,0 +1,104 @@
+{
+  "clauses": {
+    "continuity": {
+      "evidence": [],
+      "metrics": {
+        "allowed_gap_ms": 24.0,
+        "first_target_valid_influence_us": 28676000.0,
+        "last_old_valid_influence_us": 28668000.0,
+        "maximum_unowned_window_ms": 8.0,
+        "valid_fallback_output": true
+      },
+      "reasons": [
+        "continuous, fully covered writer evidence is unavailable"
+      ],
+      "status": "UNKNOWN"
+    },
+    "exclusivity": {
+      "evidence": [],
+      "metrics": {
+        "candidate_writers": [
+          "control_allocator"
+        ],
+        "competing_window_count": 0,
+        "observation_hole_count": 0,
+        "observed_writers": [
+          "control_allocator"
+        ],
+        "sequence_gap_count": 31,
+        "uninstrumented_candidates": []
+      },
+      "reasons": [
+        "writer coverage status is SEQUENCE_GAP"
+      ],
+      "status": "UNKNOWN"
+    },
+    "installation": {
+      "evidence": [],
+      "metrics": {
+        "checks": {
+          "allocator_input": true,
+          "declared_mode": true,
+          "enabled_modules": true,
+          "final_writer": true,
+          "fresh_consumption": true,
+          "registration_or_activation": true,
+          "setpoint_configuration": true
+        },
+        "first_target_consumption_us": 28684000.0,
+        "first_target_writer_us": 28676000.0
+      },
+      "reasons": [],
+      "status": "PASS"
+    },
+    "recovery": {
+      "evidence": [],
+      "metrics": {
+        "automatic_old_route_reentry_observed": false,
+        "checks": {
+          "fallback_modules_installed": true,
+          "fallback_selected": true,
+          "fallback_writer_active": true,
+          "old_consumer_stopped": null,
+          "old_producer_stopped": false,
+          "old_writer_stopped": null
+        }
+      },
+      "reasons": [
+        "missing recovery evidence: old_consumer_stopped",
+        "missing recovery evidence: old_writer_stopped",
+        "missing recovery evidence: old_producer_stopped"
+      ],
+      "status": "UNKNOWN"
+    },
+    "revocation": {
+      "evidence": [],
+      "metrics": {
+        "declared_route_exit_us": 28672000.0,
+        "last_old_route_consumption_us": 27600000.0,
+        "last_old_writer_event_us": 28668000.0,
+        "last_producer_publish_us": null,
+        "post_revocation_consumption_count": null,
+        "post_revocation_writer_count": null,
+        "revocation_latency_ms": -4.0
+      },
+      "reasons": [
+        "producer evidence is cross-domain and has no valid clock bridge",
+        "old-route consumption events lack route_epoch_id; a later activation of the same mode cannot be attributed to the old route",
+        "old-route writer events lack route_epoch_id; a shared final writer cannot be attributed to one route"
+      ],
+      "status": "UNKNOWN"
+    }
+  },
+  "clock_bridge": null,
+  "route_oracle_version": "0.1",
+  "run_id": "p0d_post_disarm_phase_a1_20260716T0755",
+  "schema_version": "1.0",
+  "status": "UNKNOWN",
+  "transition": {
+    "source_mode": 23,
+    "target_mode": 5,
+    "timestamp_domain": "ulog_us",
+    "timestamp_us": 28672000.0
+  }
+}

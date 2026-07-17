@@ -1,0 +1,16 @@
+{
+  "event_count": 2231,
+  "information_fabricated": false,
+  "migration": "route_trace_v1_0_to_v1_1",
+  "output_artifact": {
+    "path": "data/processed/p0/p0a_offboard_20260716/route_trace.jsonl",
+    "sha256": "8434150edc7763131d2527baa5203e9c0b82a44ee9de0ebe6991ccf0e098c6e5"
+  },
+  "phase_values_moved": 207,
+  "schema_version": "1.0",
+  "source_artifact": {
+    "path": "data/processed/p0/p0a_offboard_20260716/route_trace.jsonl",
+    "sha256": "811c01d0b9266d78e95c03f53c398a2a2f4cc517fcb7fa7c6b3967a4d9732323"
+  },
+  "unknown_setpoint_levels": 219
+}

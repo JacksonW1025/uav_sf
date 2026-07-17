@@ -15,6 +15,7 @@
     "authority_source",
     "producer_identity",
     "setpoint_level",
+    "behavior_phase",
     "setpoint_topic",
     "message_age",
     "enabled_modules",
@@ -24,11 +25,12 @@
     "actuator_output_summary",
     "failsafe_state",
     "fallback_target",
+    "observation",
     "evidence_source",
     "confidence"
   ],
   "properties": {
-    "schema_version": {"const": "1.0"},
+    "schema_version": {"const": "1.1"},
     "run_id": {"type": "string", "minLength": 1},
     "timestamp": {"type": "number", "minimum": 0},
     "timestamp_domain": {
@@ -39,7 +41,21 @@
     "registration_state": {"type": ["string", "object", "null"]},
     "authority_source": {"type": ["string", "null"]},
     "producer_identity": {"type": ["string", "null"]},
-    "setpoint_level": {"type": ["string", "null"]},
+    "setpoint_level": {
+      "enum": [
+        "position",
+        "velocity",
+        "acceleration",
+        "position_velocity",
+        "position_velocity_acceleration",
+        "attitude",
+        "body_rate",
+        "thrust_and_torque",
+        "direct_actuator",
+        "unknown"
+      ]
+    },
+    "behavior_phase": {"type": ["string", "null"]},
     "setpoint_topic": {"type": ["string", "null"]},
     "message_age": {"type": ["number", "null"], "minimum": 0},
     "enabled_modules": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
@@ -49,6 +65,37 @@
     "actuator_output_summary": {"type": ["object", "null"]},
     "failsafe_state": {"type": ["string", "object", "boolean", "null"]},
     "fallback_target": {"type": ["string", "integer", "null"]},
+    "observation": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "sequence",
+            "event_id",
+            "source_id",
+            "topic_id",
+            "writer_id",
+            "instance",
+            "profile",
+            "expected_period_us",
+            "subject_timestamp"
+          ],
+          "properties": {
+            "sequence": {"type": "integer", "minimum": 0},
+            "event_id": {"type": "integer", "minimum": 0},
+            "source_id": {"type": "integer", "minimum": 0},
+            "topic_id": {"type": "integer", "minimum": 0},
+            "writer_id": {"type": "integer", "minimum": 0},
+            "instance": {"type": "integer", "minimum": 0},
+            "profile": {"enum": ["BASELINE", "TRANSITION", "UNKNOWN"]},
+            "expected_period_us": {"type": "integer", "minimum": 0},
+            "subject_timestamp": {"type": "number", "minimum": 0}
+          }
+        }
+      ]
+    },
     "evidence_source": {"type": "string", "minLength": 1},
     "confidence": {"enum": ["HIGH", "MEDIUM", "LOW", "UNKNOWN"]}
   }
