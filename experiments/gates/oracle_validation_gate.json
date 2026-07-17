@@ -1,0 +1,92 @@
+{
+  "criteria": {
+    "O1": {
+      "evidence": {
+        "continuity": [
+          "NOT_APPLICABLE",
+          "PASS",
+          "UNKNOWN",
+          "VIOLATION"
+        ],
+        "exclusivity": [
+          "NOT_APPLICABLE",
+          "PASS",
+          "UNKNOWN",
+          "VIOLATION"
+        ],
+        "installation": [
+          "NOT_APPLICABLE",
+          "PASS",
+          "UNKNOWN",
+          "VIOLATION"
+        ],
+        "recovery": [
+          "NOT_APPLICABLE",
+          "PASS",
+          "UNKNOWN",
+          "VIOLATION"
+        ],
+        "revocation": [
+          "NOT_APPLICABLE",
+          "PASS",
+          "UNKNOWN",
+          "VIOLATION"
+        ]
+      },
+      "pass": true
+    },
+    "O2": {
+      "count": 0,
+      "pass": true
+    },
+    "O3": {
+      "detections": 14,
+      "misses": 0,
+      "pass": true
+    },
+    "O4": {
+      "incomplete_unknowns": 12,
+      "pass": true,
+      "unexpected_unknowns": 0
+    },
+    "O5": {
+      "pass": true,
+      "valid_live_mutant_types": [
+        "install_delay",
+        "old_route_late_consumption",
+        "recovery_incomplete"
+      ]
+    },
+    "O6": {
+      "pass": true,
+      "valid_control_count": 3
+    },
+    "O7": {
+      "correct_target_assertions": 18,
+      "pass": true,
+      "target_assertions": 18,
+      "valid_mutant_run_count": 15
+    },
+    "O8": {
+      "check": "AST decision conditions contain no run_id/case_id/ground_truth_case_id",
+      "pass": true
+    },
+    "O9": {
+      "check": "scripts/validation/validate_repo.sh",
+      "pass": true
+    }
+  },
+  "criteria_frozen_commit": "6aa47c7",
+  "evidence": {
+    "confusion_matrix": "data/processed/oracle_validation/clause_confusion_matrix.tsv",
+    "live_results": "data/processed/oracle_validation/live_case_results.json",
+    "trace_results": "data/processed/oracle_validation/case_results.json"
+  },
+  "failed_criteria": [],
+  "fuzzer_v0_authorized": true,
+  "gate": "oracle_validation",
+  "oracle_version": "0.3",
+  "route_trace_schema_version": "1.2",
+  "schema_version": "1.0",
+  "status": "PASS"
+}

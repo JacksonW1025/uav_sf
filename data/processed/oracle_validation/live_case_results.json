@@ -1,0 +1,553 @@
+{
+  "all_expected_predictions_match": true,
+  "assertion_count": 27,
+  "case_count": 18,
+  "correct_assertion_count": 27,
+  "environment_failure_count": 0,
+  "oracle_version": "0.3",
+  "results": [
+    {
+      "all_assertions_match": true,
+      "assertions": [
+        {
+          "clause": "installation",
+          "correct": true,
+          "expected": "PASS",
+          "predicted": "PASS",
+          "selector": [
+            17,
+            14
+          ]
+        },
+        {
+          "clause": "revocation",
+          "correct": true,
+          "expected": "PASS",
+          "predicted": "PASS",
+          "selector": [
+            14,
+            4
+          ]
+        },
+        {
+          "clause": "recovery",
+          "correct": true,
+          "expected": "PASS",
+          "predicted": "PASS",
+          "selector": [
+            14,
+            4
+          ]
+        }
+      ],
+      "case_id": "live_control_r1",
+      "classification": "VALID",
+      "delay_ms": 0,
+      "elapsed_s": 49.11014557303861,
+      "expected_profile": "control",
+      "mutant_type": "control",
+      "repeat": 1,
+      "scenario_exit_code": 0,
+      "schema_version": "1.0",
+      "sut_profile": "canonical"
+    },
+    {
+      "all_assertions_match": true,
+      "assertions": [
+        {
+          "clause": "installation",
+          "correct": true,
+          "expected": "PASS",
+          "predicted": "PASS",
+          "selector": [
+            17,
+            14
+          ]
+        },
+        {
+          "clause": "revocation",
+          "correct": true,
+          "expected": "PASS",
+          "predicted": "PASS",
+          "selector": [
+            14,
+            4
+          ]
+        },
+        {
+          "clause": "recovery",
+          "correct": true,
+          "expected": "PASS",
+          "predicted": "PASS",
+          "selector": [
+            14,
+            4
+          ]
+        }
+      ],
+      "case_id": "live_control_r2",
+      "classification": "VALID",
+      "delay_ms": 0,
+      "elapsed_s": 45.7995131239295,
+      "expected_profile": "control",
+      "mutant_type": "control",
+      "repeat": 2,
+      "scenario_exit_code": 0,
+      "schema_version": "1.0",
+      "sut_profile": "canonical"
+    },
+    {
+      "all_assertions_match": true,
+      "assertions": [
+        {
+          "clause": "installation",
+          "correct": true,
+          "expected": "PASS",
+          "predicted": "PASS",
+          "selector": [
+            17,
+            14
+          ]
+        },
+        {
+          "clause": "revocation",
+          "correct": true,
+          "expected": "PASS",
+          "predicted": "PASS",
+          "selector": [
+            14,
+            4
+          ]
+        },
+        {
+          "clause": "recovery",
+          "correct": true,
+          "expected": "PASS",
+          "predicted": "PASS",
+          "selector": [
+            14,
+            4
+          ]
+        }
+      ],
+      "case_id": "live_control_r3",
+      "classification": "VALID",
+      "delay_ms": 0,
+      "elapsed_s": 46.00099165271968,
+      "expected_profile": "control",
+      "mutant_type": "control",
+      "repeat": 3,
+      "scenario_exit_code": 0,
+      "schema_version": "1.0",
+      "sut_profile": "canonical"
+    },
+    {
+      "all_assertions_match": true,
+      "assertions": [
+        {
+          "clause": "installation",
+          "correct": true,
+          "expected": "PASS",
+          "predicted": "PASS",
+          "selector": [
+            17,
+            14
+          ]
+        }
+      ],
+      "case_id": "live_install_200_r1",
+      "classification": "VALID",
+      "delay_ms": 200,
+      "elapsed_s": 49.221837285440415,
+      "expected_profile": "below_threshold",
+      "mutant_type": "install_delay",
+      "repeat": 1,
+      "scenario_exit_code": 0,
+      "schema_version": "1.0",
+      "sut_profile": "mutant"
+    },
+    {
+      "all_assertions_match": true,
+      "assertions": [
+        {
+          "clause": "installation",
+          "correct": true,
+          "expected": "PASS",
+          "predicted": "PASS",
+          "selector": [
+            17,
+            14
+          ]
+        }
+      ],
+      "case_id": "live_install_200_r2",
+      "classification": "VALID",
+      "delay_ms": 200,
+      "elapsed_s": 45.90192446997389,
+      "expected_profile": "below_threshold",
+      "mutant_type": "install_delay",
+      "repeat": 2,
+      "scenario_exit_code": 0,
+      "schema_version": "1.0",
+      "sut_profile": "mutant"
+    },
+    {
+      "all_assertions_match": true,
+      "assertions": [
+        {
+          "clause": "installation",
+          "correct": true,
+          "expected": "PASS",
+          "predicted": "PASS",
+          "selector": [
+            17,
+            14
+          ]
+        }
+      ],
+      "case_id": "live_install_200_r3",
+      "classification": "VALID",
+      "delay_ms": 200,
+      "elapsed_s": 45.8999768611975,
+      "expected_profile": "below_threshold",
+      "mutant_type": "install_delay",
+      "repeat": 3,
+      "scenario_exit_code": 0,
+      "schema_version": "1.0",
+      "sut_profile": "mutant"
+    },
+    {
+      "all_assertions_match": true,
+      "assertions": [
+        {
+          "clause": "installation",
+          "correct": true,
+          "expected": "VIOLATION",
+          "predicted": "VIOLATION",
+          "selector": [
+            17,
+            14
+          ]
+        }
+      ],
+      "case_id": "live_install_500_r1",
+      "classification": "VALID",
+      "delay_ms": 500,
+      "elapsed_s": 48.708465424366295,
+      "expected_profile": "above_threshold",
+      "mutant_type": "install_delay",
+      "repeat": 1,
+      "scenario_exit_code": 0,
+      "schema_version": "1.0",
+      "sut_profile": "mutant"
+    },
+    {
+      "all_assertions_match": true,
+      "assertions": [
+        {
+          "clause": "installation",
+          "correct": true,
+          "expected": "VIOLATION",
+          "predicted": "VIOLATION",
+          "selector": [
+            17,
+            14
+          ]
+        }
+      ],
+      "case_id": "live_install_500_r2",
+      "classification": "VALID",
+      "delay_ms": 500,
+      "elapsed_s": 45.95137330098078,
+      "expected_profile": "above_threshold",
+      "mutant_type": "install_delay",
+      "repeat": 2,
+      "scenario_exit_code": 0,
+      "schema_version": "1.0",
+      "sut_profile": "mutant"
+    },
+    {
+      "all_assertions_match": true,
+      "assertions": [
+        {
+          "clause": "installation",
+          "correct": true,
+          "expected": "VIOLATION",
+          "predicted": "VIOLATION",
+          "selector": [
+            17,
+            14
+          ]
+        }
+      ],
+      "case_id": "live_install_500_r3",
+      "classification": "VALID",
+      "delay_ms": 500,
+      "elapsed_s": 46.10101823601872,
+      "expected_profile": "above_threshold",
+      "mutant_type": "install_delay",
+      "repeat": 3,
+      "scenario_exit_code": 0,
+      "schema_version": "1.0",
+      "sut_profile": "mutant"
+    },
+    {
+      "all_assertions_match": true,
+      "assertions": [
+        {
+          "clause": "installation",
+          "correct": true,
+          "expected": "VIOLATION",
+          "predicted": "VIOLATION",
+          "selector": [
+            17,
+            14
+          ]
+        }
+      ],
+      "case_id": "live_install_1000_r1",
+      "classification": "VALID",
+      "delay_ms": 1000,
+      "elapsed_s": 45.60006653005257,
+      "expected_profile": "above_threshold",
+      "mutant_type": "install_delay",
+      "repeat": 1,
+      "scenario_exit_code": 0,
+      "schema_version": "1.0",
+      "sut_profile": "mutant"
+    },
+    {
+      "all_assertions_match": true,
+      "assertions": [
+        {
+          "clause": "installation",
+          "correct": true,
+          "expected": "VIOLATION",
+          "predicted": "VIOLATION",
+          "selector": [
+            17,
+            14
+          ]
+        }
+      ],
+      "case_id": "live_install_1000_r2",
+      "classification": "VALID",
+      "delay_ms": 1000,
+      "elapsed_s": 46.55124453175813,
+      "expected_profile": "above_threshold",
+      "mutant_type": "install_delay",
+      "repeat": 2,
+      "scenario_exit_code": 0,
+      "schema_version": "1.0",
+      "sut_profile": "mutant"
+    },
+    {
+      "all_assertions_match": true,
+      "assertions": [
+        {
+          "clause": "installation",
+          "correct": true,
+          "expected": "VIOLATION",
+          "predicted": "VIOLATION",
+          "selector": [
+            17,
+            14
+          ]
+        }
+      ],
+      "case_id": "live_install_1000_r3",
+      "classification": "VALID",
+      "delay_ms": 1000,
+      "elapsed_s": 46.09322497993708,
+      "expected_profile": "above_threshold",
+      "mutant_type": "install_delay",
+      "repeat": 3,
+      "scenario_exit_code": 0,
+      "schema_version": "1.0",
+      "sut_profile": "mutant"
+    },
+    {
+      "all_assertions_match": true,
+      "assertions": [
+        {
+          "clause": "recovery",
+          "correct": true,
+          "expected": "VIOLATION",
+          "predicted": "VIOLATION",
+          "selector": [
+            14,
+            4
+          ]
+        }
+      ],
+      "case_id": "live_recovery_500_r1",
+      "classification": "VALID",
+      "delay_ms": 500,
+      "elapsed_s": 46.152208159677684,
+      "expected_profile": "above_threshold",
+      "mutant_type": "recovery_incomplete",
+      "repeat": 1,
+      "scenario_exit_code": 0,
+      "schema_version": "1.0",
+      "sut_profile": "mutant"
+    },
+    {
+      "all_assertions_match": true,
+      "assertions": [
+        {
+          "clause": "recovery",
+          "correct": true,
+          "expected": "VIOLATION",
+          "predicted": "VIOLATION",
+          "selector": [
+            14,
+            4
+          ]
+        }
+      ],
+      "case_id": "live_recovery_500_r2",
+      "classification": "VALID",
+      "delay_ms": 500,
+      "elapsed_s": 46.200217459816486,
+      "expected_profile": "above_threshold",
+      "mutant_type": "recovery_incomplete",
+      "repeat": 2,
+      "scenario_exit_code": 0,
+      "schema_version": "1.0",
+      "sut_profile": "mutant"
+    },
+    {
+      "all_assertions_match": true,
+      "assertions": [
+        {
+          "clause": "recovery",
+          "correct": true,
+          "expected": "VIOLATION",
+          "predicted": "VIOLATION",
+          "selector": [
+            14,
+            4
+          ]
+        }
+      ],
+      "case_id": "live_recovery_500_r3",
+      "classification": "VALID",
+      "delay_ms": 500,
+      "elapsed_s": 46.05791558884084,
+      "expected_profile": "above_threshold",
+      "mutant_type": "recovery_incomplete",
+      "repeat": 3,
+      "scenario_exit_code": 0,
+      "schema_version": "1.0",
+      "sut_profile": "mutant"
+    },
+    {
+      "all_assertions_match": true,
+      "assertions": [
+        {
+          "clause": "revocation",
+          "correct": true,
+          "expected": "VIOLATION",
+          "predicted": "VIOLATION",
+          "selector": [
+            14,
+            4
+          ]
+        },
+        {
+          "clause": "recovery",
+          "correct": true,
+          "expected": "VIOLATION",
+          "predicted": "VIOLATION",
+          "selector": [
+            14,
+            4
+          ]
+        }
+      ],
+      "case_id": "live_old_route_500_r1",
+      "classification": "VALID",
+      "delay_ms": 500,
+      "elapsed_s": 46.35223680129275,
+      "expected_profile": "above_threshold",
+      "mutant_type": "old_route_late_consumption",
+      "repeat": 1,
+      "scenario_exit_code": 0,
+      "schema_version": "1.0",
+      "sut_profile": "mutant"
+    },
+    {
+      "all_assertions_match": true,
+      "assertions": [
+        {
+          "clause": "revocation",
+          "correct": true,
+          "expected": "VIOLATION",
+          "predicted": "VIOLATION",
+          "selector": [
+            14,
+            4
+          ]
+        },
+        {
+          "clause": "recovery",
+          "correct": true,
+          "expected": "VIOLATION",
+          "predicted": "VIOLATION",
+          "selector": [
+            14,
+            4
+          ]
+        }
+      ],
+      "case_id": "live_old_route_500_r2",
+      "classification": "VALID",
+      "delay_ms": 500,
+      "elapsed_s": 46.14950586669147,
+      "expected_profile": "above_threshold",
+      "mutant_type": "old_route_late_consumption",
+      "repeat": 2,
+      "scenario_exit_code": 0,
+      "schema_version": "1.0",
+      "sut_profile": "mutant"
+    },
+    {
+      "all_assertions_match": true,
+      "assertions": [
+        {
+          "clause": "revocation",
+          "correct": true,
+          "expected": "VIOLATION",
+          "predicted": "VIOLATION",
+          "selector": [
+            14,
+            4
+          ]
+        },
+        {
+          "clause": "recovery",
+          "correct": true,
+          "expected": "VIOLATION",
+          "predicted": "VIOLATION",
+          "selector": [
+            14,
+            4
+          ]
+        }
+      ],
+      "case_id": "live_old_route_500_r3",
+      "classification": "VALID",
+      "delay_ms": 500,
+      "elapsed_s": 51.43064471008256,
+      "expected_profile": "above_threshold",
+      "mutant_type": "old_route_late_consumption",
+      "repeat": 3,
+      "scenario_exit_code": 0,
+      "schema_version": "1.0",
+      "sut_profile": "mutant"
+    }
+  ],
+  "schema_version": "1.0",
+  "threshold_profile_id": "oracle-validation-preregistered-v1",
+  "valid_case_count": 18
+}
