@@ -1,0 +1,34 @@
+schema_version: "1.0"
+profile: aerostack2-runtime-trace-spike-humble
+source_dependencies:
+  aerostack2:
+    url: https://github.com/aerostack2/aerostack2.git
+    commit: a8e7318b8d1d7c5adc580e8a16374357773bc11a
+  as2_platform_pixhawk:
+    url: https://github.com/aerostack2/as2_platform_pixhawk.git
+    commit: 482563ba979baea965df918995c141a362e26637
+  project_px4_vision:
+    url: https://github.com/aerostack2/project_px4_vision.git
+    commit: 22d945c956ae234839b3c48555ab2c1ba40eaee3
+  px4_msgs:
+    url: https://github.com/PX4/px4_msgs.git
+    commit: 18ecff03041c6f8d8a0012fbc63af0b23dd60af1
+  px4_autopilot:
+    url: https://github.com/PX4/PX4-Autopilot.git
+    commit: 4ae21a5e569d3d89c2f6366688cbacb3e93437c9
+host_runtime:
+  os: Ubuntu 22.04 arm64
+  ros_distribution: humble
+  ros_humble_ros_base_deb: 0.10.0-1jammy.20260219.051636
+  gz_sim8_cli_deb: 8.10.0-1~jammy
+  libgz_sim8_deb: 8.10.0-1~jammy
+  micro_xrce_agent: /usr/local/bin/MicroXRCEAgent
+isolation:
+  source: external/aerostack2
+  workspace: ros2_ws_aerostack2
+  canonical_ros_workspace_modified: false
+  canonical_px4_worktree_modified: false
+container_profile:
+  path: docker/aerostack2/Dockerfile
+  status: DEFINED_NOT_EXECUTED
+  reason: local user lacks access to the installed Docker daemon

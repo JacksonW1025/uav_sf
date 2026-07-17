@@ -1,0 +1,7 @@
+scenario	aerostack2_event	entry_point	px4_interface	expected_route_effect	runtime_evidence_required	safety_status
+A1	set_offboard_mode(true)	as2_core AerialPlatform service	VehicleCommand DO_SET_MODE + OffboardControlMode	possible internal-to-Offboard handoff	PX4 vehicle_status + consumption + writer	ALLOWED_LOW_RISK_SITL
+A2	mission completion	behavior action completion	motion reference cessation or platform request	mechanism-dependent	PX4 vehicle_status + route epoch	ALLOWED_LOW_RISK_SITL
+A3	action cancel	BehaviorServer cancel callback	motion_reference pose/twist/trajectory	usually in-route update	stable PX4 mode + stable route epoch	ALLOWED_LOW_RISK_SITL
+A4	companion process loss	process termination	OffboardControlMode/setpoint loss	possible Offboard-to-fallback handoff	PX4 vehicle_status + fallback consumption/writer	ALLOWED_LOW_RISK_SITL
+A5	emergency Land request	alert/land behavior	adapter-dependent; ownLand unsupported in selected adapter	unresolved without PX4 evidence	PX4 Land request + vehicle_status	SAFE_LAND_ONLY
+EXCLUDED	kill switch	PixhawkPlatform::ownKillSwitch	ManualControlSwitches.kill_switch	motor termination	not acquired	PROHIBITED
