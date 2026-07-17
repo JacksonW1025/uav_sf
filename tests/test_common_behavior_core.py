@@ -18,6 +18,7 @@ def test_behavior_sequence_and_markers() -> None:
     assert core.command_at(0.0, 2.0).setpoint_level == "velocity"
     assert core.command_at(3.0, 3.0).behavior_phase == BehaviorPhase.STRAIGHT_LINE.value
     assert core.command_at(8.0, 4.0).behavior_phase == BehaviorPhase.LOW_SPEED_TURN.value
+    assert core.command_at(12.0, 4.5).behavior_phase == BehaviorPhase.STABLE_DESCENT.value
     completed = core.command_at(core.duration_seconds, 5.0)
     assert completed.termination_event == "mission_complete"
     assert core.cancel(6.0).termination_event == "cancel"
@@ -32,6 +33,27 @@ def test_commands_are_finite_and_low_speed() -> None:
         assert max(abs(value) for value in command.velocity) <= 0.5
     with pytest.raises(ValueError):
         core.command_at(-1.0, 0.0)
+
+
+def test_preregistered_context_commands_are_distinct_and_bounded() -> None:
+    core = CommonBehaviorCore()
+    commands = {
+        context: core.command_for_context(context, 2.0, 10.0)
+        for context in ("hover", "straight", "turn", "descent")
+    }
+    assert {command.behavior_phase for command in commands.values()} == {
+        BehaviorPhase.HOVER.value,
+        BehaviorPhase.STRAIGHT_LINE.value,
+        BehaviorPhase.LOW_SPEED_TURN.value,
+        BehaviorPhase.STABLE_DESCENT.value,
+    }
+    assert commands["descent"].velocity == (0.0, 0.0, 0.2)
+    assert all(
+        max(abs(value) for value in command.velocity or ()) <= 0.5
+        for command in commands.values()
+    )
+    with pytest.raises(ValueError):
+        core.command_for_context("climb", 0.0, 0.0)
 
 
 def test_common_core_has_no_interface_imports() -> None:

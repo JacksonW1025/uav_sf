@@ -19,6 +19,7 @@ PX4_BUILD="${PX4_DIR}/build/px4_sitl_default"
 AGENT_PREFIX="${REPO_ROOT}/external/install/microxrce_agent"
 AGENT_BIN="${MICROXRCE_AGENT_BIN:-${AGENT_PREFIX}/bin/MicroXRCEAgent}"
 AGENT_LIBRARY_PATH="${MICROXRCE_AGENT_LD_LIBRARY_PATH:-${AGENT_PREFIX}/lib}"
+EXTERNAL_MODE_BIN="${ROUTE_EXTERNAL_MODE_BIN:-${REPO_ROOT}/ros2_ws/install/route_transition_external_mode/lib/route_transition_external_mode/route_transition_external_mode}"
 RAW_DIR="${P0_RUN_ROOT:-${REPO_ROOT}/runs/p0}/${RUN_ID}/raw"
 PROCESSED_DIR="${P0_PROCESSED_ROOT:-${REPO_ROOT}/data/processed/p0}/${RUN_ID}"
 mkdir -p "${RAW_DIR}" "${PROCESSED_DIR}"
@@ -125,17 +126,23 @@ fi
 if [[ "${P0_HOVER_ONLY:-0}" == "1" ]]; then
   runner_args+=(--hover-only)
 fi
+if [[ -n "${P0_ACTIVE_DURATION_S:-}" ]]; then
+  export UAV_SF_ACTIVE_DURATION_S="${P0_ACTIVE_DURATION_S}"
+fi
 case "${SCENARIO}" in
   offboard)
     python3 "${REPO_ROOT}/scripts/probes/p0_route_runner.py" "${runner_args[@]}" \
       >"${RAW_DIR}/runner.log" 2>&1
     ;;
   external)
-    python3 "${REPO_ROOT}/scripts/probes/p0_route_runner.py" \
-      --scenario external --output "${RESULT_FILE}" --timeout 180 \
+    external_runner_args=(--scenario external --output "${RESULT_FILE}" --timeout 180)
+    if [[ -n "${P0_ACTIVE_DURATION_S:-}" ]]; then
+      external_runner_args+=(--active-duration "${P0_ACTIVE_DURATION_S}")
+    fi
+    python3 "${REPO_ROOT}/scripts/probes/p0_route_runner.py" "${external_runner_args[@]}" \
       >"${RAW_DIR}/runner.log" 2>&1 &
     RUNNER_PID=$!
-    "${REPO_ROOT}/ros2_ws/install/route_transition_external_mode/lib/route_transition_external_mode/route_transition_external_mode" \
+    "${EXTERNAL_MODE_BIN}" \
       >"${RAW_DIR}/external_mode.log" 2>&1 &
     MODE_PID=$!
     wait "${RUNNER_PID}"

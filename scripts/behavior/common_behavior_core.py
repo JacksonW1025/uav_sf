@@ -17,6 +17,7 @@ class BehaviorPhase(str, Enum):
     HOVER = "hover"
     STRAIGHT_LINE = "straight_line"
     LOW_SPEED_TURN = "low_speed_turn"
+    STABLE_DESCENT = "stable_descent"
     MISSION_COMPLETE = "mission_complete"
     CANCELLED = "cancelled"
 
@@ -57,30 +58,41 @@ class CommonBehaviorCore:
         hover_seconds: float = 3.0,
         straight_seconds: float = 5.0,
         turn_seconds: float = 4.0,
+        descent_seconds: float = 4.0,
         straight_speed_m_s: float = 0.5,
         turn_speed_m_s: float = 0.3,
         turn_rate_rad_s: float = 0.15,
+        descent_speed_m_s: float = 0.2,
     ) -> None:
         values = (
             hover_seconds,
             straight_seconds,
             turn_seconds,
+            descent_seconds,
             straight_speed_m_s,
             turn_speed_m_s,
             turn_rate_rad_s,
+            descent_speed_m_s,
         )
         if not all(math.isfinite(value) and value > 0 for value in values):
             raise ValueError("durations, speeds, and turn rate must be finite and positive")
         self.hover_seconds = hover_seconds
         self.straight_seconds = straight_seconds
         self.turn_seconds = turn_seconds
+        self.descent_seconds = descent_seconds
         self.straight_speed_m_s = straight_speed_m_s
         self.turn_speed_m_s = turn_speed_m_s
         self.turn_rate_rad_s = turn_rate_rad_s
+        self.descent_speed_m_s = descent_speed_m_s
 
     @property
     def duration_seconds(self) -> float:
-        return self.hover_seconds + self.straight_seconds + self.turn_seconds
+        return (
+            self.hover_seconds
+            + self.straight_seconds
+            + self.turn_seconds
+            + self.descent_seconds
+        )
 
     def takeoff_marker(self, timestamp: float) -> CanonicalCommand:
         return CanonicalCommand(
@@ -107,7 +119,8 @@ class CommonBehaviorCore:
                 (self.straight_speed_m_s, 0.0, 0.0),
                 0.0,
             )
-        if elapsed_seconds < self.duration_seconds:
+        turn_end = self.hover_seconds + self.straight_seconds + self.turn_seconds
+        if elapsed_seconds < turn_end:
             turn_elapsed = elapsed_seconds - self.hover_seconds - self.straight_seconds
             yaw = self.turn_rate_rad_s * turn_elapsed
             velocity = (
@@ -116,7 +129,47 @@ class CommonBehaviorCore:
                 0.0,
             )
             return self._velocity_command(timestamp, BehaviorPhase.LOW_SPEED_TURN, velocity, yaw)
+        if elapsed_seconds < self.duration_seconds:
+            return self.command_for_context("descent", elapsed_seconds - turn_end, timestamp)
         return self.mission_complete(timestamp)
+
+    def command_for_context(
+        self, context: str, elapsed_seconds: float, timestamp: float
+    ) -> CanonicalCommand:
+        """Return a deterministic command inside one preregistered P5 context."""
+        if not math.isfinite(elapsed_seconds) or elapsed_seconds < 0:
+            raise ValueError("elapsed_seconds must be finite and non-negative")
+        if context == "hover":
+            return self._velocity_command(
+                timestamp, BehaviorPhase.HOVER, (0.0, 0.0, 0.0), 0.0
+            )
+        if context == "straight":
+            return self._velocity_command(
+                timestamp,
+                BehaviorPhase.STRAIGHT_LINE,
+                (self.straight_speed_m_s, 0.0, 0.0),
+                0.0,
+            )
+        if context == "turn":
+            yaw = self.turn_rate_rad_s * elapsed_seconds
+            return self._velocity_command(
+                timestamp,
+                BehaviorPhase.LOW_SPEED_TURN,
+                (
+                    self.turn_speed_m_s * math.cos(yaw),
+                    self.turn_speed_m_s * math.sin(yaw),
+                    0.0,
+                ),
+                yaw,
+            )
+        if context == "descent":
+            return self._velocity_command(
+                timestamp,
+                BehaviorPhase.STABLE_DESCENT,
+                (0.0, 0.0, self.descent_speed_m_s),
+                0.0,
+            )
+        raise ValueError(f"unsupported behavior context: {context}")
 
     def mission_complete(self, timestamp: float) -> CanonicalCommand:
         return CanonicalCommand(

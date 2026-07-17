@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import signal
 import sys
 import time
@@ -52,6 +53,8 @@ def run(events_path: Path, control_dir: Path, timeout_s: float) -> int:
             self.release_started: float | None = None
             self.exit_code: int | None = None
             self.core = CommonBehaviorCore()
+            self.behavior_context = os.environ.get("UAV_SF_BEHAVIOR_CONTEXT", "hover")
+            self.core.command_for_context(self.behavior_context, 0.0, 0.0)
             self.adapter = Px4OffboardAdapter(
                 self,
                 event_sink=lambda event: self._event("adapter_event", adapter_event=event),
@@ -152,7 +155,9 @@ def run(events_path: Path, control_dir: Path, timeout_s: float) -> int:
             heartbeat_enabled = not (control_dir / "heartbeat.off").exists()
             setpoint_enabled = not (control_dir / "setpoint.off").exists()
             self.adapter.publish_channels(
-                self.core.command_at(0.0, now - self.started),
+                self.core.command_for_context(
+                    self.behavior_context, now - self.started, now - self.started
+                ),
                 producer_timestamp_us=timestamp_us,
                 heartbeat_enabled=heartbeat_enabled,
                 setpoint_enabled=setpoint_enabled,

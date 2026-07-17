@@ -4,6 +4,7 @@
 #include <chrono>
 #include <cmath>
 #include <cstdlib>
+#include <cstring>
 #include <filesystem>
 #include <memory>
 #include <px4_ros2/components/mode.hpp>
@@ -55,7 +56,12 @@ class RouteTransitionMode final : public px4_ros2::ModeBase {
       return;
     }
     const double elapsed_s = (node().get_clock()->now() - activation_time_).seconds();
-    const bool hover_only = std::getenv("UAV_SF_HOVER_ONLY") != nullptr;
+    const char* selected_context = std::getenv("UAV_SF_BEHAVIOR_CONTEXT");
+    if (selected_context == nullptr && std::getenv("UAV_SF_HOVER_ONLY") != nullptr) {
+      selected_context = "hover";
+    }
+    const char* duration_value = std::getenv("UAV_SF_ACTIVE_DURATION_S");
+    const double completion_s = duration_value == nullptr ? 16.0 : std::strtod(duration_value, nullptr);
     const bool log_every_setpoint = std::getenv("UAV_SF_LOG_EVERY_SETPOINT") != nullptr;
     const bool health_reply_enabled = channelEnabled("health_reply.off");
     const bool setpoint_enabled = channelEnabled("setpoint.off");
@@ -73,10 +79,31 @@ class RouteTransitionMode final : public px4_ros2::ModeBase {
     const char* phase = "hover";
     std::optional<float> yaw = 0.f;
 
-    if (!hover_only && elapsed_s >= 3.0 && elapsed_s < 8.0) {
+    if (selected_context != nullptr && std::strcmp(selected_context, "straight") == 0) {
       velocity = Eigen::Vector3f{0.5f, 0.f, 0.f};
       phase = "straight_line";
-    } else if (!hover_only && elapsed_s >= 8.0) {
+    } else if (selected_context != nullptr && std::strcmp(selected_context, "turn") == 0) {
+      const float selected_yaw = 0.15f * static_cast<float>(elapsed_s);
+      velocity = Eigen::Vector3f{0.3f * std::cos(selected_yaw), 0.3f * std::sin(selected_yaw), 0.f};
+      yaw = selected_yaw;
+      phase = "low_speed_turn";
+    } else if (selected_context != nullptr && std::strcmp(selected_context, "descent") == 0) {
+      velocity = Eigen::Vector3f{0.f, 0.f, 0.2f};
+      phase = "stable_descent";
+    } else if (selected_context == nullptr && elapsed_s >= 3.0 && elapsed_s < 8.0) {
+      velocity = Eigen::Vector3f{0.5f, 0.f, 0.f};
+      phase = "straight_line";
+    } else if (selected_context == nullptr && elapsed_s >= 8.0 && elapsed_s < 12.0) {
+      const float selected_yaw = 0.15f * static_cast<float>(elapsed_s - 8.0);
+      velocity = Eigen::Vector3f{0.3f * std::cos(selected_yaw), 0.3f * std::sin(selected_yaw), 0.f};
+      yaw = selected_yaw;
+      phase = "low_speed_turn";
+    } else if (selected_context == nullptr && elapsed_s >= 12.0) {
+      velocity = Eigen::Vector3f{0.f, 0.f, 0.2f};
+      phase = "stable_descent";
+    }
+
+    if (selected_context == nullptr && elapsed_s >= completion_s) {
       if (!completion_reported_) {
         completion_reported_ = true;
         RCLCPP_INFO(node().get_logger(),

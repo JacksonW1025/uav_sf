@@ -309,10 +309,11 @@ def run(
 
             if self.state == "ACTIVE_EXTERNAL":
                 elapsed = now - self.active_started
-                if elapsed < 7.5 and int(self.status.nav_state) != self.external_mode_id:
+                active_duration = self.active_duration_s or self.core.duration_seconds
+                if elapsed < active_duration - 0.5 and int(self.status.nav_state) != self.external_mode_id:
                     self._finish("FAIL", "registered External Mode exited before completion")
                     return
-                if elapsed >= 9.0:
+                if elapsed >= active_duration + 1.0:
                     self._transition("RTL")
                 return
 
