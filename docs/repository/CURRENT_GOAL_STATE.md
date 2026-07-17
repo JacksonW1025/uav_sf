@@ -18,16 +18,19 @@
 - Completed paired cells: v5 `p5_t1_hover_pair_r1` through
   `p5_t1_hover_pair_r3`; all six sides were valid on attempt 1 with matched
   seed and scenario identities
-- Partial paired cells: none in v5; v4 `p5_t1_hover_pair_r1` (Offboard valid; Dynamic
+- Partial paired cells: v5 `p5_t1_hover_pair_r4` has valid Dynamic attempt 1
+  and Offboard attempt 1 excluded as an environment failure; v4
+  `p5_t1_hover_pair_r1` (Offboard valid; Dynamic
   attempts 1 and 2 are measurement-unknown with 18 and 17 retained clock
   samples); no v4 pair is accepted
-- Pending paired cells: 32 v5 pairs beginning with `p5_t1_hover_pair_r4`; no v3 or v4
+- Pending paired cells: first missing side is v5 r4 Offboard attempt 2, then
+  31 untouched pairs; no v3 or v4
   side is reused across the observation-capture revision
 - Known environment failures: three recovered v3 Dynamic T1 PX4
   abort/incomplete attempts plus v4 pilot attempt 1, which failed before PX4
   readiness because a relative artifact root was resolved inside the PX4
-  subshell; all are preserved as environment evidence, never SUT or Oracle
-  violations
-- Next exact action: after checkpointing the third valid pair, run both missing
-  sides of `p5_t1_hover_pair_r4` as the next bounded v5 matrix batch
-- Last update: 2026-07-17T13:39:24-07:00
+  subshell, plus v5 r4 Offboard attempt 1 (`timeout in TAKEOFF`, PX4 SIGABRT);
+  all are preserved as environment evidence, never SUT or Oracle violations
+- Next exact action: checkpoint the partial r4 evidence, then retry only its
+  Offboard side as attempt 2; do not rerun valid Dynamic attempt 1
+- Last update: 2026-07-17T13:44:24-07:00
