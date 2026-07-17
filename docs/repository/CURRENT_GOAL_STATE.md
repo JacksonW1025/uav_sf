@@ -3,7 +3,7 @@
 - Goal phase: Phase B, P5 recovery and stabilization
 - Current gate: P5 Differential Gate, initial five-pair matrix incomplete
 - Current campaign: `campaign_seeded_v3` — `CLOSED_REVISION_CHANGE_REQUIRED`
-- Repository checkpoint commit: `2dd06f1ef65d9a993aaa24e04d1466f4f650d516` (pre-recovery checkpoint)
+- Repository checkpoint commit: `a02fc11a8a99f55a3fbd9f2cea9eb7f68ae95028`
 - Campaign revision identities: PX4 `4ae21a5e...`; PX4 binary `931320a0...`;
   observation patch `73555576...`; adapter `bdeb303` / binary `103fcdc8...`;
   Route Oracle `0.3`; trace schema `1.2`; threshold profile
@@ -20,8 +20,7 @@
 - Known environment failures: three recovered Dynamic T1 PX4
   abort/incomplete attempts; preserved as environment evidence, never SUT or
   Oracle violations
-- Next exact action: commit and push the recovery/lifecycle checkpoint, rebuild
-  the Dynamic adapter, run one identity-stamped strengthened T5 pilot, then
-  create the next campaign version and execute at most the first two missing
-  sides
-- Last update: 2026-07-17T12:51:02-07:00
+- Next exact action: run one identity-stamped strengthened Dynamic T5 pilot
+  using adapter binary `af5a02a2...`; if it passes, create the next campaign
+  version and execute at most the first two missing sides
+- Last update: 2026-07-17T12:59:28-07:00
