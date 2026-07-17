@@ -128,3 +128,11 @@ def test_p5_adaptive_repeat_rule_records_both_trigger_types() -> None:
             ],
         }
     ]
+
+
+def test_dynamic_adapter_replaces_hold_for_matched_internal_fallback() -> None:
+    root = Path(__file__).resolve().parents[1]
+    header = (
+        root / "scripts/adapters/external_mode_adapter/include/route_transition_mode.hpp"
+    ).read_text(encoding="utf-8")
+    assert ".replaceInternalMode(ModeBase::kModeIDLoiter)" in header

@@ -17,7 +17,9 @@ namespace uav_sf {
 class RouteTransitionMode final : public px4_ros2::ModeBase {
  public:
   explicit RouteTransitionMode(rclcpp::Node& node)
-      : ModeBase(node, Settings{"Route Transition"}.preventArming(false))
+      : ModeBase(node, Settings{"Route Transition"}
+                           .replaceInternalMode(ModeBase::kModeIDLoiter)
+                           .preventArming(false))
   {
     modeRequirements().local_position = true;
     trajectory_setpoint_ = std::make_shared<px4_ros2::TrajectorySetpointType>(*this);
