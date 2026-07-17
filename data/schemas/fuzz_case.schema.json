@@ -1,0 +1,180 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uav-sf.local/schemas/fuzz_case.schema.json",
+  "title": "Route-transition Fuzzer v0 case",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "case_id",
+    "seed_id",
+    "route_family",
+    "source_route",
+    "target_route",
+    "fallback_route",
+    "behavior_context",
+    "initial_state_constraints",
+    "transition_events",
+    "channel_states",
+    "faults",
+    "timing",
+    "repetition",
+    "environment"
+  ],
+  "$defs": {
+    "route": {
+      "enum": [
+        "internal_takeoff",
+        "internal_hold",
+        "internal_rtl",
+        "internal_land",
+        "legacy_offboard",
+        "dynamic_external_mode"
+      ]
+    },
+    "event_kind": {
+      "enum": [
+        "admit",
+        "activate",
+        "complete",
+        "cancel",
+        "release",
+        "unregister",
+        "process_sigterm",
+        "process_sigkill",
+        "process_pause",
+        "heartbeat_off",
+        "heartbeat_on",
+        "setpoint_off",
+        "setpoint_on",
+        "fallback",
+        "reentry"
+      ]
+    },
+    "condition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["quantity", "operator", "value", "timeout_s"],
+      "properties": {
+        "quantity": {"enum": ["speed_m_s", "descent_rate_m_s", "turn_rate_rad_s", "mission_phase"]},
+        "operator": {"enum": ["ge", "le", "eq"]},
+        "value": {"type": ["number", "string"]},
+        "timeout_s": {"type": "number", "exclusiveMinimum": 0, "maximum": 12}
+      }
+    },
+    "channel_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["offset_s", "liveness", "setpoint", "registration", "process_state"],
+      "properties": {
+        "offset_s": {"type": "number", "minimum": 0, "maximum": 12},
+        "liveness": {"enum": ["on", "off"]},
+        "setpoint": {"enum": ["on", "off"]},
+        "registration": {"enum": ["registered", "unregistered", "not_applicable"]},
+        "process_state": {"enum": ["running", "paused", "terminated"]}
+      }
+    }
+  },
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "case_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]{2,127}$"},
+    "seed_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_.-]{2,127}$"},
+    "route_family": {"const": "family_a_external_autonomy"},
+    "source_route": {"$ref": "#/$defs/route"},
+    "target_route": {"$ref": "#/$defs/route"},
+    "fallback_route": {"enum": ["internal_hold", "internal_rtl", "internal_land"]},
+    "behavior_context": {"enum": ["hover", "straight", "turn", "descent"]},
+    "initial_state_constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["armed", "minimum_altitude_m", "maximum_speed_m_s", "maximum_descent_rate_m_s", "maximum_turn_rate_rad_s"],
+      "properties": {
+        "armed": {"const": true},
+        "minimum_altitude_m": {"type": "number", "minimum": 2, "maximum": 20},
+        "maximum_speed_m_s": {"type": "number", "minimum": 0, "maximum": 2},
+        "maximum_descent_rate_m_s": {"type": "number", "minimum": 0, "maximum": 0.5},
+        "maximum_turn_rate_rad_s": {"type": "number", "minimum": 0, "maximum": 0.35}
+      }
+    },
+    "transition_events": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["event_id", "kind", "offset_s"],
+        "properties": {
+          "event_id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{1,63}$"},
+          "kind": {"$ref": "#/$defs/event_kind"},
+          "offset_s": {"type": "number", "minimum": 0, "maximum": 12},
+          "duration_s": {"type": "number", "minimum": 0.1, "maximum": 3},
+          "condition": {"$ref": "#/$defs/condition"}
+        }
+      }
+    },
+    "channel_states": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 12,
+      "items": {"$ref": "#/$defs/channel_state"}
+    },
+    "faults": {
+      "type": "array",
+      "maxItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["fault_id", "kind", "target_session", "event_id"],
+        "properties": {
+          "fault_id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{1,63}$"},
+          "kind": {"enum": ["sigterm", "sigkill", "pause", "heartbeat_loss", "setpoint_loss"]},
+          "target_session": {"enum": ["case_producer"]},
+          "event_id": {"type": "string"}
+        }
+      }
+    },
+    "timing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fault_offset_s", "heartbeat_setpoint_skew_s", "repeated_transition_interval_s", "maximum_duration_s"],
+      "properties": {
+        "fault_offset_s": {"type": "number", "minimum": 0, "maximum": 12},
+        "heartbeat_setpoint_skew_s": {"type": "number", "minimum": -3, "maximum": 3},
+        "repeated_transition_interval_s": {"type": "number", "minimum": 1, "maximum": 8},
+        "maximum_duration_s": {"type": "number", "minimum": 10, "maximum": 150}
+      }
+    },
+    "repetition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["count", "simulation_seed"],
+      "properties": {
+        "count": {"type": "integer", "minimum": 1, "maximum": 3},
+        "simulation_seed": {"type": "integer", "minimum": 1, "maximum": 2147483647}
+      }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profile", "vehicle", "world", "sitl_only", "wind_m_s", "observation_profile"],
+      "properties": {
+        "profile": {"enum": ["canonical", "oracle_validation_mutant"]},
+        "vehicle": {"const": "x500"},
+        "world": {"const": "default"},
+        "sitl_only": {"const": true},
+        "wind_m_s": {"type": "number", "minimum": 0, "maximum": 2},
+        "observation_profile": {"const": "TRANSITION"}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source": {"enum": ["p0", "p2", "p3", "p5", "oracle_live_mutant", "aerostack2"]},
+        "source_case": {"type": "string"},
+        "validation_only": {"type": "boolean"}
+      }
+    }
+  }
+}

@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uav-sf.local/schemas/fuzz_result.schema.json",
+  "title": "Route-transition Fuzzer v0 evaluation result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "evaluation_id",
+    "case_id",
+    "case_digest",
+    "classification",
+    "validity_checks",
+    "oracle",
+    "fitness",
+    "novelty",
+    "duplicate_fingerprint",
+    "provenance",
+    "artifacts"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "evaluation_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]{2,127}$"},
+    "case_id": {"type": "string"},
+    "case_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "classification": {
+      "enum": [
+        "VALID",
+        "INVALID_INPUT",
+        "INVALID_SETUP",
+        "ENVIRONMENT_FAILURE",
+        "MEASUREMENT_UNKNOWN",
+        "SUT_PASS",
+        "SUT_VIOLATION"
+      ]
+    },
+    "validity_checks": {
+      "type": "object",
+      "additionalProperties": {"enum": ["PASS", "FAIL", "UNKNOWN", "NOT_APPLICABLE"]},
+      "required": [
+        "armed",
+        "source_route_activated",
+        "fault_delivered",
+        "target_or_fallback_observed",
+        "clock_bridge",
+        "critical_window",
+        "px4_alive",
+        "gazebo_alive",
+        "ulog_produced"
+      ]
+    },
+    "oracle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "status", "target_clauses", "result_path"],
+      "properties": {
+        "version": {"const": "0.3"},
+        "status": {"enum": ["PASS", "VIOLATION", "UNKNOWN", "NOT_APPLICABLE", "NOT_RUN"]},
+        "target_clauses": {
+          "type": "array",
+          "items": {"enum": ["revocation", "installation", "exclusivity", "continuity", "recovery"]},
+          "uniqueItems": true
+        },
+        "result_path": {"type": ["string", "null"]}
+      }
+    },
+    "fitness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["validity_tier", "total", "contract_distance", "penalty"],
+      "properties": {
+        "validity_tier": {"type": "integer", "minimum": 0, "maximum": 3},
+        "total": {"type": "number"},
+        "contract_distance": {"type": "number", "minimum": 0},
+        "penalty": {"type": "number", "minimum": 0}
+      }
+    },
+    "novelty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["route_state", "transition_sequence"],
+      "properties": {
+        "route_state": {"type": "number", "minimum": 0, "maximum": 1},
+        "transition_sequence": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    },
+    "duplicate_fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "replay": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "attempts", "matching_clause_count"],
+      "properties": {
+        "status": {"enum": ["NOT_RUN", "REPRODUCIBLE", "FLAKY", "NOT_REPRODUCED", "ENVIRONMENT_FAILURE"]},
+        "attempts": {"type": "integer", "minimum": 0, "maximum": 3},
+        "matching_clause_count": {"type": "integer", "minimum": 0, "maximum": 3}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["strategy", "rng_seed", "simulation_seed", "px4_revision", "dependency_lock_digest", "mutant_profile"],
+      "properties": {
+        "strategy": {"enum": ["seed_replay", "random_baseline", "state_aware_guided", "minimization"]},
+        "rng_seed": {"type": "integer", "minimum": 0},
+        "simulation_seed": {"type": "integer", "minimum": 1},
+        "px4_revision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "dependency_lock_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "mutant_profile": {"type": ["string", "null"]}
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["root", "case", "trace", "oracle", "console"],
+      "properties": {
+        "root": {"type": "string"},
+        "case": {"type": "string"},
+        "trace": {"type": ["string", "null"]},
+        "oracle": {"type": ["string", "null"]},
+        "console": {"type": ["string", "null"]}
+      }
+    },
+    "reason": {"type": ["string", "null"]}
+  }
+}
