@@ -1,0 +1,39 @@
+schema_version: "1.0"
+pair_key: [cell_id, simulation_seed, repeat]
+primary_statistic: median_paired_difference
+dispersion: interquartile_range
+confidence_interval:
+  method: paired_bootstrap
+  confidence: 0.95
+  resamples: 10000
+adaptation:
+  initial_paired_repeats: 5
+  maximum_paired_repeats: 10
+  increase_when_coefficient_of_variation_exceeds: 0.20
+  increase_when_difference_below_combined_uncertainty: true
+acceptance:
+  require_validity: VALID
+  require_clock_bridge: VALID
+  require_critical_window: COMPLETE
+  exclude_environment_failures: true
+interpretation:
+  measurable_difference_requires_exceeding_combined_uncertainty: true
+  global_safety_ranking_forbidden: true
+metrics:
+  - registration_admission_latency_ms
+  - activation_latency_ms
+  - failure_detection_latency_ms
+  - fallback_selection_latency_ms
+  - unregistration_release_latency_ms
+  - reentry_latency_ms
+  - first_target_consumption_ms
+  - old_epoch_revocation_ms
+  - target_installation_ms
+  - maximum_overlap_ms
+  - maximum_gap_ms
+  - allocator_transition_ms
+  - writer_transition_ms
+  - altitude_loss_m
+  - peak_tilt_rad
+  - position_error_m
+  - recovery_duration_ms

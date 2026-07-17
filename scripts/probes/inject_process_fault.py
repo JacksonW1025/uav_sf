@@ -42,10 +42,13 @@ def main() -> int:
     record: dict[str, object] = {
         "schema_version": "1.0",
         "event_type": "process_fault_injected",
+        "fault_marker_id": f"{args.fault}-{monotonic_ns}",
         "fault_class": args.fault,
         "target_pid": args.pid,
+        "target_process_session": f"pid:{args.pid}",
         "signal": signal.Signals(delivered).name,
         "ros_time_ns": ros_time_ns,
+        "host_monotonic_time": monotonic_ns,
         "monotonic_ns": monotonic_ns,
         "pause_seconds": args.pause_seconds if args.fault == "sigstop_sigcont" else None,
     }
