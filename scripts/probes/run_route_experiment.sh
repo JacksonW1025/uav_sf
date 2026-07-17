@@ -10,13 +10,16 @@ HEARTBEAT_OR_HEALTH="${ROUTE_EXPERIMENT_HEARTBEAT_OR_HEALTH:-on}"
 SETPOINT="${ROUTE_EXPERIMENT_SETPOINT:-on}"
 
 set +u
-source /opt/ros/jazzy/setup.bash
-source "${REPO_ROOT}/ros2_ws/install/setup.bash"
+source "${ROS_DISTRO_SETUP:-/opt/ros/jazzy/setup.bash}"
+source "${ROS_WORKSPACE_SETUP:-${REPO_ROOT}/ros2_ws/install/setup.bash}"
 set -u
 
 PX4_DIR="${PX4_OBSERVABILITY_DIR:-${REPO_ROOT}/external/PX4-Autopilot-route-observability-q4-transition}"
 PX4_BUILD="${PX4_DIR}/build/px4_sitl_default"
 AGENT_PREFIX="${REPO_ROOT}/external/install/microxrce_agent"
+AGENT_BIN="${MICROXRCE_AGENT_BIN:-${AGENT_PREFIX}/bin/MicroXRCEAgent}"
+AGENT_LIBRARY_PATH="${MICROXRCE_AGENT_LD_LIBRARY_PATH:-${AGENT_PREFIX}/lib}"
+EXTERNAL_MODE_BIN="${ROUTE_EXTERNAL_MODE_BIN:-${REPO_ROOT}/ros2_ws/install/route_transition_external_mode/lib/route_transition_external_mode/route_transition_external_mode}"
 RAW_DIR="${ROUTE_EXPERIMENT_RAW_ROOT:-${REPO_ROOT}/runs/${EXPERIMENT_KIND}/${RUN_ID}/raw}"
 PROCESSED_DIR="${ROUTE_EXPERIMENT_PROCESSED_ROOT:-${REPO_ROOT}/data/processed/${EXPERIMENT_KIND}/${RUN_ID}}"
 CONTROL_DIR="${RAW_DIR}/channel_control"
@@ -70,14 +73,15 @@ finish_processes() {
 }
 trap finish_processes EXIT
 
-LD_LIBRARY_PATH="${AGENT_PREFIX}/lib" \
-  "${AGENT_PREFIX}/bin/MicroXRCEAgent" udp4 -p 8888 \
+LD_LIBRARY_PATH="${AGENT_LIBRARY_PATH}" \
+  "${AGENT_BIN}" udp4 -p 8888 \
   >"${RAW_DIR}/microxrce_agent.log" 2>&1 &
 AGENT_PID=$!
 
 (
   cd "${PX4_DIR}"
-  PX4_PARAM_SDLOG_MODE=0 PX4_PARAM_SDLOG_PROFILE=1 HEADLESS=1 PX4_SIM_MODEL=gz_x500 \
+  GZ_SIM_RESOURCE_PATH= PX4_PARAM_SDLOG_MODE=0 PX4_PARAM_SDLOG_PROFILE=1 \
+    HEADLESS=1 PX4_SIM_MODEL=gz_x500 \
     "${PX4_BUILD}/bin/px4" -i 0 <"${FIFO}"
 ) >"${RAW_DIR}/px4.log" 2>&1 &
 PX4_PID=$!
@@ -142,7 +146,7 @@ else
   sleep 0.5
   UAV_SF_HOVER_ONLY=1 UAV_SF_LOG_EVERY_SETPOINT=1 \
     UAV_SF_CHANNEL_CONTROL_DIR="${CONTROL_DIR}" \
-    "${REPO_ROOT}/ros2_ws/install/route_transition_external_mode/lib/route_transition_external_mode/route_transition_external_mode" \
+    "${EXTERNAL_MODE_BIN}" \
     >"${RAW_DIR}/external_mode.log" 2>&1 &
   PRODUCER_PID=$!
   (
