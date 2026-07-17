@@ -30,6 +30,14 @@ RAW_DIR="${ROUTE_EXPERIMENT_RAW_ROOT:-${REPO_ROOT}/runs/${EXPERIMENT_KIND}/${RUN
 PROCESSED_DIR="${ROUTE_EXPERIMENT_PROCESSED_ROOT:-${REPO_ROOT}/data/processed/${EXPERIMENT_KIND}/${RUN_ID}}"
 CONTROL_DIR="${RAW_DIR}/channel_control"
 mkdir -p "${RAW_DIR}" "${PROCESSED_DIR}" "${CONTROL_DIR}"
+rm -f \
+  "${CONTROL_DIR}/activate" \
+  "${CONTROL_DIR}/context.active" \
+  "${CONTROL_DIR}/experiment.ready" \
+  "${CONTROL_DIR}/health_reply.off" \
+  "${CONTROL_DIR}/heartbeat.off" \
+  "${CONTROL_DIR}/setpoint.off" \
+  "${CONTROL_DIR}/stop"
 LOGGER_TOPICS_TARGET="${PX4_BUILD}/rootfs/0/etc/logging/logger_topics.txt"
 if [[ -n "${LOGGER_TOPICS_FILE}" ]]; then
   install -D -m 0644 "${LOGGER_TOPICS_FILE}" "${LOGGER_TOPICS_TARGET}"

@@ -8,6 +8,7 @@ import csv
 import json
 import os
 from pathlib import Path
+import re
 import subprocess
 import time
 from typing import Any
@@ -319,7 +320,13 @@ def execute_plan(
             results.append(_json(accepted_record))
             continue
         attempts: list[dict[str, Any]] = []
-        for attempt in range(1, max_attempts + 1):
+        existing_attempt_numbers = []
+        for path in logical_root.glob("**/*attempt_*"):
+            match = re.search(r"attempt_(\d+)$", path.name)
+            if path.is_dir() and match:
+                existing_attempt_numbers.append(int(match.group(1)))
+        first_attempt = max(existing_attempt_numbers, default=0) + 1
+        for attempt in range(first_attempt, first_attempt + max_attempts):
             attempt_root = logical_root / f"attempt_{attempt}"
             attempt_root.mkdir(parents=True, exist_ok=True)
             command_row = dict(row)
@@ -383,7 +390,7 @@ def execute_plan(
                     **row,
                     "validity": "ENVIRONMENT_FAILURE",
                     "accepted_attempt": "",
-                    "environment_retry_count": max_attempts,
+                    "environment_retry_count": first_attempt + max_attempts - 1,
                     "artifact_root": "",
                     "clock_status": "",
                     "critical_window": "",
