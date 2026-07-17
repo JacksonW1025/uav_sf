@@ -2,7 +2,7 @@
 
 - Goal phase: Phase B, P5 recovery and stabilization
 - Current gate: P5 Differential Gate, initial five-pair matrix incomplete
-- Current campaign: `campaign_seeded_v5` — `READY_FOR_INITIAL_MATRIX`; v3 and
+- Current campaign: `campaign_seeded_v5` — `INITIAL_MATRIX_IN_PROGRESS`; v3 and
   v4 are preserved and closed
 - Repository checkpoint commit: `610db2bee295f221d6bba4ee9ae7bf65a80b2e48`
 - Campaign revision identities: PX4 `4ae21a5e...`; PX4 binary `931320a0...`;
@@ -15,17 +15,18 @@
 - Current pilots: v4 Dynamic T5 attempt 2 remains revision-matched and valid;
   v5 Dynamic T1 capture attempt 1 is valid with 21 retained clock samples, a
   complete selected critical window, and a passing P5 Oracle verdict
-- Completed paired cells: none
+- Completed paired cells: v5 `p5_t1_hover_pair_r1`; both sides were valid on
+  attempt 1 with matched seed and scenario identities
 - Partial paired cells: none in v5; v4 `p5_t1_hover_pair_r1` (Offboard valid; Dynamic
   attempts 1 and 2 are measurement-unknown with 18 and 17 retained clock
   samples); no v4 pair is accepted
-- Pending paired cells: v5 must run all 35 pairs; no v3 or v4
+- Pending paired cells: 34 v5 pairs beginning with `p5_t1_hover_pair_r2`; no v3 or v4
   side is reused across the observation-capture revision
 - Known environment failures: three recovered v3 Dynamic T1 PX4
   abort/incomplete attempts plus v4 pilot attempt 1, which failed before PX4
   readiness because a relative artifact root was resolved inside the PX4
   subshell; all are preserved as environment evidence, never SUT or Oracle
   violations
-- Next exact action: checkpoint the valid capture pilot, then run both missing
-  sides of `p5_t1_hover_pair_r1` as the first bounded v5 matrix batch
-- Last update: 2026-07-17T13:24:45-07:00
+- Next exact action: after checkpointing the first valid pair, run both missing
+  sides of `p5_t1_hover_pair_r2` as the next bounded v5 matrix batch
+- Last update: 2026-07-17T13:28:53-07:00
