@@ -15,6 +15,7 @@ POST_OBSERVATION_CAPTURE_S="${ROUTE_EXPERIMENT_POST_OBSERVATION_CAPTURE_S:-0.75}
 LOGGER_PROFILE="${ROUTE_EXPERIMENT_SDLOG_PROFILE:-1}"
 LOGGER_TOPICS_FILE="${ROUTE_EXPERIMENT_LOGGER_TOPICS_FILE:-}"
 SIMULATION_SEED="${ROUTE_EXPERIMENT_SIMULATION_SEED:-1}"
+BUILD_PROVENANCE="${ROUTE_EXPERIMENT_BUILD_PROVENANCE:-${REPO_ROOT}/data/processed/phase_a2/queue_q4_build_provenance.json}"
 
 set +u
 source "${ROS_DISTRO_SETUP:-/opt/ros/jazzy/setup.bash}"
@@ -293,7 +294,7 @@ summary_args=(
   --clock-bridge "${PROCESSED_DIR}/clock_bridge.json"
   --observation-profile TRANSITION
   --uorb-queue-length 4
-  --build-provenance "${REPO_ROOT}/data/processed/phase_a2/queue_q4_build_provenance.json"
+  --build-provenance "${BUILD_PROVENANCE}"
 )
 if [[ -f "${RAW_DIR}/external_mode.log" ]]; then
   summary_args+=(--source "${RAW_DIR}/external_mode.log")

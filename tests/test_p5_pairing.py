@@ -13,6 +13,7 @@ from scripts.probes.p5_runner import (
     environment_for,
     execution_plan,
     load_matrix,
+    select_run_ids,
 )
 from scripts.probes.p5_campaign_manifest import reconstruct
 from scripts.analysis.p5_compare import compare
@@ -149,6 +150,26 @@ def test_p5_runtime_collects_clock_samples_after_backlog_discard(tmp_path) -> No
     )
     environment = environment_for(row, tmp_path / "campaign", tmp_path / "attempt")
     assert environment["ROUTE_EXPERIMENT_MIN_CLOCK_SAMPLES"] == "40"
+    assert environment["ROUTE_EXPERIMENT_BUILD_PROVENANCE"].endswith(
+        "experiments/probes/p5/canonical_control_build_provenance.json"
+    )
+    assert environment["P0_BUILD_PROVENANCE"].endswith(
+        "experiments/probes/p5/canonical_control_build_provenance.json"
+    )
+
+
+def test_p5_exact_run_selector_rejects_unknown_ids() -> None:
+    rows = execution_plan(load_matrix())
+    selected = select_run_ids(rows, ["p5_t5_hover_pair_r1_dynamic_external_mode"])
+    assert [row["run_id"] for row in selected] == [
+        "p5_t5_hover_pair_r1_dynamic_external_mode"
+    ]
+    try:
+        select_run_ids(rows, ["not-a-run"])
+    except ValueError as exc:
+        assert "not-a-run" in str(exc)
+    else:
+        raise AssertionError("unknown run ID was accepted")
 
 
 def test_dynamic_adapter_unregisters_after_successful_completion() -> None:
@@ -184,6 +205,7 @@ def test_campaign_batch_caps_environment_attempts_and_new_sides(
     ][:2]
     monkeypatch.setattr(p5_runner, "command_for", lambda _row: ["/bin/true"])
     monkeypatch.setattr(p5_runner, "ROOT", tmp_path)
+    monkeypatch.setattr(p5_runner, "campaign_identity_snapshot", lambda: {"revision": "test"})
     results = p5_runner.execute_plan(
         rows,
         tmp_path,

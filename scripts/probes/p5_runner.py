@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -22,6 +23,9 @@ DEFAULT_DISPOSITION = ROOT / "experiments" / "probes" / "p5" / "preflight_dispos
 DEFAULT_RUN_ROOT = ROOT / "runs" / "p5" / "campaign"
 ANALYSIS = ROOT / "experiments" / "probes" / "p5" / "pre_registered_analysis.yaml"
 MINIMAL_LOGGER_TOPICS = ROOT / "config" / "phase_a2_minimal_logger_topics.txt"
+CANONICAL_BUILD_PROVENANCE = (
+    ROOT / "experiments" / "probes" / "p5" / "canonical_control_build_provenance.json"
+)
 METRICS = (
     "registration_admission_latency_ms",
     "activation_latency_ms",
@@ -83,6 +87,17 @@ def execution_plan(matrix: dict) -> list[dict]:
     return rows
 
 
+def select_run_ids(rows: list[dict[str, Any]], run_ids: list[str]) -> list[dict[str, Any]]:
+    if not run_ids:
+        return rows
+    requested = set(run_ids)
+    selected = [row for row in rows if row["run_id"] in requested]
+    missing = requested - {row["run_id"] for row in selected}
+    if missing:
+        raise ValueError(f"unknown P5 run ID(s): {', '.join(sorted(missing))}")
+    return selected
+
+
 def write_plan(rows: list[dict], output: Path) -> None:
     output.parent.mkdir(parents=True, exist_ok=True)
     with output.open("w", encoding="utf-8", newline="") as handle:
@@ -141,12 +156,14 @@ def environment_for(row: dict[str, Any], campaign_root: Path, attempt_root: Path
             "ROUTE_EXPERIMENT_SIMULATION_SEED": str(row["simulation_seed"]),
             "ROUTE_EXPERIMENT_SDLOG_PROFILE": "0",
             "ROUTE_EXPERIMENT_LOGGER_TOPICS_FILE": str(MINIMAL_LOGGER_TOPICS),
+            "ROUTE_EXPERIMENT_BUILD_PROVENANCE": str(CANONICAL_BUILD_PROVENANCE),
             "ROUTE_EXPERIMENT_RAW_ROOT": str(attempt_root / "raw"),
             "ROUTE_EXPERIMENT_PROCESSED_ROOT": str(attempt_root),
             "P0_RUN_ROOT": str(campaign_root),
             "P0_PROCESSED_ROOT": str(campaign_root),
             "P0_SDLOG_PROFILE": "0",
             "P0_LOGGER_TOPICS_FILE": str(MINIMAL_LOGGER_TOPICS),
+            "P0_BUILD_PROVENANCE": str(CANONICAL_BUILD_PROVENANCE),
             "P0_OBSERVATION_PROFILE": "TRANSITION",
             "P0_UORB_QUEUE_LENGTH": "4",
             "P0_SIMULATION_SEED": str(row["simulation_seed"]),
@@ -161,6 +178,74 @@ def environment_for(row: dict[str, Any], campaign_root: Path, attempt_root: Path
 
 def _json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _implementation_commit() -> str:
+    identity_paths = [
+        "scripts/adapters/external_mode_adapter",
+        "scripts/probes/p5_runner.py",
+        "scripts/probes/run_p0_scenario.sh",
+        "scripts/probes/run_p2_scenario.sh",
+        "scripts/probes/run_p3_scenario.sh",
+        "scripts/probes/run_route_experiment.sh",
+        "scripts/probes/fault_marker.py",
+        "scripts/probes/inject_process_fault.py",
+        "scripts/probes/route_fault_monitor.py",
+        "scripts/oracles/route_oracle_v0.py",
+        "scripts/tracing",
+        "patches/px4/route_observability",
+        "config/phase_a2_minimal_logger_topics.txt",
+        "experiments/probes/p5/scenario_matrix.yaml",
+        "experiments/probes/p5/preflight_disposition.yaml",
+        "experiments/probes/p5/pre_registered_analysis.yaml",
+    ]
+    return subprocess.run(
+        ["git", "log", "-1", "--format=%H", "--", *identity_paths],
+        cwd=ROOT,
+        check=True,
+        text=True,
+        capture_output=True,
+    ).stdout.strip()
+
+
+def campaign_identity_snapshot() -> dict[str, Any]:
+    px4_dir = ROOT / "external/PX4-Autopilot-oracle-validation-control"
+    adapter_dir = ROOT / "scripts/adapters/external_mode_adapter"
+    px4_commit = subprocess.run(
+        ["git", "rev-parse", "HEAD"], cwd=px4_dir, check=True, text=True,
+        capture_output=True,
+    ).stdout.strip()
+    return {
+        "schema_version": "1.0",
+        "repository_commit": _implementation_commit(),
+        "PX4_commit": px4_commit,
+        "PX4_build_hash": _sha256(px4_dir / "build/px4_sitl_default/bin/px4"),
+        "observation_patch_hash": _sha256(
+            ROOT / "patches/px4/route_observability/route_observability_topics.patch"
+        ),
+        "adapter_binary_hash": _sha256(
+            ROOT
+            / "ros2_ws_humble_live/install/route_transition_external_mode/lib/route_transition_external_mode/route_transition_external_mode"
+        ),
+        "adapter_header_hash": _sha256(adapter_dir / "include/route_transition_mode.hpp"),
+        "adapter_source_hash": _sha256(adapter_dir / "src/external_mode.cpp"),
+        "Route_Oracle_version": "0.3",
+        "route_trace_schema_version": "1.2",
+        "threshold_profile_id": "route-oracle-v0.3-default",
+        "scenario_matrix_hash": _sha256(DEFAULT_MATRIX),
+        "fallback_parameter_snapshot": {
+            "COM_OF_LOSS_T": 1.0,
+            "COM_OBL_RC_ACT": 5,
+            "COM_RC_IN_MODE": 4,
+            "NAV_RCL_ACT": 0,
+            "NAV_DLL_ACT": 0,
+            "expected_fallback_nav_state": 4,
+        },
+    }
 
 
 def _external_mode_id(trace: Path) -> int:
@@ -367,13 +452,19 @@ def execute_plan(
     campaign_root.mkdir(parents=True, exist_ok=True)
     batch_started = time.monotonic()
     new_sides = 0
+    identity = campaign_identity_snapshot()
     for row in rows:
         if row["cell_id"] not in matched:
             continue
         logical_root = campaign_root / row["run_id"]
         accepted_record = logical_root / "accepted_result.json"
         if accepted_record.exists():
-            results.append(_refresh_accepted_metrics(row, _json(accepted_record)))
+            accepted = _json(accepted_record)
+            if accepted.get("campaign_identity") != identity:
+                raise RuntimeError(
+                    f"preserved accepted run has a different campaign identity: {row['run_id']}"
+                )
+            results.append(_refresh_accepted_metrics(row, accepted))
             continue
         # A corrected validity rule may make a preserved, fully collected attempt
         # acceptable without rerunning SITL. Never promote a nonzero-return attempt.
@@ -382,6 +473,9 @@ def execute_plan(
             if int(prior.get("return_code", 1)) != 0:
                 continue
             prior_root = prior_result_path.parent
+            prior_identity_path = prior_root / "campaign_identity.json"
+            if not prior_identity_path.exists() or _json(prior_identity_path) != identity:
+                continue
             prior_validity, prior_reasons, prior_oracle = classify_attempt(row, prior_root, 0)
             if prior_validity != "VALID" or prior_oracle is None:
                 continue
@@ -395,6 +489,7 @@ def execute_plan(
                 "clock_status": "VALID",
                 "critical_window": "COMPLETE",
                 "observed_fallback_nav_state": prior_oracle["transition"]["target_mode"],
+                "campaign_identity": identity,
                 "accepted_after_classifier_correction": True,
                 **_metric_row(row, prior_root, prior_oracle),
             }
@@ -457,6 +552,10 @@ def execute_plan(
                 env["P0_RUN_ROOT"] = str(logical_root)
                 env["P0_PROCESSED_ROOT"] = str(logical_root)
                 attempt_root = logical_root / command_row["run_id"]
+                attempt_root.mkdir(parents=True, exist_ok=True)
+            (attempt_root / "campaign_identity.json").write_text(
+                json.dumps(identity, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+            )
             started = time.time_ns()
             completed = subprocess.run(
                 command,
@@ -495,6 +594,7 @@ def execute_plan(
                     "clock_status": "VALID",
                     "critical_window": "COMPLETE",
                     "observed_fallback_nav_state": oracle["transition"]["target_mode"],
+                    "campaign_identity": identity,
                     **_metric_row(row, attempt_root, oracle),
                 }
                 accepted_record.parent.mkdir(parents=True, exist_ok=True)
@@ -572,9 +672,18 @@ def main() -> int:
     )
     parser.add_argument("--max-environment-attempts", type=int, default=3)
     parser.add_argument("--batch-time-limit-seconds", type=float, default=1200.0)
+    parser.add_argument(
+        "--run-id",
+        action="append",
+        default=[],
+        help="execute/materialize only this exact logical run ID; repeat for more than one",
+    )
     args = parser.parse_args()
     matrix = load_matrix(args.matrix)
-    rows = execution_plan(matrix)
+    try:
+        rows = select_run_ids(execution_plan(matrix), args.run_id)
+    except ValueError as exc:
+        parser.error(str(exc))
     write_plan(rows, args.output)
     if args.execute:
         if args.max_attempts < 1 or args.max_new_sides < 1:
