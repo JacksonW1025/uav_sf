@@ -2,7 +2,7 @@
   "PX4_build_hash": "sha256:931320a07585dabf36ca9c8ba994756b93ee7d154cd9c8930b2171548d978993",
   "PX4_commit": "4ae21a5e569d3d89c2f6366688cbacb3e93437c9",
   "Route_Oracle_version": "0.3",
-  "accepted_attempt_count": 0,
+  "accepted_attempt_count": 1,
   "adapter_revision": {
     "binary_sha256": "af5a02a2dd349fd91e1c0493eed47cc3f0d5b4baf0fefae8f1286561908ef79b",
     "fallback_replacement_mode": "Hold",
@@ -35,12 +35,12 @@
     "threshold_profile_id": "route-oracle-v0.3-default"
   },
   "campaign_start_time": "2026-07-17T13:07:44-07:00",
-  "campaign_status": "READY_FOR_INITIAL_MATRIX",
+  "campaign_status": "ACTIVE_INITIAL_MATRIX",
   "completed_cells": [],
   "dirty_tree_hash": null,
   "dirty_tree_note": "Campaign identity was frozen from pushed implementation commit b415741 with a clean tracked worktree before any v4 paired run.",
   "environment_failure_count": 0,
-  "excluded_attempt_count": 0,
+  "excluded_attempt_count": 1,
   "fallback_parameter_snapshot": {
     "COM_OBL_RC_ACT": 5,
     "COM_OF_LOSS_T": 1.0,
@@ -54,14 +54,22 @@
     "commit": "c50a9ea6495c8ca5d7facb0361816ce98d36020d",
     "sha256": "00d6c700694eeb28b450014c17fd57fcdf7c044832d62dc033180455b4fc0bf4"
   },
-  "last_checkpoint_time": "2026-07-17T13:09:01-07:00",
+  "last_checkpoint_time": "2026-07-17T13:13:47-07:00",
   "observation_patch_hash": "sha256:735555764c175ebd0a318723d4e76b8898965c4728ee4cab9b05b6c34d5e8b7c",
   "observation_profile": "TRANSITION",
   "parent_campaign": "campaign_seeded_v3",
   "parent_exclusion_reason": "v3 is preserved and closed because the Hold-replacement adapter did not unregister after successful completion; v4 changes adapter lifecycle and explicit provenance stamping.",
-  "partially_completed_cells": [],
+  "partially_completed_cells": [
+    {
+      "classification": "PARTIAL_PAIR",
+      "pair_id": "p5_t1_hover_pair_r1",
+      "sides": {
+        "dynamic_external_mode": "MEASUREMENT_UNKNOWN",
+        "legacy_offboard": "COMPLETE_VALID_SIDE"
+      }
+    }
+  ],
   "pending_cells": [
-    "p5_t1_hover_pair_r1",
     "p5_t1_hover_pair_r2",
     "p5_t1_hover_pair_r3",
     "p5_t1_hover_pair_r4",
