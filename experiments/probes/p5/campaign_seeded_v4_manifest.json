@@ -1,0 +1,130 @@
+{
+  "PX4_build_hash": "sha256:931320a07585dabf36ca9c8ba994756b93ee7d154cd9c8930b2171548d978993",
+  "PX4_commit": "4ae21a5e569d3d89c2f6366688cbacb3e93437c9",
+  "Route_Oracle_version": "0.3",
+  "accepted_attempt_count": 0,
+  "adapter_revision": {
+    "binary_sha256": "af5a02a2dd349fd91e1c0493eed47cc3f0d5b4baf0fefae8f1286561908ef79b",
+    "fallback_replacement_mode": "Hold",
+    "header_sha256": "eb834331b4e7ea7decde67080980e6251f780a0efeb2f6259b4ff08d650ed876",
+    "implementation_commit": "a02fc11a8a99f55a3fbd9f2cea9eb7f68ae95028",
+    "source_sha256": "ded38cca4044124ab114b88322fa65a40b105b5d9d9326614cfaefa72e2ba92c"
+  },
+  "campaign_configuration_failure_count": 0,
+  "campaign_id": "campaign_seeded_v4",
+  "campaign_revision_identity": {
+    "PX4_build_hash": "931320a07585dabf36ca9c8ba994756b93ee7d154cd9c8930b2171548d978993",
+    "PX4_commit": "4ae21a5e569d3d89c2f6366688cbacb3e93437c9",
+    "Route_Oracle_version": "0.3",
+    "adapter_binary_hash": "af5a02a2dd349fd91e1c0493eed47cc3f0d5b4baf0fefae8f1286561908ef79b",
+    "adapter_header_hash": "eb834331b4e7ea7decde67080980e6251f780a0efeb2f6259b4ff08d650ed876",
+    "adapter_source_hash": "ded38cca4044124ab114b88322fa65a40b105b5d9d9326614cfaefa72e2ba92c",
+    "fallback_parameter_snapshot": {
+      "COM_OBL_RC_ACT": 5,
+      "COM_OF_LOSS_T": 1.0,
+      "COM_RC_IN_MODE": 4,
+      "NAV_DLL_ACT": 0,
+      "NAV_RCL_ACT": 0,
+      "expected_fallback_nav_state": 4
+    },
+    "observation_patch_hash": "735555764c175ebd0a318723d4e76b8898965c4728ee4cab9b05b6c34d5e8b7c",
+    "repository_commit": "b41574117ef4333802c333aa4fe2c0a3dbbf6f64",
+    "route_trace_schema_version": "1.2",
+    "scenario_matrix_hash": "8a39d52fae162478ca50aebb690b1ab29525c52664dc7b3e27c55bc72ce0738a",
+    "schema_version": "1.0",
+    "threshold_profile_id": "route-oracle-v0.3-default"
+  },
+  "campaign_start_time": "2026-07-17T13:07:44-07:00",
+  "campaign_status": "READY_FOR_INITIAL_MATRIX",
+  "completed_cells": [],
+  "dirty_tree_hash": null,
+  "dirty_tree_note": "Campaign identity was frozen from pushed implementation commit b415741 with a clean tracked worktree before any v4 paired run.",
+  "environment_failure_count": 0,
+  "excluded_attempt_count": 0,
+  "fallback_parameter_snapshot": {
+    "COM_OBL_RC_ACT": 5,
+    "COM_OF_LOSS_T": 1.0,
+    "COM_RC_IN_MODE": 4,
+    "NAV_DLL_ACT": 0,
+    "NAV_RCL_ACT": 0,
+    "dynamic_replacement_mode": "Hold",
+    "expected_fallback_nav_state": 4
+  },
+  "fault_marker_revision": {
+    "commit": "c50a9ea6495c8ca5d7facb0361816ce98d36020d",
+    "sha256": "00d6c700694eeb28b450014c17fd57fcdf7c044832d62dc033180455b4fc0bf4"
+  },
+  "last_checkpoint_time": "2026-07-17T13:09:01-07:00",
+  "observation_patch_hash": "sha256:735555764c175ebd0a318723d4e76b8898965c4728ee4cab9b05b6c34d5e8b7c",
+  "observation_profile": "TRANSITION",
+  "parent_campaign": "campaign_seeded_v3",
+  "parent_exclusion_reason": "v3 is preserved and closed because the Hold-replacement adapter did not unregister after successful completion; v4 changes adapter lifecycle and explicit provenance stamping.",
+  "partially_completed_cells": [],
+  "pending_cells": [
+    "p5_t1_hover_pair_r1",
+    "p5_t1_hover_pair_r2",
+    "p5_t1_hover_pair_r3",
+    "p5_t1_hover_pair_r4",
+    "p5_t1_hover_pair_r5",
+    "p5_t2_straight_pair_r1",
+    "p5_t2_straight_pair_r2",
+    "p5_t2_straight_pair_r3",
+    "p5_t2_straight_pair_r4",
+    "p5_t2_straight_pair_r5",
+    "p5_t4_turn_pair_r1",
+    "p5_t4_turn_pair_r2",
+    "p5_t4_turn_pair_r3",
+    "p5_t4_turn_pair_r4",
+    "p5_t4_turn_pair_r5",
+    "p5_t5_hover_pair_r1",
+    "p5_t5_hover_pair_r2",
+    "p5_t5_hover_pair_r3",
+    "p5_t5_hover_pair_r4",
+    "p5_t5_hover_pair_r5",
+    "p5_t6_straight_pair_r1",
+    "p5_t6_straight_pair_r2",
+    "p5_t6_straight_pair_r3",
+    "p5_t6_straight_pair_r4",
+    "p5_t6_straight_pair_r5",
+    "p5_t7_turn_pair_r1",
+    "p5_t7_turn_pair_r2",
+    "p5_t7_turn_pair_r3",
+    "p5_t7_turn_pair_r4",
+    "p5_t7_turn_pair_r5",
+    "p5_t8_descent_pair_r1",
+    "p5_t8_descent_pair_r2",
+    "p5_t8_descent_pair_r3",
+    "p5_t8_descent_pair_r4",
+    "p5_t8_descent_pair_r5"
+  ],
+  "pilot": {
+    "accepted_attempt": 2,
+    "artifact": "runs/p5/campaign_seeded_v4_pilot/p5_t5_hover_pair_r1_dynamic_external_mode/attempt_2",
+    "behavioral_verdict": "VALID",
+    "campaign_acceptance": "MATCHED_REVISION_VALID",
+    "environment_failures": [
+      {
+        "attempt": 1,
+        "classification": "ENVIRONMENT_FAILURE",
+        "reason": "relative artifact-root FIFO failed before PX4 readiness"
+      }
+    ],
+    "expected_fallback": "Hold",
+    "observed_fallback": "Hold"
+  },
+  "repository_commit": "b41574117ef4333802c333aa4fe2c0a3dbbf6f64",
+  "resume_history": [
+    {
+      "event": "v4 revision authorized by the adapter lifecycle change that formally closed v3.",
+      "time": "2026-07-17T13:07:44-07:00"
+    },
+    {
+      "event": "Identity-stamped strengthened Dynamic T5 pilot accepted on attempt 2.",
+      "time": "2026-07-17T13:07:44-07:00"
+    }
+  ],
+  "route_trace_schema_version": "1.2",
+  "scenario_matrix_hash": "sha256:8a39d52fae162478ca50aebb690b1ab29525c52664dc7b3e27c55bc72ce0738a",
+  "schema_version": "1.0",
+  "threshold_profile_id": "route-oracle-v0.3-default"
+}
