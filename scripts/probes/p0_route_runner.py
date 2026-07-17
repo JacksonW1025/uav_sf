@@ -313,7 +313,20 @@ def run(
                 if elapsed < active_duration - 0.5 and int(self.status.nav_state) != self.external_mode_id:
                     self._finish("FAIL", "registered External Mode exited before completion")
                     return
-                if elapsed >= active_duration + 1.0:
+                if elapsed >= active_duration + 0.25:
+                    self._transition("REQUEST_HOLD_AFTER_COMPLETION")
+                return
+
+            if self.state == "REQUEST_HOLD_AFTER_COMPLETION":
+                self._command_periodic(
+                    VehicleCommand.VEHICLE_CMD_DO_SET_MODE,
+                    param1=1.0,
+                    param2=4.0,
+                    param3=3.0,
+                )
+                if int(self.status.nav_state) == int(
+                    VehicleStatus.NAVIGATION_STATE_AUTO_LOITER
+                ):
                     self._transition("RTL")
                 return
 
