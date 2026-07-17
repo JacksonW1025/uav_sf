@@ -1,0 +1,129 @@
+{
+  "PX4_build_hash": "sha256:931320a07585dabf36ca9c8ba994756b93ee7d154cd9c8930b2171548d978993",
+  "PX4_commit": "4ae21a5e569d3d89c2f6366688cbacb3e93437c9",
+  "Route_Oracle_version": "0.3",
+  "accepted_attempt_count": 0,
+  "adapter_revision": {
+    "binary_sha256": "af5a02a2dd349fd91e1c0493eed47cc3f0d5b4baf0fefae8f1286561908ef79b",
+    "fallback_replacement_mode": "Hold",
+    "header_sha256": "eb834331b4e7ea7decde67080980e6251f780a0efeb2f6259b4ff08d650ed876",
+    "implementation_commit": "a02fc11a8a99f55a3fbd9f2cea9eb7f68ae95028",
+    "source_sha256": "ded38cca4044124ab114b88322fa65a40b105b5d9d9326614cfaefa72e2ba92c"
+  },
+  "campaign_configuration_failure_count": 0,
+  "campaign_id": "campaign_seeded_v5",
+  "campaign_revision_identity": {
+    "PX4_build_hash": "931320a07585dabf36ca9c8ba994756b93ee7d154cd9c8930b2171548d978993",
+    "PX4_commit": "4ae21a5e569d3d89c2f6366688cbacb3e93437c9",
+    "Route_Oracle_version": "0.3",
+    "adapter_binary_hash": "af5a02a2dd349fd91e1c0493eed47cc3f0d5b4baf0fefae8f1286561908ef79b",
+    "adapter_header_hash": "eb834331b4e7ea7decde67080980e6251f780a0efeb2f6259b4ff08d650ed876",
+    "adapter_source_hash": "ded38cca4044124ab114b88322fa65a40b105b5d9d9326614cfaefa72e2ba92c",
+    "fallback_parameter_snapshot": {
+      "COM_OBL_RC_ACT": 5,
+      "COM_OF_LOSS_T": 1.0,
+      "COM_RC_IN_MODE": 4,
+      "NAV_DLL_ACT": 0,
+      "NAV_RCL_ACT": 0,
+      "expected_fallback_nav_state": 4
+    },
+    "observation_patch_hash": "735555764c175ebd0a318723d4e76b8898965c4728ee4cab9b05b6c34d5e8b7c",
+    "repository_commit": "c38fa5743f2d1098c21c6c5c9f04538e8e9c62d4",
+    "route_trace_schema_version": "1.2",
+    "scenario_matrix_hash": "8a39d52fae162478ca50aebb690b1ab29525c52664dc7b3e27c55bc72ce0738a",
+    "schema_version": "1.0",
+    "threshold_profile_id": "route-oracle-v0.3-default"
+  },
+  "campaign_start_time": "2026-07-17T13:18:51-07:00",
+  "campaign_status": "PENDING_CAPTURE_PILOT",
+  "completed_cells": [],
+  "dirty_tree_hash": null,
+  "dirty_tree_note": "Campaign identity was frozen from pushed observation implementation commit c38fa57 before any v5 run.",
+  "environment_failure_count": 0,
+  "excluded_attempt_count": 0,
+  "fallback_parameter_snapshot": {
+    "COM_OBL_RC_ACT": 5,
+    "COM_OF_LOSS_T": 1.0,
+    "COM_RC_IN_MODE": 4,
+    "NAV_DLL_ACT": 0,
+    "NAV_RCL_ACT": 0,
+    "dynamic_replacement_mode": "Hold",
+    "expected_fallback_nav_state": 4
+  },
+  "fault_marker_revision": {
+    "commit": "c50a9ea6495c8ca5d7facb0361816ce98d36020d",
+    "sha256": "00d6c700694eeb28b450014c17fd57fcdf7c044832d62dc033180455b4fc0bf4"
+  },
+  "last_checkpoint_time": "2026-07-17T13:20:07-07:00",
+  "observation_capture_revision": {
+    "p0_post_disarm_capture_s": 4,
+    "p0_route_runner_sha256": "2ade83ed0e32bfa9dc6c026417ba08e72c5d0155dbc0809f50e44c27e34a498b",
+    "p0_wrapper_sha256": "ee0f879c46ca45fcb3dac3a8a3f64575fd758b518bc7ba1387984be4663682db",
+    "p5_runner_sha256": "464191e6da767e56af7544f6e563714ee3b426a5a48191a162c7982676a43c7f"
+  },
+  "observation_patch_hash": "sha256:735555764c175ebd0a318723d4e76b8898965c4728ee4cab9b05b6c34d5e8b7c",
+  "observation_profile": "TRANSITION",
+  "parent_campaign": "campaign_seeded_v4",
+  "parent_exclusion_reason": "v4 is preserved and closed because two clean Dynamic T1 attempts retained fewer than 20 post-backlog clock samples; v5 adds only a four-second post-disarm observation interval.",
+  "partially_completed_cells": [],
+  "pending_cells": [
+    "p5_t1_hover_pair_r1",
+    "p5_t1_hover_pair_r2",
+    "p5_t1_hover_pair_r3",
+    "p5_t1_hover_pair_r4",
+    "p5_t1_hover_pair_r5",
+    "p5_t2_straight_pair_r1",
+    "p5_t2_straight_pair_r2",
+    "p5_t2_straight_pair_r3",
+    "p5_t2_straight_pair_r4",
+    "p5_t2_straight_pair_r5",
+    "p5_t4_turn_pair_r1",
+    "p5_t4_turn_pair_r2",
+    "p5_t4_turn_pair_r3",
+    "p5_t4_turn_pair_r4",
+    "p5_t4_turn_pair_r5",
+    "p5_t5_hover_pair_r1",
+    "p5_t5_hover_pair_r2",
+    "p5_t5_hover_pair_r3",
+    "p5_t5_hover_pair_r4",
+    "p5_t5_hover_pair_r5",
+    "p5_t6_straight_pair_r1",
+    "p5_t6_straight_pair_r2",
+    "p5_t6_straight_pair_r3",
+    "p5_t6_straight_pair_r4",
+    "p5_t6_straight_pair_r5",
+    "p5_t7_turn_pair_r1",
+    "p5_t7_turn_pair_r2",
+    "p5_t7_turn_pair_r3",
+    "p5_t7_turn_pair_r4",
+    "p5_t7_turn_pair_r5",
+    "p5_t8_descent_pair_r1",
+    "p5_t8_descent_pair_r2",
+    "p5_t8_descent_pair_r3",
+    "p5_t8_descent_pair_r4",
+    "p5_t8_descent_pair_r5"
+  ],
+  "pilot": {
+    "capture_pilot": {
+      "artifact": "runs/p5/campaign_seeded_v5_capture_pilot/p5_t1_hover_pair_r1_dynamic_external_mode",
+      "status": "PENDING"
+    },
+    "strengthened_t5": {
+      "artifact": "runs/p5/campaign_seeded_v4_pilot/p5_t5_hover_pair_r1_dynamic_external_mode/attempt_2",
+      "behavioral_verdict": "VALID",
+      "reuse_basis": "PX4, adapter, observation patch, Oracle, trace schema, threshold profile, and fallback parameters are unchanged; the new P0-only post-disarm capture is not exercised by T5.",
+      "status": "MATCHED_UNCHANGED_IDENTITIES"
+    }
+  },
+  "repository_commit": "c38fa5743f2d1098c21c6c5c9f04538e8e9c62d4",
+  "resume_history": [
+    {
+      "event": "v5 authorized by the P0 observation-capture change that formally closed v4.",
+      "time": "2026-07-17T13:18:51-07:00"
+    }
+  ],
+  "route_trace_schema_version": "1.2",
+  "scenario_matrix_hash": "sha256:8a39d52fae162478ca50aebb690b1ab29525c52664dc7b3e27c55bc72ce0738a",
+  "schema_version": "1.0",
+  "threshold_profile_id": "route-oracle-v0.3-default"
+}

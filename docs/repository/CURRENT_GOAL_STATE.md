@@ -2,9 +2,9 @@
 
 - Goal phase: Phase B, P5 recovery and stabilization
 - Current gate: P5 Differential Gate, initial five-pair matrix incomplete
-- Current campaign: `campaign_seeded_v4` —
-  `CLOSED_REVISION_CHANGE_REQUIRED`; v3 and v4 are preserved
-- Repository checkpoint commit: `b41574117ef4333802c333aa4fe2c0a3dbbf6f64`
+- Current campaign: `campaign_seeded_v5` — `PENDING_CAPTURE_PILOT`; v3 and
+  v4 are preserved and closed
+- Repository checkpoint commit: `c38fa5743f2d1098c21c6c5c9f04538e8e9c62d4`
 - Campaign revision identities: PX4 `4ae21a5e...`; PX4 binary `931320a0...`;
   observation patch `73555576...`; adapter `a02fc11` / binary `af5a02a2...`;
   Route Oracle `0.3`; trace schema `1.2`; threshold profile
@@ -15,7 +15,7 @@
 - Current pilot: v4 Dynamic T5 attempt 2 is revision-matched and valid; Hold,
   clock, critical-window, epoch, revocation, writer, and all Oracle checks pass
 - Completed paired cells: none
-- Partial paired cells: v4 `p5_t1_hover_pair_r1` (Offboard valid; Dynamic
+- Partial paired cells: none in v5; v4 `p5_t1_hover_pair_r1` (Offboard valid; Dynamic
   attempts 1 and 2 are measurement-unknown with 18 and 17 retained clock
   samples); no v4 pair is accepted
 - Pending paired cells: the next revision must rerun all 35 pairs; no v3 or v4
@@ -25,7 +25,7 @@
   readiness because a relative artifact root was resolved inside the PX4
   subshell; all are preserved as environment evidence, never SUT or Oracle
   violations
-- Next exact action: checkpoint and close v4, add a four-second post-disarm P0
-  clock-capture interval, test and push that observation revision, then create
-  the next campaign version
-- Last update: 2026-07-17T13:16:05-07:00
+- Next exact action: checkpoint the v5 descriptor, then run exactly one Dynamic
+  T1 capture pilot; begin the paired matrix only if at least 20 clock samples
+  remain and all normal validity gates pass
+- Last update: 2026-07-17T13:18:51-07:00
