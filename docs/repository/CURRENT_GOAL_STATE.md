@@ -17,19 +17,19 @@
   complete selected critical window, and a passing P5 Oracle verdict
 - Completed paired cells: v5 `p5_t1_hover_pair_r1` through
   `p5_t1_hover_pair_r5`; T1 now has all five preregistered repeats, with all
-  excluded attempts preserved
+  excluded attempts preserved; T2 straight repeat 1 is also complete
 - Partial paired cells: none in v5; v4
   `p5_t1_hover_pair_r1` (Offboard valid; Dynamic
   attempts 1 and 2 are measurement-unknown with 18 and 17 retained clock
   samples); no v4 pair is accepted
-- Pending paired cells: 30 untouched pairs beginning with
-  `p5_t2_straight_pair_r1`; no v3 or v4
+- Pending paired cells: 29 untouched pairs beginning with
+  `p5_t2_straight_pair_r2`; no v3 or v4
   side is reused across the observation-capture revision
 - Known environment failures: three recovered v3 Dynamic T1 PX4
   abort/incomplete attempts plus v4 pilot attempt 1, which failed before PX4
   readiness because a relative artifact root was resolved inside the PX4
   subshell, plus v5 r4 Offboard attempt 1 (`timeout in TAKEOFF`, PX4 SIGABRT);
   all are preserved as environment evidence, never SUT or Oracle violations
-- Next exact action: checkpoint the completed T1 repeats, then run both missing
-  sides of `p5_t2_straight_pair_r1` as the next bounded v5 matrix batch
-- Last update: 2026-07-17T14:00:55-07:00
+- Next exact action: checkpoint T2 repeat 1, then run both missing sides of
+  `p5_t2_straight_pair_r2` as the next bounded v5 matrix batch
+- Last update: 2026-07-17T14:04:11-07:00
