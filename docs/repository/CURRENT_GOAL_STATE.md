@@ -4,7 +4,7 @@
 - Current gate: P5 Differential Gate, initial five-pair matrix incomplete
 - Current campaign: `campaign_seeded_v5` — `READY_FOR_INITIAL_MATRIX`; v3 and
   v4 are preserved and closed
-- Repository checkpoint commit: `808b0e3f9d0cbe6d2ac62a93212eb7e46ed9721b`
+- Repository checkpoint commit: `610db2bee295f221d6bba4ee9ae7bf65a80b2e48`
 - Campaign revision identities: PX4 `4ae21a5e...`; PX4 binary `931320a0...`;
   observation patch `73555576...`; adapter `a02fc11` / binary `af5a02a2...`;
   Route Oracle `0.3`; trace schema `1.2`; threshold profile
@@ -28,4 +28,4 @@
   violations
 - Next exact action: checkpoint the valid capture pilot, then run both missing
   sides of `p5_t1_hover_pair_r1` as the first bounded v5 matrix batch
-- Last update: 2026-07-17T13:23:02-07:00
+- Last update: 2026-07-17T13:24:45-07:00
