@@ -35,12 +35,13 @@
     "threshold_profile_id": "route-oracle-v0.3-default"
   },
   "campaign_start_time": "2026-07-17T13:07:44-07:00",
-  "campaign_status": "ACTIVE_INITIAL_MATRIX",
+  "campaign_status": "CLOSED_REVISION_CHANGE_REQUIRED",
+  "close_reason": "Two clean Dynamic T1 attempts completed the Hold handoff and Oracle window but retained only 18 and 17 post-backlog clock samples against the preregistered minimum of 20. Continuing requires an observation-capture interval change.",
   "completed_cells": [],
   "dirty_tree_hash": null,
   "dirty_tree_note": "Campaign identity was frozen from pushed implementation commit b415741 with a clean tracked worktree before any v4 paired run.",
   "environment_failure_count": 0,
-  "excluded_attempt_count": 1,
+  "excluded_attempt_count": 2,
   "fallback_parameter_snapshot": {
     "COM_OBL_RC_ACT": 5,
     "COM_OF_LOSS_T": 1.0,
@@ -54,7 +55,7 @@
     "commit": "c50a9ea6495c8ca5d7facb0361816ce98d36020d",
     "sha256": "00d6c700694eeb28b450014c17fd57fcdf7c044832d62dc033180455b4fc0bf4"
   },
-  "last_checkpoint_time": "2026-07-17T13:13:47-07:00",
+  "last_checkpoint_time": "2026-07-17T13:16:24-07:00",
   "observation_patch_hash": "sha256:735555764c175ebd0a318723d4e76b8898965c4728ee4cab9b05b6c34d5e8b7c",
   "observation_profile": "TRANSITION",
   "parent_campaign": "campaign_seeded_v3",
