@@ -62,6 +62,7 @@ class RouteTransitionMode final : public px4_ros2::ModeBase {
     }
     const char* duration_value = std::getenv("UAV_SF_ACTIVE_DURATION_S");
     const double completion_s = duration_value == nullptr ? 16.0 : std::strtod(duration_value, nullptr);
+    const bool explicit_completion_duration = duration_value != nullptr;
     const bool context_active = contextMarkerActive();
     const bool log_every_setpoint = std::getenv("UAV_SF_LOG_EVERY_SETPOINT") != nullptr;
     const bool health_reply_enabled = channelEnabled("health_reply.off");
@@ -113,7 +114,7 @@ class RouteTransitionMode final : public px4_ros2::ModeBase {
       phase = "stable_descent";
     }
 
-    if (selected_context == nullptr && elapsed_s >= completion_s) {
+    if ((selected_context == nullptr || explicit_completion_duration) && elapsed_s >= completion_s) {
       if (!completion_reported_) {
         completion_reported_ = true;
         RCLCPP_INFO(node().get_logger(),

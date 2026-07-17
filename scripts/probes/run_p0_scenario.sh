@@ -20,9 +20,15 @@ AGENT_PREFIX="${REPO_ROOT}/external/install/microxrce_agent"
 AGENT_BIN="${MICROXRCE_AGENT_BIN:-${AGENT_PREFIX}/bin/MicroXRCEAgent}"
 AGENT_LIBRARY_PATH="${MICROXRCE_AGENT_LD_LIBRARY_PATH:-${AGENT_PREFIX}/lib}"
 EXTERNAL_MODE_BIN="${ROUTE_EXTERNAL_MODE_BIN:-${REPO_ROOT}/ros2_ws/install/route_transition_external_mode/lib/route_transition_external_mode/route_transition_external_mode}"
+LOGGER_PROFILE="${P0_SDLOG_PROFILE:-1}"
+LOGGER_TOPICS_FILE="${P0_LOGGER_TOPICS_FILE:-}"
 RAW_DIR="${P0_RUN_ROOT:-${REPO_ROOT}/runs/p0}/${RUN_ID}/raw"
 PROCESSED_DIR="${P0_PROCESSED_ROOT:-${REPO_ROOT}/data/processed/p0}/${RUN_ID}"
 mkdir -p "${RAW_DIR}" "${PROCESSED_DIR}"
+LOGGER_TOPICS_TARGET="${PX4_BUILD}/rootfs/0/etc/logging/logger_topics.txt"
+if [[ -n "${LOGGER_TOPICS_FILE}" ]]; then
+  install -D -m 0644 "${LOGGER_TOPICS_FILE}" "${LOGGER_TOPICS_TARGET}"
+fi
 START_MARKER="${RAW_DIR}/run.start"
 touch "${START_MARKER}"
 # PX4 persists reboot-required logger parameters in the generated SITL rootfs.
@@ -81,6 +87,7 @@ finish_processes() {
   stop_process "${AGENT_PID}" TERM
   exec 3>&-
   rm -f "${FIFO}"
+  if [[ -n "${LOGGER_TOPICS_FILE}" ]]; then rm -f "${LOGGER_TOPICS_TARGET}"; fi
 }
 trap finish_processes EXIT
 
@@ -93,7 +100,7 @@ AGENT_PID=$!
   cd "${PX4_DIR}"
   # Do not let a caller's Gazebo resource path select a model from another PX4
   # checkout. px4-rc.gzsim adds this checkout's locked model/world paths.
-  GZ_SIM_RESOURCE_PATH= PX4_PARAM_SDLOG_MODE=0 PX4_PARAM_SDLOG_PROFILE=1 \
+  GZ_SIM_RESOURCE_PATH= PX4_PARAM_SDLOG_MODE=0 PX4_PARAM_SDLOG_PROFILE="${LOGGER_PROFILE}" \
     HEADLESS=1 PX4_SIM_MODEL=gz_x500 \
     "${PX4_BUILD}/bin/px4" -i 0 <"${FIFO}"
 ) >"${RAW_DIR}/px4.log" 2>&1 &
@@ -125,6 +132,7 @@ if [[ -n "${P0_ACTIVE_DURATION_S:-}" ]]; then
 fi
 if [[ "${P0_HOVER_ONLY:-0}" == "1" ]]; then
   runner_args+=(--hover-only)
+  export UAV_SF_BEHAVIOR_CONTEXT=hover
 fi
 if [[ -n "${P0_ACTIVE_DURATION_S:-}" ]]; then
   export UAV_SF_ACTIVE_DURATION_S="${P0_ACTIVE_DURATION_S}"

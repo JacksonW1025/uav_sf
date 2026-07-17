@@ -1,0 +1,28 @@
+schema_version: "1.0"
+performed_after_preregistration: true
+matched_cells:
+  - p5_t1_hover
+  - p5_t2_straight
+  - p5_t4_turn
+  - p5_t5_hover
+  - p5_t6_straight
+  - p5_t7_turn
+  - p5_t8_descent
+not_applicable:
+  - cell_id: p5_t3_descent
+    transition_class: T3
+    disposition: NOT_APPLICABLE
+    mechanism_basis: >-
+      ModeBase::completed(result) and the Legacy Offboard release contract do not
+      select Land/RTL as part of completion. An independent VehicleCommand would
+      be a different transition input and would violate the matched-event rule.
+  - cell_id: p5_t9_hover
+    transition_class: T9
+    disposition: NOT_APPLICABLE
+    mechanism_basis: >-
+      Legacy Offboard has release and later activation but no registration or
+      unregister lifecycle. Dynamic External Mode unregister removes a commander
+      slot. Treating release as unregister would erase the mechanism under study.
+forbidden_substitutions:
+  - independent Land/RTL command presented as completion
+  - Offboard release presented as component unregister
