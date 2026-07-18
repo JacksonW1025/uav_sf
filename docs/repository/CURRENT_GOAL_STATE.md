@@ -1,7 +1,7 @@
 # Current Goal state
 
 - Goal phase: Phase B, formal P5 v6 paired campaign initialized
-- `campaign_seeded_v6` status: `INITIAL_MATRIX_IN_PROGRESS`; formal campaign,
+- `campaign_seeded_v6` status: `MATRIX_COMPLETE_ANALYSIS_PENDING`; formal campaign,
   authorized by `AUTHORIZED_FOR_V6_CREATION`
 - P5 Differential Gate: `FORMAL_CAMPAIGN_IN_PROGRESS`
 - Frozen implementation identity: commit
@@ -18,24 +18,22 @@
   nav state `4`
 - Formal matrix: 35 matched pairs / 70 sides; T1/T2/T4/T5/T6/T8 use
   `TRANSITION`, T7 uses `RETAINED_ROUTE`
-- Matrix progress: 34 complete pairs, 0 partial pairs, 1 pending pair;
-  68 accepted sides, 0 excluded attempts, 25 environment failures, 0 campaign
+- Matrix progress: 35 complete pairs, 0 partial pairs, 0 pending pairs;
+  70 accepted sides, 0 excluded attempts, 25 environment failures, 0 campaign
   configuration failures
-- Last completed pair: independent-fallback cell `p5_t8_descent_pair_r4`;
-  Legacy attempt 1 and Dynamic attempt 2 are accepted with seed `50804`,
+- Last completed pair: independent-fallback cell `p5_t8_descent_pair_r5`;
+  both attempt 1 sides are accepted with seed `50805`,
   health off/setpoint on, independently observed Hold fallback, `COMPLETE`
-  transition windows, and PASS on all applicable clauses. Dynamic attempt 1
-  remains preserved as `ENVIRONMENT_FAILURE` after its 150-second `STABILIZE`
-  timeout.
+  transition windows, and PASS on all applicable clauses
 - Current partial pair: none
 - Environment diagnosis: elevated host scheduling load (10.62/9.79/9.25) is
   present, with remote-desktop and GUI CPU load but no experiment residue,
   occupied campaign port, memory exhaustion, or workspace disk pressure;
   classification remains transient run-environment instability, not
   frozen-revision drift
-- Next exact action: execute final independent-fallback cell
-  `p5_t8_descent_pair_r5` as one bounded matched pair with seed `50805`, Legacy
-  first and Dynamic second
+- Next exact action: perform the preregistered matched-pair differential
+  analysis over the frozen 70-side accepted dataset, then generate the formal
+  P5 v6 report and machine-readable Differential Gate
 - Historical campaigns: `campaign_seeded_v3` and `campaign_seeded_v4` remain
   preserved/closed; `campaign_seeded_v5` remains permanently
   `CLOSED_REVISION_CHANGE_REQUIRED` with 25/35 complete pairs, 50 accepted
@@ -49,4 +47,4 @@
 - Last checkpoint focused tests: PASS, `38 passed`
 - Last checkpoint full repository validator: PASS, `125 passed`, `15/15`
   stages
-- Last update: 2026-07-18T15:04:18-07:00
+- Last update: 2026-07-18T15:09:21-07:00
