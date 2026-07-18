@@ -18,22 +18,22 @@
   nav state `4`
 - Formal matrix: 35 matched pairs / 70 sides; T1/T2/T4/T5/T6/T8 use
   `TRANSITION`, T7 uses `RETAINED_ROUTE`
-- Matrix progress: 25 complete pairs, 0 partial pairs, 10 pending pairs;
-  50 accepted sides, 0 excluded attempts, 20 environment failures, 0 campaign
+- Matrix progress: 26 complete pairs, 0 partial pairs, 9 pending pairs;
+  52 accepted sides, 0 excluded attempts, 20 environment failures, 0 campaign
   configuration failures
-- Last completed pair: `p5_t6_straight_pair_r5`; Legacy attempt 1 and Dynamic
-  attempt 2 are accepted with matched seed `50605`, observed Hold fallback,
-  `COMPLETE` transition windows, and PASS on all applicable clauses. Dynamic
-  attempt 1 remains preserved as `ENVIRONMENT_FAILURE` after PX4
-  stack-smashing detection.
+- Last completed pair: retained-route cell `p5_t7_turn_pair_r1`; both attempt
+  1 sides are accepted with seed `50701`, health on/setpoint off, `COMPLETE`
+  3000 ms retained windows, continuity/exclusivity PASS,
+  revocation/installation/recovery `NOT_APPLICABLE`, zero fallback/route
+  changes/conflicts, no disallowed gap, and null transition metrics
 - Current partial pair: none
 - Environment diagnosis: elevated host scheduling load (10.62/9.79/9.25) is
   present, with remote-desktop and GUI CPU load but no experiment residue,
   occupied campaign port, memory exhaustion, or workspace disk pressure;
   classification remains transient run-environment instability, not
   frozen-revision drift
-- Next exact action: execute only retained-route cell `p5_t7_turn_pair_r1` as
-  one bounded matched pair with seed `50701`, Legacy first and Dynamic second
+- Next exact action: execute only retained-route cell `p5_t7_turn_pair_r2` as
+  one bounded matched pair with seed `50702`, Legacy first and Dynamic second
 - Historical campaigns: `campaign_seeded_v3` and `campaign_seeded_v4` remain
   preserved/closed; `campaign_seeded_v5` remains permanently
   `CLOSED_REVISION_CHANGE_REQUIRED` with 25/35 complete pairs, 50 accepted
@@ -47,4 +47,4 @@
 - Last checkpoint focused tests: PASS, `38 passed`
 - Last checkpoint full repository validator: PASS, `125 passed`, `15/15`
   stages
-- Last update: 2026-07-18T14:08:37-07:00
+- Last update: 2026-07-18T14:13:21-07:00
