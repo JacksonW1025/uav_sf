@@ -18,12 +18,14 @@
   nav state `4`
 - Formal matrix: 35 matched pairs / 70 sides; T1/T2/T4/T5/T6/T8 use
   `TRANSITION`, T7 uses `RETAINED_ROUTE`
-- Matrix progress: 0 complete pairs, 0 partial pairs, 35 pending pairs;
-  0 accepted sides, 0 excluded attempts, 0 environment failures, 0 campaign
+- Matrix progress: 1 complete pair, 0 partial pairs, 34 pending pairs;
+  2 accepted sides, 0 excluded attempts, 0 environment failures, 0 campaign
   configuration failures
-- Last completed pair: none
-- Next exact pair: `p5_t1_hover_pair_r1` (Legacy Offboard and Dynamic
-  External Mode, matched seed `50101`)
+- Last completed pair: `p5_t1_hover_pair_r1`; both formal sides are `VALID`,
+  have `VALID` clocks and `COMPLETE` transition windows, and all applicable
+  Route Oracle clauses pass
+- Next exact pair: `p5_t1_hover_pair_r2` (Legacy Offboard and Dynamic
+  External Mode, matched seed `50102`)
 - Historical campaigns: `campaign_seeded_v3` and `campaign_seeded_v4` remain
   preserved/closed; `campaign_seeded_v5` remains permanently
   `CLOSED_REVISION_CHANGE_REQUIRED` with 25/35 complete pairs, 50 accepted
@@ -34,4 +36,7 @@
 - Baseline focused retained-route tests: PASS, `38 passed`
 - Baseline full repository validator: PASS, `125 passed`, `15/15` stages
 - Current blocker: none
-- Last update: 2026-07-18T10:58:20-07:00
+- Last checkpoint focused tests: PASS, `38 passed`
+- Last checkpoint full repository validator: PASS, `125 passed`, `15/15`
+  stages
+- Last update: 2026-07-18T11:04:50-07:00
