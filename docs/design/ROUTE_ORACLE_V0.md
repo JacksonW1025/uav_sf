@@ -1,8 +1,16 @@
 # Route Oracle v0
 
-Version: `0.3` (result schema `1.2`).
+Version: `0.4` (result schema `1.3`).
 
 Route Oracle v0 consumes a canonical route trace and the strengthened writer-attribution result. Every clause and overall result uses only `PASS`, `VIOLATION`, `UNKNOWN`, or `NOT_APPLICABLE`. Missing evidence is never converted into success.
+
+Version 0.4 adds an explicit `observation_kind`. `TRANSITION` preserves the
+0.3 source-to-target evaluation. `RETAINED_ROUTE` evaluates a preregistered,
+clock-mapped stable window without inventing a target or fallback. In that mode
+revocation, installation, and recovery are `NOT_APPLICABLE`; exclusivity and
+continuity evaluate stable mode/epoch/authority/registration/writer identity
+and complete writer sequence. The retained contract is
+`RETAINED_ROUTE_OBSERVATION_CONTRACT.md`.
 
 Tracked processed traces retain every final actuator-writer observation. To keep
 each committed artifact below the repository's 10 MiB boundary, they retain one

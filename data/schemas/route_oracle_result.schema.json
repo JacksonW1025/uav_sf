@@ -1,15 +1,18 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://uav-sf.local/schemas/route_oracle_result.schema.json",
-  "title": "Route Oracle v0.3 result",
+  "title": "Route Oracle v0.4 result",
   "type": "object",
   "additionalProperties": false,
   "required": [
     "schema_version",
     "route_oracle_version",
     "run_id",
+    "observation_kind",
     "status",
+    "violation_categories",
     "transition",
+    "retained_route",
     "clock_bridge",
     "clauses",
     "ground_truth_case_id",
@@ -18,11 +21,30 @@
     "evidence_completeness"
   ],
   "properties": {
-    "schema_version": {"const": "1.2"},
-    "route_oracle_version": {"const": "0.3"},
+    "schema_version": {"const": "1.3"},
+    "route_oracle_version": {"const": "0.4"},
     "run_id": {"type": "string", "minLength": 1},
+    "observation_kind": {"enum": ["TRANSITION", "RETAINED_ROUTE"]},
     "status": {"enum": ["PASS", "VIOLATION", "UNKNOWN", "NOT_APPLICABLE"]},
+    "violation_categories": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "UNEXPECTED_FALLBACK",
+          "UNEXPECTED_ROUTE_CHANGE",
+          "ROUTE_RETENTION_GAP",
+          "AUTHORITY_CONFLICT",
+          "WRITER_CONFLICT",
+          "STALE_OR_INSUFFICIENT_EVIDENCE"
+        ]
+      },
+      "uniqueItems": true
+    },
     "transition": {
+      "type": ["object", "null"],
+      "additionalProperties": true
+    },
+    "retained_route": {
       "type": ["object", "null"],
       "additionalProperties": true
     },

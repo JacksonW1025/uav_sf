@@ -13,6 +13,7 @@ import re
 import subprocess
 import time
 from typing import Any
+from dataclasses import dataclass
 
 import yaml
 
@@ -22,6 +23,10 @@ DEFAULT_MATRIX = ROOT / "experiments" / "probes" / "p5" / "scenario_matrix.yaml"
 DEFAULT_DISPOSITION = ROOT / "experiments" / "probes" / "p5" / "preflight_disposition.yaml"
 DEFAULT_RUN_ROOT = ROOT / "runs" / "p5" / "campaign"
 ANALYSIS = ROOT / "experiments" / "probes" / "p5" / "pre_registered_analysis.yaml"
+RETAINED_PREREGISTRATION = (
+    ROOT / "experiments" / "probes" / "p5" / "retained_route_revision_preregistration.yaml"
+)
+RETAINED_CONTRACT = ROOT / "docs" / "design" / "RETAINED_ROUTE_OBSERVATION_CONTRACT.md"
 MINIMAL_LOGGER_TOPICS = ROOT / "config" / "phase_a2_minimal_logger_topics.txt"
 CANONICAL_BUILD_PROVENANCE = (
     ROOT / "experiments" / "probes" / "p5" / "canonical_control_build_provenance.json"
@@ -44,9 +49,35 @@ METRICS = (
     "peak_tilt_rad",
     "position_error_m",
     "recovery_duration_ms",
+    "retained_window_duration_ms",
+    "unexpected_route_change_count",
+    "unexpected_fallback_count",
+    "maximum_unowned_window_ms",
+    "authority_conflict_count",
+    "writer_conflict_count",
 )
 
 PHYSICAL_METRICS = {"altitude_loss_m", "peak_tilt_rad", "position_error_m"}
+COUNT_METRICS = {
+    "unexpected_route_change_count",
+    "unexpected_fallback_count",
+    "authority_conflict_count",
+    "writer_conflict_count",
+}
+PX4_DOMAIN_METRICS = {"maximum_unowned_window_ms"}
+
+
+@dataclass(frozen=True)
+class SelectedObservation:
+    observation_kind: str
+    source_mode: int | None = None
+    target_mode: int | None = None
+    expected_route: int | None = None
+    expected_fallback: int | None = None
+    window_anchor_event: str | None = None
+    settle_interval_ms: float | None = None
+    window_duration_ms: float | None = None
+    applicable_clauses: tuple[str, ...] = ()
 
 
 def load_matrix(path: Path = DEFAULT_MATRIX) -> dict:
@@ -58,6 +89,12 @@ def load_matrix(path: Path = DEFAULT_MATRIX) -> dict:
         raise ValueError("P5 requires at least five initial paired repeats")
     if set(matrix["mechanisms"]) != {"legacy_offboard", "dynamic_external_mode"}:
         raise ValueError("P5 requires both route mechanisms")
+    kinds = {cell.get("observation_kind") for cell in matrix["cells"]}
+    if not kinds <= {"TRANSITION", "RETAINED_ROUTE"} or None in kinds:
+        raise ValueError("every P5 cell requires an explicit observation_kind")
+    by_class = {cell["transition_class"]: cell["observation_kind"] for cell in matrix["cells"]}
+    if by_class["T7"] != "RETAINED_ROUTE" or by_class["T8"] != "TRANSITION":
+        raise ValueError("T7 must retain the route and T8 must observe a transition")
     return matrix
 
 
@@ -74,6 +111,7 @@ def execution_plan(matrix: dict) -> list[dict]:
                         "pair_id": pair_id,
                         "cell_id": cell["cell_id"],
                         "transition_class": cell["transition_class"],
+                        "observation_kind": cell["observation_kind"],
                         "context": cell["context"],
                         "action": cell["action"],
                         "mechanism": mechanism,
@@ -203,6 +241,8 @@ def _implementation_commit() -> str:
         "experiments/probes/p5/scenario_matrix.yaml",
         "experiments/probes/p5/preflight_disposition.yaml",
         "experiments/probes/p5/pre_registered_analysis.yaml",
+        "experiments/probes/p5/retained_route_revision_preregistration.yaml",
+        "docs/design/RETAINED_ROUTE_OBSERVATION_CONTRACT.md",
     ]
     return subprocess.run(
         ["git", "log", "-1", "--format=%H", "--", *identity_paths],
@@ -234,10 +274,18 @@ def campaign_identity_snapshot() -> dict[str, Any]:
         ),
         "adapter_header_hash": _sha256(adapter_dir / "include/route_transition_mode.hpp"),
         "adapter_source_hash": _sha256(adapter_dir / "src/external_mode.cpp"),
-        "Route_Oracle_version": "0.3",
+        "legacy_offboard_adapter_source_hash": _sha256(
+            ROOT / "scripts/probes/offboard_channel_producer.py"
+        ),
+        "Route_Oracle_version": "0.4",
+        "route_oracle_result_schema_version": "1.3",
         "route_trace_schema_version": "1.2",
         "threshold_profile_id": "route-oracle-v0.3-default",
         "scenario_matrix_hash": _sha256(DEFAULT_MATRIX),
+        "scenario_matrix_schema_version": "1.1",
+        "retained_route_contract_version": "1.0",
+        "retained_route_contract_hash": _sha256(RETAINED_CONTRACT),
+        "retained_route_preregistration_hash": _sha256(RETAINED_PREREGISTRATION),
         "fallback_parameter_snapshot": {
             "COM_OF_LOSS_T": 1.0,
             "COM_OBL_RC_ACT": 5,
@@ -262,44 +310,138 @@ def _external_mode_id(trace: Path) -> int:
     return modes[0]
 
 
-def selected_modes(row: dict[str, Any], trace: Path) -> tuple[int, int]:
+def selected_observation(row: dict[str, Any], trace: Path) -> SelectedObservation:
     external = 14 if row["mechanism"] == "legacy_offboard" else _external_mode_id(trace)
+    observation_kind = str(row["observation_kind"])
+    if observation_kind == "RETAINED_ROUTE":
+        preregistration = yaml.safe_load(RETAINED_PREREGISTRATION.read_text(encoding="utf-8"))
+        window = preregistration["t7_contract"]["window"]
+        return SelectedObservation(
+            observation_kind=observation_kind,
+            expected_route=external,
+            expected_fallback=None,
+            window_anchor_event=str(window["anchor_event"]),
+            settle_interval_ms=float(window["settle_interval_ms"]),
+            window_duration_ms=float(window["nominal_duration_ms"]),
+            applicable_clauses=("exclusivity", "continuity"),
+        )
+    if observation_kind != "TRANSITION":
+        raise ValueError(f"unsupported observation kind: {observation_kind}")
     if row["transition_class"] == "T1":
-        return 17, external
+        return SelectedObservation(observation_kind, 17, external, expected_route=external)
     if row["transition_class"] == "T2":
-        return external, 4
+        return SelectedObservation(
+            observation_kind, external, 4, expected_route=4, expected_fallback=4
+        )
     monitor = _json(trace.parent / "raw/monitor_result.json")
     observed_fallback = monitor.get("fallback_nav_state")
     if not isinstance(observed_fallback, int):
         raise ValueError("independently observed fallback route is unavailable")
-    return external, observed_fallback
+    return SelectedObservation(
+        observation_kind,
+        external,
+        observed_fallback,
+        expected_route=observed_fallback,
+        expected_fallback=observed_fallback,
+    )
 
 
 def run_selected_oracle(row: dict[str, Any], attempt_root: Path) -> dict[str, Any]:
     trace = attempt_root / "route_trace.jsonl"
-    source, target = selected_modes(row, trace)
+    selected = selected_observation(row, trace)
     output = attempt_root / "p5_route_oracle.json"
+    command = [
+        "python3",
+        str(ROOT / "scripts/oracles/route_oracle_v0.py"),
+        "--trace",
+        str(trace),
+        "--clock-bridge",
+        str(attempt_root / "clock_bridge.json"),
+        "--observation-kind",
+        selected.observation_kind.lower().replace("_", "-"),
+        "--source-artifact-complete",
+        "--output",
+        str(output),
+    ]
+    if selected.observation_kind == "TRANSITION":
+        assert selected.source_mode is not None and selected.target_mode is not None
+        command.extend(
+            [
+                "--transition-source-mode",
+                str(selected.source_mode),
+                "--transition-target-mode",
+                str(selected.target_mode),
+            ]
+        )
+    else:
+        assert selected.expected_route is not None
+        command.extend(
+            [
+                "--retained-route-mode",
+                str(selected.expected_route),
+                "--retained-settle-ms",
+                str(selected.settle_interval_ms),
+                "--retained-window-duration-ms",
+                str(selected.window_duration_ms),
+            ]
+        )
     subprocess.run(
-        [
-            "python3",
-            str(ROOT / "scripts/oracles/route_oracle_v0.py"),
-            "--trace",
-            str(trace),
-            "--clock-bridge",
-            str(attempt_root / "clock_bridge.json"),
-            "--transition-source-mode",
-            str(source),
-            "--transition-target-mode",
-            str(target),
-            "--output",
-            str(output),
-        ],
+        command,
         cwd=ROOT,
         check=False,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
     )
     return _json(output)
+
+
+def _monitor_events(path: Path) -> list[dict[str, Any]]:
+    return [
+        json.loads(line)
+        for line in path.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+
+
+def _retained_monitor_reasons(attempt_root: Path) -> list[str]:
+    path = attempt_root / "raw/monitor_events.jsonl"
+    if not path.is_file():
+        return ["missing_channel_evidence:monitor_events.jsonl"]
+    events = _monitor_events(path)
+    channels = [
+        event
+        for event in events
+        if event.get("event_type") == "channel_configuration_applied"
+        and event.get("heartbeat_or_health_enabled") is True
+        and event.get("setpoint_enabled") is False
+    ]
+    if not channels:
+        return ["channel_evidence:health_on_setpoint_off_unconfirmed"]
+    channel = channels[0]
+    anchors = [
+        event
+        for event in events
+        if event.get("event_type") == "experiment_window_started"
+        and isinstance(event.get("ros_time_ns"), int)
+        and int(event["ros_time_ns"]) >= int(channel["ros_time_ns"])
+    ]
+    if not anchors:
+        return ["retained_window:anchor_unavailable"]
+    preregistration = yaml.safe_load(RETAINED_PREREGISTRATION.read_text(encoding="utf-8"))
+    window = preregistration["t7_contract"]["window"]
+    nominal_end_ns = int(anchors[0]["ros_time_ns"]) + int(
+        (float(window["settle_interval_ms"]) + float(window["nominal_duration_ms"]))
+        * 1_000_000
+    )
+    bounded = any(
+        event.get("event_type") == "state_transition"
+        and event.get("previous") == "OBSERVE"
+        and event.get("current") == "REQUEST_HOLD"
+        and isinstance(event.get("ros_time_ns"), int)
+        and int(event["ros_time_ns"]) >= nominal_end_ns
+        for event in events
+    )
+    return [] if bounded else ["retained_window:bounded_observation_incomplete"]
 
 
 def classify_attempt(
@@ -335,18 +477,29 @@ def classify_attempt(
     clock = _json(attempt_root / "clock_bridge.json")
     if clock.get("status") != "VALID":
         reasons.append(f"clock_bridge:{clock.get('status')}")
+    identity_path = attempt_root / "campaign_identity.json"
+    if not identity_path.is_file():
+        reasons.append("revision_identity:missing")
+    elif _json(identity_path) != campaign_identity_snapshot():
+        reasons.append("revision_identity:mismatch")
     try:
         oracle = run_selected_oracle(row, attempt_root)
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         return "MEASUREMENT_UNKNOWN", [f"selected_oracle:{exc}"], None
-    window = (
-        oracle.get("clauses", {})
-        .get("exclusivity", {})
-        .get("metrics", {})
-        .get("critical_window", {})
-    )
-    if window.get("coverage_verdict") != "COMPLETE":
-        reasons.append(f"critical_window:{window.get('coverage_verdict')}")
+    if row["observation_kind"] == "RETAINED_ROUTE":
+        coverage = oracle.get("retained_route", {}).get("coverage_verdict")
+        if coverage != "COMPLETE":
+            reasons.append(f"retained_window:{coverage}")
+        reasons.extend(_retained_monitor_reasons(attempt_root))
+    else:
+        window = (
+            oracle.get("clauses", {})
+            .get("exclusivity", {})
+            .get("metrics", {})
+            .get("critical_window", {})
+        )
+        if window.get("coverage_verdict") != "COMPLETE":
+            reasons.append(f"critical_window:{window.get('coverage_verdict')}")
     result_name = "runner_result.json" if row["transition_class"] in {"T1", "T2"} else "monitor_result.json"
     result = _json(attempt_root / "raw" / result_name)
     if result.get("status") != "PASS":
@@ -367,37 +520,70 @@ def classify_attempt(
     context_seen = any(phase in path.read_text(encoding="utf-8", errors="replace") for path in evidence_files)
     if not context_seen:
         reasons.append(f"behavior_context_missing:{phase}")
-    return ("VALID" if not reasons else "MEASUREMENT_UNKNOWN"), reasons, oracle
+    if reasons:
+        return "MEASUREMENT_UNKNOWN", reasons, oracle
+    if row["observation_kind"] == "RETAINED_ROUTE":
+        expected_clauses = {
+            "revocation": "NOT_APPLICABLE",
+            "installation": "NOT_APPLICABLE",
+            "exclusivity": "PASS",
+            "continuity": "PASS",
+            "recovery": "NOT_APPLICABLE",
+        }
+        observed_clauses = {
+            name: clause.get("status")
+            for name, clause in oracle.get("clauses", {}).items()
+        }
+        if oracle.get("status") == "VIOLATION":
+            return "SUT_VIOLATION", list(oracle.get("violation_categories", [])), oracle
+        if oracle.get("status") != "PASS" or observed_clauses != expected_clauses:
+            return "MEASUREMENT_UNKNOWN", ["retained_oracle:not_conclusive_pass"], oracle
+    return "VALID", [], oracle
 
 
 def _metric_row(
     row: dict[str, Any], attempt_root: Path, oracle: dict[str, Any]
 ) -> dict[str, Any]:
-    output: dict[str, Any] = {key: "" for key in METRICS}
+    output: dict[str, Any] = {key: None for key in METRICS}
     clock = _json(attempt_root / "clock_bridge.json")
     uncertainty_ms = float(clock["uncertainty_ns"]) / 1_000_000.0
-    transition_us = float(oracle["transition"]["timestamp_us"])
     clauses = oracle["clauses"]
-    installation = clauses["installation"]["metrics"]
-    revocation = clauses["revocation"]["metrics"]
-    continuity = clauses["continuity"]["metrics"]
-    exclusivity = clauses["exclusivity"]["metrics"]
-    output["first_target_consumption_ms"] = (
-        float(installation["first_target_consumption_us"]) - transition_us
-    ) / 1000.0
-    output["old_epoch_revocation_ms"] = float(revocation["revocation_latency_ms"])
-    output["target_installation_ms"] = float(installation["installation_latency_ms"])
-    output["maximum_overlap_ms"] = 0.0 if not exclusivity["old_new_epoch_overlap"] else ""
-    output["maximum_gap_ms"] = float(continuity["maximum_unowned_window_ms"])
-    output["writer_transition_ms"] = (
-        float(installation["first_target_writer_us"]) - transition_us
-    ) / 1000.0
-    output["allocator_transition_ms"] = output["target_installation_ms"]
-    if row["transition_class"] == "T1":
-        output["registration_admission_latency_ms"] = output["target_installation_ms"]
-        output["activation_latency_ms"] = output["first_target_consumption_ms"]
-    if row["transition_class"] in {"T2", "T4"}:
-        output["unregistration_release_latency_ms"] = output["target_installation_ms"]
+    if oracle.get("observation_kind") == "RETAINED_ROUTE":
+        retained = oracle["retained_route"]
+        for metric in (
+            "retained_window_duration_ms",
+            "unexpected_route_change_count",
+            "unexpected_fallback_count",
+            "maximum_unowned_window_ms",
+            "authority_conflict_count",
+            "writer_conflict_count",
+        ):
+            value = retained.get(metric)
+            output[metric] = float(value) if value is not None else None
+    else:
+        transition_us = float(oracle["transition"]["timestamp_us"])
+        installation = clauses["installation"]["metrics"]
+        revocation = clauses["revocation"]["metrics"]
+        continuity = clauses["continuity"]["metrics"]
+        exclusivity = clauses["exclusivity"]["metrics"]
+        output["first_target_consumption_ms"] = (
+            float(installation["first_target_consumption_us"]) - transition_us
+        ) / 1000.0
+        output["old_epoch_revocation_ms"] = float(revocation["revocation_latency_ms"])
+        output["target_installation_ms"] = float(installation["installation_latency_ms"])
+        output["maximum_overlap_ms"] = (
+            0.0 if not exclusivity["old_new_epoch_overlap"] else None
+        )
+        output["maximum_gap_ms"] = float(continuity["maximum_unowned_window_ms"])
+        output["writer_transition_ms"] = (
+            float(installation["first_target_writer_us"]) - transition_us
+        ) / 1000.0
+        output["allocator_transition_ms"] = output["target_installation_ms"]
+        if row["transition_class"] == "T1":
+            output["registration_admission_latency_ms"] = output["target_installation_ms"]
+            output["activation_latency_ms"] = output["first_target_consumption_ms"]
+        if row["transition_class"] in {"T2", "T4"}:
+            output["unregistration_release_latency_ms"] = output["target_installation_ms"]
     monitor_path = attempt_root / "raw/monitor_result.json"
     if monitor_path.exists():
         monitor = _json(monitor_path)
@@ -416,10 +602,12 @@ def _metric_row(
     analysis = yaml.safe_load(ANALYSIS.read_text(encoding="utf-8"))
     physical_resolution = analysis["uncertainty_model"]["physical_resolution"]
     for metric in METRICS:
-        if output[metric] == "":
-            output[f"{metric}_uncertainty"] = ""
+        if output[metric] is None:
+            output[f"{metric}_uncertainty"] = None
         elif metric in PHYSICAL_METRICS:
             output[f"{metric}_uncertainty"] = float(physical_resolution[metric])
+        elif metric in COUNT_METRICS or metric in PX4_DOMAIN_METRICS:
+            output[f"{metric}_uncertainty"] = 0.0
         else:
             output[f"{metric}_uncertainty"] = uncertainty_ms
     return output
@@ -490,7 +678,11 @@ def execute_plan(
                 "artifact_root": str(prior_root.resolve().relative_to(ROOT)),
                 "clock_status": "VALID",
                 "critical_window": "COMPLETE",
-                "observed_fallback_nav_state": prior_oracle["transition"]["target_mode"],
+                "observed_fallback_nav_state": (
+                    prior_oracle["transition"]["target_mode"]
+                    if prior_oracle.get("transition") is not None
+                    else None
+                ),
                 "campaign_identity": identity,
                 "accepted_after_classifier_correction": True,
                 **_metric_row(row, prior_root, prior_oracle),
@@ -527,8 +719,8 @@ def execute_plan(
                     "artifact_root": "",
                     "clock_status": "",
                     "critical_window": "",
-                    **{key: "" for key in METRICS},
-                    **{f"{key}_uncertainty": "" for key in METRICS},
+                    **{key: None for key in METRICS},
+                    **{f"{key}_uncertainty": None for key in METRICS},
                 }
             )
             continue
@@ -595,7 +787,11 @@ def execute_plan(
                     "artifact_root": str(attempt_root.resolve().relative_to(ROOT)),
                     "clock_status": "VALID",
                     "critical_window": "COMPLETE",
-                    "observed_fallback_nav_state": oracle["transition"]["target_mode"],
+                    "observed_fallback_nav_state": (
+                        oracle["transition"]["target_mode"]
+                        if oracle.get("transition") is not None
+                        else None
+                    ),
                     "campaign_identity": identity,
                     **_metric_row(row, attempt_root, oracle),
                 }
@@ -612,7 +808,7 @@ def execute_plan(
                 if environment_attempts >= max_environment_attempts:
                     terminal_validity = "BLOCKED_ENVIRONMENT"
                     break
-            elif validity == "CAMPAIGN_CONFIGURATION_FAILURE":
+            elif validity in {"CAMPAIGN_CONFIGURATION_FAILURE", "SUT_VIOLATION"}:
                 break
         if not accepted_this_side:
             results.append(
@@ -624,8 +820,8 @@ def execute_plan(
                     "artifact_root": "",
                     "clock_status": "",
                     "critical_window": "",
-                    **{key: "" for key in METRICS},
-                    **{f"{key}_uncertainty": "" for key in METRICS},
+                    **{key: None for key in METRICS},
+                    **{f"{key}_uncertainty": None for key in METRICS},
                 }
             )
         print(

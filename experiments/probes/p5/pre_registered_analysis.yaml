@@ -1,4 +1,4 @@
-schema_version: "1.0"
+schema_version: "1.1"
 pair_key: [cell_id, simulation_seed, repeat]
 primary_statistic: median_paired_difference
 dispersion: interquartile_range
@@ -47,3 +47,33 @@ metrics:
   - peak_tilt_rad
   - position_error_m
   - recovery_duration_ms
+  - retained_window_duration_ms
+  - unexpected_route_change_count
+  - unexpected_fallback_count
+  - maximum_unowned_window_ms
+  - authority_conflict_count
+  - writer_conflict_count
+metric_applicability:
+  TRANSITION:
+    retained_window_duration_ms: NOT_APPLICABLE
+    unexpected_route_change_count: NOT_APPLICABLE
+    unexpected_fallback_count: NOT_APPLICABLE
+    maximum_unowned_window_ms: NOT_APPLICABLE
+    authority_conflict_count: NOT_APPLICABLE
+    writer_conflict_count: NOT_APPLICABLE
+  RETAINED_ROUTE:
+    registration_admission_latency_ms: NOT_APPLICABLE
+    activation_latency_ms: NOT_APPLICABLE
+    failure_detection_latency_ms: NOT_APPLICABLE
+    fallback_selection_latency_ms: NOT_APPLICABLE
+    unregistration_release_latency_ms: NOT_APPLICABLE
+    reentry_latency_ms: NOT_APPLICABLE
+    first_target_consumption_ms: NOT_APPLICABLE
+    old_epoch_revocation_ms: NOT_APPLICABLE
+    target_installation_ms: NOT_APPLICABLE
+    maximum_overlap_ms: NOT_APPLICABLE
+    maximum_gap_ms: NOT_APPLICABLE
+    allocator_transition_ms: NOT_APPLICABLE
+    writer_transition_ms: NOT_APPLICABLE
+    recovery_duration_ms: NOT_APPLICABLE
+not_applicable_encoding: null

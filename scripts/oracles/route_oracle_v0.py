@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Route Oracle v0 for route-replacing authority transitions."""
+"""Route Oracle v0 for route transitions and retained-route observations."""
 
 from __future__ import annotations
 
@@ -22,9 +22,11 @@ RESULT_SCHEMA = json.loads(
     (ROOT / "data" / "schemas" / "route_oracle_result.schema.json").read_text(encoding="utf-8")
 )
 EXTERNAL_MODES = {14, *range(23, 31)}
-ORACLE_VERSION = "0.3"
-RESULT_SCHEMA_VERSION = "1.2"
+ORACLE_VERSION = "0.4"
+RESULT_SCHEMA_VERSION = "1.3"
 DEFAULT_THRESHOLD_PROFILE_ID = "route-oracle-v0.3-default"
+DEFAULT_RETAINED_SETTLE_MS = 500.0
+DEFAULT_RETAINED_DURATION_MS = 3000.0
 DEFAULT_THRESHOLDS = {
     "installation_deadline_ms": 300.0,
     "recovery_deadline_ms": 300.0,
@@ -256,6 +258,458 @@ def _deadline_status(
     return "PASS", []
 
 
+def _retained_result(
+    events: list[dict[str, Any]],
+    writer_summary: dict[str, Any],
+    clock_bridge: dict[str, Any] | None,
+    *,
+    expected_mode: Any,
+    settle_ms: float,
+    duration_ms: float,
+    source_artifact_complete: bool | None,
+    ground_truth_case_id: str | None,
+    oracle_validation_profile: str,
+    threshold_profile_id: str,
+    thresholds: dict[str, float],
+) -> dict[str, Any]:
+    run_id = str(events[0].get("run_id", "unknown")) if events else "unknown"
+    source_status = (
+        "COMPLETE"
+        if source_artifact_complete is True
+        else "INCOMPLETE"
+        if source_artifact_complete is False
+        else "UNKNOWN"
+    )
+    channel_events = sorted(
+        (
+            event
+            for event in events
+            if event.get("event_type") == "channel_configuration_applied"
+            and event.get("timestamp_domain") == "ros_node_ns"
+        ),
+        key=lambda event: float(event["timestamp"]),
+    )
+    anchors = sorted(
+        (
+            event
+            for event in events
+            if event.get("event_type") == "experiment_window_started"
+            and event.get("timestamp_domain") == "ros_node_ns"
+        ),
+        key=lambda event: float(event["timestamp"]),
+    )
+    anchor = next(
+        (
+            candidate
+            for candidate in anchors
+            if any(
+                float(channel["timestamp"]) <= float(candidate["timestamp"])
+                for channel in channel_events
+            )
+        ),
+        None,
+    )
+    clock_status = (
+        "VALID"
+        if _valid_bridge(clock_bridge)
+        else "MISSING"
+        if clock_bridge is None
+        else "INVALID"
+    )
+    nominal_start_ros_ns = (
+        float(anchor["timestamp"]) + settle_ms * 1_000_000.0
+        if anchor is not None
+        else None
+    )
+    nominal_end_ros_ns = (
+        nominal_start_ros_ns + duration_ms * 1_000_000.0
+        if nominal_start_ros_ns is not None
+        else None
+    )
+    start_us = (
+        _px4_time(
+            {"timestamp": nominal_start_ros_ns, "timestamp_domain": "ros_node_ns"},
+            clock_bridge,
+        )
+        if nominal_start_ros_ns is not None
+        else None
+    )
+    end_us = (
+        _px4_time(
+            {"timestamp": nominal_end_ros_ns, "timestamp_domain": "ros_node_ns"},
+            clock_bridge,
+        )
+        if nominal_end_ros_ns is not None
+        else None
+    )
+    uncertainty_us = (
+        float(clock_bridge["uncertainty_ns"])
+        / (1000.0 * float(clock_bridge["rate_ratio"]))
+        if _valid_bridge(clock_bridge)
+        else None
+    )
+    strict_start_us = (
+        start_us + uncertainty_us
+        if start_us is not None and uncertainty_us is not None
+        else None
+    )
+    strict_end_us = (
+        end_us - uncertainty_us
+        if end_us is not None and uncertainty_us is not None
+        else None
+    )
+    bound_events = [
+        event
+        for event in events
+        if event.get("event_type") == "probe_state_transition"
+        and event.get("timestamp_domain") == "ros_node_ns"
+        and nominal_end_ros_ns is not None
+        and float(event["timestamp"]) >= nominal_end_ros_ns
+    ]
+
+    setup_reasons: list[str] = []
+    if source_artifact_complete is not True:
+        setup_reasons.append("complete source artifact was not established")
+    if not channel_events:
+        setup_reasons.append("channel-configuration marker is unavailable")
+    if anchor is None:
+        setup_reasons.append("retained-window anchor is unavailable")
+    if clock_status != "VALID" or start_us is None or end_us is None:
+        setup_reasons.append("retained-window endpoints lack a valid clock mapping")
+    if duration_ms < DEFAULT_RETAINED_DURATION_MS:
+        setup_reasons.append("retained-window duration is below the preregistered minimum")
+    if not bound_events:
+        setup_reasons.append("bounded monitor observation does not cover the retained window")
+
+    route_events: list[dict[str, Any]] = []
+    before_start: list[dict[str, Any]] = []
+    after_end: list[dict[str, Any]] = []
+    if start_us is not None and end_us is not None:
+        status_events = [
+            event
+            for event in events
+            if event.get("event_type") == "vehicle_status"
+            and event.get("timestamp_domain") == "ulog_us"
+        ]
+        before_start = [
+            event for event in status_events if float(event["timestamp"]) <= start_us
+        ]
+        after_end = [
+            event for event in status_events if float(event["timestamp"]) >= end_us
+        ]
+        route_events = [
+            event
+            for event in events
+            if event.get("timestamp_domain") == "ulog_us"
+            and event.get("event_type") in {"vehicle_status", "route_epoch_changed"}
+            and start_us <= float(event["timestamp"]) <= end_us
+        ]
+    start_event = max(
+        before_start, key=lambda event: float(event["timestamp"]), default=None
+    )
+    end_event = min(
+        after_end, key=lambda event: float(event["timestamp"]), default=None
+    )
+    expected_epoch = start_event.get("route_epoch_id") if start_event else None
+    expected_authority = (
+        "ros2_offboard"
+        if expected_mode == 14
+        else "dynamic_external_mode"
+        if expected_mode in EXTERNAL_MODES
+        else None
+    )
+    route_reasons: list[str] = []
+    if start_event is None or start_event.get("declared_mode") != expected_mode:
+        route_reasons.append("expected external route was not established at window start")
+    if expected_epoch is None:
+        route_reasons.append("retained route epoch is unavailable at window start")
+    if end_event is None:
+        route_reasons.append("declared-route evidence does not cover the window end")
+    if expected_authority is None:
+        route_reasons.append("expected retained mode is not an external route")
+
+    registration_reasons: list[str] = []
+    if expected_mode in EXTERNAL_MODES and expected_mode != 14:
+        registration = start_event.get("registration_state") if start_event else None
+        if not isinstance(registration, dict) or not registration.get("registered"):
+            registration_reasons.append(
+                "dynamic external registration was not established at window start"
+            )
+    activation_events = [
+        event
+        for event in events
+        if event.get("route_activation_id") is not None
+        and nominal_start_ros_ns is not None
+        and event.get("timestamp_domain") == "ros_node_ns"
+        and float(event["timestamp"]) <= nominal_start_ros_ns
+    ]
+    activation_id = (
+        activation_events[-1].get("route_activation_id") if activation_events else None
+    )
+    registration_instance_id = (
+        activation_events[-1].get("registration_instance_id")
+        if activation_events
+        else None
+    )
+
+    interior_changes: list[dict[str, Any]] = []
+    boundary_changes: list[dict[str, Any]] = []
+    if expected_epoch is not None and start_us is not None and end_us is not None:
+        mismatches = [
+            event
+            for event in route_events
+            if event.get("declared_mode") != expected_mode
+            or event.get("route_epoch_id") != expected_epoch
+            or (
+                expected_authority is not None
+                and event.get("authority_source") not in {None, expected_authority}
+            )
+        ]
+        for event in mismatches:
+            timestamp = float(event["timestamp"])
+            if (
+                strict_start_us is not None
+                and strict_end_us is not None
+                and strict_start_us < timestamp < strict_end_us
+            ):
+                interior_changes.append(event)
+            else:
+                boundary_changes.append(event)
+    unexpected_modes = {
+        event.get("declared_mode")
+        for event in interior_changes
+        if event.get("declared_mode") != expected_mode
+    }
+    unexpected_fallback_count = len(
+        {mode for mode in unexpected_modes if mode not in EXTERNAL_MODES}
+    )
+    unexpected_route_change_count = len(
+        {
+            (
+                event.get("declared_mode"),
+                event.get("route_epoch_id"),
+            )
+            for event in interior_changes
+        }
+    )
+    authority_conflicts = [
+        event
+        for event in route_events
+        if expected_authority is not None
+        and event.get("authority_source") not in {None, expected_authority}
+    ]
+    registration_conflicts = [
+        event
+        for event in route_events
+        if expected_mode in EXTERNAL_MODES
+        and expected_mode != 14
+        and isinstance(event.get("registration_state"), dict)
+        and not event["registration_state"].get("registered", False)
+    ]
+    authority_conflict_count = len(authority_conflicts) + len(registration_conflicts)
+
+    writer_events: list[dict[str, Any]] = []
+    if start_us is not None and end_us is not None:
+        writer_events = sorted(
+            (
+                event
+                for event in events
+                if event.get("event_type") == "actuator_output_published"
+                and event.get("timestamp_domain") == "ulog_us"
+                and start_us <= float(event["timestamp"]) <= end_us
+            ),
+            key=lambda event: float(event["timestamp"]),
+        )
+    observed_writers = sorted(
+        {
+            str(event.get("actuator_writer"))
+            for event in writer_events
+            if event.get("actuator_writer") is not None
+        }
+    )
+    writer_epochs = {
+        event.get("route_epoch_id")
+        for event in writer_events
+        if event.get("route_epoch_id") is not None
+    }
+    writer_conflict_count = max(0, len(observed_writers) - 1)
+    if expected_epoch is not None and any(epoch != expected_epoch for epoch in writer_epochs):
+        writer_conflict_count += 1
+    sequence_complete = bool(writer_events)
+    previous_by_writer: dict[str, int] = {}
+    for event in writer_events:
+        writer = str(event.get("actuator_writer"))
+        observation = event.get("observation")
+        if not isinstance(observation, dict) or not isinstance(observation.get("sequence"), int):
+            sequence_complete = False
+            continue
+        sequence = int(observation["sequence"])
+        if writer in previous_by_writer and sequence != previous_by_writer[writer] + 1:
+            sequence_complete = False
+        previous_by_writer[writer] = sequence
+    candidate_coverage = not writer_summary.get("uninstrumented_candidates")
+    expected_period_ms = float(writer_summary.get("expected_period_ms", 0.0))
+    allowed_gap_ms = max(
+        float(thresholds["minimum_continuity_gap_ms"]),
+        float(thresholds["continuity_period_multiplier"]) * expected_period_ms,
+    )
+    maximum_gap_ms: float | None = None
+    if writer_events and start_us is not None and end_us is not None:
+        timestamps = [float(event["timestamp"]) for event in writer_events]
+        gaps_us = [timestamps[0] - start_us, end_us - timestamps[-1]]
+        gaps_us.extend(right - left for left, right in zip(timestamps, timestamps[1:]))
+        maximum_gap_ms = max(gaps_us) / 1000.0
+
+    writer_reasons: list[str] = []
+    if not writer_events:
+        writer_reasons.append("retained-window writer evidence is unavailable")
+    if not observed_writers:
+        writer_reasons.append("retained writer identity is unavailable")
+    if not sequence_complete:
+        writer_reasons.append("retained writer sequence is incomplete")
+    if not candidate_coverage:
+        writer_reasons.append("candidate writer coverage is incomplete")
+
+    proved_route_violation = bool(interior_changes)
+    proved_exclusivity_violation = (
+        proved_route_violation or authority_conflict_count > 0 or writer_conflict_count > 0
+    )
+    proved_gap_violation = (
+        maximum_gap_ms is not None
+        and maximum_gap_ms > allowed_gap_ms
+        and sequence_complete
+        and candidate_coverage
+    )
+    coverage_reasons = [
+        *setup_reasons,
+        *route_reasons,
+        *registration_reasons,
+        *writer_reasons,
+    ]
+    if boundary_changes:
+        coverage_reasons.append("route-change membership is ambiguous at a clock boundary")
+    if proved_route_violation or proved_exclusivity_violation or proved_gap_violation:
+        critical_window = "COMPLETE" if not setup_reasons else "INSUFFICIENT"
+    else:
+        critical_window = "COMPLETE" if not coverage_reasons else "INSUFFICIENT"
+
+    exclusivity_metrics = {
+        "expected_mode": expected_mode,
+        "expected_route_epoch_id": expected_epoch,
+        "expected_authority_source": expected_authority,
+        "activation_id": activation_id,
+        "registration_instance_id": registration_instance_id,
+        "observed_writers": observed_writers,
+        "unexpected_route_change_count": unexpected_route_change_count,
+        "unexpected_fallback_count": unexpected_fallback_count,
+        "authority_conflict_count": authority_conflict_count,
+        "writer_conflict_count": writer_conflict_count,
+    }
+    if proved_exclusivity_violation:
+        exclusivity = _clause(
+            "VIOLATION", exclusivity_metrics, reasons=["retained route was not exclusive"]
+        )
+    elif coverage_reasons:
+        exclusivity = _clause("UNKNOWN", exclusivity_metrics, reasons=coverage_reasons)
+    else:
+        exclusivity = _clause("PASS", exclusivity_metrics)
+
+    continuity_metrics = {
+        "retained_window_duration_ms": duration_ms,
+        "maximum_unowned_window_ms": maximum_gap_ms,
+        "allowed_gap_ms": allowed_gap_ms,
+        "writer_event_count": len(writer_events),
+        "writer_sequence_complete": sequence_complete,
+    }
+    if proved_route_violation or proved_gap_violation:
+        continuity_reasons = []
+        if proved_route_violation:
+            continuity_reasons.append("expected retained route changed inside the window")
+        if proved_gap_violation:
+            continuity_reasons.append("maximum unowned window exceeds the observation contract")
+        continuity = _clause("VIOLATION", continuity_metrics, reasons=continuity_reasons)
+    elif coverage_reasons:
+        continuity = _clause("UNKNOWN", continuity_metrics, reasons=coverage_reasons)
+    else:
+        continuity = _clause("PASS", continuity_metrics)
+
+    clauses = {
+        "revocation": _clause(
+            "NOT_APPLICABLE", reasons=["retained-route observation expects no revocation"]
+        ),
+        "installation": _clause(
+            "NOT_APPLICABLE", reasons=["retained-route observation expects no target installation"]
+        ),
+        "exclusivity": exclusivity,
+        "continuity": continuity,
+        "recovery": _clause(
+            "NOT_APPLICABLE", reasons=["retained-route observation expects no fallback recovery"]
+        ),
+    }
+    statuses = {clause["status"] for clause in clauses.values()}
+    overall = (
+        "VIOLATION"
+        if "VIOLATION" in statuses
+        else "PASS"
+        if statuses <= {"PASS", "NOT_APPLICABLE"}
+        else "UNKNOWN"
+    )
+    categories: list[str] = []
+    if unexpected_fallback_count:
+        categories.append("UNEXPECTED_FALLBACK")
+    elif unexpected_route_change_count:
+        categories.append("UNEXPECTED_ROUTE_CHANGE")
+    if proved_gap_violation:
+        categories.append("ROUTE_RETENTION_GAP")
+    if authority_conflict_count:
+        categories.append("AUTHORITY_CONFLICT")
+    if writer_conflict_count:
+        categories.append("WRITER_CONFLICT")
+    if overall == "UNKNOWN":
+        categories.append("STALE_OR_INSUFFICIENT_EVIDENCE")
+
+    retained_route = {
+        "expected_mode": expected_mode,
+        "expected_route_epoch_id": expected_epoch,
+        "anchor_event": "experiment_window_started",
+        "anchor_ros_ns": float(anchor["timestamp"]) if anchor is not None else None,
+        "settle_interval_ms": settle_ms,
+        "nominal_start_ros_ns": nominal_start_ros_ns,
+        "nominal_end_ros_ns": nominal_end_ros_ns,
+        "nominal_start_us": start_us,
+        "nominal_end_us": end_us,
+        "clock_uncertainty_us": uncertainty_us,
+        "nominal_duration_ms": duration_ms,
+        "coverage_verdict": critical_window,
+        **exclusivity_metrics,
+        **continuity_metrics,
+    }
+    evidence_completeness = {
+        "source_artifact": source_status,
+        "critical_window": critical_window,
+        "writer_sequence": "COMPLETE" if sequence_complete else "INCOMPLETE",
+        "candidate_writer_coverage": "COMPLETE" if candidate_coverage else "INCOMPLETE",
+        "clock_bridge": clock_status,
+        "route_epoch": "COMPLETE" if expected_epoch is not None else "INCOMPLETE",
+    }
+    return {
+        "schema_version": RESULT_SCHEMA_VERSION,
+        "route_oracle_version": ORACLE_VERSION,
+        "run_id": run_id,
+        "observation_kind": "RETAINED_ROUTE",
+        "status": overall,
+        "violation_categories": categories,
+        "transition": None,
+        "retained_route": retained_route,
+        "clock_bridge": clock_bridge,
+        "ground_truth_case_id": ground_truth_case_id,
+        "oracle_validation_profile": oracle_validation_profile,
+        "threshold_profile_id": threshold_profile_id,
+        "evidence_completeness": evidence_completeness,
+        "clauses": clauses,
+    }
+
+
 def evaluate(
     events: list[dict[str, Any]],
     writer_summary: dict[str, Any],
@@ -268,8 +722,31 @@ def evaluate(
     source_artifact_complete: bool | None = None,
     transition_source_mode: Any | None = None,
     transition_target_mode: Any | None = None,
+    observation_kind: str = "transition",
+    retained_route_mode: Any | None = None,
+    retained_settle_ms: float = DEFAULT_RETAINED_SETTLE_MS,
+    retained_window_duration_ms: float = DEFAULT_RETAINED_DURATION_MS,
 ) -> dict[str, Any]:
     active_thresholds = {**DEFAULT_THRESHOLDS, **(thresholds or {})}
+    normalized_kind = observation_kind.upper().replace("-", "_")
+    if normalized_kind == "RETAINED_ROUTE":
+        if retained_route_mode is None:
+            raise ValueError("retained-route observation requires retained_route_mode")
+        return _retained_result(
+            events,
+            writer_summary,
+            clock_bridge,
+            expected_mode=retained_route_mode,
+            settle_ms=retained_settle_ms,
+            duration_ms=retained_window_duration_ms,
+            source_artifact_complete=source_artifact_complete,
+            ground_truth_case_id=ground_truth_case_id,
+            oracle_validation_profile=oracle_validation_profile,
+            threshold_profile_id=threshold_profile_id,
+            thresholds=active_thresholds,
+        )
+    if normalized_kind != "TRANSITION":
+        raise ValueError(f"unsupported observation kind: {observation_kind}")
     run_id = str(events[0].get("run_id", "unknown")) if events else "unknown"
     transition = _mode_transition(events, transition_source_mode, transition_target_mode)
     evidence_completeness = _default_evidence_completeness(
@@ -288,8 +765,11 @@ def evaluate(
             "schema_version": RESULT_SCHEMA_VERSION,
             "route_oracle_version": ORACLE_VERSION,
             "run_id": run_id,
+            "observation_kind": "TRANSITION",
             "status": "NOT_APPLICABLE",
+            "violation_categories": [],
             "transition": None,
+            "retained_route": None,
             "clock_bridge": clock_bridge,
             "ground_truth_case_id": ground_truth_case_id,
             "oracle_validation_profile": oracle_validation_profile,
@@ -760,8 +1240,11 @@ def evaluate(
         "schema_version": RESULT_SCHEMA_VERSION,
         "route_oracle_version": ORACLE_VERSION,
         "run_id": run_id,
+        "observation_kind": "TRANSITION",
         "status": overall,
+        "violation_categories": [],
         "transition": transition,
+        "retained_route": None,
         "clock_bridge": clock_bridge,
         "ground_truth_case_id": ground_truth_case_id,
         "oracle_validation_profile": oracle_validation_profile,
@@ -784,6 +1267,10 @@ def run(
     instrumented_candidates: Iterable[str] | None = None,
     transition_source_mode: Any | None = None,
     transition_target_mode: Any | None = None,
+    observation_kind: str = "transition",
+    retained_route_mode: Any | None = None,
+    retained_settle_ms: float = DEFAULT_RETAINED_SETTLE_MS,
+    retained_window_duration_ms: float = DEFAULT_RETAINED_DURATION_MS,
 ) -> dict[str, Any]:
     events = [
         json.loads(line)
@@ -805,6 +1292,10 @@ def run(
         source_artifact_complete=source_artifact_complete,
         transition_source_mode=transition_source_mode,
         transition_target_mode=transition_target_mode,
+        observation_kind=observation_kind,
+        retained_route_mode=retained_route_mode,
+        retained_settle_ms=retained_settle_ms,
+        retained_window_duration_ms=retained_window_duration_ms,
     )
     Draft202012Validator(RESULT_SCHEMA).validate(result)
     return result
@@ -820,6 +1311,20 @@ def main() -> int:
     parser.add_argument("--threshold-profile-id", default=DEFAULT_THRESHOLD_PROFILE_ID)
     parser.add_argument("--transition-source-mode", type=int)
     parser.add_argument("--transition-target-mode", type=int)
+    parser.add_argument(
+        "--observation-kind",
+        choices=("transition", "retained-route"),
+        default="transition",
+    )
+    parser.add_argument("--retained-route-mode", type=int)
+    parser.add_argument(
+        "--retained-settle-ms", type=float, default=DEFAULT_RETAINED_SETTLE_MS
+    )
+    parser.add_argument(
+        "--retained-window-duration-ms",
+        type=float,
+        default=DEFAULT_RETAINED_DURATION_MS,
+    )
     parser.add_argument(
         "--source-artifact-complete",
         action=argparse.BooleanOptionalAction,
@@ -840,6 +1345,10 @@ def main() -> int:
         source_artifact_complete=args.source_artifact_complete,
         transition_source_mode=args.transition_source_mode,
         transition_target_mode=args.transition_target_mode,
+        observation_kind=args.observation_kind,
+        retained_route_mode=args.retained_route_mode,
+        retained_settle_ms=args.retained_settle_ms,
+        retained_window_duration_ms=args.retained_window_duration_ms,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")
