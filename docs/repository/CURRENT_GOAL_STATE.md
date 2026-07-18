@@ -6,7 +6,7 @@
   conforming retained-route observation
 - Current campaign: `campaign_seeded_v5` — `CLOSED_REVISION_CHANGE_REQUIRED`;
   v3 and v4 are also preserved and closed
-- Repository checkpoint commit: `3930909408601c3dc2bbd6c602a8bd2113371de4`
+- Repository checkpoint commit: `ed375cbbacca16e613b804e6cecfa0ba4a9c24cf`
 - Campaign revision identities: PX4 `4ae21a5e...`; PX4 binary `931320a0...`;
   observation patch `73555576...`; adapter `a02fc11` / binary `af5a02a2...`;
   Route Oracle `0.3`; trace schema `1.2`; threshold profile
@@ -50,4 +50,4 @@
 - Next exact action: review and preregister a minimal retained-route T7
   measurement/acceptance revision. Do not resume v5 or create v6 until that
   revision is explicitly authorized, implemented, tested, and piloted.
-- Last update: 2026-07-18T05:10:13-07:00
+- Last update: 2026-07-18T05:13:02-07:00
