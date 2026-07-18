@@ -18,15 +18,15 @@
 - Completed paired cells: v5 `p5_t1_hover_pair_r1` through
   `p5_t1_hover_pair_r5`; T1 now has all five preregistered repeats, with all
   excluded attempts preserved; T2 straight also has all five repeats; T4 turn
-  now has `p5_t4_turn_pair_r1-r5` and `p5_t5_hover_pair_r1` complete, for 16
-  complete pairs and 32 accepted sides
+  now has `p5_t4_turn_pair_r1-r5` and `p5_t5_hover_pair_r1-r2` complete, for 17
+  complete pairs and 34 accepted sides
 - Partial/invalid paired cells: none in v5; all excluded attempts remain
   preserved, as does v4 history
   `p5_t1_hover_pair_r1` (Offboard valid; Dynamic
   attempts 1 and 2 are measurement-unknown with 18 and 17 retained clock
   samples); no v4 pair is accepted
-- Pending paired cells: 19 untouched pairs beginning with
-  `p5_t5_hover_pair_r2`; no v3 or v4
+- Pending paired cells: 18 untouched pairs beginning with
+  `p5_t5_hover_pair_r3`; no v3 or v4
   side is reused across the observation-capture revision
 - Known environment failures: three recovered v3 Dynamic T1 PX4
   abort/incomplete attempts plus v4 pilot attempt 1, which failed before PX4
@@ -34,10 +34,10 @@
   subshell, plus v5 r4 Offboard attempt 1 (`timeout in TAKEOFF`, PX4 SIGABRT);
   v5 T2 r3 Offboard attempt 2 timed out in `RELEASE_OFFBOARD`; all are
   preserved as environment evidence, never SUT or Oracle violations
-- Latest pair: v5 `p5_t5_hover_pair_r1` used seed 50501; both first attempts are
+- Latest pair: v5 `p5_t5_hover_pair_r2` used seed 50502; both first attempts are
   revision-matched, clock-valid, critical-window complete, and PASS for all
   five Route Oracle clauses, with no old-epoch post-revocation consumption or
   writer output and no illegal overlap
-- Next exact action: run both sides of `p5_t5_hover_pair_r2` as the next bounded
-  v5 matrix batch
-- Last update: 2026-07-18T04:11:57-07:00
+- Next exact action: checkpoint `p5_t5_hover_pair_r2`, then run both sides of
+  `p5_t5_hover_pair_r3` as the next bounded v5 matrix batch
+- Last update: 2026-07-18T04:15:42-07:00
