@@ -18,20 +18,24 @@
   nav state `4`
 - Formal matrix: 35 matched pairs / 70 sides; T1/T2/T4/T5/T6/T8 use
   `TRANSITION`, T7 uses `RETAINED_ROUTE`
-- Matrix progress: 23 complete pairs, 0 partial pairs, 12 pending pairs;
-  46 accepted sides, 0 excluded attempts, 16 environment failures, 0 campaign
+- Matrix progress: 23 complete pairs, 1 partial pair, 11 pending pairs;
+  46 accepted sides, 0 excluded attempts, 18 environment failures, 0 campaign
   configuration failures
 - Last completed pair: `p5_t6_straight_pair_r3`; both attempt 1 sides are
   accepted with matched seed `50603`, observed Hold fallback, `COMPLETE`
   transition windows, and PASS on all applicable clauses
-- Current partial pair: none
+- Current partial pair: `p5_t6_straight_pair_r4`; neither side is accepted.
+  Both attempt 1 sides are preserved as `ENVIRONMENT_FAILURE`: Legacy ended
+  in a PX4 segmentation fault after takeoff, while Dynamic ended in PX4
+  stack-smashing detection during fallback/landing. Neither produced the
+  complete required flight/trace/clock artifact set.
 - Environment diagnosis: elevated host scheduling load (8.60/8.35/8.36) is
   present, with remote-desktop and GUI CPU load but no experiment residue,
   occupied campaign port, memory exhaustion, or workspace disk pressure;
   classification remains transient run-environment instability, not
   frozen-revision drift
-- Next exact action: execute only `p5_t6_straight_pair_r4` as one bounded
-  matched pair with seed `50604`, Legacy first and Dynamic second
+- Next exact action: retry both missing sides of `p5_t6_straight_pair_r4` as
+  attempt 2 with seed `50604`, Legacy first and Dynamic second
 - Historical campaigns: `campaign_seeded_v3` and `campaign_seeded_v4` remain
   preserved/closed; `campaign_seeded_v5` remains permanently
   `CLOSED_REVISION_CHANGE_REQUIRED` with 25/35 complete pairs, 50 accepted
@@ -45,4 +49,4 @@
 - Last checkpoint focused tests: PASS, `38 passed`
 - Last checkpoint full repository validator: PASS, `125 passed`, `15/15`
   stages
-- Last update: 2026-07-18T13:50:17-07:00
+- Last update: 2026-07-18T13:53:46-07:00
