@@ -1,5 +1,5 @@
 {
-  "accepted_attempt_count": 46,
+  "accepted_attempt_count": 47,
   "campaign_configuration_failure_count": 0,
   "campaign_creation_authorization": "AUTHORIZED_FOR_V6_CREATION",
   "campaign_creation_base_commit": "af6fdc6b0944ad26a1e94dbfe156558437d46769",
@@ -119,9 +119,16 @@
       "evidence": "Attempts 1-2 both ended in PX4 process aborts and produced no complete flight/trace/clock artifact set: attempt 1 failed during preflight with a pthread mutex assertion, while attempt 2 reached takeoff and landing before stack-smashing detection. Post-attempt audit found load averages 8.60/8.35/8.36 with remote-desktop and GUI CPU load, but no experiment-process residue, occupied campaign ports, memory exhaustion, or workspace disk pressure.",
       "next_action": "Checkpoint attempt 2 and retry only the missing Dynamic side as attempt 3 with the matched seed and unchanged frozen identity and acceptance standards.",
       "time": "2026-07-18T13:05:19-07:00"
+    },
+    {
+      "affected_side": "p5_t6_straight_pair_r4_dynamic_external_mode",
+      "conclusion": "TRANSIENT_RUN_ENVIRONMENT_INSTABILITY_NO_REVISION_DRIFT",
+      "evidence": "Attempt 1 ended in a PX4 stack-smashing abort and produced no complete artifact set; attempt 2 completed the flight but its 106606201 ns clock residual exceeded the frozen 100000000 ns VALID threshold. Post-attempt audit found load averages 10.62/9.79/9.25 with remote-desktop and GUI CPU load, but no experiment-process residue, occupied campaign ports, memory exhaustion, or workspace disk pressure.",
+      "next_action": "Checkpoint attempt 2 and retry only the missing Dynamic side as attempt 3 with the matched seed and unchanged frozen identity and acceptance standards.",
+      "time": "2026-07-18T13:57:37-07:00"
     }
   ],
-  "environment_failure_count": 18,
+  "environment_failure_count": 19,
   "excluded_attempt_count": 0,
   "execution_order": [
     "T1",
@@ -135,7 +142,7 @@
   "fallback": "Hold",
   "formal_campaign": true,
   "historical_side_reuse": false,
-  "last_checkpoint_time": "2026-07-18T13:53:46-07:00",
+  "last_checkpoint_time": "2026-07-18T13:57:37-07:00",
   "observation_contracts": {
     "T1": "TRANSITION",
     "T2": "TRANSITION",
@@ -152,7 +159,7 @@
       "pair_id": "p5_t6_straight_pair_r4",
       "sides": {
         "dynamic_external_mode": "ENVIRONMENT_FAILURE",
-        "legacy_offboard": "ENVIRONMENT_FAILURE"
+        "legacy_offboard": "COMPLETE_VALID_SIDE"
       }
     }
   ],
