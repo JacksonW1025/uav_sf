@@ -1,5 +1,5 @@
 {
-  "accepted_attempt_count": 8,
+  "accepted_attempt_count": 9,
   "campaign_configuration_failure_count": 0,
   "campaign_creation_authorization": "AUTHORIZED_FOR_V6_CREATION",
   "campaign_creation_base_commit": "af6fdc6b0944ad26a1e94dbfe156558437d46769",
@@ -48,6 +48,12 @@
       "basis": "The otherwise complete runner/Oracle PASS attempt had a DEGRADED clock bridge because its 124571451 ns residual exceeded the frozen 100000000 ns VALID threshold; campaign rules classify run-environment clock degradation as ENVIRONMENT_FAILURE.",
       "campaign_classification": "ENVIRONMENT_FAILURE",
       "recorded_runner_validity": "MEASUREMENT_UNKNOWN"
+    },
+    {
+      "attempt_id": "p5_t1_hover_pair_r5_dynamic_external_mode::attempt_1",
+      "basis": "The otherwise complete attempt had a DEGRADED clock bridge because its 106534692 ns residual exceeded the frozen 100000000 ns VALID threshold; campaign rules classify run-environment clock degradation as ENVIRONMENT_FAILURE.",
+      "campaign_classification": "ENVIRONMENT_FAILURE",
+      "recorded_runner_validity": "MEASUREMENT_UNKNOWN"
     }
   ],
   "completed_cells": [
@@ -56,7 +62,7 @@
     "p5_t1_hover_pair_r3",
     "p5_t1_hover_pair_r4"
   ],
-  "environment_failure_count": 2,
+  "environment_failure_count": 3,
   "excluded_attempt_count": 0,
   "execution_order": [
     "T1",
@@ -70,7 +76,7 @@
   "fallback": "Hold",
   "formal_campaign": true,
   "historical_side_reuse": false,
-  "last_checkpoint_time": "2026-07-18T11:22:38-07:00",
+  "last_checkpoint_time": "2026-07-18T11:26:49-07:00",
   "observation_contracts": {
     "T1": "TRANSITION",
     "T2": "TRANSITION",
@@ -81,9 +87,17 @@
     "T8": "TRANSITION"
   },
   "parent_campaign": "campaign_seeded_v5",
-  "partially_completed_cells": [],
+  "partially_completed_cells": [
+    {
+      "classification": "PARTIAL_PAIR",
+      "pair_id": "p5_t1_hover_pair_r5",
+      "sides": {
+        "dynamic_external_mode": "ENVIRONMENT_FAILURE",
+        "legacy_offboard": "COMPLETE_VALID_SIDE"
+      }
+    }
+  ],
   "pending_cells": [
-    "p5_t1_hover_pair_r5",
     "p5_t2_straight_pair_r1",
     "p5_t2_straight_pair_r2",
     "p5_t2_straight_pair_r3",
