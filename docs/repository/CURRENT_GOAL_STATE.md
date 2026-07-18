@@ -4,7 +4,7 @@
 - Current gate: P5 Differential Gate, initial five-pair matrix incomplete
 - Current campaign: `campaign_seeded_v5` — `INITIAL_MATRIX_IN_PROGRESS`; v3 and
   v4 are preserved and closed
-- Repository checkpoint commit: `a3aede3a98d3ec9e1e5d6c8686d9232caa4a034d`
+- Repository checkpoint commit: `050cdc57030c5eecfdf0550850ec79ba0d3c236d`
 - Campaign revision identities: PX4 `4ae21a5e...`; PX4 binary `931320a0...`;
   observation patch `73555576...`; adapter `a02fc11` / binary `af5a02a2...`;
   Route Oracle `0.3`; trace schema `1.2`; threshold profile
@@ -38,6 +38,6 @@
   revision-matched, clock-valid, critical-window complete, and PASS for all
   five Route Oracle clauses, with no old-epoch post-revocation consumption or
   writer output and no illegal overlap
-- Next exact action: checkpoint `p5_t5_hover_pair_r1`, then run both sides of
-  `p5_t5_hover_pair_r2` as the next bounded v5 matrix batch
-- Last update: 2026-07-18T04:10:40-07:00
+- Next exact action: run both sides of `p5_t5_hover_pair_r2` as the next bounded
+  v5 matrix batch
+- Last update: 2026-07-18T04:11:57-07:00
