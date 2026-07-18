@@ -18,15 +18,13 @@
   nav state `4`
 - Formal matrix: 35 matched pairs / 70 sides; T1/T2/T4/T5/T6/T8 use
   `TRANSITION`, T7 uses `RETAINED_ROUTE`
-- Matrix progress: 32 complete pairs, 0 partial pairs, 3 pending pairs;
-  64 accepted sides, 0 excluded attempts, 24 environment failures, 0 campaign
+- Matrix progress: 33 complete pairs, 0 partial pairs, 2 pending pairs;
+  66 accepted sides, 0 excluded attempts, 24 environment failures, 0 campaign
   configuration failures
-- Last completed pair: independent-fallback cell `p5_t8_descent_pair_r2`;
-  Legacy attempt 1 and Dynamic attempt 2 are accepted with seed `50802`,
-  health off/setpoint on, independently observed Hold fallback, `COMPLETE`
-  transition windows, and PASS on all applicable clauses. Dynamic attempt 1
-  remains preserved as `ENVIRONMENT_FAILURE` for its 116961652 ns `DEGRADED`
-  clock residual.
+- Last completed pair: independent-fallback cell `p5_t8_descent_pair_r3`;
+  both attempt 1 sides are accepted with seed `50803`, health off/setpoint on,
+  independently observed Hold fallback, `COMPLETE` transition windows, and
+  PASS on all applicable clauses
 - Current partial pair: none
 - Environment diagnosis: elevated host scheduling load (10.62/9.79/9.25) is
   present, with remote-desktop and GUI CPU load but no experiment residue,
@@ -34,7 +32,7 @@
   classification remains transient run-environment instability, not
   frozen-revision drift
 - Next exact action: execute only independent-fallback cell
-  `p5_t8_descent_pair_r3` as one bounded matched pair with seed `50803`, Legacy
+  `p5_t8_descent_pair_r4` as one bounded matched pair with seed `50804`, Legacy
   first and Dynamic second
 - Historical campaigns: `campaign_seeded_v3` and `campaign_seeded_v4` remain
   preserved/closed; `campaign_seeded_v5` remains permanently
@@ -49,4 +47,4 @@
 - Last checkpoint focused tests: PASS, `38 passed`
 - Last checkpoint full repository validator: PASS, `125 passed`, `15/15`
   stages
-- Last update: 2026-07-18T14:50:26-07:00
+- Last update: 2026-07-18T14:55:36-07:00
