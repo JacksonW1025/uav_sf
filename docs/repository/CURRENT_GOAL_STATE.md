@@ -18,27 +18,23 @@
   nav state `4`
 - Formal matrix: 35 matched pairs / 70 sides; T1/T2/T4/T5/T6/T8 use
   `TRANSITION`, T7 uses `RETAINED_ROUTE`
-- Matrix progress: 26 complete pairs, 1 partial pair, 8 pending pairs;
-  52 accepted sides, 0 excluded attempts, 22 environment failures, 0 campaign
+- Matrix progress: 27 complete pairs, 0 partial pairs, 8 pending pairs;
+  54 accepted sides, 0 excluded attempts, 22 environment failures, 0 campaign
   configuration failures
-- Last completed pair: retained-route cell `p5_t7_turn_pair_r1`; both attempt
-  1 sides are accepted with seed `50701`, health on/setpoint off, `COMPLETE`
+- Last completed pair: retained-route cell `p5_t7_turn_pair_r2`; both attempt
+  2 sides are accepted with seed `50702`, health on/setpoint off, `COMPLETE`
   3000 ms retained windows, continuity/exclusivity PASS,
   revocation/installation/recovery `NOT_APPLICABLE`, zero fallback/route
-  changes/conflicts, no disallowed gap, and null transition metrics
-- Current partial pair: retained-route cell `p5_t7_turn_pair_r2`; neither side
-  is accepted. Legacy attempt 1 is preserved as `ENVIRONMENT_FAILURE` after
-  PX4 stack-smashing detection, while Dynamic attempt 1 is preserved after a
-  PX4 pthread-mutex assertion. Neither produced the complete required
-  flight/trace/clock artifact set.
+  changes/conflicts, no disallowed gap, and null transition metrics. Both
+  attempt 1 PX4 aborts remain preserved as `ENVIRONMENT_FAILURE`.
+- Current partial pair: none
 - Environment diagnosis: elevated host scheduling load (10.62/9.79/9.25) is
   present, with remote-desktop and GUI CPU load but no experiment residue,
   occupied campaign port, memory exhaustion, or workspace disk pressure;
   classification remains transient run-environment instability, not
   frozen-revision drift
-- Next exact action: retry both missing retained-route sides of
-  `p5_t7_turn_pair_r2` as attempt 2 with seed `50702`, Legacy first and Dynamic
-  second
+- Next exact action: execute only retained-route cell `p5_t7_turn_pair_r3` as
+  one bounded matched pair with seed `50703`, Legacy first and Dynamic second
 - Historical campaigns: `campaign_seeded_v3` and `campaign_seeded_v4` remain
   preserved/closed; `campaign_seeded_v5` remains permanently
   `CLOSED_REVISION_CHANGE_REQUIRED` with 25/35 complete pairs, 50 accepted
@@ -52,4 +48,4 @@
 - Last checkpoint focused tests: PASS, `38 passed`
 - Last checkpoint full repository validator: PASS, `125 passed`, `15/15`
   stages
-- Last update: 2026-07-18T14:16:29-07:00
+- Last update: 2026-07-18T14:21:12-07:00
