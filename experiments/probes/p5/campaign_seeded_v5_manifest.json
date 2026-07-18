@@ -2,7 +2,7 @@
   "PX4_build_hash": "sha256:931320a07585dabf36ca9c8ba994756b93ee7d154cd9c8930b2171548d978993",
   "PX4_commit": "4ae21a5e569d3d89c2f6366688cbacb3e93437c9",
   "Route_Oracle_version": "0.3",
-  "accepted_attempt_count": 49,
+  "accepted_attempt_count": 50,
   "adapter_revision": {
     "binary_sha256": "af5a02a2dd349fd91e1c0493eed47cc3f0d5b4baf0fefae8f1286561908ef79b",
     "fallback_replacement_mode": "Hold",
@@ -60,7 +60,8 @@
     "p5_t6_straight_pair_r1",
     "p5_t6_straight_pair_r2",
     "p5_t6_straight_pair_r3",
-    "p5_t6_straight_pair_r4"
+    "p5_t6_straight_pair_r4",
+    "p5_t6_straight_pair_r5"
   ],
   "dirty_tree_hash": null,
   "dirty_tree_note": "Campaign identity was frozen from pushed observation implementation commit c38fa57 before any v5 run.",
@@ -79,7 +80,7 @@
     "commit": "c50a9ea6495c8ca5d7facb0361816ce98d36020d",
     "sha256": "00d6c700694eeb28b450014c17fd57fcdf7c044832d62dc033180455b4fc0bf4"
   },
-  "last_checkpoint_time": "2026-07-18T04:59:58-07:00",
+  "last_checkpoint_time": "2026-07-18T05:03:44-07:00",
   "observation_capture_revision": {
     "p0_post_disarm_capture_s": 4,
     "p0_route_runner_sha256": "2ade83ed0e32bfa9dc6c026417ba08e72c5d0155dbc0809f50e44c27e34a498b",
@@ -90,16 +91,7 @@
   "observation_profile": "TRANSITION",
   "parent_campaign": "campaign_seeded_v4",
   "parent_exclusion_reason": "v4 is preserved and closed because two clean Dynamic T1 attempts retained fewer than 20 post-backlog clock samples; v5 adds only a four-second post-disarm observation interval.",
-  "partially_completed_cells": [
-    {
-      "classification": "PARTIAL_PAIR",
-      "pair_id": "p5_t6_straight_pair_r5",
-      "sides": {
-        "dynamic_external_mode": "COMPLETE_VALID_SIDE",
-        "legacy_offboard": "ENVIRONMENT_FAILURE"
-      }
-    }
-  ],
+  "partially_completed_cells": [],
   "pending_cells": [
     "p5_t7_turn_pair_r1",
     "p5_t7_turn_pair_r2",

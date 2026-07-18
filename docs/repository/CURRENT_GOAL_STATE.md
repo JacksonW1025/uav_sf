@@ -19,17 +19,16 @@
   `p5_t1_hover_pair_r5`; T1 now has all five preregistered repeats, with all
   excluded attempts preserved; T2 straight also has all five repeats; T4 turn
   now has `p5_t4_turn_pair_r1-r5`, `p5_t5_hover_pair_r1-r5`, and
-  `p5_t6_straight_pair_r1-r4` complete, for 24 complete pairs and 48 accepted sides
-- Partial/invalid paired cells: v5 `p5_t6_straight_pair_r5` is partial; its
-  Dynamic attempt 1 is valid, while Legacy attempts 1 and 2 are preserved as
-  environment failures after runner return 1 with INVALID 440.8 ms and
-  DEGRADED 106.0 ms-residual clock bridges; all excluded attempts remain
+  `p5_t6_straight_pair_r1-r5` complete, for 25 complete pairs and 50 accepted sides
+- Partial/invalid paired cells: none in v5; T6 r5 Legacy attempts 1 and 2 remain
+  preserved as environment failures after runner return 1 with INVALID 440.8
+  ms and DEGRADED 106.0 ms-residual clock bridges; all excluded attempts remain
   preserved, as does v4 history
   `p5_t1_hover_pair_r1` (Offboard valid; Dynamic
   attempts 1 and 2 are measurement-unknown with 18 and 17 retained clock
   samples); no v4 pair is accepted
 - Pending paired cells: 10 untouched pairs beginning with
-  `p5_t7_turn_pair_r1`, plus the missing Legacy side of T6 r5; no v3 or v4
+  `p5_t7_turn_pair_r1`; no v3 or v4
   side is reused across the observation-capture revision
 - Known environment failures: three recovered v3 Dynamic T1 PX4
   abort/incomplete attempts plus v4 pilot attempt 1, which failed before PX4
@@ -39,7 +38,9 @@
   attempts 1 and 2 returned 1 with invalid/degraded clock bridges after
   behaviorally complete runs; all are preserved as environment evidence, never
   SUT or Oracle violations
-- Latest batch: v5 T6 r5 Legacy attempt 2 completed behaviorally but was
-  excluded with a DEGRADED clock bridge; the accepted Dynamic side is untouched
-- Next exact action: run only the missing Legacy side of T6 r5 with attempt 3
-- Last update: 2026-07-18T05:01:16-07:00
+- Latest pair: v5 T6 r5 Legacy attempt 3 is revision-matched, clock-valid,
+  critical-window complete, and PASS for all five Route Oracle clauses; it is
+  paired with the preserved valid Dynamic attempt 1 under seed 50605
+- Next exact action: checkpoint the completed T6 r5 pair, then run both sides of
+  `p5_t7_turn_pair_r1` as the next bounded v5 matrix batch
+- Last update: 2026-07-18T05:03:44-07:00
