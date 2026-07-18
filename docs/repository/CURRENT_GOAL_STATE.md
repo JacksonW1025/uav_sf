@@ -19,21 +19,23 @@
 - Formal matrix: 35 matched pairs / 70 sides; T1/T2/T4/T5/T6/T8 use
   `TRANSITION`, T7 uses `RETAINED_ROUTE`
 - Matrix progress: 16 complete pairs, 1 partial pair, 18 pending pairs;
-  33 accepted sides, 0 excluded attempts, 10 environment failures, 0 campaign
+  33 accepted sides, 0 excluded attempts, 11 environment failures, 0 campaign
   configuration failures
 - Last completed pair: `p5_t5_hover_pair_r1`
-- Current partial pair: `p5_t5_hover_pair_r2`; Legacy attempt 1 is accepted;
-  Dynamic attempt 1 is preserved as `ENVIRONMENT_FAILURE` after PX4 aborted
-  during preflight with a pthread mutex assertion and produced no required
-  flight/trace/clock artifacts
-  observed Hold fallback, `COMPLETE` transition windows, and PASS on applicable
-  clauses
-- Environment diagnosis: elevated host scheduling load (7.40/7.76/8.06) was
-  present, with no experiment residue, occupied port, memory exhaustion, or
-  disk pressure; classification is transient run-environment instability, not
+- Current partial pair: `p5_t5_hover_pair_r2`; Legacy attempt 1 is accepted
+  after observing Hold fallback, `COMPLETE` transition windows, and PASS on
+  applicable clauses. Dynamic attempts 1 and 2 are preserved as
+  `ENVIRONMENT_FAILURE`: attempt 1 aborted during preflight with a pthread
+  mutex assertion; attempt 2 reached takeoff and landing before a PX4
+  stack-smashing abort. Neither produced the complete required
+  flight/trace/clock artifact set.
+- Environment diagnosis: elevated host scheduling load (8.60/8.35/8.36) is
+  present, with remote-desktop and GUI CPU load but no experiment residue,
+  occupied campaign port, memory exhaustion, or workspace disk pressure;
+  classification remains transient run-environment instability, not
   frozen-revision drift
 - Next exact action: retry only the Dynamic External Mode side of
-  `p5_t5_hover_pair_r2` as attempt 2 with matched seed `50502`
+  `p5_t5_hover_pair_r2` as attempt 3 with matched seed `50502`
 - Historical campaigns: `campaign_seeded_v3` and `campaign_seeded_v4` remain
   preserved/closed; `campaign_seeded_v5` remains permanently
   `CLOSED_REVISION_CHANGE_REQUIRED` with 25/35 complete pairs, 50 accepted
@@ -47,4 +49,4 @@
 - Last checkpoint focused tests: PASS, `38 passed`
 - Last checkpoint full repository validator: PASS, `125 passed`, `15/15`
   stages
-- Last update: 2026-07-18T13:02:25-07:00
+- Last update: 2026-07-18T13:05:19-07:00

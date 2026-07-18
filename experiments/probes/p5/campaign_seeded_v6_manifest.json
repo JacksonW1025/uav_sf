@@ -105,9 +105,16 @@
       "evidence": "Attempts 1-2 were complete return-0 runs with DEGRADED clock residuals of 143421012 and 105761236 ns; attempt 3 had a PX4 stack-smashing abort during TAKEOFF. Post-run audit found load averages 7.40/7.76/8.06 with remote-desktop and GUI CPU load, but no experiment residue, occupied ports, memory exhaustion, or disk pressure.",
       "next_action": "Checkpoint attempt 3, allow validation/push cooldown, then retry only the missing Dynamic side with a new attempt ID and unchanged standards.",
       "time": "2026-07-18T12:03:34-07:00"
+    },
+    {
+      "affected_side": "p5_t5_hover_pair_r2_dynamic_external_mode",
+      "conclusion": "TRANSIENT_RUN_ENVIRONMENT_INSTABILITY_NO_REVISION_DRIFT",
+      "evidence": "Attempts 1-2 both ended in PX4 process aborts and produced no complete flight/trace/clock artifact set: attempt 1 failed during preflight with a pthread mutex assertion, while attempt 2 reached takeoff and landing before stack-smashing detection. Post-attempt audit found load averages 8.60/8.35/8.36 with remote-desktop and GUI CPU load, but no experiment-process residue, occupied campaign ports, memory exhaustion, or workspace disk pressure.",
+      "next_action": "Checkpoint attempt 2 and retry only the missing Dynamic side as attempt 3 with the matched seed and unchanged frozen identity and acceptance standards.",
+      "time": "2026-07-18T13:05:19-07:00"
     }
   ],
-  "environment_failure_count": 10,
+  "environment_failure_count": 11,
   "excluded_attempt_count": 0,
   "execution_order": [
     "T1",
@@ -121,7 +128,7 @@
   "fallback": "Hold",
   "formal_campaign": true,
   "historical_side_reuse": false,
-  "last_checkpoint_time": "2026-07-18T13:00:46-07:00",
+  "last_checkpoint_time": "2026-07-18T13:05:19-07:00",
   "observation_contracts": {
     "T1": "TRANSITION",
     "T2": "TRANSITION",
