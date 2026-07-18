@@ -21,9 +21,10 @@
   now has `p5_t4_turn_pair_r1-r5`, `p5_t5_hover_pair_r1-r5`, and
   `p5_t6_straight_pair_r1-r4` complete, for 24 complete pairs and 48 accepted sides
 - Partial/invalid paired cells: v5 `p5_t6_straight_pair_r5` is partial; its
-  Dynamic attempt 1 is valid, while Legacy attempt 1 is preserved as an
-  environment failure after runner return 1 and an INVALID 440.8 ms-residual
-  clock bridge; all excluded attempts remain preserved, as does v4 history
+  Dynamic attempt 1 is valid, while Legacy attempts 1 and 2 are preserved as
+  environment failures after runner return 1 with INVALID 440.8 ms and
+  DEGRADED 106.0 ms-residual clock bridges; all excluded attempts remain
+  preserved, as does v4 history
   `p5_t1_hover_pair_r1` (Offboard valid; Dynamic
   attempts 1 and 2 are measurement-unknown with 18 and 17 retained clock
   samples); no v4 pair is accepted
@@ -35,11 +36,11 @@
   readiness because a relative artifact root was resolved inside the PX4
   subshell, plus v5 r4 Offboard attempt 1 (`timeout in TAKEOFF`, PX4 SIGABRT);
   v5 T2 r3 Offboard attempt 2 timed out in `RELEASE_OFFBOARD`; v5 T6 r5 Legacy
-  attempt 1 returned 1 with an invalid clock bridge after a behaviorally
-  complete run; all are preserved as environment evidence, never SUT or Oracle
-  violations
-- Latest batch: v5 T6 r5 Dynamic attempt 1 is revision-matched, clock-valid,
-  critical-window complete, and PASS for all five Route Oracle clauses; Legacy
-  attempt 1 is the environment failure described above
-- Next exact action: run only the missing Legacy side of T6 r5 with attempt 2
-- Last update: 2026-07-18T04:57:38-07:00
+  attempts 1 and 2 returned 1 with invalid/degraded clock bridges after
+  behaviorally complete runs; all are preserved as environment evidence, never
+  SUT or Oracle violations
+- Latest batch: v5 T6 r5 Legacy attempt 2 completed behaviorally but was
+  excluded with a DEGRADED clock bridge; the accepted Dynamic side is untouched
+- Next exact action: checkpoint T6 r5 Legacy attempt 2, then run only its missing
+  Legacy side with attempt 3
+- Last update: 2026-07-18T04:59:58-07:00
