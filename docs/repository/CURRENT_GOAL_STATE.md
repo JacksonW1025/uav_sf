@@ -18,14 +18,13 @@
   nav state `4`
 - Formal matrix: 35 matched pairs / 70 sides; T1/T2/T4/T5/T6/T8 use
   `TRANSITION`, T7 uses `RETAINED_ROUTE`
-- Matrix progress: 30 complete pairs, 0 partial pairs, 5 pending pairs;
-  60 accepted sides, 0 excluded attempts, 23 environment failures, 0 campaign
+- Matrix progress: 31 complete pairs, 0 partial pairs, 4 pending pairs;
+  62 accepted sides, 0 excluded attempts, 23 environment failures, 0 campaign
   configuration failures
-- Last completed pair: retained-route cell `p5_t7_turn_pair_r5`; both attempt
-  1 sides are accepted with seed `50705`, health on/setpoint off, `COMPLETE`
-  3000 ms retained windows, continuity/exclusivity PASS,
-  revocation/installation/recovery `NOT_APPLICABLE`, zero fallback/route
-  changes/conflicts, no disallowed gap, and null transition metrics
+- Last completed pair: independent-fallback cell `p5_t8_descent_pair_r1`;
+  both attempt 1 sides are accepted with seed `50801`, health off/setpoint on,
+  independently observed Hold fallback, `COMPLETE` transition windows, and
+  PASS on all applicable clauses
 - Current partial pair: none
 - Environment diagnosis: elevated host scheduling load (10.62/9.79/9.25) is
   present, with remote-desktop and GUI CPU load but no experiment residue,
@@ -33,7 +32,7 @@
   classification remains transient run-environment instability, not
   frozen-revision drift
 - Next exact action: execute only independent-fallback cell
-  `p5_t8_descent_pair_r1` as one bounded matched pair with seed `50801`, Legacy
+  `p5_t8_descent_pair_r2` as one bounded matched pair with seed `50802`, Legacy
   first and Dynamic second; independently require Hold fallback despite
   setpoint on/health off
 - Historical campaigns: `campaign_seeded_v3` and `campaign_seeded_v4` remain
@@ -49,4 +48,4 @@
 - Last checkpoint focused tests: PASS, `38 passed`
 - Last checkpoint full repository validator: PASS, `125 passed`, `15/15`
   stages
-- Last update: 2026-07-18T14:37:58-07:00
+- Last update: 2026-07-18T14:42:45-07:00
