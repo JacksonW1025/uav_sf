@@ -4,7 +4,7 @@
 - Current gate: P5 Differential Gate, initial five-pair matrix incomplete
 - Current campaign: `campaign_seeded_v5` — `INITIAL_MATRIX_IN_PROGRESS`; v3 and
   v4 are preserved and closed
-- Repository checkpoint commit: `4f7032039458e0aded9af5e49b19c9443276d71f`
+- Repository checkpoint commit: `fef4b31c3b6a0ec220b98b4e7d8e1efc83e87677`
 - Campaign revision identities: PX4 `4ae21a5e...`; PX4 binary `931320a0...`;
   observation patch `73555576...`; adapter `a02fc11` / binary `af5a02a2...`;
   Route Oracle `0.3`; trace schema `1.2`; threshold profile
@@ -41,6 +41,5 @@
 - Latest batch: v5 T6 r5 Dynamic attempt 1 is revision-matched, clock-valid,
   critical-window complete, and PASS for all five Route Oracle clauses; Legacy
   attempt 1 is the environment failure described above
-- Next exact action: checkpoint the partial T6 r5 batch, then run only its
-  missing Legacy side with attempt 2
-- Last update: 2026-07-18T04:56:07-07:00
+- Next exact action: run only the missing Legacy side of T6 r5 with attempt 2
+- Last update: 2026-07-18T04:57:38-07:00
