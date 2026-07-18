@@ -36,18 +36,24 @@
   "campaign_status": "INITIAL_MATRIX_IN_PROGRESS",
   "candidate_identity": "experiments/probes/p5/retained_route_candidate_identity.json",
   "candidate_pilot_reuse": false,
-  "completed_cells": [
-    "p5_t1_hover_pair_r1"
-  ],
   "classification_overrides": [
     {
       "attempt_id": "p5_t1_hover_pair_r2_legacy_offboard::attempt_1",
       "basis": "The otherwise complete runner/Oracle PASS attempt had a DEGRADED clock bridge because its 113420307 ns residual exceeded the frozen 100000000 ns VALID threshold; campaign rules classify run-environment clock degradation as ENVIRONMENT_FAILURE.",
       "campaign_classification": "ENVIRONMENT_FAILURE",
       "recorded_runner_validity": "MEASUREMENT_UNKNOWN"
+    },
+    {
+      "attempt_id": "p5_t1_hover_pair_r2_legacy_offboard::attempt_2",
+      "basis": "The otherwise complete runner/Oracle PASS attempt had a DEGRADED clock bridge because its 124571451 ns residual exceeded the frozen 100000000 ns VALID threshold; campaign rules classify run-environment clock degradation as ENVIRONMENT_FAILURE.",
+      "campaign_classification": "ENVIRONMENT_FAILURE",
+      "recorded_runner_validity": "MEASUREMENT_UNKNOWN"
     }
   ],
-  "environment_failure_count": 1,
+  "completed_cells": [
+    "p5_t1_hover_pair_r1"
+  ],
+  "environment_failure_count": 2,
   "excluded_attempt_count": 0,
   "execution_order": [
     "T1",
@@ -61,7 +67,7 @@
   "fallback": "Hold",
   "formal_campaign": true,
   "historical_side_reuse": false,
-  "last_checkpoint_time": "2026-07-18T11:07:54-07:00",
+  "last_checkpoint_time": "2026-07-18T11:11:10-07:00",
   "observation_contracts": {
     "T1": "TRANSITION",
     "T2": "TRANSITION",
