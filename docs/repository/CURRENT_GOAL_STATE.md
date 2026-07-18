@@ -18,20 +18,24 @@
   nav state `4`
 - Formal matrix: 35 matched pairs / 70 sides; T1/T2/T4/T5/T6/T8 use
   `TRANSITION`, T7 uses `RETAINED_ROUTE`
-- Matrix progress: 20 complete pairs, 0 partial pairs, 15 pending pairs;
-  40 accepted sides, 0 excluded attempts, 14 environment failures, 0 campaign
+- Matrix progress: 20 complete pairs, 1 partial pair, 14 pending pairs;
+  41 accepted sides, 0 excluded attempts, 15 environment failures, 0 campaign
   configuration failures
 - Last completed pair: `p5_t5_hover_pair_r5`; both attempt 1 sides are
   accepted with matched seed `50505`, observed Hold fallback, `COMPLETE`
   transition windows, and PASS on all applicable clauses
-- Current partial pair: none
+- Current partial pair: `p5_t6_straight_pair_r1`; Dynamic attempt 1 is
+  accepted with seed `50601`, observed Hold fallback, `COMPLETE` transition
+  windows, and PASS on all applicable clauses. Legacy attempt 1 is preserved
+  as `ENVIRONMENT_FAILURE` after PX4 aborted with a pthread-mutex assertion
+  shortly after takeoff and the monitor never published its fault-ready marker.
 - Environment diagnosis: elevated host scheduling load (8.60/8.35/8.36) is
   present, with remote-desktop and GUI CPU load but no experiment residue,
   occupied campaign port, memory exhaustion, or workspace disk pressure;
   classification remains transient run-environment instability, not
   frozen-revision drift
-- Next exact action: execute only `p5_t6_straight_pair_r1` as one bounded
-  matched pair with seed `50601`, Legacy first and Dynamic second
+- Next exact action: retry only the Legacy Offboard side of
+  `p5_t6_straight_pair_r1` as attempt 2 with matched seed `50601`
 - Historical campaigns: `campaign_seeded_v3` and `campaign_seeded_v4` remain
   preserved/closed; `campaign_seeded_v5` remains permanently
   `CLOSED_REVISION_CHANGE_REQUIRED` with 25/35 complete pairs, 50 accepted
@@ -45,4 +49,4 @@
 - Last checkpoint focused tests: PASS, `38 passed`
 - Last checkpoint full repository validator: PASS, `125 passed`, `15/15`
   stages
-- Last update: 2026-07-18T13:30:46-07:00
+- Last update: 2026-07-18T13:34:39-07:00
