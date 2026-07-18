@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections import Counter, defaultdict
+import json
 import os
 from pathlib import Path
 
@@ -10,10 +11,13 @@ from scripts.probes import p5_runner
 from scripts.probes.p5_runner import (
     PHYSICAL_METRICS,
     _metric_row,
+    _retained_monitor_reasons,
+    classify_attempt,
     command_for,
     environment_for,
     execution_plan,
     load_matrix,
+    selected_observation,
     select_run_ids,
 )
 from scripts.probes.p5_campaign_manifest import reconstruct
@@ -38,6 +42,12 @@ def test_p5_core_matrix_has_five_matched_pairs_for_t1_through_t9() -> None:
         assert len({row["context"] for row in pair}) == 1
         assert len({row["fault_offset_s"] for row in pair}) == 1
     assert Counter(row["repeat"] for row in rows) == {i: 18 for i in range(1, 6)}
+    assert {row["observation_kind"] for row in rows if row["transition_class"] == "T7"} == {
+        "RETAINED_ROUTE"
+    }
+    assert {row["observation_kind"] for row in rows if row["transition_class"] == "T8"} == {
+        "TRANSITION"
+    }
 
 
 def test_p5_preflight_disposition_covers_every_preregistered_cell() -> None:
@@ -69,6 +79,30 @@ def test_p5_dispatch_preserves_preregistered_fault_and_channel_actions() -> None
     assert command_for(by_class["T9"]) is None
 
 
+def test_p5_selector_distinguishes_retained_t7_from_transition_t8(tmp_path: Path) -> None:
+    trace = tmp_path / "route_trace.jsonl"
+    trace.write_text(
+        '{"event_type":"route_epoch_changed","declared_mode":23}\n',
+        encoding="utf-8",
+    )
+    (tmp_path / "raw").mkdir()
+    (tmp_path / "raw/monitor_result.json").write_text(
+        '{"fallback_nav_state":4}\n', encoding="utf-8"
+    )
+    by_class = {}
+    for row in execution_plan(load_matrix()):
+        if row["mechanism"] == "dynamic_external_mode":
+            by_class.setdefault(row["transition_class"], row)
+    retained = selected_observation(by_class["T7"], trace)
+    transition = selected_observation(by_class["T8"], trace)
+    assert retained.observation_kind == "RETAINED_ROUTE"
+    assert retained.expected_route == 23
+    assert retained.target_mode is None
+    assert retained.expected_fallback is None
+    assert transition.observation_kind == "TRANSITION"
+    assert (transition.source_mode, transition.target_mode) == (23, 4)
+
+
 def test_p5_uncertainty_model_keeps_physical_units(tmp_path) -> None:
     (tmp_path / "clock_bridge.json").write_text(
         '{"uncertainty_ns": 42000000}\n', encoding="utf-8"
@@ -93,6 +127,131 @@ def test_p5_uncertainty_model_keeps_physical_units(tmp_path) -> None:
     assert metrics["altitude_loss_m_uncertainty"] == 0.01
     assert metrics["peak_tilt_rad_uncertainty"] == 0.001
     assert PHYSICAL_METRICS == {"altitude_loss_m", "peak_tilt_rad", "position_error_m"}
+
+
+def test_retained_metrics_leave_transition_metrics_not_applicable(tmp_path: Path) -> None:
+    (tmp_path / "clock_bridge.json").write_text(
+        '{"uncertainty_ns":57000000}\n', encoding="utf-8"
+    )
+    (tmp_path / "raw").mkdir()
+    (tmp_path / "raw/monitor_result.json").write_text(
+        '{"physical_recovery":{"altitude_loss_m":0.0,"peak_tilt_rad":0.002}}\n',
+        encoding="utf-8",
+    )
+    oracle = {
+        "observation_kind": "RETAINED_ROUTE",
+        "transition": None,
+        "retained_route": {
+            "retained_window_duration_ms": 3000,
+            "unexpected_route_change_count": 0,
+            "unexpected_fallback_count": 0,
+            "maximum_unowned_window_ms": 12,
+            "authority_conflict_count": 0,
+            "writer_conflict_count": 0,
+        },
+        "clauses": {},
+    }
+    metrics = _metric_row(
+        {"transition_class": "T7", "observation_kind": "RETAINED_ROUTE"},
+        tmp_path,
+        oracle,
+    )
+    assert metrics["target_installation_ms"] is None
+    assert metrics["fallback_selection_latency_ms"] is None
+    assert metrics["retained_window_duration_ms"] == 3000
+    assert metrics["unexpected_fallback_count"] == 0
+    assert metrics["maximum_unowned_window_ms"] == 12
+    assert metrics["maximum_unowned_window_ms_uncertainty"] == 0
+
+
+def _write_retained_attempt(root: Path, *, include_channel: bool = True) -> None:
+    (root / "raw").mkdir(parents=True)
+    (root / "route_trace.jsonl").write_text("low_speed_turn\n", encoding="utf-8")
+    (root / "clock_bridge.json").write_text(
+        '{"status":"VALID","uncertainty_ns":0}\n', encoding="utf-8"
+    )
+    (root / "raw/flight.ulg").write_bytes(b"flight")
+    (root / "raw/monitor_result.json").write_text(
+        '{"status":"PASS","heartbeat_or_health_enabled":true,"setpoint_enabled":false}\n',
+        encoding="utf-8",
+    )
+    events = []
+    if include_channel:
+        events.append(
+            {
+                "event_type": "channel_configuration_applied",
+                "heartbeat_or_health_enabled": True,
+                "setpoint_enabled": False,
+                "ros_time_ns": 1_000_000_000,
+            }
+        )
+    events.extend(
+        [
+            {"event_type": "experiment_window_started", "ros_time_ns": 1_000_000_001},
+            {
+                "event_type": "state_transition",
+                "previous": "OBSERVE",
+                "current": "REQUEST_HOLD",
+                "ros_time_ns": 5_000_000_001,
+            },
+        ]
+    )
+    (root / "raw/monitor_events.jsonl").write_text(
+        "".join(json.dumps(event) + "\n" for event in events), encoding="utf-8"
+    )
+    (root / "campaign_identity.json").write_text(
+        '{"revision":"test"}\n', encoding="utf-8"
+    )
+
+
+def _passing_retained_oracle() -> dict[str, object]:
+    return {
+        "status": "PASS",
+        "observation_kind": "RETAINED_ROUTE",
+        "violation_categories": [],
+        "retained_route": {"coverage_verdict": "COMPLETE"},
+        "clauses": {
+            "revocation": {"status": "NOT_APPLICABLE"},
+            "installation": {"status": "NOT_APPLICABLE"},
+            "exclusivity": {"status": "PASS"},
+            "continuity": {"status": "PASS"},
+            "recovery": {"status": "NOT_APPLICABLE"},
+        },
+    }
+
+
+def test_retained_classifier_accepts_complete_t7_without_fallback_field(
+    tmp_path: Path, monkeypatch
+) -> None:
+    row = next(
+        row
+        for row in execution_plan(load_matrix())
+        if row["transition_class"] == "T7" and row["mechanism"] == "legacy_offboard"
+    )
+    _write_retained_attempt(tmp_path)
+    monkeypatch.setattr(p5_runner, "campaign_identity_snapshot", lambda: {"revision": "test"})
+    monkeypatch.setattr(p5_runner, "run_selected_oracle", lambda _row, _root: _passing_retained_oracle())
+    validity, reasons, oracle = classify_attempt(row, tmp_path, 0)
+    assert validity == "VALID"
+    assert reasons == []
+    assert oracle is not None and oracle["status"] == "PASS"
+
+
+def test_retained_classifier_rejects_missing_channel_evidence(
+    tmp_path: Path, monkeypatch
+) -> None:
+    row = next(
+        row
+        for row in execution_plan(load_matrix())
+        if row["transition_class"] == "T7" and row["mechanism"] == "legacy_offboard"
+    )
+    _write_retained_attempt(tmp_path, include_channel=False)
+    monkeypatch.setattr(p5_runner, "campaign_identity_snapshot", lambda: {"revision": "test"})
+    monkeypatch.setattr(p5_runner, "run_selected_oracle", lambda _row, _root: _passing_retained_oracle())
+    validity, reasons, _ = classify_attempt(row, tmp_path, 0)
+    assert validity == "MEASUREMENT_UNKNOWN"
+    assert reasons == ["channel_evidence:health_on_setpoint_off_unconfirmed"]
+    assert _retained_monitor_reasons(tmp_path) == reasons
 
 
 def test_p5_adaptive_repeat_rule_records_both_trigger_types() -> None:
