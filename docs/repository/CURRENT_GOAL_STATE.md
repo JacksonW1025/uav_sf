@@ -18,19 +18,19 @@
   nav state `4`
 - Formal matrix: 35 matched pairs / 70 sides; T1/T2/T4/T5/T6/T8 use
   `TRANSITION`, T7 uses `RETAINED_ROUTE`
-- Matrix progress: 9 complete pairs, 1 partial pair, 25 pending pairs;
-  19 accepted sides, 0 excluded attempts, 9 environment failures, 0 campaign
+- Matrix progress: 10 complete pairs, 0 partial pairs, 25 pending pairs;
+  20 accepted sides, 0 excluded attempts, 9 environment failures, 0 campaign
   configuration failures
-- Last completed pair: `p5_t2_straight_pair_r4`
-- Current partial pair: `p5_t2_straight_pair_r5`; Dynamic attempt 1 is
-  accepted; Legacy attempt 1 is preserved as `ENVIRONMENT_FAILURE` after its
-  complete return-0 run produced a `DEGRADED` clock (105.404 ms residual)
+- Last completed pair: `p5_t2_straight_pair_r5`; Dynamic attempt 1 and Legacy
+  attempt 2 are accepted with exact identity, matched seed `50205`, `VALID`
+  clocks, `COMPLETE` transition windows, and PASS on applicable clauses;
+  Legacy attempt 1 remains a preserved environment/clock failure
 - Environment diagnosis: elevated host scheduling load (7.40/7.76/8.06) was
   present, with no experiment residue, occupied port, memory exhaustion, or
   disk pressure; classification is transient run-environment instability, not
   frozen-revision drift
-- Next exact action: retry only the Legacy Offboard side of
-  `p5_t2_straight_pair_r5` as attempt 2 with matched seed `50205`
+- Next exact pair: `p5_t4_turn_pair_r1` (Legacy Offboard and Dynamic External
+  Mode, matched seed `50401`)
 - Historical campaigns: `campaign_seeded_v3` and `campaign_seeded_v4` remain
   preserved/closed; `campaign_seeded_v5` remains permanently
   `CLOSED_REVISION_CHANGE_REQUIRED` with 25/35 complete pairs, 50 accepted
@@ -44,4 +44,4 @@
 - Last checkpoint focused tests: PASS, `38 passed`
 - Last checkpoint full repository validator: PASS, `125 passed`, `15/15`
   stages
-- Last update: 2026-07-18T12:20:37-07:00
+- Last update: 2026-07-18T12:24:11-07:00
