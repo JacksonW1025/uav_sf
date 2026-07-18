@@ -1,4 +1,4 @@
-schema_version: "1.0"
+schema_version: "1.1"
 paired_repeats: 5
 mechanisms: [legacy_offboard, dynamic_external_mode]
 locked_execution:
@@ -11,14 +11,14 @@ locked_execution:
   fault_offset_s: 2.0
   maximum_duration_s: 150
 cells:
-  - {cell_id: p5_t1_hover, transition_class: T1, context: hover, action: admission, applicable: both}
-  - {cell_id: p5_t2_straight, transition_class: T2, context: straight, action: completion_hold, applicable: both}
-  - {cell_id: p5_t3_descent, transition_class: T3, context: descent, action: completion_land, applicable: both}
-  - {cell_id: p5_t4_turn, transition_class: T4, context: turn, action: graceful_shutdown, applicable: both}
-  - {cell_id: p5_t5_hover, transition_class: T5, context: hover, action: process_crash, applicable: both}
-  - {cell_id: p5_t6_straight, transition_class: T6, context: straight, action: process_pause, applicable: both}
-  - {cell_id: p5_t7_turn, transition_class: T7, context: turn, action: liveness_on_setpoint_off, applicable: both}
-  - {cell_id: p5_t8_descent, transition_class: T8, context: descent, action: liveness_off_setpoint_on, applicable: both}
-  - {cell_id: p5_t9_hover, transition_class: T9, context: hover, action: graceful_release_reentry, applicable: both}
+  - {cell_id: p5_t1_hover, transition_class: T1, observation_kind: TRANSITION, context: hover, action: admission, applicable: both}
+  - {cell_id: p5_t2_straight, transition_class: T2, observation_kind: TRANSITION, context: straight, action: completion_hold, applicable: both}
+  - {cell_id: p5_t3_descent, transition_class: T3, observation_kind: TRANSITION, context: descent, action: completion_land, applicable: both}
+  - {cell_id: p5_t4_turn, transition_class: T4, observation_kind: TRANSITION, context: turn, action: graceful_shutdown, applicable: both}
+  - {cell_id: p5_t5_hover, transition_class: T5, observation_kind: TRANSITION, context: hover, action: process_crash, applicable: both}
+  - {cell_id: p5_t6_straight, transition_class: T6, observation_kind: TRANSITION, context: straight, action: process_pause, applicable: both}
+  - {cell_id: p5_t7_turn, transition_class: T7, observation_kind: RETAINED_ROUTE, context: turn, action: liveness_on_setpoint_off, applicable: both}
+  - {cell_id: p5_t8_descent, transition_class: T8, observation_kind: TRANSITION, context: descent, action: liveness_off_setpoint_on, applicable: both}
+  - {cell_id: p5_t9_hover, transition_class: T9, observation_kind: TRANSITION, context: hover, action: graceful_release_reentry, applicable: both}
 extensions:
-  - {transition_class: T10, context: hover, action: repeated_a_b_a, gate_blocking: false}
+  - {transition_class: T10, observation_kind: TRANSITION, context: hover, action: repeated_a_b_a, gate_blocking: false}
