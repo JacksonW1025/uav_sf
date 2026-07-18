@@ -4,7 +4,7 @@
 - Current gate: P5 Differential Gate, initial five-pair matrix incomplete
 - Current campaign: `campaign_seeded_v5` — `INITIAL_MATRIX_IN_PROGRESS`; v3 and
   v4 are preserved and closed
-- Repository checkpoint commit: `fef4b31c3b6a0ec220b98b4e7d8e1efc83e87677`
+- Repository checkpoint commit: `38dbc05597971170d020359388db833fe329f84e`
 - Campaign revision identities: PX4 `4ae21a5e...`; PX4 binary `931320a0...`;
   observation patch `73555576...`; adapter `a02fc11` / binary `af5a02a2...`;
   Route Oracle `0.3`; trace schema `1.2`; threshold profile
@@ -41,6 +41,5 @@
   SUT or Oracle violations
 - Latest batch: v5 T6 r5 Legacy attempt 2 completed behaviorally but was
   excluded with a DEGRADED clock bridge; the accepted Dynamic side is untouched
-- Next exact action: checkpoint T6 r5 Legacy attempt 2, then run only its missing
-  Legacy side with attempt 3
-- Last update: 2026-07-18T04:59:58-07:00
+- Next exact action: run only the missing Legacy side of T6 r5 with attempt 3
+- Last update: 2026-07-18T05:01:16-07:00
