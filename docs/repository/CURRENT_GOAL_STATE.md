@@ -18,26 +18,25 @@
   nav state `4`
 - Formal matrix: 35 matched pairs / 70 sides; T1/T2/T4/T5/T6/T8 use
   `TRANSITION`, T7 uses `RETAINED_ROUTE`
-- Matrix progress: 28 complete pairs, 1 partial pair, 6 pending pairs;
-  57 accepted sides, 0 excluded attempts, 23 environment failures, 0 campaign
+- Matrix progress: 29 complete pairs, 0 partial pairs, 6 pending pairs;
+  58 accepted sides, 0 excluded attempts, 23 environment failures, 0 campaign
   configuration failures
-- Last completed pair: retained-route cell `p5_t7_turn_pair_r3`; both attempt
-  1 sides are accepted with seed `50703`, health on/setpoint off, `COMPLETE`
+- Last completed pair: retained-route cell `p5_t7_turn_pair_r4`; Legacy
+  attempt 2 and Dynamic attempt 1 are accepted with seed `50704`, health
+  on/setpoint off, `COMPLETE`
   3000 ms retained windows, continuity/exclusivity PASS,
   revocation/installation/recovery `NOT_APPLICABLE`, zero fallback/route
-  changes/conflicts, no disallowed gap, and null transition metrics
-- Current partial pair: retained-route cell `p5_t7_turn_pair_r4`; Dynamic
-  attempt 1 is accepted with seed `50704` and the full retained-route contract
-  satisfied. Legacy attempt 1 is preserved as `ENVIRONMENT_FAILURE` after an
-  otherwise complete observation produced a `DEGRADED` clock bridge with
-  103006536 ns residual, above the frozen 100000000 ns VALID threshold.
+  changes/conflicts, no disallowed gap, and null transition metrics. Legacy
+  attempt 1 remains preserved as `ENVIRONMENT_FAILURE` for its 103006536 ns
+  `DEGRADED` clock residual.
+- Current partial pair: none
 - Environment diagnosis: elevated host scheduling load (10.62/9.79/9.25) is
   present, with remote-desktop and GUI CPU load but no experiment residue,
   occupied campaign port, memory exhaustion, or workspace disk pressure;
   classification remains transient run-environment instability, not
   frozen-revision drift
-- Next exact action: retry only the Legacy Offboard side of retained-route cell
-  `p5_t7_turn_pair_r4` as attempt 2 with matched seed `50704`
+- Next exact action: execute only retained-route cell `p5_t7_turn_pair_r5` as
+  one bounded matched pair with seed `50705`, Legacy first and Dynamic second
 - Historical campaigns: `campaign_seeded_v3` and `campaign_seeded_v4` remain
   preserved/closed; `campaign_seeded_v5` remains permanently
   `CLOSED_REVISION_CHANGE_REQUIRED` with 25/35 complete pairs, 50 accepted
@@ -51,4 +50,4 @@
 - Last checkpoint focused tests: PASS, `38 passed`
 - Last checkpoint full repository validator: PASS, `125 passed`, `15/15`
   stages
-- Last update: 2026-07-18T14:29:25-07:00
+- Last update: 2026-07-18T14:33:10-07:00
