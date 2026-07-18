@@ -63,13 +63,75 @@
   "schema_version": "1.0",
   "sides": {
     "dynamic_external_mode": {
-      "attempts": [],
-      "status": "PLANNED"
+      "accepted_attempt": 1,
+      "artifact_root": "runs/p5/p5_v6_candidate_t7_pilot/p5_v6_candidate_r2_t7_pilot_dynamic_external_mode/attempt_1",
+      "attempts": [
+        {
+          "attempt": 1,
+          "attempt_result_sha256": "3cfc5db38b40d71c20c31e6e283b7acc133b3a285eb90b442aab8430b64e4109",
+          "classification": "VALID",
+          "clock_bridge": "VALID",
+          "clock_bridge_sha256": "644b4dcc2543c68ad1097fb1e2b25fb3d08bf04d8e950cd3583fcfe16d8f6e6e",
+          "clock_residual_max_ns": 65373765,
+          "clock_sample_count": 35,
+          "identity_match": true,
+          "oracle_sha256": "74a731bb91ad1a57764f4b084abfce60bc4062f452cb212d5c0a06932aad9818"
+        }
+      ],
+      "clauses": {
+        "continuity": "PASS",
+        "exclusivity": "PASS",
+        "installation": "NOT_APPLICABLE",
+        "recovery": "NOT_APPLICABLE",
+        "revocation": "NOT_APPLICABLE"
+      },
+      "retained_metrics": {
+        "authority_conflict_count": 0,
+        "expected_mode": 23,
+        "expected_route_epoch_id": 4,
+        "maximum_unowned_window_ms": 12,
+        "retained_window_duration_ms": 3000,
+        "unexpected_fallback_count": 0,
+        "unexpected_route_change_count": 0,
+        "writer_conflict_count": 0
+      },
+      "status": "PASS"
     },
     "legacy_offboard": {
-      "attempts": [],
-      "status": "PLANNED"
+      "accepted_attempt": 1,
+      "artifact_root": "runs/p5/p5_v6_candidate_t7_pilot/p5_v6_candidate_r2_t7_pilot_legacy_offboard/attempt_1",
+      "attempts": [
+        {
+          "attempt": 1,
+          "attempt_result_sha256": "af6ef27695440eaaf4dfacc131fc69df66c9e2fea7fe812aec4fc7e132103005",
+          "classification": "VALID",
+          "clock_bridge": "VALID",
+          "clock_bridge_sha256": "4259080c869fc7330868c5a74a4b58b49e3ab8b7691aecc23b68f29f0fb98f9d",
+          "clock_residual_max_ns": 37232601,
+          "clock_sample_count": 33,
+          "identity_match": true,
+          "oracle_sha256": "b4e7b41493ca3cbc87299317196fce98b7e2c9543dc1446e3430764a8a008ba5"
+        }
+      ],
+      "clauses": {
+        "continuity": "PASS",
+        "exclusivity": "PASS",
+        "installation": "NOT_APPLICABLE",
+        "recovery": "NOT_APPLICABLE",
+        "revocation": "NOT_APPLICABLE"
+      },
+      "retained_metrics": {
+        "authority_conflict_count": 0,
+        "expected_mode": 14,
+        "expected_route_epoch_id": 3,
+        "maximum_unowned_window_ms": 12,
+        "retained_window_duration_ms": 3000,
+        "unexpected_fallback_count": 0,
+        "unexpected_route_change_count": 0,
+        "writer_conflict_count": 0
+      },
+      "status": "PASS"
     }
   },
-  "status": "READY_FOR_PILOT_REVISION_2"
+  "status": "PILOTS_PASS_AUTHORIZED_FOR_V6_CREATION"
 }
