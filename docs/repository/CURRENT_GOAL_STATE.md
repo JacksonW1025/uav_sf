@@ -18,8 +18,8 @@
   nav state `4`
 - Formal matrix: 35 matched pairs / 70 sides; T1/T2/T4/T5/T6/T8 use
   `TRANSITION`, T7 uses `RETAINED_ROUTE`
-- Matrix progress: 17 complete pairs, 0 partial pairs, 18 pending pairs;
-  34 accepted sides, 0 excluded attempts, 11 environment failures, 0 campaign
+- Matrix progress: 17 complete pairs, 1 partial pair, 17 pending pairs;
+  35 accepted sides, 0 excluded attempts, 12 environment failures, 0 campaign
   configuration failures
 - Last completed pair: `p5_t5_hover_pair_r2`; Legacy attempt 1 and Dynamic
   attempt 3 are accepted with matched seed `50502`, observed Hold fallback,
@@ -28,14 +28,17 @@
   aborted during preflight with a pthread mutex assertion; attempt 2 reached
   takeoff and landing before a PX4 stack-smashing abort. Neither produced the
   complete required flight/trace/clock artifact set.
-- Current partial pair: none
+- Current partial pair: `p5_t5_hover_pair_r3`; Legacy attempt 1 is accepted
+  with seed `50503`; Dynamic attempt 1 is preserved as
+  `ENVIRONMENT_FAILURE` after PX4 terminated with a bus error shortly after
+  takeoff and produced no complete flight/trace/clock artifact set
 - Environment diagnosis: elevated host scheduling load (8.60/8.35/8.36) is
   present, with remote-desktop and GUI CPU load but no experiment residue,
   occupied campaign port, memory exhaustion, or workspace disk pressure;
   classification remains transient run-environment instability, not
   frozen-revision drift
-- Next exact action: execute only `p5_t5_hover_pair_r3` as one bounded matched
-  pair with seed `50503`, Legacy first and Dynamic second
+- Next exact action: retry only the Dynamic External Mode side of
+  `p5_t5_hover_pair_r3` as attempt 2 with matched seed `50503`
 - Historical campaigns: `campaign_seeded_v3` and `campaign_seeded_v4` remain
   preserved/closed; `campaign_seeded_v5` remains permanently
   `CLOSED_REVISION_CHANGE_REQUIRED` with 25/35 complete pairs, 50 accepted
@@ -49,4 +52,4 @@
 - Last checkpoint focused tests: PASS, `38 passed`
 - Last checkpoint full repository validator: PASS, `125 passed`, `15/15`
   stages
-- Last update: 2026-07-18T13:10:25-07:00
+- Last update: 2026-07-18T13:14:22-07:00
