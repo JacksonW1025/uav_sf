@@ -83,7 +83,16 @@
     "p5_t2_straight_pair_r1",
     "p5_t2_straight_pair_r2"
   ],
-  "environment_failure_count": 7,
+  "environment_diagnostics": [
+    {
+      "affected_side": "p5_t2_straight_pair_r3_dynamic_external_mode",
+      "conclusion": "TRANSIENT_RUN_ENVIRONMENT_INSTABILITY_NO_REVISION_DRIFT",
+      "evidence": "Attempts 1-2 were complete return-0 runs with DEGRADED clock residuals of 143421012 and 105761236 ns; attempt 3 had a PX4 stack-smashing abort during TAKEOFF. Post-run audit found load averages 7.40/7.76/8.06 with remote-desktop and GUI CPU load, but no experiment residue, occupied ports, memory exhaustion, or disk pressure.",
+      "next_action": "Checkpoint attempt 3, allow validation/push cooldown, then retry only the missing Dynamic side with a new attempt ID and unchanged standards.",
+      "time": "2026-07-18T12:03:34-07:00"
+    }
+  ],
+  "environment_failure_count": 8,
   "excluded_attempt_count": 0,
   "execution_order": [
     "T1",
@@ -97,7 +106,7 @@
   "fallback": "Hold",
   "formal_campaign": true,
   "historical_side_reuse": false,
-  "last_checkpoint_time": "2026-07-18T11:57:35-07:00",
+  "last_checkpoint_time": "2026-07-18T12:03:34-07:00",
   "observation_contracts": {
     "T1": "TRANSITION",
     "T2": "TRANSITION",

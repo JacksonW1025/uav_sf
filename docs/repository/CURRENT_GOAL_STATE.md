@@ -19,15 +19,20 @@
 - Formal matrix: 35 matched pairs / 70 sides; T1/T2/T4/T5/T6/T8 use
   `TRANSITION`, T7 uses `RETAINED_ROUTE`
 - Matrix progress: 7 complete pairs, 1 partial pair, 27 pending pairs;
-  15 accepted sides, 0 excluded attempts, 7 environment failures, 0 campaign
+  15 accepted sides, 0 excluded attempts, 8 environment failures, 0 campaign
   configuration failures
 - Last completed pair: `p5_t2_straight_pair_r2`
 - Current partial pair: `p5_t2_straight_pair_r3`; Legacy attempt 1 is accepted;
-  Dynamic attempts 1 and 2 are preserved as `ENVIRONMENT_FAILURE` after their
-  otherwise complete return-0 runs produced `DEGRADED` clocks (143.421 and
-  105.761 ms residual)
+  Dynamic attempts 1 and 2 are preserved clock `ENVIRONMENT_FAILURE`s
+  (143.421 and 105.761 ms residual), and attempt 3 is preserved after PX4
+  aborted with stack smashing during `TAKEOFF`
+- Environment diagnosis: elevated host scheduling load (7.40/7.76/8.06) was
+  present, with no experiment residue, occupied port, memory exhaustion, or
+  disk pressure; classification is transient run-environment instability, not
+  frozen-revision drift
 - Next exact action: retry only the Dynamic External Mode side of
-  `p5_t2_straight_pair_r3` as attempt 3 with matched seed `50203`
+  `p5_t2_straight_pair_r3` as attempt 4 with matched seed `50203` after the
+  validation/push cooldown
 - Historical campaigns: `campaign_seeded_v3` and `campaign_seeded_v4` remain
   preserved/closed; `campaign_seeded_v5` remains permanently
   `CLOSED_REVISION_CHANGE_REQUIRED` with 25/35 complete pairs, 50 accepted
@@ -41,4 +46,4 @@
 - Last checkpoint focused tests: PASS, `38 passed`
 - Last checkpoint full repository validator: PASS, `125 passed`, `15/15`
   stages
-- Last update: 2026-07-18T11:58:40-07:00
+- Last update: 2026-07-18T12:05:56-07:00
