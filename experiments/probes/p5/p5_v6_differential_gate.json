@@ -1,0 +1,131 @@
+{
+  "analysis": {
+    "adaptive_repeat_decision": {
+      "decision": "INCREASE_TRIGGERED_CELLS_TO_MAXIMUM",
+      "initial_paired_repeats": 5,
+      "maximum_paired_repeats": 10,
+      "triggered_cells": [
+        "p5_t1_hover",
+        "p5_t2_straight",
+        "p5_t4_turn",
+        "p5_t5_hover",
+        "p5_t6_straight",
+        "p5_t7_turn",
+        "p5_t8_descent"
+      ]
+    },
+    "comparison_count": 71,
+    "global_safety_ranking": "NOT_PERMITTED",
+    "measurable_differences": [
+      {
+        "adaptive_repeat_trigger": true,
+        "bootstrap_95_ci": [
+          0.004781440559747593,
+          0.008803204224297631
+        ],
+        "cell_id": "p5_t4_turn",
+        "coefficient_of_variation": 0.21150480143624945,
+        "combined_resolution_rad": 0.001414213562373095,
+        "direction": "DYNAMIC_EXTERNAL_MODE_HIGHER",
+        "median_dynamic_minus_legacy": 0.007939266261445352,
+        "metric": "peak_tilt_rad",
+        "paired_repeat_count": 5,
+        "stability": "CONFIRMATION_REQUIRED_BY_ADAPTIVE_RULE"
+      }
+    ],
+    "stable_timing_difference_count": 0,
+    "timing_conclusion": "NO_TIMING_DIFFERENCE_RESOLVED_ABOVE_CLOCK_UNCERTAINTY"
+  },
+  "campaign_id": "campaign_seeded_v6",
+  "conditions": [
+    "Do not infer a global safety ranking or mechanism-wide superiority from this campaign.",
+    "Treat the T4 peak-tilt result as a state-dependent signal requiring confirmation because its coefficient of variation triggered the preregistered adaptive rule.",
+    "Treat all cross-domain timing comparisons as measurement-resolution-limited unless a future preregistered study resolves them above clock uncertainty.",
+    "Preserve the frozen v6 campaign at 35 pairs; the adaptive decision is a follow-up recommendation, not authority to add cases to this completed campaign."
+  ],
+  "conclusion": "CONDITIONAL_PASS",
+  "evaluated_at": "2026-07-18T15:13:51-07:00",
+  "evaluated_from_checkpoint": "7e22ec605fdf9b2e2f6547c0acc84b839c30ae02",
+  "evidence": {
+    "accepted_attempt_count": 70,
+    "campaign_configuration_failure_count": 0,
+    "clock_valid_count": 70,
+    "complete_pair_count": 35,
+    "complete_window_count": 70,
+    "environment_failure_count": 25,
+    "environment_failure_detail": {
+      "by_mechanism": {
+        "dynamic_external_mode": 16,
+        "legacy_offboard": 9
+      },
+      "clock_degraded": 11,
+      "missing_artifacts_after_abort_timeout_or_runner_failure": 14,
+      "runner_environment_failure_count": 18,
+      "runner_measurement_unknown_reclassified_by_campaign_rule": 7
+    },
+    "excluded_attempt_count": 0,
+    "identity_mismatch_count": 0,
+    "oracle_pass_count": 70,
+    "oracle_unknown_count": 0,
+    "oracle_violation_count": 0,
+    "partial_pair_count": 0,
+    "pending_pair_count": 0,
+    "retained_route_side_count": 10,
+    "scenario_monitor_pass_count": 70,
+    "seed_pair_mismatch_count": 0,
+    "transition_side_count": 60
+  },
+  "frozen_identity": {
+    "PX4_binary_sha256": "931320a07585dabf36ca9c8ba994756b93ee7d154cd9c8930b2171548d978993",
+    "PX4_commit": "4ae21a5e569d3d89c2f6366688cbacb3e93437c9",
+    "Route_Oracle_version": "0.4",
+    "implementation_commit": "7f736c209b2818dc0d64024ffd6045c8549f0e13",
+    "observation_patch_sha256": "735555764c175ebd0a318723d4e76b8898965c4728ee4cab9b05b6c34d5e8b7c",
+    "retained_route_contract_sha256": "41be4cef1d541c8a8d6457d6cc200f1c292a2075d587b50055a4268e72490e4c",
+    "scenario_matrix_sha256": "e0affaadc4514114fc0434995a67074bd239110b4188d56e85aaa314b51b3db5",
+    "threshold_profile_id": "route-oracle-v0.3-default"
+  },
+  "input_artifacts": {
+    "accepted_results": {
+      "path": "runs/p5/campaign_seeded_v6/accepted_runs.tsv",
+      "sha256": "b19449ce22f6cfa432acb3b07d9043a7963ba37423cd1ca512b5a58cac5a8685"
+    },
+    "analysis_config": {
+      "path": "experiments/probes/p5/pre_registered_analysis.yaml",
+      "sha256": "f8e9f2f2c48aea81a451bd1d726c1ab34bf6f188c072ae20e01ee84484ed50e5"
+    },
+    "paired_results": {
+      "path": "runs/p5/campaign_seeded_v6/paired_results.tsv",
+      "sha256": "1711238e980f0b6ad6446fbdbe769dc89787e20caeec3d58bb02a372bb14f0bb"
+    },
+    "paired_summary": {
+      "path": "runs/p5/campaign_seeded_v6/paired_summary.json",
+      "sha256": "a4f4aa439d7b3bbcd3654467dd7cd4c3531d424e71fba191041fa66715e728e8"
+    }
+  },
+  "next_stage_disposition": "PROCEED_TO_SCOPED_NEXT_PHASE_DESIGN_WITH_CONDITIONS",
+  "revision_blocker": false,
+  "route_findings": {
+    "illegal_overlap_count": 0,
+    "maximum_transition_unowned_window_ms": 16.0,
+    "old_epoch_post_revocation_allocator_max": 0,
+    "old_epoch_post_revocation_consumption_max": 0,
+    "old_epoch_post_revocation_stale_consumption_max": 0,
+    "old_epoch_post_revocation_writer_max": 0,
+    "t7": {
+      "applicable_clause_pass_count": 20,
+      "channel_configuration_pass_count": 10,
+      "complete_3000ms_window_count": 10,
+      "instability_count": 0,
+      "non_applicable_clause_count": 30,
+      "side_count": 10
+    },
+    "t8": {
+      "channel_configuration_pass_count": 10,
+      "independently_observed_hold_count": 10,
+      "side_count": 10
+    }
+  },
+  "schema_version": "1.0",
+  "statement": "Under the frozen PX4, adapter, Oracle, scenario, contract, threshold, and fallback revision, campaign_seeded_v6 observed no route violation."
+}

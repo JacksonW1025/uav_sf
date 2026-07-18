@@ -1,5 +1,17 @@
 {
   "accepted_attempt_count": 70,
+  "analysis": {
+    "accepted_results": "runs/p5/campaign_seeded_v6/accepted_runs.tsv",
+    "accepted_results_sha256": "b19449ce22f6cfa432acb3b07d9043a7963ba37423cd1ca512b5a58cac5a8685",
+    "adaptive_repeat_decision": "INCREASE_TRIGGERED_CELLS_TO_MAXIMUM",
+    "comparison_count": 71,
+    "measurable_difference_count": 1,
+    "paired_results": "runs/p5/campaign_seeded_v6/paired_results.tsv",
+    "paired_results_sha256": "1711238e980f0b6ad6446fbdbe769dc89787e20caeec3d58bb02a372bb14f0bb",
+    "paired_summary": "runs/p5/campaign_seeded_v6/paired_summary.json",
+    "paired_summary_sha256": "a4f4aa439d7b3bbcd3654467dd7cd4c3531d424e71fba191041fa66715e728e8",
+    "report": "docs/repository/P5_V6_DIFFERENTIAL_REPORT.md"
+  },
   "campaign_configuration_failure_count": 0,
   "campaign_creation_authorization": "AUTHORIZED_FOR_V6_CREATION",
   "campaign_creation_base_commit": "af6fdc6b0944ad26a1e94dbfe156558437d46769",
@@ -33,7 +45,7 @@
     "threshold_profile_id": "route-oracle-v0.3-default"
   },
   "campaign_start_time": "2026-07-18T10:58:20-07:00",
-  "campaign_status": "MATRIX_COMPLETE_ANALYSIS_PENDING",
+  "campaign_status": "COMPLETE_ANALYZED",
   "candidate_identity": "experiments/probes/p5/retained_route_candidate_identity.json",
   "candidate_pilot_reuse": false,
   "classification_overrides": [
@@ -80,6 +92,7 @@
       "recorded_runner_validity": "MEASUREMENT_UNKNOWN"
     }
   ],
+  "completion_time": "2026-07-18T15:13:51-07:00",
   "completed_cells": [
     "p5_t1_hover_pair_r1",
     "p5_t1_hover_pair_r2",
@@ -154,7 +167,13 @@
   "fallback": "Hold",
   "formal_campaign": true,
   "historical_side_reuse": false,
-  "last_checkpoint_time": "2026-07-18T15:07:43-07:00",
+  "last_checkpoint_time": "2026-07-18T15:13:51-07:00",
+  "differential_gate": {
+    "conclusion": "CONDITIONAL_PASS",
+    "machine_result": "experiments/probes/p5/p5_v6_differential_gate.json",
+    "next_stage_disposition": "PROCEED_TO_SCOPED_NEXT_PHASE_DESIGN_WITH_CONDITIONS",
+    "revision_blocker": false
+  },
   "observation_contracts": {
     "T1": "TRANSITION",
     "T2": "TRANSITION",
