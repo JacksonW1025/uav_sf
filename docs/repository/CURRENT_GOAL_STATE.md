@@ -1,53 +1,45 @@
 # Current Goal state
 
-- Goal phase: Phase B, P5 revision-blocking issue
-- Current gate: P5 Differential Gate — `INCONCLUSIVE`; the preregistered matrix
-  is incomplete because frozen T7 transition selection cannot classify a
-  conforming retained-route observation
-- Current campaign: `campaign_seeded_v5` — `CLOSED_REVISION_CHANGE_REQUIRED`;
-  v3 and v4 are also preserved and closed
-- Repository checkpoint commit: `ed375cbbacca16e613b804e6cecfa0ba4a9c24cf`
-- Campaign revision identities: PX4 `4ae21a5e...`; PX4 binary `931320a0...`;
-  observation patch `73555576...`; adapter `a02fc11` / binary `af5a02a2...`;
-  Route Oracle `0.3`; trace schema `1.2`; threshold profile
-  `route-oracle-v0.3-default`; scenario matrix `8a39d52f...`; Hold fallback
-- Completed deliverables: Oracle Validation Gate; Oracle 0.3; P5 runner,
-  matched matrix, fault markers, paired analysis, strengthened clock capture,
-  recovery manifest reconstruction, and bounded batch/retry controls
-- Current pilots: v4 Dynamic T5 attempt 2 remains revision-matched and valid;
-  v5 Dynamic T1 capture attempt 1 is valid with 21 retained clock samples, a
-  complete selected critical window, and a passing P5 Oracle verdict
-- Completed paired cells: v5 `p5_t1_hover_pair_r1` through
-  `p5_t1_hover_pair_r5`; T1 now has all five preregistered repeats, with all
-  excluded attempts preserved; T2 straight also has all five repeats; T4 turn
-  now has `p5_t4_turn_pair_r1-r5`, `p5_t5_hover_pair_r1-r5`, and
-  `p5_t6_straight_pair_r1-r5` complete, for 25 complete pairs and 50 accepted sides
-- Partial/invalid paired cells: v5 `p5_t7_turn_pair_r1` is partial; Legacy
-  attempt 1 is an environment failure after PX4 exited with required artifacts
-  absent, while Dynamic attempt 1 is measurement-unknown because conforming T7
-  behavior retained the external route and supplied no fallback target to the
-  frozen P5 selector; T6 r5 Legacy attempts 1 and 2 remain preserved environment
-  failures, and all older exclusions remain preserved
-  `p5_t1_hover_pair_r1` (Offboard valid; Dynamic
-  attempts 1 and 2 are measurement-unknown with 18 and 17 retained clock
-  samples); no v4 pair is accepted
-- Pending paired cells: nine untouched pairs (`p5_t7_turn_pair_r2-r5` and
-  `p5_t8_descent_pair_r1-r5`); no v3 or v4
-  side is reused across the observation-capture revision
-- Known environment failures: three recovered v3 Dynamic T1 PX4
-  abort/incomplete attempts plus v4 pilot attempt 1, which failed before PX4
-  readiness because a relative artifact root was resolved inside the PX4
-  subshell, plus v5 r4 Offboard attempt 1 (`timeout in TAKEOFF`, PX4 SIGABRT);
-  v5 T2 r3 Offboard attempt 2 timed out in `RELEASE_OFFBOARD`; v5 T6 r5 Legacy
-  attempts 1 and 2 returned 1 with invalid/degraded clock bridges after
-  behaviorally complete runs; T7 r1 Legacy attempt 1 exited before required
-  artifacts were available; all are preserved as environment evidence, never
-  SUT or Oracle violations
-- Revision blocker: T7 is `liveness_on_setpoint_off` and correctly retains the
-  external route, but frozen `selected_modes()` requires an observed fallback
-  for every T4–T8 run; retrying cannot produce both conforming behavior and the
-  required selected Oracle result. See `P5_V5_REVISION_BLOCKER.md`.
-- Next exact action: review and preregister a minimal retained-route T7
-  measurement/acceptance revision. Do not resume v5 or create v6 until that
-  revision is explicitly authorized, implemented, tested, and piloted.
-- Last update: 2026-07-18T05:13:02-07:00
+- Goal phase: Phase B, P5 retained-route candidate revision complete
+- Historical P5 Differential Gate: `INCONCLUSIVE`; no new gate is claimed
+  because no formal successor campaign has been created
+- Frozen campaign: `campaign_seeded_v5` remains permanently
+  `CLOSED_REVISION_CHANGE_REQUIRED`, with 25/35 complete pairs, 50 accepted
+  sides, partial T7 r1, and nine untouched T7/T8 pairs; its manifest SHA-256
+  remains `8c7727986...329c31f`
+- Retained-route contract: `p5-retained-route-observation-v1` / `1.0`,
+  preregistered and reviewed; T7 is `RETAINED_ROUTE`, while T1/T2/T4/T5/T6/T8
+  remain `TRANSITION`
+- Candidate implementation: commit `7f736c209b2818dc0d64024ffd6045c8549f0e13`;
+  Route Oracle `0.4`, result schema `1.3`, trace schema unchanged at `1.2`,
+  scenario schema `1.1`, unchanged `route-oracle-v0.3-default` thresholds
+- Candidate identity: PX4 `4ae21a5e...`, binary `931320a0...`, observation patch
+  `73555576...`, adapter binary `af5a02a2...`, scenario hash `e0affa...b3db5`,
+  contract hash `41be4c...90e4c`, and unchanged Hold fallback parameters; canonical
+  snapshot: `experiments/probes/p5/retained_route_candidate_identity.json`
+- Focused tests: PASS, `38 passed`; complete repository validator: PASS,
+  `125 passed` before revision-2 pilots and at final handoff
+- Offline v5 regression: saved Dynamic T7 attempt produces candidate Oracle
+  PASS/COMPLETE without a fallback requirement, but remains historical v5
+  `MEASUREMENT_UNKNOWN`; no v5 record was backfilled
+- Transition regression: accepted v5 T5 Legacy transition selection, overall
+  status, and all clause statuses are unchanged under Oracle 0.4
+- Legacy T7 candidate pilot: revision 2 attempt 1 VALID; runner/monitor PASS,
+  VALID clock (33 samples, 37.233 ms max residual), COMPLETE 3000 ms window,
+  mode 14/epoch 3 retained, 12 ms maximum gap, zero violation counts, exact
+  clause applicability, identity match
+- Dynamic T7 candidate pilot: revision 2 attempt 1 VALID; runner/monitor PASS,
+  VALID clock (35 samples, 65.374 ms max residual), COMPLETE 3000 ms window,
+  mode 23/epoch 4/activation 2 retained, 12 ms maximum gap, zero violation
+  counts, exact clause applicability, identity match
+- Preserved sensitivity attempts: candidate revision-1 Legacy attempts 1 and 3
+  were environment failures with DEGRADED clocks; attempt 2 was
+  `MEASUREMENT_UNKNOWN` because Legacy trace composition omitted preserved
+  monitor markers. Revision 2 merged that existing evidence without changing
+  patch, schema, monitor, window, threshold, or SUT behavior; no revision-1 side
+  was reused
+- Authorization recommendation: `AUTHORIZED_FOR_V6_CREATION`
+- Formal v6 status: not created; no official v6 case or matrix has run
+- Next exact action: Review candidate revision report and explicitly authorize
+  creation of `campaign_seeded_v6`.
+- Last update: 2026-07-18T08:27:04-07:00
