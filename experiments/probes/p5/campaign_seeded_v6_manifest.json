@@ -116,7 +116,7 @@
       "time": "2026-07-18T13:05:19-07:00"
     }
   ],
-  "environment_failure_count": 12,
+  "environment_failure_count": 14,
   "excluded_attempt_count": 0,
   "execution_order": [
     "T1",
@@ -130,7 +130,7 @@
   "fallback": "Hold",
   "formal_campaign": true,
   "historical_side_reuse": false,
-  "last_checkpoint_time": "2026-07-18T13:16:45-07:00",
+  "last_checkpoint_time": "2026-07-18T13:21:44-07:00",
   "observation_contracts": {
     "T1": "TRANSITION",
     "T2": "TRANSITION",
@@ -141,9 +141,17 @@
     "T8": "TRANSITION"
   },
   "parent_campaign": "campaign_seeded_v5",
-  "partially_completed_cells": [],
+  "partially_completed_cells": [
+    {
+      "classification": "PARTIAL_PAIR",
+      "pair_id": "p5_t5_hover_pair_r4",
+      "sides": {
+        "dynamic_external_mode": "ENVIRONMENT_FAILURE",
+        "legacy_offboard": "ENVIRONMENT_FAILURE"
+      }
+    }
+  ],
   "pending_cells": [
-    "p5_t5_hover_pair_r4",
     "p5_t5_hover_pair_r5",
     "p5_t6_straight_pair_r1",
     "p5_t6_straight_pair_r2",
