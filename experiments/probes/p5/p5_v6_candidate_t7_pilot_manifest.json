@@ -1,0 +1,50 @@
+{
+  "candidate_identity": "experiments/probes/p5/retained_route_candidate_identity.json",
+  "formal_campaign": false,
+  "matched_design": {
+    "action": "liveness_on_setpoint_off",
+    "context": "turn",
+    "fallback_mode": "HOLD",
+    "heartbeat_or_health_enabled": true,
+    "maximum_environment_attempts_per_side": 3,
+    "observation_kind": "RETAINED_ROUTE",
+    "retained_window_duration_ms": 3000,
+    "settle_interval_ms": 500,
+    "setpoint_enabled": false,
+    "simulation_seed": 7001
+  },
+  "offline_regression": {
+    "saved_t7_dynamic": {
+      "artifact": "runs/p5/campaign_seeded_v5/p5_t7_turn_pair_r1_dynamic_external_mode/attempt_1",
+      "candidate_oracle_status": "PASS",
+      "candidate_window": "COMPLETE",
+      "original_v5_classification": "MEASUREMENT_UNKNOWN",
+      "v5_backfill": false
+    },
+    "transition_t5_legacy": {
+      "artifact": "runs/p5/campaign_seeded_v5/p5_t5_hover_pair_r1_legacy_offboard/attempt_1",
+      "candidate_oracle_status": "PASS",
+      "clause_status_semantics_unchanged": true,
+      "selected_transition_unchanged": true
+    }
+  },
+  "pilot_root": "runs/p5/p5_v6_candidate_t7_pilot",
+  "preconditions": {
+    "focused_tests": "30 passed",
+    "repository_validator": "PASS (124 passed)",
+    "transition_regression": "PASS",
+    "v5_manifest_sha256": "8c7727986b2b0200f19e5983be8fc25177d07b9ab0e97c10740525a6e329c31f"
+  },
+  "schema_version": "1.0",
+  "sides": {
+    "dynamic_external_mode": {
+      "attempts": [],
+      "status": "PLANNED"
+    },
+    "legacy_offboard": {
+      "attempts": [],
+      "status": "PLANNED"
+    }
+  },
+  "status": "READY_FOR_PILOT"
+}
