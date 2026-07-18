@@ -18,14 +18,14 @@
   nav state `4`
 - Formal matrix: 35 matched pairs / 70 sides; T1/T2/T4/T5/T6/T8 use
   `TRANSITION`, T7 uses `RETAINED_ROUTE`
-- Matrix progress: 3 complete pairs, 0 partial pairs, 32 pending pairs;
-  6 accepted sides, 0 excluded attempts, 2 environment failures, 0 campaign
+- Matrix progress: 4 complete pairs, 0 partial pairs, 31 pending pairs;
+  8 accepted sides, 0 excluded attempts, 2 environment failures, 0 campaign
   configuration failures
-- Last completed pair: `p5_t1_hover_pair_r3`; both attempt 1 sides are accepted
-  with exact identity, matched seed `50103`, `VALID` clocks, `COMPLETE`
+- Last completed pair: `p5_t1_hover_pair_r4`; both attempt 1 sides are accepted
+  with exact identity, matched seed `50104`, `VALID` clocks, `COMPLETE`
   transition windows, and PASS on all applicable clauses
-- Next exact pair: `p5_t1_hover_pair_r4` (Legacy Offboard and Dynamic
-  External Mode, matched seed `50104`)
+- Next exact pair: `p5_t1_hover_pair_r5` (Legacy Offboard and Dynamic
+  External Mode, matched seed `50105`)
 - Historical campaigns: `campaign_seeded_v3` and `campaign_seeded_v4` remain
   preserved/closed; `campaign_seeded_v5` remains permanently
   `CLOSED_REVISION_CHANGE_REQUIRED` with 25/35 complete pairs, 50 accepted
@@ -39,4 +39,4 @@
 - Last checkpoint focused tests: PASS, `38 passed`
 - Last checkpoint full repository validator: PASS, `125 passed`, `15/15`
   stages
-- Last update: 2026-07-18T11:19:50-07:00
+- Last update: 2026-07-18T11:24:08-07:00

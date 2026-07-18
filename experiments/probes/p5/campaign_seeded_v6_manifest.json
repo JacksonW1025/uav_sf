@@ -1,5 +1,5 @@
 {
-  "accepted_attempt_count": 6,
+  "accepted_attempt_count": 8,
   "campaign_configuration_failure_count": 0,
   "campaign_creation_authorization": "AUTHORIZED_FOR_V6_CREATION",
   "campaign_creation_base_commit": "af6fdc6b0944ad26a1e94dbfe156558437d46769",
@@ -53,7 +53,8 @@
   "completed_cells": [
     "p5_t1_hover_pair_r1",
     "p5_t1_hover_pair_r2",
-    "p5_t1_hover_pair_r3"
+    "p5_t1_hover_pair_r3",
+    "p5_t1_hover_pair_r4"
   ],
   "environment_failure_count": 2,
   "excluded_attempt_count": 0,
@@ -69,7 +70,7 @@
   "fallback": "Hold",
   "formal_campaign": true,
   "historical_side_reuse": false,
-  "last_checkpoint_time": "2026-07-18T11:18:22-07:00",
+  "last_checkpoint_time": "2026-07-18T11:22:38-07:00",
   "observation_contracts": {
     "T1": "TRANSITION",
     "T2": "TRANSITION",
@@ -82,7 +83,6 @@
   "parent_campaign": "campaign_seeded_v5",
   "partially_completed_cells": [],
   "pending_cells": [
-    "p5_t1_hover_pair_r4",
     "p5_t1_hover_pair_r5",
     "p5_t2_straight_pair_r1",
     "p5_t2_straight_pair_r2",
