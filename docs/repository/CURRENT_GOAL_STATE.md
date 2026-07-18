@@ -18,14 +18,16 @@
   nav state `4`
 - Formal matrix: 35 matched pairs / 70 sides; T1/T2/T4/T5/T6/T8 use
   `TRANSITION`, T7 uses `RETAINED_ROUTE`
-- Matrix progress: 1 complete pair, 0 partial pairs, 34 pending pairs;
-  2 accepted sides, 0 excluded attempts, 0 environment failures, 0 campaign
+- Matrix progress: 1 complete pair, 1 partial pair, 33 pending pairs;
+  3 accepted sides, 0 excluded attempts, 1 environment failure, 0 campaign
   configuration failures
-- Last completed pair: `p5_t1_hover_pair_r1`; both formal sides are `VALID`,
-  have `VALID` clocks and `COMPLETE` transition windows, and all applicable
-  Route Oracle clauses pass
-- Next exact pair: `p5_t1_hover_pair_r2` (Legacy Offboard and Dynamic
-  External Mode, matched seed `50102`)
+- Last completed pair: `p5_t1_hover_pair_r1`; both formal sides remain `VALID`
+- Current partial pair: `p5_t1_hover_pair_r2`; Dynamic attempt 1 is accepted,
+  while Legacy attempt 1 is preserved as `ENVIRONMENT_FAILURE` because its
+  otherwise complete runner/Oracle PASS evidence had a `DEGRADED` clock
+  (113.420 ms maximum residual versus the frozen 100 ms VALID limit)
+- Next exact action: retry only the Legacy Offboard side of
+  `p5_t1_hover_pair_r2` with attempt 2 and the same matched seed `50102`
 - Historical campaigns: `campaign_seeded_v3` and `campaign_seeded_v4` remain
   preserved/closed; `campaign_seeded_v5` remains permanently
   `CLOSED_REVISION_CHANGE_REQUIRED` with 25/35 complete pairs, 50 accepted
@@ -39,4 +41,4 @@
 - Last checkpoint focused tests: PASS, `38 passed`
 - Last checkpoint full repository validator: PASS, `125 passed`, `15/15`
   stages
-- Last update: 2026-07-18T11:04:50-07:00
+- Last update: 2026-07-18T11:09:25-07:00
