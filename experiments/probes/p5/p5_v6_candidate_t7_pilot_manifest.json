@@ -30,11 +30,36 @@
   },
   "pilot_root": "runs/p5/p5_v6_candidate_t7_pilot",
   "preconditions": {
-    "focused_tests": "30 passed",
-    "repository_validator": "PASS (124 passed)",
+    "focused_tests": "38 passed",
+    "repository_validator": "PASS (125 passed)",
     "transition_regression": "PASS",
     "v5_manifest_sha256": "8c7727986b2b0200f19e5983be8fc25177d07b9ab0e97c10740525a6e329c31f"
   },
+  "prior_candidate_revisions": [
+    {
+      "disposition": "SUPERSEDED_AFTER_PILOT_INTEGRATION_FINDING",
+      "legacy_offboard_attempts": [
+        {
+          "attempt": 1,
+          "clock_bridge": "DEGRADED",
+          "classification": "ENVIRONMENT_FAILURE"
+        },
+        {
+          "attempt": 2,
+          "clock_bridge": "VALID",
+          "classification": "MEASUREMENT_UNKNOWN",
+          "reason": "Legacy trace invocation omitted preserved monitor channel/window markers"
+        },
+        {
+          "attempt": 3,
+          "clock_bridge": "DEGRADED",
+          "classification": "ENVIRONMENT_FAILURE"
+        }
+      ],
+      "repository_commit": "8d59b8f8b081e9e4ac2d0fdade606611172d89b9",
+      "resolution_commit": "7f736c209b2818dc0d64024ffd6045c8549f0e13"
+    }
+  ],
   "schema_version": "1.0",
   "sides": {
     "dynamic_external_mode": {
@@ -46,5 +71,5 @@
       "status": "PLANNED"
     }
   },
-  "status": "READY_FOR_PILOT"
+  "status": "READY_FOR_PILOT_REVISION_2"
 }
