@@ -18,26 +18,24 @@
   nav state `4`
 - Formal matrix: 35 matched pairs / 70 sides; T1/T2/T4/T5/T6/T8 use
   `TRANSITION`, T7 uses `RETAINED_ROUTE`
-- Matrix progress: 31 complete pairs, 1 partial pair, 3 pending pairs;
-  63 accepted sides, 0 excluded attempts, 24 environment failures, 0 campaign
+- Matrix progress: 32 complete pairs, 0 partial pairs, 3 pending pairs;
+  64 accepted sides, 0 excluded attempts, 24 environment failures, 0 campaign
   configuration failures
-- Last completed pair: independent-fallback cell `p5_t8_descent_pair_r1`;
-  both attempt 1 sides are accepted with seed `50801`, health off/setpoint on,
-  independently observed Hold fallback, `COMPLETE` transition windows, and
-  PASS on all applicable clauses
-- Current partial pair: independent-fallback cell `p5_t8_descent_pair_r2`;
-  Legacy attempt 1 is accepted with seed `50802`, health off/setpoint on,
-  independently observed Hold fallback, `COMPLETE` transition windows, and
-  all clauses PASS. Dynamic attempt 1 is preserved as `ENVIRONMENT_FAILURE`
-  after an otherwise complete observation produced a `DEGRADED` clock bridge
-  with 116961652 ns residual.
+- Last completed pair: independent-fallback cell `p5_t8_descent_pair_r2`;
+  Legacy attempt 1 and Dynamic attempt 2 are accepted with seed `50802`,
+  health off/setpoint on, independently observed Hold fallback, `COMPLETE`
+  transition windows, and PASS on all applicable clauses. Dynamic attempt 1
+  remains preserved as `ENVIRONMENT_FAILURE` for its 116961652 ns `DEGRADED`
+  clock residual.
+- Current partial pair: none
 - Environment diagnosis: elevated host scheduling load (10.62/9.79/9.25) is
   present, with remote-desktop and GUI CPU load but no experiment residue,
   occupied campaign port, memory exhaustion, or workspace disk pressure;
   classification remains transient run-environment instability, not
   frozen-revision drift
-- Next exact action: retry only the Dynamic External Mode side of
-  `p5_t8_descent_pair_r2` as attempt 2 with matched seed `50802`
+- Next exact action: execute only independent-fallback cell
+  `p5_t8_descent_pair_r3` as one bounded matched pair with seed `50803`, Legacy
+  first and Dynamic second
 - Historical campaigns: `campaign_seeded_v3` and `campaign_seeded_v4` remain
   preserved/closed; `campaign_seeded_v5` remains permanently
   `CLOSED_REVISION_CHANGE_REQUIRED` with 25/35 complete pairs, 50 accepted
@@ -51,4 +49,4 @@
 - Last checkpoint focused tests: PASS, `38 passed`
 - Last checkpoint full repository validator: PASS, `125 passed`, `15/15`
   stages
-- Last update: 2026-07-18T14:46:25-07:00
+- Last update: 2026-07-18T14:50:26-07:00
