@@ -35,7 +35,7 @@
     "threshold_profile_id": "route-oracle-v0.3-default"
   },
   "campaign_start_time": "2026-07-17T13:18:51-07:00",
-  "campaign_status": "INITIAL_MATRIX_IN_PROGRESS",
+  "campaign_status": "CLOSED_REVISION_CHANGE_REQUIRED",
   "completed_cells": [
     "p5_t1_hover_pair_r1",
     "p5_t1_hover_pair_r2",
@@ -65,8 +65,8 @@
   ],
   "dirty_tree_hash": null,
   "dirty_tree_note": "Campaign identity was frozen from pushed observation implementation commit c38fa57 before any v5 run.",
-  "environment_failure_count": 4,
-  "excluded_attempt_count": 7,
+  "environment_failure_count": 5,
+  "excluded_attempt_count": 8,
   "fallback_parameter_snapshot": {
     "COM_OBL_RC_ACT": 5,
     "COM_OF_LOSS_T": 1.0,
@@ -80,7 +80,7 @@
     "commit": "c50a9ea6495c8ca5d7facb0361816ce98d36020d",
     "sha256": "00d6c700694eeb28b450014c17fd57fcdf7c044832d62dc033180455b4fc0bf4"
   },
-  "last_checkpoint_time": "2026-07-18T05:03:44-07:00",
+  "last_checkpoint_time": "2026-07-18T05:10:13-07:00",
   "observation_capture_revision": {
     "p0_post_disarm_capture_s": 4,
     "p0_route_runner_sha256": "2ade83ed0e32bfa9dc6c026417ba08e72c5d0155dbc0809f50e44c27e34a498b",
@@ -91,9 +91,17 @@
   "observation_profile": "TRANSITION",
   "parent_campaign": "campaign_seeded_v4",
   "parent_exclusion_reason": "v4 is preserved and closed because two clean Dynamic T1 attempts retained fewer than 20 post-backlog clock samples; v5 adds only a four-second post-disarm observation interval.",
-  "partially_completed_cells": [],
+  "partially_completed_cells": [
+    {
+      "classification": "PARTIAL_PAIR",
+      "pair_id": "p5_t7_turn_pair_r1",
+      "sides": {
+        "dynamic_external_mode": "MEASUREMENT_UNKNOWN",
+        "legacy_offboard": "ENVIRONMENT_FAILURE"
+      }
+    }
+  ],
   "pending_cells": [
-    "p5_t7_turn_pair_r1",
     "p5_t7_turn_pair_r2",
     "p5_t7_turn_pair_r3",
     "p5_t7_turn_pair_r4",
@@ -132,6 +140,10 @@
     {
       "event": "Dynamic T1 capture pilot attempt 1 passed with 21 retained clock samples and a complete selected critical window.",
       "time": "2026-07-17T13:23:02-07:00"
+    },
+    {
+      "event": "v5 closed after T7 exposed a structural transition-selection mismatch: liveness-on/setpoint-off correctly retained the external route, but the frozen P5 classifier required an observed fallback target and could not produce an acceptable selected Oracle result.",
+      "time": "2026-07-18T05:08:07-07:00"
     }
   ],
   "route_trace_schema_version": "1.2",
