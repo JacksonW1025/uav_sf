@@ -9,10 +9,12 @@ from jsonschema import Draft202012Validator, ValidationError
 from scripts.tracing.route_trace_collector import (
     RouteEventReducer,
     RouteTraceWriter,
+    collect_ulogs,
     lifecycle_events,
     processed_trace_events,
     producer_events,
 )
+from scripts.tracing import route_trace_collector
 from scripts.tracing.migrate_route_trace_v1_0_to_v1_1 import migrate_event
 from scripts.tracing.migrate_route_trace_v1_1_to_v1_2 import migrate_event as migrate_v1_2_event
 
@@ -132,6 +134,55 @@ def test_producer_and_lifecycle_sidecars_preserve_ros_clock_domain(tmp_path: Pat
     [registration] = list(lifecycle_events(lifecycle, "run-sidecar"))
     assert registration["registration_state"]["mode_id"] == 23
     assert registration["timestamp"] == 1_000_250_000_000.0
+
+
+def test_collector_merges_independent_producer_and_monitor_sidecars(
+    tmp_path: Path, monkeypatch
+) -> None:
+    producer = tmp_path / "producer.jsonl"
+    producer.write_text(
+        json.dumps(
+            {
+                "event_type": "adapter_event",
+                "ros_time_ns": 100,
+                "adapter_event": {
+                    "event_type": "offboard_publish",
+                    "producer_identity": "legacy-offboard",
+                },
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    monitor = tmp_path / "monitor.jsonl"
+    monitor.write_text(
+        json.dumps(
+            {
+                "event_type": "channel_configuration_applied",
+                "ros_time_ns": 200,
+                "heartbeat_or_health_enabled": True,
+                "setpoint_enabled": False,
+            }
+        )
+        + "\n"
+        + json.dumps({"event_type": "experiment_window_started", "ros_time_ns": 201})
+        + "\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(route_trace_collector, "rows_from_ulog", lambda _path: iter(()))
+    output = tmp_path / "trace.jsonl"
+    assert collect_ulogs(
+        [tmp_path / "empty.ulg"],
+        output,
+        "merged-sidecars",
+        producer_paths=[producer, monitor],
+    ) == 3
+    event_types = [json.loads(line)["event_type"] for line in output.read_text().splitlines()]
+    assert event_types == [
+        "producer_still_publishing",
+        "channel_configuration_applied",
+        "experiment_window_started",
+    ]
 
 
 def test_v1_migration_moves_old_phase_without_inventing_level() -> None:

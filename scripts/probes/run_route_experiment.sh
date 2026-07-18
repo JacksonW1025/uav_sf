@@ -262,18 +262,19 @@ if [[ -z "${ULOG}" || ! -f "${ULOG}" ]]; then
 fi
 cp "${ULOG}" "${RAW_DIR}/flight.ulg"
 
+TRACE_PRODUCERS=("${MONITOR_EVENTS}")
 if [[ "${OBJECT}" == "offboard" ]]; then
-  TRACE_PRODUCER="${PRODUCER_EVENTS}"
-else
-  TRACE_PRODUCER="${MONITOR_EVENTS}"
+  TRACE_PRODUCERS+=("${PRODUCER_EVENTS}")
 fi
 CLOCK_SAMPLES="${MONITOR_EVENTS}"
 collector_args=(
   --ulog "${RAW_DIR}/flight.ulg"
   --output "${PROCESSED_DIR}/route_trace.jsonl"
   --run-id "${RUN_ID}"
-  --producer-events "${TRACE_PRODUCER}"
 )
+for trace_producer in "${TRACE_PRODUCERS[@]}"; do
+  collector_args+=(--producer-events "${trace_producer}")
+done
 if [[ -f "${RAW_DIR}/external_mode.log" ]]; then
   collector_args+=(--lifecycle-log "${RAW_DIR}/external_mode.log")
 fi
@@ -289,13 +290,15 @@ summary_args=(
   --output "${PROCESSED_DIR}/route_summary.json"
   --scenario-label "${EXPERIMENT_KIND}_${OBJECT}"
   --source "${RAW_DIR}/flight.ulg"
-  --source "${TRACE_PRODUCER}"
   --source "${CLOCK_SAMPLES}"
   --clock-bridge "${PROCESSED_DIR}/clock_bridge.json"
   --observation-profile TRANSITION
   --uorb-queue-length 4
   --build-provenance "${BUILD_PROVENANCE}"
 )
+if [[ "${OBJECT}" == "offboard" ]]; then
+  summary_args+=(--source "${PRODUCER_EVENTS}")
+fi
 if [[ -f "${RAW_DIR}/external_mode.log" ]]; then
   summary_args+=(--source "${RAW_DIR}/external_mode.log")
 fi

@@ -162,3 +162,14 @@ documentation. It does not change the PX4 build, adapters, observation patch,
 trace schema, clock bridge, monitor, thresholds, fallback configuration, fault
 timing, or T7 channel semantics. Existing Oracle `0.3` result files remain
 historical schema `1.2` artifacts and are never rewritten.
+
+### Candidate pilot integration amendment
+
+The first Legacy candidate pilot showed that its raw monitor log contained the
+preregistered channel/window events while the Legacy trace-builder invocation
+merged only the Offboard producer log. The Dynamic invocation already used the
+monitor log. Candidate revision 2 therefore merges both already-preserved JSONL
+streams for Legacy. This is an evidence-composition correction: it does not add
+an event, change monitor behavior, change schema `1.2`, alter the window, or
+alter an Oracle decision rule. The excluded revision-1 attempts remain
+preserved and are not reused under the new identity.

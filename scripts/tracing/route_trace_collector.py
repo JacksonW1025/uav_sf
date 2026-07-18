@@ -545,6 +545,7 @@ def collect_ulogs(
     output: Path,
     run_id: str,
     producer_path: Optional[Path] = None,
+    producer_paths: Optional[Iterable[Path]] = None,
     lifecycle_path: Optional[Path] = None,
     lifecycle_paths: Optional[Iterable[Path]] = None,
 ) -> int:
@@ -558,8 +559,11 @@ def collect_ulogs(
         reducer.reduce(source, payload, timestamp, "ulog_us")
         for timestamp, source, payload in sorted(rows, key=ulog_row_order)
     ]
+    selected_producer_paths = list(producer_paths or [])
     if producer_path is not None:
-        events.extend(producer_events(producer_path, run_id))
+        selected_producer_paths.append(producer_path)
+    for selected_producer_path in selected_producer_paths:
+        events.extend(producer_events(selected_producer_path, run_id))
     selected_lifecycle_paths = list(lifecycle_paths or [])
     if lifecycle_path is not None:
         selected_lifecycle_paths.append(lifecycle_path)
@@ -592,14 +596,20 @@ def main() -> int:
     )
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--run-id", required=True)
-    parser.add_argument("--producer-events", type=Path)
+    parser.add_argument(
+        "--producer-events",
+        action="append",
+        type=Path,
+        default=[],
+        help="producer or monitor JSONL; repeat to merge independent evidence streams",
+    )
     parser.add_argument("--lifecycle-log", action="append", type=Path, default=[])
     args = parser.parse_args()
     count = collect_ulogs(
         args.ulog,
         args.output,
         args.run_id,
-        producer_path=args.producer_events,
+        producer_paths=args.producer_events,
         lifecycle_paths=args.lifecycle_log,
     )
     print(json.dumps({"status": "PASS", "events": count, "output": str(args.output)}))
