@@ -197,9 +197,11 @@ sleep 2
 
 MONITOR_RESULT="${RAW_DIR}/monitor_result.json"
 LIFECYCLE_EVENTS="${RAW_DIR}/lifecycle_events.jsonl"
+ABORT_MARKER="${RAW_DIR}/infrastructure.abort"
 python3 "${REPO_ROOT}/scripts/tracing/successor_lifecycle_monitor.py" \
   --run-id "${RUN_ID}" --output "${MONITOR_RESULT}" --events "${LIFECYCLE_EVENTS}" \
   --timeout 180 --post-disarm-capture 8 --component-name "Successor Baseline" \
+  --abort-marker "${ABORT_MARKER}" \
   >"${RAW_DIR}/monitor.log" 2>&1 &
 MONITOR_PID=$!
 sleep 1
@@ -207,6 +209,21 @@ UAV_SF_SUCCESSOR_ACTIVE_DURATION_S="${ACTIVE_DURATION_S}" "${EXECUTOR_BIN}" \
   >"${RAW_DIR}/external_mode_executor.log" 2>&1 &
 EXECUTOR_PID=$!
 
+PX4_EARLY_EXIT=0
+EXECUTOR_EARLY_EXIT=0
+while kill -0 "${MONITOR_PID}" 2>/dev/null; do
+  if ! kill -0 "${PX4_PID}" 2>/dev/null; then
+    PX4_EARLY_EXIT=1
+    printf '%s\n' "PX4 exited before terminal lifecycle" >"${ABORT_MARKER}"
+    break
+  fi
+  if ! kill -0 "${EXECUTOR_PID}" 2>/dev/null; then
+    EXECUTOR_EARLY_EXIT=1
+    printf '%s\n' "executor exited before terminal lifecycle" >"${ABORT_MARKER}"
+    break
+  fi
+  sleep 0.1
+done
 set +e
 wait "${MONITOR_PID}"
 MONITOR_RC=$?
@@ -215,16 +232,22 @@ MONITOR_PID=""
 stop_process "${EXECUTOR_PID}" INT
 EXECUTOR_PID=""
 
-echo shutdown >&3
-for _ in $(seq 1 200); do
-  kill -0 "${PX4_PID}" 2>/dev/null || break
-  sleep 0.1
-done
-if kill -0 "${PX4_PID}" 2>/dev/null; then
-  echo "PX4 did not exit after normal shutdown" >&2
-  exit 11
+PX4_RC=0
+if [[ "${PX4_EARLY_EXIT}" == "0" ]]; then
+  echo shutdown >&3
+  for _ in $(seq 1 200); do
+    kill -0 "${PX4_PID}" 2>/dev/null || break
+    sleep 0.1
+  done
+  if kill -0 "${PX4_PID}" 2>/dev/null; then
+    echo "PX4 did not exit after normal shutdown" >&2
+    exit 11
+  fi
 fi
-wait "${PX4_PID}" || true
+set +e
+wait "${PX4_PID}"
+PX4_RC=$?
+set -e
 PX4_PID=""
 sleep 1
 
@@ -294,13 +317,16 @@ python3 "${REPO_ROOT}/scripts/analysis/classify_successor_baseline.py" \
   --successor-oracle "${SUCCESSOR_ORACLE}" --lifecycle-events "${LIFECYCLE_EVENTS}" \
   --executor-log "${RAW_DIR}/external_mode_executor.log" --route-trace "${ROUTE_TRACE}" \
   --flight-log "${RAW_DIR}/flight.ulg" --executor-binary "${EXECUTOR_BIN}" \
-  --library-binary "${LIBRARY_BIN}" --px4-dir "${PX4_DIR}" --output "${ATTEMPT_RESULT}"
+  --library-binary "${LIBRARY_BIN}" --px4-dir "${PX4_DIR}" \
+  --monitor-exit-code "${MONITOR_RC}" --px4-exit-code "${PX4_RC}" \
+  --px4-early-exit "${PX4_EARLY_EXIT}" --executor-early-exit "${EXECUTOR_EARLY_EXIT}" \
+  --output "${ATTEMPT_RESULT}"
 CLASSIFIER_RC=$?
 set -e
 
 if [[ "${MONITOR_RC}" != "0" || "${CLOCK_RC}" != "0" || "${ROUTE_RC}" != "0" \
       || "${SUCCESSOR_RC}" != "0" || "${CLASSIFIER_RC}" != "0" ]]; then
-  echo "SUCCESSOR_BASELINE=REJECTED run_id=${RUN_ID} monitor_rc=${MONITOR_RC} clock_rc=${CLOCK_RC} route_rc=${ROUTE_RC} successor_rc=${SUCCESSOR_RC}" >&2
+  echo "SUCCESSOR_BASELINE=REJECTED run_id=${RUN_ID} monitor_rc=${MONITOR_RC} px4_rc=${PX4_RC} clock_rc=${CLOCK_RC} route_rc=${ROUTE_RC} successor_rc=${SUCCESSOR_RC}" >&2
   exit 20
 fi
 echo "SUCCESSOR_BASELINE=ACCEPTED run_id=${RUN_ID}"

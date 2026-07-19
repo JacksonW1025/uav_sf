@@ -39,6 +39,12 @@ def git_output(directory: Path, *args: str) -> str:
     ).stdout.strip()
 
 
+def attempt_classification(accepted: bool, infrastructure_abort: bool) -> str:
+    if infrastructure_abort:
+        return "ENVIRONMENT_FAILURE"
+    return "ACCEPTED_BASELINE" if accepted else "EVIDENCE_OR_ORACLE_FAILURE"
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run-id", required=True)
@@ -53,6 +59,10 @@ def main() -> int:
     parser.add_argument("--executor-binary", type=Path, required=True)
     parser.add_argument("--library-binary", type=Path, required=True)
     parser.add_argument("--px4-dir", type=Path, required=True)
+    parser.add_argument("--monitor-exit-code", type=int, default=0)
+    parser.add_argument("--px4-exit-code", type=int, default=0)
+    parser.add_argument("--px4-early-exit", type=int, choices=(0, 1), default=0)
+    parser.add_argument("--executor-early-exit", type=int, choices=(0, 1), default=0)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
 
@@ -85,6 +95,12 @@ def main() -> int:
     px4_binary_sha256 = sha256(args.px4_dir / "build/px4_sitl_default/bin/px4")
     library_binary_sha256 = sha256(args.library_binary)
     executor_binary_sha256 = sha256(args.executor_binary)
+    monitor_reason = str(monitor.get("reason", "")) if monitor else ""
+    infrastructure_abort = bool(
+        args.px4_early_exit
+        or args.executor_early_exit
+        or "infrastructure process exited" in monitor_reason
+    )
     checks = {
         "monitor_pass": monitor is not None and monitor.get("status") == "PASS",
         "clock_bridge_valid": clock is not None and clock.get("status") == "VALID",
@@ -114,6 +130,7 @@ def main() -> int:
         and library_binary_sha256
         == "dddfa0698c27617ce5a368dc7d0d5272bc510f3cb780c5ef3f48c77d098380e6",
         "executor_binary_present": executor_binary_sha256 is not None,
+        "no_infrastructure_process_abort": not infrastructure_abort,
     }
     accepted = all(checks.values())
     artifacts = {
@@ -132,7 +149,7 @@ def main() -> int:
         "attempt_kind": "legal_non_replacement_executor_successor_baseline",
         "run_id": args.run_id,
         "status": "ACCEPTED" if accepted else "REJECTED",
-        "classification": "ACCEPTED_BASELINE" if accepted else "EVIDENCE_OR_ORACLE_FAILURE",
+        "classification": attempt_classification(accepted, infrastructure_abort),
         "acceptance_checks": checks,
         "monitor_status": monitor.get("status") if monitor else None,
         "clock_bridge_status": clock.get("status") if clock else None,
@@ -140,6 +157,13 @@ def main() -> int:
         "route_clause_statuses": route_clause_statuses,
         "successor_oracle_status": successor.get("status") if successor else None,
         "successor_clause_statuses": successor_clause_statuses,
+        "runtime": {
+            "monitor_exit_code": args.monitor_exit_code,
+            "px4_exit_code": args.px4_exit_code,
+            "px4_early_exit": bool(args.px4_early_exit),
+            "executor_early_exit": bool(args.executor_early_exit),
+            "monitor_reason": monitor_reason or None,
+        },
         "identity": {
             "repository_commit": git_output(ROOT, "rev-parse", "HEAD"),
             "tracked_worktree_clean_at_classification": tracked_status == "",

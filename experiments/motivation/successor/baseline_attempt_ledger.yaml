@@ -3,7 +3,8 @@ study_id: external_rtl_successor_issue_162
 baseline_id: legal_non_replacement_executor_successor_chain
 accepted_runs_required: 3
 accepted_runs: 2
-rejected_attempts: 1
+rejected_attempts: 2
+environment_failures: 1
 attempts:
   - run_id: successor_baseline_seed16201_r1
     simulation_seed: 16201
@@ -141,3 +142,51 @@ attempts:
       successor_oracle: 654baef6e9b44056cbd7363eee41de2c548776b369439a33686029a856467703
     preserved_raw_root: runs/motivation/successor/baseline/successor_baseline_seed16202_r1/raw
     recorded_at: 2026-07-19T08:40:57-07:00
+  - run_id: successor_baseline_seed16203_r1
+    simulation_seed: 16203
+    repository_commit: 1b8b83990b667c3e0296cf7ce91165a63b103be6
+    disposition: ENVIRONMENT_FAILURE
+    counted_as_accepted_baseline: false
+    target_lifecycle_observed:
+      registration_and_ownership: PASS
+      external_activation: PASS
+      completion_generated_by_external_node: true
+      public_completion_delivery: NOT_OBSERVED_AFTER_PX4_EXIT
+      land_request_and_selection: NOT_REACHED
+      terminal_state: NOT_REACHED
+    process_evidence:
+      px4_exit: SIGSEGV
+      px4_shell_status: 139
+      executor_exit: SIGABRT_AFTER_FMU_RESPONSE_TIMEOUT
+      monitor: FAIL_TIMEOUT
+      clock_bridge: INVALID
+      route_oracle: NOT_APPLICABLE
+      attempt_time_successor_oracle: VIOLATION_AFTER_INFRASTRUCTURE_ABORT
+      core_or_coredump_available: false
+    classification_reason: >-
+      The PX4 SITL process exited abnormally before it published the external
+      ModeCompleted event, making all downstream lifecycle evidence impossible.
+      The owning executor then aborted only after its FMU response timeout.
+      Under the preregistered criteria, a PX4/Gazebo/ROS process abort without a
+      complete target lifecycle is an ENVIRONMENT_FAILURE and its downstream
+      Oracle violations never count as a SUT violation.
+    residual_uncertainty: >-
+      The abort was temporally near external completion. Two identical legal
+      baseline runs already passed, so this single event is not a confirmed
+      PROCESS_ASSERT_OR_CRASH defect. Retry the same seed under a new attempt ID;
+      if the abort repeats, reopen it for target-correlation diagnosis.
+    artifact_sha256:
+      attempt_result: d8935c728f49d92c76b48c35aa13cb9a077b8a3299786aed7a4985262d682208
+      clock_bridge: c5ee09f2658b00943aaedfe870e9d65a4509e9f4ac7ebc87023c6701bec9a517
+      executor_log: 9d4e796edb47ff82e869f778419358f75637394a4178382a5c9e5d59427de603
+      flight_log: 81e05b9ac05ad15a06ebe74d5b43a4a64897a7cd87ca5314684405727771235a
+      lifecycle_events: 9faca86d42ffd9e239511729acd33aae8a934da65b0123028c00daa680bb02eb
+      monitor_result: 648db44d32f39686ba4054bb0ff2cb243cb077a75bab6628d8a2fd12d6aabf22
+      px4_log: f48d783074f836da219ec669505e4264e2cf51fa7ab0eb150b96a2d25a2402da
+      route_oracle: 6c962740637f6532583e5025fb9f81ef3436890a5b9ea5ea1fa5cf5db26c39ef
+      route_summary: 3e15c9db752753504367a89d3a95d92b0075f7b169484cb086c06a935953c370
+      route_trace: b696c6d6ddb14d796b87c6e740ac304830bb0c021930438ab41f5005ad348815
+      successor_oracle: de8694d4975c1008f20cff781a1b89e0e6781a8fafb41a352cd8d870f18c0737
+    p5_v6_isolation: PASS
+    preserved_raw_root: runs/motivation/successor/baseline/successor_baseline_seed16203_r1/raw
+    recorded_at: 2026-07-19T08:49:01-07:00

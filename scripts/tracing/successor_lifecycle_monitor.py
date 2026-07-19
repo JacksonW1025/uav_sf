@@ -23,6 +23,7 @@ def run(
     timeout_s: float,
     post_disarm_capture_s: float,
     component_name: str,
+    abort_marker: Path | None = None,
 ) -> int:
     try:
         import rclpy
@@ -313,6 +314,13 @@ def run(
 
         def _tick(self) -> None:
             now = time.monotonic()
+            if abort_marker is not None and abort_marker.exists():
+                reason = abort_marker.read_text(encoding="utf-8").strip()
+                self._finish(
+                    "FAIL",
+                    reason or "infrastructure process exited before terminal lifecycle",
+                )
+                return
             if now >= self.deadline:
                 self._finish("FAIL", "lifecycle monitor timeout")
                 return
@@ -346,6 +354,7 @@ def main() -> int:
     parser.add_argument("--timeout", type=float, default=180.0)
     parser.add_argument("--post-disarm-capture", type=float, default=2.0)
     parser.add_argument("--component-name", default="Successor Baseline")
+    parser.add_argument("--abort-marker", type=Path)
     args = parser.parse_args()
     return run(
         args.run_id,
@@ -354,6 +363,7 @@ def main() -> int:
         args.timeout,
         args.post_disarm_capture,
         args.component_name,
+        args.abort_marker,
     )
 
 
