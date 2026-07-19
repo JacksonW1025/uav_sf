@@ -1,5 +1,45 @@
 # Current Goal state
 
+- Current phase: External RTL successor motivation study, issue inventory
+  complete; primary preregistration next
+- Goal disposition: active, no terminal disposition yet
+- Primary reproduction target: Auterion/px4-ros2-interface-lib Issue #162,
+  External RTL replacement selected while its owning Mode Executor remains
+  Autopilot, preventing the expected Land successor
+- Baseline status: repository recovery PASS (`HEAD == origin/main` at
+  `75a5217e0e0bfab232d03c30dcc22088aa16624d`); successor flight baseline not
+  started
+- Observability status: route/epoch/writer evidence exists; lifecycle owner,
+  completion receiver, successor request, Land selection, and terminal Disarm
+  need the preregistered successor observation contract
+- Successor Oracle status: not implemented; minimum obligations identified in
+  `docs/motivation/EXTERNAL_RTL_SUCCESSOR_ISSUE_INVENTORY.md`
+- Current-version reproduction status: not started; source audit predicts
+  construction-time rejection because locked px4-ros2-interface-lib
+  `c3e410f` contains guard commit `dce6c1f`
+- Historical reproduction status: not started; reported affected target is
+  px4-ros2-interface-lib `release/1.16` / `a5b9f3c`
+- Probe status: none; no formal reproduction or bounded probe has run
+- Confirmed issue count: 0 local reproductions; one upstream-confirmed
+  unsupported ownership/successor lifecycle selected for reproduction
+- Current blocker: none; formal execution is intentionally gated by primary
+  preregistration
+- Next exact action: create and review
+  `experiments/motivation/successor/primary_reproduction_preregistration.yaml`,
+  then validate and checkpoint before any formal reproduction attempt
+- Motivation namespace: `experiments/motivation/successor/`,
+  `runs/motivation/successor/`, and
+  `data/processed/motivation/successor/`; P5 v6 remains frozen and isolated
+- Motivation-study baseline validation: focused PASS (`38 passed`); full PASS
+  (`125 passed`, `15/15` stages)
+- Protected P5 v6 hashes at Goal start: differential Gate
+  `9542eb7c98dfd4df1ab50026c149f21fb719fc6a2a09d040a9db4df647f132bc`;
+  manifest
+  `02d857f555623c10dc44998cd202c2da6226ec5c40a94a75020d75df87f02518`
+- Last update: 2026-07-19T00:09:03-07:00
+
+## Preserved P5 v6 completion state
+
 - Goal phase: Phase B, formal P5 v6 paired campaign completed and analyzed
 - `campaign_seeded_v6` status: `COMPLETE_ANALYZED`; formal campaign,
   authorized by `AUTHORIZED_FOR_V6_CREATION`
@@ -66,4 +106,4 @@
   stages
 - Formal report: `docs/repository/P5_V6_DIFFERENTIAL_REPORT.md`
 - Machine Gate: `experiments/probes/p5/p5_v6_differential_gate.json`
-- Last update: 2026-07-18T15:13:51-07:00
+- P5 v6 last update: 2026-07-18T15:13:51-07:00
