@@ -22,6 +22,7 @@ def run(
     events_path: Path,
     timeout_s: float,
     post_disarm_capture_s: float,
+    post_completion_capture_s: float,
     component_name: str,
     abort_marker: Path | None = None,
 ) -> int:
@@ -52,6 +53,7 @@ def run(
             self.started = time.monotonic()
             self.deadline = self.started + timeout_s
             self.finish_not_before: float | None = None
+            self.completion_observed_monotonic: float | None = None
             self.exit_code: int | None = None
             self.status_message: Any | None = None
             self.landed: bool | None = None
@@ -245,6 +247,13 @@ def run(
             )
 
         def _mode_completed(self, message: Any) -> None:
+            if (
+                self.registered_mode_id is not None
+                and int(message.nav_state) == self.registered_mode_id
+                and int(message.result) == 0
+                and self.completion_observed_monotonic is None
+            ):
+                self.completion_observed_monotonic = time.monotonic()
             self._event(
                 "mode_completed_observed",
                 px4_timestamp_us=int(message.timestamp),
@@ -303,13 +312,15 @@ def run(
                 "land_selected_seen": self.land_selected_seen,
                 "landed_seen": self.landed_seen,
                 "disarmed_seen": self.disarmed_seen,
+                "completion_observed": self.completion_observed_monotonic is not None,
+                "post_completion_capture_s": post_completion_capture_s,
             }
             self._event("monitor_finished", details=result)
             self.output.write_text(
                 json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8"
             )
             self.events.close()
-            self.exit_code = 0 if status == "PASS" else 1
+            self.exit_code = 0 if status in {"PASS", "COMPLETE_WITHOUT_TERMINAL"} else 1
             self.timer.cancel()
 
         def _tick(self) -> None:
@@ -335,6 +346,24 @@ def run(
                 self.finish_not_before = now + post_disarm_capture_s
             if self.finish_not_before is not None and now >= self.finish_not_before:
                 self._finish("PASS", "external completion to Land and Disarm observed")
+                return
+            if (
+                post_completion_capture_s > 0
+                and self.completion_observed_monotonic is not None
+                and now
+                >= self.completion_observed_monotonic + post_completion_capture_s
+                and self.status_message is not None
+                and self.registered_mode_id is not None
+                and int(self.status_message.nav_state) == self.registered_mode_id
+                and int(self.status_message.arming_state)
+                == int(VehicleStatus.ARMING_STATE_ARMED)
+                and self.landed is False
+                and not self.land_selected_seen
+            ):
+                self._finish(
+                    "COMPLETE_WITHOUT_TERMINAL",
+                    "completion observed but Land was not selected; vehicle remained armed, airborne, and in the external mode",
+                )
 
     rclpy.init()
     node = Monitor()
@@ -353,6 +382,7 @@ def main() -> int:
     parser.add_argument("--events", type=Path, required=True)
     parser.add_argument("--timeout", type=float, default=180.0)
     parser.add_argument("--post-disarm-capture", type=float, default=2.0)
+    parser.add_argument("--post-completion-capture", type=float, default=0.0)
     parser.add_argument("--component-name", default="Successor Baseline")
     parser.add_argument("--abort-marker", type=Path)
     args = parser.parse_args()
@@ -362,6 +392,7 @@ def main() -> int:
         args.events,
         args.timeout,
         args.post_disarm_capture,
+        args.post_completion_capture,
         args.component_name,
         args.abort_marker,
     )

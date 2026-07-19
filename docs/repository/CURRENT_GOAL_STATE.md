@@ -35,22 +35,23 @@
   `UNSUPPORTED_COMBINATION_REJECTED`; this is not a successor-chain PASS
 - Historical reproduction status: flight replay not started; the independent
   Ubuntu Noble / ROS Jazzy build of reported affected px4-ros2-interface-lib
-  `release/1.16` / `a5b9f3c` and the shared harness is PASS
+  `release/1.16` / `a5b9f3c`, the shared harness, and historical PX4
+  `v1.16.0` observation SITL are PASS; the bounded formal runner is ready
 - Probe status: none; no bounded motivation probe has run
 - Confirmed issue count: 0 local reproductions; one upstream-confirmed
   unsupported ownership/successor lifecycle selected for reproduction
-- Current blocker: none; historical PX4 SITL and observation instrumentation
-  are not built yet. Baseline attempt 1 is preserved and classified
+- Current blocker: none; historical formal flight attempts remain `0/3`.
+  Baseline attempt 1 is preserved and classified
   `REJECTED_OBSERVABILITY`, attempts 2 and 3 are accepted, and attempt 4 is an
   `ENVIRONMENT_FAILURE` after PX4 SIGSEGV before public completion; attempt 5
   is `REJECTED_OBSERVABILITY` at the clock valid-interval boundary; attempt 6
   is an `ENVIRONMENT_FAILURE` after PX4-to-ROS transport stopped before external
   completion and the executor watchdog aborted; attempt 7 on new seed `16204`
   is the third accepted baseline
-- Next exact action: build the isolated historical PX4 `v1.16.0` worktree at
-  `6ea3539` with route/lifecycle observation, verify its binary identity, then
-  execute the first formal affected-version replay without changing the locked
-  shared lifecycle contract
+- Next exact action: execute formal historical attempt 1 with the clean tracked
+  repository, locked Jazzy harness, PX4 `6ea3539` observation binary, and public
+  `arm → takeoff → auto:rtl` trigger; preserve and classify the complete bounded
+  completion window before applying the preregistered repeat rule
 - Motivation namespace: `experiments/motivation/successor/`,
   `runs/motivation/successor/`, and
   `data/processed/motivation/successor/`; P5 v6 remains frozen and isolated
@@ -116,8 +117,16 @@
   `f25c8847...2e6b`. The current guard string is absent. A non-formal no-FMU
   preflight reached `Waiting for FMU` before its bounded timeout; it attempted
   no registration or flight.
-- Historical preparation validation: focused PASS (`49 passed` after adding
-  four historical contract checks); full PASS (`149 passed`, `15/15` stages)
+- Historical PX4/replay readiness: PASS. PX4 observation binary SHA-256 is
+  `e6b2f64e...0027`; the reviewed v1.16 multicopter-only observation diff is
+  `009c4d52...002a` and covers route epochs, registration lifecycle, position
+  consumption, rate-controller allocator input, control-allocator output, and
+  ULog capture. The formal runner enforces those hashes, the historical library
+  and harness hashes, and both protected P5 hashes before creating a run.
+- Historical runner/Oracle validation: focused PASS (`52 passed` including
+  baseline/route/trace regression coverage); full PASS (`152 passed`, `15/15`
+  stages). Identity preflight passed every artifact lock and intentionally
+  stopped at the clean-main-worktree Gate during checkpoint construction.
 - Last motivation checkpoint validation: focused PASS (`48 passed` for the
   successor/route/trace contracts); full PASS (`144 passed`, `15/15` stages)
 - Protected P5 v6 hashes at Goal start: differential Gate
@@ -127,7 +136,7 @@
 - Primary preregistration:
   `experiments/motivation/successor/primary_reproduction_preregistration.yaml`
 - Successor Oracle design: `docs/design/SUCCESSOR_PROGRESSION_ORACLE.md`
-- Last update: 2026-07-19T12:58:24-07:00
+- Last update: 2026-07-19T13:16:19-07:00
 
 ## Preserved P5 v6 completion state
 

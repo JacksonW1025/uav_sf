@@ -15,6 +15,12 @@ PROFILE = yaml.safe_load(
         encoding="utf-8"
     )
 )
+HISTORICAL_PROFILE = yaml.safe_load(
+    (
+        ROOT
+        / "experiments/motivation/successor/historical_lifecycle_profile.yaml"
+    ).read_text(encoding="utf-8")
+)
 EVENT_SCHEMA = json.loads(
     (ROOT / "data/schemas/successor_lifecycle_event.schema.json").read_text(encoding="utf-8")
 )
@@ -215,20 +221,32 @@ def test_issue_162_pattern_detects_wrong_owner_and_missing_successor() -> None:
     lifecycle.append({
         **lifecycle[-1],
         "event_type": "monitor_finished",
-        "ros_time_ns": 60_000_000,
-        "monotonic_ns": 60_000_000,
-        "details": {"status": "FAIL"},
+        "ros_time_ns": 6_010_000_000,
+        "monotonic_ns": 6_010_000_000,
+        "details": {"status": "COMPLETE_WITHOUT_TERMINAL"},
         "armed": True,
         "arming_state": 2,
+        "landed": False,
     })
-    result = evaluate(PROFILE, lifecycle, executor_events[:2], route_events, None, clock_bridge)
+    route_oracle = {"status": "NOT_APPLICABLE", "transition": None, "clauses": {}}
+    result = evaluate(
+        HISTORICAL_PROFILE,
+        lifecycle,
+        executor_events[:2],
+        route_events,
+        route_oracle,
+        clock_bridge,
+    )
     assert result["status"] == "VIOLATION"
     assert result["clauses"]["ownership"]["status"] == "VIOLATION"
     assert result["clauses"]["successor_request"]["status"] == "VIOLATION"
+    assert result["clauses"]["successor_installation"]["status"] == "VIOLATION"
     assert {
         "EXECUTOR_NOT_IN_CHARGE",
         "EXPECTED_SUCCESSOR_NOT_REQUESTED",
+        "EXPECTED_SUCCESSOR_NOT_INSTALLED",
         "LIFECYCLE_DEAD_END",
+        "UNEXPECTED_HOVER_AFTER_COMPLETION",
     } <= set(result["violation_categories"])
 
 

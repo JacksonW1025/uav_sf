@@ -282,7 +282,18 @@ def evaluate(
     )
     clock_required = bool(profile.get("evidence", {}).get("require_valid_clock_bridge", False))
     clock_valid = clock_bridge is not None and clock_bridge.get("status") == "VALID"
-    if request is None:
+    if request is None and completion_anchor_ns is not None and monitor_complete:
+        successor_installation = _clause(
+            "VIOLATION",
+            "the complete post-completion window contains no Land request, selection, or route installation",
+            evidence={
+                "route_oracle_status": route_oracle.get("status") if route_oracle else None,
+                "route_transition": route_transition,
+                "selected_nav_state": None,
+            },
+        )
+        categories.append("EXPECTED_SUCCESSOR_NOT_INSTALLED")
+    elif request is None:
         successor_installation = _clause("UNKNOWN", "successor request anchor is missing")
     elif selected is None and monitor_complete:
         successor_installation = _clause(
@@ -375,6 +386,24 @@ def evaluate(
     )
     mission_reasons: list[str] = []
     mission_categories: list[str] = []
+    monitor_finished = _first(
+        lifecycle_events, lambda event: _event_type(event, "monitor_finished")
+    )
+    hover_after_completion_ms = int(
+        profile.get("terminal_condition", {}).get("hover_after_completion_ms", 0)
+    )
+    hover_observed = bool(
+        public_completion is not None
+        and monitor_finished is not None
+        and hover_after_completion_ms > 0
+        and int(monitor_finished["ros_time_ns"])
+        - int(public_completion["ros_time_ns"])
+        >= hover_after_completion_ms * 1_000_000
+        and monitor_finished.get("active_mode") == registered_mode_id
+        and monitor_finished.get("armed") is True
+        and monitor_finished.get("landed") is False
+        and selected is None
+    )
     if deactivated is None:
         mission_reasons.append("external mode deactivation was not observed")
         mission_categories.append("EXTERNAL_ROUTE_NOT_RELEASED")
@@ -393,6 +422,11 @@ def evaluate(
         if disarm_latency_ns > disarm_deadline_ns:
             mission_reasons.append("terminal disarm exceeded its deadline")
             mission_categories.append("DISARM_NOT_REACHED")
+    if hover_observed:
+        mission_reasons.append(
+            f"vehicle remained armed and airborne in the external mode for at least {hover_after_completion_ms} ms after completion"
+        )
+        mission_categories.append("UNEXPECTED_HOVER_AFTER_COMPLETION")
     required_monitor_status = str(profile.get("evidence", {}).get("require_monitor_status", "PASS"))
     if not mission_reasons and monitor_complete and monitor_status == required_monitor_status:
         mission_progression = _clause(

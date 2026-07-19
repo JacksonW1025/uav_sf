@@ -14,9 +14,15 @@
   "compiler": "gcc 13.3.0",
   "guard_exception_string_present": false,
   "historical_px4": {
+    "binary_sha256": "e6b2f64e63df7e0cda2e2b8013ed73156df0029ad36aefa034be70f575ba0027",
     "commit": "6ea3539157ca358c70a515878b77077af7d4611d",
     "describe": "v1.16.0",
-    "sitl_build_status": "PENDING_AFTER_PREPARATION_CHECKPOINT"
+    "observation_patch": {
+      "diff_sha256": "009c4d522cd69acf5b43a1bab9713cc97cfa7c0cc2f501aefcea8cf13ba2002a",
+      "profile": "TRANSITION",
+      "scope": "multicopter route epoch, registration lifecycle, position consumption, rate allocator input, control allocator output, and logger only"
+    },
+    "sitl_build_status": "PASS"
   },
   "offline_registration_preflight": {
     "formal_attempt": false,
