@@ -3,9 +3,9 @@ study_id: external_rtl_successor_issue_162
 attempt_kind: historical_affected_external_rtl_successor_replay
 maximum_formal_attempts: 3
 maximum_environment_retries: 3
-formal_attempts: 0
+formal_attempts: 1
 environment_failures: 1
-observability_rejections: 0
+observability_rejections: 1
 matching_violations: 0
 disposition: ACTIVE
 attempts:
@@ -25,3 +25,24 @@ attempts:
     preserved_raw_root: runs/motivation/successor/historical/successor_historical_a5b9f3c_seed16211_r1/raw
     processed_result: data/processed/motivation/successor/historical/successor_historical_a5b9f3c_seed16211_r1/attempt_result.json
     recorded_at: 2026-07-19T13:20:25-07:00
+  - run_id: successor_historical_a5b9f3c_seed16211_r2
+    simulation_seed: 16211
+    repository_commit: d1a9e480d7e29e0a8f40e46b9ef9b67be2e43144
+    px4_commit: 6ea3539157ca358c70a515878b77077af7d4611d
+    px4_ros2_interface_lib_commit: a5b9f3cb7cb65d2be80183bad31e9a7ce9f02684
+    formal_attempt: true
+    environment_retry: 0
+    status: ANALYSIS_RECOVERY_PENDING
+    classification: OBSERVABILITY_INSUFFICIENT
+    registered_mode_id: 23
+    registered_executor_id: 1
+    observed_executor_in_charge: 0
+    completion_generated: true
+    completion_public: true
+    land_selected: false
+    final_armed: true
+    final_landed: false
+    initial_analysis_failure: data/processed/motivation/successor/historical/successor_historical_a5b9f3c_seed16211_r2/initial_analysis_failure.json
+    preserved_raw_root: runs/motivation/successor/historical/successor_historical_a5b9f3c_seed16211_r2/raw
+    reanalysis_policy: immutable_raw_artifacts_only
+    recorded_at: 2026-07-19T13:25:52-07:00

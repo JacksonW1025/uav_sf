@@ -158,6 +158,21 @@ def test_lifecycle_sidecar_preserves_declared_component_identity(tmp_path: Path)
     assert setpoint["event_type"] == "producer_still_publishing"
 
 
+def test_lifecycle_sidecar_normalizes_c_printf_nonfinite_values(tmp_path: Path) -> None:
+    lifecycle = tmp_path / "nonfinite.log"
+    lifecycle.write_text(
+        '[INFO] [1002.25] [mode]: {"event_type":"external_mode_setpoint",'
+        '"component_name":"Issue 162 Custom RTL","horizontal_error_m":nan,'
+        '"vertical_error_m":nan,"speed_m_s":nan}\n',
+        encoding="utf-8",
+    )
+    [setpoint] = list(lifecycle_events(lifecycle, "historical-sidecar"))
+    assert setpoint["event_type"] == "producer_still_publishing"
+    assert setpoint["producer_identity"] == (
+        "registered_component:Issue 162 Custom RTL"
+    )
+
+
 def test_collector_merges_independent_producer_and_monitor_sidecars(
     tmp_path: Path, monkeypatch
 ) -> None:

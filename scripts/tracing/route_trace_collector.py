@@ -468,6 +468,7 @@ def producer_events(path: Path, run_id: str) -> Iterator[dict[str, object]]:
 
 
 STRUCTURED_LOG_EVENT = re.compile(r"\[(?P<timestamp>[0-9]+(?:\.[0-9]+)?)\].*?(?P<json>\{\"event_type\".*\})")
+NONFINITE_JSON_VALUE = re.compile(r"(?<=:)(?:nan|-?inf)(?=[,}])")
 
 
 def lifecycle_events(path: Path, run_id: str) -> Iterator[dict[str, object]]:
@@ -478,7 +479,10 @@ def lifecycle_events(path: Path, run_id: str) -> Iterator[dict[str, object]]:
             match = STRUCTURED_LOG_EVENT.search(line)
             if not match:
                 continue
-            payload = json.loads(match.group("json"))
+            # C/C++ printf emits lowercase nan/inf for invalid telemetry values,
+            # while strict JSON has no non-finite number spelling. Preserve the
+            # lifecycle record and normalize only those scalar values to null.
+            payload = json.loads(NONFINITE_JSON_VALUE.sub("null", match.group("json")))
             event_type = str(payload["event_type"])
             timestamp_ns = float(match.group("timestamp")) * 1_000_000_000.0
             confidence = "HIGH"

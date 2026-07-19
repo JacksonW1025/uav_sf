@@ -207,7 +207,7 @@ def run(
 
         def _land_detected(self, message: Any) -> None:
             self.landed = bool(message.landed)
-            if self.landed and self.armed_seen:
+            if self.landed and self.land_selected_seen:
                 self.landed_seen = True
             if self.landed != self.last_landed:
                 self.last_landed = self.landed

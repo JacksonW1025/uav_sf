@@ -1,0 +1,37 @@
+{
+  "artifact_sha256": {
+    "executor_log": "8defc6159b15b45ac8ba78089d57df6d9d5061c63959799f4a0ce3d2c804e0e0",
+    "flight_log": "2dfc026829f37338e19b8da8e00ce945dece79ede583a816ff7ee7fae4d2bf8b",
+    "lifecycle_events": "336d9221819446d842c127d60a7c5698dbd90c996f72fd88310ded7209e16842",
+    "microxrce_agent_log": "d1f1a0e87e0b74aec1949302c4258b18c532af33ca8388c490c1e889749b84df",
+    "monitor_result": "e00a3399f9aecd6ec268d5b5e5db3ef6af174951f0f64a0ffda9f8ec3bb78313",
+    "px4_log": "ef42fd6a008fe9c223643421c9725af0d5fd5d1a4f490b1e4fd802a735bc86c6"
+  },
+  "classification": "OBSERVABILITY_INSUFFICIENT",
+  "failure": {
+    "component": "route_trace_collector",
+    "exception": "JSONDecodeError",
+    "reason": "C printf emitted lowercase nan telemetry scalars in two post-shutdown structured setpoint records"
+  },
+  "final_classification": "PENDING_DETERMINISTIC_REANALYSIS",
+  "formal_attempt": true,
+  "immutable_raw_evidence": {
+    "completion_generated": true,
+    "completion_public": true,
+    "executor_in_charge": 0,
+    "final_active_mode": 23,
+    "final_armed": true,
+    "final_landed": false,
+    "land_selected": false,
+    "monitor_status": "COMPLETE_WITHOUT_TERMINAL",
+    "registered_executor_id": 1,
+    "registered_mode_id": 23
+  },
+  "p5_v6_isolation": "PASS",
+  "recorded_at": "2026-07-19T13:25:52-07:00",
+  "repository_commit": "d1a9e480d7e29e0a8f40e46b9ef9b67be2e43144",
+  "run_id": "successor_historical_a5b9f3c_seed16211_r2",
+  "schema_version": "1.0",
+  "simulation_seed": 16211,
+  "status": "ANALYSIS_RECOVERY_PENDING"
+}

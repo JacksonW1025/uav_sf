@@ -33,15 +33,19 @@
   harness exits `42` on the preregistered prevention exception before
   registration, classified `NOT_REPRODUCED_ON_CURRENT` /
   `UNSUPPORTED_COMBINATION_REJECTED`; this is not a successor-chain PASS
-- Historical reproduction status: flight replay not started; the independent
+- Historical reproduction status: formal flight 1 reached the complete target
+  window but its initial analysis is `OBSERVABILITY_INSUFFICIENT` pending
+  deterministic reanalysis; the independent
   Ubuntu Noble / ROS Jazzy build of reported affected px4-ros2-interface-lib
   `release/1.16` / `a5b9f3c`, the shared harness, and historical PX4
   `v1.16.0` observation SITL are PASS; the bounded formal runner is ready
 - Probe status: none; no bounded motivation probe has run
 - Confirmed issue count: 0 local reproductions; one upstream-confirmed
   unsupported ownership/successor lifecycle selected for reproduction
-- Current blocker: none; historical formal flight attempts remain `0/3` and
-  environment retries are `1/3`.
+- Current blocker: the first complete historical flight's route collector
+  rejected lowercase C `nan` scalars in two post-shutdown setpoint records;
+  formal flights are `1/3`, environment retries `1/3`, and accepted matching
+  violations remain `0/3` until immutable-raw reanalysis completes.
   Baseline attempt 1 is preserved and classified
   `REJECTED_OBSERVABILITY`, attempts 2 and 3 are accepted, and attempt 4 is an
   `ENVIRONMENT_FAILURE` after PX4 SIGSEGV before public completion; attempt 5
@@ -49,11 +53,10 @@
   is an `ENVIRONMENT_FAILURE` after PX4-to-ROS transport stopped before external
   completion and the executor watchdog aborted; attempt 7 on new seed `16204`
   is the third accepted baseline
-- Next exact action: checkpoint the classified pre-trigger environment failure,
-  then execute formal historical attempt 1 with a new run ID and the clean tracked
-  repository, locked Jazzy harness, PX4 `6ea3539` observation binary, and public
-  `arm → takeoff → auto:rtl` trigger; preserve and classify the complete bounded
-  completion window before applying the preregistered repeat rule
+- Next exact action: checkpoint the strict structured-log normalization and
+  terminal-landing semantic correction, then deterministically reprocess formal
+  flight 1's unchanged ULog/lifecycle/executor artifacts. Only a complete Oracle
+  result may count it toward the preregistered `3/3` matching violations.
 - Motivation namespace: `experiments/motivation/successor/`,
   `runs/motivation/successor/`, and
   `data/processed/motivation/successor/`; P5 v6 remains frozen and isolated
@@ -136,6 +139,19 @@
   `ENVIRONMENT_FAILURE`, not a formal attempt. The empty generated `etc` tree is
   preserved inside its raw artifact; the runner now verifies/creates the exact
   link before installing logger configuration.
+- Historical formal flight 1: `successor_historical_a5b9f3c_seed16211_r2`
+  registered mode `23` and executor `1`, publicly armed/took off/selected RTL,
+  activated External RTL with Autopilot executor `0`, generated and publicly
+  emitted successful completion, and ended the bounded window still armed,
+  airborne, and in mode `23`, with no Land selection. Initial promotion is
+  forbidden because route-trace collection rejected lowercase C `nan` values
+  emitted only after transport shutdown. The raw ULog and sidecars are hashed
+  and unchanged. The parser now maps only non-finite telemetry scalars to JSON
+  `null`; monitor/Oracle landing evidence now requires post-Land-selection /
+  post-completion landing rather than the armed-on-ground pre-takeoff state.
+- Analysis recovery validation: the unchanged formal-flight-1 raw artifacts
+  now produce `20,328` route events; focused PASS (`31 passed`) and full PASS
+  (`153 passed`, `15/15` stages) before deterministic final reanalysis.
 - Last motivation checkpoint validation: focused PASS (`48 passed` for the
   successor/route/trace contracts); full PASS (`144 passed`, `15/15` stages)
 - Protected P5 v6 hashes at Goal start: differential Gate
@@ -145,7 +161,7 @@
 - Primary preregistration:
   `experiments/motivation/successor/primary_reproduction_preregistration.yaml`
 - Successor Oracle design: `docs/design/SUCCESSOR_PROGRESSION_ORACLE.md`
-- Last update: 2026-07-19T13:20:25-07:00
+- Last update: 2026-07-19T13:28:01-07:00
 
 ## Preserved P5 v6 completion state
 

@@ -375,7 +375,9 @@ def evaluate(
     landed = _first(
         lifecycle_events,
         lambda event: _event_type(event, "land_detected_observed")
-        and event.get("landed") is True,
+        and event.get("landed") is True
+        and public_completion is not None
+        and int(event["ros_time_ns"]) >= int(public_completion["ros_time_ns"]),
     )
     disarmed = _first(
         lifecycle_events,

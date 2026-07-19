@@ -100,6 +100,15 @@ def main() -> int:
     provenance = load_json(args.build_provenance) or {}
     trace = load_jsonl(args.route_trace)
     lifecycle = load_jsonl(args.lifecycle_events)
+    monitor_finished = next(
+        (
+            event
+            for event in reversed(lifecycle)
+            if event.get("event_type") == "monitor_finished"
+        ),
+        None,
+    )
+    final_landed = monitor_finished.get("landed") if monitor_finished else None
     registered_mode = monitor.get("registered_mode_id") if monitor else None
     source_trace = [event for event in trace if event.get("declared_mode") == registered_mode]
     source_counts = Counter(str(event.get("event_type")) for event in source_trace)
@@ -197,8 +206,8 @@ def main() -> int:
         and monitor
         and monitor.get("status") == "COMPLETE_WITHOUT_TERMINAL"
         and monitor.get("land_selected_seen") is False
-        and monitor.get("landed_seen") is False
         and monitor.get("disarmed_seen") is False
+        and final_landed is False
         and route
         and route.get("status") == "NOT_APPLICABLE"
         and route.get("transition") is None
@@ -257,7 +266,7 @@ def main() -> int:
         },
         "mission_consequence": {
             "land_selected": bool(monitor and monitor.get("land_selected_seen")),
-            "landed": bool(monitor and monitor.get("landed_seen")),
+            "landed": final_landed,
             "disarmed": bool(monitor and monitor.get("disarmed_seen")),
             "hover_after_completion": "UNEXPECTED_HOVER_AFTER_COMPLETION" in categories,
         },
