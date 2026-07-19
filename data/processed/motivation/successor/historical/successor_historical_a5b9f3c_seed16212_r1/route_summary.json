@@ -1,0 +1,321 @@
+{
+  "baseline": {
+    "armed_seen": true,
+    "completion_observed": true,
+    "disarmed_seen": false,
+    "duration_s": 36.613,
+    "external_active_seen": true,
+    "land_selected_seen": false,
+    "landed_seen": false,
+    "post_completion_capture_s": 8.0,
+    "reason": "completion observed but Land was not selected; vehicle remained armed, airborne, and in the external mode",
+    "registered_executor_id": 1,
+    "registered_mode_id": 23,
+    "run_id": "successor_historical_a5b9f3c_seed16212_r1",
+    "runner_scenario": null,
+    "scenario": "issue162_historical",
+    "schema_version": "1.0",
+    "status": "COMPLETE_WITHOUT_TERMINAL"
+  },
+  "clock_bridge": {
+    "clock_bridge_id": "clock-3ef3a2c03ffcb7d4",
+    "discarded_initial_backlog_samples": 0,
+    "offset_ns": 1784493557798940938,
+    "rate_ratio": 1.1261310870341747,
+    "reasons": [
+      "residual_exceeds_valid_threshold"
+    ],
+    "reference_px4_us": 35334000,
+    "reference_ros_ns": 1784493593132940938,
+    "reset_count": 0,
+    "residual_max_ns": 204466578,
+    "residual_median_ns": 8041184,
+    "sample_count": 382,
+    "schema_version": "1.0",
+    "segment_count": 1,
+    "status": "DEGRADED",
+    "thresholds": {
+      "degraded_residual_max_ns": 250000000,
+      "maximum_round_trip_time_ns": 20000000,
+      "maximum_timesync_offset_span_ns": 5000000,
+      "minimum_sample_count": 20,
+      "residual_max_ns": 100000000,
+      "segment_jump_ns": 50000000
+    },
+    "timestamp_domains": {
+      "source": "px4_boot_us",
+      "target": "ros_node_ns"
+    },
+    "uncertainty_ns": 210466578,
+    "valid_from": 17852000,
+    "valid_until": 47708000
+  },
+  "duration_us": 41292000.0,
+  "event_type_counts": {
+    "actuator_motors": 9201,
+    "actuator_output_published": 4880,
+    "allocator_input_published": 1224,
+    "clock_bridge_sample": 392,
+    "external_mode_activated": 1,
+    "external_mode_completed": 1,
+    "failsafe_flags": 79,
+    "land_detected_observed": 2,
+    "mode_completed_observed": 1,
+    "mode_executor_registered": 1,
+    "monitor_finished": 1,
+    "monitor_started": 1,
+    "producer_still_publishing": 21,
+    "px4_setpoint_consumed": 1557,
+    "px4_setpoint_received": 1558,
+    "register_ext_component_reply": 1,
+    "registration_observed": 1,
+    "route_epoch_changed": 3,
+    "vehicle_control_mode": 85,
+    "vehicle_status": 85,
+    "vehicle_status_observed": 4
+  },
+  "execution_status": "COMPLETE_WITHOUT_TERMINAL",
+  "experiment_configuration": {
+    "build_provenance": {
+      "adapter_binary_sha256": "b7a23fe32ed2ff726cd63b1bc108ffff88ee730d1461868a24bba06e1c327b66",
+      "adapter_source_sha256": "f25c88476ddfda3b7f790110fff11c262ae3f5e16bd556431c2ee493633f2e6b",
+      "api_adaptation": {
+        "executor_constructor": "ModeExecutorBase(node, Settings{}, owned_mode)",
+        "mode_settings_constructor": "Settings(component_name, false, ModeBase::kModeIDRtl)",
+        "semantic_delta": "none",
+        "summary": "release/1.16 constructor spelling only; preserves armed-only activation, internal RTL replacement, executor ownership, completion, and Land successor"
+      },
+      "build_command": "colcon build --merge-install --packages-up-to route_transition_external_mode --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo -DUAV_SF_ISSUE162_ONLY=ON -DUAV_SF_ISSUE162_HISTORICAL_API=ON",
+      "build_status": "PASS",
+      "build_type": "RelWithDebInfo",
+      "canonical": true,
+      "compiler": "gcc 13.3.0",
+      "guard_exception_string_present": false,
+      "historical_px4": {
+        "binary_sha256": "e6b2f64e63df7e0cda2e2b8013ed73156df0029ad36aefa034be70f575ba0027",
+        "commit": "6ea3539157ca358c70a515878b77077af7d4611d",
+        "describe": "v1.16.0",
+        "observation_patch": {
+          "diff_sha256": "009c4d522cd69acf5b43a1bab9713cc97cfa7c0cc2f501aefcea8cf13ba2002a",
+          "profile": "TRANSITION",
+          "scope": "multicopter route epoch, registration lifecycle, position consumption, rate allocator input, control allocator output, and logger only"
+        },
+        "sitl_build_status": "PASS"
+      },
+      "offline_registration_preflight": {
+        "flight_started": false,
+        "fmu_wait_reached": true,
+        "formal_attempt": false,
+        "log_sha256": "1c2339718096cd847e3a145fd6a8b27b3831acd1bc179b7af2832ae66fcb0936",
+        "registration_attempted": false,
+        "termination": "timeout_sigkill",
+        "timeout_exit_code": 137
+      },
+      "primary_preregistration_sha256": "11cc54e73dc03192374b4d877cf84cf3b864d9f084b8aa00549d1cdc3b52d060",
+      "px4_msgs_commit": "392e831c1f659429ca83902e66820d7094591410",
+      "px4_ros2_interface_lib_binary_sha256": "bfb9d81ad7490a784800ad1befc34bab82931fff50f979a1f3bb81a4cdb5302c",
+      "px4_ros2_interface_lib_commit": "a5b9f3cb7cb65d2be80183bad31e9a7ce9f02684",
+      "px4_ros2_interface_lib_describe": "1.5.2",
+      "rootfs": {
+        "base_archive": "ubuntu-base-24.04.4-base-arm64.tar.gz",
+        "base_archive_sha256": "04207713ece899c3740823d33690441ad3a7f0ded1101aca744e2b0f37ac7ff2",
+        "isolation": "rootless bubblewrap user namespace",
+        "os": "Ubuntu 24.04.4 LTS (Noble Numbat)"
+      },
+      "ros": {
+        "distro": "jazzy",
+        "rclcpp_package": "28.1.21-1noble.20260612.095833",
+        "ros_base_package": "0.11.0-1noble.20260614.091815"
+      },
+      "schema_version": "1.0",
+      "shared_lifecycle_contract": {
+        "completion": "stable for 1000 ms within 0.5 m position and 0.5 m/s speed, then completed(Success)",
+        "expected_successor": "owning executor receives custom RTL completion and requests Land, then waits for Disarm",
+        "replacement": "registered external mode replaces internal RTL",
+        "target": "home-above NED [0, 0, -5] m"
+      },
+      "sut_kind": "executor-owned external RTL replacement replay on reported affected release/1.16 revision",
+      "workspace": "external/issue162_history/ros2_ws_jazzy"
+    },
+    "observation_profile": "TRANSITION",
+    "uorb_queue_length": 4
+  },
+  "first_timestamp_us": 11316000.0,
+  "last_timestamp_us": 52608000.0,
+  "lifecycle_evidence": [
+    "ros_structured_log:external_mode_executor.log:registration_instance_id=3589741803907783",
+    "ros_structured_log:external_mode_executor.log:activation_id=1,registration_instance_id=3589741803907783",
+    "ros_structured_log:external_mode_executor.log:result=success,activation_id=1,registration_instance_id=3589741803907783"
+  ],
+  "max_message_age_s": 0.016,
+  "nav_state_transitions": [
+    4,
+    17,
+    23
+  ],
+  "processed_trace_policy": {
+    "actuator_output_stride": 1,
+    "allocator_input_stride": 4,
+    "complete_source": "source_artifacts ULog"
+  },
+  "producer_consumer_evidence": {
+    "domains_require_clock_bridge": true,
+    "producer_publish_events": 21,
+    "px4_consume_events": 1557
+  },
+  "registration_transitions": [
+    {
+      "arming_check_id": 0,
+      "component_hash": 607572424,
+      "mode_executor_id": 1,
+      "mode_id": 23,
+      "processing_result": "SUCCESS",
+      "reason_code": 0,
+      "registered": true
+    }
+  ],
+  "route_epochs": [
+    1,
+    2,
+    3
+  ],
+  "route_verdict": "UNKNOWN",
+  "run_id": "successor_historical_a5b9f3c_seed16212_r1",
+  "schema_version": "1.2",
+  "source_artifacts": [
+    {
+      "bytes": 1596664,
+      "name": "flight.ulg",
+      "sha256": "986df759a40a343f4e867390a2a2ba3c760d24e4b5e51aacc2a09dfb560dcab7"
+    },
+    {
+      "bytes": 317738,
+      "name": "lifecycle_events.jsonl",
+      "sha256": "7117a11a2dcf0ca9b2ddcaaa8415a9e96a27ef92b8c3a05c154114490ca51668"
+    },
+    {
+      "bytes": 12089,
+      "name": "external_mode_executor.log",
+      "sha256": "817d9745871cb668d7878feb9361528d5d17e59f98bffbda22b75d45f5d9d52c"
+    }
+  ],
+  "timestamp_domains": {
+    "ros_node_ns": {
+      "duration": 43431353600.0,
+      "event_count": 426,
+      "first": 1.7844935705560566e+18,
+      "last": 1.7844936139874102e+18
+    },
+    "ulog_us": {
+      "duration": 41292000.0,
+      "event_count": 18673,
+      "first": 11316000.0,
+      "last": 52608000.0
+    }
+  },
+  "trace_event_count": 19099,
+  "writer_attribution": {
+    "actual_rate_hz": 121.19932432432432,
+    "actuator_output_events": 4880,
+    "actuator_writers": [
+      "control_allocator"
+    ],
+    "allocator_input_writers": [
+      "mc_rate_control"
+    ],
+    "candidate_writers": [
+      "control_allocator"
+    ],
+    "competing_windows": [],
+    "coverage_ratio": 1.0,
+    "critical_transition_windows": [
+      {
+        "coverage_verdict": "COMPLETE",
+        "end_us": 36552000.0,
+        "event_count": 122,
+        "from_mode": 17,
+        "from_route": 17,
+        "maximum_gap_ms": 12.0,
+        "observed_writers": [
+          "control_allocator"
+        ],
+        "sequence_gap_count": 0,
+        "start_us": 35552000.0,
+        "timestamp_us": 36052000.0,
+        "to_mode": 23,
+        "to_route": 23,
+        "uninstrumented_candidate_writers": [],
+        "window_end": 36552000.0,
+        "window_start": 35552000.0
+      }
+    ],
+    "critical_window_quality": {
+      "detectable_resolution_ms": 0.0,
+      "maximum_gap_ms": 12.0,
+      "sequence_gap_count": 0,
+      "status": "COMPLETE"
+    },
+    "event_count": 4880,
+    "expected_period_ms": 8.0,
+    "global_capture_quality": {
+      "coverage_ratio": 1.0,
+      "maximum_gap_ms": 20.0,
+      "missing_sequence_count": 0,
+      "sequence_gap_count": 0,
+      "status": "COMPLETE"
+    },
+    "maximum_event_gap_ms": 20.0,
+    "observation_holes": [],
+    "observation_profiles": [
+      "TRANSITION"
+    ],
+    "observed_writers": [
+      "control_allocator"
+    ],
+    "per_publication_complete": false,
+    "rate_gate_passed": true,
+    "sequence_gaps": [],
+    "status": "EXCLUSIVE",
+    "transition_windows": [
+      {
+        "coverage_verdict": "COMPLETE",
+        "end_us": 33928000.0,
+        "event_count": 124,
+        "from_mode": 4,
+        "from_route": 4,
+        "maximum_gap_ms": 12.0,
+        "observed_writers": [
+          "control_allocator"
+        ],
+        "sequence_gap_count": 0,
+        "start_us": 32928000.0,
+        "timestamp_us": 33428000.0,
+        "to_mode": 17,
+        "to_route": 17,
+        "uninstrumented_candidate_writers": [],
+        "window_end": 33928000.0,
+        "window_start": 32928000.0
+      },
+      {
+        "coverage_verdict": "COMPLETE",
+        "end_us": 36552000.0,
+        "event_count": 122,
+        "from_mode": 17,
+        "from_route": 17,
+        "maximum_gap_ms": 12.0,
+        "observed_writers": [
+          "control_allocator"
+        ],
+        "sequence_gap_count": 0,
+        "start_us": 35552000.0,
+        "timestamp_us": 36052000.0,
+        "to_mode": 23,
+        "to_route": 23,
+        "uninstrumented_candidate_writers": [],
+        "window_end": 36552000.0,
+        "window_start": 35552000.0
+      }
+    ],
+    "uninstrumented_candidates": []
+  }
+}

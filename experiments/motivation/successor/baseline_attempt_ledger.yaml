@@ -374,7 +374,7 @@ historical_replay:
   formal_attempts: 0
   matching_violation_runs: 0
   environment_retries: 1
-  observability_rejections: 1
+  observability_rejections: 2
   disposition: ACTIVE
   attempts:
     - run_id: successor_historical_a5b9f3c_seed16211_r1
@@ -471,3 +471,65 @@ historical_replay:
       preserved_raw_root: >-
         runs/motivation/successor/historical/successor_historical_a5b9f3c_seed16211_r2/raw
       recorded_at: 2026-07-19T13:34:57-07:00
+    - run_id: successor_historical_a5b9f3c_seed16212_r1
+      simulation_seed: 16212
+      repository_commit: c96ff2653d06b3002a621ea9baf4ec2d7b8783da
+      flight_attempt: true
+      formal_attempt: false
+      disposition: REJECTED_OBSERVABILITY
+      classification: OBSERVABILITY_INSUFFICIENT
+      counted_as_matching_violation: false
+      identity_and_isolation: PASS
+      monitor: COMPLETE_WITHOUT_TERMINAL
+      clock_bridge: DEGRADED
+      clock_bridge_reason: residual_exceeds_valid_threshold
+      clock_bridge_metrics:
+        sample_count: 382
+        prelaunch_sample_requirement: 80
+        residual_max_ns: 204466578
+        residual_median_ns: 8041184
+        uncertainty_ns: 210466578
+        unchanged_valid_residual_threshold_ns: 100000000
+      route_oracle: NOT_APPLICABLE
+      route_oracle_interpretation: NOT_APPLICABLE_NO_SUCCESSOR_TRANSITION
+      successor_oracle: VIOLATION_NOT_PROMOTED
+      successor_clause_statuses:
+        ownership: VIOLATION
+        completion: VIOLATION
+        successor_request: VIOLATION
+        successor_installation: VIOLATION
+        mission_progression: VIOLATION
+      lifecycle_evidence:
+        external_mode_id: 23
+        registered_executor_id: 1
+        executor_in_charge_during_external: 0
+        completion_condition_reached: true
+        completion_generated: true
+        public_completion_observed: true
+        completion_receiver_observed: false
+        land_request_observed: false
+        land_selected: false
+        land_route_epoch_installed: false
+        terminal_disarm: false
+        hover_after_completion_at_least_ms: 5000
+      classification_reason: >-
+        The independent seed repeats the complete Issue #162 lifecycle pattern,
+        but its receive-time affine bridge is DEGRADED: the 204.467 ms maximum
+        residual exceeds the unchanged 100 ms VALID threshold. Increasing the
+        prelaunch sample count did not correct host scheduling variability, so
+        this run remains an observability rejection and is not promoted.
+      artifact_sha256:
+        attempt_result: 0773d5e30f797fe5c5d9d86af20df81ace59822f9f9a99808ba7eb5982df1d88
+        clock_bridge: df489e0a0471fc25cda26fba16050c237540cfd766d2472c4268120e79750485
+        executor_log: 817d9745871cb668d7878feb9361528d5d17e59f98bffbda22b75d45f5d9d52c
+        flight_log: 986df759a40a343f4e867390a2a2ba3c760d24e4b5e51aacc2a09dfb560dcab7
+        lifecycle_events: 7117a11a2dcf0ca9b2ddcaaa8415a9e96a27ef92b8c3a05c154114490ca51668
+        monitor_result: bbc972fa9faef0badb13932ae772874e6f99f415031b1f8d9d681f8446f1e8ca
+        route_oracle: bcc66a98e405fce11aee3dfab397b6e9175f6a659aceb845fd3231d1a7e79c4e
+        route_summary: f8a5f2c0d052206623f3180cc713aafbddbcba5cf3e7d57c9d7e0eaa6422af0c
+        route_trace: 0e47e976df226115d2e56eb7f77bf8cb3ffa35bc06e36054029861f4711650e4
+        successor_oracle: 81d38f3fd41be4d6fe02f04425c56463511997807db6f19f9a7532a97c78ba6b
+      p5_v6_isolation: PASS
+      preserved_raw_root: >-
+        runs/motivation/successor/historical/successor_historical_a5b9f3c_seed16212_r1/raw
+      recorded_at: 2026-07-19T13:40:12-07:00
