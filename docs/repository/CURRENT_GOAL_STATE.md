@@ -1,8 +1,8 @@
 # Current Goal state
 
 - Current phase: External RTL successor motivation study, primary reproduction
-  preregistered; isolated normal-baseline harness built and ready for its first
-  bounded SITL run
+  preregistered; attempt-1 observability correction ready for checkpoint before
+  the next bounded baseline run
 - Goal disposition: active, no terminal disposition yet
 - Primary reproduction target: Auterion/px4-ros2-interface-lib Issue #162,
   External RTL replacement selected while its owning Mode Executor remains
@@ -12,32 +12,40 @@
   complete executor-in-charge, public completion, and successor-command
   evidence; the separate non-replacement `Successor Baseline` executor now
   implements Takeoff → owned External Mode → completion → Land → Disarm, but
-  successor flight baseline has not started
+  first successor flight attempt completed the physical chain but was rejected
+  for an observer/profile defect and insufficient clock samples; accepted count
+  remains `0/3`
 - Observability status: lifecycle event schema 1.0 and a dedicated monitor now
   cover registration, active/owned mode, executor in charge, completion,
   successor command, Land selection, landed state, Disarm, and clock samples;
   the route collector now preserves component-declared identity; live
   validation remains pending
 - Successor Oracle status: version 0.1 implemented independently of Route
-  Oracle 0.4; eight focused synthetic tests cover PASS, Issue #162 ownership
+  Oracle 0.4; nine focused synthetic tests cover PASS, Issue #162 ownership
   and missing-successor violations, completion loss, wrong requester,
   route-UNKNOWN conservatism, missing evidence, and NOT_APPLICABLE; live
-  validation remains pending
+  attempt 1 exposed and corrected the request encoding to
+  `VEHICLE_CMD_SET_NAV_STATE(100001), param1=Land(18)`; live PASS remains pending
 - Current-version reproduction status: not started; source audit predicts
   construction-time rejection because locked px4-ros2-interface-lib
   `c3e410f` contains guard commit `dce6c1f`
 - Historical reproduction status: not started; reported affected target is
   px4-ros2-interface-lib `release/1.16` / `a5b9f3c`
-- Probe status: none; no formal reproduction or bounded probe has run
+- Probe status: none; no primary reproduction or bounded motivation probe has run
 - Confirmed issue count: 0 local reproductions; one upstream-confirmed
   unsupported ownership/successor lifecycle selected for reproduction
-- Current blocker: none; no formal attempt has run
-- Next exact action: from the clean published harness checkpoint, run the first
-  bounded `Successor Baseline` SITL attempt with seed `16201`, inspect complete
-  lifecycle/route/clock evidence, and accept it only if both Oracles PASS
+- Current blocker: none; baseline attempt 1 is preserved and classified
+  `REJECTED_OBSERVABILITY`, never as a lifecycle violation
+- Next exact action: publish the evidence-driven request-encoding and observer
+  tail correction, then retry seed `16201` under a new attempt ID without
+  changing thresholds or acceptance criteria
 - Motivation namespace: `experiments/motivation/successor/`,
   `runs/motivation/successor/`, and
   `data/processed/motivation/successor/`; P5 v6 remains frozen and isolated
+- Baseline attempt ledger:
+  `experiments/motivation/successor/baseline_attempt_ledger.yaml`; attempt 1
+  monitor PASS, clock INVALID (18/20 usable samples), Route Oracle UNKNOWN,
+  attempt-time Successor Oracle VIOLATION caused by the corrected command match
 - Motivation-study baseline validation: focused PASS (`38 passed`); full PASS
   (`125 passed`, `15/15` stages)
 - Baseline harness build: PASS against locked Humble px4-ros2-interface-lib;
@@ -45,8 +53,8 @@
   `eba79e78565587a71cac2e5a70677f9c88ca4172054483beb2fc40414bdccc45`;
   locked library SHA-256
   `dddfa0698c27617ce5a368dc7d0d5272bc510f3cb780c5ef3f48c77d098380e6`
-- Last motivation checkpoint validation: focused PASS (`21 passed` for the
-  successor/trace contracts); full PASS (`138 passed`, `15/15` stages)
+- Last motivation checkpoint validation: focused PASS (`22 passed` for the
+  successor/trace contracts); full PASS (`139 passed`, `15/15` stages)
 - Protected P5 v6 hashes at Goal start: differential Gate
   `9542eb7c98dfd4df1ab50026c149f21fb719fc6a2a09d040a9db4df647f132bc`;
   manifest
@@ -54,7 +62,7 @@
 - Primary preregistration:
   `experiments/motivation/successor/primary_reproduction_preregistration.yaml`
 - Successor Oracle design: `docs/design/SUCCESSOR_PROGRESSION_ORACLE.md`
-- Last update: 2026-07-19T03:42:00-07:00
+- Last update: 2026-07-19T05:46:16-07:00
 
 ## Preserved P5 v6 completion state
 

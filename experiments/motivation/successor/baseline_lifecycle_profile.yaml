@@ -18,7 +18,8 @@ completion:
   receiver_result: Success
 expected_successor:
   request_event_type: executor_command_observed
-  command: 21
+  command: 100001
+  command_param1: 18
   requester_source_component_base: 1000
   selected_nav_state: 18
   request_after_completion_deadline_ms: 1000

@@ -213,6 +213,10 @@ def evaluate(
         commands_after_completion,
         lambda event: _event_type(event, str(successor_profile["request_event_type"]))
         and _details(event).get("command") == successor_profile["command"]
+        and (
+            "command_param1" not in successor_profile
+            or _details(event).get("param1") == successor_profile["command_param1"]
+        )
         and registered_executor_id is not None
         and _details(event).get("source_component")
         == successor_profile["requester_source_component_base"] + registered_executor_id,
@@ -241,6 +245,7 @@ def evaluate(
                 "PASS",
                 evidence={
                     "command": successor_profile["command"],
+                    "command_param1": successor_profile.get("command_param1"),
                     "timestamp_ns": request["ros_time_ns"],
                     "latency_ms": request_latency_ns / 1_000_000.0,
                 },

@@ -57,6 +57,13 @@ After completion delivery, the expected Mode Executor command must be observed
 within the profile deadline. A complete monitor window without it is
 `EXPECTED_SUCCESSOR_NOT_REQUESTED`.
 
+For the locked px4-ros2-interface-lib and its historical `release/1.16`
+implementation, `ModeExecutorBase::land()` calls `scheduleMode(kModeIDLand)`.
+The public request encoding is therefore `VEHICLE_CMD_SET_NAV_STATE` (`100001`)
+with `param1=18`, issued by component `1000 + registered_executor_id`; it is not
+the MAVLink-facing `VEHICLE_CMD_NAV_LAND` (`21`). The profile matches command,
+target nav state, and requester together.
+
 ### Successor installation
 
 Commander must select the expected Land nav state within its deadline, and the

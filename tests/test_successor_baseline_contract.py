@@ -71,6 +71,7 @@ def test_runner_is_bounded_and_keeps_p5_v6_isolated() -> None:
     assert "--transition-target-mode 18" in RUNNER
     assert "successor_progression_oracle.py" in RUNNER
     assert "classify_successor_baseline.py" in RUNNER
+    assert '--post-disarm-capture 8' in RUNNER
     assert "9542eb7c98dfd4df1ab50026c149f21fb719fc6a2a09d040a9db4df647f132bc" in RUNNER
     assert "02d857f555623c10dc44998cd202c2da6226ec5c40a94a75020d75df87f02518" in RUNNER
     assert "P5_RUN_ROOT" not in RUNNER

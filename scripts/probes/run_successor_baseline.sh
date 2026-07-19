@@ -199,7 +199,7 @@ MONITOR_RESULT="${RAW_DIR}/monitor_result.json"
 LIFECYCLE_EVENTS="${RAW_DIR}/lifecycle_events.jsonl"
 python3 "${REPO_ROOT}/scripts/tracing/successor_lifecycle_monitor.py" \
   --run-id "${RUN_ID}" --output "${MONITOR_RESULT}" --events "${LIFECYCLE_EVENTS}" \
-  --timeout 180 --post-disarm-capture 4 --component-name "Successor Baseline" \
+  --timeout 180 --post-disarm-capture 8 --component-name "Successor Baseline" \
   >"${RAW_DIR}/monitor.log" 2>&1 &
 MONITOR_PID=$!
 sleep 1

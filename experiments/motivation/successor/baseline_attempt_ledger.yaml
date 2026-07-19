@@ -1,0 +1,47 @@
+schema_version: "1.0"
+study_id: external_rtl_successor_issue_162
+baseline_id: legal_non_replacement_executor_successor_chain
+accepted_runs_required: 3
+attempts:
+  - run_id: successor_baseline_seed16201_r1
+    simulation_seed: 16201
+    repository_commit: 546ef8c2d62a2bc60a8174598e2ebc59f5dae7e6
+    disposition: REJECTED_OBSERVABILITY
+    counted_as_accepted_baseline: false
+    target_lifecycle_observed:
+      monitor: PASS
+      ownership: PASS
+      completion: PASS
+      external_to_land_route_installation: PASS
+      land_and_disarm: PASS
+    rejection_evidence:
+      clock_bridge: INVALID
+      usable_clock_samples: 18
+      required_clock_samples: 20
+      route_oracle: UNKNOWN
+      successor_oracle_at_attempt_time: VIOLATION
+    diagnosis:
+      - >-
+        The monitor captured the actual executor Land request as command 100001,
+        but omitted param1 and the initial lifecycle profile incorrectly matched
+        MAVLink-facing command 21. Locked and historical library source both
+        prove ModeExecutorBase::land uses VEHICLE_CMD_SET_NAV_STATE with
+        param1=18. This is an observer/profile defect, not a target violation.
+      - >-
+        The four-second post-disarm observer tail yielded 32 samples before the
+        preregistered delivery-backlog filter and 18 after it, two below the
+        unchanged minimum. The runner tail is extended to eight seconds; the
+        clock threshold is not relaxed.
+    artifact_sha256:
+      attempt_result: bc3ed5d2fb29141cfad396e72e361639e80fc1a0bc160508c3e6ca3e14a41cbf
+      clock_bridge: c9621fda059fdcbf901c22780003e8fba973ccd2200b7039be3b9bd24d98ebc4
+      executor_log: ef3336217e82e5e126e178740fae0937de6f93ed008fa5b941c136c3b27d5b95
+      flight_log: 9e87b99b16cc14ee5ab3530df68bbee9719343f9ddab3baba84322783d6e39f8
+      lifecycle_events: 4a7df4e398fd484b2923de8dff9291de0a2cb667ce0dd988b0ac16884f7c5409
+      route_oracle: 6d9432aaf70d2d99d91db4786d4bee2f985716f9f57b3bb19efced6b283d1079
+      route_summary: 15242f2cadfd278021d246091afa9d06c9c2141a5959c7a4044619ed4ef23ecc
+      route_trace: 48ba21ddf30ff415464af08843cbb372afa684cb2da1c1bf665a4e3a84645145
+      successor_oracle: 17e4b9d7eb44c4de6679b7c552500fb38bd5dd586819abffd629dfeca566651b
+    p5_v6_isolation: PASS
+    preserved_raw_root: runs/motivation/successor/baseline/successor_baseline_seed16201_r1/raw
+    recorded_at: 2026-07-19T05:46:16-07:00

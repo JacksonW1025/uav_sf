@@ -7,6 +7,8 @@ build/
 install/
 log/
 runs/
+# Canonical motivation traces remain local; compact results retain their hashes.
+data/processed/motivation/successor/**/route_trace.jsonl
 .ccache/
 __pycache__/
 .pytest_cache/

@@ -257,6 +257,7 @@ def run(
                 details={
                     "message_timestamp": int(message.timestamp),
                     "command": int(message.command),
+                    "param1": float(message.param1),
                     "source_system": int(message.source_system),
                     "source_component": int(message.source_component),
                     "target_system": int(message.target_system),

@@ -99,7 +99,7 @@ def passing_inputs() -> tuple[
             armed=True,
             registered_mode=23,
             registered_executor=1,
-            details={"command": 21, "source_component": 1001},
+            details={"command": 100001, "param1": 18, "source_component": 1001},
         ),
         event(
             "vehicle_status_observed",
@@ -179,6 +179,8 @@ def test_schemas_are_valid_and_profile_is_explicit() -> None:
     Draft202012Validator.check_schema(EVENT_SCHEMA)
     Draft202012Validator.check_schema(RESULT_SCHEMA)
     assert PROFILE["expected_successor"]["selected_nav_state"] == 18
+    assert PROFILE["expected_successor"]["command"] == 100001
+    assert PROFILE["expected_successor"]["command_param1"] == 18
     assert PROFILE["missing_required_evidence"] == "UNKNOWN"
 
 
@@ -274,6 +276,19 @@ def test_command_from_wrong_source_is_not_expected_successor_request() -> None:
     assert result["status"] == "VIOLATION"
     assert result["clauses"]["successor_request"]["status"] == "VIOLATION"
     assert "EXPECTED_SUCCESSOR_NOT_REQUESTED" in result["violation_categories"]
+
+
+def test_set_nav_state_command_for_wrong_mode_is_not_land_request() -> None:
+    lifecycle, executor_events, route_events, route_oracle, clock_bridge = passing_inputs()
+    command = next(
+        item for item in lifecycle if item["event_type"] == "executor_command_observed"
+    )
+    command["details"]["param1"] = 5
+    result = evaluate(
+        PROFILE, lifecycle, executor_events, route_events, route_oracle, clock_bridge
+    )
+    assert result["status"] == "VIOLATION"
+    assert result["clauses"]["successor_request"]["status"] == "VIOLATION"
 
 
 def test_explicitly_unsupported_profile_is_not_applicable() -> None:
