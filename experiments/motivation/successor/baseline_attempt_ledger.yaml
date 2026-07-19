@@ -371,10 +371,10 @@ historical_replay:
   affected_revision: a5b9f3cb7cb65d2be80183bad31e9a7ce9f02684
   required_matching_violation_runs: 3
   maximum_formal_attempts: 3
-  formal_attempts: 1
-  matching_violation_runs: 1
+  formal_attempts: 2
+  matching_violation_runs: 2
   environment_retries: 1
-  observability_rejections: 3
+  observability_rejections: 4
   disposition: ACTIVE
   attempts:
     - run_id: successor_historical_a5b9f3c_seed16211_r1
@@ -641,3 +641,109 @@ historical_replay:
       preserved_raw_root: >-
         runs/motivation/successor/historical/successor_historical_a5b9f3c_seed16214_r1/raw
       recorded_at: 2026-07-19T13:59:00-07:00
+    - run_id: successor_historical_a5b9f3c_seed16215_r1
+      simulation_seed: 16215
+      repository_commit: b5e8e7ed2b4880460df222f0982713ea5c7f6cb3
+      flight_attempt: true
+      formal_attempt: false
+      disposition: REJECTED_OBSERVABILITY
+      classification: OBSERVABILITY_INSUFFICIENT
+      counted_as_matching_violation: false
+      identity_and_isolation: PASS
+      monitor: COMPLETE_WITHOUT_TERMINAL
+      clock_bridge: DEGRADED
+      clock_bridge_metrics:
+        sample_source: vehicle_status_with_converged_timesync_metadata
+        sample_count: 37
+        residual_max_ns: 183594842
+        residual_median_ns: 49317404
+        uncertainty_ns: 185594842
+        unchanged_valid_residual_threshold_ns: 100000000
+      target_clock_window:
+        covered: false
+      route_oracle: NOT_APPLICABLE
+      successor_oracle: VIOLATION_NOT_PROMOTED
+      defect_pattern_complete: true
+      artifact_sha256:
+        attempt_result: bd4f8f9b032206b8c1742343f39ef032b14b15d4b348222a0b98c717d13395d9
+        clock_bridge: ce0f8668e6e3c16ad1f4bd8199dd4595c1703cdada76c1e1748f3a2966e98dae
+        executor_log: a25384f195345d04e842e54f95bde4fc4e9e1acfd6497267af7be0241ada1efb
+        flight_log: b4a9d3b021252bd349b570cc7ecc5b09c78aa27b403674c08670d4e86d9cce35
+        lifecycle_events: f75e0f24eabc23bf335bbdd34affb073963b08fcac05a135f4b04bb8dc905745
+        monitor_result: 4f8cef3ba5625951752b6fd780bc039f82a877f258f7c89c55d047f134095f2b
+        route_oracle: 384abbabff334d02e4f22fbb94e4c2237898e45279e1a4926f0a6d0aa9314b28
+        route_summary: 56091de0c6ba661ac18cb86da7e004016b7ddcb0aad2b8e5bff82534a218d6df
+        route_trace: 745a370faf7a013cdacec93574e5fbbb1b5e19147b156d1e248a838e7421647b
+        successor_oracle: d76743446834fc9a8796770b11b6eb76b38b62121319c45565519a8711940dc8
+      p5_v6_isolation: PASS
+      preserved_raw_root: >-
+        runs/motivation/successor/historical/successor_historical_a5b9f3c_seed16215_r1/raw
+      recorded_at: 2026-07-19T14:05:00-07:00
+    - run_id: successor_historical_a5b9f3c_seed16216_r1
+      simulation_seed: 16216
+      repository_commit: b5e8e7ed2b4880460df222f0982713ea5c7f6cb3
+      flight_attempt: true
+      formal_attempt: true
+      disposition: ACCEPTED_MATCHING_VIOLATION
+      classification: HISTORICAL_DEFECT_REPRODUCED
+      counted_as_matching_violation: true
+      identity_and_isolation: PASS
+      monitor: COMPLETE_WITHOUT_TERMINAL
+      clock_bridge: VALID
+      clock_bridge_metrics:
+        sample_source: vehicle_status_with_converged_timesync_metadata
+        sample_count: 65
+        residual_max_ns: 41586589
+        residual_median_ns: 9736485
+        uncertainty_ns: 49586589
+        valid_from_px4_us: 18588000
+        valid_until_px4_us: 48508000
+        unchanged_valid_residual_threshold_ns: 100000000
+      target_clock_window:
+        covered: true
+        start_px4_us: 36912417.242
+        end_px4_us: 46169840.662
+      route_oracle: NOT_APPLICABLE
+      route_oracle_interpretation: NOT_APPLICABLE_NO_SUCCESSOR_TRANSITION
+      successor_oracle: VIOLATION
+      successor_clause_statuses:
+        ownership: VIOLATION
+        completion: VIOLATION
+        successor_request: VIOLATION
+        successor_installation: VIOLATION
+        mission_progression: VIOLATION
+      lifecycle_evidence:
+        external_mode_id: 23
+        registered_executor_id: 1
+        executor_in_charge_during_external: 0
+        completion_condition_reached: true
+        completion_generated: true
+        public_completion_observed: true
+        completion_receiver_observed: false
+        land_request_observed: false
+        land_selected: false
+        land_route_epoch_installed: false
+        terminal_disarm: false
+        hover_after_completion_at_least_ms: 5000
+      route_chain_evidence:
+        source_route_epoch_observed: true
+        land_route_epoch_observed: false
+        producer_events: 21
+        controller_consumption_events: 372
+        allocator_input_events: 521
+        actuator_writer_events: 2074
+      artifact_sha256:
+        attempt_result: 1e5f76f12a0f7c061ed263adee93234d551aa50453ab9bcc12f7340fbb855313
+        clock_bridge: 478c3706cd8a859f8414e859cb97d363cdd845e5d5e0fe5a8d5f12b0cd72a317
+        executor_log: a20356a7cf13fefcb8661200ed9573325d400ffd99028488f476a4181a170a0c
+        flight_log: c1a5092d869e9b3eea2758b5e453fb5bb95d6f755b31bb4e88f1e94b0dcbe136
+        lifecycle_events: 9a654f1e6ec0dfd1142b15264740a68ee183df1bc89cfa35c963214ae4099840
+        monitor_result: b2f07ba3651c4c36d2c22c77961a246bf25545bd070e72744c5ecf867af78b98
+        route_oracle: b7bbf194c9f8aa84d92936b92c6277eefb76cdc4d5a8718ca192ef1eb631ef5a
+        route_summary: 452ff323bd3f30ebc3538862a543632ed779cadddb1011193c3aa0661b83ceb0
+        route_trace: 85301813b7c31d1a9c960b9253cc48c48a1031e0885823aee15ff62a4ab8634f
+        successor_oracle: dc69a38b6fa72264a8377b54b8399e433a3a38b5ad524c0ac2afd4266ecc4874
+      p5_v6_isolation: PASS
+      preserved_raw_root: >-
+        runs/motivation/successor/historical/successor_historical_a5b9f3c_seed16216_r1/raw
+      recorded_at: 2026-07-19T14:05:00-07:00

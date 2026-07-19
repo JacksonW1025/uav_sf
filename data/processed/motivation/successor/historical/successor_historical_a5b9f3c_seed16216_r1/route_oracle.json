@@ -1,0 +1,94 @@
+{
+  "clauses": {
+    "continuity": {
+      "evidence": [],
+      "metrics": {},
+      "reasons": [
+        "no declared mode transition was observed"
+      ],
+      "status": "NOT_APPLICABLE"
+    },
+    "exclusivity": {
+      "evidence": [],
+      "metrics": {},
+      "reasons": [
+        "no declared mode transition was observed"
+      ],
+      "status": "NOT_APPLICABLE"
+    },
+    "installation": {
+      "evidence": [],
+      "metrics": {},
+      "reasons": [
+        "no declared mode transition was observed"
+      ],
+      "status": "NOT_APPLICABLE"
+    },
+    "recovery": {
+      "evidence": [],
+      "metrics": {},
+      "reasons": [
+        "no declared mode transition was observed"
+      ],
+      "status": "NOT_APPLICABLE"
+    },
+    "revocation": {
+      "evidence": [],
+      "metrics": {},
+      "reasons": [
+        "no declared mode transition was observed"
+      ],
+      "status": "NOT_APPLICABLE"
+    }
+  },
+  "clock_bridge": {
+    "clock_bridge_id": "clock-ea7504034d7cb7fc",
+    "discarded_initial_backlog_samples": 2,
+    "offset_ns": 1784494846274637656,
+    "rate_ratio": 1.0912148307159146,
+    "reasons": [],
+    "reference_px4_us": 33872000,
+    "reference_ros_ns": 1784494880146637656,
+    "reset_count": 0,
+    "residual_max_ns": 41586589,
+    "residual_median_ns": 9736485,
+    "sample_count": 65,
+    "schema_version": "1.0",
+    "segment_count": 1,
+    "status": "VALID",
+    "thresholds": {
+      "degraded_residual_max_ns": 250000000,
+      "maximum_round_trip_time_ns": 20000000,
+      "maximum_timesync_offset_span_ns": 5000000,
+      "minimum_sample_count": 20,
+      "residual_max_ns": 100000000,
+      "segment_jump_ns": 50000000
+    },
+    "timestamp_domains": {
+      "source": "px4_boot_us",
+      "target": "ros_node_ns"
+    },
+    "uncertainty_ns": 49586589,
+    "valid_from": 18588000,
+    "valid_until": 48508000
+  },
+  "evidence_completeness": {
+    "candidate_writer_coverage": "NOT_APPLICABLE",
+    "clock_bridge": "NOT_REQUIRED",
+    "critical_window": "NOT_APPLICABLE",
+    "route_epoch": "NOT_APPLICABLE",
+    "source_artifact": "COMPLETE",
+    "writer_sequence": "NOT_APPLICABLE"
+  },
+  "ground_truth_case_id": null,
+  "observation_kind": "TRANSITION",
+  "oracle_validation_profile": "production",
+  "retained_route": null,
+  "route_oracle_version": "0.4",
+  "run_id": "successor_historical_a5b9f3c_seed16216_r1",
+  "schema_version": "1.3",
+  "status": "NOT_APPLICABLE",
+  "threshold_profile_id": "route-oracle-v0.3-default",
+  "transition": null,
+  "violation_categories": []
+}
