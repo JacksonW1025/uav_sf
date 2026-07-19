@@ -1,7 +1,7 @@
 # Current Goal state
 
-- Current phase: External RTL successor motivation study, issue inventory
-  complete; primary preregistration next
+- Current phase: External RTL successor motivation study, primary reproduction
+  preregistered; normal baseline design and observability implementation next
 - Goal disposition: active, no terminal disposition yet
 - Primary reproduction target: Auterion/px4-ros2-interface-lib Issue #162,
   External RTL replacement selected while its owning Mode Executor remains
@@ -22,11 +22,12 @@
 - Probe status: none; no formal reproduction or bounded probe has run
 - Confirmed issue count: 0 local reproductions; one upstream-confirmed
   unsupported ownership/successor lifecycle selected for reproduction
-- Current blocker: none; formal execution is intentionally gated by primary
-  preregistration
-- Next exact action: create and review
-  `experiments/motivation/successor/primary_reproduction_preregistration.yaml`,
-  then validate and checkpoint before any formal reproduction attempt
+- Current blocker: none; no formal attempt has run, and the preregistered
+  three-run normal baseline plus minimum lifecycle observation support must be
+  implemented first
+- Next exact action: review existing P0/P5 runner and trace artifacts against
+  the preregistered lifecycle fields, then implement only the missing baseline
+  lifecycle/successor observations before the first accepted baseline run
 - Motivation namespace: `experiments/motivation/successor/`,
   `runs/motivation/successor/`, and
   `data/processed/motivation/successor/`; P5 v6 remains frozen and isolated
@@ -36,7 +37,9 @@
   `9542eb7c98dfd4df1ab50026c149f21fb719fc6a2a09d040a9db4df647f132bc`;
   manifest
   `02d857f555623c10dc44998cd202c2da6226ec5c40a94a75020d75df87f02518`
-- Last update: 2026-07-19T00:09:03-07:00
+- Primary preregistration:
+  `experiments/motivation/successor/primary_reproduction_preregistration.yaml`
+- Last update: 2026-07-19T02:49:40-07:00
 
 ## Preserved P5 v6 completion state
 

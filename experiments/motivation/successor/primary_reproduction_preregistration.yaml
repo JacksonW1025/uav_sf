@@ -1,0 +1,299 @@
+schema_version: "1.0"
+status: PREREGISTERED_BEFORE_FORMAL_REPRODUCTION
+study_id: external_rtl_successor_issue_162
+namespace:
+  experiment: experiments/motivation/successor
+  raw_runs: runs/motivation/successor
+  processed: data/processed/motivation/successor
+  p5_v6_isolation: REQUIRED_NO_READ_WRITE_OR_CLASSIFICATION_REUSE
+
+provenance:
+  primary_issue:
+    repository: Auterion/px4-ros2-interface-lib
+    number: 162
+    url: https://github.com/Auterion/px4-ros2-interface-lib/issues/162
+    title: Mode Executor with RTL Internal Mode Replacement
+  corroborating_issue:
+    repository: PX4/PX4-Autopilot
+    number: 25707
+    url: https://github.com/PX4/PX4-Autopilot/issues/25707
+    title: "[Bug]Replacing internal mode with external with an executor"
+  inventory: docs/motivation/EXTERNAL_RTL_SUCCESSOR_ISSUE_INVENTORY.md
+  legal_trigger_sources:
+    - manual_or_gcs_rtl_mode_request
+    - external_mode_completion_via_ModeBase_completed
+  forbidden_trigger_methods:
+    - direct_internal_state_mutation
+    - seeded_route_or_lifecycle_fault
+    - px4_behavior_patch_that_creates_the_target_problem
+
+revisions:
+  reported_affected:
+    px4:
+      ref: v1.16.0
+      commit: 6ea3539157ca358c70a515878b77077af7d4611d
+    px4_ros2_interface_lib:
+      ref: release/1.16
+      describe: "1.5.2"
+      commit: a5b9f3cb7cb65d2be80183bad31e9a7ce9f02684
+    ros_distro: jazzy
+    simulator: gazebo
+  isolated_prevention_differential:
+    px4_commit: 4ae21a5e569d3d89c2f6366688cbacb3e93437c9
+    affected_library_parent:
+      commit: 755f8eeacf19719a43ddef84f66640ff19702bc3
+      meaning: last_main_line_parent_before_constructor_prevention
+    prevention_library:
+      commit: dce6c1f2e4a29e947fd32a84c4981773f1962c03
+      meaning: rejects_executor_owned_mode_that_replaces_internal_mode
+    constraint: same_harness_sequence_environment_and_px4_except_library_revision
+  current_locked:
+    repository_commit_at_preregistration: d62a71dbb6ec027896114a4e02ddb2e13ac06fcb
+    px4_commit: 4ae21a5e569d3d89c2f6366688cbacb3e93437c9
+    px4_ros2_interface_lib_commit: c3e410f035806e8c56246708432ded09c976434b
+    px4_ros2_interface_lib_describe: 2.1.1-9-gc3e410f
+    expected_capability: unsupported_combination_rejected_during_construction
+  prevention_is_not_functional_fix: true
+
+primary_target:
+  issue_mechanism: replacement_nav_state_does_not_select_replacement_modes_registered_executor
+  source_route:
+    route_id: internal_position_hold_after_takeoff
+    declared_mode: POSITION_OR_HOLD
+    lifecycle_owner: autopilot
+    authority_source: px4_internal
+  replacement_route:
+    route_id: external_custom_rtl_above_home
+    declared_mode: EXTERNAL_MODE_REPLACING_INTERNAL_RTL
+    authority_source: dynamic_external_mode
+    setpoint_level: position_velocity_or_goto
+    producer_identity: issue_162_minimal_custom_rtl_node
+    final_target: home_horizontal_position_and_fixed_positive_height_above_home
+  lifecycle_owner:
+    expected: registered_mode_executor_owning_custom_rtl
+    observed_in_upstream_report: autopilot_executor_id_0
+  executor_owner:
+    expected_owned_mode: external_custom_rtl_above_home
+    expected_in_charge_during_custom_rtl: true
+  completion_condition:
+    target: final_custom_rtl_waypoint_above_home
+    horizontal_error_max_m: 0.5
+    vertical_error_max_m: 0.5
+    velocity_max_m_s: 0.5
+    stable_duration_ms: 1000
+    action: call_ModeBase_completed_with_Result_Success
+  expected_successor:
+    mode: PX4_INTERNAL_LAND
+    requester: registered_mode_executor_owning_custom_rtl
+    request_after_completion_deadline_ms: 1000
+    selection_after_request_deadline_ms: 1000
+    complete_route_installation_deadline_ms: 300
+    distinct_route_epoch_required: true
+  fallback_route:
+    trigger: custom_rtl_node_or_registration_becomes_unresponsive
+    mode: PX4_INTERNAL_RTL
+    terminal_chain: [PX4_INTERNAL_RTL, LAND, DISARM]
+    not_triggered_in_primary_completion_case: true
+  terminal_condition:
+    state: DISARMED_AFTER_LAND
+    land_selected_after_completion_deadline_ms: 2000
+    disarm_after_land_selection_deadline_ms: 60000
+
+baseline_reference:
+  id: legal_non_replacement_executor_successor_chain
+  purpose: prove_completion_successor_observation_and_harness_before_historical_reproduction
+  sequence:
+    - ARM
+    - INTERNAL_TAKEOFF
+    - SELECT_EXECUTOR_OWNED_EXTERNAL_MODE_WITHOUT_INTERNAL_REPLACEMENT
+    - EXTERNAL_MODE_COMPLETION_SUCCESS
+    - EXECUTOR_REQUESTS_INTERNAL_LAND
+    - LAND_SELECTED_AND_INSTALLED
+    - DISARMED
+  accepted_runs_required: 3
+  semantic_difference_from_primary: owned_external_mode_does_not_replace_internal_rtl
+  use_as_probability_estimate: false
+
+trigger_sequence:
+  - verify_exact_revision_identity_and_clean_dedicated_worktree
+  - start_px4_sitl_gazebo_ros2_transport_and_observers
+  - register_custom_rtl_as_internal_rtl_replacement_and_executor_owned_mode
+  - arm_through_public_command_interface
+  - take_off_through_public_mode_or_command_interface
+  - reach_stable_internal_position_or_hold
+  - request_rtl_through_public_rc_or_gcs_equivalent_mode_command
+  - observe_external_custom_rtl_selection_and_route_installation
+  - allow_custom_rtl_to_reach_final_waypoint_above_home
+  - emit_public_mode_completion_success
+  - observe_executor_ownership_completion_delivery_and_successor_request
+  - observe_land_selection_route_installation_landing_and_disarm_or_deadline
+
+observed_lifecycle_fields:
+  - active_mode
+  - executor_in_charge
+  - owned_mode
+  - completion_condition_observed
+  - completion_event_observed
+  - completion_receiver
+  - successor_requested
+  - successor_requester
+  - successor_selected
+  - successor_installed
+  - successor_route_epoch
+  - external_route_released
+  - terminal_state
+
+required_evidence:
+  identity:
+    - repository_commit
+    - px4_commit_and_binary_sha256
+    - px4_ros2_interface_lib_commit_and_binary_sha256
+    - observation_patch_sha256_when_present
+    - scenario_and_preregistration_sha256
+  control_plane:
+    - external_component_registration_reply
+    - assigned_external_mode_id
+    - assigned_mode_executor_id
+    - vehicle_status_nav_state
+    - vehicle_status_executor_in_charge
+    - mode_completion_publication
+    - executor_schedule_request_or_proved_absence_over_complete_window
+    - successor_mode_selection
+    - arming_and_land_detected_state
+  route:
+    - route_epoch_events
+    - authority_source
+    - producer_publication_and_consumption
+    - setpoint_level_and_configuration
+    - enabled_and_bypassed_modules
+    - allocator_input
+    - final_writer_sequence
+    - failsafe_state
+  timing:
+    - px4_boot_domain_timestamps
+    - ros_node_domain_timestamps
+    - valid_clock_bridge_for_cross_domain_deadlines
+  artifacts:
+    - raw_flight_log
+    - canonical_route_trace
+    - raw_lifecycle_events
+    - clock_bridge
+    - route_oracle_result
+    - successor_oracle_result
+    - attempt_classification
+
+criteria:
+  conformance_success:
+    - expected_executor_is_in_charge_while_custom_rtl_active
+    - completion_condition_and_completion_event_are_observed
+    - completion_is_delivered_to_expected_executor
+    - land_is_requested_by_expected_executor_within_deadline
+    - commander_selects_land_within_deadline
+    - land_route_is_completely_installed_on_a_distinct_epoch
+    - external_custom_rtl_route_is_released_without_illegal_overlap
+    - vehicle_lands_and_disarms_within_terminal_deadline
+  reproduction_success:
+    status: VIOLATION
+    required:
+      - external_custom_rtl_is_selected_after_legal_rtl_request
+      - complete_evidence_proves_executor_in_charge_is_autopilot_not_registered_owner
+      - custom_rtl_completion_condition_and_success_event_are_observed
+      - complete_post_completion_window_proves_no_expected_land_request_or_land_selection
+      - vehicle_remains_armed_and_airborne_for_at_least_5000_ms_after_completion
+    categories:
+      - EXECUTOR_NOT_IN_CHARGE
+      - EXPECTED_SUCCESSOR_NOT_REQUESTED
+      - LIFECYCLE_DEAD_END
+      - UNEXPECTED_HOVER_AFTER_COMPLETION
+      - LAND_NOT_REACHED
+      - DISARM_NOT_REACHED
+  violation:
+    ownership:
+      - active_replacement_owned_mode_with_wrong_executor_in_charge
+      - multiple_conflicting_lifecycle_owners
+    completion:
+      - reached_completion_condition_without_completion_event
+      - completion_event_not_delivered_to_expected_owner
+    successor:
+      - expected_successor_not_requested_within_1000_ms
+      - wrong_successor_requested
+      - land_not_selected_within_1000_ms_of_valid_request
+      - land_selected_but_route_not_installed_within_300_ms
+      - old_external_route_not_released
+    mission:
+      - armed_airborne_hover_persists_5000_ms_after_successful_completion
+      - no_land_within_2000_ms_after_completion
+      - no_disarm_within_60000_ms_after_land_selection
+  unknown:
+    - missing_required_identity_or_artifact
+    - incomplete_post_completion_observation_window
+    - invalid_or_degraded_clock_bridge_for_cross_domain_deadline
+    - missing_executor_in_charge_or_completion_publication_evidence
+    - incomplete_writer_coverage
+  not_applicable:
+    - current_revision_constructor_rejects_combination_before_registration
+
+current_version_replay:
+  sequence_parity_required: true
+  expected_result: NOT_REPRODUCED_ON_CURRENT
+  expected_reason: explicit_unsupported_combination_exception_before_registration
+  acceptable_classification:
+    - NOT_REPRODUCED_ON_CURRENT
+    - OBSERVABILITY_INSUFFICIENT
+    - ENVIRONMENT_FAILURE
+  forbidden_interpretation: constructor_rejection_is_not_a_passing_successor_chain
+
+historical_replay:
+  order:
+    - reported_affected_or_api_compatible_prevention_parent
+    - prevention_revision
+    - current_locked_revision
+  dedicated_worktrees_required: true
+  worktree_roots_must_be_ignored_and_outside_formal_repository_state: true
+  same_sequence_and_oracle_required: true
+  same_environment_except_version_difference_required: true
+  affected_expected_result: VIOLATION
+  prevention_expected_result: UNSUPPORTED_COMBINATION_REJECTED
+  prevention_result_is_not_oracle_pass: true
+  instrumentation_reduced_confirmation_required_after_three_matching_violations: true
+
+attempt_limits:
+  accepted_normal_baseline_runs: 3
+  current_locked_replay:
+    maximum_formal_attempts: 1
+    maximum_environment_retries: 1
+  historical_affected_runtime:
+    required_matching_violation_runs: 3
+    maximum_formal_attempts: 3
+    maximum_environment_retries: 3
+  historical_prevention_revision:
+    maximum_formal_attempts: 1
+    maximum_environment_retries: 1
+  instrumentation_reduced_confirmation:
+    maximum_formal_attempts: 1
+    maximum_environment_retries: 1
+  batch_limit:
+    maximum_cases: 1
+    maximum_individual_runs: 2
+    maximum_wall_minutes: 10
+
+environment_failure_criteria:
+  classification: ENVIRONMENT_FAILURE
+  conditions:
+    - px4_gazebo_ros2_or_dds_process_abort_unrelated_to_target_lifecycle
+    - timeout_before_legal_rtl_trigger_or_external_route_activation
+    - missing_required_artifacts_due_to_runner_or_host_failure
+    - invalid_or_degraded_clock_bridge_caused_by_host_scheduling
+    - port_collision_or_residual_process_contamination
+    - resource_exhaustion_or_workspace_disk_pressure
+  never_count_as_violation: true
+  preserve_all_failed_attempts: true
+  retry_requires_new_attempt_id_and_unchanged_criteria: true
+
+stop_rules:
+  - stop_expanding_probes_after_first_high_confidence_violation
+  - preserve_artifacts_and_repeat_only_to_three_matching_violations
+  - create_minimal_testcase_and_instrumentation_reduced_replay
+  - do_not_add_cases_to_p5_v6_or_create_p5_v7
+  - do_not_treat_prevention_exception_as_functional_successor_fix
+  - do_not_continue_to_probes_b_through_e_if_documented_lifecycle_gap_is_confirmed_and_goal_terminates
