@@ -1,9 +1,9 @@
 # Current Goal state
 
-- Current phase: External RTL successor motivation study runtime complete;
-  evidence is frozen after the preregistered `3/3` fully instrumented affected
-  runs and `1/1` instrumentation-reduced confirmation, with the final case
-  report in progress
+- Current phase: External RTL successor motivation study complete; evidence is
+  frozen after the preregistered `3/3` fully instrumented affected runs and
+  `1/1` instrumentation-reduced confirmation, and the final case report is
+  complete
 - Goal disposition: `HISTORICAL_DEFECT_REPRODUCED`
 - Primary reproduction target: Auterion/px4-ros2-interface-lib Issue #162,
   External RTL replacement selected while its owning Mode Executor remains
@@ -59,9 +59,9 @@
   is an `ENVIRONMENT_FAILURE` after PX4-to-ROS transport stopped before external
   completion and the executor watchdog aborted; attempt 7 on new seed `16204`
   is the third accepted baseline
-- Next exact action: freeze the accepted reduced-confirmation artifacts, then
-  produce the final motivation case report; no further runtime attempt is
-  authorized or needed.
+- Next exact action: none inside this bounded study. Preserve the evidence and
+  treat any current functional implementation or upstream source fix as a new,
+  separately authorized design task; no further replay is authorized or needed.
 - Motivation namespace: `experiments/motivation/successor/`,
   `runs/motivation/successor/`, and
   `data/processed/motivation/successor/`; P5 v6 remains frozen and isolated
@@ -212,7 +212,9 @@
 - Primary preregistration:
   `experiments/motivation/successor/primary_reproduction_preregistration.yaml`
 - Successor Oracle design: `docs/design/SUCCESSOR_PROGRESSION_ORACLE.md`
-- Last update: 2026-07-19T14:16:37-07:00
+- Final case report:
+  `docs/motivation/EXTERNAL_RTL_SUCCESSOR_CASE_REPORT.md`
+- Last update: 2026-07-19T14:23:37-07:00
 
 ## Preserved P5 v6 completion state
 
