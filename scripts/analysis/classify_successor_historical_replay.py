@@ -27,6 +27,7 @@ REQUIRED_DEFECT_CATEGORIES = {
     "LIFECYCLE_DEAD_END",
     "UNEXPECTED_HOVER_AFTER_COMPLETION",
 }
+REQUIRED_HOVER_WINDOW_NS = 5_000_000_000
 
 
 def sha256(path: Path) -> str | None:
@@ -68,6 +69,50 @@ def classify(
     return "OBSERVABILITY_INSUFFICIENT"
 
 
+def bridge_window(
+    clock: dict[str, Any] | None, start_ros_ns: int | None, end_ros_ns: int | None
+) -> dict[str, Any]:
+    result = {
+        "start_ros_ns": start_ros_ns,
+        "end_ros_ns": end_ros_ns,
+        "start_px4_us": None,
+        "end_px4_us": None,
+        "covered": False,
+    }
+    if (
+        clock is None
+        or clock.get("status") != "VALID"
+        or start_ros_ns is None
+        or end_ros_ns is None
+        or clock.get("reference_px4_us") is None
+        or clock.get("reference_ros_ns") is None
+        or clock.get("rate_ratio") is None
+        or clock.get("valid_from") is None
+        or clock.get("valid_until") is None
+    ):
+        return result
+    rate_ratio = float(clock["rate_ratio"])
+    if rate_ratio <= 0:
+        return result
+
+    def inverse(ros_ns: int) -> float:
+        return float(clock["reference_px4_us"]) + (
+            ros_ns - int(clock["reference_ros_ns"])
+        ) / (rate_ratio * 1000.0)
+
+    start_px4_us = inverse(start_ros_ns)
+    end_px4_us = inverse(end_ros_ns)
+    result.update(
+        {
+            "start_px4_us": round(start_px4_us, 3),
+            "end_px4_us": round(end_px4_us, 3),
+            "covered": float(clock["valid_from"]) <= start_px4_us
+            and end_px4_us <= float(clock["valid_until"]),
+        }
+    )
+    return result
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run-id", required=True)
@@ -107,6 +152,34 @@ def main() -> int:
             if event.get("event_type") == "monitor_finished"
         ),
         None,
+    )
+    external_active = next(
+        (
+            event
+            for event in lifecycle
+            if event.get("event_type") == "vehicle_status_observed"
+            and event.get("registered_mode_id") is not None
+            and event.get("active_mode") == event.get("registered_mode_id")
+        ),
+        None,
+    )
+    public_completion = next(
+        (
+            event
+            for event in lifecycle
+            if event.get("event_type") == "mode_completed_observed"
+            and event.get("details", {}).get("result") == 0
+        ),
+        None,
+    )
+    target_clock_window = bridge_window(
+        clock,
+        external_active.get("ros_time_ns") if external_active else None,
+        (
+            int(public_completion["ros_time_ns"]) + REQUIRED_HOVER_WINDOW_NS
+            if public_completion and public_completion.get("ros_time_ns") is not None
+            else None
+        ),
     )
     final_landed = monitor_finished.get("landed") if monitor_finished else None
     registered_mode = monitor.get("registered_mode_id") if monitor else None
@@ -167,6 +240,7 @@ def main() -> int:
         ),
         "canonical_route_trace_present": args.route_trace.is_file(),
         "clock_bridge_valid": clock is not None and clock.get("status") == "VALID",
+        "clock_bridge_covers_target_window": target_clock_window["covered"],
         "monitor_window_complete": monitor is not None
         and monitor.get("status") in {"PASS", "COMPLETE_WITHOUT_TERMINAL"},
         "successor_oracle_decisive": successor is not None
@@ -253,6 +327,7 @@ def main() -> int:
         "violation_categories": sorted(categories),
         "required_defect_categories": sorted(REQUIRED_DEFECT_CATEGORIES),
         "evidence_completeness": required_completeness,
+        "clock_bridge_target_window": target_clock_window,
         "route_oracle_status": route.get("status") if route else None,
         "route_oracle_interpretation": (
             "NOT_APPLICABLE_NO_SUCCESSOR_TRANSITION"

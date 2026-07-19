@@ -70,7 +70,6 @@
     "segment_count": {"type": "integer", "minimum": 0},
     "reset_count": {"type": "integer", "minimum": 0},
     "discarded_initial_backlog_samples": {"type": "integer", "minimum": 0},
-    "discarded_delivery_backlog_samples": {"type": "integer", "minimum": 0},
     "reasons": {"type": "array", "items": {"type": "string"}}
   }
 }

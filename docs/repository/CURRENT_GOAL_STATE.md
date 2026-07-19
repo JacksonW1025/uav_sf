@@ -43,7 +43,10 @@
 - Probe status: none; no bounded motivation probe has run
 - Confirmed issue count: 0 local reproductions; one upstream-confirmed
   unsupported ownership/successor lifecycle selected for reproduction
-- Current blocker: none. Historical evidence-complete formal attempts are
+- Current blocker: seed `16214` passes a `VALID` bridge over the entire target
+  window and repeats the complete defect pattern, but final promotion is held
+  at the clean-worktree Gate while its observer correction is checkpointed.
+  Historical evidence-complete formal attempts remain
   `0/3`, environment retries are `1/3`, observability rejections are `3`, and
   accepted matching violations remain `0/3`. The first complete flight is not
   promoted because its `160.145 ms` maximum clock-fit residual exceeds the
@@ -55,11 +58,10 @@
   is an `ENVIRONMENT_FAILURE` after PX4-to-ROS transport stopped before external
   completion and the executor watchdog aborted; attempt 7 on new seed `16204`
   is the third accepted baseline
-- Next exact action: checkpoint the observer-only clock-source correction, then
-  execute seed `16214`. The lifecycle monitor will prefer continuous
-  `VehicleStatus` receive-time pairs carrying the latest converged Timesync
-  fields; no clock threshold, lifecycle semantic, SUT behavior, or Oracle rule
-  changes. Only a bridge spanning the target window may count.
+- Next exact action: commit and push the target-window coverage Gate, then
+  deterministically reclassify seed `16214` from its unchanged raw artifacts.
+  If the clean-worktree Gate passes, count it as matching violation `1/3` and
+  repeat only to the preregistered `3/3`.
 - Motivation namespace: `experiments/motivation/successor/`,
   `runs/motivation/successor/`, and
   `data/processed/motivation/successor/`; P5 v6 remains frozen and isolated
@@ -171,6 +173,13 @@
   `VehicleStatus` receive-time pairs with converged Timesync metadata so the
   next run can cover the entire target lifecycle without using delayed callback
   samples or changing the mapping.
+- Historical complete flight 4: seed `16214` records 60 continuous status pairs
+  and a `VALID` bridge with `80.794 ms` maximum residual. Its mapped interval
+  covers External activation (`36.360 s PX4`) through the five-second
+  post-completion deadline (`45.584 s PX4`). The raw lifecycle again contains
+  all five Successor violations. Its first runner result was not counted because
+  the earlier collector had selected a pre-registration Timesync subsegment;
+  the corrected analysis is awaiting only the clean-worktree checkpoint Gate.
 - Last motivation checkpoint validation: focused PASS (`48 passed` for the
   successor/route/trace contracts); full PASS (`144 passed`, `15/15` stages)
 - Protected P5 v6 hashes at Goal start: differential Gate
@@ -180,7 +189,7 @@
 - Primary preregistration:
   `experiments/motivation/successor/primary_reproduction_preregistration.yaml`
 - Successor Oracle design: `docs/design/SUCCESSOR_PROGRESSION_ORACLE.md`
-- Last update: 2026-07-19T13:56:00-07:00
+- Last update: 2026-07-19T13:55:05-07:00
 
 ## Preserved P5 v6 completion state
 

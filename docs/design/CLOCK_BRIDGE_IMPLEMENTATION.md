@@ -39,15 +39,6 @@ ROS-versus-monotonic jump over 50 ms, or a DDS source/convergence-state change.
 Duplicate PX4 samples are ignored by the fit. Latency is never computed across
 segments.
 
-The synchronized outbound timestamp is also retained as a delivery diagnostic,
-not as the bridge target. If its absolute difference from ROS callback receive
-time exceeds the fixed 50 ms jump boundary, that sample is a delayed DDS
-delivery rather than a contemporaneous receive-time pair. Such samples are
-excluded, the queue-drain boundary starts a new candidate segment, and the
-discard count is recorded. This handles mid-run callback backlog as well as the
-already-supported discovery backlog without changing the affine mapping or any
-validity threshold.
-
 Thresholds were fixed after the q16 baseline smoke (67.1 ms maximum affine
 residual) and before the controlled queue matrix, P0-D, P2, or P3 experiments:
 

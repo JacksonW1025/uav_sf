@@ -2,7 +2,7 @@ import hashlib
 import json
 from pathlib import Path
 
-from scripts.analysis.classify_successor_historical_replay import classify
+from scripts.analysis.classify_successor_historical_replay import bridge_window, classify
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -108,3 +108,16 @@ def test_environment_failure_precedes_historical_violation() -> None:
         successor_status="VIOLATION",
         defect_pattern_complete=True,
     ) == "HISTORICAL_DEFECT_REPRODUCED"
+
+
+def test_historical_bridge_must_cover_external_mode_through_hover_window() -> None:
+    clock = {
+        "status": "VALID",
+        "reference_px4_us": 20_000,
+        "reference_ros_ns": 1_000_000_000,
+        "rate_ratio": 1.0,
+        "valid_from": 10_000,
+        "valid_until": 40_000,
+    }
+    assert bridge_window(clock, 990_000_000, 1_020_000_000)["covered"] is True
+    assert bridge_window(clock, 990_000_000, 1_030_000_001)["covered"] is False

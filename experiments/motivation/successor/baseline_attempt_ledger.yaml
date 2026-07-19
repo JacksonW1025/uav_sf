@@ -582,3 +582,60 @@ historical_replay:
       preserved_raw_root: >-
         runs/motivation/successor/historical/successor_historical_a5b9f3c_seed16213_r1/raw
       recorded_at: 2026-07-19T13:49:40-07:00
+    - run_id: successor_historical_a5b9f3c_seed16214_r1
+      simulation_seed: 16214
+      repository_commit: f1d21b659584e71711d275de56242e36e8af67c2
+      flight_attempt: true
+      formal_attempt: false
+      disposition: ANALYSIS_RECOVERY_PENDING
+      classification: OBSERVABILITY_INSUFFICIENT_DURING_CHECKPOINT
+      counted_as_matching_violation: false
+      identity_and_isolation: PASS
+      monitor: COMPLETE_WITHOUT_TERMINAL
+      clock_bridge: VALID
+      clock_bridge_metrics:
+        sample_source: vehicle_status_with_converged_timesync_metadata
+        sample_count: 60
+        residual_max_ns: 80793827
+        residual_median_ns: 27335142
+        uncertainty_ns: 84793827
+        valid_from_px4_us: 20628000
+        valid_until_px4_us: 47920000
+        unchanged_valid_residual_threshold_ns: 100000000
+      target_clock_window:
+        covered: true
+        start_px4_us: 36360201.175
+        end_px4_us: 45584004.339
+      route_oracle: NOT_APPLICABLE
+      route_oracle_interpretation: NOT_APPLICABLE_NO_SUCCESSOR_TRANSITION
+      successor_oracle: VIOLATION_NOT_YET_PROMOTED
+      successor_clause_statuses:
+        ownership: VIOLATION
+        completion: VIOLATION
+        successor_request: VIOLATION
+        successor_installation: VIOLATION
+        mission_progression: VIOLATION
+      analysis_audit: >-
+        The runner's first analysis reported HISTORICAL_DEFECT_REPRODUCED, but
+        its selected VALID Timesync subsegment ended before registration. That
+        result was not counted. The collector now correctly reads the nested
+        sample-source field and selects 60 continuous VehicleStatus pairs; the
+        classifier additionally requires explicit coverage from External Mode
+        activation through the five-second hover deadline. Reanalysis passes
+        both checks but remains temporarily rejected only because these analyzer
+        changes are intentionally uncommitted at this checkpoint.
+      artifact_sha256_at_checkpoint:
+        attempt_result: cff1e319531d5d2d0d30d32a52558d5813af2054ddda2a5a9a9bf8f6a2362a35
+        clock_bridge: b92700a48c4fc1fad3c8ddeabe3e3eddefc68c31b369d95740fb6df4e4f0642f
+        executor_log: 66420de4bf86451697106490be5895d8716f30d234ab304f63b01fdd1d405ef6
+        flight_log: 99703c148f299d5d0f686f2d89bf79c5f4388520f9c5275f4a27bb630fb4d3aa
+        lifecycle_events: d18bf0ea5fafc954e6aba349fc000893c38de54d5016b52c0060078da506b84b
+        monitor_result: 34bb9e965fda58fa8cb04e030a18c0ddf945128fb068dbca3c32ea9197d32d0b
+        route_oracle: 6d6691806eb296e5dcb2e19312a4609c545422e5f81c0263384575b2023b84a4
+        route_summary: 5144f83a11459c07db52b892677babb5367171a9fcc4ae07b99990eb0bc4e282
+        route_trace: 54208e77ab3e68865fc91788e7882da912fc05b6138b4d36f3b26f3da9793f7e
+        successor_oracle: fdfc9047bb7dd98ed01926170ea95b73e03d8d5d7172aa4c13800e35a974bc93
+      p5_v6_isolation: PASS
+      preserved_raw_root: >-
+        runs/motivation/successor/historical/successor_historical_a5b9f3c_seed16214_r1/raw
+      recorded_at: 2026-07-19T13:55:05-07:00
