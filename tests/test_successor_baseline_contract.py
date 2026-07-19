@@ -76,6 +76,7 @@ def test_runner_is_bounded_and_keeps_p5_v6_isolated() -> None:
     assert '--post-disarm-capture 8' in RUNNER
     assert '--abort-marker "${ABORT_MARKER}"' in RUNNER
     assert '--px4-early-exit "${PX4_EARLY_EXIT}"' in RUNNER
+    assert '--executor-exit-code "${EXECUTOR_RC}"' in RUNNER
     assert 'SUCCESSOR_MIN_PRELAUNCH_CLOCK_SAMPLES:-40' in RUNNER
     assert "9542eb7c98dfd4df1ab50026c149f21fb719fc6a2a09d040a9db4df647f132bc" in RUNNER
     assert "02d857f555623c10dc44998cd202c2da6226ec5c40a94a75020d75df87f02518" in RUNNER

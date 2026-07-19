@@ -67,6 +67,7 @@ def main() -> int:
     parser.add_argument("--px4-dir", type=Path, required=True)
     parser.add_argument("--monitor-exit-code", type=int, default=0)
     parser.add_argument("--px4-exit-code", type=int, default=0)
+    parser.add_argument("--executor-exit-code", type=int, default=0)
     parser.add_argument("--px4-early-exit", type=int, choices=(0, 1), default=0)
     parser.add_argument("--executor-early-exit", type=int, choices=(0, 1), default=0)
     parser.add_argument("--output", type=Path, required=True)
@@ -183,6 +184,7 @@ def main() -> int:
         "runtime": {
             "monitor_exit_code": args.monitor_exit_code,
             "px4_exit_code": args.px4_exit_code,
+            "executor_exit_code": args.executor_exit_code,
             "px4_early_exit": bool(args.px4_early_exit),
             "executor_early_exit": bool(args.executor_early_exit),
             "monitor_reason": monitor_reason or None,

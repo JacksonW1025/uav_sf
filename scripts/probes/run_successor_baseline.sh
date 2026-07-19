@@ -241,7 +241,15 @@ wait "${MONITOR_PID}"
 MONITOR_RC=$?
 set -e
 MONITOR_PID=""
-stop_process "${EXECUTOR_PID}" INT
+EXECUTOR_RC=0
+if [[ "${EXECUTOR_EARLY_EXIT}" == "1" ]]; then
+  set +e
+  wait "${EXECUTOR_PID}"
+  EXECUTOR_RC=$?
+  set -e
+else
+  stop_process "${EXECUTOR_PID}" INT
+fi
 EXECUTOR_PID=""
 
 PX4_RC=0
@@ -331,6 +339,7 @@ python3 "${REPO_ROOT}/scripts/analysis/classify_successor_baseline.py" \
   --flight-log "${RAW_DIR}/flight.ulg" --executor-binary "${EXECUTOR_BIN}" \
   --library-binary "${LIBRARY_BIN}" --px4-dir "${PX4_DIR}" \
   --monitor-exit-code "${MONITOR_RC}" --px4-exit-code "${PX4_RC}" \
+  --executor-exit-code "${EXECUTOR_RC}" \
   --px4-early-exit "${PX4_EARLY_EXIT}" --executor-early-exit "${EXECUTOR_EARLY_EXIT}" \
   --output "${ATTEMPT_RESULT}"
 CLASSIFIER_RC=$?

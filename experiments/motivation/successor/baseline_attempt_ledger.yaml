@@ -3,8 +3,8 @@ study_id: external_rtl_successor_issue_162
 baseline_id: legal_non_replacement_executor_successor_chain
 accepted_runs_required: 3
 accepted_runs: 2
-rejected_attempts: 3
-environment_failures: 1
+rejected_attempts: 4
+environment_failures: 2
 observability_rejections: 2
 attempts:
   - run_id: successor_baseline_seed16201_r1
@@ -251,3 +251,61 @@ attempts:
     p5_v6_isolation: PASS
     preserved_raw_root: runs/motivation/successor/baseline/successor_baseline_seed16203_r2/raw
     recorded_at: 2026-07-19T08:54:33-07:00
+  - run_id: successor_baseline_seed16203_r3
+    simulation_seed: 16203
+    repository_commit: 830e73a72205bd3d35fc1cdf5016aa356afcf936
+    disposition: ENVIRONMENT_FAILURE
+    counted_as_accepted_baseline: false
+    target_lifecycle_observed:
+      registration_and_ownership: PASS
+      external_activation: PASS
+      completion_generated_by_external_node: true
+      public_external_completion_delivery: NOT_OBSERVED_AFTER_TRANSPORT_LOSS
+      land_request_and_selection: NOT_REACHED
+      terminal_state: NOT_REACHED
+    process_evidence:
+      px4_exit: NORMAL_RUNNER_SHUTDOWN
+      px4_shell_status: 0
+      executor_exit: SIGABRT_AFTER_ARMING_CHECK_REQUEST_TIMEOUT
+      executor_shell_status: 134_FROM_RAW_SHELL_DIAGNOSTIC
+      monitor: FAIL_EXECUTOR_EXIT
+      clock_bridge: VALID
+      route_oracle: NOT_APPLICABLE
+      attempt_time_successor_oracle: VIOLATION_AFTER_INFRASTRUCTURE_ABORT
+      microxrce_agent_disconnect_diagnostic: NOT_EMITTED
+    temporal_evidence:
+      last_clock_sample_ros_time_ns: 1784476725299661694
+      external_completion_generated_ros_time_ns: 1784476726767220199
+      transport_gap_preceded_completion_ms: 1467.558505
+      executor_watchdog_exception_ros_time_ns: 1784476732707599223
+      exception_after_completion_ms: 5940.379024
+    classification_reason: >-
+      Periodic PX4 TimesyncStatus delivery stopped 1467.559 ms before the
+      external node generated completion. The registered executor later
+      triggered the library's four-second HealthAndArmingChecks watchdog
+      because no further FMU arming-check request arrived, then aborted. PX4
+      itself remained alive until normal runner shutdown and the Micro XRCE-DDS
+      Agent emitted no disconnect diagnostic. Because the loss of PX4-to-ROS
+      transport evidence causally precedes completion, downstream missing
+      completion, Land, and Disarm evidence is an ENVIRONMENT_FAILURE rather
+      than a successor-lifecycle violation.
+    retry_disposition: >-
+      Seed 16203 already has one complete lifecycle retry that disproved the
+      earlier PX4 abort, so do not spend another same-seed retry. Preserve this
+      attempt and use a new independent seed for the third accepted baseline.
+    artifact_sha256:
+      attempt_result: 0eb2a3d78f3d29d74b30a2857e1bc540428adf3da654274f606637047024d48f
+      clock_bridge: 6f91b92a73b1cb1dcbb3986583a528a35adfb4e52602a90804de7aeace812c6b
+      executor_log: 8843bcc61cdd705d3d845baa0fd08f167fb3290901f38c90e10a56104bb9bc2a
+      flight_log: 3a150beaf4e95b472ba2209083bd6d3c86341db099c1a64421be8b4e3a63d457
+      lifecycle_events: b1d5a3861035d0a14eb6ab3009118ebf3a86d252a1406bf8eeda95ea57c85bb5
+      microxrce_agent_log: 57268a0ffd65b6140c93c84185a8fc12ff764aca7f4b5ab5667ffc8ceb61ac8d
+      monitor_result: 6a1d78991320068d44b6a79aadcd5a871a96d4ab622c683965af4f0b720ec1cb
+      px4_log: b02ea142ddac409319840f798be222c78a35dca47b977e651c1a2b9ca1a6a60e
+      route_oracle: 22ea30e39b123f16c4297c159d696c76d16eb569d8ec13f84669694159b6060c
+      route_summary: 2b5aa0833faebae535ef910dbe43d5425ffc66db2c6bfefbddbe1daecf588ecf
+      route_trace: f237026ec7d5a847d0425e635e32a549df49fb77a66041a07fa17fab071489f7
+      successor_oracle: 8e90bfb3e08b23a71a8586d2e0011be01863dcd57b881f95820b85c7cf46d95d
+    p5_v6_isolation: PASS
+    preserved_raw_root: runs/motivation/successor/baseline/successor_baseline_seed16203_r3/raw
+    recorded_at: 2026-07-19T09:01:13-07:00

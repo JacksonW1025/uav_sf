@@ -1,0 +1,82 @@
+{
+  "acceptance_checks": {
+    "canonical_route_trace_present": true,
+    "clock_bridge_valid": true,
+    "executor_binary_present": true,
+    "library_identity_exact": true,
+    "monitor_pass": false,
+    "no_infrastructure_process_abort": false,
+    "p5_v6_gate_unchanged": true,
+    "p5_v6_manifest_unchanged": true,
+    "px4_identity_exact": true,
+    "raw_evidence_present": true,
+    "route_clauses_pass": false,
+    "route_oracle_pass": false,
+    "successor_clauses_pass": false,
+    "successor_oracle_pass": false,
+    "tracked_worktree_clean": true
+  },
+  "artifact_sha256": {
+    "clock_bridge": "6f91b92a73b1cb1dcbb3986583a528a35adfb4e52602a90804de7aeace812c6b",
+    "executor_log": "8843bcc61cdd705d3d845baa0fd08f167fb3290901f38c90e10a56104bb9bc2a",
+    "flight_log": "3a150beaf4e95b472ba2209083bd6d3c86341db099c1a64421be8b4e3a63d457",
+    "lifecycle_events": "b1d5a3861035d0a14eb6ab3009118ebf3a86d252a1406bf8eeda95ea57c85bb5",
+    "monitor_result": "6a1d78991320068d44b6a79aadcd5a871a96d4ab622c683965af4f0b720ec1cb",
+    "route_oracle": "22ea30e39b123f16c4297c159d696c76d16eb569d8ec13f84669694159b6060c",
+    "route_trace": "f237026ec7d5a847d0425e635e32a549df49fb77a66041a07fa17fab071489f7",
+    "successor_oracle": "8e90bfb3e08b23a71a8586d2e0011be01863dcd57b881f95820b85c7cf46d95d"
+  },
+  "attempt_kind": "legal_non_replacement_executor_successor_baseline",
+  "classification": "ENVIRONMENT_FAILURE",
+  "clock_bridge_status": "VALID",
+  "identity": {
+    "baseline_profile_sha256": "8d3c0213f91542f73ddbf56a66ace65c6a016d9e9ae0dbbae95d20a576960063",
+    "executor_binary_sha256": "eba79e78565587a71cac2e5a70677f9c88ca4172054483beb2fc40414bdccc45",
+    "executor_source_sha256": "96fb7f29a91c6170e5aaafcf1710a268aabe0adb6e543d485ac633df4af81811",
+    "monitor_source_sha256": "9bc23721920186b4e1edfc6fc293c22a793b429a7088a8d0908e68558179efd6",
+    "primary_preregistration_sha256": "11cc54e73dc03192374b4d877cf84cf3b864d9f084b8aa00549d1cdc3b52d060",
+    "px4_binary_sha256": "931320a07585dabf36ca9c8ba994756b93ee7d154cd9c8930b2171548d978993",
+    "px4_commit": "4ae21a5e569d3d89c2f6366688cbacb3e93437c9",
+    "px4_ros2_interface_lib_binary_sha256": "dddfa0698c27617ce5a368dc7d0d5272bc510f3cb780c5ef3f48c77d098380e6",
+    "px4_ros2_interface_lib_commit": "c3e410f035806e8c56246708432ded09c976434b",
+    "repository_commit": "830e73a72205bd3d35fc1cdf5016aa356afcf936",
+    "successor_oracle_source_sha256": "73c56f89e3171af28109286c16b8375550954ca0b37b7380f739d0248e966e31",
+    "tracked_worktree_clean_at_classification": true,
+    "tracked_worktree_status": []
+  },
+  "monitor_status": "FAIL",
+  "p5_v6_isolation": {
+    "protected_hashes": {
+      "p5_v6_differential_gate": "9542eb7c98dfd4df1ab50026c149f21fb719fc6a2a09d040a9db4df647f132bc",
+      "p5_v6_manifest": "02d857f555623c10dc44998cd202c2da6226ec5c40a94a75020d75df87f02518"
+    },
+    "status": "PASS"
+  },
+  "route_clause_statuses": {
+    "continuity": "NOT_APPLICABLE",
+    "exclusivity": "NOT_APPLICABLE",
+    "installation": "NOT_APPLICABLE",
+    "recovery": "NOT_APPLICABLE",
+    "revocation": "NOT_APPLICABLE"
+  },
+  "route_oracle_status": "NOT_APPLICABLE",
+  "run_id": "successor_baseline_seed16203_r3",
+  "runtime": {
+    "executor_early_exit": true,
+    "monitor_exit_code": 1,
+    "monitor_reason": "executor exited before terminal lifecycle",
+    "px4_early_exit": false,
+    "px4_exit_code": 0
+  },
+  "schema_version": "1.0",
+  "status": "REJECTED",
+  "study_id": "external_rtl_successor_issue_162",
+  "successor_clause_statuses": {
+    "completion": "VIOLATION",
+    "mission_progression": "VIOLATION",
+    "ownership": "PASS",
+    "successor_installation": "UNKNOWN",
+    "successor_request": "UNKNOWN"
+  },
+  "successor_oracle_status": "VIOLATION"
+}
