@@ -1,7 +1,8 @@
 # Current Goal state
 
 - Current phase: External RTL successor motivation study, primary reproduction
-  preregistered; normal baseline design and observability implementation next
+  preregistered; isolated normal-baseline harness built and ready for its first
+  bounded SITL run
 - Goal disposition: active, no terminal disposition yet
 - Primary reproduction target: Auterion/px4-ros2-interface-lib Issue #162,
   External RTL replacement selected while its owning Mode Executor remains
@@ -9,11 +10,14 @@
 - Baseline status: repository recovery PASS; existing P0-C is not reused
   because it predates the current Loiter-replacement mode semantics and lacks
   complete executor-in-charge, public completion, and successor-command
-  evidence; successor flight baseline has not started
+  evidence; the separate non-replacement `Successor Baseline` executor now
+  implements Takeoff → owned External Mode → completion → Land → Disarm, but
+  successor flight baseline has not started
 - Observability status: lifecycle event schema 1.0 and a dedicated monitor now
   cover registration, active/owned mode, executor in charge, completion,
   successor command, Land selection, landed state, Disarm, and clock samples;
-  live validation remains pending
+  the route collector now preserves component-declared identity; live
+  validation remains pending
 - Successor Oracle status: version 0.1 implemented independently of Route
   Oracle 0.4; eight focused synthetic tests cover PASS, Issue #162 ownership
   and missing-successor violations, completion loss, wrong requester,
@@ -27,19 +31,22 @@
 - Probe status: none; no formal reproduction or bounded probe has run
 - Confirmed issue count: 0 local reproductions; one upstream-confirmed
   unsupported ownership/successor lifecycle selected for reproduction
-- Current blocker: none; no formal attempt has run, and the legal
-  non-replacement baseline executable/runner must be wired to the new monitor
-  and Oracle before the first accepted run
-- Next exact action: add the isolated `Successor Baseline` Mode Executor chain
-  (Takeoff → non-replacement owned External Mode → Land → Disarm), its bounded
-  runner, build/identity checks, and offline classifier without changing P5
+- Current blocker: none; no formal attempt has run
+- Next exact action: from the clean published harness checkpoint, run the first
+  bounded `Successor Baseline` SITL attempt with seed `16201`, inspect complete
+  lifecycle/route/clock evidence, and accept it only if both Oracles PASS
 - Motivation namespace: `experiments/motivation/successor/`,
   `runs/motivation/successor/`, and
   `data/processed/motivation/successor/`; P5 v6 remains frozen and isolated
 - Motivation-study baseline validation: focused PASS (`38 passed`); full PASS
   (`125 passed`, `15/15` stages)
-- Last motivation checkpoint validation: focused PASS (`46 passed`); full PASS
-  (`133 passed`, `15/15` stages)
+- Baseline harness build: PASS against locked Humble px4-ros2-interface-lib;
+  executable SHA-256
+  `eba79e78565587a71cac2e5a70677f9c88ca4172054483beb2fc40414bdccc45`;
+  locked library SHA-256
+  `dddfa0698c27617ce5a368dc7d0d5272bc510f3cb780c5ef3f48c77d098380e6`
+- Last motivation checkpoint validation: focused PASS (`21 passed` for the
+  successor/trace contracts); full PASS (`138 passed`, `15/15` stages)
 - Protected P5 v6 hashes at Goal start: differential Gate
   `9542eb7c98dfd4df1ab50026c149f21fb719fc6a2a09d040a9db4df647f132bc`;
   manifest
@@ -47,7 +54,7 @@
 - Primary preregistration:
   `experiments/motivation/successor/primary_reproduction_preregistration.yaml`
 - Successor Oracle design: `docs/design/SUCCESSOR_PROGRESSION_ORACLE.md`
-- Last update: 2026-07-19T03:02:11-07:00
+- Last update: 2026-07-19T03:42:00-07:00
 
 ## Preserved P5 v6 completion state
 

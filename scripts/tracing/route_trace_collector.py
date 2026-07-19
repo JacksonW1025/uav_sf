@@ -485,25 +485,28 @@ def lifecycle_events(path: Path, run_id: str) -> Iterator[dict[str, object]]:
 
             if event_type == "external_mode_registered":
                 mode_id = int(payload["mode_id"])
+                component_name = str(payload.get("component_name", "Route Transition"))
                 state.registration_state = {
                     "registered": True,
-                    "name": "Route Transition",
+                    "name": component_name,
                     "mode_id": mode_id,
                 }
-                state.producer_identity = "registered_component:Route Transition"
+                state.producer_identity = f"registered_component:{component_name}"
                 state.registration_instance_id = payload.get("registration_instance_id")
             elif event_type == "external_mode_activated":
+                component_name = str(payload.get("component_name", "Route Transition"))
                 state.declared_mode = int(payload["mode_id"])
                 state.authority_source = "dynamic_external_mode"
-                state.producer_identity = "registered_component:Route Transition"
+                state.producer_identity = f"registered_component:{component_name}"
                 state.setpoint_topic = "trajectory_setpoint"
                 state.setpoint_level = "velocity"
                 state.route_activation_id = payload.get("activation_id")
                 state.registration_instance_id = payload.get("registration_instance_id")
             elif event_type == "external_mode_setpoint":
+                component_name = str(payload.get("component_name", "Route Transition"))
                 event_type = "producer_still_publishing"
                 state.authority_source = "dynamic_external_mode"
-                state.producer_identity = "registered_component:Route Transition"
+                state.producer_identity = f"registered_component:{component_name}"
                 state.setpoint_topic = "trajectory_setpoint"
                 state.setpoint_level = "velocity"
                 phase = payload.get("behavior_phase", payload.get("phase"))
@@ -512,7 +515,8 @@ def lifecycle_events(path: Path, run_id: str) -> Iterator[dict[str, object]]:
                 state.authority_source = None
             elif event_type.startswith("executor_") or event_type == "mode_executor_registered":
                 if state.producer_identity is None:
-                    state.producer_identity = "mode_executor:Route Transition"
+                    component_name = str(payload.get("component_name", "Route Transition"))
+                    state.producer_identity = f"mode_executor:{component_name}"
                 confidence = "MEDIUM" if event_type == "executor_transition" else "HIGH"
 
             details = ",".join(

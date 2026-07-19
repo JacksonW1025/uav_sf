@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import time
 from pathlib import Path
 from typing import Any
@@ -40,7 +41,8 @@ def run(
 
     class Monitor(Node):
         def __init__(self) -> None:
-            super().__init__(f"successor_lifecycle_{run_id}")
+            safe_run_id = re.sub(r"[^A-Za-z0-9_]", "_", run_id)
+            super().__init__(f"successor_lifecycle_{safe_run_id}")
             self.output = output
             self.events_path = events_path
             self.output.parent.mkdir(parents=True, exist_ok=True)

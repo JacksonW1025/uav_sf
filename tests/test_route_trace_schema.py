@@ -136,6 +136,28 @@ def test_producer_and_lifecycle_sidecars_preserve_ros_clock_domain(tmp_path: Pat
     assert registration["timestamp"] == 1_000_250_000_000.0
 
 
+def test_lifecycle_sidecar_preserves_declared_component_identity(tmp_path: Path) -> None:
+    lifecycle = tmp_path / "successor.log"
+    lifecycle.write_text(
+        '[INFO] [1000.25] [mode]: {"event_type":"external_mode_registered",'
+        '"component_name":"Successor Baseline","mode_id":23}\n'
+        '[INFO] [1001.25] [mode]: {"event_type":"external_mode_activated",'
+        '"component_name":"Successor Baseline","mode_id":23,"activation_id":1}\n'
+        '[INFO] [1002.25] [mode]: {"event_type":"external_mode_setpoint",'
+        '"component_name":"Successor Baseline","behavior_phase":"hover"}\n',
+        encoding="utf-8",
+    )
+    registration, activation, setpoint = list(
+        lifecycle_events(lifecycle, "successor-sidecar")
+    )
+    expected = "registered_component:Successor Baseline"
+    assert registration["registration_state"]["name"] == "Successor Baseline"
+    assert registration["producer_identity"] == expected
+    assert activation["producer_identity"] == expected
+    assert setpoint["producer_identity"] == expected
+    assert setpoint["event_type"] == "producer_still_publishing"
+
+
 def test_collector_merges_independent_producer_and_monitor_sidecars(
     tmp_path: Path, monkeypatch
 ) -> None:
