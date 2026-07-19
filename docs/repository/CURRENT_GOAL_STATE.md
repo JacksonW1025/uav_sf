@@ -33,22 +33,19 @@
   harness exits `42` on the preregistered prevention exception before
   registration, classified `NOT_REPRODUCED_ON_CURRENT` /
   `UNSUPPORTED_COMBINATION_REJECTED`; this is not a successor-chain PASS
-- Historical reproduction status: the first complete flight reached the target
-  window and deterministically exhibits the complete defect pattern, but is
-  classified `OBSERVABILITY_INSUFFICIENT` and excluded because its clock bridge
-  is `DEGRADED`; the independent
+- Historical reproduction status: matching violation `1/3` is accepted and
+  classified `HISTORICAL_DEFECT_REPRODUCED`; three earlier complete flights are
+  preserved as `OBSERVABILITY_INSUFFICIENT` because their Timesync-only bridges
+  are `DEGRADED`; the independent
   Ubuntu Noble / ROS Jazzy build of reported affected px4-ros2-interface-lib
   `release/1.16` / `a5b9f3c`, the shared harness, and historical PX4
   `v1.16.0` observation SITL are PASS; the bounded formal runner is ready
 - Probe status: none; no bounded motivation probe has run
-- Confirmed issue count: 0 local reproductions; one upstream-confirmed
+- Confirmed issue count: 1 local reproduction of the one upstream-confirmed
   unsupported ownership/successor lifecycle selected for reproduction
-- Current blocker: seed `16214` passes a `VALID` bridge over the entire target
-  window and repeats the complete defect pattern, but final promotion is held
-  at the clean-worktree Gate while its observer correction is checkpointed.
-  Historical evidence-complete formal attempts remain
-  `0/3`, environment retries are `1/3`, observability rejections are `3`, and
-  accepted matching violations remain `0/3`. The first complete flight is not
+- Current blocker: none. Historical evidence-complete formal attempts are
+  `1/3`, environment retries are `1/3`, observability rejections are `3`, and
+  accepted matching violations are `1/3`. The first complete flight is not
   promoted because its `160.145 ms` maximum clock-fit residual exceeds the
   unchanged `100 ms` VALID threshold.
   Baseline attempt 1 is preserved and classified
@@ -58,10 +55,9 @@
   is an `ENVIRONMENT_FAILURE` after PX4-to-ROS transport stopped before external
   completion and the executor watchdog aborted; attempt 7 on new seed `16204`
   is the third accepted baseline
-- Next exact action: commit and push the target-window coverage Gate, then
-  deterministically reclassify seed `16214` from its unchanged raw artifacts.
-  If the clean-worktree Gate passes, count it as matching violation `1/3` and
-  repeat only to the preregistered `3/3`.
+- Next exact action: checkpoint matching violation 1, then run independent seed
+  `16215` with the unchanged target-window coverage Gate. Repeat only to the
+  preregistered `3/3` matching violations.
 - Motivation namespace: `experiments/motivation/successor/`,
   `runs/motivation/successor/`, and
   `data/processed/motivation/successor/`; P5 v6 remains frozen and isolated
@@ -179,7 +175,8 @@
   post-completion deadline (`45.584 s PX4`). The raw lifecycle again contains
   all five Successor violations. Its first runner result was not counted because
   the earlier collector had selected a pre-registration Timesync subsegment;
-  the corrected analysis is awaiting only the clean-worktree checkpoint Gate.
+  deterministic clean-worktree reclassification passes every acceptance check
+  and is accepted as `HISTORICAL_DEFECT_REPRODUCED` matching run `1/3`.
 - Last motivation checkpoint validation: focused PASS (`48 passed` for the
   successor/route/trace contracts); full PASS (`144 passed`, `15/15` stages)
 - Protected P5 v6 hashes at Goal start: differential Gate
@@ -189,7 +186,7 @@
 - Primary preregistration:
   `experiments/motivation/successor/primary_reproduction_preregistration.yaml`
 - Successor Oracle design: `docs/design/SUCCESSOR_PROGRESSION_ORACLE.md`
-- Last update: 2026-07-19T13:55:05-07:00
+- Last update: 2026-07-19T13:59:00-07:00
 
 ## Preserved P5 v6 completion state
 

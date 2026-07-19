@@ -371,8 +371,8 @@ historical_replay:
   affected_revision: a5b9f3cb7cb65d2be80183bad31e9a7ce9f02684
   required_matching_violation_runs: 3
   maximum_formal_attempts: 3
-  formal_attempts: 0
-  matching_violation_runs: 0
+  formal_attempts: 1
+  matching_violation_runs: 1
   environment_retries: 1
   observability_rejections: 3
   disposition: ACTIVE
@@ -586,10 +586,10 @@ historical_replay:
       simulation_seed: 16214
       repository_commit: f1d21b659584e71711d275de56242e36e8af67c2
       flight_attempt: true
-      formal_attempt: false
-      disposition: ANALYSIS_RECOVERY_PENDING
-      classification: OBSERVABILITY_INSUFFICIENT_DURING_CHECKPOINT
-      counted_as_matching_violation: false
+      formal_attempt: true
+      disposition: ACCEPTED_MATCHING_VIOLATION
+      classification: HISTORICAL_DEFECT_REPRODUCED
+      counted_as_matching_violation: true
       identity_and_isolation: PASS
       monitor: COMPLETE_WITHOUT_TERMINAL
       clock_bridge: VALID
@@ -608,7 +608,7 @@ historical_replay:
         end_px4_us: 45584004.339
       route_oracle: NOT_APPLICABLE
       route_oracle_interpretation: NOT_APPLICABLE_NO_SUCCESSOR_TRANSITION
-      successor_oracle: VIOLATION_NOT_YET_PROMOTED
+      successor_oracle: VIOLATION
       successor_clause_statuses:
         ownership: VIOLATION
         completion: VIOLATION
@@ -621,11 +621,13 @@ historical_replay:
         result was not counted. The collector now correctly reads the nested
         sample-source field and selects 60 continuous VehicleStatus pairs; the
         classifier additionally requires explicit coverage from External Mode
-        activation through the five-second hover deadline. Reanalysis passes
-        both checks but remains temporarily rejected only because these analyzer
-        changes are intentionally uncommitted at this checkpoint.
-      artifact_sha256_at_checkpoint:
-        attempt_result: cff1e319531d5d2d0d30d32a52558d5813af2054ddda2a5a9a9bf8f6a2362a35
+        activation through the five-second hover deadline. After the analyzer
+        checkpoint, deterministic reclassification passes every acceptance
+        check and this run is matching historical violation 1 of 3.
+      analysis_checkpoint_attempt_result_sha256: >-
+        cff1e319531d5d2d0d30d32a52558d5813af2054ddda2a5a9a9bf8f6a2362a35
+      artifact_sha256:
+        attempt_result: 7198431de70282bdda813bbb0ad3a933c2b930d0426a77416a5ec682f6fb4adf
         clock_bridge: b92700a48c4fc1fad3c8ddeabe3e3eddefc68c31b369d95740fb6df4e4f0642f
         executor_log: 66420de4bf86451697106490be5895d8716f30d234ab304f63b01fdd1d405ef6
         flight_log: 99703c148f299d5d0f686f2d89bf79c5f4388520f9c5275f4a27bb630fb4d3aa
@@ -638,4 +640,4 @@ historical_replay:
       p5_v6_isolation: PASS
       preserved_raw_root: >-
         runs/motivation/successor/historical/successor_historical_a5b9f3c_seed16214_r1/raw
-      recorded_at: 2026-07-19T13:55:05-07:00
+      recorded_at: 2026-07-19T13:59:00-07:00

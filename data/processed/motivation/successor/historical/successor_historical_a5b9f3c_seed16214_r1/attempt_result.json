@@ -16,7 +16,7 @@
     "required_successor_evidence_complete": true,
     "route_oracle_decisive": true,
     "successor_oracle_decisive": true,
-    "tracked_worktree_clean": false
+    "tracked_worktree_clean": true
   },
   "artifact_sha256": {
     "clock_bridge": "b92700a48c4fc1fad3c8ddeabe3e3eddefc68c31b369d95740fb6df4e4f0642f",
@@ -29,7 +29,7 @@
     "successor_oracle": "fdfc9047bb7dd98ed01926170ea95b73e03d8d5d7172aa4c13800e35a974bc93"
   },
   "attempt_kind": "historical_affected_external_rtl_successor_replay",
-  "classification": "OBSERVABILITY_INSUFFICIENT",
+  "classification": "HISTORICAL_DEFECT_REPRODUCED",
   "clock_bridge_target_window": {
     "covered": true,
     "end_px4_us": 45584004.339,
@@ -55,7 +55,7 @@
     "px4_observation_diff_sha256": "009c4d522cd69acf5b43a1bab9713cc97cfa7c0cc2f501aefcea8cf13ba2002a",
     "px4_ros2_interface_lib_binary_sha256": "bfb9d81ad7490a784800ad1befc34bab82931fff50f979a1f3bb81a4cdb5302c",
     "px4_ros2_interface_lib_commit": "a5b9f3cb7cb65d2be80183bad31e9a7ce9f02684",
-    "repository_commit": "f1d21b659584e71711d275de56242e36e8af67c2"
+    "repository_commit": "6df6f9bfa9573ee46b903ddd63edb74b6f6d1ba5"
   },
   "mission_consequence": {
     "disarmed": false,
@@ -100,7 +100,7 @@
     "trigger_failure": false
   },
   "schema_version": "1.0",
-  "status": "REJECTED",
+  "status": "ACCEPTED",
   "study_id": "external_rtl_successor_issue_162",
   "successor_clause_statuses": {
     "completion": "VIOLATION",
