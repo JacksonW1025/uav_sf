@@ -20,5 +20,8 @@ target_link_libraries(p0_external_mode_executor PUBLIC Eigen3::Eigen px4_ros2_cp
 add_executable(successor_baseline_executor src/successor_baseline.cpp)
 target_link_libraries(successor_baseline_executor PUBLIC Eigen3::Eigen px4_ros2_cpp::px4_ros2_cpp rclcpp::rclcpp)
 
-install(TARGETS route_transition_external_mode p0_external_mode_executor successor_baseline_executor DESTINATION lib/${PROJECT_NAME})
+add_executable(issue162_replay src/issue162_replay.cpp)
+target_link_libraries(issue162_replay PUBLIC Eigen3::Eigen px4_ros2_cpp::px4_ros2_cpp rclcpp::rclcpp)
+
+install(TARGETS route_transition_external_mode p0_external_mode_executor successor_baseline_executor issue162_replay DESTINATION lib/${PROJECT_NAME})
 ament_package()
