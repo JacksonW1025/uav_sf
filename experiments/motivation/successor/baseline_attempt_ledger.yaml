@@ -366,3 +366,108 @@ attempts:
     p5_v6_isolation: PASS
     preserved_raw_root: runs/motivation/successor/baseline/successor_baseline_seed16204_r1/raw
     recorded_at: 2026-07-19T09:06:01-07:00
+
+historical_replay:
+  affected_revision: a5b9f3cb7cb65d2be80183bad31e9a7ce9f02684
+  required_matching_violation_runs: 3
+  maximum_formal_attempts: 3
+  formal_attempts: 0
+  matching_violation_runs: 0
+  environment_retries: 1
+  observability_rejections: 1
+  disposition: ACTIVE
+  attempts:
+    - run_id: successor_historical_a5b9f3c_seed16211_r1
+      simulation_seed: 16211
+      flight_attempt: false
+      formal_attempt: false
+      disposition: ENVIRONMENT_FAILURE
+      classification: ENVIRONMENT_FAILURE
+      target_lifecycle_observed: false
+      reason: >-
+        PX4 shell startup failed before registration because the independently
+        built historical instance did not yet have its rootfs/0/etc link. The
+        generated empty tree is preserved; the runner now verifies and creates
+        the exact link without modifying the SUT.
+      preserved_raw_root: >-
+        runs/motivation/successor/historical/successor_historical_a5b9f3c_seed16211_r1/raw
+      recorded_at: 2026-07-19T12:24:10-07:00
+    - run_id: successor_historical_a5b9f3c_seed16211_r2
+      simulation_seed: 16211
+      repository_commit: f9c2c51c8f4400c05a818b12f5ca0fc58562d3aa
+      flight_attempt: true
+      formal_attempt: false
+      disposition: REJECTED_OBSERVABILITY
+      classification: OBSERVABILITY_INSUFFICIENT
+      counted_as_matching_violation: false
+      identity_and_isolation: PASS
+      monitor: COMPLETE_WITHOUT_TERMINAL
+      clock_bridge: DEGRADED
+      clock_bridge_reason: residual_exceeds_valid_threshold
+      clock_bridge_metrics:
+        sample_count: 323
+        residual_max_ns: 160144787
+        residual_median_ns: 5816011
+        uncertainty_ns: 164144787
+        unchanged_valid_residual_threshold_ns: 100000000
+      route_oracle: NOT_APPLICABLE
+      route_oracle_interpretation: NOT_APPLICABLE_NO_SUCCESSOR_TRANSITION
+      successor_oracle: VIOLATION_NOT_PROMOTED
+      successor_clause_statuses:
+        ownership: VIOLATION
+        completion: VIOLATION
+        successor_request: VIOLATION
+        successor_installation: VIOLATION
+        mission_progression: VIOLATION
+      lifecycle_evidence:
+        external_mode_id: 23
+        registered_executor_id: 1
+        executor_in_charge_during_external: 0
+        completion_condition_reached: true
+        completion_generated: true
+        public_completion_observed: true
+        completion_receiver_observed: false
+        land_request_observed: false
+        land_selected: false
+        land_route_epoch_installed: false
+        terminal_disarm: false
+        hover_after_completion_at_least_ms: 5000
+      route_chain_evidence:
+        source_route_epoch_observed: true
+        land_route_epoch_observed: false
+        producer_events: 22
+        controller_consumption_events: 375
+        allocator_input_events: 505
+        actuator_writer_events: 2010
+      violation_categories_not_promoted:
+        - COMPLETION_NOT_DELIVERED
+        - EXECUTOR_NOT_IN_CHARGE
+        - EXPECTED_SUCCESSOR_NOT_INSTALLED
+        - EXPECTED_SUCCESSOR_NOT_REQUESTED
+        - LIFECYCLE_DEAD_END
+        - UNEXPECTED_HOVER_AFTER_COMPLETION
+      classification_reason: >-
+        The unchanged raw flight contains the complete Issue #162 lifecycle
+        pattern, but its clock bridge is DEGRADED because the 160.145 ms
+        maximum fit residual exceeds the unchanged 100 ms VALID threshold.
+        Preregistered cross-domain deadline evidence therefore remains
+        insufficient and the Oracle VIOLATION cannot be promoted or counted.
+      observation_revision: >-
+        Use a new independent seed with a longer prelaunch clock-sample warmup.
+        This only expands bridge coverage and does not change any clock
+        threshold, SUT behavior, lifecycle condition, or Oracle rule.
+      artifact_sha256:
+        attempt_result: e316a3c329002bf1af571c4b9859d87dd233ebb26d87ca2737faae43b5896663
+        clock_bridge: cd42e6a9f753379f3d674c277207bf2bd385b5d90c7b93fd5b01b83d56ef4e23
+        executor_log: 8defc6159b15b45ac8ba78089d57df6d9d5061c63959799f4a0ce3d2c804e0e0
+        flight_log: 2dfc026829f37338e19b8da8e00ce945dece79ede583a816ff7ee7fae4d2bf8b
+        lifecycle_events: 336d9221819446d842c127d60a7c5698dbd90c996f72fd88310ded7209e16842
+        monitor_result: e00a3399f9aecd6ec268d5b5e5db3ef6af174951f0f64a0ffda9f8ec3bb78313
+        route_oracle: e9cb0319cf30f889b0b7acf8724d8e8ec5e350aa4b94b377b0d47f52319c00fd
+        route_summary: 25feaaec6da6a2378c11a85d97ba3bc3f3b84e88b2a3cd0e0c16ae58ebe44bcd
+        route_trace: de26a701e2ec7d00d61f13a936887ff8a771aa6a5d0d46d573d1cd645fa5c008
+        successor_oracle: 5fda798a2b260bd0855bf19b1cab75045178ac8479bf13b6bda638eeaf844d50
+      p5_v6_isolation: PASS
+      preserved_raw_root: >-
+        runs/motivation/successor/historical/successor_historical_a5b9f3c_seed16211_r2/raw
+      recorded_at: 2026-07-19T13:34:57-07:00
