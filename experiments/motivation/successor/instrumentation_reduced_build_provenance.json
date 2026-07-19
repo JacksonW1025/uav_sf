@@ -1,0 +1,35 @@
+{
+  "adapter_binary_sha256": "b7a23fe32ed2ff726cd63b1bc108ffff88ee730d1461868a24bba06e1c327b66",
+  "adapter_source_sha256": "f25c88476ddfda3b7f790110fff11c262ae3f5e16bd556431c2ee493633f2e6b",
+  "build_status": "PASS",
+  "canonical": true,
+  "confirmation_kind": "instrumentation_reduced",
+  "historical_px4": {
+    "binary_sha256": "42e4fd3ba83eb67a560d6ba54427fc11445da469961a0c871ef409710b2f3035",
+    "build_directory": "external/issue162_history/PX4-Autopilot-v1.16.0/build/px4_sitl_default_replay",
+    "cmake_cxx_flags": "",
+    "commit": "6ea3539157ca358c70a515878b77077af7d4611d",
+    "describe": "v1.16.0",
+    "observation_patch": {
+      "diff_sha256": "009c4d522cd69acf5b43a1bab9713cc97cfa7c0cc2f501aefcea8cf13ba2002a",
+      "expected_period_us": 100000,
+      "profile": "BASELINE",
+      "transition_profile_expected_period_us": 8000,
+      "publication_rate_reduction_factor": 12.5,
+      "uorb_queue_length": 4
+    },
+    "transition_macro_compile_command_count": 0
+  },
+  "p5_v6_protected_hashes": {
+    "differential_gate": "9542eb7c98dfd4df1ab50026c149f21fb719fc6a2a09d040a9db4df647f132bc",
+    "manifest": "02d857f555623c10dc44998cd202c2da6226ec5c40a94a75020d75df87f02518"
+  },
+  "primary_preregistration_sha256": "11cc54e73dc03192374b4d877cf84cf3b864d9f084b8aa00549d1cdc3b52d060",
+  "px4_msgs_commit": "392e831c1f659429ca83902e66820d7094591410",
+  "px4_ros2_interface_lib_binary_sha256": "bfb9d81ad7490a784800ad1befc34bab82931fff50f979a1f3bb81a4cdb5302c",
+  "px4_ros2_interface_lib_commit": "a5b9f3cb7cb65d2be80183bad31e9a7ce9f02684",
+  "px4_ros2_interface_lib_describe": "1.5.2",
+  "schema_version": "1.0",
+  "semantic_contract": "identical Issue #162 registration, RTL replacement, completion, expected Land successor, and terminal Disarm lifecycle",
+  "sut_delta_from_formal_runs": "none; only route-observation publication cadence changes from 8 ms TRANSITION to 100 ms BASELINE"
+}

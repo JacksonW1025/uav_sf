@@ -10,7 +10,7 @@ fi
 
 HISTORY_ROOT="${SUCCESSOR_HISTORY_ROOT:-${REPO_ROOT}/external/issue162_history}"
 PX4_DIR="${SUCCESSOR_PX4_DIR:-${HISTORY_ROOT}/PX4-Autopilot-v1.16.0}"
-PX4_BUILD="${PX4_DIR}/build/px4_sitl_default"
+PX4_BUILD="${SUCCESSOR_PX4_BUILD:-${PX4_DIR}/build/px4_sitl_default}"
 ROOTFS="${SUCCESSOR_JAZZY_ROOTFS:-${HISTORY_ROOT}/noble-rootfs}"
 JAZZY_WS="${SUCCESSOR_JAZZY_WS:-${HISTORY_ROOT}/ros2_ws_jazzy}"
 LIBRARY_SOURCE="${SUCCESSOR_LIBRARY_SOURCE:-${HISTORY_ROOT}/px4_ros2_interface_lib-a5b9f3c}"
@@ -21,6 +21,7 @@ AGENT_LIBRARY_PATH="${MICROXRCE_AGENT_LD_LIBRARY_PATH:-/usr/local/lib}"
 LOGGER_TOPICS_FILE="${SUCCESSOR_LOGGER_TOPICS_FILE:-${REPO_ROOT}/config/phase_a2_minimal_logger_topics.txt}"
 BUILD_PROVENANCE="${SUCCESSOR_BUILD_PROVENANCE:-${REPO_ROOT}/experiments/motivation/successor/historical_replay_build_provenance.json}"
 PROFILE="${SUCCESSOR_PROFILE:-${REPO_ROOT}/experiments/motivation/successor/historical_lifecycle_profile.yaml}"
+OBSERVATION_PROFILE="${SUCCESSOR_OBSERVATION_PROFILE:-$(jq -r .historical_px4.observation_patch.profile "${BUILD_PROVENANCE}")}"
 SIMULATION_SEED="${SUCCESSOR_SIMULATION_SEED:-16211}"
 RAW_PARENT="${SUCCESSOR_RUN_ROOT:-${REPO_ROOT}/runs/motivation/successor/historical}"
 PROCESSED_PARENT="${SUCCESSOR_PROCESSED_ROOT:-${REPO_ROOT}/data/processed/motivation/successor/historical}"
@@ -50,6 +51,8 @@ run_jazzy() {
 [[ -f "${LIBRARY_BIN}" ]] || { echo "historical px4_ros2_cpp library is unavailable" >&2; exit 4; }
 [[ -x "${PX4_BUILD}/bin/px4" ]] || { echo "historical PX4 SITL binary is unavailable" >&2; exit 4; }
 [[ -f "${ROOTFS}/opt/ros/jazzy/setup.bash" ]] || { echo "isolated Jazzy rootfs is unavailable" >&2; exit 4; }
+[[ "${OBSERVATION_PROFILE}" =~ ^(BASELINE|TRANSITION)$ ]] \
+  || { echo "historical observation profile must be BASELINE or TRANSITION" >&2; exit 4; }
 [[ "$(git -C "${PX4_DIR}" rev-parse HEAD)" == "6ea3539157ca358c70a515878b77077af7d4611d" ]] \
   || { echo "PX4 revision differs from historical lock" >&2; exit 5; }
 [[ "$(git -C "${LIBRARY_SOURCE}" rev-parse HEAD)" == "a5b9f3cb7cb65d2be80183bad31e9a7ce9f02684" ]] \
@@ -346,7 +349,7 @@ python3 "${REPO_ROOT}/scripts/analysis/summarize_route_trace.py" \
   --output "${PROCESSED_DIR}/route_summary.json" --scenario-label "issue162_historical" \
   --source "${RAW_DIR}/flight.ulg" --source "${LIFECYCLE_EVENTS}" \
   --source "${RAW_DIR}/external_mode_executor.log" --clock-bridge "${CLOCK_BRIDGE}" \
-  --observation-profile TRANSITION --uorb-queue-length 4 \
+  --observation-profile "${OBSERVATION_PROFILE}" --uorb-queue-length 4 \
   --build-provenance "${BUILD_PROVENANCE}"
 
 MODE_ID="$(jq -r '.registered_mode_id // empty' "${MONITOR_RESULT}")"
@@ -381,7 +384,8 @@ python3 "${REPO_ROOT}/scripts/analysis/classify_successor_historical_replay.py" 
   --executor-log "${RAW_DIR}/external_mode_executor.log" --route-trace "${ROUTE_TRACE}" \
   --flight-log "${RAW_DIR}/flight.ulg" --executor-binary "${EXECUTOR_BIN}" \
   --library-binary "${LIBRARY_BIN}" --library-source-dir "${LIBRARY_SOURCE}" \
-  --px4-dir "${PX4_DIR}" --build-provenance "${BUILD_PROVENANCE}" \
+  --px4-dir "${PX4_DIR}" --px4-binary "${PX4_BUILD}/bin/px4" \
+  --build-provenance "${BUILD_PROVENANCE}" \
   --monitor-exit-code "${MONITOR_RC}" --px4-exit-code "${PX4_RC}" \
   --executor-exit-code "${EXECUTOR_RC}" --px4-early-exit "${PX4_EARLY_EXIT}" \
   --executor-early-exit "${EXECUTOR_EARLY_EXIT}" --trigger-failure "${TRIGGER_FAILURE}" \

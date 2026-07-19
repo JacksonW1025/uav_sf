@@ -128,6 +128,7 @@ def main() -> int:
     parser.add_argument("--library-binary", type=Path, required=True)
     parser.add_argument("--library-source-dir", type=Path, required=True)
     parser.add_argument("--px4-dir", type=Path, required=True)
+    parser.add_argument("--px4-binary", type=Path)
     parser.add_argument("--build-provenance", type=Path, required=True)
     parser.add_argument("--monitor-exit-code", type=int, default=0)
     parser.add_argument("--px4-exit-code", type=int, default=0)
@@ -221,7 +222,8 @@ def main() -> int:
     px4_diff_sha256 = hashlib.sha256(
         git_bytes(args.px4_dir, "diff", "--cached")
     ).hexdigest()
-    px4_binary_sha256 = sha256(args.px4_dir / "build/px4_sitl_default/bin/px4")
+    px4_binary = args.px4_binary or args.px4_dir / "build/px4_sitl_default/bin/px4"
+    px4_binary_sha256 = sha256(px4_binary)
     library_binary_sha256 = sha256(args.library_binary)
     executor_binary_sha256 = sha256(args.executor_binary)
     tracked_status = git_text(ROOT, "status", "--porcelain=v1", "--untracked-files=no")

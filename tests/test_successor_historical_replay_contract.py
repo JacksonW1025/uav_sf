@@ -91,6 +91,9 @@ def test_historical_runner_is_isolated_bounded_and_publicly_triggered() -> None:
     assert RUNNER.index("PX4_INSTANCE_ETC=") < RUNNER.index("LOGGER_TOPICS_TARGET=")
     assert "--transition-target-mode 18" in RUNNER
     assert "classify_successor_historical_replay.py" in RUNNER
+    assert 'PX4_BUILD="${SUCCESSOR_PX4_BUILD:-' in RUNNER
+    assert '--px4-binary "${PX4_BUILD}/bin/px4"' in RUNNER
+    assert '--observation-profile "${OBSERVATION_PROFILE}"' in RUNNER
     assert "9542eb7c98dfd4df1ab50026c149f21fb719fc6a2a09d040a9db4df647f132bc" in RUNNER
     assert "02d857f555623c10dc44998cd202c2da6226ec5c40a94a75020d75df87f02518" in RUNNER
 
@@ -108,6 +111,22 @@ def test_environment_failure_precedes_historical_violation() -> None:
         successor_status="VIOLATION",
         defect_pattern_complete=True,
     ) == "HISTORICAL_DEFECT_REPRODUCED"
+
+
+def test_instrumentation_reduced_build_is_locked() -> None:
+    reduced = json.loads(
+        (
+            ROOT
+            / "experiments/motivation/successor/instrumentation_reduced_build_provenance.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert reduced["canonical"] is True
+    assert reduced["confirmation_kind"] == "instrumentation_reduced"
+    assert reduced["historical_px4"]["observation_patch"]["profile"] == "BASELINE"
+    assert reduced["historical_px4"]["observation_patch"]["expected_period_us"] == 100000
+    assert reduced["historical_px4"]["binary_sha256"] == (
+        "42e4fd3ba83eb67a560d6ba54427fc11445da469961a0c871ef409710b2f3035"
+    )
 
 
 def test_historical_bridge_must_cover_external_mode_through_hover_window() -> None:

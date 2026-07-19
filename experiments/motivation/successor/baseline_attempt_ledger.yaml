@@ -376,6 +376,17 @@ historical_replay:
   environment_retries: 1
   observability_rejections: 4
   disposition: THREE_MATCHING_VIOLATIONS_CONFIRMED
+  instrumentation_reduced_confirmation:
+    required: true
+    maximum_formal_attempts: 1
+    formal_attempts: 0
+    status: BUILD_PREPARED
+    observation_profile: BASELINE
+    expected_period_us: 100000
+    transition_profile_expected_period_us: 8000
+    publication_rate_reduction_factor: 12.5
+    px4_binary_sha256: 42e4fd3ba83eb67a560d6ba54427fc11445da469961a0c871ef409710b2f3035
+    source_and_observation_diff_unchanged: true
   attempts:
     - run_id: successor_historical_a5b9f3c_seed16211_r1
       simulation_seed: 16211

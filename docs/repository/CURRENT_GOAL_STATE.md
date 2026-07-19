@@ -55,9 +55,10 @@
   is an `ENVIRONMENT_FAILURE` after PX4-to-ROS transport stopped before external
   completion and the executor watchdog aborted; attempt 7 on new seed `16204`
   is the third accepted baseline
-- Next exact action: checkpoint the third matching violation, then perform the
-  single preregistered instrumentation-reduced confirmation and stop runtime
-  expansion before producing the final motivation case report.
+- Next exact action: checkpoint the independent BASELINE-profile PX4 build and
+  runner identity inputs, then perform the single preregistered
+  instrumentation-reduced confirmation and stop runtime expansion before
+  producing the final motivation case report.
 - Motivation namespace: `experiments/motivation/successor/`,
   `runs/motivation/successor/`, and
   `data/processed/motivation/successor/`; P5 v6 remains frozen and isolated
@@ -189,6 +190,12 @@
   accepted as the third `HISTORICAL_DEFECT_REPRODUCED` run. The formal affected
   runtime attempt limit is now exhausted at `3/3`; no further fully instrumented
   formal replay is authorized.
+- Instrumentation-reduced build: PASS in independent
+  `build/px4_sitl_default_replay`; binary SHA-256 is `42e4fd3b...f3035`, source
+  commit and observation diff are unchanged, the TRANSITION macro is absent,
+  and route observation cadence is reduced from 8 ms to 100 ms (12.5×). The
+  runner now locks the alternate build/profile/provenance explicitly; no
+  reduced confirmation flight has run yet (`0/1`).
 - Last motivation checkpoint validation: focused PASS (`48 passed` for the
   successor/route/trace contracts); full PASS (`144 passed`, `15/15` stages)
 - Protected P5 v6 hashes at Goal start: differential Gate
@@ -198,7 +205,7 @@
 - Primary preregistration:
   `experiments/motivation/successor/primary_reproduction_preregistration.yaml`
 - Successor Oracle design: `docs/design/SUCCESSOR_PROGRESSION_ORACLE.md`
-- Last update: 2026-07-19T14:10:00-07:00
+- Last update: 2026-07-19T14:20:00-07:00
 
 ## Preserved P5 v6 completion state
 
