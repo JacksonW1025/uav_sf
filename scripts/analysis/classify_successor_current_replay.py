@@ -20,6 +20,8 @@ P5_GATE = ROOT / "experiments/probes/p5/p5_v6_differential_gate.json"
 P5_MANIFEST = ROOT / "experiments/probes/p5/campaign_seeded_v6_manifest.json"
 P5_GATE_SHA256 = "9542eb7c98dfd4df1ab50026c149f21fb719fc6a2a09d040a9db4df647f132bc"
 P5_MANIFEST_SHA256 = "02d857f555623c10dc44998cd202c2da6226ec5c40a94a75020d75df87f02518"
+CURRENT_LIBRARY_COMMIT = "c3e410f035806e8c56246708432ded09c976434b"
+GUARD_COMMIT = "dce6c1f2e4a29e947fd32a84c4981773f1962c03"
 
 
 def sha256(path: Path) -> str | None:
@@ -91,9 +93,16 @@ def main() -> int:
         "attempt_kind": "current_locked_constructor_and_registration_replay",
         "run_id": args.run_id,
         "status": "NOT_REPRODUCED_ON_CURRENT" if accepted else "REJECTED",
-        "classification": (
+        "classification": "NOT_REPRODUCED_ON_CURRENT" if accepted else "REJECTED",
+        "disposition": (
             "UNSUPPORTED_COMBINATION_REJECTED" if accepted else "EVIDENCE_FAILURE"
         ),
+        "exit_code": args.replay_exit_code,
+        "guard_exception_match": expected_rejection,
+        "registration_attempted": False,
+        "flight_started": False,
+        "current_library_commit": library_commit,
+        "guard_commit": GUARD_COMMIT,
         "reason": (
             "current library rejected executor-owned internal RTL replacement before registration"
             if accepted
@@ -103,7 +112,9 @@ def main() -> int:
         "lifecycle_applicability": "NOT_APPLICABLE" if accepted else "UNKNOWN",
         "runtime": {
             "replay_exit_code": args.replay_exit_code,
+            "registration_attempted": False,
             "registration_reached": '"event_type":"mode_executor_registered"' in replay_log,
+            "flight_started": False,
             "expected_exception_observed": EXPECTED_EXCEPTION in replay_log,
         },
         "identity": {

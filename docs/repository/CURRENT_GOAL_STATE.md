@@ -1,8 +1,8 @@
 # Current Goal state
 
 - Current phase: External RTL successor motivation study, primary reproduction
-  preregistered; legal successor baseline complete at `3/3` accepted runs and
-  current-version reproduction is next
+  preregistered; legal successor baseline complete at `3/3`, current-version
+  replay complete, and historical affected replay is next
 - Goal disposition: active, no terminal disposition yet
 - Primary reproduction target: Auterion/px4-ros2-interface-lib Issue #162,
   External RTL replacement selected while its owning Mode Executor remains
@@ -29,13 +29,13 @@
   attempt 1 exposed and corrected the request encoding to
   `VEHICLE_CMD_SET_NAV_STATE(100001), param1=Land(18)`; three live runs now PASS
   every ownership, completion, successor, installation, and mission clause
-- Current-version reproduction status: exact shared replay harness implemented
-  and built, but its one formal attempt has not run; source audit predicts
-  construction-time rejection because locked px4-ros2-interface-lib `c3e410f`
-  contains guard commit `dce6c1f`
+- Current-version reproduction status: complete `1/1`; exact shared replay
+  harness exits `42` on the preregistered prevention exception before
+  registration, classified `NOT_REPRODUCED_ON_CURRENT` /
+  `UNSUPPORTED_COMBINATION_REJECTED`; this is not a successor-chain PASS
 - Historical reproduction status: not started; reported affected target is
   px4-ros2-interface-lib `release/1.16` / `a5b9f3c`
-- Probe status: none; no primary reproduction or bounded motivation probe has run
+- Probe status: none; no bounded motivation probe has run
 - Confirmed issue count: 0 local reproductions; one upstream-confirmed
   unsupported ownership/successor lifecycle selected for reproduction
 - Current blocker: none; baseline attempt 1 is preserved and classified
@@ -45,9 +45,10 @@
   is an `ENVIRONMENT_FAILURE` after PX4-to-ROS transport stopped before external
   completion and the executor watchdog aborted; attempt 7 on new seed `16204`
   is the third accepted baseline
-- Next exact action: checkpoint the built replay harness, then execute its one
-  preregistered current-version constructor/registration attempt before any
-  historical checkout or bounded motivation probe
+- Next exact action: checkpoint the completed current replay, then create and
+  verify an ignored dedicated historical worktree/build for reported affected
+  library `a5b9f3c` (or the preregistered API-compatible pre-guard parent if the
+  reported stack cannot build) before the first historical flight attempt
 - Motivation namespace: `experiments/motivation/successor/`,
   `runs/motivation/successor/`, and
   `data/processed/motivation/successor/`; P5 v6 remains frozen and isolated
@@ -97,8 +98,13 @@
   `a23b1ffa13a409749c6b93533653943f3fc87825a4e1506aa95fb98f4c159fcc`;
   current executable SHA-256
   `272eae42b7f7592c098c5a9b0cbcbac9e3726c0d659b46c2faa4bc5a60cd6297`
-- Last motivation checkpoint validation: focused PASS (`32 passed` for the
-  successor/trace contracts); full PASS (`143 passed`, `15/15` stages)
+- Current replay evidence: `successor_current_c3e410f_r1` matches the exact
+  constructor prevention text from guard `dce6c1f`, exits `42`, attempts no
+  registration, starts no flight, and PASSes every identity, build-provenance,
+  clean-worktree, and P5 isolation check. Its result is NOT_APPLICABLE to
+  runtime Successor Oracle obligations.
+- Last motivation checkpoint validation: focused PASS (`48 passed` for the
+  successor/route/trace contracts); full PASS (`144 passed`, `15/15` stages)
 - Protected P5 v6 hashes at Goal start: differential Gate
   `9542eb7c98dfd4df1ab50026c149f21fb719fc6a2a09d040a9db4df647f132bc`;
   manifest
@@ -106,7 +112,7 @@
 - Primary preregistration:
   `experiments/motivation/successor/primary_reproduction_preregistration.yaml`
 - Successor Oracle design: `docs/design/SUCCESSOR_PROGRESSION_ORACLE.md`
-- Last update: 2026-07-19T09:14:51-07:00
+- Last update: 2026-07-19T12:05:30-07:00
 
 ## Preserved P5 v6 completion state
 

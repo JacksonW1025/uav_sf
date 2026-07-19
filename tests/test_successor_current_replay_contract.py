@@ -9,6 +9,9 @@ SOURCE = (
 RUNNER = (ROOT / "scripts/probes/run_successor_current_replay.sh").read_text(
     encoding="utf-8"
 )
+CLASSIFIER = (
+    ROOT / "scripts/analysis/classify_successor_current_replay.py"
+).read_text(encoding="utf-8")
 
 
 def test_issue162_harness_uses_preregistered_legal_composition() -> None:
@@ -37,3 +40,12 @@ def test_current_replay_is_bounded_exact_and_p5_isolated() -> None:
     assert "c3e410f035806e8c56246708432ded09c976434b" in RUNNER
     assert "9542eb7c98dfd4df1ab50026c149f21fb719fc6a2a09d040a9db4df647f132bc" in RUNNER
     assert "02d857f555623c10dc44998cd202c2da6226ec5c40a94a75020d75df87f02518" in RUNNER
+
+
+def test_current_replay_records_guard_and_nonflight_disposition() -> None:
+    assert '"classification": "NOT_REPRODUCED_ON_CURRENT"' in CLASSIFIER
+    assert '"UNSUPPORTED_COMBINATION_REJECTED"' in CLASSIFIER
+    assert '"guard_exception_match": expected_rejection' in CLASSIFIER
+    assert '"registration_attempted": False' in CLASSIFIER
+    assert '"flight_started": False' in CLASSIFIER
+    assert "dce6c1f2e4a29e947fd32a84c4981773f1962c03" in CLASSIFIER

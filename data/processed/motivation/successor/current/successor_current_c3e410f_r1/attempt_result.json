@@ -1,0 +1,59 @@
+{
+  "acceptance_checks": {
+    "exact_current_library_binary": true,
+    "exact_current_library_commit": true,
+    "exact_px4_binary": true,
+    "exact_px4_commit": true,
+    "executable_matches_build_provenance": true,
+    "expected_constructor_exception": true,
+    "p5_v6_gate_unchanged": true,
+    "p5_v6_manifest_unchanged": true,
+    "registration_not_reached": true,
+    "source_matches_build_provenance": true,
+    "tracked_worktree_clean": true
+  },
+  "artifact_sha256": {
+    "replay_log": "41cac62e5a68b004eda85de1f00fe1fe06336595c8b60d015a5858185fe6936a"
+  },
+  "attempt_kind": "current_locked_constructor_and_registration_replay",
+  "classification": "NOT_REPRODUCED_ON_CURRENT",
+  "current_library_commit": "c3e410f035806e8c56246708432ded09c976434b",
+  "disposition": "UNSUPPORTED_COMBINATION_REJECTED",
+  "exit_code": 42,
+  "flight_started": false,
+  "guard_commit": "dce6c1f2e4a29e947fd32a84c4981773f1962c03",
+  "guard_exception_match": true,
+  "identity": {
+    "build_provenance_sha256": "dfc529736266374ac779a345de48cf378256c8a35e6be36a3257ba944cf71627",
+    "executable_sha256": "272eae42b7f7592c098c5a9b0cbcbac9e3726c0d659b46c2faa4bc5a60cd6297",
+    "preregistration_sha256": "11cc54e73dc03192374b4d877cf84cf3b864d9f084b8aa00549d1cdc3b52d060",
+    "px4_binary_sha256": "931320a07585dabf36ca9c8ba994756b93ee7d154cd9c8930b2171548d978993",
+    "px4_commit": "4ae21a5e569d3d89c2f6366688cbacb3e93437c9",
+    "px4_ros2_interface_lib_binary_sha256": "dddfa0698c27617ce5a368dc7d0d5272bc510f3cb780c5ef3f48c77d098380e6",
+    "px4_ros2_interface_lib_commit": "c3e410f035806e8c56246708432ded09c976434b",
+    "repository_commit": "6e321bfd58b8dd20cdc6b0ab08b010014c022bc9",
+    "source_sha256": "a23b1ffa13a409749c6b93533653943f3fc87825a4e1506aa95fb98f4c159fcc",
+    "tracked_worktree_status": []
+  },
+  "lifecycle_applicability": "NOT_APPLICABLE",
+  "p5_v6_isolation": {
+    "protected_hashes": {
+      "p5_v6_differential_gate": "9542eb7c98dfd4df1ab50026c149f21fb719fc6a2a09d040a9db4df647f132bc",
+      "p5_v6_manifest": "02d857f555623c10dc44998cd202c2da6226ec5c40a94a75020d75df87f02518"
+    },
+    "status": "PASS"
+  },
+  "reason": "current library rejected executor-owned internal RTL replacement before registration",
+  "registration_attempted": false,
+  "run_id": "successor_current_c3e410f_r1",
+  "runtime": {
+    "expected_exception_observed": true,
+    "flight_started": false,
+    "registration_attempted": false,
+    "registration_reached": false,
+    "replay_exit_code": 42
+  },
+  "schema_version": "1.0",
+  "status": "NOT_REPRODUCED_ON_CURRENT",
+  "study_id": "external_rtl_successor_issue_162"
+}
