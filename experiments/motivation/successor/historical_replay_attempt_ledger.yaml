@@ -1,0 +1,27 @@
+schema_version: "1.0"
+study_id: external_rtl_successor_issue_162
+attempt_kind: historical_affected_external_rtl_successor_replay
+maximum_formal_attempts: 3
+maximum_environment_retries: 3
+formal_attempts: 0
+environment_failures: 1
+observability_rejections: 0
+matching_violations: 0
+disposition: ACTIVE
+attempts:
+  - run_id: successor_historical_a5b9f3c_seed16211_r1
+    simulation_seed: 16211
+    repository_commit: d570a8a8ab5af603a52b53f68c37ff53959facac
+    px4_commit: 6ea3539157ca358c70a515878b77077af7d4611d
+    px4_ros2_interface_lib_commit: a5b9f3cb7cb65d2be80183bad31e9a7ce9f02684
+    formal_attempt: false
+    environment_retry: 1
+    status: REJECTED
+    classification: ENVIRONMENT_FAILURE
+    target_lifecycle_started: false
+    registration_attempted: false
+    flight_started: false
+    reason: historical PX4 instance root lacked the rootfs/0/etc link, so rcS was unavailable
+    preserved_raw_root: runs/motivation/successor/historical/successor_historical_a5b9f3c_seed16211_r1/raw
+    processed_result: data/processed/motivation/successor/historical/successor_historical_a5b9f3c_seed16211_r1/attempt_result.json
+    recorded_at: 2026-07-19T13:20:25-07:00

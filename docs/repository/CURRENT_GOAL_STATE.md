@@ -40,7 +40,8 @@
 - Probe status: none; no bounded motivation probe has run
 - Confirmed issue count: 0 local reproductions; one upstream-confirmed
   unsupported ownership/successor lifecycle selected for reproduction
-- Current blocker: none; historical formal flight attempts remain `0/3`.
+- Current blocker: none; historical formal flight attempts remain `0/3` and
+  environment retries are `1/3`.
   Baseline attempt 1 is preserved and classified
   `REJECTED_OBSERVABILITY`, attempts 2 and 3 are accepted, and attempt 4 is an
   `ENVIRONMENT_FAILURE` after PX4 SIGSEGV before public completion; attempt 5
@@ -48,7 +49,8 @@
   is an `ENVIRONMENT_FAILURE` after PX4-to-ROS transport stopped before external
   completion and the executor watchdog aborted; attempt 7 on new seed `16204`
   is the third accepted baseline
-- Next exact action: execute formal historical attempt 1 with the clean tracked
+- Next exact action: checkpoint the classified pre-trigger environment failure,
+  then execute formal historical attempt 1 with a new run ID and the clean tracked
   repository, locked Jazzy harness, PX4 `6ea3539` observation binary, and public
   `arm → takeoff → auto:rtl` trigger; preserve and classify the complete bounded
   completion window before applying the preregistered repeat rule
@@ -127,6 +129,13 @@
   baseline/route/trace regression coverage); full PASS (`152 passed`, `15/15`
   stages). Identity preflight passed every artifact lock and intentionally
   stopped at the clean-main-worktree Gate during checkpoint construction.
+- Historical environment retry 1: `successor_historical_a5b9f3c_seed16211_r1`
+  exited before PX4 shell readiness because the new historical build had no
+  `rootfs/0/etc → build/etc` instance link, so `rcS` was unavailable. It reached
+  no registration, flight, or legal RTL trigger and is classified
+  `ENVIRONMENT_FAILURE`, not a formal attempt. The empty generated `etc` tree is
+  preserved inside its raw artifact; the runner now verifies/creates the exact
+  link before installing logger configuration.
 - Last motivation checkpoint validation: focused PASS (`48 passed` for the
   successor/route/trace contracts); full PASS (`144 passed`, `15/15` stages)
 - Protected P5 v6 hashes at Goal start: differential Gate
@@ -136,7 +145,7 @@
 - Primary preregistration:
   `experiments/motivation/successor/primary_reproduction_preregistration.yaml`
 - Successor Oracle design: `docs/design/SUCCESSOR_PROGRESSION_ORACLE.md`
-- Last update: 2026-07-19T13:16:19-07:00
+- Last update: 2026-07-19T13:20:25-07:00
 
 ## Preserved P5 v6 completion state
 

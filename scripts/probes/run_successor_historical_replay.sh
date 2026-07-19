@@ -85,7 +85,22 @@ if [[ -e "${RAW_DIR}" || -e "${PROCESSED_DIR}" ]]; then
 fi
 mkdir -p "${RAW_DIR}" "${PROCESSED_DIR}"
 
-LOGGER_TOPICS_TARGET="${PX4_BUILD}/rootfs/0/etc/logging/logger_topics.txt"
+PX4_INSTANCE_ROOT="${PX4_BUILD}/rootfs/0"
+PX4_INSTANCE_ETC="${PX4_INSTANCE_ROOT}/etc"
+mkdir -p "${PX4_INSTANCE_ROOT}"
+if [[ -L "${PX4_INSTANCE_ETC}" ]]; then
+  [[ "$(readlink -f "${PX4_INSTANCE_ETC}")" == "$(readlink -f "${PX4_BUILD}/etc")" ]] \
+    || { echo "historical PX4 instance etc link has the wrong target" >&2; exit 8; }
+elif [[ -e "${PX4_INSTANCE_ETC}" ]]; then
+  echo "historical PX4 instance etc path exists but is not a symlink" >&2
+  exit 8
+else
+  ln -s "${PX4_BUILD}/etc" "${PX4_INSTANCE_ETC}"
+fi
+[[ -f "${PX4_INSTANCE_ETC}/init.d-posix/rcS" ]] \
+  || { echo "historical PX4 instance startup script is unavailable" >&2; exit 8; }
+
+LOGGER_TOPICS_TARGET="${PX4_INSTANCE_ETC}/logging/logger_topics.txt"
 LOGGER_TOPICS_BACKUP="${RAW_DIR}/logger_topics.previous"
 LOGGER_TOPICS_EXISTED=0
 if [[ -f "${LOGGER_TOPICS_TARGET}" ]]; then

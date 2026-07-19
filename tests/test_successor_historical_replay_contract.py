@@ -86,6 +86,9 @@ def test_historical_runner_is_isolated_bounded_and_publicly_triggered() -> None:
     assert 'echo "commander takeoff" >&3' in RUNNER
     assert 'echo "commander mode auto:rtl" >&3' in RUNNER
     assert "--post-completion-capture 8" in RUNNER
+    assert 'PX4_INSTANCE_ETC="${PX4_INSTANCE_ROOT}/etc"' in RUNNER
+    assert '[[ -f "${PX4_INSTANCE_ETC}/init.d-posix/rcS" ]]' in RUNNER
+    assert RUNNER.index("PX4_INSTANCE_ETC=") < RUNNER.index("LOGGER_TOPICS_TARGET=")
     assert "--transition-target-mode 18" in RUNNER
     assert "classify_successor_historical_replay.py" in RUNNER
     assert "9542eb7c98dfd4df1ab50026c149f21fb719fc6a2a09d040a9db4df647f132bc" in RUNNER

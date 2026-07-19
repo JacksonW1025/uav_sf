@@ -1,0 +1,32 @@
+{
+  "artifact_sha256": {
+    "gazebo_log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "microxrce_agent_log": "8d7aeb9a12fded2f443bd2ec1809f98875a7be9fd16a0a167874216daa8604f3",
+    "px4_log": "eddeb32035aa566ac64938df6074d9ae06779124ff0970a636d57df2b61f4907"
+  },
+  "attempt_kind": "historical_affected_external_rtl_successor_replay",
+  "classification": "ENVIRONMENT_FAILURE",
+  "environment_retry": 1,
+  "evidence": {
+    "flight_started": false,
+    "legal_rtl_trigger_generated": false,
+    "registration_attempted": false,
+    "target_lifecycle_started": false
+  },
+  "formal_attempt": false,
+  "identity": {
+    "px4_binary_sha256": "e6b2f64e63df7e0cda2e2b8013ed73156df0029ad36aefa034be70f575ba0027",
+    "px4_commit": "6ea3539157ca358c70a515878b77077af7d4611d",
+    "px4_ros2_interface_lib_commit": "a5b9f3cb7cb65d2be80183bad31e9a7ce9f02684",
+    "repository_commit": "d570a8a8ab5af603a52b53f68c37ff53959facac"
+  },
+  "p5_v6_isolation": "PASS",
+  "preserved_raw_root": "runs/motivation/successor/historical/successor_historical_a5b9f3c_seed16211_r1/raw",
+  "reason": "PX4 exited before shell readiness because build/px4_sitl_default/rootfs/0/etc was not linked to build/px4_sitl_default/etc and etc/init.d-posix/rcS was unavailable",
+  "recorded_at": "2026-07-19T13:20:25-07:00",
+  "run_id": "successor_historical_a5b9f3c_seed16211_r1",
+  "runner_exit_code": 10,
+  "schema_version": "1.0",
+  "simulation_seed": 16211,
+  "status": "REJECTED"
+}
