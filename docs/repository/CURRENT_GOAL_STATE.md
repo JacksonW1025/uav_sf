@@ -6,14 +6,19 @@
 - Primary reproduction target: Auterion/px4-ros2-interface-lib Issue #162,
   External RTL replacement selected while its owning Mode Executor remains
   Autopilot, preventing the expected Land successor
-- Baseline status: repository recovery PASS (`HEAD == origin/main` at
-  `75a5217e0e0bfab232d03c30dcc22088aa16624d`); successor flight baseline not
-  started
-- Observability status: route/epoch/writer evidence exists; lifecycle owner,
-  completion receiver, successor request, Land selection, and terminal Disarm
-  need the preregistered successor observation contract
-- Successor Oracle status: not implemented; minimum obligations identified in
-  `docs/motivation/EXTERNAL_RTL_SUCCESSOR_ISSUE_INVENTORY.md`
+- Baseline status: repository recovery PASS; existing P0-C is not reused
+  because it predates the current Loiter-replacement mode semantics and lacks
+  complete executor-in-charge, public completion, and successor-command
+  evidence; successor flight baseline has not started
+- Observability status: lifecycle event schema 1.0 and a dedicated monitor now
+  cover registration, active/owned mode, executor in charge, completion,
+  successor command, Land selection, landed state, Disarm, and clock samples;
+  live validation remains pending
+- Successor Oracle status: version 0.1 implemented independently of Route
+  Oracle 0.4; eight focused synthetic tests cover PASS, Issue #162 ownership
+  and missing-successor violations, completion loss, wrong requester,
+  route-UNKNOWN conservatism, missing evidence, and NOT_APPLICABLE; live
+  validation remains pending
 - Current-version reproduction status: not started; source audit predicts
   construction-time rejection because locked px4-ros2-interface-lib
   `c3e410f` contains guard commit `dce6c1f`
@@ -22,24 +27,27 @@
 - Probe status: none; no formal reproduction or bounded probe has run
 - Confirmed issue count: 0 local reproductions; one upstream-confirmed
   unsupported ownership/successor lifecycle selected for reproduction
-- Current blocker: none; no formal attempt has run, and the preregistered
-  three-run normal baseline plus minimum lifecycle observation support must be
-  implemented first
-- Next exact action: review existing P0/P5 runner and trace artifacts against
-  the preregistered lifecycle fields, then implement only the missing baseline
-  lifecycle/successor observations before the first accepted baseline run
+- Current blocker: none; no formal attempt has run, and the legal
+  non-replacement baseline executable/runner must be wired to the new monitor
+  and Oracle before the first accepted run
+- Next exact action: add the isolated `Successor Baseline` Mode Executor chain
+  (Takeoff → non-replacement owned External Mode → Land → Disarm), its bounded
+  runner, build/identity checks, and offline classifier without changing P5
 - Motivation namespace: `experiments/motivation/successor/`,
   `runs/motivation/successor/`, and
   `data/processed/motivation/successor/`; P5 v6 remains frozen and isolated
 - Motivation-study baseline validation: focused PASS (`38 passed`); full PASS
   (`125 passed`, `15/15` stages)
+- Last motivation checkpoint validation: focused PASS (`46 passed`); full PASS
+  (`133 passed`, `15/15` stages)
 - Protected P5 v6 hashes at Goal start: differential Gate
   `9542eb7c98dfd4df1ab50026c149f21fb719fc6a2a09d040a9db4df647f132bc`;
   manifest
   `02d857f555623c10dc44998cd202c2da6226ec5c40a94a75020d75df87f02518`
 - Primary preregistration:
   `experiments/motivation/successor/primary_reproduction_preregistration.yaml`
-- Last update: 2026-07-19T02:49:40-07:00
+- Successor Oracle design: `docs/design/SUCCESSOR_PROGRESSION_ORACLE.md`
+- Last update: 2026-07-19T03:02:11-07:00
 
 ## Preserved P5 v6 completion state
 

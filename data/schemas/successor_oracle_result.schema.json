@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uav-sf.local/schemas/successor_oracle_result.schema.json",
+  "title": "Successor Progression Oracle result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "successor_oracle_version",
+    "run_id",
+    "profile_id",
+    "status",
+    "clauses",
+    "violation_categories",
+    "timeline",
+    "evidence_completeness",
+    "inputs"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "successor_oracle_version": {"const": "0.1"},
+    "run_id": {"type": "string", "minLength": 1},
+    "profile_id": {"type": "string", "minLength": 1},
+    "status": {"enum": ["PASS", "VIOLATION", "UNKNOWN", "NOT_APPLICABLE"]},
+    "clauses": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ownership",
+        "completion",
+        "successor_request",
+        "successor_installation",
+        "mission_progression"
+      ],
+      "properties": {
+        "ownership": {"$ref": "#/$defs/clause"},
+        "completion": {"$ref": "#/$defs/clause"},
+        "successor_request": {"$ref": "#/$defs/clause"},
+        "successor_installation": {"$ref": "#/$defs/clause"},
+        "mission_progression": {"$ref": "#/$defs/clause"}
+      }
+    },
+    "violation_categories": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "EXECUTOR_NOT_IN_CHARGE",
+          "COMPLETION_NOT_DELIVERED",
+          "EXPECTED_SUCCESSOR_NOT_REQUESTED",
+          "EXPECTED_SUCCESSOR_NOT_SELECTED",
+          "EXPECTED_SUCCESSOR_NOT_INSTALLED",
+          "SUCCESSOR_INSTALLED_WITH_WRONG_ROUTE",
+          "EXTERNAL_ROUTE_NOT_RELEASED",
+          "FALLBACK_ROUTE_INCOMPLETE",
+          "LIFECYCLE_DEAD_END",
+          "UNEXPECTED_HOVER_AFTER_COMPLETION",
+          "LAND_NOT_REACHED",
+          "DISARM_NOT_REACHED",
+          "OWNERSHIP_CONFLICT",
+          "ROUTE_GAP",
+          "ILLEGAL_OVERLAP",
+          "PROCESS_ASSERT_OR_CRASH"
+        ]
+      }
+    },
+    "timeline": {
+      "type": "object",
+      "additionalProperties": {"type": ["integer", "null"]}
+    },
+    "evidence_completeness": {
+      "type": "object",
+      "additionalProperties": {"type": "boolean"}
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lifecycle_events", "executor_log", "route_trace", "route_oracle", "clock_bridge", "profile"],
+      "properties": {
+        "lifecycle_events": {"type": ["string", "null"]},
+        "executor_log": {"type": ["string", "null"]},
+        "route_trace": {"type": ["string", "null"]},
+        "route_oracle": {"type": ["string", "null"]},
+        "clock_bridge": {"type": ["string", "null"]},
+        "profile": {"type": ["string", "null"]}
+      }
+    }
+  },
+  "$defs": {
+    "clause": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "reasons", "evidence"],
+      "properties": {
+        "status": {"enum": ["PASS", "VIOLATION", "UNKNOWN", "NOT_APPLICABLE"]},
+        "reasons": {"type": "array", "items": {"type": "string"}},
+        "evidence": {"type": "object"}
+      }
+    }
+  }
+}

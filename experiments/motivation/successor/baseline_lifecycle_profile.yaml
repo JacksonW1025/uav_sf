@@ -1,0 +1,41 @@
+schema_version: "1.0"
+profile_id: external-mode-completion-land-disarm-baseline-v1
+applicability: APPLICABLE
+current_route:
+  mode_source: successful_registration_reply
+  route_family: dynamic_external_mode
+lifecycle_owner:
+  source: successful_registration_reply
+  expected: registered_mode_executor_id
+executor_owner:
+  owned_mode: registered_mode_id
+completion:
+  generated_event_type: external_mode_completed
+  public_event_type: mode_completed_observed
+  public_success_result: 0
+  receiver_event_type: executor_result
+  receiver_stage: external_mode_complete
+  receiver_result: Success
+expected_successor:
+  request_event_type: executor_command_observed
+  command: 21
+  requester_source_component_base: 1000
+  selected_nav_state: 18
+  request_after_completion_deadline_ms: 1000
+  selection_after_request_deadline_ms: 1000
+  route_installation_deadline_ms: 300
+  require_route_oracle_installation_pass: true
+  require_distinct_route_epoch: true
+fallback_route:
+  expected_in_baseline: false
+  mode: 5
+terminal_condition:
+  require_landed: true
+  require_disarmed: true
+  disarm_after_land_selection_deadline_ms: 60000
+evidence:
+  require_monitor_finished: true
+  require_monitor_status: PASS
+  require_valid_clock_bridge: true
+  require_external_mode_deactivation: true
+missing_required_evidence: UNKNOWN
