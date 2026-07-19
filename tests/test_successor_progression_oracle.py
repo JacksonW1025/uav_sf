@@ -6,7 +6,7 @@ from pathlib import Path
 import yaml
 from jsonschema import Draft202012Validator
 
-from scripts.oracles.successor_progression_oracle import evaluate
+from scripts.oracles.successor_progression_oracle import evaluate, load_executor_events
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -316,3 +316,16 @@ def test_explicitly_unsupported_profile_is_not_applicable() -> None:
     assert all(
         clause["status"] == "NOT_APPLICABLE" for clause in result["clauses"].values()
     )
+
+
+def test_executor_log_normalizes_c_printf_nonfinite_values(tmp_path: Path) -> None:
+    executor_log = tmp_path / "executor.log"
+    executor_log.write_text(
+        '[INFO] [1002.25] [mode]: {"event_type":"external_mode_setpoint",'
+        '"horizontal_error_m":nan,"vertical_error_m":nan,"speed_m_s":nan}\n',
+        encoding="utf-8",
+    )
+    [event_record] = load_executor_events(executor_log)
+    assert event_record["horizontal_error_m"] is None
+    assert event_record["vertical_error_m"] is None
+    assert event_record["speed_m_s"] is None

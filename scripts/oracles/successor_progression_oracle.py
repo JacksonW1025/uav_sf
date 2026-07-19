@@ -19,6 +19,7 @@ RESULT_SCHEMA_PATH = ROOT / "data" / "schemas" / "successor_oracle_result.schema
 STRUCTURED_LOG_EVENT = re.compile(
     r"\[(?P<timestamp>[0-9]+(?:\.[0-9]+)?)\].*?(?P<json>\{\"event_type\".*\})"
 )
+NONFINITE_JSON_VALUE = re.compile(r"(?<=:)(?:nan|-?inf)(?=[,}])")
 STATUSES = {"PASS", "VIOLATION", "UNKNOWN", "NOT_APPLICABLE"}
 
 
@@ -54,7 +55,7 @@ def load_executor_events(path: Path) -> list[dict[str, Any]]:
             match = STRUCTURED_LOG_EVENT.search(line)
             if not match:
                 continue
-            payload = json.loads(match.group("json"))
+            payload = json.loads(NONFINITE_JSON_VALUE.sub("null", match.group("json")))
             payload["ros_time_ns"] = int(float(match.group("timestamp")) * 1_000_000_000)
             events.append(payload)
     return sorted(events, key=lambda event: int(event["ros_time_ns"]))
