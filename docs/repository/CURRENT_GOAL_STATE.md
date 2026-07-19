@@ -33,7 +33,7 @@
   harness exits `42` on the preregistered prevention exception before
   registration, classified `NOT_REPRODUCED_ON_CURRENT` /
   `UNSUPPORTED_COMBINATION_REJECTED`; this is not a successor-chain PASS
-- Historical reproduction status: matching violations `2/3` are accepted and
+- Historical reproduction status: matching violations `3/3` are accepted and
   classified `HISTORICAL_DEFECT_REPRODUCED`; three earlier complete flights are
   preserved as `OBSERVABILITY_INSUFFICIENT` because their Timesync-only bridges
   are `DEGRADED`; the independent
@@ -41,11 +41,11 @@
   `release/1.16` / `a5b9f3c`, the shared harness, and historical PX4
   `v1.16.0` observation SITL are PASS; the bounded formal runner is ready
 - Probe status: none; no bounded motivation probe has run
-- Confirmed issue count: 2 matching local reproductions of the one upstream-confirmed
+- Confirmed issue count: 3 matching local reproductions of the one upstream-confirmed
   unsupported ownership/successor lifecycle selected for reproduction
 - Current blocker: none. Historical evidence-complete formal attempts are
-  `2/3`, environment retries are `1/3`, observability rejections are `4`, and
-  accepted matching violations are `2/3`. The first complete flight is not
+  `3/3`, environment retries are `1/3`, observability rejections are `4`, and
+  accepted matching violations are `3/3`. The first complete flight is not
   promoted because its `160.145 ms` maximum clock-fit residual exceeds the
   unchanged `100 ms` VALID threshold.
   Baseline attempt 1 is preserved and classified
@@ -55,9 +55,9 @@
   is an `ENVIRONMENT_FAILURE` after PX4-to-ROS transport stopped before external
   completion and the executor watchdog aborted; attempt 7 on new seed `16204`
   is the third accepted baseline
-- Next exact action: checkpoint the seed `16215` observability rejection and
-  seed `16216` matching violation, then run independent seed `16217` with the
-  unchanged target-window coverage Gate to complete `3/3`.
+- Next exact action: checkpoint the third matching violation, then perform the
+  single preregistered instrumentation-reduced confirmation and stop runtime
+  expansion before producing the final motivation case report.
 - Motivation namespace: `experiments/motivation/successor/`,
   `runs/motivation/successor/`, and
   `data/processed/motivation/successor/`; P5 v6 remains frozen and isolated
@@ -183,6 +183,12 @@
   `41.587 ms` maximum residual, covers External activation through the hover
   deadline, passes every identity/evidence Gate, and is accepted as matching
   `HISTORICAL_DEFECT_REPRODUCED` run `2/3`.
+- Historical matching run 3: seed `16217` has a `VALID` 65-sample bridge with
+  `46.819 ms` maximum residual, covers the full target window, repeats the exact
+  executor `0` / owned executor `1` mismatch and missing Land chain, and is
+  accepted as the third `HISTORICAL_DEFECT_REPRODUCED` run. The formal affected
+  runtime attempt limit is now exhausted at `3/3`; no further fully instrumented
+  formal replay is authorized.
 - Last motivation checkpoint validation: focused PASS (`48 passed` for the
   successor/route/trace contracts); full PASS (`144 passed`, `15/15` stages)
 - Protected P5 v6 hashes at Goal start: differential Gate
@@ -192,7 +198,7 @@
 - Primary preregistration:
   `experiments/motivation/successor/primary_reproduction_preregistration.yaml`
 - Successor Oracle design: `docs/design/SUCCESSOR_PROGRESSION_ORACLE.md`
-- Last update: 2026-07-19T14:05:00-07:00
+- Last update: 2026-07-19T14:10:00-07:00
 
 ## Preserved P5 v6 completion state
 
