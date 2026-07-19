@@ -3,8 +3,9 @@ study_id: external_rtl_successor_issue_162
 baseline_id: legal_non_replacement_executor_successor_chain
 accepted_runs_required: 3
 accepted_runs: 2
-rejected_attempts: 2
+rejected_attempts: 3
 environment_failures: 1
+observability_rejections: 2
 attempts:
   - run_id: successor_baseline_seed16201_r1
     simulation_seed: 16201
@@ -190,3 +191,63 @@ attempts:
     p5_v6_isolation: PASS
     preserved_raw_root: runs/motivation/successor/baseline/successor_baseline_seed16203_r1/raw
     recorded_at: 2026-07-19T08:49:01-07:00
+  - run_id: successor_baseline_seed16203_r2
+    simulation_seed: 16203
+    repository_commit: 66fa61f4ffa9e2e85f10fab528e0b19a330a4f04
+    disposition: REJECTED_OBSERVABILITY
+    counted_as_accepted_baseline: false
+    identity_and_isolation: PASS
+    monitor: PASS
+    clock_bridge: VALID
+    successor_oracle: PASS
+    successor_clause_statuses:
+      ownership: PASS
+      completion: PASS
+      successor_request: PASS
+      successor_installation: PASS
+      mission_progression: PASS
+    route_oracle: VIOLATION
+    route_clause_statuses:
+      revocation: UNKNOWN
+      installation: PASS
+      exclusivity: PASS
+      continuity: PASS
+      recovery: VIOLATION
+    classification_reason: >-
+      The clock bridge itself is VALID, but its valid interval begins at PX4
+      27.996 s. The final periodic external-producer event maps just before that
+      boundary and is therefore intentionally unbridgeable, while completion
+      and deactivation map inside the interval. Route Oracle cannot establish a
+      last producer publication, leaving revocation UNKNOWN and mechanically
+      making old_producer_stopped a recovery VIOLATION. Complete lifecycle,
+      Land installation, and terminal Disarm all PASS, so this is an
+      observability rejection rather than a route or successor defect.
+    observation_revision: >-
+      Require 40 raw clock samples before launching the executor. This moves the
+      entire external-mode publication window inside the unchanged VALID bridge
+      interval. No clock threshold, Route Oracle rule, SUT, or acceptance rule
+      is changed.
+    lifecycle_evidence:
+      request_after_completion_ms: 0.425692
+      land_selection_after_request_ms: 14.654384
+      source_route_epoch_id: 4
+      land_route_epoch_id: 5
+      land_installation_ms: 16.0
+      maximum_unowned_window_ms: 8.0
+      post_revocation_consumption_count: 0
+      post_revocation_writer_count: 0
+      disarm_after_land_selection_ms: 6175.013628
+    artifact_sha256:
+      attempt_result: 2b896f45577956bfde534a1891f7be004f1496f632648a78d454c8e742581df4
+      clock_bridge: dbba8b4f7ab83664081f5a1c8270a17b37170f1bbcdfc14b612380ebeeaf93f2
+      executor_log: 66248ce21976c24b4c1c43cda14cc2aef75654954c2e3fb21835ff419bb14362
+      flight_log: 43c544f6f8297d386fea0eb548bd838f21e47501fba24edaa1c0a1aca8ab89de
+      lifecycle_events: ae46b164dfd76bfdd049b09f0217ca5a4b08d5870d77895064959d02607ea2be
+      monitor_result: 5cee44fcd7b3e801b114f9b38cda2214a717e5e93ec1091e3b9fb57af6403b08
+      route_oracle: 5a99ea33f0e19ab9208a4e29770daa213d677dbe6c5a0342e97ff1e098ed767b
+      route_summary: 61145760847db719fe063c2923ff4b7cc6dabf219da93539e0b2f60065ac0bad
+      route_trace: 12d864bd3c536dadd989f609cf92f78be97ea8608d5c2419f77443c0504dd45c
+      successor_oracle: 657db77e84f9fc03bad5423df9b4b62d646456a8f86d6135b7867147274ed3e3
+    p5_v6_isolation: PASS
+    preserved_raw_root: runs/motivation/successor/baseline/successor_baseline_seed16203_r2/raw
+    recorded_at: 2026-07-19T08:54:33-07:00

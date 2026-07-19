@@ -204,7 +204,19 @@ python3 "${REPO_ROOT}/scripts/tracing/successor_lifecycle_monitor.py" \
   --abort-marker "${ABORT_MARKER}" \
   >"${RAW_DIR}/monitor.log" 2>&1 &
 MONITOR_PID=$!
-sleep 1
+MIN_PRELAUNCH_CLOCK_SAMPLES="${SUCCESSOR_MIN_PRELAUNCH_CLOCK_SAMPLES:-40}"
+OBSERVED_CLOCK_SAMPLES=0
+for _ in $(seq 1 600); do
+  OBSERVED_CLOCK_SAMPLES="$(grep -c '"event_type": "clock_bridge_sample"' "${LIFECYCLE_EVENTS}" 2>/dev/null || true)"
+  [[ "${OBSERVED_CLOCK_SAMPLES}" -ge "${MIN_PRELAUNCH_CLOCK_SAMPLES}" ]] && break
+  kill -0 "${PX4_PID}" 2>/dev/null || { echo "PX4 exited during clock warmup" >&2; exit 13; }
+  kill -0 "${MONITOR_PID}" 2>/dev/null || { echo "lifecycle monitor exited during clock warmup" >&2; exit 13; }
+  sleep 0.1
+done
+if [[ "${OBSERVED_CLOCK_SAMPLES}" -lt "${MIN_PRELAUNCH_CLOCK_SAMPLES}" ]]; then
+  echo "clock warmup did not reach ${MIN_PRELAUNCH_CLOCK_SAMPLES} samples" >&2
+  exit 13
+fi
 UAV_SF_SUCCESSOR_ACTIVE_DURATION_S="${ACTIVE_DURATION_S}" "${EXECUTOR_BIN}" \
   >"${RAW_DIR}/external_mode_executor.log" 2>&1 &
 EXECUTOR_PID=$!

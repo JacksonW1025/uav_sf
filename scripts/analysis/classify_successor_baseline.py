@@ -39,9 +39,15 @@ def git_output(directory: Path, *args: str) -> str:
     ).stdout.strip()
 
 
-def attempt_classification(accepted: bool, infrastructure_abort: bool) -> str:
+def attempt_classification(
+    accepted: bool,
+    infrastructure_abort: bool,
+    observability_insufficient: bool = False,
+) -> str:
     if infrastructure_abort:
         return "ENVIRONMENT_FAILURE"
+    if observability_insufficient:
+        return "OBSERVABILITY_INSUFFICIENT"
     return "ACCEPTED_BASELINE" if accepted else "EVIDENCE_OR_ORACLE_FAILURE"
 
 
@@ -101,6 +107,21 @@ def main() -> int:
         or args.executor_early_exit
         or "infrastructure process exited" in monitor_reason
     )
+    route_recovery_reasons = (
+        route.get("clauses", {}).get("recovery", {}).get("reasons", []) if route else []
+    )
+    observability_insufficient = bool(
+        not infrastructure_abort
+        and monitor is not None
+        and monitor.get("status") == "PASS"
+        and clock is not None
+        and clock.get("status") == "VALID"
+        and successor is not None
+        and successor.get("status") == "PASS"
+        and route is not None
+        and route.get("clauses", {}).get("revocation", {}).get("status") == "UNKNOWN"
+        and any("old_producer_stopped" in str(reason) for reason in route_recovery_reasons)
+    )
     checks = {
         "monitor_pass": monitor is not None and monitor.get("status") == "PASS",
         "clock_bridge_valid": clock is not None and clock.get("status") == "VALID",
@@ -149,7 +170,9 @@ def main() -> int:
         "attempt_kind": "legal_non_replacement_executor_successor_baseline",
         "run_id": args.run_id,
         "status": "ACCEPTED" if accepted else "REJECTED",
-        "classification": attempt_classification(accepted, infrastructure_abort),
+        "classification": attempt_classification(
+            accepted, infrastructure_abort, observability_insufficient
+        ),
         "acceptance_checks": checks,
         "monitor_status": monitor.get("status") if monitor else None,
         "clock_bridge_status": clock.get("status") if clock else None,
