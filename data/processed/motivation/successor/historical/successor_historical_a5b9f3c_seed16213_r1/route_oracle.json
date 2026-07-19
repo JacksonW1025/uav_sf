@@ -1,0 +1,96 @@
+{
+  "clauses": {
+    "continuity": {
+      "evidence": [],
+      "metrics": {},
+      "reasons": [
+        "no declared mode transition was observed"
+      ],
+      "status": "NOT_APPLICABLE"
+    },
+    "exclusivity": {
+      "evidence": [],
+      "metrics": {},
+      "reasons": [
+        "no declared mode transition was observed"
+      ],
+      "status": "NOT_APPLICABLE"
+    },
+    "installation": {
+      "evidence": [],
+      "metrics": {},
+      "reasons": [
+        "no declared mode transition was observed"
+      ],
+      "status": "NOT_APPLICABLE"
+    },
+    "recovery": {
+      "evidence": [],
+      "metrics": {},
+      "reasons": [
+        "no declared mode transition was observed"
+      ],
+      "status": "NOT_APPLICABLE"
+    },
+    "revocation": {
+      "evidence": [],
+      "metrics": {},
+      "reasons": [
+        "no declared mode transition was observed"
+      ],
+      "status": "NOT_APPLICABLE"
+    }
+  },
+  "clock_bridge": {
+    "clock_bridge_id": "clock-728e9c55722d42f2",
+    "discarded_initial_backlog_samples": 15,
+    "offset_ns": 1784493796314235833,
+    "rate_ratio": 1.1063853786780706,
+    "reasons": [
+      "residual_exceeds_valid_threshold"
+    ],
+    "reference_px4_us": 43532000,
+    "reference_ros_ns": 1784493839846235833,
+    "reset_count": 0,
+    "residual_max_ns": 222623922,
+    "residual_median_ns": 9647554,
+    "sample_count": 324,
+    "schema_version": "1.0",
+    "segment_count": 1,
+    "status": "DEGRADED",
+    "thresholds": {
+      "degraded_residual_max_ns": 250000000,
+      "maximum_round_trip_time_ns": 20000000,
+      "maximum_timesync_offset_span_ns": 5000000,
+      "minimum_sample_count": 20,
+      "residual_max_ns": 100000000,
+      "segment_jump_ns": 50000000
+    },
+    "timestamp_domains": {
+      "source": "px4_boot_us",
+      "target": "ros_node_ns"
+    },
+    "uncertainty_ns": 226623922,
+    "valid_from": 29812000,
+    "valid_until": 47136000
+  },
+  "evidence_completeness": {
+    "candidate_writer_coverage": "NOT_APPLICABLE",
+    "clock_bridge": "NOT_REQUIRED",
+    "critical_window": "NOT_APPLICABLE",
+    "route_epoch": "NOT_APPLICABLE",
+    "source_artifact": "COMPLETE",
+    "writer_sequence": "NOT_APPLICABLE"
+  },
+  "ground_truth_case_id": null,
+  "observation_kind": "TRANSITION",
+  "oracle_validation_profile": "production",
+  "retained_route": null,
+  "route_oracle_version": "0.4",
+  "run_id": "successor_historical_a5b9f3c_seed16213_r1",
+  "schema_version": "1.3",
+  "status": "NOT_APPLICABLE",
+  "threshold_profile_id": "route-oracle-v0.3-default",
+  "transition": null,
+  "violation_categories": []
+}

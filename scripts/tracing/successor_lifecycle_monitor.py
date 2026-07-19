@@ -67,6 +67,9 @@ def run(
             self.disarmed_seen = False
             self.last_status: tuple[int, int, int, int, bool] | None = None
             self.last_landed: bool | None = None
+            self.timesync_estimated_offset_us: int | None = None
+            self.timesync_round_trip_time_us: int | None = None
+            self.timesync_source_protocol: int | None = None
 
             qos = QoSProfile(
                 history=HistoryPolicy.KEEP_LAST,
@@ -172,6 +175,9 @@ def run(
 
         def _status(self, message: Any) -> None:
             self.status_message = message
+            self._clock_sample(
+                int(message.timestamp), sample_source="vehicle_status"
+            )
             armed = int(message.arming_state) == int(VehicleStatus.ARMING_STATE_ARMED)
             if armed:
                 self.armed_seen = True
@@ -276,23 +282,36 @@ def run(
             )
 
         def _timesync(self, message: Any) -> None:
+            self.timesync_estimated_offset_us = int(message.estimated_offset)
+            self.timesync_round_trip_time_us = int(message.round_trip_time)
+            self.timesync_source_protocol = int(message.source_protocol)
+            self._clock_sample(
+                int(message.timestamp), sample_source="timesync_status"
+            )
+
+        def _clock_sample(self, outbound_us: int, *, sample_source: str) -> None:
+            if (
+                self.timesync_estimated_offset_us is None
+                or self.timesync_round_trip_time_us is None
+                or self.timesync_source_protocol is None
+            ):
+                return
             receive_ros_ns = self.get_clock().now().nanoseconds
             receive_monotonic_ns = time.monotonic_ns()
-            outbound_us = int(message.timestamp)
-            offset_us = int(message.estimated_offset)
+            offset_us = self.timesync_estimated_offset_us
             self._event(
                 "clock_bridge_sample",
                 px4_timestamp_us=outbound_us + offset_us,
-                details={"sample_source": "timesync_status"},
+                details={"sample_source": sample_source},
                 clock_fields={
                     "px4_outbound_timestamp_us": outbound_us,
                     "px4_boot_timestamp_us": outbound_us + offset_us,
                     "ros_receive_ns": receive_ros_ns,
                     "monotonic_receive_ns": receive_monotonic_ns,
-                    "timesync_source_protocol": int(message.source_protocol),
+                    "timesync_source_protocol": self.timesync_source_protocol,
                     "timesync_estimated_offset_us": offset_us,
-                    "timesync_round_trip_time_us": int(message.round_trip_time),
-                    "timesync_converged": int(message.source_protocol) == 2,
+                    "timesync_round_trip_time_us": self.timesync_round_trip_time_us,
+                    "timesync_converged": self.timesync_source_protocol == 2,
                 },
             )
 

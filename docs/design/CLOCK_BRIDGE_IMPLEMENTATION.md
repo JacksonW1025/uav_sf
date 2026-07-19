@@ -1,8 +1,10 @@
 # ROS–PX4 clock bridge implementation
 
-The bridge collector pairs, in one `TimesyncStatus` callback, the PX4 outbound
-timestamp, its estimated DDS offset, ROS node receive time, and monotonic
-receive time. PX4 boot time is recovered as:
+The bridge collector captures the PX4 outbound timestamp, the latest converged
+DDS offset, ROS node receive time, and monotonic receive time. It records the
+`TimesyncStatus` callback directly and, when available, prefers continuous
+`VehicleStatus` outbound samples carrying the same current time-sync evidence.
+PX4 boot time is recovered as:
 
 ```text
 px4_boot_us = outbound_timestamp_us + timesync_estimated_offset_us
@@ -10,6 +12,12 @@ px4_boot_us = outbound_timestamp_us + timesync_estimated_offset_us
 
 This matters because the DDS-visible outbound timestamp is synchronized toward
 ROS epoch time; treating it as boot time produces false resets.
+
+The continuous status pairs cover the complete lifecycle window and avoid
+mistaking a bursty `TimesyncStatus` delivery pattern for clock drift. They do
+not weaken the convergence requirement: every selected sample retains source
+protocol, estimated offset, round-trip time, and convergence fields from the
+latest observed `TimesyncStatus`.
 
 Gazebo/PX4 simulated time and host wall time do not advance at exactly the same
 rate. A segment therefore uses the affine map:
@@ -30,6 +38,15 @@ A new segment begins on PX4 time reversal, ROS or monotonic time reversal, a
 ROS-versus-monotonic jump over 50 ms, or a DDS source/convergence-state change.
 Duplicate PX4 samples are ignored by the fit. Latency is never computed across
 segments.
+
+The synchronized outbound timestamp is also retained as a delivery diagnostic,
+not as the bridge target. If its absolute difference from ROS callback receive
+time exceeds the fixed 50 ms jump boundary, that sample is a delayed DDS
+delivery rather than a contemporaneous receive-time pair. Such samples are
+excluded, the queue-drain boundary starts a new candidate segment, and the
+discard count is recorded. This handles mid-run callback backlog as well as the
+already-supported discovery backlog without changing the affine mapping or any
+validity threshold.
 
 Thresholds were fixed after the q16 baseline smoke (67.1 ms maximum affine
 residual) and before the controlled queue matrix, P0-D, P2, or P3 experiments:

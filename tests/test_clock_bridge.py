@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from jsonschema import Draft202012Validator
 
-from scripts.tracing.clock_bridge_collector import SCHEMA, collect
+import json
+
+from scripts.tracing.clock_bridge_collector import SCHEMA, collect, load_samples
 
 
 def _sample(index: int, jitter_ns: int = 0) -> dict[str, int | str]:
@@ -67,3 +69,38 @@ def test_initial_dds_delivery_backlog_is_explicitly_discarded() -> None:
     assert result["status"] == "VALID"
     assert result["discarded_initial_backlog_samples"] == 2
     assert result["sample_count"] == 23
+
+
+def test_midrun_dds_delivery_backlog_starts_a_new_candidate_segment() -> None:
+    samples = [_sample(index) for index in range(50)]
+    for sample in samples:
+        sample["px4_outbound_timestamp_us"] = (
+            sample["ros_receive_ns"] - 2_000_000
+        ) // 1000
+    for sample in samples[20:25]:
+        sample["px4_outbound_timestamp_us"] = (
+            sample["ros_receive_ns"] - 200_000_000
+        ) // 1000
+
+    result = collect(samples)
+
+    assert result["status"] == "VALID"
+    assert result["sample_count"] == 25
+    assert result["segment_count"] == 2
+    assert result["reset_count"] == 0
+    assert result["discarded_delivery_backlog_samples"] == 5
+    assert "DDS_delivery_backlog_samples_discarded" in result["reasons"]
+
+
+def test_continuous_vehicle_status_pairs_are_preferred(tmp_path) -> None:
+    path = tmp_path / "events.jsonl"
+    timesync = _sample(0)
+    timesync["sample_source"] = "timesync_status"
+    status = _sample(1)
+    status["sample_source"] = "vehicle_status"
+    path.write_text(
+        json.dumps(timesync) + "\n" + json.dumps(status) + "\n",
+        encoding="utf-8",
+    )
+
+    assert load_samples(path) == [status]

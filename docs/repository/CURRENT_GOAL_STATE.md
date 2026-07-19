@@ -44,7 +44,7 @@
 - Confirmed issue count: 0 local reproductions; one upstream-confirmed
   unsupported ownership/successor lifecycle selected for reproduction
 - Current blocker: none. Historical evidence-complete formal attempts are
-  `0/3`, environment retries are `1/3`, observability rejections are `2`, and
+  `0/3`, environment retries are `1/3`, observability rejections are `3`, and
   accepted matching violations remain `0/3`. The first complete flight is not
   promoted because its `160.145 ms` maximum clock-fit residual exceeds the
   unchanged `100 ms` VALID threshold.
@@ -55,11 +55,11 @@
   is an `ENVIRONMENT_FAILURE` after PX4-to-ROS transport stopped before external
   completion and the executor watchdog aborted; attempt 7 on new seed `16204`
   is the third accepted baseline
-- Next exact action: preserve seed `16212` as a second observability rejection,
-  then isolate the replay processes onto otherwise idle CPU cores before a new
-  seed. Do not change clock thresholds, lifecycle semantics, SUT behavior, or
-  either Oracle; only a `VALID` bridge and complete evidence may count toward
-  the preregistered `3/3` matching violations.
+- Next exact action: checkpoint the observer-only clock-source correction, then
+  execute seed `16214`. The lifecycle monitor will prefer continuous
+  `VehicleStatus` receive-time pairs carrying the latest converged Timesync
+  fields; no clock threshold, lifecycle semantic, SUT behavior, or Oracle rule
+  changes. Only a bridge spanning the target window may count.
 - Motivation namespace: `experiments/motivation/successor/`,
   `runs/motivation/successor/`, and
   `data/processed/motivation/successor/`; P5 v6 remains frozen and isolated
@@ -163,6 +163,14 @@
   bridge has a `204.467 ms` maximum residual despite an 80-sample prelaunch
   warmup. This demonstrates that longer warmup alone does not remove the
   receive-time scheduling variance; the result is preserved and not counted.
+- Historical complete flight 3: seed `16213` under idle-core affinity again
+  repeats all five Successor violations, but its bridge is `DEGRADED` at
+  `222.624 ms` and remains unpromoted. Residual localization found a
+  pre-registration `TimesyncStatus` callback backlog; target-window residuals
+  are below the unchanged threshold. The monitor now records continuous
+  `VehicleStatus` receive-time pairs with converged Timesync metadata so the
+  next run can cover the entire target lifecycle without using delayed callback
+  samples or changing the mapping.
 - Last motivation checkpoint validation: focused PASS (`48 passed` for the
   successor/route/trace contracts); full PASS (`144 passed`, `15/15` stages)
 - Protected P5 v6 hashes at Goal start: differential Gate
@@ -172,7 +180,7 @@
 - Primary preregistration:
   `experiments/motivation/successor/primary_reproduction_preregistration.yaml`
 - Successor Oracle design: `docs/design/SUCCESSOR_PROGRESSION_ORACLE.md`
-- Last update: 2026-07-19T13:45:00-07:00
+- Last update: 2026-07-19T13:56:00-07:00
 
 ## Preserved P5 v6 completion state
 

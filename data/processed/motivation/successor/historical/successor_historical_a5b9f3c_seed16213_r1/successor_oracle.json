@@ -1,0 +1,98 @@
+{
+  "clauses": {
+    "completion": {
+      "evidence": {},
+      "reasons": [
+        "completion was generated but not delivered to the expected executor"
+      ],
+      "status": "VIOLATION"
+    },
+    "mission_progression": {
+      "evidence": {},
+      "reasons": [
+        "external mode deactivation was not observed",
+        "landed state was not observed",
+        "terminal disarm was not observed",
+        "vehicle remained armed and airborne in the external mode for at least 5000 ms after completion"
+      ],
+      "status": "VIOLATION"
+    },
+    "ownership": {
+      "evidence": {
+        "active_mode": 23,
+        "expected_executor": 1,
+        "observed_executor": 0,
+        "timestamp_ns": 1784493831435419535
+      },
+      "reasons": [
+        "active owned external mode does not have its registered executor in charge"
+      ],
+      "status": "VIOLATION"
+    },
+    "successor_installation": {
+      "evidence": {
+        "route_oracle_status": "NOT_APPLICABLE",
+        "route_transition": null,
+        "selected_nav_state": null
+      },
+      "reasons": [
+        "the complete post-completion window contains no Land request, selection, or route installation"
+      ],
+      "status": "VIOLATION"
+    },
+    "successor_request": {
+      "evidence": {},
+      "reasons": [
+        "expected successor command was not observed after completion"
+      ],
+      "status": "VIOLATION"
+    }
+  },
+  "evidence_completeness": {
+    "clock_bridge_valid": false,
+    "completion_generated": true,
+    "completion_public": true,
+    "completion_receiver": false,
+    "external_activation": true,
+    "registration": true,
+    "route_oracle": true,
+    "route_trace_target_epoch": false,
+    "single_run_id": true,
+    "successor_request": false,
+    "successor_selection": false,
+    "terminal_monitor": true
+  },
+  "inputs": {
+    "clock_bridge": "/mnt/nvme/uav_sf/data/processed/motivation/successor/historical/successor_historical_a5b9f3c_seed16213_r1/clock_bridge.json",
+    "executor_log": "/mnt/nvme/uav_sf/runs/motivation/successor/historical/successor_historical_a5b9f3c_seed16213_r1/raw/external_mode_executor.log",
+    "lifecycle_events": "/mnt/nvme/uav_sf/runs/motivation/successor/historical/successor_historical_a5b9f3c_seed16213_r1/raw/lifecycle_events.jsonl",
+    "profile": "/mnt/nvme/uav_sf/experiments/motivation/successor/historical_lifecycle_profile.yaml",
+    "route_oracle": "/mnt/nvme/uav_sf/data/processed/motivation/successor/historical/successor_historical_a5b9f3c_seed16213_r1/route_oracle.json",
+    "route_trace": "/mnt/nvme/uav_sf/data/processed/motivation/successor/historical/successor_historical_a5b9f3c_seed16213_r1/route_trace.jsonl"
+  },
+  "profile_id": "external-rtl-historical-issue162-completion-land-disarm-v1",
+  "run_id": "successor_historical_a5b9f3c_seed16213_r1",
+  "schema_version": "1.0",
+  "status": "VIOLATION",
+  "successor_oracle_version": "0.1",
+  "timeline": {
+    "completion_ros_time_ns": 1784493836645140958,
+    "disarmed_ros_time_ns": null,
+    "external_active_ros_time_ns": 1784493831435419535,
+    "landed_ros_time_ns": null,
+    "registration_ros_time_ns": 1784493826424056272,
+    "successor_request_ros_time_ns": null,
+    "successor_selected_ros_time_ns": null
+  },
+  "violation_categories": [
+    "COMPLETION_NOT_DELIVERED",
+    "DISARM_NOT_REACHED",
+    "EXECUTOR_NOT_IN_CHARGE",
+    "EXPECTED_SUCCESSOR_NOT_INSTALLED",
+    "EXPECTED_SUCCESSOR_NOT_REQUESTED",
+    "EXTERNAL_ROUTE_NOT_RELEASED",
+    "LAND_NOT_REACHED",
+    "LIFECYCLE_DEAD_END",
+    "UNEXPECTED_HOVER_AFTER_COMPLETION"
+  ]
+}

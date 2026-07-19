@@ -1,0 +1,116 @@
+{
+  "acceptance_checks": {
+    "canonical_route_trace_present": true,
+    "clock_bridge_valid": false,
+    "executor_identity_exact": true,
+    "external_source_route_observed": true,
+    "library_identity_exact": true,
+    "monitor_window_complete": true,
+    "no_infrastructure_process_abort": true,
+    "p5_v6_gate_unchanged": true,
+    "p5_v6_manifest_unchanged": true,
+    "producer_controller_writer_observed": true,
+    "px4_identity_exact": true,
+    "raw_evidence_present": true,
+    "required_successor_evidence_complete": false,
+    "route_oracle_decisive": true,
+    "successor_oracle_decisive": true,
+    "tracked_worktree_clean": true
+  },
+  "artifact_sha256": {
+    "clock_bridge": "37be3d6821bfffc5d5b95ee18f6bdc036f7d65e452b196bf3244a9a3a9136b76",
+    "executor_log": "4ef0f3de24471d35bb6406e3db51fa3a1373e6f47507cfae2ad88ca6af3894a6",
+    "flight_log": "82c763f4c2ed4929452519ec275153100067b6ea81de14a75e2d2eba7f456f97",
+    "lifecycle_events": "5e33dea49e46a9479c64bb544002bc3f732497e97f317df1b03b3c33fcd525ba",
+    "monitor_result": "e86eb7453d339476d8acad15402262b45b87438c164f60801c8d215a99db40fc",
+    "route_oracle": "a2dfc3ad6e6431a92f941ccc13d22521d0e1567b8acd80fe54c9b74a2372c98d",
+    "route_trace": "155d8ad8590cf860ce97e5c5d4d737f831e2488a0930a8c163299f2dc062e290",
+    "successor_oracle": "6dc0869c851b2b1c17f416a122f381418d41520a3d429269cf6988864b4d3f5b"
+  },
+  "attempt_kind": "historical_affected_external_rtl_successor_replay",
+  "classification": "OBSERVABILITY_INSUFFICIENT",
+  "defect_pattern_complete": true,
+  "evidence_completeness": {
+    "clock_bridge_valid": false,
+    "completion_generated": true,
+    "completion_public": true,
+    "external_activation": true,
+    "registration": true,
+    "route_oracle": true,
+    "single_run_id": true,
+    "terminal_monitor": true
+  },
+  "identity": {
+    "executor_binary_sha256": "b7a23fe32ed2ff726cd63b1bc108ffff88ee730d1461868a24bba06e1c327b66",
+    "px4_binary_sha256": "e6b2f64e63df7e0cda2e2b8013ed73156df0029ad36aefa034be70f575ba0027",
+    "px4_commit": "6ea3539157ca358c70a515878b77077af7d4611d",
+    "px4_observation_diff_sha256": "009c4d522cd69acf5b43a1bab9713cc97cfa7c0cc2f501aefcea8cf13ba2002a",
+    "px4_ros2_interface_lib_binary_sha256": "bfb9d81ad7490a784800ad1befc34bab82931fff50f979a1f3bb81a4cdb5302c",
+    "px4_ros2_interface_lib_commit": "a5b9f3cb7cb65d2be80183bad31e9a7ce9f02684",
+    "repository_commit": "f7383660aac6f3d2053760634579ec2a4e4ef7b0"
+  },
+  "mission_consequence": {
+    "disarmed": false,
+    "hover_after_completion": true,
+    "land_selected": false,
+    "landed": false
+  },
+  "p5_v6_isolation": {
+    "protected_hashes": {
+      "p5_v6_differential_gate": "9542eb7c98dfd4df1ab50026c149f21fb719fc6a2a09d040a9db4df647f132bc",
+      "p5_v6_manifest": "02d857f555623c10dc44998cd202c2da6226ec5c40a94a75020d75df87f02518"
+    },
+    "status": "PASS"
+  },
+  "required_defect_categories": [
+    "COMPLETION_NOT_DELIVERED",
+    "EXECUTOR_NOT_IN_CHARGE",
+    "EXPECTED_SUCCESSOR_NOT_INSTALLED",
+    "EXPECTED_SUCCESSOR_NOT_REQUESTED",
+    "LIFECYCLE_DEAD_END",
+    "UNEXPECTED_HOVER_AFTER_COMPLETION"
+  ],
+  "route_chain_evidence": {
+    "actuator_writer": 2035,
+    "allocator_input": 511,
+    "controller_consumption": 373,
+    "external_source_route_epoch": true,
+    "land_route_epoch": false,
+    "producer": 21
+  },
+  "route_oracle_interpretation": "NOT_APPLICABLE_NO_SUCCESSOR_TRANSITION",
+  "route_oracle_status": "NOT_APPLICABLE",
+  "run_id": "successor_historical_a5b9f3c_seed16213_r1",
+  "runtime": {
+    "executor_early_exit": false,
+    "executor_exit_code": 0,
+    "monitor_exit_code": 0,
+    "monitor_reason": "completion observed but Land was not selected; vehicle remained armed, airborne, and in the external mode",
+    "monitor_status": "COMPLETE_WITHOUT_TERMINAL",
+    "px4_early_exit": false,
+    "px4_exit_code": 0,
+    "trigger_failure": false
+  },
+  "schema_version": "1.0",
+  "status": "REJECTED",
+  "study_id": "external_rtl_successor_issue_162",
+  "successor_clause_statuses": {
+    "completion": "VIOLATION",
+    "mission_progression": "VIOLATION",
+    "ownership": "VIOLATION",
+    "successor_installation": "VIOLATION",
+    "successor_request": "VIOLATION"
+  },
+  "successor_oracle_status": "VIOLATION",
+  "violation_categories": [
+    "COMPLETION_NOT_DELIVERED",
+    "DISARM_NOT_REACHED",
+    "EXECUTOR_NOT_IN_CHARGE",
+    "EXPECTED_SUCCESSOR_NOT_INSTALLED",
+    "EXPECTED_SUCCESSOR_NOT_REQUESTED",
+    "EXTERNAL_ROUTE_NOT_RELEASED",
+    "LAND_NOT_REACHED",
+    "LIFECYCLE_DEAD_END",
+    "UNEXPECTED_HOVER_AFTER_COMPLETION"
+  ]
+}

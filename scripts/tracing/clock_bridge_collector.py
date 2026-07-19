@@ -105,6 +105,38 @@ def _drop_initial_delivery_backlog(
     return samples, 0
 
 
+def _split_around_delivery_backlog(
+    samples: list[dict[str, Any]], jump_ns: int
+) -> tuple[list[list[dict[str, Any]]], int]:
+    """Exclude delayed DDS callback bursts and preserve their segment boundary.
+
+    TimesyncStatus.outbound timestamp is synchronized toward the ROS epoch.  It
+    is not used as the bridge target, but it lets us identify samples that sat
+    in the delivery queue for longer than the already-preregistered jump bound.
+    Keeping those samples in a receive-time affine fit turns queue drain into a
+    false clock residual.  A later timely sample starts a new candidate segment.
+    """
+    groups: list[list[dict[str, Any]]] = []
+    current: list[dict[str, Any]] = []
+    discarded = 0
+    for sample in samples:
+        outbound_us = sample.get("px4_outbound_timestamp_us")
+        delayed = False
+        if outbound_us is not None and int(outbound_us) > 0:
+            delivery_delta_ns = int(sample["ros_receive_ns"]) - int(outbound_us) * 1000
+            delayed = abs(delivery_delta_ns) > jump_ns
+        if delayed:
+            if current:
+                groups.append(current)
+                current = []
+            discarded += 1
+            continue
+        current.append(sample)
+    if current:
+        groups.append(current)
+    return groups, discarded
+
+
 def _evaluate_segment(
     segment: list[dict[str, Any]], thresholds: dict[str, int], segment_index: int
 ) -> dict[str, Any]:
@@ -239,7 +271,15 @@ def collect(
     ordered, discarded_backlog = _drop_initial_delivery_backlog(
         ordered, selected_thresholds["segment_jump_ns"]
     )
-    segments = _segments(ordered, selected_thresholds["segment_jump_ns"])
+    delivery_groups, discarded_delivery_backlog = _split_around_delivery_backlog(
+        ordered, selected_thresholds["segment_jump_ns"]
+    )
+    segments: list[list[dict[str, Any]]] = []
+    reset_count = 0
+    for group in delivery_groups:
+        group_segments = _segments(group, selected_thresholds["segment_jump_ns"])
+        segments.extend(group_segments)
+        reset_count += max(0, len(group_segments) - 1)
     evaluated = [
         _evaluate_segment(segment, selected_thresholds, index)
         for index, segment in enumerate(segments)
@@ -253,10 +293,13 @@ def collect(
     else:
         result = _evaluate_segment([], selected_thresholds, 0)
     result["segment_count"] = len(segments)
-    result["reset_count"] = max(0, len(segments) - 1)
+    result["reset_count"] = reset_count
     result["discarded_initial_backlog_samples"] = discarded_backlog
-    if len(segments) > 1:
+    result["discarded_delivery_backlog_samples"] = discarded_delivery_backlog
+    if reset_count:
         result["reasons"].append("clock_reset_or_jump_segmented")
+    if discarded_delivery_backlog:
+        result["reasons"].append("DDS_delivery_backlog_samples_discarded")
     Draft202012Validator(SCHEMA).validate(result)
     return result
 
@@ -269,10 +312,13 @@ def load_samples(path: Path) -> list[dict[str, Any]]:
         record = json.loads(line)
         if record.get("event_type") == "clock_bridge_sample":
             samples.append(record)
+    vehicle_status_samples = [
+        sample for sample in samples if sample.get("sample_source") == "vehicle_status"
+    ]
     timesync_samples = [
         sample for sample in samples if sample.get("sample_source") == "timesync_status"
     ]
-    return timesync_samples or samples
+    return vehicle_status_samples or timesync_samples or samples
 
 
 def main() -> int:
