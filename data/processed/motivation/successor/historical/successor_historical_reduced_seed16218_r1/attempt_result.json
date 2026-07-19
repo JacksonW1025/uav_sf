@@ -1,0 +1,124 @@
+{
+  "acceptance_checks": {
+    "canonical_route_trace_present": true,
+    "clock_bridge_covers_target_window": true,
+    "clock_bridge_valid": true,
+    "executor_identity_exact": true,
+    "external_source_route_observed": true,
+    "library_identity_exact": true,
+    "monitor_window_complete": true,
+    "no_infrastructure_process_abort": true,
+    "p5_v6_gate_unchanged": true,
+    "p5_v6_manifest_unchanged": true,
+    "producer_controller_writer_observed": true,
+    "px4_identity_exact": true,
+    "raw_evidence_present": true,
+    "required_successor_evidence_complete": true,
+    "route_oracle_decisive": true,
+    "successor_oracle_decisive": true,
+    "tracked_worktree_clean": true
+  },
+  "artifact_sha256": {
+    "clock_bridge": "690cc0ada31f75a29b5b752c7ad8d9062a991395d886bdc74c2bb70d4249e298",
+    "executor_log": "0fcd15e62104435f51fe51be5d5769716813bcceafb34d2875dd36d68c091851",
+    "flight_log": "9ba07bd0970dbec9d3f79e374c9dfe3d439c9fe2e1f677cbf07142a35c130b71",
+    "lifecycle_events": "d4ef5d919aacdcd2fe288855eef6600b595ca116560604261a0b5e7d6ec194b1",
+    "monitor_result": "acd0e71f18af3e3878c4a3808c0fe04c926c775b24edeef1d44b3b72c01c02e8",
+    "route_oracle": "5689e774591907e63ef60cca1f786f745547041e02ad4d26a012e87f0d6f40b5",
+    "route_trace": "5ab469fd5d41bffc12e82163b63662b6998dbedf71b86aceb6dead71fb365bce",
+    "successor_oracle": "6431bd847ceb8a700f6d4005d58e1d5939d3e1ac5e6ab059b7e7a84a73eb8c3f"
+  },
+  "attempt_kind": "historical_affected_external_rtl_successor_replay",
+  "classification": "HISTORICAL_DEFECT_REPRODUCED",
+  "clock_bridge_target_window": {
+    "covered": true,
+    "end_px4_us": 3591817379008.028,
+    "end_ros_ns": 1784495663122586928,
+    "start_px4_us": 3591807168531.788,
+    "start_ros_ns": 1784495652912048542
+  },
+  "defect_pattern_complete": true,
+  "evidence_completeness": {
+    "clock_bridge_valid": true,
+    "completion_generated": true,
+    "completion_public": true,
+    "external_activation": true,
+    "registration": true,
+    "route_oracle": true,
+    "single_run_id": true,
+    "terminal_monitor": true
+  },
+  "identity": {
+    "executor_binary_sha256": "b7a23fe32ed2ff726cd63b1bc108ffff88ee730d1461868a24bba06e1c327b66",
+    "px4_binary_sha256": "42e4fd3ba83eb67a560d6ba54427fc11445da469961a0c871ef409710b2f3035",
+    "px4_commit": "6ea3539157ca358c70a515878b77077af7d4611d",
+    "px4_observation_diff_sha256": "009c4d522cd69acf5b43a1bab9713cc97cfa7c0cc2f501aefcea8cf13ba2002a",
+    "px4_ros2_interface_lib_binary_sha256": "bfb9d81ad7490a784800ad1befc34bab82931fff50f979a1f3bb81a4cdb5302c",
+    "px4_ros2_interface_lib_commit": "a5b9f3cb7cb65d2be80183bad31e9a7ce9f02684",
+    "repository_commit": "d443d9fd03a8aeb7192533ec7039d79da65014bf"
+  },
+  "mission_consequence": {
+    "disarmed": false,
+    "hover_after_completion": true,
+    "land_selected": false,
+    "landed": false
+  },
+  "p5_v6_isolation": {
+    "protected_hashes": {
+      "p5_v6_differential_gate": "9542eb7c98dfd4df1ab50026c149f21fb719fc6a2a09d040a9db4df647f132bc",
+      "p5_v6_manifest": "02d857f555623c10dc44998cd202c2da6226ec5c40a94a75020d75df87f02518"
+    },
+    "status": "PASS"
+  },
+  "required_defect_categories": [
+    "COMPLETION_NOT_DELIVERED",
+    "EXECUTOR_NOT_IN_CHARGE",
+    "EXPECTED_SUCCESSOR_NOT_INSTALLED",
+    "EXPECTED_SUCCESSOR_NOT_REQUESTED",
+    "LIFECYCLE_DEAD_END",
+    "UNEXPECTED_HOVER_AFTER_COMPLETION"
+  ],
+  "route_chain_evidence": {
+    "actuator_writer": 182,
+    "allocator_input": 46,
+    "controller_consumption": 142,
+    "external_source_route_epoch": true,
+    "land_route_epoch": false,
+    "producer": 21
+  },
+  "route_oracle_interpretation": "NOT_APPLICABLE_NO_SUCCESSOR_TRANSITION",
+  "route_oracle_status": "NOT_APPLICABLE",
+  "run_id": "successor_historical_reduced_seed16218_r1",
+  "runtime": {
+    "executor_early_exit": false,
+    "executor_exit_code": 0,
+    "monitor_exit_code": 0,
+    "monitor_reason": "completion observed but Land was not selected; vehicle remained armed, airborne, and in the external mode",
+    "monitor_status": "COMPLETE_WITHOUT_TERMINAL",
+    "px4_early_exit": false,
+    "px4_exit_code": 0,
+    "trigger_failure": false
+  },
+  "schema_version": "1.0",
+  "status": "ACCEPTED",
+  "study_id": "external_rtl_successor_issue_162",
+  "successor_clause_statuses": {
+    "completion": "VIOLATION",
+    "mission_progression": "VIOLATION",
+    "ownership": "VIOLATION",
+    "successor_installation": "VIOLATION",
+    "successor_request": "VIOLATION"
+  },
+  "successor_oracle_status": "VIOLATION",
+  "violation_categories": [
+    "COMPLETION_NOT_DELIVERED",
+    "DISARM_NOT_REACHED",
+    "EXECUTOR_NOT_IN_CHARGE",
+    "EXPECTED_SUCCESSOR_NOT_INSTALLED",
+    "EXPECTED_SUCCESSOR_NOT_REQUESTED",
+    "EXTERNAL_ROUTE_NOT_RELEASED",
+    "LAND_NOT_REACHED",
+    "LIFECYCLE_DEAD_END",
+    "UNEXPECTED_HOVER_AFTER_COMPLETION"
+  ]
+}

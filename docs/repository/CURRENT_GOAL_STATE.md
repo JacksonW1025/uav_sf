@@ -1,9 +1,10 @@
 # Current Goal state
 
-- Current phase: External RTL successor motivation study; legal successor
-  baseline complete at `3/3`, current-version replay complete, and the
-  historical affected Jazzy library/harness build is prepared for SITL replay
-- Goal disposition: active, no terminal disposition yet
+- Current phase: External RTL successor motivation study runtime complete;
+  evidence is frozen after the preregistered `3/3` fully instrumented affected
+  runs and `1/1` instrumentation-reduced confirmation, with the final case
+  report in progress
+- Goal disposition: `HISTORICAL_DEFECT_REPRODUCED`
 - Primary reproduction target: Auterion/px4-ros2-interface-lib Issue #162,
   External RTL replacement selected while its owning Mode Executor remains
   Autopilot, preventing the expected Land successor
@@ -36,16 +37,19 @@
 - Historical reproduction status: matching violations `3/3` are accepted and
   classified `HISTORICAL_DEFECT_REPRODUCED`; three earlier complete flights are
   preserved as `OBSERVABILITY_INSUFFICIENT` because their Timesync-only bridges
-  are `DEGRADED`; the independent
+  are `DEGRADED`; one further target-window rejection is also preserved. The
+  independent BASELINE-observation confirmation is accepted at `1/1`; the
   Ubuntu Noble / ROS Jazzy build of reported affected px4-ros2-interface-lib
   `release/1.16` / `a5b9f3c`, the shared harness, and historical PX4
-  `v1.16.0` observation SITL are PASS; the bounded formal runner is ready
+  `v1.16.0` observation SITL are PASS; the bounded runtime study is complete
 - Probe status: none; no bounded motivation probe has run
-- Confirmed issue count: 3 matching local reproductions of the one upstream-confirmed
-  unsupported ownership/successor lifecycle selected for reproduction
+- Confirmed issue count: `1`; it has three accepted fully instrumented local
+  reproductions (`3/3`) plus one accepted instrumentation-reduced confirmation
+  (`1/1`)
 - Current blocker: none. Historical evidence-complete formal attempts are
-  `3/3`, environment retries are `1/3`, observability rejections are `4`, and
-  accepted matching violations are `3/3`. The first complete flight is not
+  `3/3`, the separate reduced confirmation is `1/1`, environment retries are
+  `1/3`, observability rejections are `4`, and all accepted runs reproduce the
+  same five-clause Successor Oracle violation. The first complete flight is not
   promoted because its `160.145 ms` maximum clock-fit residual exceeds the
   unchanged `100 ms` VALID threshold.
   Baseline attempt 1 is preserved and classified
@@ -55,10 +59,9 @@
   is an `ENVIRONMENT_FAILURE` after PX4-to-ROS transport stopped before external
   completion and the executor watchdog aborted; attempt 7 on new seed `16204`
   is the third accepted baseline
-- Next exact action: checkpoint the independent BASELINE-profile PX4 build and
-  runner identity inputs, then perform the single preregistered
-  instrumentation-reduced confirmation and stop runtime expansion before
-  producing the final motivation case report.
+- Next exact action: freeze the accepted reduced-confirmation artifacts, then
+  produce the final motivation case report; no further runtime attempt is
+  authorized or needed.
 - Motivation namespace: `experiments/motivation/successor/`,
   `runs/motivation/successor/`, and
   `data/processed/motivation/successor/`; P5 v6 remains frozen and isolated
@@ -193,11 +196,15 @@
 - Instrumentation-reduced build: PASS in independent
   `build/px4_sitl_default_replay`; binary SHA-256 is `42e4fd3b...f3035`, source
   commit and observation diff are unchanged, the TRANSITION macro is absent,
-  and route observation cadence is reduced from 8 ms to 100 ms (12.5×). The
-  runner now locks the alternate build/profile/provenance explicitly; no
-  reduced confirmation flight has run yet (`0/1`).
-- Last motivation checkpoint validation: focused PASS (`48 passed` for the
-  successor/route/trace contracts); full PASS (`144 passed`, `15/15` stages)
+  and route observation cadence is reduced from 8 ms to 100 ms (12.5×).
+  Reduced run `successor_historical_reduced_seed16218_r1` is accepted at `1/1`:
+  its 74-sample bridge is VALID (`6.299 ms` maximum residual), covers the full
+  target window, and repeats executor `0` versus registered executor `1`,
+  undelivered completion, absent Land request/selection/route, and the armed
+  airborne hover. Route Oracle is `NOT_APPLICABLE` because the successor
+  transition never occurs; Successor Oracle is `VIOLATION` on all five clauses.
+- Last motivation checkpoint validation: focused PASS (`66 passed` for the
+  successor/route/trace contracts); full PASS (`157 passed`, `15/15` stages)
 - Protected P5 v6 hashes at Goal start: differential Gate
   `9542eb7c98dfd4df1ab50026c149f21fb719fc6a2a09d040a9db4df647f132bc`;
   manifest
@@ -205,7 +212,7 @@
 - Primary preregistration:
   `experiments/motivation/successor/primary_reproduction_preregistration.yaml`
 - Successor Oracle design: `docs/design/SUCCESSOR_PROGRESSION_ORACLE.md`
-- Last update: 2026-07-19T14:20:00-07:00
+- Last update: 2026-07-19T14:16:37-07:00
 
 ## Preserved P5 v6 completion state
 
