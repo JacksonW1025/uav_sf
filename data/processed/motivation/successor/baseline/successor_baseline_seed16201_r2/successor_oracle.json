@@ -1,0 +1,96 @@
+{
+  "clauses": {
+    "completion": {
+      "evidence": {
+        "generated_timestamp_ns": 1784475551069503488,
+        "public_timestamp_ns": 1784475551071859362,
+        "receiver_timestamp_ns": 1784475551072268032
+      },
+      "reasons": [],
+      "status": "PASS"
+    },
+    "mission_progression": {
+      "evidence": {
+        "deactivated_timestamp_ns": 1784475551101116416,
+        "disarm_after_land_selection_ms": 6403.027884,
+        "disarmed_timestamp_ns": 1784475557504448537,
+        "landed_timestamp_ns": 1784475537414325250
+      },
+      "reasons": [],
+      "status": "PASS"
+    },
+    "ownership": {
+      "evidence": {
+        "active_mode": 23,
+        "executor_in_charge": 1,
+        "timestamp_ns": 1784475537712469749
+      },
+      "reasons": [],
+      "status": "PASS"
+    },
+    "successor_installation": {
+      "evidence": {
+        "route_installation": "PASS",
+        "selected_mode": 18,
+        "selection_latency_ms": 26.245556,
+        "target_route_epoch_id": 5,
+        "transition": {
+          "source_mode": 23,
+          "source_route_epoch_id": 4,
+          "target_mode": 18,
+          "timestamp_domain": "ulog_us",
+          "timestamp_us": 29076000.0
+        }
+      },
+      "reasons": [],
+      "status": "PASS"
+    },
+    "successor_request": {
+      "evidence": {
+        "command": 100001,
+        "command_param1": 18,
+        "latency_ms": 3.315735,
+        "timestamp_ns": 1784475551075175097
+      },
+      "reasons": [],
+      "status": "PASS"
+    }
+  },
+  "evidence_completeness": {
+    "clock_bridge_valid": true,
+    "completion_generated": true,
+    "completion_public": true,
+    "completion_receiver": true,
+    "external_activation": true,
+    "registration": true,
+    "route_oracle": true,
+    "route_trace_target_epoch": true,
+    "single_run_id": true,
+    "successor_request": true,
+    "successor_selection": true,
+    "terminal_monitor": true
+  },
+  "inputs": {
+    "clock_bridge": "/mnt/nvme/uav_sf/data/processed/motivation/successor/baseline/successor_baseline_seed16201_r2/clock_bridge.json",
+    "executor_log": "/mnt/nvme/uav_sf/runs/motivation/successor/baseline/successor_baseline_seed16201_r2/raw/external_mode_executor.log",
+    "lifecycle_events": "/mnt/nvme/uav_sf/runs/motivation/successor/baseline/successor_baseline_seed16201_r2/raw/lifecycle_events.jsonl",
+    "profile": "/mnt/nvme/uav_sf/experiments/motivation/successor/baseline_lifecycle_profile.yaml",
+    "route_oracle": "/mnt/nvme/uav_sf/data/processed/motivation/successor/baseline/successor_baseline_seed16201_r2/route_oracle.json",
+    "route_trace": "/mnt/nvme/uav_sf/data/processed/motivation/successor/baseline/successor_baseline_seed16201_r2/route_trace.jsonl"
+  },
+  "profile_id": "external-mode-completion-land-disarm-baseline-v1",
+  "run_id": "successor_baseline_seed16201_r2",
+  "schema_version": "1.0",
+  "status": "PASS",
+  "successor_oracle_version": "0.1",
+  "timeline": {
+    "completion_ros_time_ns": 1784475551071859362,
+    "disarmed_ros_time_ns": 1784475557504448537,
+    "external_active_ros_time_ns": 1784475537712469749,
+    "landed_ros_time_ns": 1784475537414325250,
+    "registration_ros_time_ns": 1784475537711464919,
+    "successor_request_ros_time_ns": 1784475551075175097,
+    "successor_selected_ros_time_ns": 1784475551101420653
+  },
+  "violation_categories": []
+}

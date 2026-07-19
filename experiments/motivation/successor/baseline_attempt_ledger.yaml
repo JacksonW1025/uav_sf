@@ -2,6 +2,8 @@ schema_version: "1.0"
 study_id: external_rtl_successor_issue_162
 baseline_id: legal_non_replacement_executor_successor_chain
 accepted_runs_required: 3
+accepted_runs: 2
+rejected_attempts: 1
 attempts:
   - run_id: successor_baseline_seed16201_r1
     simulation_seed: 16201
@@ -45,3 +47,97 @@ attempts:
     p5_v6_isolation: PASS
     preserved_raw_root: runs/motivation/successor/baseline/successor_baseline_seed16201_r1/raw
     recorded_at: 2026-07-19T05:46:16-07:00
+  - run_id: successor_baseline_seed16201_r2
+    simulation_seed: 16201
+    repository_commit: e24823a61ff09755095acdd798edb3640446a48e
+    disposition: ACCEPTED_BASELINE
+    counted_as_accepted_baseline: true
+    identity_and_isolation: PASS
+    monitor: PASS
+    clock_bridge: VALID
+    route_oracle: PASS
+    route_clause_statuses:
+      revocation: PASS
+      installation: PASS
+      exclusivity: PASS
+      continuity: PASS
+      recovery: PASS
+    successor_oracle: PASS
+    successor_clause_statuses:
+      ownership: PASS
+      completion: PASS
+      successor_request: PASS
+      successor_installation: PASS
+      mission_progression: PASS
+    lifecycle_evidence:
+      external_mode_id: 23
+      registered_executor_id: 1
+      executor_in_charge_during_external: 1
+      land_request_command: 100001
+      land_request_param1: 18
+      land_requester_source_component: 1001
+      request_after_completion_ms: 3.315735
+      land_selection_after_request_ms: 26.245556
+      source_route_epoch_id: 4
+      land_route_epoch_id: 5
+      land_installation_ms: 24.0
+      maximum_unowned_window_ms: 0.0
+      post_revocation_consumption_count: 0
+      post_revocation_writer_count: 0
+      disarm_after_land_selection_ms: 6403.027884
+    artifact_sha256:
+      attempt_result: 83bb5652a9ddfc292b55e546e6122bb327229e60ea3cdc6fba959a9c6dfd0725
+      clock_bridge: 5521c334d8e3e84ca7550fb869bbab9afad05cd2516d8cab5e5c9fd2ae60a551
+      route_oracle: 5e507db2b95dd12cc67556a67ea7d8c209a0d12ff86b20808673c7412f8ab46b
+      route_summary: 803e500c9ba08df80d723378615d3ddf717a5af1b38469bee454acafaeb43c17
+      route_trace: 687d98ab5d958f9cf5a432ef1e66ca61780dfffbd38cc59b165fc2f50184e7f0
+      successor_oracle: 4a601a7c43b4c0136ececcc6e8222b1b7dcbf6b246ab9fe1ba69378a475667a4
+    preserved_raw_root: runs/motivation/successor/baseline/successor_baseline_seed16201_r2/raw
+    recorded_at: 2026-07-19T08:39:17-07:00
+  - run_id: successor_baseline_seed16202_r1
+    simulation_seed: 16202
+    repository_commit: e24823a61ff09755095acdd798edb3640446a48e
+    disposition: ACCEPTED_BASELINE
+    counted_as_accepted_baseline: true
+    identity_and_isolation: PASS
+    monitor: PASS
+    clock_bridge: VALID
+    route_oracle: PASS
+    route_clause_statuses:
+      revocation: PASS
+      installation: PASS
+      exclusivity: PASS
+      continuity: PASS
+      recovery: PASS
+    successor_oracle: PASS
+    successor_clause_statuses:
+      ownership: PASS
+      completion: PASS
+      successor_request: PASS
+      successor_installation: PASS
+      mission_progression: PASS
+    lifecycle_evidence:
+      external_mode_id: 23
+      registered_executor_id: 1
+      executor_in_charge_during_external: 1
+      land_request_command: 100001
+      land_request_param1: 18
+      land_requester_source_component: 1001
+      request_after_completion_ms: 2.480438
+      land_selection_after_request_ms: 30.085489
+      source_route_epoch_id: 4
+      land_route_epoch_id: 5
+      land_installation_ms: 8.0
+      maximum_unowned_window_ms: 8.0
+      post_revocation_consumption_count: 0
+      post_revocation_writer_count: 0
+      disarm_after_land_selection_ms: 6348.929263
+    artifact_sha256:
+      attempt_result: f2bebd850773b29024cedde6446224ee60496c67d0040b634503006cef5b1868
+      clock_bridge: 4ab97e84c734a8ee77fcdec02c0933cc45f94aba7c6953553fa4b2e6b4c23848
+      route_oracle: a3e5e5de495f53e67da2951d3f888d98f7c92d66104cf2749140e3443de0967a
+      route_summary: 661188bade9bf8713e926990f68ab2ef3d78f7d38930a4e162dbac1e5be5eae6
+      route_trace: 576890e23fcc0a429b26540641eae890239567fd1c833759bf66a0c5cdba33f8
+      successor_oracle: 654baef6e9b44056cbd7363eee41de2c548776b369439a33686029a856467703
+    preserved_raw_root: runs/motivation/successor/baseline/successor_baseline_seed16202_r1/raw
+    recorded_at: 2026-07-19T08:40:57-07:00
