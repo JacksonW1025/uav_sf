@@ -1,8 +1,8 @@
 # Current Goal state
 
-- Current phase: External RTL successor motivation study, primary reproduction
-  preregistered; legal successor baseline complete at `3/3`, current-version
-  replay complete, and historical affected replay is next
+- Current phase: External RTL successor motivation study; legal successor
+  baseline complete at `3/3`, current-version replay complete, and the
+  historical affected Jazzy library/harness build is prepared for SITL replay
 - Goal disposition: active, no terminal disposition yet
 - Primary reproduction target: Auterion/px4-ros2-interface-lib Issue #162,
   External RTL replacement selected while its owning Mode Executor remains
@@ -33,22 +33,24 @@
   harness exits `42` on the preregistered prevention exception before
   registration, classified `NOT_REPRODUCED_ON_CURRENT` /
   `UNSUPPORTED_COMBINATION_REJECTED`; this is not a successor-chain PASS
-- Historical reproduction status: not started; reported affected target is
-  px4-ros2-interface-lib `release/1.16` / `a5b9f3c`
+- Historical reproduction status: flight replay not started; the independent
+  Ubuntu Noble / ROS Jazzy build of reported affected px4-ros2-interface-lib
+  `release/1.16` / `a5b9f3c` and the shared harness is PASS
 - Probe status: none; no bounded motivation probe has run
 - Confirmed issue count: 0 local reproductions; one upstream-confirmed
   unsupported ownership/successor lifecycle selected for reproduction
-- Current blocker: none; baseline attempt 1 is preserved and classified
+- Current blocker: none; historical PX4 SITL and observation instrumentation
+  are not built yet. Baseline attempt 1 is preserved and classified
   `REJECTED_OBSERVABILITY`, attempts 2 and 3 are accepted, and attempt 4 is an
   `ENVIRONMENT_FAILURE` after PX4 SIGSEGV before public completion; attempt 5
   is `REJECTED_OBSERVABILITY` at the clock valid-interval boundary; attempt 6
   is an `ENVIRONMENT_FAILURE` after PX4-to-ROS transport stopped before external
   completion and the executor watchdog aborted; attempt 7 on new seed `16204`
   is the third accepted baseline
-- Next exact action: checkpoint the completed current replay, then create and
-  verify an ignored dedicated historical worktree/build for reported affected
-  library `a5b9f3c` (or the preregistered API-compatible pre-guard parent if the
-  reported stack cannot build) before the first historical flight attempt
+- Next exact action: build the isolated historical PX4 `v1.16.0` worktree at
+  `6ea3539` with route/lifecycle observation, verify its binary identity, then
+  execute the first formal affected-version replay without changing the locked
+  shared lifecycle contract
 - Motivation namespace: `experiments/motivation/successor/`,
   `runs/motivation/successor/`, and
   `data/processed/motivation/successor/`; P5 v6 remains frozen and isolated
@@ -103,6 +105,19 @@
   registration, starts no flight, and PASSes every identity, build-provenance,
   clean-worktree, and P5 isolation check. Its result is NOT_APPLICABLE to
   runtime Successor Oracle obligations.
+- Historical replay preparation: PASS against ROS Jazzy in an isolated Ubuntu
+  24.04.4 rootless namespace. Exact library `a5b9f3c` (`1.5.2`), PX4 source
+  `6ea3539` (`v1.16.0`), and `px4_msgs` `392e831` match the preregistration.
+  The minimal release/1.16 adapter only translates constructor spelling while
+  retaining armed-only internal-RTL replacement, executor ownership, public
+  completion, Land successor, and Disarm semantics. Jazzy executable SHA-256 is
+  `b7a23fe3...327b66`; historical library SHA-256 is
+  `bfb9d81a...5302c`; adapted shared source SHA-256 is
+  `f25c8847...2e6b`. The current guard string is absent. A non-formal no-FMU
+  preflight reached `Waiting for FMU` before its bounded timeout; it attempted
+  no registration or flight.
+- Historical preparation validation: focused PASS (`49 passed` after adding
+  four historical contract checks); full PASS (`149 passed`, `15/15` stages)
 - Last motivation checkpoint validation: focused PASS (`48 passed` for the
   successor/route/trace contracts); full PASS (`144 passed`, `15/15` stages)
 - Protected P5 v6 hashes at Goal start: differential Gate
@@ -112,7 +127,7 @@
 - Primary preregistration:
   `experiments/motivation/successor/primary_reproduction_preregistration.yaml`
 - Successor Oracle design: `docs/design/SUCCESSOR_PROGRESSION_ORACLE.md`
-- Last update: 2026-07-19T12:05:30-07:00
+- Last update: 2026-07-19T12:58:24-07:00
 
 ## Preserved P5 v6 completion state
 

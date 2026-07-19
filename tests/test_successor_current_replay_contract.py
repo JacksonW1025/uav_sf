@@ -15,11 +15,17 @@ CLASSIFIER = (
 
 
 def test_issue162_harness_uses_preregistered_legal_composition() -> None:
-    assert ".replaceInternalMode(ModeBase::kModeIDRtl)" in SOURCE
+    assert ".replaceInternalMode(px4_ros2::ModeBase::kModeIDRtl)" in SOURCE
     assert "ModeExecutorBase(Settings{}, owned_mode)" in SOURCE
     assert "ActivateImmediately" not in SOURCE
     assert 'kComponentName = "Issue 162 Custom RTL"' in SOURCE
     assert "kTargetHeightM = 5.f" in SOURCE
+
+
+def test_historical_api_adapter_preserves_the_same_composition() -> None:
+    assert "UAV_SF_ISSUE162_HISTORICAL_API" in SOURCE
+    assert "return {kComponentName, false, px4_ros2::ModeBase::kModeIDRtl}" in SOURCE
+    assert "ModeExecutorBase(node, Settings{}, owned_mode)" in SOURCE
 
 
 def test_issue162_completion_condition_and_successor_are_fixed() -> None:

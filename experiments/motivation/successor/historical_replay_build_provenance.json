@@ -1,0 +1,55 @@
+{
+  "adapter_binary_sha256": "b7a23fe32ed2ff726cd63b1bc108ffff88ee730d1461868a24bba06e1c327b66",
+  "adapter_source_sha256": "f25c88476ddfda3b7f790110fff11c262ae3f5e16bd556431c2ee493633f2e6b",
+  "api_adaptation": {
+    "executor_constructor": "ModeExecutorBase(node, Settings{}, owned_mode)",
+    "mode_settings_constructor": "Settings(component_name, false, ModeBase::kModeIDRtl)",
+    "semantic_delta": "none",
+    "summary": "release/1.16 constructor spelling only; preserves armed-only activation, internal RTL replacement, executor ownership, completion, and Land successor"
+  },
+  "build_command": "colcon build --merge-install --packages-up-to route_transition_external_mode --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo -DUAV_SF_ISSUE162_ONLY=ON -DUAV_SF_ISSUE162_HISTORICAL_API=ON",
+  "build_status": "PASS",
+  "build_type": "RelWithDebInfo",
+  "canonical": true,
+  "compiler": "gcc 13.3.0",
+  "guard_exception_string_present": false,
+  "historical_px4": {
+    "commit": "6ea3539157ca358c70a515878b77077af7d4611d",
+    "describe": "v1.16.0",
+    "sitl_build_status": "PENDING_AFTER_PREPARATION_CHECKPOINT"
+  },
+  "offline_registration_preflight": {
+    "formal_attempt": false,
+    "fmu_wait_reached": true,
+    "flight_started": false,
+    "log_sha256": "1c2339718096cd847e3a145fd6a8b27b3831acd1bc179b7af2832ae66fcb0936",
+    "registration_attempted": false,
+    "termination": "timeout_sigkill",
+    "timeout_exit_code": 137
+  },
+  "primary_preregistration_sha256": "11cc54e73dc03192374b4d877cf84cf3b864d9f084b8aa00549d1cdc3b52d060",
+  "px4_msgs_commit": "392e831c1f659429ca83902e66820d7094591410",
+  "px4_ros2_interface_lib_binary_sha256": "bfb9d81ad7490a784800ad1befc34bab82931fff50f979a1f3bb81a4cdb5302c",
+  "px4_ros2_interface_lib_commit": "a5b9f3cb7cb65d2be80183bad31e9a7ce9f02684",
+  "px4_ros2_interface_lib_describe": "1.5.2",
+  "rootfs": {
+    "base_archive": "ubuntu-base-24.04.4-base-arm64.tar.gz",
+    "base_archive_sha256": "04207713ece899c3740823d33690441ad3a7f0ded1101aca744e2b0f37ac7ff2",
+    "isolation": "rootless bubblewrap user namespace",
+    "os": "Ubuntu 24.04.4 LTS (Noble Numbat)"
+  },
+  "ros": {
+    "distro": "jazzy",
+    "rclcpp_package": "28.1.21-1noble.20260612.095833",
+    "ros_base_package": "0.11.0-1noble.20260614.091815"
+  },
+  "schema_version": "1.0",
+  "shared_lifecycle_contract": {
+    "completion": "stable for 1000 ms within 0.5 m position and 0.5 m/s speed, then completed(Success)",
+    "expected_successor": "owning executor receives custom RTL completion and requests Land, then waits for Disarm",
+    "replacement": "registered external mode replaces internal RTL",
+    "target": "home-above NED [0, 0, -5] m"
+  },
+  "sut_kind": "executor-owned external RTL replacement replay on reported affected release/1.16 revision",
+  "workspace": "external/issue162_history/ros2_ws_jazzy"
+}

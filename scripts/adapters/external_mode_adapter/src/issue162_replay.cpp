@@ -22,14 +22,24 @@ constexpr float kTargetHeightM = 5.f;
 constexpr float kPositionToleranceM = 0.5f;
 constexpr float kVelocityToleranceMps = 0.5f;
 constexpr auto kStableDuration = std::chrono::seconds(1);
+
+px4_ros2::ModeBase::Settings issue162ModeSettings()
+{
+#ifdef UAV_SF_ISSUE162_HISTORICAL_API
+  // release/1.16 exposes replacement through the Settings constructor.
+  return {kComponentName, false, px4_ros2::ModeBase::kModeIDRtl};
+#else
+  return px4_ros2::ModeBase::Settings{kComponentName}
+      .replaceInternalMode(px4_ros2::ModeBase::kModeIDRtl)
+      .preventArming(false);
+#endif
+}
 }
 
 class Issue162CustomRtlMode final : public px4_ros2::ModeBase {
  public:
   explicit Issue162CustomRtlMode(rclcpp::Node& node)
-      : ModeBase(node, Settings{kComponentName}
-                           .replaceInternalMode(ModeBase::kModeIDRtl)
-                           .preventArming(false))
+      : ModeBase(node, issue162ModeSettings())
   {
     modeRequirements().local_position = true;
     trajectory_setpoint_ = std::make_shared<px4_ros2::TrajectorySetpointType>(*this);
@@ -146,10 +156,17 @@ class Issue162CustomRtlMode final : public px4_ros2::ModeBase {
 
 class Issue162Executor final : public px4_ros2::ModeExecutorBase {
  public:
+#ifdef UAV_SF_ISSUE162_HISTORICAL_API
+  Issue162Executor(rclcpp::Node& node, px4_ros2::ModeBase& owned_mode)
+      : ModeExecutorBase(node, Settings{}, owned_mode)
+  {
+  }
+#else
   explicit Issue162Executor(px4_ros2::ModeBase& owned_mode)
       : ModeExecutorBase(Settings{}, owned_mode)
   {
   }
+#endif
 
   void onActivate() override
   {

@@ -11,17 +11,28 @@ find_package(Eigen3 REQUIRED)
 find_package(px4_ros2_cpp REQUIRED)
 find_package(rclcpp REQUIRED)
 
-add_executable(route_transition_external_mode src/external_mode.cpp)
-target_link_libraries(route_transition_external_mode PUBLIC Eigen3::Eigen px4_ros2_cpp::px4_ros2_cpp rclcpp::rclcpp)
+option(UAV_SF_ISSUE162_ONLY "Build only the Issue #162 replay target" OFF)
+option(UAV_SF_ISSUE162_HISTORICAL_API "Use the release/1.16 Mode Settings API" OFF)
 
-add_executable(p0_external_mode_executor src/p0_executor.cpp)
-target_link_libraries(p0_external_mode_executor PUBLIC Eigen3::Eigen px4_ros2_cpp::px4_ros2_cpp rclcpp::rclcpp)
+set(install_targets issue162_replay)
 
-add_executable(successor_baseline_executor src/successor_baseline.cpp)
-target_link_libraries(successor_baseline_executor PUBLIC Eigen3::Eigen px4_ros2_cpp::px4_ros2_cpp rclcpp::rclcpp)
+if(NOT UAV_SF_ISSUE162_ONLY)
+  add_executable(route_transition_external_mode src/external_mode.cpp)
+  target_link_libraries(route_transition_external_mode PUBLIC Eigen3::Eigen px4_ros2_cpp::px4_ros2_cpp rclcpp::rclcpp)
+
+  add_executable(p0_external_mode_executor src/p0_executor.cpp)
+  target_link_libraries(p0_external_mode_executor PUBLIC Eigen3::Eigen px4_ros2_cpp::px4_ros2_cpp rclcpp::rclcpp)
+
+  add_executable(successor_baseline_executor src/successor_baseline.cpp)
+  target_link_libraries(successor_baseline_executor PUBLIC Eigen3::Eigen px4_ros2_cpp::px4_ros2_cpp rclcpp::rclcpp)
+  list(APPEND install_targets route_transition_external_mode p0_external_mode_executor successor_baseline_executor)
+endif()
 
 add_executable(issue162_replay src/issue162_replay.cpp)
 target_link_libraries(issue162_replay PUBLIC Eigen3::Eigen px4_ros2_cpp::px4_ros2_cpp rclcpp::rclcpp)
+if(UAV_SF_ISSUE162_HISTORICAL_API)
+  target_compile_definitions(issue162_replay PRIVATE UAV_SF_ISSUE162_HISTORICAL_API=1)
+endif()
 
-install(TARGETS route_transition_external_mode p0_external_mode_executor successor_baseline_executor issue162_replay DESTINATION lib/${PROJECT_NAME})
+install(TARGETS ${install_targets} DESTINATION lib/${PROJECT_NAME})
 ament_package()
