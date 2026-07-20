@@ -2,14 +2,13 @@
 
 ## Active Current-Version freshness pilot
 
-- Current phase: Current-Version External Mode Setpoint Freshness
-  preregistration preparation
+- Current phase: Current-Version External Mode Setpoint Freshness formal pilot,
+  F1 ready and not started
 - Formal accepted runs: `0/12`
 - Completed tuning: Trajectory `TOTAL_PROCESS_STOP`; Attitude
   `TOTAL_PROCESS_STOP`; Rate `TOTAL_PROCESS_STOP` and
   `SETPOINT_ONLY_STALL` at `0.06 rad/s`
-- Current unresolved item: none in the bounded tuning contexts; freeze the
-  four-cell preregistration before any formal execution
+- Current unresolved item: none; execute F1 under the frozen preregistration
 - Latest instrumentation checkpoint:
   `f4b5a600badf3961dae1d45eebb183c0d0fa6d01`
 - Tuning evidence status: ignored, non-formal, and excluded from the formal
@@ -30,6 +29,8 @@
 - Cleanup observability correction: clock samples continue through explicit
   Land cleanup, and every ROS marker used by the summarizer must map inside the
   selected bridge interval; out-of-interval extrapolation is rejected
+- Frozen preregistration commit:
+  `be11b984e13c9df43ebc8b3b31d04517c46d5224`, pushed before F1
 - Last update: 2026-07-20
 
 ## Frozen Issue #162 completion state
