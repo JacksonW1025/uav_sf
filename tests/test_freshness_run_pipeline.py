@@ -6,6 +6,7 @@ from pathlib import Path
 from scripts.analysis.summarize_freshness_run import (
     _baseline_complete,
     _health_evidence,
+    _last_external_subject_timestamp,
     _physical_metrics,
 )
 
@@ -25,6 +26,7 @@ def test_runner_keeps_attempts_immutable_and_uses_locked_local_agent() -> None:
     assert "PX4_PARAM_SDLOG_PROFILE=0" in text
     assert "route_oracle_v0.py" in text
     assert "pre_revocation_freshness_oracle.py" in text
+    assert 'STABLE_SECONDS="${FRESHNESS_STABLE_SECONDS:-5.0}"' in text
 
 
 def test_fault_channels_are_independent_and_total_stop_is_sigkill() -> None:
@@ -62,6 +64,44 @@ def test_health_coverage_and_loss_detection_are_distinct() -> None:
     assert result["health_loss_detection_us"] == 1_700_000
     assert result["matched_reply_count"] == 2
     assert result["alive_through_target"] is False
+
+
+def test_external_receive_time_comes_from_typed_source_epoch_consumption() -> None:
+    events = [
+        {
+            "timestamp_domain": "ulog_us",
+            "event_type": "px4_setpoint_consumed",
+            "timestamp": 1_100_000,
+            "route_epoch_id": 3,
+            "setpoint_topic": "vehicle_attitude_setpoint",
+            "observation": {"subject_timestamp": 1_010_000},
+        },
+        {
+            "timestamp_domain": "ulog_us",
+            "event_type": "px4_setpoint_consumed",
+            "timestamp": 1_200_000,
+            "route_epoch_id": 3,
+            "setpoint_topic": "vehicle_attitude_setpoint",
+            "observation": {"subject_timestamp": 1_010_000},
+        },
+        {
+            "timestamp_domain": "ulog_us",
+            "event_type": "px4_setpoint_consumed",
+            "timestamp": 1_210_000,
+            "route_epoch_id": 3,
+            "setpoint_topic": "vehicle_rates_setpoint",
+            "observation": {"subject_timestamp": 1_205_000},
+        },
+        {
+            "timestamp_domain": "ulog_us",
+            "event_type": "px4_setpoint_consumed",
+            "timestamp": 1_300_000,
+            "route_epoch_id": 4,
+            "setpoint_topic": "vehicle_attitude_setpoint",
+            "observation": {"subject_timestamp": 1_295_000},
+        },
+    ]
+    assert _last_external_subject_timestamp(events, "ATTITUDE", 3, 1_250_000) == 1_010_000
 
 
 def test_physical_metrics_use_fault_relative_position_and_absolute_tilt() -> None:

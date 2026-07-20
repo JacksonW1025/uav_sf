@@ -130,6 +130,35 @@ def _last_trace_time(
     return max(values, default=None)
 
 
+def _last_external_subject_timestamp(
+    events: list[dict[str, Any]],
+    setpoint_type: str,
+    epoch: int | None,
+    cutoff: float,
+) -> float | None:
+    """Return the receive-time timestamp of the retained external setpoint.
+
+    The locked interface library publishes zero-valued source timestamps, so PX4
+    replaces them with HRT at uORB ingress.  The observation-only controller
+    event carries that value as ``observation.subject_timestamp`` on every
+    subsequent consumption.  Filtering by both route epoch and setpoint topic
+    excludes downstream and fallback setpoints that share the same uORB topic.
+    """
+    values = [
+        float(event["observation"]["subject_timestamp"])
+        for event in events
+        if event.get("timestamp_domain") == "ulog_us"
+        and event.get("event_type") == "px4_setpoint_consumed"
+        and event.get("route_epoch_id") == epoch
+        and event.get("setpoint_topic") == SETPOINT_TOPIC[setpoint_type]
+        and float(event["timestamp"]) <= cutoff
+        and isinstance(event.get("observation"), dict)
+        and event["observation"].get("subject_timestamp") is not None
+        and float(event["observation"]["subject_timestamp"]) > 0
+    ]
+    return max(values, default=None)
+
+
 def _health_evidence(
     requests: list[dict[str, Any]],
     replies: list[dict[str, Any]],
@@ -342,7 +371,6 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
     replies = _dataset_rows(ulog, "arming_check_reply")
     failsafe_flags = _dataset_rows(ulog, "failsafe_flags")
     statuses = _dataset_rows(ulog, "vehicle_status")
-    setpoints = _dataset_rows(ulog, SETPOINT_TOPIC[args.setpoint_type])
 
     fault_us = _ros_to_px4_us(int(fault["ros_time_ns"]), bridge)
     target_end_ros_ns = int(monitor["target_window_end_ros_time_ns"])
@@ -373,8 +401,9 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
         if last_producer_ros_ns is not None
         else None
     )
-    last_receive_row = _last_at_or_before(setpoints, cutoff_us)
-    last_receive_us = float(last_receive_row["timestamp"]) if last_receive_row else None
+    last_receive_us = _last_external_subject_timestamp(
+        events, args.setpoint_type, source_epoch, cutoff_us
+    )
     last_consumption_us = _last_trace_time(
         events, "px4_setpoint_consumed", source_epoch, cutoff_us
     )
@@ -543,6 +572,11 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "physical_window_end_us": physical_end_us,
             "clock_uncertainty_ns": bridge.get("uncertainty_ns"),
             "required_trace_complete": required_trace,
+            "px4_receive_time_source": (
+                "controller_consumption.observation.subject_timestamp"
+                if last_receive_us is not None
+                else None
+            ),
         },
         "inputs": {
             "ulog": str(args.ulog),
