@@ -13,7 +13,7 @@ Freshness pilot denominator.
 - Starting ahead/behind: `0/0`
 - Protected ancestor: `955e7c98e3b29ddd21fa4d44fb562065700fa832`
 - Current phase: C1 concurrent authority-event preregistration
-- Phase status: `C1_PREREGISTRATION_READY_FOR_FIRST_PUSH`
+- Phase status: `C1_PREREGISTERED_PENDING_EXECUTION_FREEZE_PUSH`
 
 ## Frozen evidence
 
@@ -48,7 +48,7 @@ testing is authorized.
 | Initialization | `COMPLETE` | n/a | n/a | n/a | `f2aa93aa` pushed |
 | N1 trajectory residue | `COMPLETE` | 8 / 9 | 14 / 18 | 6 | `CURRENT_EVENT_REOBSERVED_BUT_PHASE_DEPENDENT`; 2 matching violations |
 | N1 reduced confirmation | `COMPLETE` | 1 / 1 | 1 / 3 | 0 | accepted Route PASS; no matching residue; stopped at target |
-| C1 concurrency | `PREREGISTRATION_READY` | 0 / 15 | 0 / 30 | 0 | 15 slots frozen locally; no formal attempts |
+| C1 concurrency | `PREREGISTERED` | 0 / 15 | 0 / 30 | 0 | preregistration `2cb2e021`; no formal attempts |
 | C1 minimal confirmations | `NOT_APPLICABLE_PENDING_TRIGGER` | 0 | 0 / 3 per finding | 0 | only if a violation is found |
 | R1 session rollover | `NOT_STARTED` | 0 / 9 | 0 / 18 | 0 | pending |
 | W1 workload spike | `NOT_STARTED` | 0 / 3 canonical | 0 | 0 | pending |
@@ -82,13 +82,15 @@ All future rejected attempts must be explicitly classified as
 - `fd9b93fb0d2f50554d6f52d19ac3cd573d7ae2f9` —
   `experiment: adjudicate current trajectory residue event` (pushed; final
   N1 disposition and evidence freeze).
+- `2cb2e021f1604868387f94b5eef6b6457f719416` —
+  `oracle: preregister authority event linearization probe` (pushed before
+  every formal C1 attempt).
 
 ## Next exact action
 
-Run C1 preregistration focused tests and the full validator, commit and push
-the oracle/schema/public-interface harness and frozen 15-slot matrix, record
-that pushed commit in the matrix and ledger, push the freeze record, and only
-then start `C1-A-A_FIRST` attempt 1 with seed `320101`.
+Commit and push the exact C1 preregistration hash recorded in the matrix,
+ledger, provenance, and durable state. Confirm clean synchronization, then
+start `C1-A-A_FIRST` attempt 1 with seed `320101`.
 
 ## Current blockers
 

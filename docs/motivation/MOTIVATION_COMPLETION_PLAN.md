@@ -67,10 +67,10 @@ bounded non-reproduction without erasing the original found event.
 
 ### C1 — Concurrent authority-event deterministic probe
 
-Status: `PREREGISTRATION_READY_FOR_FIRST_PUSH`; no formal attempts have run.
-The public-interface harness, Authority Event Linearization Oracle 0.1,
-15-slot matrix, two-attempt slot caps, and three-attempt triggered-confirmation
-cap are prepared for an immutable pre-attempt push.
+Status: `PREREGISTERED`; commit `2cb2e021f1604868387f94b5eef6b6457f719416`
+was pushed before any formal attempt. The public-interface harness, Authority
+Event Linearization Oracle 0.1, 15-slot matrix, two-attempt slot caps, and
+three-attempt triggered-confirmation cap are frozen.
 
 Outputs:
 
