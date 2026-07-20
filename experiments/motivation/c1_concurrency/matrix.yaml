@@ -10,7 +10,8 @@ total_attempts: 4
 active_oracle_version: "0.2"
 oracle_amendment: C1-ORACLE-001
 oracle_amendment_commit: 4f90d132bb856384438dc81a038b6c26f8be96b6
-harness_amendment: C1-HARNESS-002_PENDING_PUSH
+harness_amendment: C1-HARNESS-002
+harness_amendment_commit: 489204770d5ac095cde6274148f2ce3e5dd175ea
 confirmation:
   status: NOT_APPLICABLE_PENDING_TRIGGER
   accepted_target: 1

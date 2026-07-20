@@ -13,7 +13,7 @@ Freshness pilot denominator.
 - Starting ahead/behind: `0/0`
 - Protected ancestor: `955e7c98e3b29ddd21fa4d44fb562065700fa832`
 - Current phase: C1 concurrent authority-event preregistration
-- Phase status: `C1_HARNESS_WARMUP_AMENDMENT_PENDING_PUSH`
+- Phase status: `C1_IN_PROGRESS_WARMUP_ACTIVE`
 
 ## Frozen evidence
 
@@ -48,7 +48,7 @@ testing is authorized.
 | Initialization | `COMPLETE` | n/a | n/a | n/a | `f2aa93aa` pushed |
 | N1 trajectory residue | `COMPLETE` | 8 / 9 | 14 / 18 | 6 | `CURRENT_EVENT_REOBSERVED_BUT_PHASE_DEPENDENT`; 2 matching violations |
 | N1 reduced confirmation | `COMPLETE` | 1 / 1 | 1 / 3 | 0 | accepted Route PASS; no matching residue; stopped at target |
-| C1 concurrency | `IN_PROGRESS` | 1 / 15 | 4 / 30 | 1 configuration failure, 2 observability rejections | A/near closed measurement-insufficient; warm-up amendment pending |
+| C1 concurrency | `IN_PROGRESS` | 1 / 15 | 4 / 30 | 1 configuration failure, 2 observability rejections | A/near closed; warm-up `48920477` active for open slots |
 | C1 minimal confirmations | `NOT_APPLICABLE_PENDING_TRIGGER` | 0 | 0 / 3 per finding | 0 | only if a violation is found |
 | R1 session rollover | `NOT_STARTED` | 0 / 9 | 0 / 18 | 0 | pending |
 | W1 workload spike | `NOT_STARTED` | 0 / 3 canonical | 0 | 0 | pending |
@@ -91,12 +91,22 @@ All future rejected attempts must be explicitly classified as
 - `4f90d132bb856384438dc81a038b6c26f8be96b6` —
   `oracle: exclude c1 cleanup from linearization window` (pushed observation-
   only correction after the excluded configuration-failure attempt).
+- `89dc2bacdafcf33113d7c8ce75459cbb5c128988` —
+  `experiment: activate c1 oracle amendment` (pushed; first Oracle 0.2 formal
+  attempt starting revision).
+- `0f6f50968510704067cebc48949a29f2ec6d5a0d` —
+  `experiment: record c1 a-first result` (pushed).
+- `ffc0cb3522dbbab97a7df30378ff7dbe73205ee8` —
+  `experiment: record c1 near observability rejection` (pushed; second A/near
+  attempt starting revision).
+- `489204770d5ac095cde6274148f2ce3e5dd175ea` —
+  `experiment: add c1 preflight observation warmup` (pushed future-only
+  harness amendment after A/near closed at cap).
 
 ## Next exact action
 
-Freeze, test, commit, and push the future-attempt-only preflight clock-sample
-warm-up amendment. Do not reopen A/near. Then run `C1-A-B_FIRST` attempt 1
-with seed `320121`.
+Record and push warm-up amendment commit `48920477`, confirm clean
+synchronization, then run `C1-A-B_FIRST` attempt 1 with seed `320121`.
 
 ## Current blockers
 

@@ -86,6 +86,8 @@ the slot is closed measurement-insufficient at its cap. Future-only amendment
 `C1-HARNESS-002` adds a bounded ten-sample pre-arm observation warm-up without
 changing the clock threshold, event-pair timing, public commands, SUT state,
 seeds, or attempt caps. It does not reopen A/near.
+The amendment is frozen at commit
+`489204770d5ac095cde6274148f2ce3e5dd175ea` for every remaining open C1 slot.
 
 Outputs:
 
