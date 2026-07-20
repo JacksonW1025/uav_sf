@@ -4,8 +4,8 @@ status: IN_PROGRESS
 preregistration_commit: 2cb2e021f1604868387f94b5eef6b6457f719416
 oracle_amendment_commit: 4f90d132bb856384438dc81a038b6c26f8be96b6
 harness_amendment_commit: 489204770d5ac095cde6274148f2ce3e5dd175ea
-accepted_runs: 4
-total_attempts: 7
+accepted_runs: 5
+total_attempts: 8
 violations: 0
 observability_rejections: 2
 measurement_insufficient: 0
@@ -201,3 +201,31 @@ attempts:
       clock_bridge: 9b8f96e9171f2ab25aabb7f3a32a31b62e1a17eb445e228a69a840f4aee3bbdb
       route_trace: 3a09f0f70160765f55f415c08b806dd973667a09735d950ecf69b65c2f33bee8
       oracle: 12515a98357d249f8dcdc68c33189a24e4749f14e05db65c48626f0711162c95
+  - run_id: c1-b-b-first-a01
+    slot_id: C1-B-B_FIRST
+    attempt: 1
+    simulation_seed: 320221
+    repository_commit_at_start: 003e76adcd481c66ee78f5f4a0778643186e49f7
+    disposition: ACCEPTED
+    counted_as_accepted: true
+    counted_as_violation: false
+    monitor: PASS
+    relative_timing_ms: -449.46317
+    clock_bridge: VALID
+    pair_window: COMPLETE
+    lineage: COMPLETE
+    cleanup: LANDED_AND_DISARMED
+    oracle: PASS
+    final_nav_state: 4
+    executor_in_charge: 0
+    post_final_old_epoch_control_events: 0
+    competing_writer_timestamp_count: 0
+    maximum_writer_gap_ms: 8
+    physical: {maximum_tilt_deg: 3.419320851810161, maximum_angular_rate_rad_s: 0}
+    artifact_sha256:
+      flight_log: 49c3329c996f142eaaaca8ed8737c5bb49cdcb49391b413891febff81323961a
+      monitor_result: 8f827e3cfc5c535a9e81b93435da6b2114eae030600bf4ad066c1f41de70e91d
+      monitor_events: 0cb7d0d4af23ddac2d727c531bc63dd69186fcf8c141c322151ec01c2d5548d8
+      clock_bridge: 6a204414de41839fbb99227ec338cbd554e16f98902240adab9b121624cf3d1b
+      route_trace: 6be9d5822dd3c64017495387b6209c3ff6f927bdbacc89329a810e60b51f3c28
+      oracle: d0468cdc80ffd2b87eb72313803abbedf2ab4e35d72b7b2fb03d7f23cd6b8284
