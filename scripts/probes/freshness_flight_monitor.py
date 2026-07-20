@@ -64,6 +64,9 @@ def run(args: argparse.Namespace) -> int:
             self.active_seen = False
             self.last_nav_state: int | None = None
             self.clock_sample_count = 0
+            self.timesync_estimated_offset_us: int | None = None
+            self.timesync_round_trip_time_us: int | None = None
+            self.timesync_source_protocol: int | None = None
             self.telemetry_counts = {"position": 0, "attitude": 0, "angular_velocity": 0}
             self.ready_monotonic_ns: int | None = None
             self.ready_ros_time_ns: int | None = None
@@ -138,6 +141,7 @@ def run(args: argparse.Namespace) -> int:
 
         def _status(self, message: Any) -> None:
             self.status = message
+            self._clock_sample(int(message.timestamp), "vehicle_status")
             self.armed_seen = self.armed_seen or self._armed()
             nav_state = int(message.nav_state)
             if nav_state != self.last_nav_state:
@@ -195,22 +199,33 @@ def run(args: argparse.Namespace) -> int:
                 )
 
         def _timesync(self, message: Any) -> None:
+            self.timesync_estimated_offset_us = int(message.estimated_offset)
+            self.timesync_round_trip_time_us = int(message.round_trip_time)
+            self.timesync_source_protocol = int(message.source_protocol)
+            self._clock_sample(int(message.timestamp), "timesync_status")
+
+        def _clock_sample(self, outbound_us: int, sample_source: str) -> None:
+            if (
+                self.timesync_estimated_offset_us is None
+                or self.timesync_round_trip_time_us is None
+                or self.timesync_source_protocol is None
+            ):
+                return
             self.clock_sample_count += 1
             receive_ros_ns = self.get_clock().now().nanoseconds
             receive_monotonic_ns = time.monotonic_ns()
-            outbound_us = int(message.timestamp)
-            offset_us = int(message.estimated_offset)
+            offset_us = self.timesync_estimated_offset_us
             self._event(
                 "clock_bridge_sample",
-                sample_source="timesync_status",
+                sample_source=sample_source,
                 px4_outbound_timestamp_us=outbound_us,
                 px4_boot_timestamp_us=outbound_us + offset_us,
                 ros_receive_ns=receive_ros_ns,
                 monotonic_receive_ns=receive_monotonic_ns,
-                timesync_source_protocol=int(message.source_protocol),
+                timesync_source_protocol=self.timesync_source_protocol,
                 timesync_estimated_offset_us=offset_us,
-                timesync_round_trip_time_us=int(message.round_trip_time),
-                timesync_converged=int(message.source_protocol) == 2,
+                timesync_round_trip_time_us=self.timesync_round_trip_time_us,
+                timesync_converged=self.timesync_source_protocol == 2,
             )
 
         def _command(self, command: int, **params: float) -> None:

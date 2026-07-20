@@ -35,6 +35,8 @@ def test_fault_channels_are_independent_and_total_stop_is_sigkill() -> None:
     assert 'args.fault_type == "SETPOINT_ONLY_STALL"' in monitor
     assert '"REQUEST_HOLD"' in monitor
     assert 'telemetry_counts["angular_velocity"] >= 20' not in monitor
+    assert 'self._clock_sample(int(message.timestamp), "vehicle_status")' in monitor
+    assert 'px4_boot_timestamp_us=outbound_us + offset_us' in monitor
 
 
 def test_agent_builder_reads_lock_and_does_not_modify_source() -> None:
