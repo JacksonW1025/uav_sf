@@ -6,7 +6,7 @@ accepted_target: 15
 accepted_runs: 1
 maximum_attempts_per_slot: 2
 maximum_total_attempts: 30
-total_attempts: 2
+total_attempts: 3
 active_oracle_version: "0.2"
 oracle_amendment: C1-ORACLE-001
 oracle_amendment_commit: 4f90d132bb856384438dc81a038b6c26f8be96b6
@@ -19,7 +19,7 @@ confirmation:
   seed_schedule: [329901, 329902, 329903]
 slots:
   - {slot_id: C1-A-A_FIRST, pair: A, timing_order: A_FIRST, accepted_runs_required: 1, maximum_attempts: 2, accepted_runs: 1, attempts: 2, violations: 0, status: ACCEPTED_TARGET_REACHED, seed_schedule: [320101, 320102]}
-  - {slot_id: C1-A-NEAR_SIMULTANEOUS, pair: A, timing_order: NEAR_SIMULTANEOUS, accepted_runs_required: 1, maximum_attempts: 2, accepted_runs: 0, attempts: 0, violations: 0, status: PENDING, seed_schedule: [320111, 320112]}
+  - {slot_id: C1-A-NEAR_SIMULTANEOUS, pair: A, timing_order: NEAR_SIMULTANEOUS, accepted_runs_required: 1, maximum_attempts: 2, accepted_runs: 0, attempts: 1, violations: 0, status: ONE_ATTEMPT_REMAINING_AFTER_OBSERVABILITY_REJECTION, seed_schedule: [320111, 320112]}
   - {slot_id: C1-A-B_FIRST, pair: A, timing_order: B_FIRST, accepted_runs_required: 1, maximum_attempts: 2, accepted_runs: 0, attempts: 0, violations: 0, status: PENDING, seed_schedule: [320121, 320122]}
   - {slot_id: C1-B-A_FIRST, pair: B, timing_order: A_FIRST, accepted_runs_required: 1, maximum_attempts: 2, accepted_runs: 0, attempts: 0, violations: 0, status: PENDING, seed_schedule: [320201, 320202]}
   - {slot_id: C1-B-NEAR_SIMULTANEOUS, pair: B, timing_order: NEAR_SIMULTANEOUS, accepted_runs_required: 1, maximum_attempts: 2, accepted_runs: 0, attempts: 0, violations: 0, status: PENDING, seed_schedule: [320211, 320212]}
