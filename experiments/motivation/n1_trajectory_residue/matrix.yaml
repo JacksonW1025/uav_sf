@@ -3,9 +3,9 @@ study_id: n1_current_trajectory_residue_adjudication
 status: IN_PROGRESS
 preregistration_commit: 54d0411bddbc62e28d05e006a844dedbf9ebe6b3
 accepted_target: 9
-accepted_runs: 5
+accepted_runs: 8
 maximum_total_attempts: 18
-total_attempts: 9
+total_attempts: 14
 execution_order: [N1-A, N1-B, N1-C]
 cells:
   - cell_id: N1-A
@@ -37,12 +37,20 @@ cells:
     requested_offset_ms: 260
     accepted_runs_required: 3
     maximum_attempts: 6
-    accepted_runs: 0
-    attempts: 0
+    status: ACCEPTED_TARGET_REACHED
+    accepted_runs: 3
+    attempts: 5
+    violation_runs: 2
+    observability_rejections: 1
+    environment_failures: 1
     seed_schedule: [310301, 310302, 310303, 310304, 310305, 310306]
 reduced_confirmation:
-  status: NOT_APPLICABLE_PENDING_TRIGGER
+  status: TRIGGERED_PROFILE_FROZEN_PENDING_EXECUTION
   trigger: at_least_two_independent_accepted_matching_violations
+  trigger_runs: [n1-c-a04, n1-c-a05]
+  phase_bucket: C
+  logger_profile: config/n1_reduced_logger_topics.txt
+  behavior_binary_unchanged: true
   accepted_target: 1
   maximum_attempts: 3
   seed_schedule: [310401, 310402, 310403]

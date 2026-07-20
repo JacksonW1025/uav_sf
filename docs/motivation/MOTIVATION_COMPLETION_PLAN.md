@@ -36,12 +36,13 @@ storage and excluded from the SUT denominator under the correct classification.
 
 ### N1 — Current natural event adjudication
 
-Status: `IN_PROGRESS` — phase bucket A is closed at its six-attempt cap with
-2/3 accepted runs, both Route PASS. Bucket B reached 3/3 accepted in three
-attempts, all Route PASS. None of these five accepted runs reproduced the
-frozen natural event. Two observability rejections and two environment failures
-are excluded from the SUT denominator. Bucket C is next; completed buckets will
-not be retried.
+Status: `IN_PROGRESS` — phase bucket A closed at 2/3 accepted and its six-run
+cap; B reached 3/3 in three attempts; C reached 3/3 in five attempts. C04 and
+C05 independently reproduced the same narrow stale-subject-only Route
+violation, triggering one accepted observation-reduced confirmation within
+three attempts. The reduced profile preserves required route, lineage,
+physical-safety, and cleanup evidence while removing inactive-message logging;
+it does not change the SUT binary or behavior.
 
 Outputs:
 

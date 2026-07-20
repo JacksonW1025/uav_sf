@@ -46,8 +46,8 @@ testing is authorized.
 | Phase | Status | Accepted | Attempts | Rejected / excluded | Current disposition |
 |---|---|---:|---:|---:|---|
 | Initialization | `COMPLETE` | n/a | n/a | n/a | `f2aa93aa` pushed |
-| N1 trajectory residue | `IN_PROGRESS` | 5 / 9 | 9 / 18 | 4 | N1-A 2/3 at cap; N1-B 3/3 accepted Route PASS; 0 violations |
-| N1 reduced confirmation | `NOT_APPLICABLE_PENDING_TRIGGER` | 0 / 1 | 0 / 3 | 0 | only if at least two accepted reproductions |
+| N1 trajectory residue | `FORMAL_MATRIX_COMPLETE` | 8 / 9 | 14 / 18 | 6 | A 2/3 at cap; B 3/3; C 3/3; C04/C05 matching Route violations |
+| N1 reduced confirmation | `TRIGGERED_PENDING_EXECUTION` | 0 / 1 | 0 / 3 | 0 | C bucket produced two matching accepted reproductions |
 | C1 concurrency | `NOT_STARTED` | 0 / 15 | 0 / 30 | 0 | pending |
 | C1 minimal confirmations | `NOT_APPLICABLE_PENDING_TRIGGER` | 0 | 0 / 3 per finding | 0 | only if a violation is found |
 | R1 session rollover | `NOT_STARTED` | 0 / 9 | 0 / 18 | 0 | pending |
@@ -73,12 +73,16 @@ All future rejected attempts must be explicitly classified as
 - `ed8486f03d07af70d738ce787a0ed77b1e110b3b` —
   `experiment: checkpoint n1 phase bucket a` (pushed; N1-B attempt starting
   revision).
+- `b639b4bf072965cbe3e4b7a8b33c4a2c2f82a379` —
+  `experiment: checkpoint n1 phase bucket b` (pushed; N1-C attempt starting
+  revision).
 
 ## Next exact action
 
-Freeze and push the N1-B accepted-target checkpoint, confirm a clean
-synchronized worktree and unoccupied local simulator ports, then execute N1-C
-attempt 1 with seed `310301` and the preregistered 260 ms health-cycle offset.
+Freeze and push the N1-C result and observation-reduced logger profile, confirm
+a clean synchronized worktree and unoccupied local simulator ports, then run
+N1 reduced-confirmation attempt 1 with seed `310401`, phase bucket C, and
+`config/n1_reduced_logger_topics.txt`.
 
 ## Current blockers
 

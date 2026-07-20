@@ -1,0 +1,17 @@
+# N1 observation-reduced confirmation profile. Intervals are milliseconds.
+#
+# This preserves the route/controller/allocator/writer chain, Trajectory input,
+# physical safety state, public commands, fallback state, and cleanup evidence.
+# It removes arming-check traffic and the four setpoint families that are not
+# active in the preregistered Trajectory scenario. It changes logging only.
+route_observability 0
+actuator_armed 0
+actuator_motors 0
+failsafe_flags 0
+trajectory_setpoint 0
+vehicle_angular_velocity 0
+vehicle_attitude 0
+vehicle_local_position 0
+vehicle_control_mode 0
+vehicle_land_detected 0
+vehicle_status 0

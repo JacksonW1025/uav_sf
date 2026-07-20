@@ -13,6 +13,7 @@ PREREGISTRATION = (
 MATRIX = ROOT / "experiments/motivation/n1_trajectory_residue/matrix.yaml"
 LEDGER = ROOT / "experiments/motivation/n1_trajectory_residue/attempt_ledger.yaml"
 RUNNER = ROOT / "scripts/probes/run_n1_trajectory_residue.sh"
+REDUCED_LOGGER = ROOT / "config/n1_reduced_logger_topics.txt"
 
 
 def test_n1_preregistration_is_bounded_and_preserves_f1_context() -> None:
@@ -131,3 +132,38 @@ def test_n1_dispositions_are_closed_and_no_fuzzer_is_authorized() -> None:
         "ENVIRONMENT_BLOCKED",
     ]
     assert "full_stateful_fuzzer_campaign" in record["scope_exclusions"]
+
+
+def test_n1_reduced_logger_preserves_required_lineage_and_safety_topics() -> None:
+    def topics(path: Path) -> set[str]:
+        return {
+            line.split()[0]
+            for line in path.read_text(encoding="utf-8").splitlines()
+            if line.strip() and not line.lstrip().startswith("#")
+        }
+
+    full = topics(ROOT / "config/freshness_logger_topics.txt")
+    reduced = topics(REDUCED_LOGGER)
+    required = {
+        "route_observability",
+        "actuator_armed",
+        "actuator_motors",
+        "failsafe_flags",
+        "trajectory_setpoint",
+        "vehicle_angular_velocity",
+        "vehicle_attitude",
+        "vehicle_local_position",
+        "vehicle_control_mode",
+        "vehicle_land_detected",
+        "vehicle_status",
+    }
+    assert reduced == required
+    assert reduced < full
+    assert not {
+        "arming_check_request",
+        "arming_check_reply",
+        "vehicle_attitude_setpoint",
+        "vehicle_rates_setpoint",
+        "vehicle_torque_setpoint",
+        "vehicle_thrust_setpoint",
+    } & reduced
