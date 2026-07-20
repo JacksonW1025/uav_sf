@@ -25,7 +25,11 @@ if(NOT UAV_SF_ISSUE162_ONLY)
 
   add_executable(successor_baseline_executor src/successor_baseline.cpp)
   target_link_libraries(successor_baseline_executor PUBLIC Eigen3::Eigen px4_ros2_cpp::px4_ros2_cpp rclcpp::rclcpp)
-  list(APPEND install_targets route_transition_external_mode p0_external_mode_executor successor_baseline_executor)
+
+  add_executable(external_mode_freshness_probe src/freshness_probe.cpp)
+  target_link_libraries(external_mode_freshness_probe PUBLIC Eigen3::Eigen px4_ros2_cpp::px4_ros2_cpp rclcpp::rclcpp)
+
+  list(APPEND install_targets route_transition_external_mode p0_external_mode_executor successor_baseline_executor external_mode_freshness_probe)
 endif()
 
 add_executable(issue162_replay src/issue162_replay.cpp)
