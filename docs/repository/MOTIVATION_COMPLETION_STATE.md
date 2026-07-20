@@ -12,8 +12,8 @@ Freshness pilot denominator.
 - Starting `origin/main`: `955e7c98e3b29ddd21fa4d44fb562065700fa832`
 - Starting ahead/behind: `0/0`
 - Protected ancestor: `955e7c98e3b29ddd21fa4d44fb562065700fa832`
-- Current phase: C1 concurrent authority-event preregistration
-- Phase status: `C1_IN_PROGRESS_WARMUP_ACTIVE`
+- Current phase: R1 session-rollover design
+- Phase status: `C1_COMPLETE_R1_NEXT`
 
 ## Frozen evidence
 
@@ -48,8 +48,8 @@ testing is authorized.
 | Initialization | `COMPLETE` | n/a | n/a | n/a | `f2aa93aa` pushed |
 | N1 trajectory residue | `COMPLETE` | 8 / 9 | 14 / 18 | 6 | `CURRENT_EVENT_REOBSERVED_BUT_PHASE_DEPENDENT`; 2 matching violations |
 | N1 reduced confirmation | `COMPLETE` | 1 / 1 | 1 / 3 | 0 | accepted Route PASS; no matching residue; stopped at target |
-| C1 concurrency | `IN_PROGRESS` | 13 / 15 | 16 / 30 | 1 configuration failure, 2 observability rejections | E/A-first and E/near PASS |
-| C1 minimal confirmations | `NOT_APPLICABLE_PENDING_TRIGGER` | 0 | 0 / 3 per finding | 0 | only if a violation is found |
+| C1 concurrency | `COMPLETE` | 14 / 15 | 17 / 30 | 1 configuration failure, 2 observability rejections | `CONDITIONAL_PASS_BOUNDED_LINEARIZATION_CONFORMANCE`; 0 violations |
+| C1 minimal confirmations | `NOT_TRIGGERED` | 0 | 0 / 3 | 0 | no accepted violation |
 | R1 session rollover | `NOT_STARTED` | 0 / 9 | 0 / 18 | 0 | pending |
 | W1 workload spike | `NOT_STARTED` | 0 / 3 canonical | 0 | 0 | pending |
 | B1 Family B | `NOT_STARTED` | 0 / 6 if executable | 0 | 0 | pending feasibility Gate |
@@ -105,8 +105,10 @@ All future rejected attempts must be explicitly classified as
 
 ## Next exact action
 
-Record and push `C1-E-NEAR_SIMULTANEOUS`, confirm clean synchronization, then
-run `C1-E-B_FIRST` attempt 1 with seed `320521`.
+Commit and push the validated C1 report, Gate, processed summary, final
+ledger/matrix, state, and plan. Confirm synchronized clean closure, record the
+final C1 commit, then design and preregister R1 before its first formal
+attempt.
 
 ## Current blockers
 

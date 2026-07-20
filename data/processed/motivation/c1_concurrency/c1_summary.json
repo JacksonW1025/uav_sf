@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.0",
+  "study_id": "c1_concurrent_authority_event_probe",
+  "disposition": "CONDITIONAL_PASS_BOUNDED_LINEARIZATION_CONFORMANCE",
+  "formal_matrix": {
+    "slots": 15,
+    "accepted_target": 15,
+    "accepted_runs": 14,
+    "attempts": 17,
+    "maximum_attempts": 30,
+    "oracle_pass": 14,
+    "oracle_violations": 0,
+    "observability_rejections": 2,
+    "campaign_configuration_failures": 1,
+    "measurement_insufficient_slots": ["C1-A-NEAR_SIMULTANEOUS"]
+  },
+  "pairs": {
+    "A": {
+      "accepted": 2,
+      "attempts": 5,
+      "A_FIRST": {"status": "PASS", "final_nav_state": 4},
+      "NEAR_SIMULTANEOUS": {"status": "ATTEMPT_LIMIT_REACHED_MEASUREMENT_INSUFFICIENT"},
+      "B_FIRST": {"status": "PASS", "final_nav_state": 23}
+    },
+    "B": {
+      "accepted": 3,
+      "attempts": 3,
+      "A_FIRST": {"status": "PASS", "final_nav_state": 4},
+      "NEAR_SIMULTANEOUS": {"status": "PASS", "final_nav_state": 4},
+      "B_FIRST": {"status": "PASS", "final_nav_state": 4}
+    },
+    "C": {
+      "accepted": 3,
+      "attempts": 3,
+      "A_FIRST": {"status": "PASS", "final_nav_state": 5},
+      "NEAR_SIMULTANEOUS": {"status": "PASS", "final_nav_state": 5},
+      "B_FIRST": {"status": "PASS", "final_nav_state": 5}
+    },
+    "D": {
+      "accepted": 3,
+      "attempts": 3,
+      "A_FIRST": {"status": "PASS", "final_nav_state": 23},
+      "NEAR_SIMULTANEOUS": {"status": "PASS", "final_nav_state": 23},
+      "B_FIRST": {"status": "PASS", "final_nav_state": 5}
+    },
+    "E": {
+      "accepted": 3,
+      "attempts": 3,
+      "A_FIRST": {"status": "PASS", "final_nav_state": 5},
+      "NEAR_SIMULTANEOUS": {"status": "PASS", "final_nav_state": 5},
+      "B_FIRST": {"status": "PASS", "final_nav_state": 5}
+    }
+  },
+  "accepted_run_invariants": {
+    "executor_in_charge_values": [0],
+    "maximum_post_final_old_epoch_control_events": 0,
+    "maximum_competing_writer_timestamp_count": 0,
+    "maximum_writer_gap_ms": 8,
+    "maximum_tilt_deg": 6.525903629117304,
+    "maximum_angular_rate_rad_s": 0,
+    "all_cleanup_landed_and_disarmed": true
+  },
+  "confirmation": {
+    "status": "NOT_TRIGGERED_NO_VIOLATIONS",
+    "attempts": 0
+  },
+  "raw_evidence": {
+    "namespace": "runs/motivation/c1_concurrency",
+    "ignored": true,
+    "attempt_directories": 17,
+    "size_at_closure": "158M"
+  }
+}

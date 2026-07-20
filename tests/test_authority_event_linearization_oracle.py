@@ -13,6 +13,7 @@ from scripts.probes.c1_concurrency_monitor import CLOCK_PREFLIGHT_WARMUP_SAMPLES
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = ROOT / "experiments/motivation/c1_concurrency"
+SUMMARY = ROOT / "data/processed/motivation/c1_concurrency/c1_summary.json"
 SCHEMA = json.loads(
     (ROOT / "data/schemas/authority_event_linearization_result.schema.json").read_text(
         encoding="utf-8"
@@ -245,3 +246,21 @@ def test_c1_runner_is_bounded_and_uses_public_interfaces() -> None:
         "self.status.failsafe =",
     )
     assert not any(token in monitor for token in forbidden)
+
+
+def test_c1_final_gate_preserves_bounded_negative_and_incomplete_slot() -> None:
+    matrix = yaml.safe_load((BASE / "matrix.yaml").read_text(encoding="utf-8"))
+    ledger = yaml.safe_load((BASE / "attempt_ledger.yaml").read_text(encoding="utf-8"))
+    gate = json.loads((BASE / "c1_gate.json").read_text(encoding="utf-8"))
+    summary = json.loads(SUMMARY.read_text(encoding="utf-8"))
+    assert matrix["status"] == ledger["status"] == "FINAL_ANALYSIS_COMPLETE"
+    assert matrix["accepted_runs"] == ledger["accepted_runs"] == 14
+    assert matrix["total_attempts"] == ledger["total_attempts"] == 17
+    assert ledger["violations"] == gate["accepted_oracle_violations"] == 0
+    assert gate["status"] == "CONDITIONAL_PASS"
+    assert gate["state_grammar_usable"]
+    assert gate["measurement_insufficient_slots"] == ["C1-A-NEAR_SIMULTANEOUS"]
+    assert not gate["authorizes_full_fuzzer_campaign"]
+    assert summary["formal_matrix"]["oracle_pass"] == 14
+    assert summary["confirmation"]["status"] == "NOT_TRIGGERED_NO_VIOLATIONS"
+    assert summary["raw_evidence"]["ignored"]

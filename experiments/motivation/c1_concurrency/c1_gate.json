@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "gate_id": "C1_CONCURRENT_AUTHORITY_EVENT_GATE",
+  "status": "CONDITIONAL_PASS",
+  "disposition": "CONDITIONAL_PASS_BOUNDED_LINEARIZATION_CONFORMANCE",
+  "state_grammar_usable": true,
+  "accepted_runs": 14,
+  "accepted_target": 15,
+  "formal_attempts": 17,
+  "maximum_formal_attempts": 30,
+  "accepted_oracle_pass": 14,
+  "accepted_oracle_violations": 0,
+  "measurement_insufficient_slots": ["C1-A-NEAR_SIMULTANEOUS"],
+  "excluded_attempts": {
+    "OBSERVABILITY_REJECTED": 2,
+    "CAMPAIGN_CONFIGURATION_FAILURE": 1,
+    "MEASUREMENT_INSUFFICIENT": 0,
+    "ENVIRONMENT_FAILURE": 0,
+    "FORMAL_SAFETY_STOP": 0,
+    "NOT_APPLICABLE": 0
+  },
+  "coverage": {
+    "event_pairs_with_accepted_evidence": 5,
+    "event_pairs_total": 5,
+    "complete_three_order_pairs": ["B", "C", "D", "E"],
+    "partial_pairs": ["A"],
+    "accepted_timing_orders": ["A_FIRST", "NEAR_SIMULTANEOUS", "B_FIRST"]
+  },
+  "oracle_amendment_commit": "4f90d132bb856384438dc81a038b6c26f8be96b6",
+  "harness_amendment_commit": "489204770d5ac095cde6274148f2ce3e5dd175ea",
+  "violation_confirmation": "NOT_TRIGGERED_NO_VIOLATIONS",
+  "next_phase": "R1_RAPID_REENTRY_AND_SESSION_ROLLOVER_PROBE",
+  "authorizes_full_fuzzer_campaign": false
+}

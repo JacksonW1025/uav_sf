@@ -67,10 +67,14 @@ bounded non-reproduction without erasing the original found event.
 
 ### C1 — Concurrent authority-event deterministic probe
 
-Status: `PREREGISTERED`; commit `2cb2e021f1604868387f94b5eef6b6457f719416`
-was pushed before any formal attempt. The public-interface harness, Authority
-Event Linearization Oracle 0.1, 15-slot matrix, two-attempt slot caps, and
-three-attempt triggered-confirmation cap are frozen.
+Status: `COMPLETE` —
+`CONDITIONAL_PASS_BOUNDED_LINEARIZATION_CONFORMANCE`. The matrix closed at 14
+accepted / 17 attempts, with 14 Oracle PASS, zero violations, two
+observability rejections, and one campaign configuration failure. A/near is
+measurement-insufficient at its two-attempt cap; every other slot reached its
+accepted target. Confirmation was not triggered.
+Focused tests passed 10/10 and the full validator passed 15/15 stages with 216
+tests. Protected hashes and local process/port cleanup were verified.
 
 Execution note: attempt `c1-a-a-first-a01` exposed an Oracle 0.1 cleanup-window
 configuration defect and is excluded from the SUT denominator. Amendment
