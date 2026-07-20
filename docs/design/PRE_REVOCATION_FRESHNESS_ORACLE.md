@@ -68,6 +68,9 @@ The library sends setpoint timestamp zero, so the locked uCDR deserializer
 assigns PX4 HRT at receive time. Producer publish time is a separate harness
 marker. Controller/allocator/writer observations must carry original-setpoint
 lineage; their freshly generated output timestamps are not command freshness.
+Every mapped ROS marker must also fall inside the selected bridge's
+`valid_from`–`valid_until` interval; extrapolation beyond that interval is
+ineligible even when the fitted segment itself is `VALID`.
 
 Required window flags are `pre_fault_stable`, `pre_revocation_target`, and
 `fallback`. `SETPOINT_ONLY_STALL` may explicitly policy-terminate without a

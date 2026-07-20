@@ -33,11 +33,18 @@ def _jsonl(path: Path) -> list[dict[str, Any]]:
 
 
 def _ros_to_px4_us(ros_ns: int, bridge: dict[str, Any]) -> float:
-    return float(bridge["reference_px4_us"]) + (
+    mapped = float(bridge["reference_px4_us"]) + (
         (ros_ns - int(bridge["reference_ros_ns"]))
         / float(bridge["rate_ratio"])
         / 1000.0
     )
+    valid_from = bridge.get("valid_from")
+    valid_until = bridge.get("valid_until")
+    if valid_from is not None and mapped < float(valid_from):
+        raise ValueError("ROS timestamp maps before the clock bridge valid interval")
+    if valid_until is not None and mapped > float(valid_until):
+        raise ValueError("ROS timestamp maps after the clock bridge valid interval")
+    return mapped
 
 
 def _dataset_rows(ulog: Any, name: str) -> list[dict[str, Any]]:

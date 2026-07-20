@@ -27,6 +27,9 @@
   automatic fallback installation, even when the cross-domain mapping places
   the monitor's target-close marker a few milliseconds earlier; recovery and
   full-post-fault metrics remain separate
+- Cleanup observability correction: clock samples continue through explicit
+  Land cleanup, and every ROS marker used by the summarizer must map inside the
+  selected bridge interval; out-of-interval extrapolation is rejected
 - Last update: 2026-07-20
 
 ## Frozen Issue #162 completion state

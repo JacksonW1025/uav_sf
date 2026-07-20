@@ -3,12 +3,15 @@ from __future__ import annotations
 import math
 from pathlib import Path
 
+import pytest
+
 from scripts.analysis.summarize_freshness_run import (
     _baseline_complete,
     _health_evidence,
     _last_external_subject_timestamp,
     _physical_metrics,
     _pre_revocation_physical_end,
+    _ros_to_px4_us,
 )
 
 
@@ -39,6 +42,7 @@ def test_fault_channels_are_independent_and_total_stop_is_sigkill() -> None:
     assert '"REQUEST_HOLD"' in monitor
     assert 'telemetry_counts["angular_velocity"] >= 20' not in monitor
     assert 'self._clock_sample(int(message.timestamp), "vehicle_local_position")' in monitor
+    assert '{"STABILIZE", "OBSERVE_TARGET", "RECOVER", "CLEANUP_LAND"}' in monitor
     assert 'px4_boot_timestamp_us=outbound_us + offset_us' in monitor
 
 
@@ -134,6 +138,19 @@ def test_pre_revocation_physical_window_excludes_recovery() -> None:
     assert _pre_revocation_physical_end("TOTAL_PROCESS_STOP", 2_200_000, 2_250_000) == 2_200_000
     assert _pre_revocation_physical_end("TOTAL_PROCESS_STOP", 2_300_000, 2_250_000) == 2_300_000
     assert _pre_revocation_physical_end("SETPOINT_ONLY_STALL", None, 4_000_000) == 4_000_000
+
+
+def test_ros_mapping_must_remain_inside_clock_bridge_interval() -> None:
+    bridge = {
+        "reference_px4_us": 1_000_000,
+        "reference_ros_ns": 2_000_000_000,
+        "rate_ratio": 1.0,
+        "valid_from": 900_000,
+        "valid_until": 1_100_000,
+    }
+    assert _ros_to_px4_us(2_050_000_000, bridge) == 1_050_000
+    with pytest.raises(ValueError, match="after the clock bridge valid interval"):
+        _ros_to_px4_us(2_200_000_000, bridge)
 
 
 def test_baseline_gate_is_setpoint_specific() -> None:

@@ -177,7 +177,7 @@ def run(args: argparse.Namespace) -> int:
         def _position(self, message: Any) -> None:
             self.position = message
             self.telemetry_counts["position"] += 1
-            if self.state in {"STABILIZE", "OBSERVE_TARGET", "RECOVER"}:
+            if self.state in {"STABILIZE", "OBSERVE_TARGET", "RECOVER", "CLEANUP_LAND"}:
                 self._clock_sample(int(message.timestamp), "vehicle_local_position")
 
         def _attitude(self, _: Any) -> None:
