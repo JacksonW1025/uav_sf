@@ -3,10 +3,10 @@ study_id: c1_concurrent_authority_event_probe
 status: PREREGISTERED_PENDING_EXECUTION
 preregistration_commit: 2cb2e021f1604868387f94b5eef6b6457f719416
 accepted_target: 15
-accepted_runs: 3
+accepted_runs: 4
 maximum_attempts_per_slot: 2
 maximum_total_attempts: 30
-total_attempts: 6
+total_attempts: 7
 active_oracle_version: "0.2"
 oracle_amendment: C1-ORACLE-001
 oracle_amendment_commit: 4f90d132bb856384438dc81a038b6c26f8be96b6
@@ -24,7 +24,7 @@ slots:
   - {slot_id: C1-A-NEAR_SIMULTANEOUS, pair: A, timing_order: NEAR_SIMULTANEOUS, accepted_runs_required: 1, maximum_attempts: 2, accepted_runs: 0, attempts: 2, violations: 0, status: ATTEMPT_LIMIT_REACHED_MEASUREMENT_INSUFFICIENT, seed_schedule: [320111, 320112]}
   - {slot_id: C1-A-B_FIRST, pair: A, timing_order: B_FIRST, accepted_runs_required: 1, maximum_attempts: 2, accepted_runs: 1, attempts: 1, violations: 0, status: ACCEPTED_TARGET_REACHED, seed_schedule: [320121, 320122]}
   - {slot_id: C1-B-A_FIRST, pair: B, timing_order: A_FIRST, accepted_runs_required: 1, maximum_attempts: 2, accepted_runs: 1, attempts: 1, violations: 0, status: ACCEPTED_TARGET_REACHED, seed_schedule: [320201, 320202]}
-  - {slot_id: C1-B-NEAR_SIMULTANEOUS, pair: B, timing_order: NEAR_SIMULTANEOUS, accepted_runs_required: 1, maximum_attempts: 2, accepted_runs: 0, attempts: 0, violations: 0, status: PENDING, seed_schedule: [320211, 320212]}
+  - {slot_id: C1-B-NEAR_SIMULTANEOUS, pair: B, timing_order: NEAR_SIMULTANEOUS, accepted_runs_required: 1, maximum_attempts: 2, accepted_runs: 1, attempts: 1, violations: 0, status: ACCEPTED_TARGET_REACHED, seed_schedule: [320211, 320212]}
   - {slot_id: C1-B-B_FIRST, pair: B, timing_order: B_FIRST, accepted_runs_required: 1, maximum_attempts: 2, accepted_runs: 0, attempts: 0, violations: 0, status: PENDING, seed_schedule: [320221, 320222]}
   - {slot_id: C1-C-A_FIRST, pair: C, timing_order: A_FIRST, accepted_runs_required: 1, maximum_attempts: 2, accepted_runs: 0, attempts: 0, violations: 0, status: PENDING, seed_schedule: [320301, 320302]}
   - {slot_id: C1-C-NEAR_SIMULTANEOUS, pair: C, timing_order: NEAR_SIMULTANEOUS, accepted_runs_required: 1, maximum_attempts: 2, accepted_runs: 0, attempts: 0, violations: 0, status: PENDING, seed_schedule: [320311, 320312]}
