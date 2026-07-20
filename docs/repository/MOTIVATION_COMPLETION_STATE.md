@@ -48,7 +48,7 @@ testing is authorized.
 | Initialization | `COMPLETE` | n/a | n/a | n/a | `f2aa93aa` pushed |
 | N1 trajectory residue | `COMPLETE` | 8 / 9 | 14 / 18 | 6 | `CURRENT_EVENT_REOBSERVED_BUT_PHASE_DEPENDENT`; 2 matching violations |
 | N1 reduced confirmation | `COMPLETE` | 1 / 1 | 1 / 3 | 0 | accepted Route PASS; no matching residue; stopped at target |
-| C1 concurrency | `IN_PROGRESS` | 12 / 15 | 15 / 30 | 1 configuration failure, 2 observability rejections | E/A-first PASS |
+| C1 concurrency | `IN_PROGRESS` | 13 / 15 | 16 / 30 | 1 configuration failure, 2 observability rejections | E/A-first and E/near PASS |
 | C1 minimal confirmations | `NOT_APPLICABLE_PENDING_TRIGGER` | 0 | 0 / 3 per finding | 0 | only if a violation is found |
 | R1 session rollover | `NOT_STARTED` | 0 / 9 | 0 / 18 | 0 | pending |
 | W1 workload spike | `NOT_STARTED` | 0 / 3 canonical | 0 | 0 | pending |
@@ -105,8 +105,8 @@ All future rejected attempts must be explicitly classified as
 
 ## Next exact action
 
-Record and push `C1-E-A_FIRST`, confirm clean synchronization, then run
-`C1-E-NEAR_SIMULTANEOUS` attempt 1 with seed `320511`.
+Record and push `C1-E-NEAR_SIMULTANEOUS`, confirm clean synchronization, then
+run `C1-E-B_FIRST` attempt 1 with seed `320521`.
 
 ## Current blockers
 
