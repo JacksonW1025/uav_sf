@@ -4,8 +4,8 @@ status: IN_PROGRESS
 preregistration_commit: 2cb2e021f1604868387f94b5eef6b6457f719416
 oracle_amendment_commit: 4f90d132bb856384438dc81a038b6c26f8be96b6
 harness_amendment_commit: 489204770d5ac095cde6274148f2ce3e5dd175ea
-accepted_runs: 10
-total_attempts: 13
+accepted_runs: 11
+total_attempts: 14
 violations: 0
 observability_rejections: 2
 measurement_insufficient: 0
@@ -369,3 +369,34 @@ attempts:
       clock_bridge: 21b02b4c3359aee3439b9761cb80fcd265467c95de58bd0b65cea4b125e23dc2
       route_trace: 8ba904669681ec8196b98ef9a76740a0a571d6c5a823e34bcfe4aad4c52a1837
       oracle: 4e0a8135ae209ec14bb39b75a10d207fb1cbeaeb414a31cc3830b4d9949d2291
+  - run_id: c1-d-b-first-a01
+    slot_id: C1-D-B_FIRST
+    attempt: 1
+    simulation_seed: 320421
+    repository_commit_at_start: fad2c86dc80408d93d517d8fb122c4121f7a5204
+    disposition: ACCEPTED
+    counted_as_accepted: true
+    counted_as_violation: false
+    monitor: PASS
+    relative_timing_ms: -749.707675
+    clock_bridge: VALID
+    pair_window: COMPLETE
+    lineage: COMPLETE
+    cleanup: LANDED_AND_DISARMED
+    oracle: PASS
+    final_nav_state: 5
+    executor_in_charge: 0
+    post_final_old_epoch_control_events: 0
+    competing_writer_timestamp_count: 0
+    maximum_writer_gap_ms: 8
+    post_window_local_subject_cleanup: UNREGISTER_TIMEOUT_EXCEPTION_AFTER_SAFE_CLEANUP
+    post_window_cleanup_effect_on_sut_result: NONE
+    physical: {maximum_tilt_deg: 3.3117446683467704, maximum_angular_rate_rad_s: 0}
+    artifact_sha256:
+      flight_log: c0604f7c72b4473cff178582f2da3a3041c652ae0f3086fdf45887699c950aed
+      monitor_result: 4a83412f45e2dd7922c939da81e000c8d4e3beb93e4d36663e8093c53e98ea94
+      monitor_events: 53d86bf203e53906aed6a4aa1ff1918ec5d8929a48eb7eb9ee2ce72dddef8085
+      clock_bridge: fe2ed4e8cddd6a9a2bf5ade5bd8223bb616e75bfb77336cd448c2e36ed82d960
+      route_trace: 241600b6f98dfb82b6bc12920e3f810b35be6d048634aea64691cfd18f352233
+      oracle: 481a2dd1d9ec232122a86a42b89cbfa0581ce45a001eca8f3a96e739b0e13be5
+      external_mode_log: 610703ef76d5fb0ee49604a8ebafe545683a7619722b9ddc0a97c772dfb213a2
