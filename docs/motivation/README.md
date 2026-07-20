@@ -16,6 +16,10 @@ coverage audit, and the gated P0 normal-flow baselines.
    installation, overlap/gap, residue, or full recovery.
 4. **P0 Official Handoff Flow:** three legal normal-flow baselines ran after the
    P-1 gate passed.
+5. **Current-Version Setpoint Freshness Pilot:** 10 accepted runs from 16
+   attempts confirm bounded design exposure; one accepted Trajectory run has a
+   natural post-fallback Route violation, while the Attitude cell is
+   measurement-insufficient at its frozen attempt cap.
 
 ## Files
 
@@ -26,6 +30,8 @@ coverage audit, and the gated P0 normal-flow baselines.
 - `WORKLOAD_CANDIDATES.tsv`: candidate supported workloads and replay cost.
 - `../design/OBSERVABILITY_MATRIX.tsv`: field-level signal feasibility.
 - `P0_OFFICIAL_HANDOFF_BASELINE_REPORT.md`: P0-A/B/C results and limitations.
+- `SETPOINT_FRESHNESS_SOURCE_AUDIT.md`: revision-locked freshness and health-path source audit.
+- `SETPOINT_FRESHNESS_PILOT_REPORT.md`: final four-cell bounded pilot analysis and Gate disposition.
 
 ## Evidence rules
 

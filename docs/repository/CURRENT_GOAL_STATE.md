@@ -2,14 +2,16 @@
 
 ## Active Current-Version freshness pilot
 
-- Current phase: Current-Version External Mode Setpoint Freshness formal pilot
-  execution complete; final analysis pending
+- Current phase: Current-Version External Mode Setpoint Freshness bounded pilot
+  complete and frozen
+- Goal disposition: `CURRENT_NATURAL_VIOLATION_FOUND`
 - Formal accepted runs: `10/12`; no further formal attempt is authorized
 - Completed tuning: Trajectory `TOTAL_PROCESS_STOP`; Attitude
   `TOTAL_PROCESS_STOP`; Rate `TOTAL_PROCESS_STOP` and
   `SETPOINT_ONLY_STALL` at `0.06 rad/s`
-- Current unresolved item: adjudicate the final Gate with F2 capped at `1/3`
-  and the accepted F1 natural Route violation preserved
+- Current unresolved item: none inside this bounded pilot. F2 remains
+  measurement-insufficient at `1/3`, and the one accepted F1 natural Route
+  violation is a found event rather than a reproduced-rate estimate
 - Latest instrumentation checkpoint:
   `f4b5a600badf3961dae1d45eebb183c0d0fa6d01`
 - Tuning evidence status: ignored, non-formal, and excluded from the formal
@@ -58,6 +60,17 @@
 - Formal execution total: 16 attempts, 10 accepted, 6 observability
   rejections, 0 environment failures, 0 campaign-configuration failures, and
   0 formal safety stops. F2 is permanently closed at its six-attempt cap
+- Final Gate: `CURRENT_NATURAL_VIOLATION_FOUND`. All 10 accepted Freshness
+  results are `EXPOSURE`; accepted Route results are 9 PASS and 1 VIOLATION.
+  The decisive F1 event contains two post-fallback controller consumptions
+  carrying the pre-fallback Trajectory subject timestamp, with no
+  post-revocation old-epoch, allocator, or writer event
+- Final analysis:
+  `docs/motivation/SETPOINT_FRESHNESS_PILOT_REPORT.md` and
+  `experiments/motivation/freshness/freshness_pilot_gate.json`
+- Next exact action: none authorized. Preserve this evidence and require a new
+  preregistration for any reproduction, root-cause, fix, expanded matrix, or
+  adjacent campaign
 - Last update: 2026-07-20
 
 ## Frozen Issue #162 completion state

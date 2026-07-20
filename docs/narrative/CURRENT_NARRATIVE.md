@@ -1787,16 +1787,21 @@ Source Family
 
 ## 18.1 当前研究阶段
 
-仓库已经完成 route-observability 可行性、P5 v6 bounded differential campaign
-以及 Issue #162 Motivation Case 1；这些资产均冻结。当前阶段是严格限定于
-Family A Current-Version Dynamic External Mode 的 setpoint freshness bounded
-probe，研究 producer 停止后到 PX4 健康检测和 route 撤销前，Trajectory、
-Attitude、Rate 命令在 controller、allocator、writer 与物理状态中的持续影响。
+仓库已经完成 route-observability 可行性、P5 v6 bounded differential campaign、
+Issue #162 Motivation Case 1，以及 Family A Current-Version Dynamic External
+Mode setpoint freshness bounded pilot；这些资产均已冻结。Freshness pilot
+在预注册的 cell 规则下以 16 次 attempt、10 个 accepted run 结束：F1、F3、
+F4 完成 `3/3`，F2 在六次上限后为 `1/3`，因此 Attitude context 仍是
+measurement-insufficient。
 
-这个阶段新增独立的 Pre-Revocation Freshness Oracle。它不会改写 Route Oracle
-的历史语义，也不会预设“最后一条 setpoint 被保持”就是缺陷。Family B 仍是
-未来 deep-route validation；当前工作不扩大为所有 PX4 flight mode、通用
-scenario fuzzing 或完整 54-run matrix。
+独立的 Pre-Revocation Freshness Oracle 对 10 个 accepted run 全部返回
+`EXPOSURE`，证明在当前版本没有强制 setpoint freshness deadline 时，保留命令
+在 health-driven fallback 之前或 health-alive bounded window 内持续影响控制链。
+Route Oracle 在 9 个 accepted run 中 PASS，但 F1 的一次 accepted run 观察到
+fallback 后两次仍带有旧 Trajectory subject timestamp 的 controller consumption，因此
+总体 Gate 为 `CURRENT_NATURAL_VIOLATION_FOUND`。该事件尚未复现，不应外推为频率或
+根因结论。Family B 仍是未来 deep-route validation；这个 Gate 不授权完整
+54-run matrix、通用 scenario fuzzing 或任何 PX4 控制行为修改。
 
 本文研究 PX4 中一类会替换主要飞行控制路径的运行时 authority transition。
 

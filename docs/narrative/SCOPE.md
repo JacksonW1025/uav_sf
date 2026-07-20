@@ -43,13 +43,14 @@ Existing mc_nn/RAPTOR/classical results are legacy evidence and future cross-fam
 Repository recovery and route observability (complete)
 → P5 v6 bounded differential campaign (complete and frozen)
 → Motivation Case 1: Issue #162 successor failure (complete and frozen)
-→ Current-version External Mode setpoint freshness bounded probe (current)
-→ continuation decision at the freshness Pilot Gate
+→ Current-version External Mode setpoint freshness bounded pilot (complete and frozen)
+→ freshness Pilot Gate: CURRENT_NATURAL_VIOLATION_FOUND
 ```
 
-The current authorization is limited to the four-cell, twelve-accepted-run
-freshness pilot for Dynamic External Mode Trajectory, Attitude, and Rate
-setpoints. It does not authorize a 54-run matrix, generic mode fuzzing, a new P5
-campaign, direct-actuator flight, Aerostack2, rapid-restart/concurrency work, or
-Stateful Fuzzer v0. Family B remains future deep-route validation material. No
-current-version freshness defect is claimed before the pilot is adjudicated.
+The bounded authorization ended after 16 attempts and 10 accepted runs. F1,
+F3, and F4 completed; F2 stopped at its frozen attempt cap with one accepted
+run. All accepted runs show Freshness exposure, and one accepted F1 run has an
+evidence-complete natural post-fallback Route violation. The result does not
+authorize a 54-run matrix, generic mode fuzzing, a new P5 campaign,
+direct-actuator flight, Aerostack2, rapid-restart/concurrency work, or Stateful
+Fuzzer v0. Family B remains future deep-route validation material.

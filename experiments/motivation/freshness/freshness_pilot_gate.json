@@ -1,0 +1,179 @@
+{
+  "schema_version": "1.0",
+  "study_id": "current_version_external_mode_setpoint_freshness_pilot",
+  "evaluated_at": "2026-07-20T04:20:34-07:00",
+  "evaluated_from_execution_checkpoint": "202d3a504cbaaa86a820b62be805e9c09566998b",
+  "preregistration": {
+    "commit": "be11b984e13c9df43ebc8b3b31d04517c46d5224",
+    "path": "experiments/motivation/freshness/primary_preregistration.yaml",
+    "sha256": "fbbac59f943f499b6cc16e2787976c4ea1814dba1ce89efe8d40c23c0603f05f",
+    "pushed_before_first_formal_attempt": true,
+    "frozen_threshold_change_count": 0
+  },
+  "final_disposition": "CURRENT_NATURAL_VIOLATION_FOUND",
+  "gate": {
+    "evidence_sufficient_for_final_disposition": true,
+    "natural_contract_violation_found": true,
+    "design_exposure_confirmed_in_accepted_runs": true,
+    "current_version_conforming_within_pilot": false,
+    "environment_blocked": false,
+    "full_planned_matrix_complete": false,
+    "measurement_insufficient_cells": [
+      "F2"
+    ],
+    "adjudication_note": "The preregistration enumerated final dispositions but did not freeze precedence among them. The evidence-complete natural Route violation in accepted run freshness-f1-a02 is decisive for the overall disposition. The F2 accepted-run shortfall remains a separate cell-level measurement limitation and is not hidden by that disposition."
+  },
+  "execution": {
+    "planned_accepted_runs": 12,
+    "accepted_runs": 10,
+    "total_attempts": 16,
+    "completed_cells": 3,
+    "cells_at_attempt_limit_below_target": 1,
+    "observability_rejections": 6,
+    "environment_failures": 0,
+    "campaign_configuration_failures": 0,
+    "formal_safety_stops": 0,
+    "matrix_status": "PARTIAL_AT_PREREGISTERED_ATTEMPT_LIMIT",
+    "no_further_formal_attempt_authorized": true
+  },
+  "accepted_oracle_results": {
+    "freshness": {
+      "EXPOSURE": 10,
+      "PASS": 0,
+      "VIOLATION": 0,
+      "UNKNOWN": 0
+    },
+    "route": {
+      "PASS": 9,
+      "VIOLATION": 1,
+      "UNKNOWN": 0
+    }
+  },
+  "cells": {
+    "F1": {
+      "setpoint_type": "TRAJECTORY",
+      "fault_type": "TOTAL_PROCESS_STOP",
+      "status": "COMPLETE",
+      "accepted_runs": 3,
+      "total_attempts": 3,
+      "freshness_results": {"EXPOSURE": 3},
+      "route_results": {"PASS": 2, "VIOLATION": 1},
+      "maximum_setpoint_age_ms": {"minimum": 1096.0, "median": 1104.0, "maximum": 1348.0},
+      "fault_to_health_loss_ms": {"minimum": 1074.042, "median": 1113.306, "maximum": 1352.638},
+      "fault_to_fallback_installation_ms": {"minimum": 1086.042, "median": 1125.306, "maximum": 1364.638},
+      "physical_metrics": {
+        "maximum_attitude_excursion_deg": {"minimum": 0.459, "maximum": 0.489},
+        "maximum_angular_rate_excursion_rad_s": {"minimum": 0.017, "maximum": 0.037},
+        "altitude_loss_m": {"minimum": 0.029, "maximum": 0.048},
+        "horizontal_displacement_m": {"minimum": 0.538, "maximum": 0.645}
+      }
+    },
+    "F2": {
+      "setpoint_type": "ATTITUDE",
+      "fault_type": "TOTAL_PROCESS_STOP",
+      "status": "MEASUREMENT_INSUFFICIENT_AT_ATTEMPT_LIMIT",
+      "accepted_runs": 1,
+      "total_attempts": 6,
+      "observability_rejections": 5,
+      "freshness_results": {"EXPOSURE": 1},
+      "route_results": {"PASS": 1},
+      "maximum_setpoint_age_ms": {"observed": 1320.0},
+      "fault_to_health_loss_ms": {"observed": 1300.038},
+      "fault_to_fallback_installation_ms": {"observed": 1312.038},
+      "physical_metrics": {
+        "maximum_attitude_excursion_deg": {"observed": 6.677},
+        "maximum_angular_rate_excursion_rad_s": {"observed": 0.032},
+        "altitude_loss_m": {"observed": 0.0},
+        "horizontal_displacement_m": {"observed": 5.741}
+      },
+      "limitation": "Only one of three planned accepted runs was obtained. Four attempts exceeded the unchanged 1.0 m pre-fault altitude-span limit, one of those also had a DEGRADED bridge, and one attempt lacked fault coverage inside the selected VALID bridge."
+    },
+    "F3": {
+      "setpoint_type": "RATE",
+      "fault_type": "TOTAL_PROCESS_STOP",
+      "status": "COMPLETE",
+      "accepted_runs": 3,
+      "total_attempts": 4,
+      "observability_rejections": 1,
+      "freshness_results": {"EXPOSURE": 3},
+      "route_results": {"PASS": 3},
+      "maximum_setpoint_age_ms": {"minimum": 1116.0, "median": 1248.0, "maximum": 1312.0},
+      "fault_to_health_loss_ms": {"minimum": 1095.211, "median": 1237.347, "maximum": 1303.543},
+      "fault_to_fallback_installation_ms": {"minimum": 1107.211, "median": 1249.347, "maximum": 1315.543},
+      "physical_metrics": {
+        "maximum_attitude_excursion_deg": {"minimum": 13.991, "maximum": 14.311},
+        "maximum_angular_rate_excursion_rad_s": {"minimum": 0.031, "maximum": 0.033},
+        "altitude_loss_m": {"minimum": 0.319, "maximum": 0.700},
+        "horizontal_displacement_m": {"minimum": 5.914, "maximum": 7.227}
+      }
+    },
+    "F4": {
+      "setpoint_type": "RATE",
+      "fault_type": "SETPOINT_ONLY_STALL",
+      "status": "COMPLETE",
+      "accepted_runs": 3,
+      "total_attempts": 3,
+      "freshness_results": {"EXPOSURE": 3},
+      "route_results": {"PASS": 3},
+      "monotonic_target_duration_ms": {"minimum": 3031.517, "median": 3037.872, "maximum": 3053.964},
+      "maximum_setpoint_age_ms": {"minimum": 2732.0, "median": 2748.0, "maximum": 2780.0},
+      "health_requests": 26,
+      "matched_health_replies": 26,
+      "health_alive_through_every_target_window": true,
+      "external_route_retained_at_every_target_end": true,
+      "automatic_fallbacks_in_target_windows": 0,
+      "physical_metrics": {
+        "maximum_attitude_excursion_deg": {"minimum": 16.325, "maximum": 16.413},
+        "maximum_angular_rate_excursion_rad_s": {"minimum": 0.032, "maximum": 0.033},
+        "altitude_loss_m": {"minimum": 1.389, "maximum": 1.765},
+        "horizontal_displacement_m": {"minimum": 17.881, "maximum": 18.181}
+      }
+    }
+  },
+  "natural_violation": {
+    "run_id": "freshness-f1-a02",
+    "cell_id": "F1",
+    "classification": "NATURAL_POST_FALLBACK_STALE_TRAJECTORY_CONSUMPTION",
+    "route_oracle_status": "VIOLATION",
+    "freshness_oracle_status": "EXPOSURE",
+    "route_clause_statuses": {
+      "revocation": "VIOLATION",
+      "installation": "PASS",
+      "exclusivity": "PASS",
+      "continuity": "PASS",
+      "recovery": "VIOLATION"
+    },
+    "post_revocation_stale_subject_consumption_count": 2,
+    "post_revocation_old_epoch_consumption_count": 0,
+    "post_revocation_allocator_count": 0,
+    "post_revocation_writer_count": 0,
+    "reproduced_in_other_accepted_runs": false,
+    "interpretation": "This is a separate post-fallback Route contract violation. It does not reclassify the bounded pre-revocation retained-command interval or its physical consequence."
+  },
+  "physical_thresholds": {
+    "maximum_attitude_excursion_deg": 45.0,
+    "maximum_angular_rate_excursion_rad_s": 3.0,
+    "altitude_loss_m": 1.0,
+    "horizontal_displacement_m": 3.0
+  },
+  "recovery_and_cleanup": {
+    "all_attempts_landed_and_disarmed": true,
+    "accepted_target_ground_contact_count": 0,
+    "reported_separately_from_pre_revocation_exposure": true,
+    "health_alive_stall_cleanup": "AUTO_LOITER_HOLD_THEN_LAND_AND_DISARM",
+    "diagnostic_full_post_fault_metrics_do_not_change_disposition": true
+  },
+  "issue_27514_relationship": {
+    "qualitative_mechanism_observed": true,
+    "exact_reported_timing_reproduced": false,
+    "locked_revision_flags_on_fourth_timed_out_health_request": true,
+    "setpoint_config_timeout_field_behaviorally_inert": true,
+    "health_alive_setpoint_stall_exposure_observed": true
+  },
+  "limitations": [
+    "F2 reached its six-attempt cap with only one accepted run, so its planned three-run context is measurement-insufficient.",
+    "The natural Route violation occurred in one of three accepted F1 runs and is a found event, not a reproduced-rate estimate.",
+    "Physical consequences are specific to the frozen SITL vehicle, setpoints, timing, and initial-state acceptance window.",
+    "No result authorizes a larger matrix, behavior modification, timeout fix, direct-actuator flight, Family B, rapid restart, concurrency, Aerostack2, or fuzzing campaign."
+  ]
+}

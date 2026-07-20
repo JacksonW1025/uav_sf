@@ -1,7 +1,9 @@
 schema_version: "1.0"
 study_id: current_version_external_mode_setpoint_freshness_pilot
-status: FORMAL_EXECUTION_COMPLETE_WITH_F2_SHORTFALL
+status: FINAL_ANALYSIS_COMPLETE
 preregistration_commit: be11b984e13c9df43ebc8b3b31d04517c46d5224
+final_disposition: CURRENT_NATURAL_VIOLATION_FOUND
+matrix_completion: PARTIAL_AT_PREREGISTERED_ATTEMPT_LIMIT
 accepted_runs_target: 12
 accepted_runs: 10
 total_attempts: 16
