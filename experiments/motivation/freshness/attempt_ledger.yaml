@@ -1,17 +1,17 @@
 schema_version: "1.0"
 study_id: current_version_external_mode_setpoint_freshness_pilot
-status: READY_FOR_F2
+status: READY_FOR_F3
 preregistration_commit: be11b984e13c9df43ebc8b3b31d04517c46d5224
 accepted_runs_target: 12
-accepted_runs: 3
-total_attempts: 3
+accepted_runs: 4
+total_attempts: 9
 environment_failures: 0
-observability_rejections: 0
+observability_rejections: 5
 campaign_configuration_failures: 0
 formal_safety_stops: 0
 cell_counts:
   F1: {accepted_runs: 3, total_attempts: 3, maximum_total_attempts: 6}
-  F2: {accepted_runs: 0, total_attempts: 0, maximum_total_attempts: 6}
+  F2: {accepted_runs: 1, total_attempts: 6, maximum_total_attempts: 6}
   F3: {accepted_runs: 0, total_attempts: 0, maximum_total_attempts: 6}
   F4: {accepted_runs: 0, total_attempts: 0, maximum_total_attempts: 6}
 attempts:
@@ -123,3 +123,148 @@ attempts:
       route_oracle: e843fa46234086723b04667ceefe5c3836f358b65638f2b3065b5e7955f8da38
       freshness_observation: 42f4eca1ad0a51a6111428950c40c844fb5f4ec3c59267bfe3ffa0a6e2591299
       freshness_oracle: 6c3d7a38c9dbdf4d7c9d9555ff66a36eaa9a86f644683d2122da22ba482f9ae3
+  - run_id: freshness-f2-a01
+    cell_id: F2
+    attempt: 1
+    simulation_seed: 2751401
+    repository_commit_at_start: 8f99b777213ba944043fa3f185c5139f18cc9be9
+    disposition: REJECTED_OBSERVABILITY
+    counted_as_accepted: false
+    monitor: PASS
+    cleanup: LANDED_AND_DISARMED
+    clock_bridge: DEGRADED
+    clock_residual_max_ns: 105989603
+    baseline: INCOMPLETE
+    baseline_altitude_span_m: 1.0032453536987305
+    rejection_reasons: [clock_bridge_not_VALID, pre_fault_altitude_span_exceeded]
+    route_oracle: UNKNOWN
+    freshness_oracle: UNKNOWN
+    artifact_sha256:
+      flight_log: d99a702a7ee54491ded963a393f3c8d53c91bdc43d47e03e925a087d62a42267
+      monitor_result: 3894595efcf352b3ff3b8dfe5af6a75012fd5b8e393e448c9e13ed36902782f6
+      clock_bridge: 7232ee8d1ff4768a67b9826e72725cde233c77bc2005d3d109cb8c8e26b0c131
+      route_trace: 5939203f040188facf9d35afeb53848fbb06e5ded150ca6c31b3b2596f69daa7
+      route_oracle: c49d7f09e1d1527d02394f29323215dc88a00ad9094f2731080a1840d96ee5b5
+      freshness_observation: 939f22c56af6c7e557a6a0c5e8b3783c5fb33b41339c24961b1f6932f2b859d5
+      freshness_oracle: 79ef197f88fc2b930c51a5670723b2cb771b0accb97374b9b2ef0a4d39c3fce8
+  - run_id: freshness-f2-a02
+    cell_id: F2
+    attempt: 2
+    simulation_seed: 2751402
+    repository_commit_at_start: 8f99b777213ba944043fa3f185c5139f18cc9be9
+    disposition: REJECTED_OBSERVABILITY
+    counted_as_accepted: false
+    monitor: PASS
+    cleanup: LANDED_AND_DISARMED
+    clock_bridge: VALID
+    baseline: INCOMPLETE
+    baseline_altitude_span_m: 1.2439260482788086
+    rejection_reasons: [pre_fault_altitude_span_exceeded]
+    route_oracle: PASS
+    freshness_oracle: UNKNOWN
+    artifact_sha256:
+      flight_log: d63a33772057857949bd09c4fe353ee9754dbe684c34e625123e946533cf0fc4
+      monitor_result: 8702f326e8009d7d9b2be636d0be9755476b607a43bf7349aac074a585253ff2
+      clock_bridge: ef25393f6f6933cb3b4831f87bafacd657297915cb1acd8db280607f971811c8
+      route_trace: aa6917bd0cb2efa716dd4a83810676d19cff1213ac41ebdcd337f72ca79bb414
+      route_oracle: d6305d8dd5aaffddfc2603fb5ba47eb550f1160a836f4e3ffdc54f52b9369ca9
+      freshness_observation: 9421567df502744121d1dadf3c1ed63c75092a2f28871e549c839d6997c40397
+      freshness_oracle: 5929006ba46701698d460bbc2209b5bb7345e130dedbbd1c212bb9475f23c234
+  - run_id: freshness-f2-a03
+    cell_id: F2
+    attempt: 3
+    simulation_seed: 2751403
+    repository_commit_at_start: 8f99b777213ba944043fa3f185c5139f18cc9be9
+    disposition: REJECTED_OBSERVABILITY
+    counted_as_accepted: false
+    monitor: PASS
+    cleanup: LANDED_AND_DISARMED
+    clock_bridge: VALID_SEGMENT_WITHOUT_FAULT_COVERAGE
+    bridge_valid_from_us: 29439950
+    rejection_reasons: [fault_marker_maps_before_bridge_valid_from]
+    route_oracle: NOT_PRODUCED_AFTER_ANALYSIS_REJECTION
+    freshness_oracle: NOT_PRODUCED_AFTER_ANALYSIS_REJECTION
+    artifact_sha256:
+      flight_log: 896ee456fa5d54cbbba22031669d1d68a3c0b774766f2d5da483a571ebe527ee
+      monitor_result: 169fe2044e852e77e51e5d6e0a208f8c024e16b39c61c7a7d287a3045d3ec501
+      clock_bridge: e62462d3ffe128fdb32a25914eef7d90fd4c9c85ec21bdf25d3f0479c05e05e5
+      route_trace: b7c9d3e40c58bd7d866e654d98d825183393546adf2bc318596563d91a7de5c2
+  - run_id: freshness-f2-a04
+    cell_id: F2
+    attempt: 4
+    simulation_seed: 2751404
+    repository_commit_at_start: 8f99b777213ba944043fa3f185c5139f18cc9be9
+    disposition: ACCEPTED_FORMAL
+    counted_as_accepted: true
+    monitor: PASS
+    clock_bridge: VALID
+    windows: {pre_fault_stable: COMPLETE, pre_revocation_target: COMPLETE, fallback: COMPLETE}
+    lineage: COMPLETE
+    target_ground_contact: false
+    cleanup: LANDED_AND_DISARMED
+    route_oracle: PASS
+    freshness_oracle: EXPOSURE
+    freshness_categories: [UNBOUNDED_FRESHNESS_POLICY_GAP, PHYSICAL_EXPOSURE_THRESHOLD_EXCEEDED]
+    metrics:
+      maximum_setpoint_age_ms: 1320.0
+      fault_to_health_loss_detection_ms: 1300.0376352071128
+      fault_to_fallback_installation_ms: 1312.0376352071128
+      recovery_duration_ms: 160.0
+      maximum_attitude_excursion_deg: 6.676799917995329
+      maximum_angular_rate_excursion_rad_s: 0.03171094569117033
+      altitude_loss_m: 0.0
+      horizontal_displacement_m: 5.741322232832328
+    artifact_sha256:
+      flight_log: df43a6cfea4acad20ae1307c4819255c0c13186216f8fcfaba602ce64f61a933
+      monitor_result: 6a9bdb94b090848b3323d63c9c88d5e02991599d25361b95ce72d90ea831005d
+      clock_bridge: e1faca6ba460c0a68aa9980699886534c75d9311a664c09a885693ac82ded6b1
+      route_trace: d798aa24b77369af3465af7ab89eee57b3dd358e8488f06732c365ae16d762a6
+      route_oracle: af6b28a173ce2a0a68cee0f9954fff89dc7e5df5fa302f6abd323b57db6fc16c
+      freshness_observation: a1323dde7449f4493c23e9ea5d9acdf797c3b8fab1c3a9bad1aae9935a1a4238
+      freshness_oracle: 4601876691eda003dcb4645660f2292c54ab881a186d6618c04b1e2ae4d5eb40
+  - run_id: freshness-f2-a05
+    cell_id: F2
+    attempt: 5
+    simulation_seed: 2751405
+    repository_commit_at_start: 8f99b777213ba944043fa3f185c5139f18cc9be9
+    disposition: REJECTED_OBSERVABILITY
+    counted_as_accepted: false
+    monitor: PASS
+    cleanup: LANDED_AND_DISARMED
+    clock_bridge: VALID
+    baseline: INCOMPLETE
+    baseline_altitude_span_m: 1.3596606254577637
+    rejection_reasons: [pre_fault_altitude_span_exceeded]
+    route_oracle: PASS
+    freshness_oracle: UNKNOWN
+    artifact_sha256:
+      flight_log: 32e30b150ef49a154d44e6e9f84e964049b3352c7ab6182f87a8255ae4075c85
+      monitor_result: f7fba9d87c5bdc7dd608af250b530039efd25d6863fe35917896e7ea467f2305
+      clock_bridge: 8f7192fc1c1df08bc85e59de92906bcf6aa67c380bcefe56a8569da76f0b4419
+      route_trace: 0b040e8730edf86a1135faabe2fe74ed6844d3b45a06c8a8132405388f43bbed
+      route_oracle: 450ef8ead6aa3e1f336cad6805407ff11afbd4dbc6f07754ada8c82285ed2d8c
+      freshness_observation: 7f1d26709f79aba4c5b14b5dfb9a2793b08831090853c7115b3d066b571fcb57
+      freshness_oracle: 2442d1347a892d7377981537017f9bf9ab6e5c2231aaba2c8274094ed8299b37
+  - run_id: freshness-f2-a06
+    cell_id: F2
+    attempt: 6
+    simulation_seed: 2751406
+    repository_commit_at_start: 8f99b777213ba944043fa3f185c5139f18cc9be9
+    disposition: REJECTED_OBSERVABILITY
+    counted_as_accepted: false
+    monitor: PASS
+    cleanup: LANDED_AND_DISARMED
+    clock_bridge: VALID
+    baseline: INCOMPLETE
+    baseline_altitude_span_m: 1.0810928344726562
+    rejection_reasons: [pre_fault_altitude_span_exceeded]
+    route_oracle: PASS
+    freshness_oracle: UNKNOWN
+    artifact_sha256:
+      flight_log: 53d9f9ec65ba7c38f8d00f021aee93634d700a1e205a935041f7270e896b3bf0
+      monitor_result: 134393142635e39dd603e0d0f2c59678d7e49b04cc7e550d03db9d3ba58d237a
+      clock_bridge: 01ab8e31e66a4cf8e1bce16707baa71cf8a7b11efa8ec8a640fe6a9ca44ec01a
+      route_trace: 07432c6b088f31168f52160942646421b7a8aaf6455a421740e1f377b063d6e4
+      route_oracle: 4ddb66305d9a9d349e8522a4aa120712534172c37818701cd3e5a94a2ebf8e20
+      freshness_observation: 3addaf00dfd83fd6e4118603b3ee38fc094d8f5f35806af5e0d088f3744713de
+      freshness_oracle: a8ae7ce1e094f1b3f0b61159574571fcff1b4de1b2894a5abd899b3780d2640b
