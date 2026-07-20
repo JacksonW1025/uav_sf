@@ -13,7 +13,7 @@ Freshness pilot denominator.
 - Starting ahead/behind: `0/0`
 - Protected ancestor: `955e7c98e3b29ddd21fa4d44fb562065700fa832`
 - Current phase: C1 concurrent authority-event preregistration
-- Phase status: `C1_ORACLE_AMENDMENT_PENDING_PUSH`
+- Phase status: `C1_IN_PROGRESS_ORACLE_0_2_ACTIVE`
 
 ## Frozen evidence
 
@@ -48,7 +48,7 @@ testing is authorized.
 | Initialization | `COMPLETE` | n/a | n/a | n/a | `f2aa93aa` pushed |
 | N1 trajectory residue | `COMPLETE` | 8 / 9 | 14 / 18 | 6 | `CURRENT_EVENT_REOBSERVED_BUT_PHASE_DEPENDENT`; 2 matching violations |
 | N1 reduced confirmation | `COMPLETE` | 1 / 1 | 1 / 3 | 0 | accepted Route PASS; no matching residue; stopped at target |
-| C1 concurrency | `IN_PROGRESS` | 0 / 15 | 1 / 30 | 1 configuration failure | Oracle 0.1 cleanup-window defect; 0.2 amendment pending push |
+| C1 concurrency | `IN_PROGRESS` | 0 / 15 | 1 / 30 | 1 configuration failure | Oracle 0.2 amendment `4f90d132` active |
 | C1 minimal confirmations | `NOT_APPLICABLE_PENDING_TRIGGER` | 0 | 0 / 3 per finding | 0 | only if a violation is found |
 | R1 session rollover | `NOT_STARTED` | 0 / 9 | 0 / 18 | 0 | pending |
 | W1 workload spike | `NOT_STARTED` | 0 / 3 canonical | 0 | 0 | pending |
@@ -85,12 +85,18 @@ All future rejected attempts must be explicitly classified as
 - `2cb2e021f1604868387f94b5eef6b6457f719416` —
   `oracle: preregister authority event linearization probe` (pushed before
   every formal C1 attempt).
+- `6fa55e5256c6b99e20867f7ebca01ef8d06ab1` —
+  `experiment: freeze c1 execution matrix` (pushed; C1 attempt 1 starting
+  revision).
+- `4f90d132bb856384438dc81a038b6c26f8be96b6` —
+  `oracle: exclude c1 cleanup from linearization window` (pushed observation-
+  only correction after the excluded configuration-failure attempt).
 
 ## Next exact action
 
-Run focused tests and the full validator for `C1-ORACLE-001`, commit and push
-the observation-only Oracle 0.2 correction, confirm clean synchronization,
-then run the one remaining `C1-A-A_FIRST` attempt with seed `320102`.
+Record and push amendment commit `4f90d132` in the matrix/ledger/state, confirm
+clean synchronization, then run the one remaining `C1-A-A_FIRST` attempt with
+seed `320102`.
 
 ## Current blockers
 

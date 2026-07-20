@@ -77,6 +77,9 @@ configuration defect and is excluded from the SUT denominator. Amendment
 `C1-ORACLE-001` narrows only the offline analysis window by measured clock
 uncertainty, retains all thresholds/outcomes/caps, and must be pushed before
 the second attempt. Its diagnostic reanalysis PASS is not counted.
+The amendment is frozen at commit
+`4f90d132bb856384438dc81a038b6c26f8be96b6`; Oracle 0.2 is active for all
+remaining formal attempts.
 
 Outputs:
 
