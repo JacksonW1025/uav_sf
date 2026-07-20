@@ -1,0 +1,327 @@
+schema_version: "1.0"
+status: FROZEN_BEFORE_FORMAL_PILOT
+study_id: current_version_external_mode_setpoint_freshness_pilot
+profile_id: current-version-external-mode-freshness-v1
+applicability: APPLICABLE
+created_at: 2026-07-20T03:55:00-07:00
+freeze_mechanism: >-
+  The first pushed Git commit containing this file is the preregistration
+  commit. Its exact hash is recorded in the matrix and ledger before F1 starts;
+  this file must not change during formal execution.
+
+namespace:
+  preregistration: experiments/motivation/freshness/primary_preregistration.yaml
+  matrix: experiments/motivation/freshness/pilot_matrix.yaml
+  ledger: experiments/motivation/freshness/attempt_ledger.yaml
+  raw_runs: runs/motivation/freshness
+  final_report: docs/motivation/SETPOINT_FRESHNESS_PILOT_REPORT.md
+  final_gate: experiments/motivation/freshness/freshness_pilot_gate.json
+  raw_artifacts_are_ignored: true
+  tuning_runs_are_formally_ineligible: true
+
+source_revisions:
+  repository_harness_commit: 2a03682d37499eb6eb96d0838891e09908637b9b
+  px4_autopilot: 4ae21a5e569d3d89c2f6366688cbacb3e93437c9
+  px4_msgs: 18ecff03041c6f8d8a0012fbc63af0b23dd60af1
+  px4_ros2_interface_lib: c3e410f035806e8c56246708432ded09c976434b
+  micro_xrce_dds_agent: 73622810d984349b80bbac0ef55fc0b694d62222
+  ros_distro: humble
+  simulator: Gazebo_SITL
+
+locked_artifacts:
+  - path: scripts/probes/run_freshness_scenario.sh
+    sha256: 00e17a30c3afb8fde73ff9fa4de5ac842d88ab8a4cbad27be7d0e9064efd116d
+  - path: scripts/probes/freshness_flight_monitor.py
+    sha256: 119210e8d4ca9484e8dd80fb393e96d78e4d0cbcbad216ac1f2ad857c07befc0
+  - path: scripts/probes/inject_freshness_fault.py
+    sha256: bc0fa1357ba726f0dd314b80d28ce7e2aa3251178578c2771ee1f32bcb926d31
+  - path: scripts/analysis/summarize_freshness_run.py
+    sha256: e078be42f07499bd89148be03b47462b6078b6790c98abdbd62a079f79cfa8a2
+  - path: scripts/tracing/clock_bridge_collector.py
+    sha256: 1140be063ce1e75835ec1f9fe3c3eea55aab7a483d99799a323e0d57353f4ed2
+  - path: scripts/tracing/route_trace_collector.py
+    sha256: 446d1dad803e8599003ea5fb65216c19c854e7f04c72642d675113420c1c62a4
+  - path: scripts/oracles/pre_revocation_freshness_oracle.py
+    sha256: b7c3d116cba7ed7e9ec959b01bad9d88fdda8ae4967a3dcd51d5648711a11ea2
+  - path: scripts/oracles/route_oracle_v0.py
+    sha256: 32cf3b5dd0d4e4ea2f535d5a006aa8782dab86397b16a1b5c70d625a8af751e2
+  - path: data/schemas/pre_revocation_freshness_result.schema.json
+    sha256: 498e1b3dccf4a8ad937d17891a4427551487dbaef43a8d247b0949ed78fff019
+  - path: data/schemas/route_oracle_result.schema.json
+    sha256: e83822786145a761b8ec82e9063ff0f4cc9c8b83497786ba929535264a29ac35
+  - path: config/freshness_logger_topics.txt
+    sha256: 94c19d757f0d707f3c885ea5b9a540e8cb94bec65dcd604000df84ca28c35e35
+  - path: patches/px4/route_observability/freshness_observability.patch
+    sha256: 7cc9aa3a99ba34ebd75094e291a357e679ce7176d112687ed75d1bf4b2339141
+  - path: scripts/adapters/external_mode_adapter/include/freshness_probe_mode.hpp
+    sha256: f6f81212aff5d0ddada01edf2244222a9c630d45015dd5de845a965e83560fcb
+  - path: scripts/adapters/external_mode_adapter/src/freshness_probe.cpp
+    sha256: 867db42b331a788711936857312ab2a87975b7c2be70d83b5aef92bd3d9c5264
+
+locked_binaries:
+  freshness_probe:
+    path: runs/freshness_harness_build/install/route_transition_external_mode/lib/route_transition_external_mode/external_mode_freshness_probe
+    sha256: 63aa7bd8927eb0b4f929a05c40f82286f0353c5aad6e23a21f396688f430956b
+  px4_sitl:
+    path: external/PX4-Autopilot-oracle-validation-control/build/px4_sitl_default/bin/px4
+    sha256: d5cd7df0efd24f7f5509e8c4e5699a709cd8e4df42b0b64e453edab815471612
+  micro_xrce_dds_agent:
+    path: runs/freshness_agent_build/MicroXRCEAgent
+    sha256: 75f4ebcff6773fff460a8a50b1810f6a2ae2bee6c1ae1ec0d050e77dbaeb38e9
+
+observation_identity:
+  px4_source_commit: 4ae21a5e569d3d89c2f6366688cbacb3e93437c9
+  observation_patch: patches/px4/route_observability/freshness_observability.patch
+  observation_patch_sha256: 7cc9aa3a99ba34ebd75094e291a357e679ce7176d112687ed75d1bf4b2339141
+  behavior_constraint: observation_only_no_control_branch_reads
+  freshness_oracle_version: "0.1"
+  freshness_result_schema_version: "1.0"
+  route_oracle_version: "0.4"
+  route_result_schema_version: "1.3"
+  route_threshold_profile: route-oracle-v0.3-default
+  clock_bridge_thresholds:
+    minimum_sample_count: 20
+    residual_max_ns: 100000000
+    degraded_residual_max_ns: 250000000
+    maximum_round_trip_time_ns: 20000000
+    maximum_timesync_offset_span_ns: 5000000
+    segment_jump_ns: 50000000
+  mapping_rule: every_mapped_marker_inside_valid_from_valid_until
+
+timing:
+  external_activation_settle_seconds: 5.0
+  evaluated_pre_fault_stable_seconds: 2.0
+  fault_delay_after_ready_seconds: 0.0
+  setpoint_only_stall_target_seconds_monotonic: 3.0
+  post_target_recovery_dwell_seconds: 2.0
+  monitor_timeout_seconds: 120.0
+  total_process_stop_window_end: automatic_fallback_installation
+  setpoint_only_stall_window_end: bounded_target_window_end
+  simulator_seed_schedule: [2751401, 2751402, 2751403, 2751404, 2751405, 2751406]
+
+vehicle_context:
+  airframe: gz_x500
+  world: default
+  takeoff_condition: local_z_less_than_minus_2_m
+  source_mode: dynamic_external_mode_Freshness_Probe
+  assigned_external_mode_expected_range: [23, 30]
+  arming_state_during_target: ARMED
+  ground_contact_during_target: FORBIDDEN
+  initial_state_rule: same_public_takeoff_and_external_activation_sequence
+
+setpoint_contexts:
+  TRAJECTORY:
+    trajectory_velocity_m_s: [0.5, 0.0, 0.0]
+    yaw_rad: 0.0
+    thrust_body_z_logged_but_not_used: -0.52
+    pre_fault_acceptance_metric: median_horizontal_speed_m_s
+    pre_fault_acceptance_minimum: 0.1
+  ATTITUDE:
+    euler_rad: [0.12, 0.0, 0.0]
+    thrust_body: [0.0, 0.0, -0.72]
+    pre_fault_acceptance_metric: absolute_median_roll_rad
+    pre_fault_acceptance_minimum: 0.04
+  RATE:
+    body_rate_rad_s: [0.06, 0.0, 0.0]
+    thrust_body: [0.0, 0.0, -0.72]
+    pre_fault_acceptance_metric: absolute_median_roll_rate_rad_s
+    pre_fault_acceptance_minimum: 0.03
+
+fault_channels:
+  TOTAL_PROCESS_STOP:
+    action: SIGKILL_external_mode_probe
+    setpoint_channel_after_fault: stopped
+    health_reply_channel_after_fault: stopped
+    expected_health_behavior: fourth_timed_out_request_marks_external_mode_unresponsive
+    expected_automatic_fallback: AUTO_RTL_nav_state_5
+  SETPOINT_ONLY_STALL:
+    action: create_setpoint_off_channel_marker
+    setpoint_channel_after_fault: stopped
+    health_reply_channel_after_fault: alive
+    expected_health_behavior: no_health_loss_through_complete_target_window
+    expected_automatic_fallback: none
+    expected_route_at_target_end: external_route_retained
+
+fallback_configuration:
+  runner_parameters:
+    COM_RC_IN_MODE: 4
+    NAV_RCL_ACT: 0
+    NAV_DLL_ACT: 0
+    COM_ARM_WO_GPS: 1
+    COM_MODE_ARM_CHK: 1
+  total_process_stop:
+    source: locked_external_mode_health_loss_failsafe
+    expected_mode: AUTO_RTL
+    expected_nav_state: 5
+  explicit_stall_cleanup:
+    command: VEHICLE_CMD_DO_SET_MODE
+    requested_mode: AUTO_LOITER_HOLD
+    expected_nav_state: 4
+    installation_deadline_ms: 300
+    recovery_dwell_seconds: 2.0
+    terminal_sequence: [LAND, DISARM]
+
+policy:
+  freshness: NONE
+  setpoint_timeout_ms: null
+  measurement_tolerance_ms: 5.0
+  max_publish_after_fault_ms: 10.0
+  health_loss_deadline_ms: 1500.0
+  fallback_installation_after_health_ms: 250.0
+  post_fallback_external_effect_grace_ms: 20.0
+  physical_recovery_after_fallback_ms: 2000.0
+
+physical_thresholds:
+  maximum_attitude_excursion_deg: 45.0
+  maximum_angular_rate_excursion_rad_s: 3.0
+  altitude_loss_m: 1.0
+  horizontal_displacement_m: 3.0
+
+acceptance:
+  pre_fault_stable_seconds: 2.0
+  minimum_samples_per_physical_topic: 20
+  maximum_pre_fault_altitude_span_m: 1.0
+  trajectory_minimum_speed_m_s: 0.1
+  attitude_minimum_roll_rad: 0.04
+  rate_minimum_roll_rate_rad_s: 0.03
+  recovery_tilt_deg: 15.0
+  recovery_rate_rad_s: 0.5
+  recovery_vertical_speed_m_s: 0.7
+  recovery_hold_ms: 500.0
+
+formal_acceptance_gate:
+  identity:
+    - preregistration_commit_is_pushed_before_attempt
+    - worktree_clean_at_attempt_start
+    - harness_source_hashes_match_locked_artifacts
+    - binary_hashes_match_locked_binaries
+    - dependency_commits_match_source_revisions
+    - observation_patch_and_logger_hashes_match
+    - protected_P5_v6_and_Issue_162_hashes_match
+  environment:
+    - no_preexisting_px4_gazebo_probe_or_agent_process
+    - DDS_udp_port_8888_unoccupied
+    - runner_exit_zero
+    - monitor_status_PASS
+    - environment_status_VALID
+    - no_simulator_clock_stall
+    - vehicle_lands_and_disarms_during_cleanup
+  observability:
+    - clock_bridge_status_VALID
+    - every_cross_domain_marker_inside_bridge_valid_interval
+    - pre_fault_baseline_COMPLETE
+    - controller_allocator_writer_lineage_complete
+    - required_raw_ulog_and_compact_trace_present
+    - physical_metrics_recovery_metrics_and_full_post_fault_metrics_separate
+    - freshness_oracle_status_not_UNKNOWN_or_NOT_APPLICABLE
+    - route_oracle_has_complete_applicable_clause_evidence
+  total_process_stop:
+    - producer_stopped
+    - pre_revocation_target_COMPLETE
+    - fallback_window_COMPLETE
+    - health_loss_observed_within_deadline
+    - automatic_fallback_declared_and_installed
+  setpoint_only_stall:
+    - producer_setpoint_channel_stopped
+    - target_window_is_at_least_3_monotonic_seconds
+    - pre_revocation_target_COMPLETE
+    - fallback_window_POLICY_TERMINATED
+    - every_target_request_has_a_matching_health_reply
+    - no_health_loss_or_automatic_fallback_in_target_window
+    - external_route_retained_at_target_end
+    - no_ground_contact_in_target_window
+
+interpretation_rules:
+  TOTAL_PROCESS_STOP: >-
+    Retained-command use before health-driven fallback is adjudicated as design
+    exposure unless another explicit contract is violated.
+  SETPOINT_ONLY_STALL: >-
+    Health-alive route retention and retained-command influence in the complete
+    bounded window are adjudicated as exposure unless route attribution, an
+    explicit deadline, or cleanup/recovery contract is violated.
+  route_oracle_rule: Route Oracle PASS does not erase a Freshness exposure.
+  physical_window_rule: >-
+    The formal physical consequence clause uses only fault-to-automatic-fallback
+    installation for TOTAL_PROCESS_STOP and fault-to-target-window-end for
+    SETPOINT_ONLY_STALL.
+  recovery_rule: >-
+    Recovery and explicit-cleanup consequences are reported separately and
+    never combined with the formal pre-revocation exposure clause.
+  expected_status_without_other_contract_failure: EXPOSURE
+
+formal_cells:
+  - cell_id: F1
+    setpoint_type: TRAJECTORY
+    fault_type: TOTAL_PROCESS_STOP
+    accepted_runs_required: 3
+    maximum_total_attempts: 6
+  - cell_id: F2
+    setpoint_type: ATTITUDE
+    fault_type: TOTAL_PROCESS_STOP
+    accepted_runs_required: 3
+    maximum_total_attempts: 6
+  - cell_id: F3
+    setpoint_type: RATE
+    fault_type: TOTAL_PROCESS_STOP
+    accepted_runs_required: 3
+    maximum_total_attempts: 6
+  - cell_id: F4
+    setpoint_type: RATE
+    fault_type: SETPOINT_ONLY_STALL
+    accepted_runs_required: 3
+    maximum_total_attempts: 6
+
+attempt_rules:
+  batch_scope: one_formal_cell_per_batch
+  accepted_target_per_cell: 3
+  maximum_attempts_per_cell: 6
+  maximum_total_accepted_runs: 12
+  unique_attempt_id_required: true
+  preserve_every_attempt: true
+  threshold_change_after_first_formal_accepted_run: FORBIDDEN
+  tuning_runs_count_in_denominator: false
+  environment_and_observability_failures_count_as_accepted: false
+  complete_natural_PASS_EXPOSURE_or_VIOLATION_may_be_accepted: true
+  stop_cell_when: three_accepted_or_six_total_attempts
+  commit_and_push_before_next_cell: true
+
+attempt_classification:
+  accepted: ACCEPTED_FORMAL
+  environment_failure: ENVIRONMENT_FAILURE
+  observability_failure: REJECTED_OBSERVABILITY
+  configuration_failure: CAMPAIGN_CONFIGURATION_FAILURE
+  target_safety_stop: FORMAL_SAFETY_STOP
+  unknown_never_accepted: true
+
+protected_evidence:
+  p5_v6_differential_gate:
+    path: experiments/probes/p5/p5_v6_differential_gate.json
+    sha256: 9542eb7c98dfd4df1ab50026c149f21fb719fc6a2a09d040a9db4df647f132bc
+  p5_v6_manifest:
+    path: experiments/probes/p5/campaign_seeded_v6_manifest.json
+    sha256: 02d857f555623c10dc44998cd202c2da6226ec5c40a94a75020d75df87f02518
+  issue_162_preregistration:
+    path: experiments/motivation/successor/primary_reproduction_preregistration.yaml
+    sha256: 11cc54e73dc03192374b4d877cf84cf3b864d9f084b8aa00549d1cdc3b52d060
+  issue_162_report:
+    path: docs/motivation/EXTERNAL_RTL_SUCCESSOR_CASE_REPORT.md
+    sha256: 41fcbb85cfcf5c82f58ad1e2c7b857c6864f7105ee65d0889ce7803709aad680
+
+final_dispositions:
+  - CURRENT_DESIGN_EXPOSURE_CONFIRMED
+  - CURRENT_NATURAL_VIOLATION_FOUND
+  - CURRENT_VERSION_CONFORMING_WITHIN_PILOT
+  - MEASUREMENT_INSUFFICIENT
+  - ENVIRONMENT_BLOCKED
+
+scope_exclusions:
+  - PX4_control_behavior_modification
+  - setpoint_timeout_fix
+  - health_loss_policy_change
+  - threshold_relaxation
+  - direct_actuator
+  - 54_run_matrix
+  - Family_B
+  - Aerostack2
+  - concurrency_or_rapid_restart
+  - Stateful_Fuzzer_v0

@@ -1,0 +1,17 @@
+schema_version: "1.0"
+study_id: current_version_external_mode_setpoint_freshness_pilot
+status: PREREGISTERED_NOT_STARTED
+preregistration_commit: null
+accepted_runs_target: 12
+accepted_runs: 0
+total_attempts: 0
+environment_failures: 0
+observability_rejections: 0
+campaign_configuration_failures: 0
+formal_safety_stops: 0
+cell_counts:
+  F1: {accepted_runs: 0, total_attempts: 0, maximum_total_attempts: 6}
+  F2: {accepted_runs: 0, total_attempts: 0, maximum_total_attempts: 6}
+  F3: {accepted_runs: 0, total_attempts: 0, maximum_total_attempts: 6}
+  F4: {accepted_runs: 0, total_attempts: 0, maximum_total_attempts: 6}
+attempts: []

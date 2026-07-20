@@ -1,0 +1,96 @@
+schema_version: "1.0"
+study_id: current_version_external_mode_setpoint_freshness_pilot
+status: PREREGISTERED_NOT_STARTED
+preregistration_commit: null
+accepted_runs_target: 12
+accepted_runs: 0
+total_attempts: 0
+maximum_total_accepted_runs: 12
+cell_execution_order: [F1, F2, F3, F4]
+shared_simulation_seed_schedule: [2751401, 2751402, 2751403, 2751404, 2751405, 2751406]
+
+cells:
+  - cell_id: F1
+    setpoint_type: TRAJECTORY
+    fault_type: TOTAL_PROCESS_STOP
+    setpoint:
+      trajectory_velocity_m_s: [0.5, 0.0, 0.0]
+      thrust_body_z_logged_but_not_used: -0.52
+    stable_seconds: 5.0
+    target_seconds: 3.0
+    recovery_seconds: 2.0
+    accepted_runs_required: 3
+    maximum_total_attempts: 6
+    accepted_runs: 0
+    total_attempts: 0
+    status: NOT_STARTED
+    attempt_slots:
+      - {attempt: 1, seed: 2751401, run_id: freshness-f1-a01, status: PENDING}
+      - {attempt: 2, seed: 2751402, run_id: freshness-f1-a02, status: PENDING}
+      - {attempt: 3, seed: 2751403, run_id: freshness-f1-a03, status: PENDING}
+      - {attempt: 4, seed: 2751404, run_id: freshness-f1-a04, status: PENDING}
+      - {attempt: 5, seed: 2751405, run_id: freshness-f1-a05, status: PENDING}
+      - {attempt: 6, seed: 2751406, run_id: freshness-f1-a06, status: PENDING}
+  - cell_id: F2
+    setpoint_type: ATTITUDE
+    fault_type: TOTAL_PROCESS_STOP
+    setpoint:
+      euler_rad: [0.12, 0.0, 0.0]
+      thrust_body: [0.0, 0.0, -0.72]
+    stable_seconds: 5.0
+    target_seconds: 3.0
+    recovery_seconds: 2.0
+    accepted_runs_required: 3
+    maximum_total_attempts: 6
+    accepted_runs: 0
+    total_attempts: 0
+    status: NOT_STARTED
+    attempt_slots:
+      - {attempt: 1, seed: 2751401, run_id: freshness-f2-a01, status: PENDING}
+      - {attempt: 2, seed: 2751402, run_id: freshness-f2-a02, status: PENDING}
+      - {attempt: 3, seed: 2751403, run_id: freshness-f2-a03, status: PENDING}
+      - {attempt: 4, seed: 2751404, run_id: freshness-f2-a04, status: PENDING}
+      - {attempt: 5, seed: 2751405, run_id: freshness-f2-a05, status: PENDING}
+      - {attempt: 6, seed: 2751406, run_id: freshness-f2-a06, status: PENDING}
+  - cell_id: F3
+    setpoint_type: RATE
+    fault_type: TOTAL_PROCESS_STOP
+    setpoint:
+      body_rate_rad_s: [0.06, 0.0, 0.0]
+      thrust_body: [0.0, 0.0, -0.72]
+    stable_seconds: 5.0
+    target_seconds: 3.0
+    recovery_seconds: 2.0
+    accepted_runs_required: 3
+    maximum_total_attempts: 6
+    accepted_runs: 0
+    total_attempts: 0
+    status: NOT_STARTED
+    attempt_slots:
+      - {attempt: 1, seed: 2751401, run_id: freshness-f3-a01, status: PENDING}
+      - {attempt: 2, seed: 2751402, run_id: freshness-f3-a02, status: PENDING}
+      - {attempt: 3, seed: 2751403, run_id: freshness-f3-a03, status: PENDING}
+      - {attempt: 4, seed: 2751404, run_id: freshness-f3-a04, status: PENDING}
+      - {attempt: 5, seed: 2751405, run_id: freshness-f3-a05, status: PENDING}
+      - {attempt: 6, seed: 2751406, run_id: freshness-f3-a06, status: PENDING}
+  - cell_id: F4
+    setpoint_type: RATE
+    fault_type: SETPOINT_ONLY_STALL
+    setpoint:
+      body_rate_rad_s: [0.06, 0.0, 0.0]
+      thrust_body: [0.0, 0.0, -0.72]
+    stable_seconds: 5.0
+    target_seconds: 3.0
+    recovery_seconds: 2.0
+    accepted_runs_required: 3
+    maximum_total_attempts: 6
+    accepted_runs: 0
+    total_attempts: 0
+    status: NOT_STARTED
+    attempt_slots:
+      - {attempt: 1, seed: 2751401, run_id: freshness-f4-a01, status: PENDING}
+      - {attempt: 2, seed: 2751402, run_id: freshness-f4-a02, status: PENDING}
+      - {attempt: 3, seed: 2751403, run_id: freshness-f4-a03, status: PENDING}
+      - {attempt: 4, seed: 2751404, run_id: freshness-f4-a04, status: PENDING}
+      - {attempt: 5, seed: 2751405, run_id: freshness-f4-a05, status: PENDING}
+      - {attempt: 6, seed: 2751406, run_id: freshness-f4-a06, status: PENDING}
