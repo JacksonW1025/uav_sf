@@ -3,9 +3,9 @@ study_id: n1_current_trajectory_residue_adjudication
 status: IN_PROGRESS
 preregistration_commit: 54d0411bddbc62e28d05e006a844dedbf9ebe6b3
 accepted_target: 9
-accepted_runs: 2
+accepted_runs: 5
 maximum_total_attempts: 18
-total_attempts: 6
+total_attempts: 9
 execution_order: [N1-A, N1-B, N1-C]
 cells:
   - cell_id: N1-A
@@ -25,8 +25,12 @@ cells:
     requested_offset_ms: 150
     accepted_runs_required: 3
     maximum_attempts: 6
-    accepted_runs: 0
-    attempts: 0
+    status: ACCEPTED_TARGET_REACHED
+    accepted_runs: 3
+    attempts: 3
+    violation_runs: 0
+    observability_rejections: 0
+    environment_failures: 0
     seed_schedule: [310201, 310202, 310203, 310204, 310205, 310206]
   - cell_id: N1-C
     phase_bucket: C

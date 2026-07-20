@@ -46,7 +46,7 @@ testing is authorized.
 | Phase | Status | Accepted | Attempts | Rejected / excluded | Current disposition |
 |---|---|---:|---:|---:|---|
 | Initialization | `COMPLETE` | n/a | n/a | n/a | `f2aa93aa` pushed |
-| N1 trajectory residue | `IN_PROGRESS` | 2 / 9 | 6 / 18 | 4 | N1-A closed at cap: 2 accepted Route PASS, 0 violations |
+| N1 trajectory residue | `IN_PROGRESS` | 5 / 9 | 9 / 18 | 4 | N1-A 2/3 at cap; N1-B 3/3 accepted Route PASS; 0 violations |
 | N1 reduced confirmation | `NOT_APPLICABLE_PENDING_TRIGGER` | 0 / 1 | 0 / 3 | 0 | only if at least two accepted reproductions |
 | C1 concurrency | `NOT_STARTED` | 0 / 15 | 0 / 30 | 0 | pending |
 | C1 minimal confirmations | `NOT_APPLICABLE_PENDING_TRIGGER` | 0 | 0 / 3 per finding | 0 | only if a violation is found |
@@ -70,12 +70,15 @@ All future rejected attempts must be explicitly classified as
 - `088ee9ab0d21b08b34ade7a9539e5c91ae70cc8c` —
   `experiment: freeze n1 execution matrix` (pushed; formal-attempt starting
   revision).
+- `ed8486f03d07af70d738ce787a0ed77b1e110b3b` —
+  `experiment: checkpoint n1 phase bucket a` (pushed; N1-B attempt starting
+  revision).
 
 ## Next exact action
 
-Freeze and push the N1-A attempt-limit checkpoint, confirm a clean synchronized
-worktree and unoccupied local simulator ports, then execute N1-B attempt 1 with
-seed `310201` and the preregistered 150 ms health-cycle offset.
+Freeze and push the N1-B accepted-target checkpoint, confirm a clean
+synchronized worktree and unoccupied local simulator ports, then execute N1-C
+attempt 1 with seed `310301` and the preregistered 260 ms health-cycle offset.
 
 ## Current blockers
 

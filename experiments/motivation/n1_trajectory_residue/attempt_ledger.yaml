@@ -2,8 +2,8 @@ schema_version: "1.0"
 study_id: n1_current_trajectory_residue_adjudication
 status: IN_PROGRESS
 preregistration_commit: 54d0411bddbc62e28d05e006a844dedbf9ebe6b3
-accepted_runs: 2
-total_attempts: 6
+accepted_runs: 5
+total_attempts: 9
 observability_rejections: 2
 measurement_insufficient: 0
 environment_failures: 2
@@ -12,7 +12,7 @@ formal_safety_stops: 0
 not_applicable: 0
 cell_status:
   N1-A: ATTEMPT_LIMIT_REACHED_MEASUREMENT_INSUFFICIENT
-  N1-B: NOT_STARTED
+  N1-B: ACCEPTED_TARGET_REACHED
   N1-C: NOT_STARTED
 attempts:
   - run_id: n1-a-a01
@@ -159,3 +159,87 @@ attempts:
       route_oracle: 24dae5678fabb4ec007c37aa5d1675afa5d44859dca20598a80248a1f5fd7205
       freshness_observation: 1d63e5ce389b08c12b60e8a106fe0ee6222a2dd6ffaf7bfd73584a6ec33315d4
       freshness_oracle: 532822e131012323fd7acdefbe24e3786fdfab1fa23f38d2490003b98c1b94c0
+  - run_id: n1-b-a01
+    cell_id: N1-B
+    attempt: 1
+    simulation_seed: 310201
+    repository_commit_at_start: ed8486f03d07af70d738ce787a0ed77b1e110b3b
+    disposition: ACCEPTED
+    counted_as_accepted: true
+    phase_bucket: B
+    requested_phase_offset_ms: 150
+    observed_phase_offset_ms: 150.74284
+    phase_anchor_health_reply_sequence: 15
+    monitor: PASS
+    clock_bridge: VALID
+    windows: {pre_fault_stable: COMPLETE, pre_revocation_target: COMPLETE, fallback: COMPLETE}
+    lineage: COMPLETE
+    cleanup: LANDED_AND_DISARMED
+    route_oracle: PASS
+    freshness_oracle: EXPOSURE
+    route_evidence: {post_revocation_stale_subject_consumption_count: 0, post_revocation_old_epoch_consumption_count: 0, post_revocation_allocator_count: 0, post_revocation_writer_count: 0}
+    artifact_sha256:
+      fault_record: 45678fb811b532c7ff9fd773d0c4ebcc2ab4cc03cc22f4875b8534d0ef29612d
+      flight_log: 11f7a898d0d5027db7a4a1f92800ac513ee6c8031e20fea734da6bbb957fdb7c
+      monitor_result: 6944d648647a863187dd1a1b47406312012a078fae5888300be96ad7a9a7fe99
+      clock_bridge: b280843489b4580ba9a62d40019b74a0d25a8734da4f4dc1d3823d0c070d499c
+      route_trace: ecd8d6dd579841e480c093e2b5aa8f5217f731523b7fbb395d404ae0347771c3
+      route_oracle: 19fc57c96476fba8f571dbbb1643bf829f1fc20d8d65e90da6930230a3b02c2a
+      freshness_observation: 24277bf50046c665dab58bd78c8ff1d7c9b3cce4482a4cd4191d3300a15a94e4
+      freshness_oracle: 7a09aa401227b350e4ba088724fa1b439e5d7fcd68a6aa4872a0bab725cd9ee3
+  - run_id: n1-b-a02
+    cell_id: N1-B
+    attempt: 2
+    simulation_seed: 310202
+    repository_commit_at_start: ed8486f03d07af70d738ce787a0ed77b1e110b3b
+    disposition: ACCEPTED
+    counted_as_accepted: true
+    phase_bucket: B
+    requested_phase_offset_ms: 150
+    observed_phase_offset_ms: 150.475065
+    phase_anchor_health_reply_sequence: 15
+    monitor: PASS
+    clock_bridge: VALID
+    windows: {pre_fault_stable: COMPLETE, pre_revocation_target: COMPLETE, fallback: COMPLETE}
+    lineage: COMPLETE
+    cleanup: LANDED_AND_DISARMED
+    route_oracle: PASS
+    freshness_oracle: EXPOSURE
+    route_evidence: {post_revocation_stale_subject_consumption_count: 0, post_revocation_old_epoch_consumption_count: 0, post_revocation_allocator_count: 0, post_revocation_writer_count: 0}
+    artifact_sha256:
+      fault_record: 917f983ec3955cebe0334f12f4bee6f2934ee1b18a7757865d765002a94c24e9
+      flight_log: c318419fbb8a38292eb62533b9baefe5b94e158b686c5a37bcc65f7a9bfbdd4a
+      monitor_result: fcc42ffb453d2301320fea75eb70d134b15df585192f9288fa47227699889f57
+      clock_bridge: 5103505b901721aa53dfe1ea04ac5e2125d2ffc3bc1aae53d1a7ea39d46e4a9a
+      route_trace: 6a4080e1a5db3f5431cee4b87900a1df658aff4f4aab9f66ffd036e813272549
+      route_oracle: 965f3d1c269d8de6258cff593753029827b2c705e0a8a2007f1d059c1fbcd517
+      freshness_observation: b6bdf28220b90fc491008827d2896b8e7d71eaf65c47a2875710b73c033c1f2a
+      freshness_oracle: e0216be6ec44089db3836d4d0171495cb82d635b52dfc0b6754bb8ed35f2787c
+  - run_id: n1-b-a03
+    cell_id: N1-B
+    attempt: 3
+    simulation_seed: 310203
+    repository_commit_at_start: ed8486f03d07af70d738ce787a0ed77b1e110b3b
+    disposition: ACCEPTED
+    counted_as_accepted: true
+    phase_bucket: B
+    requested_phase_offset_ms: 150
+    observed_phase_offset_ms: 150.415446
+    phase_anchor_health_reply_sequence: 15
+    monitor: PASS
+    clock_bridge: VALID
+    windows: {pre_fault_stable: COMPLETE, pre_revocation_target: COMPLETE, fallback: COMPLETE}
+    lineage: COMPLETE
+    cleanup: LANDED_AND_DISARMED
+    route_oracle: PASS
+    freshness_oracle: EXPOSURE
+    route_evidence: {post_revocation_stale_subject_consumption_count: 0, post_revocation_old_epoch_consumption_count: 0, post_revocation_allocator_count: 0, post_revocation_writer_count: 0}
+    artifact_sha256:
+      fault_record: a6a7e65252f95030dcfe890f826e99d16e53a879b5e9bb3649f0f93ea670be10
+      flight_log: 2ffa7e92d91fd62815a278f1323a6e9cc1a6c3eca53445debd5a06f9cfa96566
+      monitor_result: 019f2e08466aabc4f09ba7b252836ae6dd7bf0f10386b78d058f0b237069c2da
+      clock_bridge: 97bc94c24832c2633c008c4b2c2415ad4c95450490b221b8dfa41d7254c1dafa
+      route_trace: 4379f546dc34981b0a0d4a4bbf6a41433727d5273de8f315db464cd91e71f810
+      route_oracle: e7cb72c7df59d0c7725a6ca379d8615e9d92a4896315217e421809ea15e9a51d
+      freshness_observation: 011da7ea632875cc4fde3ad5625ab95dd753564b0fbc3822c0ef5fe97c7d81ed
+      freshness_oracle: 86cbc8fbdef2585bf10658f4774475304de85667a16035666e8be000438f5dc7

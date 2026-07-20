@@ -37,9 +37,11 @@ storage and excluded from the SUT denominator under the correct classification.
 ### N1 — Current natural event adjudication
 
 Status: `IN_PROGRESS` — phase bucket A is closed at its six-attempt cap with
-2/3 accepted runs, both Route PASS and neither reproducing the frozen natural
-event. Two observability rejections and two environment failures are excluded
-from the SUT denominator. Bucket B is next; bucket A will not be retried.
+2/3 accepted runs, both Route PASS. Bucket B reached 3/3 accepted in three
+attempts, all Route PASS. None of these five accepted runs reproduced the
+frozen natural event. Two observability rejections and two environment failures
+are excluded from the SUT denominator. Bucket C is next; completed buckets will
+not be retried.
 
 Outputs:
 
