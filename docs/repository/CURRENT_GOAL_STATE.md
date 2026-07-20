@@ -2,16 +2,31 @@
 
 ## Active Current-Version freshness pilot
 
-- Current phase: Current-Version External Mode Setpoint Freshness tuning
+- Current phase: Current-Version External Mode Setpoint Freshness
+  preregistration preparation
 - Formal accepted runs: `0/12`
 - Completed tuning: Trajectory `TOTAL_PROCESS_STOP`; Attitude
-  `TOTAL_PROCESS_STOP`; Rate channel semantics exercised
-- Current unresolved item: select a lower bounded Rate input that permits safe
-  `SETPOINT_ONLY_STALL` cleanup and recovery
+  `TOTAL_PROCESS_STOP`; Rate `TOTAL_PROCESS_STOP` and
+  `SETPOINT_ONLY_STALL` at `0.06 rad/s`
+- Current unresolved item: none in the bounded tuning contexts; freeze the
+  four-cell preregistration before any formal execution
 - Latest instrumentation checkpoint:
   `f4b5a600badf3961dae1d45eebb183c0d0fa6d01`
 - Tuning evidence status: ignored, non-formal, and excluded from the formal
   pilot denominator
+- Rate tuning pair: `tune-rate-total-02` and `tune-rate-stall-02`, both with
+  roll rate `0.06 rad/s`, thrust-body Z `-0.72`, `5.0 s` settling,
+  `3.0 s` health-alive target, `2.0 s` recovery dwell, and simulator seed `1`;
+  only the controlled failure condition differs
+- Rate tuning result: both baselines, clock bridges, controller/allocator/writer
+  lineage, and target windows are complete; process stop installs automatic
+  fallback, while setpoint-only stall retains the external route with health
+  alive through the policy-terminated window; neither target window contains
+  ground contact, and both cleanup paths land and disarm
+- Measurement correction: process-stop `physical_metrics` now end exactly at
+  automatic fallback installation, even when the cross-domain mapping places
+  the monitor's target-close marker a few milliseconds earlier; recovery and
+  full-post-fault metrics remain separate
 - Last update: 2026-07-20
 
 ## Frozen Issue #162 completion state

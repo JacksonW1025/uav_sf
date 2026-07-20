@@ -132,6 +132,7 @@ def test_physical_metrics_use_fault_relative_position_and_absolute_tilt() -> Non
 
 def test_pre_revocation_physical_window_excludes_recovery() -> None:
     assert _pre_revocation_physical_end("TOTAL_PROCESS_STOP", 2_200_000, 2_250_000) == 2_200_000
+    assert _pre_revocation_physical_end("TOTAL_PROCESS_STOP", 2_300_000, 2_250_000) == 2_300_000
     assert _pre_revocation_physical_end("SETPOINT_ONLY_STALL", None, 4_000_000) == 4_000_000
 
 

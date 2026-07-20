@@ -263,7 +263,7 @@ def _pre_revocation_physical_end(
     fault_type: str, fallback_installed_us: float | None, target_end_us: float
 ) -> float:
     if fault_type == "TOTAL_PROCESS_STOP" and fallback_installed_us is not None:
-        return min(fallback_installed_us, target_end_us)
+        return fallback_installed_us
     return target_end_us
 
 
