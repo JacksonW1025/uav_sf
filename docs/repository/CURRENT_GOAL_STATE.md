@@ -1,5 +1,21 @@
 # Current Goal state
 
+## Active Current-Version freshness pilot
+
+- Current phase: Current-Version External Mode Setpoint Freshness tuning
+- Formal accepted runs: `0/12`
+- Completed tuning: Trajectory `TOTAL_PROCESS_STOP`; Attitude
+  `TOTAL_PROCESS_STOP`; Rate channel semantics exercised
+- Current unresolved item: select a lower bounded Rate input that permits safe
+  `SETPOINT_ONLY_STALL` cleanup and recovery
+- Latest instrumentation checkpoint:
+  `f4b5a600badf3961dae1d45eebb183c0d0fa6d01`
+- Tuning evidence status: ignored, non-formal, and excluded from the formal
+  pilot denominator
+- Last update: 2026-07-20
+
+## Frozen Issue #162 completion state
+
 - Current phase: External RTL successor motivation study complete; evidence is
   frozen after the preregistered `3/3` fully instrumented affected runs and
   `1/1` instrumentation-reduced confirmation, and the final case report is
