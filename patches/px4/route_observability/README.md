@@ -21,10 +21,19 @@ The 8 ms setting accounts for the 4 ms scheduling quantization observed in SITL.
 
 The helper is never read by control code. The patch changes no setpoint, control output, controller state, mode arbitration, work-queue interval, or control branch, and emits no console output.
 
+`freshness_observability.patch` is an incremental observation-only patch for the
+bounded freshness pilot. Apply it after `route_observability_topics.patch`. It
+does not replace the historical patch: it adds Attitude and Rate consumer
+sources, records retained-setpoint consumption on every instrumented controller
+cycle, and raises the logger instance allowance for the added publisher. No
+controller value, timeout, acceptance rule, failsafe input, or scheduling rule
+is changed.
+
 Use:
 
 ```bash
 scripts/setup/prepare_observability_px4.sh --profile TRANSITION --build
+scripts/setup/prepare_freshness_observability_px4.sh --profile TRANSITION --build
 scripts/validation/rebuild_observability_patch.sh
 ```
 

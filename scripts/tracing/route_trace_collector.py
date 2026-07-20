@@ -19,6 +19,9 @@ SCHEMA_PATH = ROOT / "data" / "schemas" / "route_trace.schema.json"
 OBSERVABILITY_PATCH_PATH = (
     ROOT / "patches" / "px4" / "route_observability" / "route_observability_topics.patch"
 )
+FRESHNESS_PATCH_PATH = (
+    ROOT / "patches" / "px4" / "route_observability" / "freshness_observability.patch"
+)
 PROCESSED_ALLOCATOR_INPUT_STRIDE = 4
 
 
@@ -147,6 +150,18 @@ def _writer_names() -> dict[int, str]:
 
 WRITER_NAMES = _writer_names()
 
+SETPOINT_SOURCE = {
+    1: ("trajectory_setpoint", "velocity"),
+    12: ("vehicle_attitude_setpoint", "attitude"),
+    13: ("vehicle_rates_setpoint", "body_rate"),
+}
+
+SETPOINT_KIND = {
+    "TRAJECTORY": ("trajectory_setpoint", "velocity"),
+    "ATTITUDE": ("vehicle_attitude_setpoint", "attitude"),
+    "RATE": ("vehicle_rates_setpoint", "body_rate"),
+}
+
 
 def _trajectory_level(payload: dict[str, object]) -> str:
     components: list[str] = []
@@ -232,6 +247,10 @@ class RouteEventReducer:
                 "trajectory_setpoint"
                 if self.state.setpoint_level
                 in {"position", "velocity", "acceleration", "position_velocity", "position_velocity_acceleration"}
+                else "vehicle_attitude_setpoint"
+                if self.state.setpoint_level == "attitude"
+                else "vehicle_rates_setpoint"
+                if self.state.setpoint_level == "body_rate"
                 else None
             )
             confidence = "MEDIUM"
@@ -250,6 +269,16 @@ class RouteEventReducer:
             subject_timestamp = float(payload.get("timestamp", timestamp))
             self.state.setpoint_topic = "trajectory_setpoint"
             self.state.setpoint_level = _trajectory_level(payload)
+            self.state.message_age = max(0.0, (timestamp - subject_timestamp) / 1_000_000.0)
+            event_type = "px4_setpoint_received"
+            confidence = "MEDIUM"
+
+        elif source in {"vehicle_attitude_setpoint", "vehicle_rates_setpoint"}:
+            subject_timestamp = float(payload.get("timestamp", timestamp))
+            self.state.setpoint_topic = source
+            self.state.setpoint_level = (
+                "attitude" if source == "vehicle_attitude_setpoint" else "body_rate"
+            )
             self.state.message_age = max(0.0, (timestamp - subject_timestamp) / 1_000_000.0)
             event_type = "px4_setpoint_received"
             confidence = "MEDIUM"
@@ -288,7 +317,10 @@ class RouteEventReducer:
                 if event_epoch:
                     self.state.route_epoch_id = event_epoch
                 event_type = "px4_setpoint_consumed"
-                self.state.setpoint_topic = "trajectory_setpoint"
+                source_id = int(payload.get("source_id", 0))
+                self.state.setpoint_topic, self.state.setpoint_level = SETPOINT_SOURCE.get(
+                    source_id, (None, "unknown")
+                )
             elif event_id == 2:
                 if event_epoch:
                     self.state.route_epoch_id = event_epoch
@@ -385,6 +417,8 @@ def rows_from_ulog(path: Path) -> Iterator[tuple[float, str, dict[str, object]]]
         "register_ext_component_reply",
         "vehicle_control_mode",
         "trajectory_setpoint",
+        "vehicle_attitude_setpoint",
+        "vehicle_rates_setpoint",
         "route_observability",
         "actuator_motors",
         "failsafe_flags",
@@ -471,6 +505,12 @@ STRUCTURED_LOG_EVENT = re.compile(r"\[(?P<timestamp>[0-9]+(?:\.[0-9]+)?)\].*?(?P
 NONFINITE_JSON_VALUE = re.compile(r"(?<=:)(?:nan|-?inf)(?=[,}])")
 
 
+def _seconds_text_to_ns(value: str) -> int:
+    seconds, separator, fractional = value.partition(".")
+    nanoseconds = int((fractional + "000000000")[:9]) if separator else 0
+    return int(seconds) * 1_000_000_000 + nanoseconds
+
+
 def lifecycle_events(path: Path, run_id: str) -> Iterator[dict[str, object]]:
     """Extract the adapter/executor's structured ROS lifecycle records."""
     state = RouteState(run_id=run_id)
@@ -484,7 +524,7 @@ def lifecycle_events(path: Path, run_id: str) -> Iterator[dict[str, object]]:
             # lifecycle record and normalize only those scalar values to null.
             payload = json.loads(NONFINITE_JSON_VALUE.sub("null", match.group("json")))
             event_type = str(payload["event_type"])
-            timestamp_ns = float(match.group("timestamp")) * 1_000_000_000.0
+            timestamp_ns = _seconds_text_to_ns(match.group("timestamp"))
             confidence = "HIGH"
 
             if event_type == "external_mode_registered":
@@ -517,6 +557,41 @@ def lifecycle_events(path: Path, run_id: str) -> Iterator[dict[str, object]]:
                 state.behavior_phase = str(phase) if phase is not None else None
             elif event_type == "external_mode_deactivated":
                 state.authority_source = None
+            elif event_type in {
+                "freshness_mode_registered",
+                "freshness_mode_activated",
+                "freshness_setpoint_published",
+                "freshness_health_reply",
+                "freshness_channel_state",
+                "freshness_mode_deactivated",
+            }:
+                component_name = "Freshness Probe"
+                state.producer_identity = f"registered_component:{component_name}"
+                setpoint_type = str(payload.get("setpoint_type", "")).upper()
+                if setpoint_type in SETPOINT_KIND:
+                    state.setpoint_topic, state.setpoint_level = SETPOINT_KIND[setpoint_type]
+                if event_type == "freshness_mode_registered":
+                    mode_id = int(payload["mode_id"])
+                    state.registration_state = {
+                        "registered": True,
+                        "name": component_name,
+                        "mode_id": mode_id,
+                    }
+                elif event_type == "freshness_mode_activated":
+                    state.declared_mode = int(payload["mode_id"])
+                    state.authority_source = "dynamic_external_mode"
+                    state.route_activation_id = payload.get("activation_id")
+                elif event_type == "freshness_setpoint_published":
+                    event_type = "producer_still_publishing"
+                    state.authority_source = "dynamic_external_mode"
+                    state.route_activation_id = payload.get("activation_id")
+                    timestamp_ns = int(payload.get("ros_time_ns", timestamp_ns))
+                elif event_type == "freshness_health_reply":
+                    timestamp_ns = int(payload.get("ros_time_ns", timestamp_ns))
+                elif event_type == "freshness_channel_state":
+                    timestamp_ns = int(payload.get("ros_time_ns", timestamp_ns))
+                elif event_type == "freshness_mode_deactivated":
+                    state.authority_source = None
             elif event_type.startswith("executor_") or event_type == "mode_executor_registered":
                 if state.producer_identity is None:
                     component_name = str(payload.get("component_name", "Route Transition"))
@@ -532,6 +607,10 @@ def lifecycle_events(path: Path, run_id: str) -> Iterator[dict[str, object]]:
                     "sequence",
                     "activation_id",
                     "registration_instance_id",
+                    "setpoint_type",
+                    "setpoint_enabled",
+                    "health_reply_enabled",
+                    "ros_time_ns",
                 )
                 if key in payload
             )
