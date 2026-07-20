@@ -12,7 +12,7 @@ Freshness pilot denominator.
 - Starting `origin/main`: `955e7c98e3b29ddd21fa4d44fb562065700fa832`
 - Starting ahead/behind: `0/0`
 - Protected ancestor: `955e7c98e3b29ddd21fa4d44fb562065700fa832`
-- Current phase: N1 trajectory residue preregistration
+- Current phase: N1 trajectory residue bounded execution
 - Phase status: `IN_PROGRESS`
 
 ## Frozen evidence
@@ -46,7 +46,7 @@ testing is authorized.
 | Phase | Status | Accepted | Attempts | Rejected / excluded | Current disposition |
 |---|---|---:|---:|---:|---|
 | Initialization | `COMPLETE` | n/a | n/a | n/a | `f2aa93aa` pushed |
-| N1 trajectory residue | `NOT_STARTED` | 0 / 9 | 0 / 18 | 0 | pending |
+| N1 trajectory residue | `IN_PROGRESS` | 2 / 9 | 6 / 18 | 4 | N1-A closed at cap: 2 accepted Route PASS, 0 violations |
 | N1 reduced confirmation | `NOT_APPLICABLE_PENDING_TRIGGER` | 0 / 1 | 0 / 3 | 0 | only if at least two accepted reproductions |
 | C1 concurrency | `NOT_STARTED` | 0 / 15 | 0 / 30 | 0 | pending |
 | C1 minimal confirmations | `NOT_APPLICABLE_PENDING_TRIGGER` | 0 | 0 / 3 per finding | 0 | only if a violation is found |
@@ -67,17 +67,20 @@ All future rejected attempts must be explicitly classified as
 - `54d0411bddbc62e28d05e006a844dedbf9ebe6b3` —
   `experiment: preregister n1 trajectory residue study` (pushed before every
   formal N1 attempt).
+- `088ee9ab0d21b08b34ade7a9539e5c91ae70cc8c` —
+  `experiment: freeze n1 execution matrix` (pushed; formal-attempt starting
+  revision).
 
 ## Next exact action
 
-Push the matrix/ledger lock checkpoint containing preregistration commit
-`54d0411b`, confirm exact hashes and a clean synchronized worktree, verify no
-residual simulator process and local UDP port 8888 unoccupied, then execute
-N1-A attempt 1 with seed `310101`.
+Freeze and push the N1-A attempt-limit checkpoint, confirm a clean synchronized
+worktree and unoccupied local simulator ports, then execute N1-B attempt 1 with
+seed `310201` and the preregistered 150 ms health-cycle offset.
 
 ## Current blockers
 
-- None.
+- N1-A reached its six-attempt cap with only 2/3 accepted runs. This is a
+  bounded measurement-insufficient cell, not authorization to retry it.
 
 ## Protected hashes
 

@@ -69,7 +69,7 @@ def test_n1_health_cycle_anchor_reads_only_appended_reply(tmp_path: Path) -> Non
     assert final_offset == health_log.stat().st_size
 
 
-def test_n1_matrix_and_empty_ledger_match_preregistration() -> None:
+def test_n1_matrix_and_ledger_match_preregistration_and_attempt_caps() -> None:
     matrix = yaml.safe_load(MATRIX.read_text(encoding="utf-8"))
     ledger = yaml.safe_load(LEDGER.read_text(encoding="utf-8"))
     assert matrix["accepted_target"] == 9
@@ -77,9 +77,47 @@ def test_n1_matrix_and_empty_ledger_match_preregistration() -> None:
     assert len(matrix["cells"]) == 3
     assert sum(cell["accepted_runs_required"] for cell in matrix["cells"]) == 9
     assert sum(cell["maximum_attempts"] for cell in matrix["cells"]) == 18
-    assert ledger["accepted_runs"] == 0
-    assert ledger["total_attempts"] == 0
-    assert ledger["attempts"] == []
+    attempts = ledger["attempts"]
+    accepted = [item for item in attempts if item["counted_as_accepted"]]
+    assert ledger["accepted_runs"] == matrix["accepted_runs"] == len(accepted)
+    assert ledger["total_attempts"] == matrix["total_attempts"] == len(attempts)
+    assert len({item["run_id"] for item in attempts}) == len(attempts)
+    assert ledger["total_attempts"] <= matrix["maximum_total_attempts"]
+
+    allowed_dispositions = {
+        "ACCEPTED",
+        "OBSERVABILITY_REJECTED",
+        "MEASUREMENT_INSUFFICIENT",
+        "ENVIRONMENT_FAILURE",
+        "CAMPAIGN_CONFIGURATION_FAILURE",
+        "FORMAL_SAFETY_STOP",
+        "NOT_APPLICABLE",
+    }
+    assert {item["disposition"] for item in attempts} <= allowed_dispositions
+    assert all(
+        item["disposition"] == "ACCEPTED" for item in accepted
+    )
+
+    attempts_by_cell = {
+        cell["cell_id"]: [
+            item for item in attempts if item["cell_id"] == cell["cell_id"]
+        ]
+        for cell in matrix["cells"]
+    }
+    for cell in matrix["cells"]:
+        cell_attempts = attempts_by_cell[cell["cell_id"]]
+        cell_accepted = [item for item in cell_attempts if item["counted_as_accepted"]]
+        assert cell["attempts"] == len(cell_attempts)
+        assert cell["accepted_runs"] == len(cell_accepted)
+        assert cell["attempts"] <= cell["maximum_attempts"]
+        assert cell["accepted_runs"] <= cell["accepted_runs_required"]
+
+    assert ledger["observability_rejections"] == sum(
+        item["disposition"] == "OBSERVABILITY_REJECTED" for item in attempts
+    )
+    assert ledger["environment_failures"] == sum(
+        item["disposition"] == "ENVIRONMENT_FAILURE" for item in attempts
+    )
 
 
 def test_n1_dispositions_are_closed_and_no_fuzzer_is_authorized() -> None:
