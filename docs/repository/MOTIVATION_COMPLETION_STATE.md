@@ -64,14 +64,16 @@ All future rejected attempts must be explicitly classified as
 
 - `f2aa93aa89e1764d0be6c806d79bfc8b683043f3` —
   `docs: initialize motivation completion workflow` (pushed).
+- `54d0411bddbc62e28d05e006a844dedbf9ebe6b3` —
+  `experiment: preregister n1 trajectory residue study` (pushed before every
+  formal N1 attempt).
 
 ## Next exact action
 
-Validate and push the N1 source audit, deterministic health-phase harness, and
-preregistration records. Record that pushed preregistration commit in the N1
-matrix and ledger, push the lock checkpoint, then execute N1-A attempt 1 only
-after confirming exact hashes, a clean worktree, no residual simulator process,
-and local UDP port 8888 unoccupied.
+Push the matrix/ledger lock checkpoint containing preregistration commit
+`54d0411b`, confirm exact hashes and a clean synchronized worktree, verify no
+residual simulator process and local UDP port 8888 unoccupied, then execute
+N1-A attempt 1 with seed `310101`.
 
 ## Current blockers
 
