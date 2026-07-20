@@ -577,6 +577,10 @@ RouteProfile = (
     route_id,
     declared_mode,
     authority_source,
+    lifecycle_owner,
+    executor_owner,
+    completion_condition,
+    expected_successor,
     setpoint_level,
     expected_producers,
     allowed_topics,
@@ -589,6 +593,11 @@ RouteProfile = (
     fallback_policy
 )
 ```
+
+其中 `lifecycle_owner` 标识谁负责 route 的注册、激活、完成与退出，
+`executor_owner` 标识谁有权消费完成并推进后继，`completion_condition`
+定义完成事件的来源和成功条件，`expected_successor` 定义完成后必须请求并
+安装的下一条 route。四者不能由 `declared_mode` 或 actuator writer 反推。
 
 运行时观测为：
 
@@ -657,6 +666,14 @@ Fallback and Recovery
 每一步由不同异步组件完成。它们不同步时可能产生无声违约。
 
 ## 5.3 Handoff Contract
+
+### Successor Progression
+
+对于 executor-owned route，handoff contract 还包含：完成事件必须由正确的
+lifecycle owner 产生并公开发布，必须交付给注册的 executor owner，并由该
+owner 请求 `expected_successor`；后继 route 必须进入新的 route epoch。这个
+contract 检查“任务链是否继续前进”，不替代下方对 controller/writer 撤销和
+安装的检查。
 
 ### Revocation
 
@@ -1266,6 +1283,22 @@ Declared Route Transition × Observed Runtime Route
 
 # 12. Motivation Study
 
+## Motivation Case 1：Issue #162 successor failure（已完成）
+
+Issue #162 bounded study 已冻结为 `HISTORICAL_DEFECT_REPRODUCED`：历史受影响
+组合在完整仪表下 `3/3`、降仪表确认 `1/1`。External RTL mode 23 被注册并
+选中，但 registered owner executor 为 1、实际 executor-in-charge 为 Autopilot
+0；External RTL 成功完成后，completion 未交付给 owner，Land 后继没有被
+请求或安装，vehicle 保持 armed/airborne。当前 library revision `c3e410f`
+通过构造期 guard 拒绝该组合，因此该证据是历史 Motivation Case，而不是
+当前版本缺陷。该 case 不再增加 replay、分类或修复工作。
+
+它同时建立两个互补 oracle 的边界：Successor Oracle 检查 owner、completion
+delivery 与 expected successor progression；Route Oracle 仅在 route transition
+声明后检查旧 controller/writer 的撤销和新 route 的安装。Issue #162 的核心
+失败发生在后继根本没有被推进，因此 Route Oracle 可以是
+`NOT_APPLICABLE`，而 Successor Oracle 为 `VIOLATION`。
+
 正式大规模 fuzzing 前完成以下调查。
 
 ## M1：真实任务中的 Handoff Inventory
@@ -1752,6 +1785,19 @@ Source Family
 
 # 18. Final Narrative
 
+## 18.1 当前研究阶段
+
+仓库已经完成 route-observability 可行性、P5 v6 bounded differential campaign
+以及 Issue #162 Motivation Case 1；这些资产均冻结。当前阶段是严格限定于
+Family A Current-Version Dynamic External Mode 的 setpoint freshness bounded
+probe，研究 producer 停止后到 PX4 健康检测和 route 撤销前，Trajectory、
+Attitude、Rate 命令在 controller、allocator、writer 与物理状态中的持续影响。
+
+这个阶段新增独立的 Pre-Revocation Freshness Oracle。它不会改写 Route Oracle
+的历史语义，也不会预设“最后一条 setpoint 被保持”就是缺陷。Family B 仍是
+未来 deep-route validation；当前工作不扩大为所有 PX4 flight mode、通用
+scenario fuzzing 或完整 54-run matrix。
+
 本文研究 PX4 中一类会替换主要飞行控制路径的运行时 authority transition。
 
 现实自主任务经常执行：
@@ -1794,7 +1840,7 @@ Observed Runtime Producer, Controller and Writer
 
 核心问题可以浓缩为：
 
-> **当 PX4 声明主要控制路径已经完成交接时，旧路径是否真正停手，新路径是否真正接棒，故障后安全路径是否真正恢复？**
+> **当 PX4 声明主要控制路径已经完成交接或 owned route 已经完成时，旧路径是否真正停手，新路径是否真正接棒，正确的 executor 是否推进 expected successor，故障后安全路径是否真正恢复？**
 
 ---
 
