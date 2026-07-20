@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uav-sf.local/schemas/authority-event-linearization-result.schema.json",
+  "title": "Authority Event Linearization Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "oracle_name", "oracle_version", "run_id", "pair", "timing_order", "status", "clauses", "linearization", "evidence_completeness"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "oracle_name": {"const": "Authority Event Linearization Oracle"},
+    "oracle_version": {"const": "0.1"},
+    "run_id": {"type": "string", "minLength": 1},
+    "pair": {"enum": ["A", "B", "C", "D", "E"]},
+    "timing_order": {"enum": ["A_FIRST", "NEAR_SIMULTANEOUS", "B_FIRST"]},
+    "status": {"enum": ["PASS", "VIOLATION", "UNKNOWN", "NOT_APPLICABLE"]},
+    "clauses": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["status", "reasons", "metrics"],
+        "properties": {
+          "status": {"enum": ["PASS", "VIOLATION", "UNKNOWN", "NOT_APPLICABLE"]},
+          "reasons": {"type": "array", "items": {"type": "string"}},
+          "metrics": {"type": "object"}
+        }
+      }
+    },
+    "linearization": {"type": "object"},
+    "evidence_completeness": {"type": "object"}
+  }
+}

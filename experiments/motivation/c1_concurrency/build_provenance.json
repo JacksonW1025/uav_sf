@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "study_id": "c1_concurrent_authority_event_probe",
+  "repository_base_before_c1": "fd9b93fb0d2f50554d6f52d19ac3cd573d7ae2f9",
+  "px4_revision": "4ae21a5e569d3d89c2f6366688cbacb3e93437c9",
+  "px4_msgs_revision": "18ecff03041c6f8d8a0012fbc63af0b23dd60af1",
+  "px4_ros2_interface_lib_revision": "c3e410f035806e8c56246708432ded09c976434b",
+  "micro_xrce_dds_agent_revision": "73622810d984349b80bbac0ef55fc0b694d62222",
+  "binaries": {
+    "c1_concurrency_probe": "06085865ca22825a782879fff6745e39d1c2c0e987e2636bdca842a353c7168e",
+    "px4_sitl": "d5cd7df0efd24f7f5509e8c4e5699a709cd8e4df42b0b64e453edab815471612",
+    "micro_xrce_dds_agent": "75f4ebcff6773fff460a8a50b1810f6a2ae2bee6c1ae1ec0d050e77dbaeb38e9"
+  },
+  "build": {
+    "workspace": "runs/c1_harness_build",
+    "command": "colcon --log-base runs/c1_harness_build/log build --base-paths scripts/adapters/external_mode_adapter --build-base runs/c1_harness_build/build --install-base runs/c1_harness_build/install --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo",
+    "result": "PASS",
+    "raw_build_products_ignored": true
+  },
+  "px4_behavior_change": false,
+  "observation_only_px4_change": false,
+  "test_subject": "dedicated non-replacement External Mode using public interfaces"
+}

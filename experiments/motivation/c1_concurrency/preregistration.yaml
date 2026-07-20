@@ -1,0 +1,240 @@
+schema_version: "1.0"
+status: FROZEN_BEFORE_FORMAL_ATTEMPTS
+study_id: c1_concurrent_authority_event_probe
+created_at: 2026-07-20T00:00:00-07:00
+freeze_mechanism: >-
+  The first pushed Git commit containing this file freezes the design, legal
+  serial outcomes, thresholds, attempt caps, seeds, and admissibility rules
+  before any formal C1 attempt. This file must not change during execution.
+
+namespace:
+  preregistration: experiments/motivation/c1_concurrency/preregistration.yaml
+  matrix: experiments/motivation/c1_concurrency/matrix.yaml
+  ledger: experiments/motivation/c1_concurrency/attempt_ledger.yaml
+  build_provenance: experiments/motivation/c1_concurrency/build_provenance.json
+  raw_runs: runs/motivation/c1_concurrency
+  processed: data/processed/motivation/c1_concurrency
+  final_report: docs/motivation/C1_CONCURRENT_AUTHORITY_EVENTS_REPORT.md
+  gate: experiments/motivation/c1_concurrency/c1_gate.json
+  raw_artifacts_are_ignored: true
+
+research_question: >-
+  Determine whether each bounded pair of concurrent lifecycle events has an
+  observable deterministic interleaving and a linearizable final route under
+  the locked current PX4/Gazebo SITL revision.
+
+source_revisions:
+  repository_base_before_c1: fd9b93fb0d2f50554d6f52d19ac3cd573d7ae2f9
+  px4_autopilot: 4ae21a5e569d3d89c2f6366688cbacb3e93437c9
+  px4_msgs: 18ecff03041c6f8d8a0012fbc63af0b23dd60af1
+  px4_ros2_interface_lib: c3e410f035806e8c56246708432ded09c976434b
+  micro_xrce_dds_agent: 73622810d984349b80bbac0ef55fc0b694d62222
+  simulator: Gazebo_SITL_gz_x500_default_world
+
+locked_artifacts:
+  scripts/probes/run_c1_concurrency.sh: 7dfa827621b095979c9998d8211dcb2a10edd2baeb1fe8c2022a0f59bec9164a
+  scripts/probes/c1_concurrency_monitor.py: d028cbd335050c4a6c2bc099c66663b313df4c70336015148f7a3e42a78a7cd5
+  scripts/oracles/authority_event_linearization_oracle.py: d56aaccabb891a67cd389afec133504a7bb34f6916136aaec3c567dc484570bc
+  data/schemas/authority_event_linearization_result.schema.json: e39844b43c337557195e1127ae92d66a92edd40775aa3958eca0800ed86dddb5
+  scripts/adapters/external_mode_adapter/src/c1_concurrency_probe.cpp: 5d43baefead1593ca327f58308a2279f63e24e00cd40ad990e656111e1089391
+  scripts/adapters/external_mode_adapter/CMakeLists.txt: 6430036d741cac433d27ebbd7e17b08a98bf911f095327c524b6db642162a922
+  scripts/tracing/route_trace_collector.py: 446d1dad803e8599003ea5fb65216c19c854e7f04c72642d675113420c1c62a4
+  scripts/tracing/clock_bridge_collector.py: 1140be063ce1e75835ec1f9fe3c3eea55aab7a483d99799a323e0d57353f4ed2
+  scripts/tracing/compact_route_trace.py: 3bd0bfb77c5c408161884823ec9199a3e684595bc4031118399be932dc6dae35
+  config/freshness_logger_topics.txt: 94c19d757f0d707f3c885ea5b9a540e8cb94bec65dcd604000df84ca28c35e35
+
+locked_binaries:
+  c1_concurrency_probe:
+    path: runs/c1_harness_build/install/route_transition_external_mode/lib/route_transition_external_mode/c1_concurrency_probe
+    sha256: 06085865ca22825a782879fff6745e39d1c2c0e987e2636bdca842a353c7168e
+  px4_sitl:
+    path: external/PX4-Autopilot-oracle-validation-control/build/px4_sitl_default/bin/px4
+    sha256: d5cd7df0efd24f7f5509e8c4e5699a709cd8e4df42b0b64e453edab815471612
+  micro_xrce_dds_agent:
+    path: runs/freshness_agent_build/MicroXRCEAgent
+    sha256: 75f4ebcff6773fff460a8a50b1810f6a2ae2bee6c1ae1ec0d050e77dbaeb38e9
+
+observation_identity:
+  px4_behavior_changes: NONE
+  px4_observation_patch_changes_from_n1: NONE
+  c1_subject_role: dedicated_non_replacement_external_mode_test_subject
+  c1_subject_controller: zero_velocity_trajectory_hover_at_20_Hz
+  c1_subject_registers_executor: false
+  public_interfaces_only:
+    - VehicleCommand
+    - ModeBase_completion
+    - ModeBase_registration_and_unregistration
+    - public_health_and_arming_check_reply_enable
+  direct_nav_state_mutation: FORBIDDEN
+  direct_executor_in_charge_mutation: FORBIDDEN
+  direct_failsafe_state_mutation: FORBIDDEN
+  authority_oracle_version: "0.1"
+  clock_bridge_minimum_samples: 20
+  cross_domain_marker_rule: inside_selected_VALID_bridge_interval
+
+event_pairs:
+  A:
+    event_a: external_activation
+    event_b: gcs_commanded_Hold
+    precondition: armed_airborne_Hold_with_registered_inactive_External
+    legal_final_by_order:
+      A_FIRST: [AUTO_LOITER_nav_state_4]
+      NEAR_SIMULTANEOUS: [AUTO_LOITER_nav_state_4, registered_External]
+      B_FIRST: [registered_External]
+  B:
+    event_a: external_completion
+    event_b: manual_or_GCS_takeover_Hold
+    precondition: armed_airborne_active_External
+    legal_final_by_order:
+      A_FIRST: [AUTO_LOITER_nav_state_4]
+      NEAR_SIMULTANEOUS: [AUTO_LOITER_nav_state_4]
+      B_FIRST: [AUTO_LOITER_nav_state_4]
+  C:
+    event_a: locally_owned_external_process_termination_SIGKILL
+    event_b: GCS_RTL_request
+    precondition: armed_airborne_active_External
+    legal_final_by_order:
+      A_FIRST: [AUTO_RTL_nav_state_5]
+      NEAR_SIMULTANEOUS: [AUTO_RTL_nav_state_5]
+      B_FIRST: [AUTO_RTL_nav_state_5]
+  D:
+    event_a: automatic_fallback_installation_after_health_reply_pause
+    event_b: rapid_legal_External_reentry_request
+    precondition: armed_airborne_active_External_then_public_health_reply_pause
+    legal_final_by_order:
+      A_FIRST: [registered_External]
+      NEAR_SIMULTANEOUS: [AUTO_RTL_nav_state_5, registered_External]
+      B_FIRST: [AUTO_RTL_nav_state_5]
+  E:
+    event_a: legal_External_release_via_local_SIGTERM
+    event_b: failsafe_clear_via_health_reply_resumption
+    precondition: automatic_RTL_fallback_installed_after_public_health_reply_pause
+    legal_final_by_order:
+      A_FIRST: [AUTO_RTL_nav_state_5]
+      NEAR_SIMULTANEOUS: [AUTO_RTL_nav_state_5]
+      B_FIRST: [AUTO_RTL_nav_state_5]
+
+relative_timing:
+  A_FIRST:
+    event_b_minus_event_a_ms_minimum: 250
+    requested_ms: 400
+  NEAR_SIMULTANEOUS:
+    absolute_event_separation_ms_maximum: 100
+    requested_ms: 0
+  B_FIRST:
+    event_b_minus_event_a_ms_maximum: -250
+    requested_ms: -400
+  timing_precondition_miss: CAMPAIGN_CONFIGURATION_FAILURE
+  no_timing_sweep: true
+
+formal_matrix:
+  event_pairs: [A, B, C, D, E]
+  timing_orders: [A_FIRST, NEAR_SIMULTANEOUS, B_FIRST]
+  accepted_runs_per_slot: 1
+  accepted_target: 15
+  maximum_attempts_per_slot: 2
+  maximum_total_attempts: 30
+  execution_order:
+    - C1-A-A_FIRST
+    - C1-A-NEAR_SIMULTANEOUS
+    - C1-A-B_FIRST
+    - C1-B-A_FIRST
+    - C1-B-NEAR_SIMULTANEOUS
+    - C1-B-B_FIRST
+    - C1-C-A_FIRST
+    - C1-C-NEAR_SIMULTANEOUS
+    - C1-C-B_FIRST
+    - C1-D-A_FIRST
+    - C1-D-NEAR_SIMULTANEOUS
+    - C1-D-B_FIRST
+    - C1-E-A_FIRST
+    - C1-E-NEAR_SIMULTANEOUS
+    - C1-E-B_FIRST
+
+acceptance:
+  identity:
+    - preregistration_commit_pushed_before_first_formal_attempt
+    - repository_worktree_clean_at_attempt_start
+    - locked_source_binary_and_protected_hashes_match
+  environment:
+    - no_preexisting_PX4_Gazebo_monitor_probe_or_agent_process
+    - local_DDS_UDP_port_8888_unoccupied
+    - runner_exit_zero
+    - monitor_PASS
+    - no_simulator_clock_stall_or_PX4_abort
+    - cleanup_landed_and_disarmed
+  scenario:
+    - both_registered_pair_events_observed_exactly_once
+    - relative_timing_matches_registered_slot
+    - pair_specific_precondition_satisfied
+    - final_snapshot_captured_before_cleanup
+    - no_ground_contact_before_cleanup
+  observability:
+    - clock_bridge_VALID_and_covers_complete_pair_window
+    - complete_controller_allocator_writer_lineage
+    - authority_oracle_has_no_UNKNOWN_applicable_clause
+    - raw_ULog_and_compact_processed_trace_present
+
+linearization_oracle:
+  statuses: [PASS, VIOLATION, UNKNOWN, NOT_APPLICABLE]
+  route_gap_maximum_ms: 24
+  final_executor_in_charge: 0
+  clauses:
+    - input_observability
+    - relative_timing
+    - linearizable_final_route
+    - owner_uniqueness
+    - final_revocation_lineage
+    - writer_exclusivity_and_continuity
+    - cleanup
+  incomplete_evidence_result: UNKNOWN
+  precondition_miss_result: UNKNOWN
+  violation_requires_complete_evidence: true
+
+physical_thresholds:
+  maximum_attitude_excursion_deg: 45.0
+  maximum_angular_rate_excursion_rad_s: 3.0
+
+formal_safety_stop:
+  - unexpected_ground_contact_before_cleanup
+  - simulator_clock_stall
+  - PX4_process_abort
+  - control_values_exceed_frozen_SITL_safety_bounds
+  - critical_observation_window_incomplete
+  - clock_bridge_invalid
+  - cleanup_cannot_be_completed_safely
+
+attempt_classification:
+  accepted: ACCEPTED
+  observability_rejected: OBSERVABILITY_REJECTED
+  measurement_insufficient: MEASUREMENT_INSUFFICIENT
+  environment_failure: ENVIRONMENT_FAILURE
+  campaign_configuration_failure: CAMPAIGN_CONFIGURATION_FAILURE
+  formal_safety_stop: FORMAL_SAFETY_STOP
+  not_applicable: NOT_APPLICABLE
+  no_infinite_retry: true
+
+violation_confirmation:
+  trigger: complete_evidence_C1_oracle_VIOLATION
+  maximum_total_confirmation_attempts: 3
+  accepted_target: 1
+  seed_schedule: [329901, 329902, 329903]
+  minimize_only_relative_gap_not_event_semantics: true
+  full_timing_sweep: FORBIDDEN
+
+protected_evidence:
+  p5_v6_gate: 9542eb7c98dfd4df1ab50026c149f21fb719fc6a2a09d040a9db4df647f132bc
+  p5_v6_manifest: 02d857f555623c10dc44998cd202c2da6226ec5c40a94a75020d75df87f02518
+  issue_162_preregistration: 11cc54e73dc03192374b4d877cf84cf3b864d9f084b8aa00549d1cdc3b52d060
+  issue_162_report: 41fcbb85cfcf5c82f58ad1e2c7b857c6864f7105ee65d0889ce7803709aad680
+  freshness_preregistration: fbbac59f943f499b6cc16e2787976c4ea1814dba1ce89efe8d40c23c0603f05f
+  freshness_gate: 71ad5ebb9ee305919381217092d4d80d6dcf6d0141cfe7a413ed219835e5d99c
+  freshness_ledger: 099a75a0166c0d3bbd08c28c6e9c8a9a78be98c04a0446669e192e5336b5d0dd
+  freshness_matrix: d52dbdaaed9e73ac510de80db49531e5745444122c4e0d69822244be04cfa841
+
+scope_exclusions:
+  - direct_internal_authority_or_failsafe_state_mutation
+  - external_network_or_third_party_system
+  - unbounded_timing_sweep
+  - full_stateful_fuzzer_campaign
+  - PX4_behavior_or_timeout_policy_change
