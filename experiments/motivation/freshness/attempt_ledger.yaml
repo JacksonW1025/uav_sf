@@ -1,10 +1,10 @@
 schema_version: "1.0"
 study_id: current_version_external_mode_setpoint_freshness_pilot
-status: READY_FOR_F4
+status: FORMAL_EXECUTION_COMPLETE_WITH_F2_SHORTFALL
 preregistration_commit: be11b984e13c9df43ebc8b3b31d04517c46d5224
 accepted_runs_target: 12
-accepted_runs: 7
-total_attempts: 13
+accepted_runs: 10
+total_attempts: 16
 environment_failures: 0
 observability_rejections: 6
 campaign_configuration_failures: 0
@@ -13,7 +13,7 @@ cell_counts:
   F1: {accepted_runs: 3, total_attempts: 3, maximum_total_attempts: 6}
   F2: {accepted_runs: 1, total_attempts: 6, maximum_total_attempts: 6}
   F3: {accepted_runs: 3, total_attempts: 4, maximum_total_attempts: 6}
-  F4: {accepted_runs: 0, total_attempts: 0, maximum_total_attempts: 6}
+  F4: {accepted_runs: 3, total_attempts: 3, maximum_total_attempts: 6}
 attempts:
   - run_id: freshness-f1-a01
     cell_id: F1
@@ -393,3 +393,117 @@ attempts:
       route_oracle: d4bbf9061d7581d95bcf17cf2244d1572e6f5a782d593842b5b019f007826af3
       freshness_observation: fdc3aac237e282dab481020f3bfa42e37d23d1b8c6f9ad8d384d49230b889b30
       freshness_oracle: 698ea03672de07dd37ac14aca51c800cc7f448498af5f67b70018d547c27ea9b
+  - run_id: freshness-f4-a01
+    cell_id: F4
+    attempt: 1
+    simulation_seed: 2751401
+    repository_commit_at_start: 5d6b839dfd4212cc4f4d2adf83f95a7ab4b30139
+    disposition: ACCEPTED_FORMAL
+    counted_as_accepted: true
+    monitor: PASS
+    clock_bridge: VALID
+    windows: {pre_fault_stable: COMPLETE, pre_revocation_target: COMPLETE, fallback: POLICY_TERMINATED}
+    lineage: COMPLETE
+    monotonic_target_duration_ms: 3037.872276
+    health_requests: 8
+    matched_health_replies: 8
+    health_alive_through_target: true
+    external_route_retained_at_target_end: true
+    target_ground_contact: false
+    cleanup: HOLD_LAND_DISARM_COMPLETE
+    route_oracle: PASS
+    freshness_oracle: EXPOSURE
+    freshness_categories: [UNBOUNDED_FRESHNESS_POLICY_GAP, PHYSICAL_EXPOSURE_THRESHOLD_EXCEEDED]
+    metrics:
+      maximum_setpoint_age_ms: 2748.0
+      fault_to_last_controller_consumption_ms: 2745.1286411240326
+      maximum_attitude_excursion_deg: 16.413309412707036
+      maximum_angular_rate_excursion_rad_s: 0.0323274713972043
+      altitude_loss_m: 1.3889827728271484
+      horizontal_displacement_m: 18.18093722736311
+      cleanup_maximum_angular_rate_rad_s: 0.6414165012514287
+      full_post_fault_horizontal_displacement_m: 34.149102366601625
+    artifact_sha256:
+      flight_log: 67fdfa0dd6c3ecad3ed7c74c7d5af97a3ac006e986f85137cff864b4c90fdc93
+      monitor_result: 31762ab21baf111367df228b5e538b1149f8b371cdc08001cd15be760cd08ab1
+      clock_bridge: 3b21d42f7b084aae91dbdeedf830a14f47fa7976a88e3212fb793a3c59574d66
+      route_trace: c79fcb026438758a153eb51560a1358d3d147214e3ddfdbbc23a20595af44778
+      route_oracle: 5e507800ef19e41ac2ccd6b3476851a5873a981812751e074acf580d55f0c0c9
+      freshness_observation: 46550c28214f64ca5705dfdfca0780b4ff1f64e76c7ffc14f8901816bd2d8d93
+      freshness_oracle: b165ac88770962f25905ff0d0b2316cb4b7bd9c5a1cd31a7401691f334d8f0d1
+  - run_id: freshness-f4-a02
+    cell_id: F4
+    attempt: 2
+    simulation_seed: 2751402
+    repository_commit_at_start: 5d6b839dfd4212cc4f4d2adf83f95a7ab4b30139
+    disposition: ACCEPTED_FORMAL
+    counted_as_accepted: true
+    monitor: PASS
+    clock_bridge: VALID
+    windows: {pre_fault_stable: COMPLETE, pre_revocation_target: COMPLETE, fallback: POLICY_TERMINATED}
+    lineage: COMPLETE
+    monotonic_target_duration_ms: 3053.963949
+    health_requests: 9
+    matched_health_replies: 9
+    health_alive_through_target: true
+    external_route_retained_at_target_end: true
+    target_ground_contact: false
+    cleanup: HOLD_LAND_DISARM_COMPLETE
+    route_oracle: PASS
+    freshness_oracle: EXPOSURE
+    freshness_categories: [UNBOUNDED_FRESHNESS_POLICY_GAP, PHYSICAL_EXPOSURE_THRESHOLD_EXCEEDED]
+    metrics:
+      maximum_setpoint_age_ms: 2780.0
+      fault_to_last_controller_consumption_ms: 2784.031748719722
+      maximum_attitude_excursion_deg: 16.350655881202897
+      maximum_angular_rate_excursion_rad_s: 0.03260776337108702
+      altitude_loss_m: 1.7653943300247192
+      horizontal_displacement_m: 18.123940267404528
+      cleanup_maximum_angular_rate_rad_s: 1.4096797620849506
+      full_post_fault_horizontal_displacement_m: 34.16390615826523
+    artifact_sha256:
+      flight_log: b74e7256bd79c483df38eedc0d64b2d64c57d8ec2ce0e05fae3bf6194cb03251
+      monitor_result: 264072e10d40d6518179c1897b2c69af6948fef3c70ee9152bf16350f97ed16b
+      clock_bridge: 0f1113bb399da0f42d2179fb06a8c141ff75496bd2ed8572dac5121daab7b753
+      route_trace: e3df79f07883fb3f75424b1dbb168a78fef574c51ef402bd107fc38e84dda6e0
+      route_oracle: 580c795fbf3cec0b3f6ac81097c39dab4d406886d247c2d778da63e94b06da17
+      freshness_observation: 2a67dd249804d5ebcfc41f613f6637942b543776fdb6b596b486252fe86d29da
+      freshness_oracle: c4080be4efcf3bcc9f658b8e5870ebce88528b11316e1c18667ecbc66b2a0bf2
+  - run_id: freshness-f4-a03
+    cell_id: F4
+    attempt: 3
+    simulation_seed: 2751403
+    repository_commit_at_start: 5d6b839dfd4212cc4f4d2adf83f95a7ab4b30139
+    disposition: ACCEPTED_FORMAL
+    counted_as_accepted: true
+    monitor: PASS
+    clock_bridge: VALID
+    windows: {pre_fault_stable: COMPLETE, pre_revocation_target: COMPLETE, fallback: POLICY_TERMINATED}
+    lineage: COMPLETE
+    monotonic_target_duration_ms: 3031.51736
+    health_requests: 9
+    matched_health_replies: 9
+    health_alive_through_target: true
+    external_route_retained_at_target_end: true
+    target_ground_contact: false
+    cleanup: HOLD_LAND_DISARM_COMPLETE
+    route_oracle: PASS
+    freshness_oracle: EXPOSURE
+    freshness_categories: [UNBOUNDED_FRESHNESS_POLICY_GAP, PHYSICAL_EXPOSURE_THRESHOLD_EXCEEDED]
+    metrics:
+      maximum_setpoint_age_ms: 2732.0
+      fault_to_last_controller_consumption_ms: 2735.6653611313923
+      maximum_attitude_excursion_deg: 16.324646505410573
+      maximum_angular_rate_excursion_rad_s: 0.03172830758836146
+      altitude_loss_m: 1.4783670902252197
+      horizontal_displacement_m: 17.88125002195408
+      cleanup_maximum_angular_rate_rad_s: 0.6315437759812097
+      full_post_fault_horizontal_displacement_m: 33.399857161569905
+    artifact_sha256:
+      flight_log: 32edecb142db8b2371f698ff6fd4fd59c1d0e2ed39f94ac19a8557fb99d87bba
+      monitor_result: 9d404f29fa9477d5af8d58e9aa2201e5e94ab8c6e339b901ba892c7435bfa6ac
+      clock_bridge: 9e9a665f5dc838f257e184f5063acf1a9f7d4fb32dc06ac0ec839028a25444c9
+      route_trace: c2c37ee9f36d344c29902c8637e84ca9b711e54582a2128e818a8f31e2a99f9b
+      route_oracle: bb3747d413d259334f97987bf0c00b9ae4fa9c64ceb02570d37f70b9ceff5fb4
+      freshness_observation: 90c07f2ff8ff3f0261b5e228a9ad00abaf43c3a17e1a2d18584fe0073b233966
+      freshness_oracle: c0a7997e6b1733e46e6345f62483a43e17233dfcc78d8b988491ba4fbd0a25c0

@@ -2,14 +2,14 @@
 
 ## Active Current-Version freshness pilot
 
-- Current phase: Current-Version External Mode Setpoint Freshness formal pilot,
-  F3 complete and F4 ready
-- Formal accepted runs: `7/12`
+- Current phase: Current-Version External Mode Setpoint Freshness formal pilot
+  execution complete; final analysis pending
+- Formal accepted runs: `10/12`; no further formal attempt is authorized
 - Completed tuning: Trajectory `TOTAL_PROCESS_STOP`; Attitude
   `TOTAL_PROCESS_STOP`; Rate `TOTAL_PROCESS_STOP` and
   `SETPOINT_ONLY_STALL` at `0.06 rad/s`
-- Current unresolved item: F2 remains capped at `1/3`; execute F4 without
-  relaxing the baseline, clock, health, route, or physical Gate
+- Current unresolved item: adjudicate the final Gate with F2 capped at `1/3`
+  and the accepted F1 natural Route violation preserved
 - Latest instrumentation checkpoint:
   `f4b5a600badf3961dae1d45eebb183c0d0fa6d01`
 - Tuning evidence status: ignored, non-formal, and excluded from the formal
@@ -50,6 +50,14 @@
   physical exposure. Attempt 3 is rejected observability: its fallback and
   Route evidence are complete, but no required health-loss timestamp was
   observed, leaving Freshness fallback clauses UNKNOWN
+- F4 result: `3/3` accepted in three attempts. All three health-alive windows
+  exceed three monotonic seconds, match every observed health request with a
+  reply, retain the external route without target-window ground contact, PASS
+  Route Oracle, and return Freshness `EXPOSURE`; explicit Hold/Land/Disarm
+  cleanup is complete and reported separately
+- Formal execution total: 16 attempts, 10 accepted, 6 observability
+  rejections, 0 environment failures, 0 campaign-configuration failures, and
+  0 formal safety stops. F2 is permanently closed at its six-attempt cap
 - Last update: 2026-07-20
 
 ## Frozen Issue #162 completion state
