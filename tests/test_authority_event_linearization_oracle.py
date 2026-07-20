@@ -143,6 +143,9 @@ def test_registered_timing_miss_is_not_a_sut_violation() -> None:
 
 def test_c1_preregistration_matrix_caps_and_locked_artifacts() -> None:
     profile = yaml.safe_load((BASE / "preregistration.yaml").read_text(encoding="utf-8"))
+    amendment = yaml.safe_load(
+        (BASE / "oracle_amendment_001.yaml").read_text(encoding="utf-8")
+    )
     matrix = yaml.safe_load((BASE / "matrix.yaml").read_text(encoding="utf-8"))
     ledger = yaml.safe_load((BASE / "attempt_ledger.yaml").read_text(encoding="utf-8"))
     assert profile["status"] == "FROZEN_BEFORE_FORMAL_ATTEMPTS"
@@ -153,13 +156,35 @@ def test_c1_preregistration_matrix_caps_and_locked_artifacts() -> None:
     assert sum(slot["accepted_runs_required"] for slot in matrix["slots"]) == 15
     assert sum(slot["maximum_attempts"] for slot in matrix["slots"]) == 30
     assert matrix["accepted_runs"] == ledger["accepted_runs"] == 0
-    assert matrix["total_attempts"] == ledger["total_attempts"] == 0
+    assert matrix["total_attempts"] == ledger["total_attempts"] == 1
+    assert ledger["campaign_configuration_failures"] == 1
+    assert ledger["attempts"][0]["disposition"] == "CAMPAIGN_CONFIGURATION_FAILURE"
+    superseded = amendment["bounded_correction"]["replacement_hashes"]
     for relative, expected in profile["locked_artifacts"].items():
+        if relative in superseded:
+            assert amendment["bounded_correction"]["old_hashes"][relative] == expected
+            expected = superseded[relative]
         actual = hashlib.sha256((ROOT / relative).read_bytes()).hexdigest()
         assert actual == expected
     for item in profile["locked_binaries"].values():
         actual = hashlib.sha256((ROOT / item["path"]).read_bytes()).hexdigest()
         assert actual == item["sha256"]
+
+
+def test_c1_oracle_amendment_is_analysis_only_and_preserves_bounds() -> None:
+    amendment = yaml.safe_load(
+        (BASE / "oracle_amendment_001.yaml").read_text(encoding="utf-8")
+    )
+    assert amendment["trigger_classification"] == "CAMPAIGN_CONFIGURATION_FAILURE"
+    assert not amendment["bounded_correction"]["diagnostic_reanalysis"]["use_in_denominator"]
+    invariants = amendment["invariants"]
+    assert not invariants["px4_or_controller_behavior_change"]
+    assert not invariants["code_read_by_sut"]
+    assert not invariants["legal_serial_outcomes_changed"]
+    assert not invariants["route_gap_threshold_changed"]
+    assert not invariants["timing_threshold_changed"]
+    assert not invariants["acceptance_or_rejection_rule_changed"]
+    assert not invariants["attempt_caps_or_seeds_changed"]
 
 
 def test_c1_runner_is_bounded_and_uses_public_interfaces() -> None:

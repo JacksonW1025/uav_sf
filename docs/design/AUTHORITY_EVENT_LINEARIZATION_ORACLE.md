@@ -1,6 +1,6 @@
 # Authority Event Linearization Oracle
 
-Version: 0.1
+Version: 0.2
 
 The Oracle evaluates two public authority/lifecycle events issued within a
 bounded local PX4/Gazebo SITL window. It asks whether the observed final route
@@ -16,6 +16,13 @@ Cross-domain window selection is allowed only when the bridge is `VALID` and
 the complete pair window lies within its valid interval. Missing input,
 window, route, writer, or cleanup evidence produces `UNKNOWN`, never PASS or
 VIOLATION.
+
+The effective cross-domain control window excludes one measured clock-bridge
+uncertainty bound at both ends. The route-context window may look back 500 ms
+to admit a registered precondition route, but it ends at the same conservative
+pre-cleanup boundary. Commands and control events issued after
+`linearization_window_closed`, including RTL/Land cleanup, are never evaluated
+as part of the event pair.
 
 ## Registered timing orders
 

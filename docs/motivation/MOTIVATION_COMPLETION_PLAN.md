@@ -72,6 +72,12 @@ was pushed before any formal attempt. The public-interface harness, Authority
 Event Linearization Oracle 0.1, 15-slot matrix, two-attempt slot caps, and
 three-attempt triggered-confirmation cap are frozen.
 
+Execution note: attempt `c1-a-a-first-a01` exposed an Oracle 0.1 cleanup-window
+configuration defect and is excluded from the SUT denominator. Amendment
+`C1-ORACLE-001` narrows only the offline analysis window by measured clock
+uncertainty, retains all thresholds/outcomes/caps, and must be pushed before
+the second attempt. Its diagnostic reanalysis PASS is not counted.
+
 Outputs:
 
 - `docs/design/AUTHORITY_EVENT_LINEARIZATION_ORACLE.md`

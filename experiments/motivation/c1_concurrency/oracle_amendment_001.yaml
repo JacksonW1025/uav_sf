@@ -1,0 +1,63 @@
+schema_version: "1.0"
+status: FROZEN_BEFORE_REMAINING_FORMAL_ATTEMPTS
+study_id: c1_concurrent_authority_event_probe
+amendment_id: C1-ORACLE-001
+created_at: 2026-07-20T00:00:00-07:00
+trigger_attempt: c1-a-a-first-a01
+trigger_classification: CAMPAIGN_CONFIGURATION_FAILURE
+trigger_does_not_enter_sut_denominator: true
+
+configuration_defect:
+  oracle_version: "0.1"
+  description: >-
+    The analysis window admitted 100 ms after linearization_window_closed.
+    Cleanup RTL was installed 74 ms after the mapped close marker and its
+    epoch-6 events were therefore compared with the pre-cleanup final Hold
+    epoch 5, producing eight false old-epoch counts.
+  sut_evidence:
+    linearizable_final_route: PASS
+    owner_uniqueness: PASS
+    writer_exclusivity_and_continuity: PASS
+    cleanup: PASS
+    original_final_revocation_lineage: {status: VIOLATION, old_epoch_events: 8}
+  original_result_sha256: 66d523ad771fcf81ca992e9adad1e63969521acec829ca30bd88ab9ae0735f97
+
+bounded_correction:
+  oracle_version: "0.2"
+  rule: >-
+    Evaluate pair control events only between the mapped input boundary plus
+    one measured clock uncertainty and the mapped close boundary minus one
+    measured clock uncertainty. Permit the existing 500 ms route-context
+    lookback, but terminate it at the same conservative pre-cleanup boundary.
+  old_hashes:
+    scripts/oracles/authority_event_linearization_oracle.py: d56aaccabb891a67cd389afec133504a7bb34f6916136aaec3c567dc484570bc
+    data/schemas/authority_event_linearization_result.schema.json: e39844b43c337557195e1127ae92d66a92edd40775aa3958eca0800ed86dddb5
+  replacement_hashes:
+    scripts/oracles/authority_event_linearization_oracle.py: ab5b38101396976c99215552dbf6fe80cd4bee926afe75a22d8e8d8894e8ff88
+    data/schemas/authority_event_linearization_result.schema.json: c7685e36a956968f1a5a618ca9535f203015c0c9bd618cfc4fec7034db64ad96
+  diagnostic_reanalysis:
+    result: PASS
+    post_final_old_epoch_control_events: 0
+    clock_uncertainty_us: 27238.409
+    effective_window_end_us: 27166691.214973066
+    cleanup_RTL_route_transition_us: 27268000
+    result_sha256: fb47409b13944486726d2f961d0e52885992ce99eaa768372183161c548970a9
+    use_in_denominator: false
+
+invariants:
+  px4_or_controller_behavior_change: false
+  code_read_by_sut: false
+  oracle_executes_after_px4_shutdown_and_ulog_extraction: true
+  legal_serial_outcomes_changed: false
+  route_gap_threshold_changed: false
+  timing_threshold_changed: false
+  acceptance_or_rejection_rule_changed: false
+  attempt_caps_or_seeds_changed: false
+  original_raw_and_oracle_evidence_preserved: true
+  frozen_preregistration_modified: false
+
+remaining_execution_rule: >-
+  Oracle 0.2 and its schema supersede only the two old hashes listed above for
+  every remaining C1 attempt. All other preregistered artifacts, rules,
+  thresholds, seeds, and caps remain frozen. C1-A-A_FIRST has one formal
+  attempt remaining, using seed 320102.

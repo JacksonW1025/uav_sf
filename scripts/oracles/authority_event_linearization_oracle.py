@@ -87,7 +87,7 @@ def evaluate(
         return {
             "schema_version": "1.0",
             "oracle_name": "Authority Event Linearization Oracle",
-            "oracle_version": "0.1",
+            "oracle_version": "0.2",
             "run_id": run_id,
             "pair": pair,
             "timing_order": order,
@@ -181,11 +181,20 @@ def evaluate(
 
     pair_trace: list[dict[str, Any]] = []
     route_context: list[dict[str, Any]] = []
+    effective_window_start_us: float | None = None
+    effective_window_end_us: float | None = None
     if window_start_us is not None and window_end_us is not None:
+        uncertainty_us = float(bridge.get("uncertainty_ns") or 0) / 1000.0
+        effective_window_start_us = window_start_us + uncertainty_us
+        effective_window_end_us = window_end_us - uncertainty_us
+        if effective_window_start_us >= effective_window_end_us:
+            unknown_reasons.append("clock_uncertainty_consumes_pair_window")
         pair_trace = [
             event
             for event in trace
-            if window_start_us - 100_000 <= float(event.get("timestamp", -1)) <= window_end_us + 100_000
+            if effective_window_start_us
+            <= float(event.get("timestamp", -1))
+            <= effective_window_end_us
         ]
         # Some pairs begin after a required precondition has installed the route
         # that remains final (for example C1-E). Retain a bounded precondition
@@ -193,7 +202,9 @@ def evaluate(
         route_context = [
             event
             for event in trace
-            if window_start_us - 500_000 <= float(event.get("timestamp", -1)) <= window_end_us + 100_000
+            if window_start_us - 500_000
+            <= float(event.get("timestamp", -1))
+            <= effective_window_end_us
         ]
     route_changes = [
         event for event in route_context if event.get("event_type") == "route_epoch_changed"
@@ -303,7 +314,7 @@ def evaluate(
     result = {
         "schema_version": "1.0",
         "oracle_name": "Authority Event Linearization Oracle",
-        "oracle_version": "0.1",
+        "oracle_version": "0.2",
         "run_id": run_id,
         "pair": pair,
         "timing_order": order,
@@ -320,6 +331,13 @@ def evaluate(
             "clock_bridge": bridge.get("status"),
             "window_start_us": window_start_us,
             "window_end_us": window_end_us,
+            "clock_uncertainty_us": (
+                float(bridge.get("uncertainty_ns") or 0) / 1000.0
+                if bridge.get("status") == "VALID"
+                else None
+            ),
+            "effective_window_start_us": effective_window_start_us,
+            "effective_window_end_us": effective_window_end_us,
             "route_change_count": len(route_changes),
             "writer_event_count": len(outputs),
             "unknown_reasons": sorted(set(unknown_reasons)),
