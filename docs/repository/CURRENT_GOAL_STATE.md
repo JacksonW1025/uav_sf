@@ -3,14 +3,13 @@
 ## Active Current-Version freshness pilot
 
 - Current phase: Current-Version External Mode Setpoint Freshness formal pilot,
-  F2 attempt limit reached and F3 ready
-- Formal accepted runs: `4/12`
+  F3 complete and F4 ready
+- Formal accepted runs: `7/12`
 - Completed tuning: Trajectory `TOTAL_PROCESS_STOP`; Attitude
   `TOTAL_PROCESS_STOP`; Rate `TOTAL_PROCESS_STOP` and
   `SETPOINT_ONLY_STALL` at `0.06 rad/s`
-- Current unresolved item: F2 reached its six-attempt cap with only `1/3`
-  accepted; continue the remaining preregistered cells without relaxing the
-  baseline or clock Gate
+- Current unresolved item: F2 remains capped at `1/3`; execute F4 without
+  relaxing the baseline, clock, health, route, or physical Gate
 - Latest instrumentation checkpoint:
   `f4b5a600badf3961dae1d45eebb183c0d0fa6d01`
 - Tuning evidence status: ignored, non-formal, and excluded from the formal
@@ -46,6 +45,11 @@
   bridge. Attempt 3 is rejected because its selected VALID bridge begins after
   the fault marker. Every attempt completed cleanup and landed/disarmed; no F2
   attempt remains authorized
+- F3 result: `3/3` accepted in four attempts. Accepted attempts 1, 2, and 4
+  have Route PASS and Freshness `EXPOSURE`, including horizontal-displacement
+  physical exposure. Attempt 3 is rejected observability: its fallback and
+  Route evidence are complete, but no required health-loss timestamp was
+  observed, leaving Freshness fallback clauses UNKNOWN
 - Last update: 2026-07-20
 
 ## Frozen Issue #162 completion state
