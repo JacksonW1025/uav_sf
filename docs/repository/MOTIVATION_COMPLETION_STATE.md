@@ -102,13 +102,17 @@ All future rejected attempts must be explicitly classified as
 - `489204770d5ac095cde6274148f2ce3e5dd175ea` —
   `experiment: add c1 preflight observation warmup` (pushed future-only
   harness amendment after A/near closed at cap).
+- `b24cfb4fb18c175856f2d01991c8d498f1d2710f` —
+  `experiment: complete concurrent authority event probe` (pushed final C1
+  report, conditional Gate, compact summary, and frozen 17-attempt ledger).
 
 ## Next exact action
 
-Commit and push the validated C1 report, Gate, processed summary, final
-ledger/matrix, state, and plan. Confirm synchronized clean closure, record the
-final C1 commit, then design and preregister R1 before its first formal
-attempt.
+Record and push final C1 commit `b24cfb4`, then audit the locked registration,
+activation, completion, configuration-override, and setpoint message paths to
+select the single highest-risk delayed old-session semantic for R1-C. Create
+and push the R1 Oracle, preregistration, 3-scenario matrix, and empty ledger
+before the first formal R1 attempt.
 
 ## Current blockers
 
