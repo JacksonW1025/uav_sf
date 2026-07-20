@@ -48,7 +48,7 @@ testing is authorized.
 | Initialization | `COMPLETE` | n/a | n/a | n/a | `f2aa93aa` pushed |
 | N1 trajectory residue | `COMPLETE` | 8 / 9 | 14 / 18 | 6 | `CURRENT_EVENT_REOBSERVED_BUT_PHASE_DEPENDENT`; 2 matching violations |
 | N1 reduced confirmation | `COMPLETE` | 1 / 1 | 1 / 3 | 0 | accepted Route PASS; no matching residue; stopped at target |
-| C1 concurrency | `IN_PROGRESS` | 0 / 15 | 1 / 30 | 1 configuration failure | Oracle 0.2 amendment `4f90d132` active |
+| C1 concurrency | `IN_PROGRESS` | 1 / 15 | 2 / 30 | 1 configuration failure | A/A-first PASS; Oracle 0.2 active |
 | C1 minimal confirmations | `NOT_APPLICABLE_PENDING_TRIGGER` | 0 | 0 / 3 per finding | 0 | only if a violation is found |
 | R1 session rollover | `NOT_STARTED` | 0 / 9 | 0 / 18 | 0 | pending |
 | W1 workload spike | `NOT_STARTED` | 0 / 3 canonical | 0 | 0 | pending |
@@ -94,9 +94,9 @@ All future rejected attempts must be explicitly classified as
 
 ## Next exact action
 
-Record and push amendment commit `4f90d132` in the matrix/ledger/state, confirm
-clean synchronization, then run the one remaining `C1-A-A_FIRST` attempt with
-seed `320102`.
+Commit and push the accepted `C1-A-A_FIRST` result, confirm clean
+synchronization, then run `C1-A-NEAR_SIMULTANEOUS` attempt 1 with seed
+`320111`.
 
 ## Current blockers
 

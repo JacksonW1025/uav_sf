@@ -155,10 +155,21 @@ def test_c1_preregistration_matrix_caps_and_locked_artifacts() -> None:
     assert len(matrix["slots"]) == 15
     assert sum(slot["accepted_runs_required"] for slot in matrix["slots"]) == 15
     assert sum(slot["maximum_attempts"] for slot in matrix["slots"]) == 30
-    assert matrix["accepted_runs"] == ledger["accepted_runs"] == 0
-    assert matrix["total_attempts"] == ledger["total_attempts"] == 1
-    assert ledger["campaign_configuration_failures"] == 1
+    attempts = ledger["attempts"]
+    accepted = [item for item in attempts if item["counted_as_accepted"]]
+    assert matrix["accepted_runs"] == ledger["accepted_runs"] == len(accepted)
+    assert matrix["total_attempts"] == ledger["total_attempts"] == len(attempts)
+    assert ledger["campaign_configuration_failures"] == sum(
+        item["disposition"] == "CAMPAIGN_CONFIGURATION_FAILURE" for item in attempts
+    )
     assert ledger["attempts"][0]["disposition"] == "CAMPAIGN_CONFIGURATION_FAILURE"
+    for slot in matrix["slots"]:
+        slot_attempts = [item for item in attempts if item["slot_id"] == slot["slot_id"]]
+        assert slot["attempts"] == len(slot_attempts)
+        assert slot["accepted_runs"] == sum(
+            item["counted_as_accepted"] for item in slot_attempts
+        )
+        assert slot["attempts"] <= slot["maximum_attempts"]
     superseded = amendment["bounded_correction"]["replacement_hashes"]
     for relative, expected in profile["locked_artifacts"].items():
         if relative in superseded:
