@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uav-sf.local/schemas/pre_revocation_freshness_result.schema.json",
+  "title": "Pre-Revocation Freshness Oracle result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "oracle_name",
+    "oracle_version",
+    "run_id",
+    "profile_id",
+    "setpoint_type",
+    "fault_type",
+    "status",
+    "eligible_for_accepted_run",
+    "exclusion_reason",
+    "clauses",
+    "categories",
+    "derived_metrics",
+    "inputs"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "oracle_name": {"const": "Pre-Revocation Freshness Oracle"},
+    "oracle_version": {"const": "0.1"},
+    "run_id": {"type": "string", "minLength": 1},
+    "profile_id": {"type": "string", "minLength": 1},
+    "setpoint_type": {"enum": ["TRAJECTORY", "ATTITUDE", "RATE", "UNKNOWN"]},
+    "fault_type": {
+      "enum": ["TOTAL_PROCESS_STOP", "SETPOINT_ONLY_STALL", "HEALTH_ONLY_STOP", "NONE", "UNKNOWN"]
+    },
+    "status": {"$ref": "#/$defs/status"},
+    "eligible_for_accepted_run": {"type": "boolean"},
+    "exclusion_reason": {"type": ["string", "null"]},
+    "clauses": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "producer_cessation",
+        "setpoint_freshness",
+        "controller_continuation",
+        "allocator_writer_continuation",
+        "fallback_detection",
+        "fallback_installation",
+        "physical_consequence",
+        "recovery"
+      ],
+      "properties": {
+        "producer_cessation": {"$ref": "#/$defs/clause"},
+        "setpoint_freshness": {"$ref": "#/$defs/clause"},
+        "controller_continuation": {"$ref": "#/$defs/clause"},
+        "allocator_writer_continuation": {"$ref": "#/$defs/clause"},
+        "fallback_detection": {"$ref": "#/$defs/clause"},
+        "fallback_installation": {"$ref": "#/$defs/clause"},
+        "physical_consequence": {"$ref": "#/$defs/clause"},
+        "recovery": {"$ref": "#/$defs/clause"}
+      }
+    },
+    "categories": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "derived_metrics": {
+      "type": "object",
+      "additionalProperties": {"type": ["number", "null"]}
+    },
+    "inputs": {"type": "object"}
+  },
+  "$defs": {
+    "status": {"enum": ["PASS", "EXPOSURE", "VIOLATION", "UNKNOWN", "NOT_APPLICABLE"]},
+    "clause": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "reasons", "evidence"],
+      "properties": {
+        "status": {"$ref": "#/$defs/status"},
+        "reasons": {"type": "array", "items": {"type": "string"}},
+        "evidence": {"type": "object"}
+      }
+    }
+  }
+}
