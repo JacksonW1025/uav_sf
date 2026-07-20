@@ -12,7 +12,7 @@ Freshness pilot denominator.
 - Starting `origin/main`: `955e7c98e3b29ddd21fa4d44fb562065700fa832`
 - Starting ahead/behind: `0/0`
 - Protected ancestor: `955e7c98e3b29ddd21fa4d44fb562065700fa832`
-- Current phase: workflow initialization
+- Current phase: N1 trajectory residue preregistration
 - Phase status: `IN_PROGRESS`
 
 ## Frozen evidence
@@ -45,7 +45,7 @@ testing is authorized.
 
 | Phase | Status | Accepted | Attempts | Rejected / excluded | Current disposition |
 |---|---|---:|---:|---:|---|
-| Initialization | `IN_PROGRESS` | n/a | n/a | n/a | pending commit |
+| Initialization | `COMPLETE` | n/a | n/a | n/a | `f2aa93aa` pushed |
 | N1 trajectory residue | `NOT_STARTED` | 0 / 9 | 0 / 18 | 0 | pending |
 | N1 reduced confirmation | `NOT_APPLICABLE_PENDING_TRIGGER` | 0 / 1 | 0 / 3 | 0 | only if at least two accepted reproductions |
 | C1 concurrency | `NOT_STARTED` | 0 / 15 | 0 / 30 | 0 | pending |
@@ -62,15 +62,16 @@ All future rejected attempts must be explicitly classified as
 
 ## Completed commits
 
-- None after the starting HEAD. The first planned commit is
-  `docs: initialize motivation completion workflow`.
+- `f2aa93aa89e1764d0be6c806d79bfc8b683043f3` —
+  `docs: initialize motivation completion workflow` (pushed).
 
 ## Next exact action
 
-Run focused documentation/schema validation and the full repository validator,
-commit and push this initialization checkpoint, confirm `HEAD == origin/main`
-with a clean worktree, then begin N1 source/observation audit and create/push
-the N1 preregistration before its first formal attempt.
+Validate and push the N1 source audit, deterministic health-phase harness, and
+preregistration records. Record that pushed preregistration commit in the N1
+matrix and ledger, push the lock checkpoint, then execute N1-A attempt 1 only
+after confirming exact hashes, a clean worktree, no residual simulator process,
+and local UDP port 8888 unoccupied.
 
 ## Current blockers
 

@@ -1,0 +1,40 @@
+schema_version: "1.0"
+study_id: n1_current_trajectory_residue_adjudication
+status: PREREGISTERED_NOT_STARTED
+preregistration_commit: TO_BE_RECORDED_AFTER_PUSH
+accepted_target: 9
+accepted_runs: 0
+maximum_total_attempts: 18
+total_attempts: 0
+execution_order: [N1-A, N1-B, N1-C]
+cells:
+  - cell_id: N1-A
+    phase_bucket: A
+    requested_offset_ms: 30
+    accepted_runs_required: 3
+    maximum_attempts: 6
+    accepted_runs: 0
+    attempts: 0
+    seed_schedule: [310101, 310102, 310103, 310104, 310105, 310106]
+  - cell_id: N1-B
+    phase_bucket: B
+    requested_offset_ms: 150
+    accepted_runs_required: 3
+    maximum_attempts: 6
+    accepted_runs: 0
+    attempts: 0
+    seed_schedule: [310201, 310202, 310203, 310204, 310205, 310206]
+  - cell_id: N1-C
+    phase_bucket: C
+    requested_offset_ms: 260
+    accepted_runs_required: 3
+    maximum_attempts: 6
+    accepted_runs: 0
+    attempts: 0
+    seed_schedule: [310301, 310302, 310303, 310304, 310305, 310306]
+reduced_confirmation:
+  status: NOT_APPLICABLE_PENDING_TRIGGER
+  trigger: at_least_two_independent_accepted_matching_violations
+  accepted_target: 1
+  maximum_attempts: 3
+  seed_schedule: [310401, 310402, 310403]

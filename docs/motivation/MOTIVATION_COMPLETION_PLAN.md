@@ -36,7 +36,8 @@ storage and excluded from the SUT denominator under the correct classification.
 
 ### N1 — Current natural event adjudication
 
-Status: `NOT_STARTED`.
+Status: `IN_PROGRESS` — source audit and preregistration prepared; no formal
+attempt has started.
 
 Outputs:
 
