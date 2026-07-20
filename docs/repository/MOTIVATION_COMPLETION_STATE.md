@@ -13,7 +13,7 @@ Freshness pilot denominator.
 - Starting ahead/behind: `0/0`
 - Protected ancestor: `955e7c98e3b29ddd21fa4d44fb562065700fa832`
 - Current phase: C1 concurrent authority-event preregistration
-- Phase status: `C1_IN_PROGRESS_ORACLE_0_2_ACTIVE`
+- Phase status: `C1_HARNESS_WARMUP_AMENDMENT_PENDING_PUSH`
 
 ## Frozen evidence
 
@@ -48,7 +48,7 @@ testing is authorized.
 | Initialization | `COMPLETE` | n/a | n/a | n/a | `f2aa93aa` pushed |
 | N1 trajectory residue | `COMPLETE` | 8 / 9 | 14 / 18 | 6 | `CURRENT_EVENT_REOBSERVED_BUT_PHASE_DEPENDENT`; 2 matching violations |
 | N1 reduced confirmation | `COMPLETE` | 1 / 1 | 1 / 3 | 0 | accepted Route PASS; no matching residue; stopped at target |
-| C1 concurrency | `IN_PROGRESS` | 1 / 15 | 3 / 30 | 1 configuration failure, 1 observability rejection | A/A-first PASS; A/near has one attempt left |
+| C1 concurrency | `IN_PROGRESS` | 1 / 15 | 4 / 30 | 1 configuration failure, 2 observability rejections | A/near closed measurement-insufficient; warm-up amendment pending |
 | C1 minimal confirmations | `NOT_APPLICABLE_PENDING_TRIGGER` | 0 | 0 / 3 per finding | 0 | only if a violation is found |
 | R1 session rollover | `NOT_STARTED` | 0 / 9 | 0 / 18 | 0 | pending |
 | W1 workload spike | `NOT_STARTED` | 0 / 3 canonical | 0 | 0 | pending |
@@ -94,8 +94,9 @@ All future rejected attempts must be explicitly classified as
 
 ## Next exact action
 
-Commit and push the rejected `C1-A-NEAR_SIMULTANEOUS` attempt, confirm clean
-synchronization, then run its final allowed attempt with seed `320112`.
+Freeze, test, commit, and push the future-attempt-only preflight clock-sample
+warm-up amendment. Do not reopen A/near. Then run `C1-A-B_FIRST` attempt 1
+with seed `320121`.
 
 ## Current blockers
 
@@ -108,6 +109,9 @@ synchronization, then run its final allowed attempt with seed `320112`.
   failure: Oracle 0.1 admitted post-window cleanup RTL. Its raw evidence and
   original result remain preserved; diagnostic 0.2 reanalysis PASS is not
   promoted into the accepted denominator.
+- C1-A/near reached its two-attempt cap with two clock-bridge sample-count
+  rejections (16 valid samples versus the frozen minimum 20). The cell is
+  closed measurement-insufficient and will not be retried.
 
 ## Protected hashes
 

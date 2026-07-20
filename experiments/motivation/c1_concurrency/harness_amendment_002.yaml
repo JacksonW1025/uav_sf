@@ -1,0 +1,50 @@
+schema_version: "1.0"
+status: FROZEN_BEFORE_FUTURE_FORMAL_ATTEMPTS
+study_id: c1_concurrent_authority_event_probe
+amendment_id: C1-HARNESS-002
+created_at: 2026-07-20T00:00:00-07:00
+trigger_attempts: [c1-a-near-a01, c1-a-near-a02]
+trigger_classification: OBSERVABILITY_REJECTED
+closed_slot: C1-A-NEAR_SIMULTANEOUS
+closed_slot_disposition: ATTEMPT_LIMIT_REACHED_MEASUREMENT_INSUFFICIENT
+closed_slot_will_not_be_retried: true
+
+measurement_problem:
+  description: >-
+    Both near-simultaneous A attempts completed the public event pair and safe
+    cleanup but produced 16 admissible bridge samples after initial-backlog
+    removal, below the frozen minimum of 20.
+  sample_counts: [16, 16]
+  frozen_minimum: 20
+  threshold_changed: false
+
+bounded_correction:
+  application: future_C1_attempts_only
+  rule: >-
+    Before arming, remain in the existing WAIT_FOR_FMU state until ten
+    TimesyncStatus samples have been observed. This is a bounded legal local
+    harness wait. No command is issued and no PX4 internal state is written
+    during the added wait.
+  preflight_clock_samples: 10
+  runner_timeout_seconds_unchanged: 120
+  old_hashes:
+    scripts/probes/c1_concurrency_monitor.py: d028cbd335050c4a6c2bc099c66663b313df4c70336015148f7a3e42a78a7cd5
+  replacement_hashes:
+    scripts/probes/c1_concurrency_monitor.py: 008796132d6759a70e842ed56d9794fee801bcebed24dbe2987ef841ba021a01
+
+invariants:
+  px4_controller_or_route_semantics_change: false
+  direct_nav_state_executor_or_failsafe_mutation: false
+  public_event_pair_changed: false
+  relative_event_timing_changed: false
+  legal_serial_outcomes_changed: false
+  clock_bridge_threshold_changed: false
+  acceptance_or_rejection_rule_changed: false
+  attempt_caps_or_seeds_changed: false
+  prior_closed_slot_reopened: false
+  frozen_preregistration_modified: false
+
+remaining_execution_rule: >-
+  Use the replacement monitor hash for C1-A-B_FIRST and every later formal C1
+  attempt. Preserve Oracle amendment C1-ORACLE-001 and every other frozen
+  artifact, rule, threshold, seed, and attempt cap.

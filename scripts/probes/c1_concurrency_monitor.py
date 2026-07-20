@@ -41,6 +41,7 @@ PAIR_EVENTS = {
     "D": ("automatic_fallback_installation", "external_reentry_request"),
     "E": ("external_release", "failsafe_clear"),
 }
+CLOCK_PREFLIGHT_WARMUP_SAMPLES = 10
 
 
 def run(args: argparse.Namespace) -> int:
@@ -410,6 +411,7 @@ def run(args: argparse.Namespace) -> int:
                     and bool(self.position.xy_valid)
                     and self.external_mode_id is not None
                     and args.mode_pid_file.exists()
+                    and self.clock_samples >= CLOCK_PREFLIGHT_WARMUP_SAMPLES
                 )
                 if ready:
                     self._transition("ARM")

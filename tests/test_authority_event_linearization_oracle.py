@@ -8,6 +8,7 @@ import yaml
 from jsonschema import Draft202012Validator
 
 from scripts.oracles.authority_event_linearization_oracle import evaluate
+from scripts.probes.c1_concurrency_monitor import CLOCK_PREFLIGHT_WARMUP_SAMPLES
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -170,10 +171,20 @@ def test_c1_preregistration_matrix_caps_and_locked_artifacts() -> None:
             item["counted_as_accepted"] for item in slot_attempts
         )
         assert slot["attempts"] <= slot["maximum_attempts"]
-    superseded = amendment["bounded_correction"]["replacement_hashes"]
+    harness_amendment = yaml.safe_load(
+        (BASE / "harness_amendment_002.yaml").read_text(encoding="utf-8")
+    )
+    superseded = {
+        **amendment["bounded_correction"]["replacement_hashes"],
+        **harness_amendment["bounded_correction"]["replacement_hashes"],
+    }
+    old_hashes = {
+        **amendment["bounded_correction"]["old_hashes"],
+        **harness_amendment["bounded_correction"]["old_hashes"],
+    }
     for relative, expected in profile["locked_artifacts"].items():
         if relative in superseded:
-            assert amendment["bounded_correction"]["old_hashes"][relative] == expected
+            assert old_hashes[relative] == expected
             expected = superseded[relative]
         actual = hashlib.sha256((ROOT / relative).read_bytes()).hexdigest()
         assert actual == expected
@@ -198,6 +209,22 @@ def test_c1_oracle_amendment_is_analysis_only_and_preserves_bounds() -> None:
     assert not invariants["attempt_caps_or_seeds_changed"]
 
 
+def test_c1_warmup_amendment_applies_only_to_future_open_slots() -> None:
+    amendment = yaml.safe_load(
+        (BASE / "harness_amendment_002.yaml").read_text(encoding="utf-8")
+    )
+    assert amendment["closed_slot"] == "C1-A-NEAR_SIMULTANEOUS"
+    assert amendment["closed_slot_will_not_be_retried"]
+    assert amendment["bounded_correction"]["preflight_clock_samples"] == 10
+    invariants = amendment["invariants"]
+    assert not invariants["px4_controller_or_route_semantics_change"]
+    assert not invariants["direct_nav_state_executor_or_failsafe_mutation"]
+    assert not invariants["relative_event_timing_changed"]
+    assert not invariants["clock_bridge_threshold_changed"]
+    assert not invariants["attempt_caps_or_seeds_changed"]
+    assert not invariants["prior_closed_slot_reopened"]
+
+
 def test_c1_runner_is_bounded_and_uses_public_interfaces() -> None:
     runner = (ROOT / "scripts/probes/run_c1_concurrency.sh").read_text(encoding="utf-8")
     monitor = (ROOT / "scripts/probes/c1_concurrency_monitor.py").read_text(encoding="utf-8")
@@ -205,6 +232,8 @@ def test_c1_runner_is_bounded_and_uses_public_interfaces() -> None:
         ROOT / "scripts/adapters/external_mode_adapter/src/c1_concurrency_probe.cpp"
     ).read_text(encoding="utf-8")
     assert '--timeout 120' in runner
+    assert CLOCK_PREFLIGHT_WARMUP_SAMPLES == 10
+    assert "self.clock_samples >= CLOCK_PREFLIGHT_WARMUP_SAMPLES" in monitor
     assert 'stop_process "${MODE_PID}" TERM' in runner
     assert "VehicleCommand.VEHICLE_CMD_SET_NAV_STATE" in monitor
     assert "VehicleCommand.VEHICLE_CMD_NAV_RETURN_TO_LAUNCH" in monitor

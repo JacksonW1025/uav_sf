@@ -81,6 +81,12 @@ The amendment is frozen at commit
 `4f90d132bb856384438dc81a038b6c26f8be96b6`; Oracle 0.2 is active for all
 remaining formal attempts.
 
+Both attempts in A/near were observability-rejected at 16 bridge samples and
+the slot is closed measurement-insufficient at its cap. Future-only amendment
+`C1-HARNESS-002` adds a bounded ten-sample pre-arm observation warm-up without
+changing the clock threshold, event-pair timing, public commands, SUT state,
+seeds, or attempt caps. It does not reopen A/near.
+
 Outputs:
 
 - `docs/design/AUTHORITY_EVENT_LINEARIZATION_ORACLE.md`
