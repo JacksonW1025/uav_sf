@@ -126,7 +126,12 @@ Compares attitude excursion, angular-rate excursion, altitude loss, horizontal
 displacement, and any other frozen metrics with their preregistered exposure
 thresholds. Exceeding them is `EXPOSURE`, not a route violation and not proof of
 causality by itself. Attribution still requires command lineage and the frozen
-motion context.
+motion context. The adjudicated `physical_metrics` window is exactly fault to
+automatic fallback installation for process death, or fault to the bounded
+target-window end for a health-alive stall. Recovery and explicit-cleanup
+motion is reported separately as `recovery_physical_metrics`; the diagnostic
+`full_post_fault_physical_metrics` must not be used to reclassify the bounded
+pre-revocation clause.
 
 ### Recovery
 

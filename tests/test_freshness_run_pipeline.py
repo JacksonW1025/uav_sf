@@ -8,6 +8,7 @@ from scripts.analysis.summarize_freshness_run import (
     _health_evidence,
     _last_external_subject_timestamp,
     _physical_metrics,
+    _pre_revocation_physical_end,
 )
 
 
@@ -127,6 +128,11 @@ def test_physical_metrics_use_fault_relative_position_and_absolute_tilt() -> Non
     assert result["horizontal_displacement_m"] == 5.0
     assert math.isclose(float(result["maximum_attitude_excursion_deg"]), 20.0)
     assert result["maximum_angular_rate_excursion_rad_s"] == 0.5
+
+
+def test_pre_revocation_physical_window_excludes_recovery() -> None:
+    assert _pre_revocation_physical_end("TOTAL_PROCESS_STOP", 2_200_000, 2_250_000) == 2_200_000
+    assert _pre_revocation_physical_end("SETPOINT_ONLY_STALL", None, 4_000_000) == 4_000_000
 
 
 def test_baseline_gate_is_setpoint_specific() -> None:

@@ -259,6 +259,14 @@ def _physical_metrics(
     }
 
 
+def _pre_revocation_physical_end(
+    fault_type: str, fallback_installed_us: float | None, target_end_us: float
+) -> float:
+    if fault_type == "TOTAL_PROCESS_STOP" and fallback_installed_us is not None:
+        return min(fallback_installed_us, target_end_us)
+    return target_end_us
+
+
 def _baseline_metrics(
     positions: list[dict[str, Any]],
     attitudes: list[dict[str, Any]],
@@ -473,7 +481,24 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
     baseline_complete, baseline_reasons = _baseline_complete(
         baseline, args.setpoint_type, profile
     )
+    pre_revocation_physical_end_us = _pre_revocation_physical_end(
+        args.fault_type, fallback_installed_us, target_end_us
+    )
     physical_metrics = _physical_metrics(
+        positions,
+        attitudes,
+        angular_rates,
+        fault_us,
+        pre_revocation_physical_end_us,
+    )
+    recovery_physical_metrics = _physical_metrics(
+        positions,
+        attitudes,
+        angular_rates,
+        pre_revocation_physical_end_us,
+        physical_end_us,
+    )
+    full_post_fault_physical_metrics = _physical_metrics(
         positions, attitudes, angular_rates, fault_us, physical_end_us
     )
     recovery_us = _physical_recovery_time(
@@ -564,12 +589,19 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "target_window_end": target_end_us,
         },
         "physical_metrics": physical_metrics,
+        "recovery_physical_metrics": recovery_physical_metrics,
+        "full_post_fault_physical_metrics": full_post_fault_physical_metrics,
         "baseline_metrics": baseline,
         "baseline_reasons": baseline_reasons,
         "evidence_quality": {
             "source_route_epoch_id": source_epoch,
             "health": health,
             "physical_window_end_us": physical_end_us,
+            "pre_revocation_physical_window_end_us": pre_revocation_physical_end_us,
+            "physical_metrics_window": "fault_to_route_revocation_or_bounded_target_end",
+            "recovery_physical_metrics_window": (
+                "route_revocation_or_bounded_target_end_to_cleanup"
+            ),
             "clock_uncertainty_ns": bridge.get("uncertainty_ns"),
             "required_trace_complete": required_trace,
             "px4_receive_time_source": (
