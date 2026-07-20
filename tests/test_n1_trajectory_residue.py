@@ -1,3 +1,4 @@
+import json
 import time
 from pathlib import Path
 
@@ -14,6 +15,10 @@ MATRIX = ROOT / "experiments/motivation/n1_trajectory_residue/matrix.yaml"
 LEDGER = ROOT / "experiments/motivation/n1_trajectory_residue/attempt_ledger.yaml"
 RUNNER = ROOT / "scripts/probes/run_n1_trajectory_residue.sh"
 REDUCED_LOGGER = ROOT / "config/n1_reduced_logger_topics.txt"
+RESULT = ROOT / "data/processed/motivation/n1_trajectory_residue/n1_adjudication.json"
+MINIMAL_TESTCASE = (
+    ROOT / "experiments/motivation/n1_trajectory_residue/minimal_testcase.yaml"
+)
 
 
 def test_n1_preregistration_is_bounded_and_preserves_f1_context() -> None:
@@ -167,3 +172,37 @@ def test_n1_reduced_logger_preserves_required_lineage_and_safety_topics() -> Non
         "vehicle_torque_setpoint",
         "vehicle_thrust_setpoint",
     } & reduced
+
+
+def test_n1_final_adjudication_preserves_bounded_counts_and_claims() -> None:
+    result = json.loads(RESULT.read_text(encoding="utf-8"))
+    matrix = result["formal_matrix"]
+    assert result["disposition"] == "CURRENT_EVENT_REOBSERVED_BUT_PHASE_DEPENDENT"
+    assert matrix["accepted_runs"] == 8
+    assert matrix["attempts"] == 14
+    assert matrix["matching_violations"] == 2
+    assert matrix["cells"]["A"]["status"] == (
+        "ATTEMPT_LIMIT_REACHED_MEASUREMENT_INSUFFICIENT"
+    )
+    reduced = result["observation_reduced_confirmation"]
+    assert reduced["accepted_runs"] == reduced["attempts"] == 1
+    assert reduced["route_oracle"] == "PASS"
+    assert reduced["post_revocation_stale_subject_consumption_count"] == 0
+    assert result["source_candidate"]["confidence"] == "MODERATE"
+    assert not result["source_candidate"]["proven_downstream_old_external_influence"]
+    assert result["frozen_event_preserved"]
+    assert not result["freshness_pilot_denominator_modified"]
+
+
+def test_n1_minimal_testcase_is_local_bounded_and_negative_aware() -> None:
+    testcase = yaml.safe_load(MINIMAL_TESTCASE.read_text(encoding="utf-8"))
+    assert testcase["scenario"]["health_phase_bucket"] == "C"
+    assert testcase["scenario"]["accepted_phase_range_ms"] == [225, 285]
+    assert len(testcase["known_matching_attempts"]) == 2
+    assert testcase["single_run_command"]["executable"] == (
+        "./scripts/probes/run_n1_trajectory_residue.sh"
+    )
+    assert any(
+        "PASS_run_is_a_valid_negative_result" in rule
+        for rule in testcase["interpretation_boundary"]
+    )

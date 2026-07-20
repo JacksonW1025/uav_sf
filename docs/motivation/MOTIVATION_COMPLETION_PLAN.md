@@ -36,13 +36,13 @@ storage and excluded from the SUT denominator under the correct classification.
 
 ### N1 — Current natural event adjudication
 
-Status: `IN_PROGRESS` — phase bucket A closed at 2/3 accepted and its six-run
-cap; B reached 3/3 in three attempts; C reached 3/3 in five attempts. C04 and
-C05 independently reproduced the same narrow stale-subject-only Route
-violation, triggering one accepted observation-reduced confirmation within
-three attempts. The reduced profile preserves required route, lineage,
-physical-safety, and cleanup evidence while removing inactive-message logging;
-it does not change the SUT binary or behavior.
+Status: `COMPLETE` — `CURRENT_EVENT_REOBSERVED_BUT_PHASE_DEPENDENT`. The formal
+matrix closed at 8 accepted / 14 attempts because A reached its cap at 2/3;
+B and C reached 3/3. C04 and C05 reproduced the stale-subject-only Route
+violation. The required reduced run was accepted Route PASS on its first
+attempt, so unused reduced seeds were not run. Source audit supports a retained
+Trajectory-input candidate, but no stable rate, proven root cause, old external
+allocator/writer lineage, or physical consequence is claimed.
 
 Outputs:
 

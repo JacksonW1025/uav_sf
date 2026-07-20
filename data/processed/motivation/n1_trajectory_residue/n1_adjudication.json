@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.0",
+  "study_id": "n1_current_trajectory_residue_adjudication",
+  "disposition": "CURRENT_EVENT_REOBSERVED_BUT_PHASE_DEPENDENT",
+  "identity": {
+    "preregistration_commit": "54d0411bddbc62e28d05e006a844dedbf9ebe6b3",
+    "formal_matrix_start_commit": "088ee9ab0d21b08b34ade7a9539e5c91ae70cc8c",
+    "px4_revision": "4ae21a5e569d3d89c2f6366688cbacb3e93437c9",
+    "px4_binary_sha256": "d5cd7df0efd24f7f5509e8c4e5699a709cd8e4df42b0b64e453edab815471612",
+    "interface_library_revision": "c3e410f035806e8c56246708432ded09c976434b",
+    "route_oracle_version": "0.4"
+  },
+  "formal_matrix": {
+    "accepted_target": 9,
+    "accepted_runs": 8,
+    "maximum_attempts": 18,
+    "attempts": 14,
+    "observability_rejections": 3,
+    "environment_failures": 3,
+    "matching_violations": 2,
+    "cells": {
+      "A": {"accepted": 2, "attempts": 6, "matching_violations": 0, "status": "ATTEMPT_LIMIT_REACHED_MEASUREMENT_INSUFFICIENT"},
+      "B": {"accepted": 3, "attempts": 3, "matching_violations": 0, "status": "ACCEPTED_TARGET_REACHED"},
+      "C": {"accepted": 3, "attempts": 5, "matching_violations": 2, "status": "ACCEPTED_TARGET_REACHED"}
+    }
+  },
+  "matching_runs": [
+    {
+      "run_id": "n1-c-a04",
+      "observed_phase_offset_ms": 260.058444,
+      "route_transition_us": 30752000,
+      "post_revocation_stale_subject_consumption_count": 1,
+      "post_revocation_old_epoch_consumption_count": 0,
+      "post_revocation_allocator_count": 0,
+      "post_revocation_writer_count": 0,
+      "route_oracle_sha256": "758a33b6dab1db3daa8b08b09613269ee6d756d013cb02f911e31971c50bd416"
+    },
+    {
+      "run_id": "n1-c-a05",
+      "observed_phase_offset_ms": 261.040338,
+      "route_transition_us": 30792000,
+      "post_revocation_stale_subject_consumption_count": 2,
+      "post_revocation_old_epoch_consumption_count": 0,
+      "post_revocation_allocator_count": 0,
+      "post_revocation_writer_count": 0,
+      "route_oracle_sha256": "c07a442910db76d4cbc6f795808eb75c4143380b2420100bc860bd46df7bbaf6"
+    }
+  ],
+  "observation_reduced_confirmation": {
+    "status": "ACCEPTED_ROUTE_PASS_NOT_MATCHING",
+    "accepted_target": 1,
+    "accepted_runs": 1,
+    "attempts": 1,
+    "maximum_attempts": 3,
+    "run_id": "n1-reduced-a01",
+    "seed": 310401,
+    "observed_phase_offset_ms": 260.052337,
+    "logger_profile_sha256": "4d06e625c87944aa218724007b0bf58cbf26fe28d0ee2280f25ab0fdc5a60536",
+    "full_trace_event_count": 14857,
+    "route_oracle": "PASS",
+    "freshness_oracle": "EXPOSURE",
+    "post_revocation_stale_subject_consumption_count": 0,
+    "route_oracle_sha256": "279782727dbbc04bdca0cfd99c12e2ab78807dbf12a738537b169d391343cc3a"
+  },
+  "source_candidate": {
+    "classification": "RETAINED_TRAJECTORY_INPUT_ACROSS_CONTINUOUS_POSITION_CONTROL",
+    "confidence": "MODERATE",
+    "pure_observation_lineage_artifact": false,
+    "proven_downstream_old_external_influence": false
+  },
+  "frozen_event_preserved": true,
+  "freshness_pilot_denominator_modified": false
+}

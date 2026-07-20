@@ -1,6 +1,7 @@
 schema_version: "1.0"
 study_id: n1_current_trajectory_residue_adjudication
-status: IN_PROGRESS
+status: FINAL_ANALYSIS_COMPLETE
+final_disposition: CURRENT_EVENT_REOBSERVED_BUT_PHASE_DEPENDENT
 preregistration_commit: 54d0411bddbc62e28d05e006a844dedbf9ebe6b3
 accepted_runs: 8
 total_attempts: 14
@@ -10,6 +11,43 @@ environment_failures: 3
 campaign_configuration_failures: 0
 formal_safety_stops: 0
 not_applicable: 0
+reduced_confirmation:
+  status: ACCEPTED_ROUTE_PASS_NOT_MATCHING
+  accepted_runs: 1
+  total_attempts: 1
+  maximum_attempts: 3
+  attempts:
+    - run_id: n1-reduced-a01
+      attempt: 1
+      simulation_seed: 310401
+      repository_commit_at_start: 3c4124d0afb513345475a738c32c68e75e92f890
+      disposition: ACCEPTED
+      counted_as_reduced_accepted: true
+      confirms_matching_violation: false
+      phase_bucket: C
+      requested_phase_offset_ms: 260
+      observed_phase_offset_ms: 260.052337
+      phase_anchor_health_reply_sequence: 15
+      observation_profile: N1_REDUCED
+      observation_profile_sha256: 4d06e625c87944aa218724007b0bf58cbf26fe28d0ee2280f25ab0fdc5a60536
+      px4_binary_unchanged: true
+      monitor: PASS
+      clock_bridge: VALID
+      windows: {pre_fault_stable: COMPLETE, pre_revocation_target: COMPLETE, fallback: COMPLETE}
+      lineage: COMPLETE
+      cleanup: LANDED_AND_DISARMED
+      route_oracle: PASS
+      freshness_oracle: EXPOSURE
+      route_evidence: {post_revocation_stale_subject_consumption_count: 0, post_revocation_old_epoch_consumption_count: 0, post_revocation_allocator_count: 0, post_revocation_writer_count: 0}
+      artifact_sha256:
+        fault_record: b42c2101401ba3bc8f60b8c11737ad719fa140b6ffbc4c4561a9cd9f69118d9e
+        flight_log: da1d18237f59c7ebb9db4f04140f470c876cb09088871d2b5598c0737995d8bc
+        monitor_result: 7abe51cf9efce1bd7489e50a39f1d585132bd7f3bcd08680f7069f89768b7003
+        clock_bridge: 8f3059cc8eb89da8f40b69d9afff1dcb0ce7f4e8ffb52db51bd17632ddba1b61
+        route_trace: 577b19ab7b8d48b38982942883e28e8475a5eaa16e363cae6494897fc7689204
+        route_oracle: 279782727dbbc04bdca0cfd99c12e2ab78807dbf12a738537b169d391343cc3a
+        freshness_observation: 7e17e5bc8fd6ce6e9e331994062d8b10804b46cfee590b40c8410c784a808a96
+        freshness_oracle: c77b8459fbaf97168e6ecd3819274f5567d5392ec0c304b45815df008edeab7d
 cell_status:
   N1-A: ATTEMPT_LIMIT_REACHED_MEASUREMENT_INSUFFICIENT
   N1-B: ACCEPTED_TARGET_REACHED

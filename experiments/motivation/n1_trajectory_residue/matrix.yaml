@@ -1,6 +1,7 @@
 schema_version: "1.0"
 study_id: n1_current_trajectory_residue_adjudication
-status: IN_PROGRESS
+status: FINAL_ANALYSIS_COMPLETE
+final_disposition: CURRENT_EVENT_REOBSERVED_BUT_PHASE_DEPENDENT
 preregistration_commit: 54d0411bddbc62e28d05e006a844dedbf9ebe6b3
 accepted_target: 9
 accepted_runs: 8
@@ -45,12 +46,18 @@ cells:
     environment_failures: 1
     seed_schedule: [310301, 310302, 310303, 310304, 310305, 310306]
 reduced_confirmation:
-  status: TRIGGERED_PROFILE_FROZEN_PENDING_EXECUTION
+  status: ACCEPTED_ROUTE_PASS_NOT_MATCHING
   trigger: at_least_two_independent_accepted_matching_violations
   trigger_runs: [n1-c-a04, n1-c-a05]
   phase_bucket: C
   logger_profile: config/n1_reduced_logger_topics.txt
   behavior_binary_unchanged: true
   accepted_target: 1
+  accepted_runs: 1
+  attempts: 1
   maximum_attempts: 3
   seed_schedule: [310401, 310402, 310403]
+  unused_seeds: [310402, 310403]
+  run_id: n1-reduced-a01
+  route_oracle: PASS
+  matching_violation: false

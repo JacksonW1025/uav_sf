@@ -1,0 +1,44 @@
+schema_version: "1.0"
+testcase_id: n1_late_health_cycle_trajectory_residue
+purpose: >-
+  Reproduce the narrow current-version post-fallback retained Trajectory input
+  observation using only public External Mode operation and locally owned
+  process termination. This is a defensive flight-safety regression testcase,
+  not a frequency estimator.
+source_identity:
+  px4_revision: 4ae21a5e569d3d89c2f6366688cbacb3e93437c9
+  px4_binary_sha256: d5cd7df0efd24f7f5509e8c4e5699a709cd8e4df42b0b64e453edab815471612
+  interface_library_revision: c3e410f035806e8c56246708432ded09c976434b
+scenario:
+  vehicle: gz_x500
+  setpoint_type: TRAJECTORY
+  trajectory_velocity_m_s: [0.5, 0.0, 0.0]
+  expected_fallback: AUTO_RTL_nav_state_5
+  controlled_failure_condition: locally_owned_process_termination_SIGKILL
+  health_phase_bucket: C
+  requested_phase_offset_ms: 260
+  accepted_phase_range_ms: [225, 285]
+known_matching_attempts:
+  - {run_id: n1-c-a04, seed: 310304, observed_phase_offset_ms: 260.058444, stale_subject_consumptions: 1}
+  - {run_id: n1-c-a05, seed: 310305, observed_phase_offset_ms: 261.040338, stale_subject_consumptions: 2}
+single_run_command:
+  environment:
+    N1_RUN_ID: n1-minimal-candidate
+    N1_HEALTH_PHASE_BUCKET: C
+    N1_SIMULATION_SEED: 310305
+  executable: ./scripts/probes/run_n1_trajectory_residue.sh
+acceptance:
+  - monitor_PASS_and_landed_disarmed
+  - phase_offset_inside_C_range
+  - clock_bridge_VALID_and_target_window_complete
+  - complete_route_controller_allocator_writer_lineage
+matching_result:
+  route_oracle: VIOLATION
+  post_revocation_stale_subject_consumption_minimum: 1
+  post_revocation_old_epoch_consumption_count: 0
+  post_revocation_allocator_count: 0
+  post_revocation_writer_count: 0
+interpretation_boundary:
+  - a_PASS_run_is_a_valid_negative_result_and_must_not_be_retried_without_a_new_preregistration
+  - no_population_rate_or_physical_effect_is_inferred
+  - no_PX4_health_state_is_directly_read_or_modified

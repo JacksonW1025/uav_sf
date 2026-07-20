@@ -12,8 +12,8 @@ Freshness pilot denominator.
 - Starting `origin/main`: `955e7c98e3b29ddd21fa4d44fb562065700fa832`
 - Starting ahead/behind: `0/0`
 - Protected ancestor: `955e7c98e3b29ddd21fa4d44fb562065700fa832`
-- Current phase: N1 trajectory residue bounded execution
-- Phase status: `IN_PROGRESS`
+- Current phase: C1 concurrent authority-event design
+- Phase status: `N1_COMPLETE_C1_NEXT`
 
 ## Frozen evidence
 
@@ -46,8 +46,8 @@ testing is authorized.
 | Phase | Status | Accepted | Attempts | Rejected / excluded | Current disposition |
 |---|---|---:|---:|---:|---|
 | Initialization | `COMPLETE` | n/a | n/a | n/a | `f2aa93aa` pushed |
-| N1 trajectory residue | `FORMAL_MATRIX_COMPLETE` | 8 / 9 | 14 / 18 | 6 | A 2/3 at cap; B 3/3; C 3/3; C04/C05 matching Route violations |
-| N1 reduced confirmation | `TRIGGERED_PENDING_EXECUTION` | 0 / 1 | 0 / 3 | 0 | C bucket produced two matching accepted reproductions |
+| N1 trajectory residue | `COMPLETE` | 8 / 9 | 14 / 18 | 6 | `CURRENT_EVENT_REOBSERVED_BUT_PHASE_DEPENDENT`; 2 matching violations |
+| N1 reduced confirmation | `COMPLETE` | 1 / 1 | 1 / 3 | 0 | accepted Route PASS; no matching residue; stopped at target |
 | C1 concurrency | `NOT_STARTED` | 0 / 15 | 0 / 30 | 0 | pending |
 | C1 minimal confirmations | `NOT_APPLICABLE_PENDING_TRIGGER` | 0 | 0 / 3 per finding | 0 | only if a violation is found |
 | R1 session rollover | `NOT_STARTED` | 0 / 9 | 0 / 18 | 0 | pending |
@@ -76,18 +76,23 @@ All future rejected attempts must be explicitly classified as
 - `b639b4bf072965cbe3e4b7a8b33c4a2c2f82a379` —
   `experiment: checkpoint n1 phase bucket b` (pushed; N1-C attempt starting
   revision).
+- `3c4124d0afb513345475a738c32c68e75e92f890` —
+  `experiment: trigger n1 reduced confirmation` (pushed; reduced-attempt
+  starting revision).
 
 ## Next exact action
 
-Freeze and push the N1-C result and observation-reduced logger profile, confirm
-a clean synchronized worktree and unoccupied local simulator ports, then run
-N1 reduced-confirmation attempt 1 with seed `310401`, phase bucket C, and
-`config/n1_reduced_logger_topics.txt`.
+Run N1 focused tests and the full validator, commit and push the final N1
+report/evidence, confirm repository synchronization and local cleanup, then
+preregister C1 before its first formal attempt.
 
 ## Current blockers
 
 - N1-A reached its six-attempt cap with only 2/3 accepted runs. This is a
   bounded measurement-insufficient cell, not authorization to retry it.
+- The accepted reduced-confirmation run did not reproduce the C-bucket event;
+  this bounds the conclusion to phase-dependent re-observation rather than a
+  stable reproduction claim.
 
 ## Protected hashes
 
