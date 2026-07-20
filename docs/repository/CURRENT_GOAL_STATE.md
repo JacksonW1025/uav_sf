@@ -3,12 +3,12 @@
 ## Active Current-Version freshness pilot
 
 - Current phase: Current-Version External Mode Setpoint Freshness formal pilot,
-  F1 ready and not started
-- Formal accepted runs: `0/12`
+  F1 complete and F2 ready
+- Formal accepted runs: `3/12`
 - Completed tuning: Trajectory `TOTAL_PROCESS_STOP`; Attitude
   `TOTAL_PROCESS_STOP`; Rate `TOTAL_PROCESS_STOP` and
   `SETPOINT_ONLY_STALL` at `0.06 rad/s`
-- Current unresolved item: none; execute F1 under the frozen preregistration
+- Current unresolved item: none; execute F2 under the frozen preregistration
 - Latest instrumentation checkpoint:
   `f4b5a600badf3961dae1d45eebb183c0d0fa6d01`
 - Tuning evidence status: ignored, non-formal, and excluded from the formal
@@ -31,6 +31,12 @@
   selected bridge interval; out-of-interval extrapolation is rejected
 - Frozen preregistration commit:
   `be11b984e13c9df43ebc8b3b31d04517c46d5224`, pushed before F1
+- F1 result: `3/3` accepted in three attempts. All Freshness Oracle results are
+  `EXPOSURE`; Route Oracle is PASS for attempts 1 and 3. Attempt 2 is an
+  accepted natural Route violation with two post-fallback Trajectory
+  consumptions carrying the pre-fallback subject timestamp; its installation,
+  exclusivity, continuity, observability, target safety, and cleanup evidence
+  are complete
 - Last update: 2026-07-20
 
 ## Frozen Issue #162 completion state

@@ -64,7 +64,7 @@ def test_rate_differential_changes_only_failure_condition() -> None:
     ]
 
 
-def test_policy_interpretation_and_initial_ledger_are_frozen() -> None:
+def test_policy_interpretation_and_ledger_aggregates_are_consistent() -> None:
     profile = _load("primary_preregistration.yaml")
     ledger = _load("attempt_ledger.yaml")
     assert profile["policy"]["freshness"] == "NONE"
@@ -73,6 +73,12 @@ def test_policy_interpretation_and_initial_ledger_are_frozen() -> None:
     assert profile["interpretation_rules"]["route_oracle_rule"] == (
         "Route Oracle PASS does not erase a Freshness exposure."
     )
-    assert ledger["accepted_runs"] == 0
-    assert ledger["total_attempts"] == 0
-    assert ledger["attempts"] == []
+    assert ledger["preregistration_commit"] == "be11b984e13c9df43ebc8b3b31d04517c46d5224"
+    assert ledger["accepted_runs"] == sum(
+        int(cell["accepted_runs"]) for cell in ledger["cell_counts"].values()
+    )
+    assert ledger["total_attempts"] == len(ledger["attempts"])
+    assert all(
+        int(cell["total_attempts"]) <= int(cell["maximum_total_attempts"])
+        for cell in ledger["cell_counts"].values()
+    )

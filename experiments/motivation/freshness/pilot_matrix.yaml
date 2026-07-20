@@ -1,10 +1,10 @@
 schema_version: "1.0"
 study_id: current_version_external_mode_setpoint_freshness_pilot
-status: READY_FOR_F1
+status: READY_FOR_F2
 preregistration_commit: be11b984e13c9df43ebc8b3b31d04517c46d5224
 accepted_runs_target: 12
-accepted_runs: 0
-total_attempts: 0
+accepted_runs: 3
+total_attempts: 3
 maximum_total_accepted_runs: 12
 cell_execution_order: [F1, F2, F3, F4]
 shared_simulation_seed_schedule: [2751401, 2751402, 2751403, 2751404, 2751405, 2751406]
@@ -21,16 +21,16 @@ cells:
     recovery_seconds: 2.0
     accepted_runs_required: 3
     maximum_total_attempts: 6
-    accepted_runs: 0
-    total_attempts: 0
-    status: NOT_STARTED
+    accepted_runs: 3
+    total_attempts: 3
+    status: COMPLETE
     attempt_slots:
-      - {attempt: 1, seed: 2751401, run_id: freshness-f1-a01, status: PENDING}
-      - {attempt: 2, seed: 2751402, run_id: freshness-f1-a02, status: PENDING}
-      - {attempt: 3, seed: 2751403, run_id: freshness-f1-a03, status: PENDING}
-      - {attempt: 4, seed: 2751404, run_id: freshness-f1-a04, status: PENDING}
-      - {attempt: 5, seed: 2751405, run_id: freshness-f1-a05, status: PENDING}
-      - {attempt: 6, seed: 2751406, run_id: freshness-f1-a06, status: PENDING}
+      - {attempt: 1, seed: 2751401, run_id: freshness-f1-a01, status: ACCEPTED_FORMAL}
+      - {attempt: 2, seed: 2751402, run_id: freshness-f1-a02, status: ACCEPTED_FORMAL_ROUTE_VIOLATION}
+      - {attempt: 3, seed: 2751403, run_id: freshness-f1-a03, status: ACCEPTED_FORMAL}
+      - {attempt: 4, seed: 2751404, run_id: freshness-f1-a04, status: NOT_NEEDED}
+      - {attempt: 5, seed: 2751405, run_id: freshness-f1-a05, status: NOT_NEEDED}
+      - {attempt: 6, seed: 2751406, run_id: freshness-f1-a06, status: NOT_NEEDED}
   - cell_id: F2
     setpoint_type: ATTITUDE
     fault_type: TOTAL_PROCESS_STOP
