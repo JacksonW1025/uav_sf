@@ -340,6 +340,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
     angular_rates = _dataset_rows(ulog, "vehicle_angular_velocity")
     requests = _dataset_rows(ulog, "arming_check_request")
     replies = _dataset_rows(ulog, "arming_check_reply")
+    failsafe_flags = _dataset_rows(ulog, "failsafe_flags")
     statuses = _dataset_rows(ulog, "vehicle_status")
     setpoints = _dataset_rows(ulog, SETPOINT_TOPIC[args.setpoint_type])
 
@@ -384,6 +385,25 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
         events, "actuator_output_published", source_epoch, cutoff_us
     )
     health = _health_evidence(requests, replies, fault_us, target_end_us)
+    external_mode_mask = 1 << int(monitor["external_mode_id"])
+    health_flag = next(
+        (
+            row
+            for row in failsafe_flags
+            if fault_us <= float(row["timestamp"]) <= target_end_us
+            and int(row.get("mode_req_other", 0)) & external_mode_mask
+        ),
+        None,
+    )
+    if health_flag is not None:
+        health["health_loss_detection_us"] = float(health_flag["timestamp"])
+        health["detection_source"] = "failsafe_flags.mode_req_other_external_mode_bit"
+    else:
+        health["detection_source"] = (
+            "arming_check_request.valid_registrations_mask"
+            if health["health_loss_detection_us"] is not None
+            else None
+        )
 
     fallback_declared_us = None
     if args.fault_type == "TOTAL_PROCESS_STOP":

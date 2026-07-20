@@ -141,7 +141,6 @@ def run(args: argparse.Namespace) -> int:
 
         def _status(self, message: Any) -> None:
             self.status = message
-            self._clock_sample(int(message.timestamp), "vehicle_status")
             self.armed_seen = self.armed_seen or self._armed()
             nav_state = int(message.nav_state)
             if nav_state != self.last_nav_state:
@@ -178,6 +177,8 @@ def run(args: argparse.Namespace) -> int:
         def _position(self, message: Any) -> None:
             self.position = message
             self.telemetry_counts["position"] += 1
+            if self.state in {"STABILIZE", "OBSERVE_TARGET", "RECOVER"}:
+                self._clock_sample(int(message.timestamp), "vehicle_local_position")
 
         def _attitude(self, _: Any) -> None:
             self.telemetry_counts["attitude"] += 1

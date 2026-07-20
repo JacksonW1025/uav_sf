@@ -83,3 +83,17 @@ def test_continuous_vehicle_status_pairs_are_preferred(tmp_path) -> None:
     )
 
     assert load_samples(path) == [status]
+
+
+def test_local_position_pairs_are_preferred_over_sparse_timesync(tmp_path) -> None:
+    path = tmp_path / "events.jsonl"
+    timesync = _sample(0)
+    timesync["sample_source"] = "timesync_status"
+    position = _sample(1)
+    position["sample_source"] = "vehicle_local_position"
+    path.write_text(
+        json.dumps(timesync) + "\n" + json.dumps(position) + "\n",
+        encoding="utf-8",
+    )
+
+    assert load_samples(path) == [position]

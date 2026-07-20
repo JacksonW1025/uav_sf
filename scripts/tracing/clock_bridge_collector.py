@@ -275,10 +275,13 @@ def load_samples(path: Path) -> list[dict[str, Any]]:
         )
 
     vehicle_status_samples = [sample for sample in samples if source(sample) == "vehicle_status"]
+    local_position_samples = [
+        sample for sample in samples if source(sample) == "vehicle_local_position"
+    ]
     timesync_samples = [
         sample for sample in samples if source(sample) == "timesync_status"
     ]
-    return vehicle_status_samples or timesync_samples or samples
+    return vehicle_status_samples or local_position_samples or timesync_samples or samples
 
 
 def main() -> int:
