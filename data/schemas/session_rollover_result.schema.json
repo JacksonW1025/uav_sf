@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uav-sf.local/schemas/session_rollover_result.schema.json",
+  "title": "Session Rollover Oracle result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "oracle_name",
+    "oracle_version",
+    "contract_classification",
+    "run_id",
+    "scenario",
+    "selected_semantic",
+    "status",
+    "clauses",
+    "identities",
+    "route_epochs",
+    "completion",
+    "evidence_completeness"
+  ],
+  "$defs": {
+    "status": {
+      "enum": ["PASS", "EXPOSURE", "VIOLATION", "UNKNOWN", "NOT_APPLICABLE"]
+    },
+    "nullableInteger": {"type": ["integer", "null"]},
+    "nullableString": {"type": ["string", "null"]},
+    "sessionIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "registration_request_id",
+        "registration_reply_request_id",
+        "registration_instance_id",
+        "producer_session_id",
+        "activation_id",
+        "activation_key",
+        "mode_id",
+        "executor_id"
+      ],
+      "properties": {
+        "registration_request_id": {"$ref": "#/$defs/nullableInteger"},
+        "registration_reply_request_id": {"$ref": "#/$defs/nullableInteger"},
+        "registration_instance_id": {"$ref": "#/$defs/nullableInteger"},
+        "producer_session_id": {"$ref": "#/$defs/nullableString"},
+        "activation_id": {"$ref": "#/$defs/nullableInteger"},
+        "activation_key": {"$ref": "#/$defs/nullableString"},
+        "mode_id": {"$ref": "#/$defs/nullableInteger"},
+        "executor_id": {"$ref": "#/$defs/nullableInteger"}
+      }
+    }
+  },
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "oracle_name": {"const": "Session Rollover Oracle"},
+    "oracle_version": {"const": "0.1"},
+    "contract_classification": {
+      "const": "B_IMPLIED_OWNERSHIP_PROGRESSION_CONTRACT"
+    },
+    "run_id": {"type": "string", "minLength": 1},
+    "scenario": {"enum": ["A", "B", "C"]},
+    "selected_semantic": {"enum": ["ModeCompleted", null]},
+    "status": {"$ref": "#/$defs/status"},
+    "clauses": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["status", "reasons", "metrics"],
+        "properties": {
+          "status": {"$ref": "#/$defs/status"},
+          "reasons": {
+            "type": "array",
+            "items": {"type": "string"},
+            "uniqueItems": true
+          },
+          "metrics": {"type": "object"}
+        }
+      }
+    },
+    "identities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["old", "new", "relation_established"],
+      "properties": {
+        "old": {"$ref": "#/$defs/sessionIdentity"},
+        "new": {"$ref": "#/$defs/sessionIdentity"},
+        "relation_established": {"type": ["boolean", "null"]}
+      }
+    },
+    "route_epochs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["old", "new", "successor"],
+      "properties": {
+        "old": {"type": ["integer", "null"], "minimum": 0},
+        "new": {"type": ["integer", "null"], "minimum": 0},
+        "successor": {"type": ["integer", "null"], "minimum": 0}
+      }
+    },
+    "completion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "provenance",
+        "wire_fields",
+        "wire_instance_or_generation_fields",
+        "released_once",
+        "observed",
+        "new_lifecycle_progressed",
+        "successor_request_observed",
+        "successor_installation_epoch"
+      ],
+      "properties": {
+        "provenance": {
+          "enum": ["EARLIER_SESSION", "NEW_SESSION", "AMBIGUOUS", "NONE"]
+        },
+        "wire_fields": {
+          "type": "array",
+          "items": {"enum": ["timestamp", "result", "nav_state"]},
+          "uniqueItems": true
+        },
+        "wire_instance_or_generation_fields": {
+          "type": "array",
+          "items": {"type": "string"},
+          "uniqueItems": true
+        },
+        "released_once": {"type": ["boolean", "null"]},
+        "observed": {"type": ["boolean", "null"]},
+        "new_lifecycle_progressed": {"type": ["boolean", "null"]},
+        "successor_request_observed": {"type": ["boolean", "null"]},
+        "successor_installation_epoch": {"type": ["integer", "null"], "minimum": 0}
+      }
+    },
+    "evidence_completeness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "clock_bridge",
+        "clock_sample_count",
+        "new_window_start_us",
+        "window_end_us",
+        "trace_event_count",
+        "observations",
+        "unknown_reasons"
+      ],
+      "properties": {
+        "clock_bridge": {"type": ["string", "null"]},
+        "clock_sample_count": {"type": "integer", "minimum": 0},
+        "new_window_start_us": {"type": ["number", "null"]},
+        "window_end_us": {"type": ["number", "null"]},
+        "trace_event_count": {"type": "integer", "minimum": 0},
+        "observations": {
+          "type": "object",
+          "additionalProperties": {"type": "boolean"}
+        },
+        "unknown_reasons": {
+          "type": "array",
+          "items": {"type": "string"},
+          "uniqueItems": true
+        }
+      }
+    }
+  }
+}

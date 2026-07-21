@@ -1,0 +1,63 @@
+schema_version: "1.0"
+study_id: r1_session_isolation
+status: PREREGISTERED_NOT_STARTED
+selected_r1_c_semantic: ModeCompleted
+accepted_target: 9
+accepted_runs: 0
+maximum_attempts_per_scenario: 6
+maximum_total_attempts: 18
+total_attempts: 0
+execution_order: [R1-A, R1-B, R1-C]
+scenarios:
+  - scenario_id: R1-A
+    short_id: A
+    name: clean_reentry
+    sequence:
+      - old_session_registered_and_activated
+      - legal_release_via_local_SIGTERM
+      - old_session_unregistration_and_fallback_observed
+      - new_session_registered_and_activated
+      - bounded_isolation_window
+      - Land_and_Disarm_cleanup
+    accepted_runs_required: 3
+    accepted_runs: 0
+    maximum_attempts: 6
+    attempts: 0
+    seed_schedule: [410101, 410102, 410103, 410104, 410105, 410106]
+    status: NOT_STARTED
+  - scenario_id: R1-B
+    short_id: B
+    name: local_component_restart_after_fallback
+    sequence:
+      - old_session_registered_and_activated
+      - old_locally_owned_component_stops_via_SIGKILL
+      - configured_PX4_fallback_installed
+      - new_local_component_starts
+      - new_session_registered_and_activated
+      - bounded_isolation_window
+      - Land_and_Disarm_cleanup
+    accepted_runs_required: 3
+    accepted_runs: 0
+    maximum_attempts: 6
+    attempts: 0
+    seed_schedule: [410201, 410202, 410203, 410204, 410205, 410206]
+    status: NOT_STARTED
+  - scenario_id: R1-C
+    short_id: C
+    name: completion_session_isolation_check
+    sequence:
+      - old_session_registered_and_activated
+      - one_ModeCompleted_value_associated_with_old_producer_is_held_locally
+      - legal_release_via_local_SIGTERM
+      - old_session_unregistration_and_fallback_observed
+      - new_session_registered_and_activated
+      - new_executor_completion_wait_observed
+      - held_ModeCompleted_delivered_once_through_normal_local_SITL_interface
+      - bounded_progression_and_lineage_window
+      - Land_and_Disarm_cleanup
+    accepted_runs_required: 3
+    accepted_runs: 0
+    maximum_attempts: 6
+    attempts: 0
+    seed_schedule: [410301, 410302, 410303, 410304, 410305, 410306]
+    status: NOT_STARTED

@@ -1,0 +1,280 @@
+schema_version: "1.0"
+status: FROZEN_BEFORE_FORMAL_ATTEMPTS
+study_id: r1_session_isolation
+created_at: 2026-07-20T00:00:00-07:00
+freeze_mechanism: >-
+  The first pushed Git commit containing this file freezes R1 source and binary
+  identity, Oracle and schema, selected completion semantic, old/new identity
+  rules, event order, timing and safety bounds, admissibility rules, cleanup,
+  seeds, and attempt caps before every formal R1 attempt.
+
+execution_gate:
+  preregistration_commit_must_be_pushed: true
+  required_remote: origin/main
+  formal_run_before_push: FORBIDDEN
+  formal_attempts_completed_at_freeze: 0
+  stop_after_preregistration_checkpoint: true
+
+namespace:
+  preregistration: experiments/motivation/r1_session/preregistration.yaml
+  matrix: experiments/motivation/r1_session/matrix.yaml
+  ledger: experiments/motivation/r1_session/attempt_ledger.yaml
+  raw_runs: runs/motivation/r1_session
+  raw_artifacts_are_ignored: true
+  semantic_audit: docs/motivation/R1_SESSION_SEMANTIC_AUDIT.md
+  oracle_design: docs/design/SESSION_ROLLOVER_ORACLE.md
+  oracle_executable: scripts/oracles/session_rollover_oracle.py
+  result_schema: data/schemas/session_rollover_result.schema.json
+
+research_question: >-
+  Determine whether a newly registered and activated local External Mode
+  instance remains isolated from lifecycle state belonging to an earlier local
+  instance under clean release, local process restart, and the preregistered
+  completion-session isolation check.
+
+source_revisions:
+  repository_base_before_r1: d78a206080a033f20fbd66fdb940c2ff8b1040d2
+  px4_autopilot: 4ae21a5e569d3d89c2f6366688cbacb3e93437c9
+  px4_msgs: 18ecff03041c6f8d8a0012fbc63af0b23dd60af1
+  px4_ros2_interface_lib: c3e410f035806e8c56246708432ded09c976434b
+  micro_xrce_dds_agent: 73622810d984349b80bbac0ef55fc0b694d62222
+  simulator: Gazebo_SITL_gz_x500_default_world
+
+locked_artifacts:
+  scripts/probes/run_r1_session.sh: 1506e9462782404c73b56839060484b451afdf9573640ba815b42704f7bf6c84
+  scripts/probes/r1_session_monitor.py: f2515194150fccbca01910b9209304769bc9fd70b768003655a3ddb54d34998b
+  scripts/oracles/session_rollover_oracle.py: 200c6345591758ace66d7667aa9827a63bfe15a0f7de570f219c164aa582f5c3
+  data/schemas/session_rollover_result.schema.json: 64697902e1960be70504a2af664a0c6600af98c829770c12e9421d2d92ffa27e
+  scripts/adapters/r1_session_adapter/src/r1_session_probe.cpp: 906ef7b84f742c957e19d7e8285067586b4f2864b4bc68c9907e82b7125d8672
+  scripts/adapters/r1_session_adapter/CMakeLists.txt: 8d2292f75668d96715ac164b428dee61b84b9f0bcade4bf665b3901c3b4f5cde
+  scripts/adapters/r1_session_adapter/package.xml: ee8b771cd406395153e06b6ef7cd2cdd619eb63b50555dfafe77bdf3e04d6ce3
+  scripts/tracing/route_trace_collector.py: 446d1dad803e8599003ea5fb65216c19c854e7f04c72642d675113420c1c62a4
+  scripts/tracing/clock_bridge_collector.py: 1140be063ce1e75835ec1f9fe3c3eea55aab7a483d99799a323e0d57353f4ed2
+  scripts/tracing/compact_route_trace.py: 3bd0bfb77c5c408161884823ec9199a3e684595bc4031118399be932dc6dae35
+  config/freshness_logger_topics.txt: 94c19d757f0d707f3c885ea5b9a540e8cb94bec65dcd604000df84ca28c35e35
+  docs/motivation/R1_SESSION_SEMANTIC_AUDIT.md: 5548db37ef0eb5a80359b19152052bd9fbeb2202b9e5aac97917b4e58002c220
+  docs/design/SESSION_ROLLOVER_ORACLE.md: d5c9e05c3d26b4ee9ba3093287611d6b00e62bc2575cd6a230545403efe31f3f
+
+locked_binaries:
+  r1_session_probe:
+    path: runs/r1_harness_build/install/r1_session_adapter/lib/r1_session_adapter/r1_session_probe
+    sha256: 82a4645b938d1e70deee75bf377325bb4cf657d0359c86cb51a2b70d883571ce
+  px4_sitl:
+    path: external/PX4-Autopilot-oracle-validation-control/build/px4_sitl_default/bin/px4
+    sha256: d5cd7df0efd24f7f5509e8c4e5699a709cd8e4df42b0b64e453edab815471612
+  micro_xrce_dds_agent:
+    path: runs/freshness_agent_build/MicroXRCEAgent
+    sha256: 75f4ebcff6773fff460a8a50b1810f6a2ae2bee6c1ae1ec0d050e77dbaeb38e9
+
+harness_build:
+  package: r1_session_adapter
+  base_path: scripts/adapters/r1_session_adapter
+  build_type: RelWithDebInfo
+  dependency_prefix: runs/freshness_harness_build/install
+  build_base: runs/r1_harness_build/build
+  install_base: runs/r1_harness_build/install
+
+environment:
+  vehicle: gz_x500
+  world: default
+  setpoint: zero_velocity_Trajectory
+  setpoint_rate_hz: 20
+  old_component_and_new_component: locally_owned_test_processes
+  transport_scope: local_SITL_namespace_only
+  external_systems: NONE
+
+selected_r1_c_semantic: ModeCompleted
+selected_semantic_wire_fields: [timestamp, result, nav_state]
+selected_semantic_instance_or_generation_fields: []
+selected_semantic_delivery: >-
+  One completion value associated by the harness with the earlier local
+  producer session is held locally and delivered once through the normal
+  /fmu/in/mode_completed SITL interface only after the new registered/activated
+  session and its executor completion wait have been observed.
+additional_delayed_semantics: FORBIDDEN
+
+contract:
+  classification: B
+  name: implied_ownership_and_progression_contract
+  explicit_registration_generation_guarantee: false
+  rationale: >-
+    ModeCompleted is documented as published by an active mode and is consumed
+    by an active scheduled-mode wait, establishing implied lifecycle ownership;
+    the message and receiver match contain no registration-instance or
+    activation-generation identifier.
+  acceptance_of_earlier_completion_is_automatically_a_bug: false
+
+identity_rules:
+  registration_identity:
+    - public_request_id
+    - correlated_public_reply_request_id
+    - harness_registration_instance_id
+    - assigned_mode_id_observation
+    - assigned_executor_id_observation
+  activation_identity:
+    - producer_session_id
+    - harness_registration_instance_id
+    - per_process_activation_count
+  producer_session_identity: explicit_unique_old_and_new_harness_strings
+  route_identity: PX4_route_epoch_id
+  mode_or_executor_numeric_slot_reuse: ALLOWED_AND_NOT_A_SESSION_ID
+  required_relation: >-
+    request IDs, registration-instance IDs, producer-session IDs, and composite
+    activation keys are all complete and distinct between old and new.
+  missing_old_or_new_identity: UNKNOWN
+  complete_non_distinct_relation: NOT_APPLICABLE
+
+event_order:
+  R1-A:
+    - old_register
+    - old_activate
+    - stabilize_old_for_at_least_1_second
+    - legal_local_SIGTERM_and_destructor_unregistration
+    - observe_exit_and_fallback
+    - wait_at_least_500_ms
+    - new_start_and_register
+    - new_activate_and_establish_executor_owner
+    - stabilize_new_for_at_least_1_second
+    - observe_isolation_window_for_at_least_1500_ms
+    - cleanup
+  R1-B:
+    - old_register
+    - old_activate
+    - stabilize_old_for_at_least_1_second
+    - stop_old_local_component_with_SIGKILL
+    - observe_configured_PX4_fallback
+    - wait_at_least_500_ms
+    - new_start_and_register
+    - new_activate_and_establish_executor_owner
+    - stabilize_new_for_at_least_1_second
+    - observe_isolation_window_for_at_least_1500_ms
+    - cleanup
+  R1-C:
+    - old_register
+    - old_activate
+    - stabilize_old_for_at_least_1_second
+    - associate_and_hold_exactly_one_successful_ModeCompleted_with_old_session
+    - legal_local_SIGTERM_and_destructor_unregistration
+    - observe_exit_and_fallback
+    - wait_at_least_500_ms
+    - new_start_register_activate_and_arm_completion_wait
+    - stabilize_new_for_at_least_1_second
+    - release_held_completion_exactly_once
+    - observe_progression_and_lineage_for_at_least_1500_ms
+    - cleanup
+
+timing_bounds:
+  runner_timeout_s: 150
+  minimum_clock_bridge_samples: 20
+  clock_bridge_status: VALID
+  complete_window_inside_clock_bridge_interval: true
+  old_stabilization_minimum_s: 1.0
+  post_fallback_wait_minimum_s: 0.5
+  new_stabilization_minimum_s: 1.0
+  completion_release_count_R1_C: 1
+  post_release_or_control_observation_minimum_s: 1.5
+  timing_sweep: FORBIDDEN
+
+observation_requirements:
+  - old_and_new_registration_request_reply_identity
+  - old_and_new_activation_identity
+  - old_and_new_producer_session_identity
+  - source_and_target_route_epoch
+  - completion_generation_provenance_R1_C
+  - completion_release_and_relay_observation_R1_C
+  - executor_lifecycle_progression
+  - successor_request_and_successor_installation_when_progression_occurs
+  - controller_lineage
+  - allocator_input_lineage
+  - final_writer_lineage
+  - Land_and_Disarm_cleanup
+
+oracle:
+  name: Session Rollover Oracle
+  version: "0.1"
+  result_schema_version: "1.0"
+  statuses: [PASS, EXPOSURE, VIOLATION, UNKNOWN, NOT_APPLICABLE]
+  PASS: >-
+    The new session remains isolated and all applicable lifecycle obligations
+    hold.
+  EXPOSURE: >-
+    The public message contract lacks sufficient instance identity, creating a
+    measurable lifecycle-ambiguity window, but no explicit or clearly
+    established contract violation is proved.
+  VIOLATION: >-
+    Complete evidence shows that the earlier session changes the current
+    session lifecycle or successor in contradiction to the implied ownership
+    contract, or another explicit registration/route obligation is contradicted.
+  UNKNOWN: >-
+    Required old/new identity, timing, route, lifecycle, successor, lineage, or
+    cleanup evidence is incomplete.
+  NOT_APPLICABLE: >-
+    Complete evidence does not establish the required old/new session relation.
+  incomplete_evidence_dominates_provisional_finding: true
+
+formal_matrix:
+  scenarios: [R1-A, R1-B, R1-C]
+  accepted_runs_per_scenario: 3
+  accepted_target: 9
+  maximum_attempts_per_scenario: 6
+  maximum_total_attempts: 18
+  stop_when_all_scenario_targets_reached_or_relevant_cap_reached: true
+  seeds_are_frozen_in: experiments/motivation/r1_session/matrix.yaml
+
+accepted_run:
+  admissible_oracle_outcomes: [PASS, EXPOSURE, VIOLATION]
+  requirements:
+    - preregistration_commit_already_pushed_to_origin_main
+    - repository_worktree_clean_and_locked_hashes_match_at_attempt_start
+    - runner_exit_zero_and_monitor_PASS
+    - exact_scenario_event_order_and_preconditions_observed
+    - complete_window_with_VALID_clock_bridge_and_at_least_20_samples
+    - complete_old_new_identity_route_lifecycle_and_lineage_evidence
+    - Oracle_has_no_UNKNOWN_applicable_clause
+    - cleanup_landed_and_disarmed
+    - no_physical_safety_bound_exceeded
+  PASS_EXPOSURE_or_VIOLATION_is_an_outcome_not_an_attempt_classification: true
+
+attempt_classification:
+  accepted: ACCEPTED
+  observability_rejected: OBSERVABILITY_REJECTED
+  measurement_insufficient: MEASUREMENT_INSUFFICIENT
+  environment_failure: ENVIRONMENT_FAILURE
+  campaign_configuration_failure: CAMPAIGN_CONFIGURATION_FAILURE
+  formal_safety_stop: FORMAL_SAFETY_STOP
+  not_applicable: NOT_APPLICABLE
+  UNKNOWN_is_not_accepted: true
+  no_infinite_retry: true
+
+physical_safety_bounds:
+  maximum_attitude_excursion_deg: 45.0
+  maximum_angular_rate_excursion_rad_s: 3.0
+  unexpected_ground_contact_before_cleanup: FORMAL_SAFETY_STOP
+  simulator_clock_stall: FORMAL_SAFETY_STOP
+  PX4_abort: FORMAL_SAFETY_STOP
+
+cleanup:
+  command: public_VehicleCommand_RTL
+  required_terminal_state: LANDED_AND_DISARMED
+  incomplete_cleanup_or_cleanup_evidence: UNKNOWN_AND_ATTEMPT_REJECTED
+  locally_owned_processes_terminated: true
+  local_DDS_UDP_port_8888_free: true
+
+protected_evidence:
+  p5_v6_gate: 9542eb7c98dfd4df1ab50026c149f21fb719fc6a2a09d040a9db4df647f132bc
+  p5_v6_manifest: 02d857f555623c10dc44998cd202c2da6226ec5c40a94a75020d75df87f02518
+  issue_162_preregistration: 11cc54e73dc03192374b4d877cf84cf3b864d9f084b8aa00549d1cdc3b52d060
+  issue_162_report: 41fcbb85cfcf5c82f58ad1e2c7b857c6864f7105ee65d0889ce7803709aad680
+  freshness_preregistration: fbbac59f943f499b6cc16e2787976c4ea1814dba1ce89efe8d40c23c0603f05f
+  freshness_gate: 71ad5ebb9ee305919381217092d4d80d6dcf6d0141cfe7a413ed219835e5d99c
+  freshness_ledger: 099a75a0166c0d3bbd08c28c6e9c8a9a78be98c04a0446669e192e5336b5d0dd
+  freshness_matrix: d52dbdaaed9e73ac510de80db49531e5745444122c4e0d69822244be04cfa841
+
+scope_exclusions:
+  - formal_R1_execution_in_this_window
+  - delayed_message_semantic_other_than_ModeCompleted
+  - direct_PX4_nav_state_registration_executor_or_failsafe_mutation
+  - PX4_behavior_or_policy_change
+  - external_network_account_device_or_third_party_system
+  - unbounded_retry_or_timing_sweep
+  - full_stateful_fuzzer_campaign

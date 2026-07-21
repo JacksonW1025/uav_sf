@@ -12,8 +12,8 @@ Freshness pilot denominator.
 - Starting `origin/main`: `955e7c98e3b29ddd21fa4d44fb562065700fa832`
 - Starting ahead/behind: `0/0`
 - Protected ancestor: `955e7c98e3b29ddd21fa4d44fb562065700fa832`
-- Current phase: R1 session-rollover design
-- Phase status: `C1_COMPLETE_R1_NEXT`
+- Current phase: R1 session-rollover preregistration
+- Phase status: `R1_PREREGISTERED_NO_EXECUTION`
 
 ## Frozen evidence
 
@@ -50,7 +50,7 @@ testing is authorized.
 | N1 reduced confirmation | `COMPLETE` | 1 / 1 | 1 / 3 | 0 | accepted Route PASS; no matching residue; stopped at target |
 | C1 concurrency | `COMPLETE` | 14 / 15 | 17 / 30 | 1 configuration failure, 2 observability rejections | `CONDITIONAL_PASS_BOUNDED_LINEARIZATION_CONFORMANCE`; 0 violations |
 | C1 minimal confirmations | `NOT_TRIGGERED` | 0 | 0 / 3 | 0 | no accepted violation |
-| R1 session rollover | `NOT_STARTED` | 0 / 9 | 0 / 18 | 0 | pending |
+| R1 session rollover | `PREREGISTERED` | 0 / 9 | 0 / 18 | 0 | no formal attempt has run |
 | W1 workload spike | `NOT_STARTED` | 0 / 3 canonical | 0 | 0 | pending |
 | B1 Family B | `NOT_STARTED` | 0 / 6 if executable | 0 | 0 | pending feasibility Gate |
 | M-FINAL | `NOT_STARTED` | n/a | n/a | n/a | pending |
@@ -105,14 +105,16 @@ All future rejected attempts must be explicitly classified as
 - `b24cfb4fb18c175856f2d01991c8d498f1d2710f` —
   `experiment: complete concurrent authority event probe` (pushed final C1
   report, conditional Gate, compact summary, and frozen 17-attempt ledger).
+- `d78a206080a033f20fbd66fdb940c2ff8b1040d2` —
+  `docs: record c1 phase closure` (pushed durable C1 closure and R1-next
+  state).
 
 ## Next exact action
 
-Record and push final C1 commit `b24cfb4`, then audit the locked registration,
-activation, completion, configuration-override, and setpoint message paths to
-select the single highest-risk delayed old-session semantic for R1-C. Create
-and push the R1 Oracle, preregistration, 3-scenario matrix, and empty ledger
-before the first formal R1 attempt.
+Push the R1 preregistration checkpoint, then stop. In a later execution window,
+confirm that the preregistration commit is already present on `origin/main`
+before starting the bounded R1-A, R1-B, or R1-C matrix. `ModeCompleted` is the
+sole R1-C semantic; no other delayed message type is authorized.
 
 ## Current blockers
 

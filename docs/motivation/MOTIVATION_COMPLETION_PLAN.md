@@ -114,7 +114,10 @@ confirmation attempts in this phase and does not authorize a timing sweep.
 
 ### R1 — Rapid re-entry and session rollover
 
-Status: `NOT_STARTED`.
+Status: `PREREGISTERED`; no formal R1 attempt has run. The Oracle, semantic
+audit, three-scenario matrix, empty ledger, event order, identity rules,
+timing/safety bounds, and attempt caps are frozen by the pushed
+preregistration checkpoint before execution.
 
 Outputs:
 
