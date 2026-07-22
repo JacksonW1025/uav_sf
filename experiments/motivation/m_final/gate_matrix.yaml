@@ -1,0 +1,85 @@
+schema_version: "1.0"
+matrix_id: m_final_mg1_mg10
+status: PREREGISTERED_PENDING_ADJUDICATION
+evidence_cutoff_commit: 3665337673e7e0a62ea204ac64f5644b8e428c25
+preregistration_commit: PENDING_FIRST_PUSH
+allowed_statuses: [PASS, CONDITIONAL_PASS, PARTIAL_PASS, NEGATIVE_SCOPE_DECISION, MEASUREMENT_INSUFFICIENT, ENVIRONMENT_BLOCKED, FAIL, NOT_APPLICABLE]
+
+clauses:
+  MG1:
+    name: Unified Problem Existence
+    question: >-
+      Do route conformance, command freshness, and lifecycle successor
+      progression form one meaningful runtime consistency problem?
+    primary_evidence: [P0_NORMAL, P2_PROCESS_LOSS, P3_CHANNEL_DECOUPLING, ISSUE162_HISTORICAL, FRESHNESS_F1, N1_FULL]
+  MG2:
+    name: Oracle Incremental Value
+    question: >-
+      Do Route, Freshness, Successor, and Evidence Gates detect or attribute
+      facts that mode-only or physical-only observation cannot establish?
+    primary_evidence: [ISSUE162_HISTORICAL, FRESHNESS_F1, P5_TRANSITION, C1_MATRIX]
+  MG3:
+    name: Normal Baseline Credibility
+    question: >-
+      Are normal entry, release, fallback, re-entry, and matched differential
+      baselines complete and admissible within their bounded configurations?
+    primary_evidence: [P0_NORMAL, P0_REENTRY, P2_PROCESS_LOSS, P5_TRANSITION, ISSUE162_BASELINE]
+  MG4:
+    name: Historical Benchmark Feasibility
+    question: >-
+      Does Issue 162 have exact-version identity, a public trigger, repeated
+      reproduction, reduced-observation confirmation, and current prevention?
+    primary_evidence: [ISSUE162_BASELINE, ISSUE162_CURRENT, ISSUE162_HISTORICAL, ISSUE162_REDUCED]
+  MG5:
+    name: Current Natural Evidence
+    question: >-
+      Does the current revision have evidence-complete natural evidence, with
+      reproduction, phase-dependence, and root-cause limits preserved?
+    primary_evidence: [FRESHNESS_F1, N1_FULL, N1_REDUCED]
+  MG6:
+    name: Partial Failure and Freshness Relevance
+    question: >-
+      Does health, setpoint, and process decoupling expose measurable command
+      freshness or route-lineage consequences?
+    primary_evidence: [P2_PROCESS_LOSS, P3_CHANNEL_DECOUPLING, FRESHNESS_F1, FRESHNESS_F2, FRESHNESS_F3, FRESHNESS_F4]
+  MG7:
+    name: Concurrency and Re-entry Readiness
+    question: >-
+      Are C1 and R1 sufficient for a Family A seed grammar, linearization
+      invariant, and session-identity readiness?
+    primary_evidence: [C1_MATRIX, R1_SESSION]
+  MG8:
+    name: Real Workload Added Value
+    question: >-
+      Does accepted runtime evidence show added route, lifecycle, timing, or
+      context value from a real workload?
+    primary_evidence: [W1_SOURCE_AUDIT, W1_RUNTIME]
+  MG9:
+    name: Cross-Depth / Family B Generality
+    question: >-
+      Do subject, observability, combined-build, and runtime results support
+      onboard registered-controller-graph generality?
+    primary_evidence: [B1_INVENTORY, B1_REFERENCE_BUILD, B1_RUNTIME]
+  MG10:
+    name: Attribution and Method-Entry Readiness
+    question: >-
+      Do version, mechanism, instrumentation, evidence discipline, seed
+      grammar, and Oracle freezes support a bounded next method evaluation?
+    primary_evidence: [P5_TRANSITION, ISSUE162_CURRENT, ISSUE162_HISTORICAL, N1_FULL, N1_REDUCED, C1_MATRIX, R1_SESSION, W1_RUNTIME, B1_RUNTIME]
+
+required_clause_output:
+  - status
+  - supporting_evidence_ids
+  - limiting_evidence_ids
+  - exact_claim
+  - prohibited_stronger_claim
+  - consequence_for_final_disposition
+  - consequence_for_next_stage_authorization
+
+hard_boundaries:
+  N1: phase_dependent_reobservation_not_stable_rate_or_root_cause
+  C1: frozen_event_pair_matrix_only_not_arbitrary_concurrency
+  R1: measurement_insufficient_no_session_rollover_outcome
+  W1: measurement_insufficient_no_runtime_added_value_outcome
+  B1: environment_blocked_static_mechanism_only_future_work
+  state_aware_search_gain: deferred_not_pass

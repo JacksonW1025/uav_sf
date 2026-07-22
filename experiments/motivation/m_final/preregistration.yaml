@@ -1,0 +1,168 @@
+schema_version: "1.0"
+study_id: m_final_unified_motivation_completion_gate
+phase: M-FINAL
+title: Unified Motivation Study Completion Gate
+registered_at: "2026-07-22T10:16:27-07:00"
+status: PREREGISTERED_PENDING_ADJUDICATION
+
+study_boundary:
+  purpose: >-
+    Freeze, verify, and adjudicate the existing Motivation evidence for
+    flight-safety validation, software reliability, runtime consistency,
+    route conformance, command freshness, lifecycle progression, and evidence
+    admissibility.
+  evidence_cutoff_commit: 3665337673e7e0a62ea204ac64f5644b8e428c25
+  starting_commit: 3665337673e7e0a62ea204ac64f5644b8e428c25
+  branch: main
+  remote: origin
+  preregistration_commit: PENDING_FIRST_PUSH
+  input_rule: >-
+    Only formal evidence present in origin/main at or before the evidence
+    cutoff commit is admissible. The preregistration commit adds no runtime
+    evidence and is not itself an empirical input.
+  no_new_runtime_attempts: true
+  no_closed_campaign_reopened: true
+  no_denominator_or_classification_changes: true
+
+evidence_priority:
+  - machine_readable_final_gate
+  - final_formal_report
+  - attempt_ledger
+  - compact_processed_evidence
+  - source_or_build_identity_lock
+  - raw_evidence_manifest
+  - narrative_summary
+conflict_rule: >-
+  A final Gate and its formal ledger must agree. A direct conflict is an
+  evidence-integrity blocker. An older narrative or current-state mismatch is
+  a consistency finding corrected only in M-FINAL current-state and Narrative
+  V7. Where a campaign has no final machine Gate, the final formal report has
+  priority over a non-final checkpoint ledger, but the structural mismatch
+  must remain visible and accepted attempt records must independently support
+  the report.
+
+gate_clause_statuses:
+  - PASS
+  - CONDITIONAL_PASS
+  - PARTIAL_PASS
+  - NEGATIVE_SCOPE_DECISION
+  - MEASUREMENT_INSUFFICIENT
+  - ENVIRONMENT_BLOCKED
+  - FAIL
+  - NOT_APPLICABLE
+non_pass_equivalence_forbidden:
+  - MEASUREMENT_INSUFFICIENT
+  - ENVIRONMENT_BLOCKED
+  - NOT_APPLICABLE
+oracle_result_rules:
+  unknown_is_pass: false
+  not_applicable_is_pass: false
+  exposure_is_violation: false
+  rejected_attempt_enters_sut_denominator: false
+  reduced_instrumentation_is_new_independent_defect: false
+
+final_dispositions:
+  - PASS_MOTIVATION_COMPLETE_AUTHORIZE_SCOPED_FUZZER_V0
+  - CONDITIONAL_PASS_MOTIVATION_COMPLETE_AUTHORIZE_FAMILY_A_FUZZER_V0
+  - CONDITIONAL_PASS_MOTIVATION_COMPLETE_REPOSITION_TO_RUNTIME_VERIFICATION
+  - NEGATIVE_SCOPE_DECISION_MOTIVATION_COMPLETE_NO_FUZZER_AUTHORIZATION
+  - FAIL_MOTIVATION_EVIDENCE_INSUFFICIENT
+
+disposition_rules:
+  PASS_MOTIVATION_COMPLETE_AUTHORIZE_SCOPED_FUZZER_V0:
+    requires:
+      - MG1_through_MG10_are_PASS
+      - current_natural_event_is_evidence_complete_and_stably_reproduced
+      - accepted_session_rollover_evidence_exists
+      - accepted_real_workload_added_value_evidence_exists
+      - accepted_Family_B_runtime_generality_evidence_exists
+      - attribution_and_method_entry_prerequisites_are_complete
+  CONDITIONAL_PASS_MOTIVATION_COMPLETE_AUTHORIZE_FAMILY_A_FUZZER_V0:
+    requires:
+      - MG1_MG2_MG3_MG4_and_MG6_are_PASS
+      - at_least_one_evidence_complete_current_natural_finding_exists
+      - MG5_is_PASS_or_CONDITIONAL_PASS
+      - MG7_is_PASS_CONDITIONAL_PASS_or_PARTIAL_PASS
+      - MG10_is_PASS_or_CONDITIONAL_PASS
+      - Family_A_seed_grammar_and_Oracles_are_ready_for_bounded_evaluation
+    permits_limitations:
+      - session_rollover_is_measurement_insufficient
+      - real_workload_runtime_value_is_measurement_insufficient
+      - Family_B_runtime_generality_is_environment_blocked
+      - state_aware_search_gain_is_deferred_to_method_evaluation
+  CONDITIONAL_PASS_MOTIVATION_COMPLETE_REPOSITION_TO_RUNTIME_VERIFICATION:
+    requires:
+      - core_route_freshness_and_lifecycle_problem_is_supported
+      - Oracle_incremental_value_is_supported
+      - natural_discovery_or_method_entry_support_is_too_weak_for_defect_discovery_claims
+    consequence: authorize_only_scoped_conformance_and_runtime_verification_planning
+  NEGATIVE_SCOPE_DECISION_MOTIVATION_COMPLETE_NO_FUZZER_AUTHORIZATION:
+    requires:
+      - problem_space_has_value
+      - current_scope_or_evidence_is_insufficient_for_method_entry
+  FAIL_MOTIVATION_EVIDENCE_INSUFFICIENT:
+    triggers:
+      - MG1_is_FAIL
+      - MG2_is_FAIL
+      - MG3_is_FAIL
+      - evidence_integrity_blocker_prevents_core_adjudication
+
+motivation_gates:
+  MG1: Unified Problem Existence
+  MG2: Oracle Incremental Value
+  MG3: Normal Baseline Credibility
+  MG4: Historical Benchmark Feasibility
+  MG5: Current Natural Evidence
+  MG6: Partial Failure and Freshness Relevance
+  MG7: Concurrency and Re-entry Readiness
+  MG8: Real Workload Added Value
+  MG9: Cross-Depth / Family B Generality
+  MG10: Attribution and Method-Entry Readiness
+
+authorization_boundary:
+  m_final_may_authorize_next_phase_preregistration_only: true
+  m_final_executes_next_phase: false
+  if_fuzzer_v0_authorized_family_a_only: true
+  r1_w1_b1_unfinished_scope_auto_imported: false
+  authorizes_aerostack2_native_adapter: false
+  authorizes_family_b_runtime: false
+  authorizes_direct_actuator: false
+  authorizes_hitl: false
+  authorizes_real_flight: false
+  authorizes_unprovenanced_random_events: false
+  authorizes_large_campaign: false
+  next_phase_requires_independent_preregistration: true
+  next_phase_requires_attempt_cap: true
+  next_phase_requires_oracle_freeze: true
+  next_phase_requires_evidence_gate: true
+
+narrative_freeze_rules:
+  - Ordinary bounded single-event handoff is generally route-conforming.
+  - P5 70 Route PASS is a bounded baseline, not a general safety proof.
+  - Freshness EXPOSURE is a design or policy exposure, not automatically a defect.
+  - The current natural stale-subject event was re-observed and is phase-dependent.
+  - Issue 162 is a historical benchmark; the current library prevents the historical composition.
+  - C1 supports only bounded event-pair conformance in the frozen matrix.
+  - R1 has no accepted session-rollover evidence.
+  - W1 has no accepted runtime source trace and cannot support a workload negative claim.
+  - B1 has static mechanism and subject evidence but no runtime graph-replacement evidence.
+  - Family A is the formal empirical scope and Family B is future work.
+  - State-aware search gain and full fuzzing effectiveness have not been evaluated.
+  - A formal safety stop, environment failure, or campaign configuration failure is not a SUT failure.
+
+forbidden_actions:
+  - start_PX4_Gazebo_SITL_ROS_or_DDS_runtime
+  - run_or_extend_N1_C1_R1_W1_or_B1
+  - change_attempt_caps_thresholds_denominators_or_historical_classifications
+  - implement_or_run_Fuzzer_v0
+  - implement_a_mutation_engine
+  - run_random_state_aware_or_large_campaigns
+  - run_Family_B_Aerostack2_HITL_real_flight_or_direct_actuator_work
+  - create_a_natural_defect_frequency_claim
+
+required_outputs:
+  - experiments/motivation/m_final/motivation_completion_gate.json
+  - data/processed/motivation/m_final/m_final_summary.json
+  - docs/motivation/MOTIVATION_STUDY_FINAL_REPORT.md
+  - docs/narrative/NEW_NARRATIVE_v7.md
+  - docs/narrative/CURRENT_NARRATIVE.md

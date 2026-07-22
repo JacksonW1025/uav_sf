@@ -1,0 +1,77 @@
+schema_version: "1.0"
+lock_id: m_final_source_lock
+captured_at: "2026-07-22T10:16:27-07:00"
+branch: main
+remote: origin
+starting_commit: 3665337673e7e0a62ea204ac64f5644b8e428c25
+starting_origin_main: 3665337673e7e0a62ea204ac64f5644b8e428c25
+starting_ahead: 0
+starting_behind: 0
+evidence_cutoff_commit: 3665337673e7e0a62ea204ac64f5644b8e428c25
+preregistration_commit: PENDING_FIRST_PUSH
+raw_artifacts_ignored: true
+tracked_raw_files: 0
+
+dependency_identity:
+  px4: 4ae21a5e569d3d89c2f6366688cbacb3e93437c9
+  px4_msgs: 18ecff03041c6f8d8a0012fbc63af0b23dd60af1
+  px4_ros2_interface_lib_current: c3e410f035806e8c56246708432ded09c976434b
+  px4_historical_issue_162: 6ea3539157ca358c70a515878b77077af7d4611d
+  px4_ros2_interface_lib_historical_issue_162: a5b9f3cb7cb65d2be80183bad31e9a7ce9f02684
+  route_oracle: "0.4"
+  freshness_oracle: "0.1"
+  successor_oracle: "0.1"
+  authority_event_linearization_oracle: "0.2"
+
+source_commits:
+  P0_P2_P3: e7718e2de6b7ada4472fcbc1fc428cb84da39e92
+  P5_v6: 75a5217e0e0bfab232d03c30dcc22088aa16624d
+  issue_162: c62452cf020f2851040fc9fa8a9611575d892e3d
+  freshness_F1_F4: 955e7c98e3b29ddd21fa4d44fb562065700fa832
+  N1: fd9b93fb0d2f50554d6f52d19ac3cd573d7ae2f9
+  C1: b24cfb4fb18c175856f2d01991c8d498f1d2710f
+  R1: 6f5abd682cca47b9e8febdbdcfb8ea0a9714e236
+  W1: e7b28518bdd3afc58696878bf1c0f2b39fd8e218
+  B1: 3665337673e7e0a62ea204ac64f5644b8e428c25
+
+protected_artifacts:
+  - {path: docs/motivation/P0_PHASE_A2_BASELINE_REPORT.md, sha256: 6f19b1bbfb5bba95ab292ccc7774a5004d1bccaafe13a900d92d7c809a221043}
+  - {path: experiments/motivation/phase_a2_measurement_gate.json, sha256: 64a901fa95a905c12f5fc552c104f5ebb9d3c30c14d4ee04282e2c706d735bc0}
+  - {path: experiments/motivation/phase_a2_reentry_gate.json, sha256: 2cee8a222db8a21de351bd7f9a82cd81823489f7e992fe1650c02674e252a02e}
+  - {path: docs/motivation/P2_PROCESS_LOSS_REPORT.md, sha256: f47980d09257e845d4553c0deaf248d8ff82b004357fee40b0a4191cfb9a7f08}
+  - {path: experiments/probes/p2/experiment_matrix.tsv, sha256: 437eefde13b22475dde1519679cf3dc64507daa2684bade0702ff6099588e050}
+  - {path: docs/motivation/P3_HEARTBEAT_SETPOINT_DECOUPLING_REPORT.md, sha256: d12cbde6449db6d64794a3188361017b9071a6bf84257349c79961f58322fda1}
+  - {path: experiments/probes/p3/experiment_matrix.tsv, sha256: 1d74986a9387f6a52343f9cf7ab731b898b0b111a6da6266b3a792fbc7c26dbd}
+  - {path: docs/repository/P5_V6_DIFFERENTIAL_REPORT.md, sha256: 39be58d185a39bc811d822998c2170741a812b0b75a9610029a7e82fa31153f9}
+  - {path: experiments/probes/p5/p5_v6_differential_gate.json, sha256: 9542eb7c98dfd4df1ab50026c149f21fb719fc6a2a09d040a9db4df647f132bc}
+  - {path: docs/motivation/EXTERNAL_RTL_SUCCESSOR_CASE_REPORT.md, sha256: 41fcbb85cfcf5c82f58ad1e2c7b857c6864f7105ee65d0889ce7803709aad680}
+  - {path: experiments/motivation/successor/baseline_attempt_ledger.yaml, sha256: dcd71d33a4c297bc7e180ca6136ed04a62d4300990ce36da8a722962111ec22b}
+  - {path: experiments/motivation/successor/current_replay_attempt_ledger.yaml, sha256: 326ab49cb72e5a668e65546b4652fb63997cd01e3188b1bbfc80e6e27c557663}
+  - {path: experiments/motivation/successor/historical_replay_attempt_ledger.yaml, sha256: 906113c23860f582ed02b182e1e9ee64b401bb311f54ecb58ab8efffdc02a191}
+  - {path: docs/motivation/SETPOINT_FRESHNESS_PILOT_REPORT.md, sha256: 21acf90a6f754fb7cfb2ecc068388320800404bcccb9c1f18dc25669f4e2ad6f}
+  - {path: experiments/motivation/freshness/freshness_pilot_gate.json, sha256: 71ad5ebb9ee305919381217092d4d80d6dcf6d0141cfe7a413ed219835e5d99c}
+  - {path: experiments/motivation/freshness/attempt_ledger.yaml, sha256: 099a75a0166c0d3bbd08c28c6e9c8a9a78be98c04a0446669e192e5336b5d0dd}
+  - {path: docs/motivation/N1_TRAJECTORY_RESIDUE_REPORT.md, sha256: cb3e60b1deaaf467406e25f6f4f7b01c9b90d63eec3a198e2e6a9052c04ecc17}
+  - {path: experiments/motivation/n1_trajectory_residue/attempt_ledger.yaml, sha256: eb8434b84058e11973cb43293b7dbffb8f29e8989e258202fc721c3f9795169b}
+  - {path: data/processed/motivation/n1_trajectory_residue/n1_adjudication.json, sha256: 0012fefe15c991e92cb7bbc1c1c7cefc96fe3e071cf59955235073435edc9142}
+  - {path: docs/motivation/C1_CONCURRENT_AUTHORITY_EVENTS_REPORT.md, sha256: 76f768ae405986912b056320065fc19769e00d3a0f3a364843a4c7846b88b95f}
+  - {path: experiments/motivation/c1_concurrency/c1_gate.json, sha256: 210d4cc7e7a876d40614a46af4427e876a0c96559b3727853453bb4de854b6ab}
+  - {path: experiments/motivation/c1_concurrency/attempt_ledger.yaml, sha256: 5f831dfebfae65f3be11a8851b20170e5e1ff60fab8d5396dc88e128fa9c105c}
+  - {path: docs/motivation/R1_SESSION_ROLLOVER_REPORT.md, sha256: 9c54667b50e6e755eb27a5ba5d9f169caa12c4f89266e982b3c5f297d46ee0a8}
+  - {path: experiments/motivation/r1_session/r1_gate.json, sha256: 4e9accbd7e447e3aec19791dc145aee2f024126bc1040ca91911cf7d27545774}
+  - {path: experiments/motivation/r1_session/attempt_ledger.yaml, sha256: 1affa471afcce5d91cc6810694ddd7bf4770e4fda3e98b803cac99a4316481bb}
+  - {path: docs/motivation/W1_REAL_WORKLOAD_SPIKE_REPORT.md, sha256: 31b4d61e6b38670e57724891a310e39a06be146510774931fc763656a978050a}
+  - {path: experiments/motivation/w1_workload/w1_gate.json, sha256: 2503f937d8fea2f102e29c7db1c0892e97b2ba3cde0e118af890e16503a600ad}
+  - {path: experiments/motivation/w1_workload/attempt_ledger.yaml, sha256: 2ddbab2fa9144e2f614a83cecd1573ef1ca786a9f93d7547e4d41e8df2ee865e}
+  - {path: docs/motivation/B1_FAMILY_B_GATE_REPORT.md, sha256: c13cb3fe8bafcb8717de966d8510e48c81dc92c6365909db7bec1586d39db0df}
+  - {path: experiments/motivation/b1_family_b/b1_gate.json, sha256: 52a4ee45c154b6042933239309c0147514a53086e33806bea12aa8696815231d}
+  - {path: experiments/motivation/b1_family_b/attempt_ledger.yaml, sha256: c75d37347cbd5c62d4de7052fef1483b607be7e7f6ea01d4183619c440cfcf58}
+
+known_pre_adjudication_consistency_note: >-
+  The Issue 162 final formal report and accepted processed attempt records
+  close the historical benchmark, while historical_replay_attempt_ledger.yaml
+  remains an early ACTIVE checkpoint containing only the first environment and
+  observability records. There is no Issue 162 final machine Gate. M-FINAL must
+  preserve the checkpoint, independently validate each accepted processed
+  result, and report this structural mismatch without treating the checkpoint
+  as a contradictory final Gate.
