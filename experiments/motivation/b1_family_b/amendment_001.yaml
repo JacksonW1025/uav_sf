@@ -1,0 +1,61 @@
+schema_version: "1.0"
+amendment_id: b1_reference_controller_probe_amendment_001
+study_id: b1_registered_controller_inventory_family_b_gate
+status: READY_FOR_PUSH_BEFORE_FIRST_FORMAL_BUILD_OR_RUNTIME_ATTEMPT
+preregistration_commit: 792a36d6ff9a26202e9fde31e4b085eff90b65c8
+preregistration_activation_commit: 4c48621e08027c4a8eeff206d7fd63bfe55257c4
+amendment_commit: PENDING_PUSH
+formal_attempts_before_amendment: 0
+trigger: B1_C_all_twelve_reference_authorization_clauses_satisfied
+selected_subject: b1_deterministic_attitude_reference
+selected_classification: PARTIAL_CONTROLLER_SUBGRAPH_REPLACEMENT
+changes:
+  - path: scripts/adapters/external_mode_adapter/include/b1_reference_controller.hpp
+    sha256: 1d53e5bd6c79e5227ce10475f6884674894db616e951f0a0d20fc4a9bf32667a
+    effect: deterministic_bounded_altitude_PD_and_level_attitude_controller
+  - path: scripts/adapters/external_mode_adapter/src/b1_reference_controller.cpp
+    sha256: 09f56edefb243e6901ed53aae68ce7cdac0997ad00038c693c83b17a9869a269
+    effect: registered_ModeBase_process_and_structured_registration_identity
+  - path: scripts/adapters/b1_reference_controller/CMakeLists.txt
+    sha256: ebc0a5785fac47509d3ffc04dbac4b6a14be6671aa83aede23e8b2248835a89b
+    effect: isolated_B1_only_colcon_build_target
+  - path: scripts/adapters/b1_reference_controller/package.xml
+    sha256: f2fe70f544279234ae53eeb16ee3cceaa9189ffa27365a1014c2e5ec55120810
+    effect: isolated_B1_only_package_identity
+  - path: scripts/probes/b1_reference_flight_monitor.py
+    sha256: ed137402d3f169a92299e103cc1eba76f36409a952348d004eb05781f06d20fb
+    effect: bounded_flight_state_machine_and_automatic_safety_monitor
+  - path: scripts/probes/b1_controlled_stop.py
+    sha256: 3d558f72fd2b0de545231e5bd7c587d136d20b2e194e94a9715f03b6703d045c
+    effect: exact_controlled_process_stop_marker
+  - path: scripts/probes/run_b1_reference_scenario.sh
+    sha256: aab362061c54f9f6aa57ddf3c9941da5a951d9a2ffc61cf901d2dbf72ffba6aa
+    effect: isolated_SITL_runner_complete_raw_capture_and_cleanup
+  - path: scripts/analysis/summarize_b1_reference_run.py
+    sha256: 53922acb933a220e1d4b145c624eb9ad6a5cee85a84e8c67a0a1f0f14b9243ff
+    effect: frozen_per_attempt_graph_writer_restoration_adjudication
+  - path: config/b1_reference_logger_topics.txt
+    sha256: 3ea84636f30027a19c4c512527ddd9fc3af525111650c8272a2b4f462195985e
+    effect: complete_registration_graph_allocator_writer_ULog_profile
+semantic_invariance:
+  research_questions_changed: false
+  attempt_caps_changed: false
+  acceptance_thresholds_changed: false
+  safety_bounds_changed: false
+  oracle_thresholds_changed: false
+  route_selection_logic_changed: false
+  Commander_changed: false
+  Control_Allocator_changed: false
+  classic_controller_semantics_changed: false
+  fallback_policy_changed: false
+  observation_hooks_feed_control: false
+  random_or_learned_control_added: false
+  direct_actuator_output_added: false
+implementation_bounds:
+  replaced_segment: mc_pos_control
+  retained_segments: [mc_att_control, mc_rate_control, control_allocator]
+  control_output: VehicleAttitudeSetpoint
+  thrust_range: [0.35, 0.65]
+  build_target: b1_reference_controller:b1_reference_controller
+  simulator: Gazebo_SITL_gz_x500_default_world
+runtime_authorization: CONDITIONAL_ON_THIS_AMENDMENT_PUSH_AND_ACCEPTED_B1_D

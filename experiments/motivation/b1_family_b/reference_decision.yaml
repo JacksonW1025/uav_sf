@@ -1,0 +1,50 @@
+schema_version: "1.0"
+decision_id: b1_reference_subject_feasibility_gate
+status: AUTHORIZED_PENDING_PUSHED_AMENDMENT_AND_FORMAL_BUILD
+decision_basis_commit: 4c48621e08027c4a8eeff206d7fd63bfe55257c4
+reference_controller_authorized: true
+selected_reference_subject: b1_deterministic_attitude_reference
+selected_classification: PARTIAL_CONTROLLER_SUBGRAPH_REPLACEMENT
+runtime_probe_authorized: true
+runtime_authorization_conditions:
+  - implementation_and_observation_hashes_are_committed_and_pushed
+  - formal_B1_D_build_and_static_integration_is_ACCEPTED
+design:
+  registration: locked_px4_ros2_ModeBase_external_component_mechanism
+  input: VehicleLocalPosition_z_vz_heading
+  controller_law: bounded_altitude_PD_plus_level_latched_yaw_attitude
+  output: VehicleAttitudeSetpoint
+  replaced_classic_segment: mc_pos_control
+  retained_classic_segment: [mc_att_control, mc_rate_control, control_allocator]
+  final_writer: control_allocator
+  normal_release: public_VehicleCommand_to_AutoLoiter
+  controlled_release: locally_owned_reference_process_stop_and_registered_component_lifecycle_loss
+  fallback: existing_Commander_external_component_policy
+  output_bounds: {minimum_thrust: 0.35, maximum_thrust: 0.65, absolute_limit: 1.0}
+authorization_clauses:
+  B1-REF-01: {satisfied: true, evidence: "ModeManagement RegisterExtComponentRequest and ModeBase registration exist at locked commits"}
+  B1-REF-02: {satisfied: true, evidence: "TYPE_ATTITUDE disables mc_pos_control and retains attitude, rate, and allocation"}
+  B1-REF-03: {satisfied: true, evidence: "registration/reply, activation/epoch, VCM, reference output, attitude consumption, allocator input/writer, release, and classic restoration have an observation contract"}
+  B1-REF-04: {satisfied: true, evidence: "fixed finite PD law has no weights, model, randomness, or benchmark"}
+  B1-REF-05: {satisfied: true, evidence: "no Commander, Control Allocator, or classic controller semantic changes"}
+  B1-REF-06: {satisfied: true, evidence: "existing external-component fallback remains unchanged"}
+  B1-REF-07: {satisfied: true, evidence: "one isolated small ROS package, structured observation markers, monitor, and focused tests; protected prior-stage adapter and collector files remain unchanged"}
+  B1-REF-08: {satisfied: true, evidence: "frozen gz_x500 envelope is 1.5 m takeoff, low speed, level attitude, bounded thrust"}
+  B1-REF-09: {satisfied: true, evidence: "public transition to AutoLoiter invokes normal ModeBase deactivation"}
+  B1-REF-10: {satisfied: true, evidence: "controlled stop of the locally owned mode process exercises registered-component lifecycle loss"}
+  B1-REF-11: {satisfied: true, evidence: "one build target and two bounded three-run probe sets fit the frozen attempt caps"}
+  B1-REF-12: {satisfied: true, evidence: "no real flight, HITL, or special hardware is required"}
+rejected_candidates:
+  mc_nn: learned_model_and_direct_actuator_performance_confound
+  mc_raptor: policy_dependency_uninitialized_locked_submodules_and_direct_actuator_confound
+  retained_family_b_prototype: historical_dependency_identity_and_no_independent_reference_controller
+  locked_interface_setpoint_examples: no_independent_closed_loop_controller_law
+remaining_observability_gaps:
+  - mc_nn_and_RAPTOR_direct_writer_paths_remain_uninstrumented_and_are_not_runtime_subjects
+  - process_side_reference_identity_requires_a_valid_clock_bridge_for_cross_domain_adjudication
+  - one_control_allocator_writer_name_is_disambiguated_by_route_epoch_and_complete_upstream_lineage
+reason: >-
+  The selected subject is a bounded closed-loop controller that changes the
+  controller graph without changing PX4 route selection, fallback, allocator,
+  or classic controller semantics. It is authorized only for the preregistered
+  build and bounded SITL probes after a pushed amendment checkpoint.

@@ -50,7 +50,7 @@ def test_b1_phase_order_caps_and_gate_are_frozen():
     assert len(prereg["reference_subject_authorization_gate"]["clauses"]) == 12
 
 
-def test_b1_attempt_classifications_and_empty_ledger():
+def test_b1_attempt_classifications_and_append_only_ledger():
     prereg = load_yaml("preregistration.yaml")
     ledger = load_yaml("attempt_ledger.yaml")
     expected = {
@@ -64,7 +64,9 @@ def test_b1_attempt_classifications_and_empty_ledger():
     }
     assert set(prereg["attempt_classification"]["allowed"]) == expected
     assert set(ledger["allowed_classifications"]) == expected
-    assert ledger["attempts"] == []
+    attempt_ids = [attempt["attempt_id"] for attempt in ledger["attempts"]]
+    assert len(attempt_ids) == len(set(attempt_ids))
+    assert all(attempt["classification"] in expected for attempt in ledger["attempts"])
 
 
 def test_b1_tsv_headers_and_enumerated_preregistration_states():
@@ -79,7 +81,10 @@ def test_b1_tsv_headers_and_enumerated_preregistration_states():
     with (B1 / "inventory.tsv").open(encoding="utf-8", newline="") as handle:
         rows = list(csv.DictReader(handle, delimiter="\t"))
     assert expected_inventory_columns <= set(rows[0])
-    assert {row["classification"] for row in rows} == {"UNRESOLVED"}
+    allowed_inventory = set(
+        load_yaml("preregistration.yaml")["candidate_subjects"]["classifications"]
+    )
+    assert {row["classification"] for row in rows} <= allowed_inventory
 
     allowed_observability = {
         "DIRECTLY_OBSERVABLE",

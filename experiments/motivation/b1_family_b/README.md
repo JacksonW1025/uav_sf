@@ -25,3 +25,9 @@ B1 may close positively, conditionally, negatively, measurement-insufficient,
 or environment-blocked. Every compliant closure advances only to the registered
 M-FINAL phase; B1 never authorizes a random campaign, complete Stateful
 Testing, or M-FINAL execution.
+
+B1-A found eight inventory subjects: two concrete true registered controller
+routes (`mc_nn` and `mc_raptor`), one selected partial-subgraph reference, one
+classic baseline, and four exclusions. B1-C authorized the bounded reference
+in `reference_decision.yaml`; the authorization remains conditional on the
+separately pushed amendment and an accepted B1-D build/static attempt.
