@@ -1,4 +1,7 @@
-FROM ros:humble-ros-base-jammy
+# Registry tag at preregistration: ros:humble-ros-base-jammy.
+# The arm64 manifest is pinned so the bounded SITL study never depends only on
+# a floating container tag.
+FROM ros@sha256:9bdda47f584f33aae18456225a8a95fe7bcde821727757f02a3252cbc46e8188
 
 ARG AEROSTACK2_COMMIT=a8e7318b8d1d7c5adc580e8a16374357773bc11a
 ARG PIXHAWK_COMMIT=482563ba979baea965df918995c141a362e26637

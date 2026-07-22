@@ -1,0 +1,67 @@
+schema_version: "1.0"
+study_id: w1_real_workload_runtime_trace_spike
+status: FROZEN_BEFORE_FORMAL_ATTEMPTS
+preregistration_commit: PENDING_FIRST_PUSH
+starting_repository_head: 6f5abd682cca47b9e8febdbdcfb8ea0a9714e236
+execution_order: [W1-A, W1-B, W1-C, W1-D, W1-E, W1-F]
+phases:
+  - phase_id: W1-A
+    name: source_build_interface_audit
+    formal_runtime: false
+    attempt_cap: NOT_APPLICABLE
+    status: NOT_STARTED
+  - phase_id: W1-B
+    name: source_trace_acquisition
+    formal_runtime: true
+    accepted_target: 1
+    maximum_attempts: 3
+    seed_schedule: [510101, 510102, 510103]
+    accepted: 0
+    attempts: 0
+    status: NOT_STARTED
+  - phase_id: W1-C
+    name: trace_only_deterministic_replay
+    formal_runtime: true
+    accepted_target: 1
+    maximum_attempts: 3
+    replay_schedule: [source_trace_first, source_trace_second, source_trace_third]
+    accepted: 0
+    attempts: 0
+    status: BLOCKED_PENDING_ACCEPTED_W1_B
+  - phase_id: W1-D
+    name: canonical_adapter_command_replay
+    formal_runtime: true
+    accepted_target: 3
+    maximum_attempts: 6
+    seed_schedule: [510201, 510202, 510203, 510204, 510205, 510206]
+    accepted: 0
+    attempts: 0
+    status: BLOCKED_PENDING_ACCEPTED_W1_C
+  - phase_id: W1-E
+    name: native_adapter_spike
+    formal_runtime: true
+    conditional: true
+    accepted_target_if_authorized: 1
+    maximum_attempts: 3
+    seed_schedule: [510301, 510302, 510303]
+    accepted: 0
+    attempts: 0
+    status: BLOCKED_PENDING_NATIVE_ADAPTER_GATE
+  - phase_id: W1-F
+    name: final_adjudication_and_gate
+    formal_runtime: false
+    attempt_cap: NOT_APPLICABLE
+    status: BLOCKED_PENDING_PRIOR_PHASE_DISPOSITION
+stop_rules:
+  - stop_each_runtime_phase_at_accepted_target_or_attempt_cap
+  - no_W1_C_before_one_accepted_W1_B
+  - no_W1_D_before_one_accepted_W1_C
+  - no_W1_E_without_explicit_authorization
+  - no_retry_after_relevant_cap
+  - close_with_registered_final_disposition
+native_adapter_gate:
+  native_adapter_adds_new_semantics: PENDING_W1_A
+  supporting_source_evidence: []
+  estimated_integration_cost: PENDING_W1_A
+  native_spike_authorized: false
+  decision: PENDING_W1_A

@@ -1,0 +1,106 @@
+schema_version: "1.0"
+study_id: w1_real_workload_runtime_trace_spike
+status: PREREGISTRATION_SOURCE_LOCK
+repository:
+  starting_head: 6f5abd682cca47b9e8febdbdcfb8ea0a9714e236
+  preregistration_commit: PENDING_FIRST_PUSH
+  required_branch: main
+  required_remote: origin/main
+workload:
+  aerostack2:
+    url: https://github.com/aerostack2/aerostack2.git
+    commit: a8e7318b8d1d7c5adc580e8a16374357773bc11a
+  px4_platform_plugin:
+    name: as2_platform_pixhawk
+    url: https://github.com/aerostack2/as2_platform_pixhawk.git
+    commit: 482563ba979baea965df918995c141a362e26637
+    path: as2_platform_pixhawk
+  simulation_project:
+    name: project_px4_vision
+    url: https://github.com/aerostack2/project_px4_vision.git
+    commit: 22d945c956ae234839b3c48555ab2c1ba40eaee3
+flight_stack:
+  px4_autopilot:
+    url: https://github.com/PX4/PX4-Autopilot.git
+    commit: 4ae21a5e569d3d89c2f6366688cbacb3e93437c9
+  px4_msgs:
+    url: https://github.com/PX4/px4_msgs.git
+    commit: 18ecff03041c6f8d8a0012fbc63af0b23dd60af1
+  px4_ros2_interface_lib:
+    url: https://github.com/Auterion/px4-ros2-interface-lib.git
+    commit: c3e410f035806e8c56246708432ded09c976434b
+simulator:
+  name: Gazebo_SITL_gz_x500_default_world
+  gz_sim_source_commit: bb0b9cf974acf4f1bcb5f5fcf80b88841562dea9
+  world:
+    logical_path: Tools/simulation/gz/worlds/default.sdf
+    sha256: 457a363a22c437b788a4aaf1e2335aa149efce4e5b988cdc108065663cd879b2
+  model:
+    logical_path: Tools/simulation/gz/models/x500/model.sdf
+    sha256: cb76a4afd439f253a8c516b1fcd3528f80347619cfa46bebb620557054fbf125
+  base_model:
+    logical_path: Tools/simulation/gz/models/x500_base/model.sdf
+    sha256: e807dca3406f7cd5cb3d545898601c3ec17e0e5242e25cf467a69df1812cf436
+runtime_environment:
+  operating_system: Ubuntu_22.04_arm64
+  ros_distribution: humble
+  ros_package_snapshot:
+    command: "dpkg-query -W -f='${Package}\\t${Version}\\n' 'ros-humble-*' | sort"
+    package_count: 353
+    sha256: b6550effc7acb43f6cfbc82e66ac32ce77a8abf4d546c650c3f7b365dc4234b0
+    full_snapshot_storage: runs/motivation/w1_workload/environment/ros_packages.tsv
+  dds:
+    implementation: rmw_fastrtps_cpp
+    rmw_version: 6.2.10-1jammy.20260217.034238
+    rmw_shared_version: 6.2.10-1jammy.20260217.033342
+    rmw_selection: default_when_RMW_IMPLEMENTATION_unset
+  compiler_and_build:
+    gcc: Ubuntu_11.4.0-1ubuntu1~22.04.3
+    gxx: Ubuntu_11.4.0-1ubuntu1~22.04.3
+    cmake: 3.22.1
+    colcon_core: 0.20.1
+    python: 3.10.12
+    build_type: RelWithDebInfo
+  micro_xrce_dds_agent:
+    logical_identity: local_Micro_XRCE_DDS_Agent
+    sha256: 7a4a2e8d0eebf1a78ed5bd98c5656c5f0b0cdaea33de68a231e9c0de419137d5
+container:
+  source_tag_for_audit: ros:humble-ros-base-jammy
+  architecture: linux_arm64_v8
+  manifest_digest: sha256:9bdda47f584f33aae18456225a8a95fe7bcde821727757f02a3252cbc46e8188
+  dockerfile: docker/aerostack2/Dockerfile
+  dockerfile_sha256: d0ad2add7398828c62c5fe2d8c246f98930a6adf10da1c17ac0bb1f105328bdc
+  execution_status: DEFINED_NOT_EXECUTED_DOCKER_DAEMON_PERMISSION_DENIED
+  runtime_path: locked_host_ROS_Humble_environment
+mission_and_launch_artifacts:
+  project_config_yaml: bbb43b13f294a0784d76dde117c69bb7e01ec4086b7fae43e4a4051e6e8888db
+  differential_flatness_controller_yaml: 995ee849c16698fd9d2cb1528d586474d75c94392a9c5b95ececd2f0f12a0f22
+  pid_speed_controller_yaml: 6c301673f958a1ac3e42afed4a27be5fe3b8d7b1859803518a396c36bf0adcf7
+  simulation_world_yaml: 8be7387b81963a43a99987b5b1a07921d991af2b2e4f9aeaa21fbd5d9e5c09b6
+  simulation_tmux_launch_yaml: c4f40071bcb0402885636cf87fda8a0be7b9cb20316b73bc02dcebe5f6041c4f
+  upstream_mission_py_for_interface_audit_only: c2556e79c01c73be0caeab36daadc695c2fb1d64f857e1122bbf4036be7a509f
+  upstream_mission_behavior_tree_py_for_interface_audit_only: e5ebc77d3a48354c6994694938480755fcb3688871e6e4a700df0b44d52cbdb4
+  w1_low_risk_mission_overlay: PENDING_IMPLEMENTATION_CHECKPOINT_BEFORE_FORMAL_ATTEMPT
+repository_artifacts:
+  config/aerostack2_dependencies.lock.yaml: a117848fad8a64ec32cf8d6d50afc708d544f79fcf189db9da8d037f0552c8c3
+  scripts/workloads/aerostack2_trace_adapter.py: eb863c2b720195433755614f8fcd9b6d716fd441da744dd03fa268154db30464
+  scripts/tracing/route_trace_collector.py: 446d1dad803e8599003ea5fb65216c19c854e7f04c72642d675113420c1c62a4
+  scripts/tracing/clock_bridge_collector.py: 1140be063ce1e75835ec1f9fe3c3eea55aab7a483d99799a323e0d57353f4ed2
+  scripts/tracing/compact_route_trace.py: 3bd0bfb77c5c408161884823ec9199a3e684595bc4031118399be932dc6dae35
+  scripts/analysis/summarize_route_trace.py: 945dc20a9d741ec8b794845991e5b5dfcd4d4fdb532809f3b74cfea59a796e33
+  future_w1_artifacts: >-
+    Any added sidecar recorder, canonical schema, trace-only replay, command
+    replay, mission overlay, or analysis tool must be hash-locked and pushed
+    in a non-semantic implementation checkpoint before formal use.
+build_products:
+  Aerostack2_binary_snapshot: PENDING_W1_A_BUILD_AUDIT
+  PX4_SITL_binary: PENDING_W1_A_BUILD_AUDIT
+  rule: exact_binary_hashes_must_be_added_and_pushed_before_formal_runtime
+external_source_storage:
+  large_dependencies_are_not_vendored: true
+  ignored_local_workspaces:
+    - external/aerostack2
+    - ros2_ws_aerostack2
+    - external/PX4-Autopilot
+    - ros2_ws/src/px4_msgs
+    - ros2_ws/src/px4_ros2_interface_lib

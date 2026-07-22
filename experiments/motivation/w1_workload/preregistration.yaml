@@ -1,0 +1,366 @@
+schema_version: "1.0"
+status: FROZEN_BEFORE_FORMAL_ATTEMPTS
+study_id: w1_real_workload_runtime_trace_spike
+created_at: 2026-07-22T00:00:00-07:00
+starting_repository_head: 6f5abd682cca47b9e8febdbdcfb8ea0a9714e236
+freeze_mechanism: >-
+  The first pushed Git commit containing this file freezes the W1 research
+  question, primary workload, bounded mission, phase order, attempt caps,
+  admissibility rules, safety stops, route classification, Native Adapter
+  Gate, final dispositions, cleanup, and claim boundary before every formal
+  W1 runtime attempt.
+
+execution_gate:
+  required_branch: main
+  required_remote: origin/main
+  preregistration_commit_must_be_pushed: true
+  formal_runtime_before_push: FORBIDDEN
+  formal_attempts_completed_at_freeze: 0
+  implementation_checkpoint_rule: >-
+    Any new or changed W1 mission overlay, sidecar recorder, adapter, replay
+    tool, schema, launch file, or parameter file must be hash-locked in
+    source_lock.yaml and pushed to origin/main before the first formal attempt
+    that uses it. This bookkeeping cannot alter the frozen question, mission,
+    caps, acceptance rules, safety bounds, or dispositions.
+
+namespace:
+  preregistration: experiments/motivation/w1_workload/preregistration.yaml
+  matrix: experiments/motivation/w1_workload/matrix.yaml
+  ledger: experiments/motivation/w1_workload/attempt_ledger.yaml
+  source_lock: experiments/motivation/w1_workload/source_lock.yaml
+  trace_manifest: experiments/motivation/w1_workload/trace_manifest.json
+  gate: experiments/motivation/w1_workload/w1_gate.json
+  compact_evidence: data/processed/motivation/w1_workload
+  raw_runs: runs/motivation/w1_workload
+  raw_artifacts_are_ignored: true
+
+scope:
+  description: >-
+    Bounded PX4/Gazebo SITL flight-safety validation of software reliability,
+    runtime consistency, lifecycle transition, route conformance, trace
+    acquisition, and deterministic replay using observation-only
+    instrumentation and locally owned processes.
+  permitted_interfaces:
+    - public_ROS_2_service_and_action_interfaces
+    - public_PX4_flight_control_interfaces
+    - sidecar_topic_subscription_and_rosbag_recording
+    - observation_only_PX4_instrumentation
+    - controlled_local_process_stop_for_cleanup
+  excluded:
+    - random_testing
+    - large_state_space_exploration
+    - external_system_modification
+    - third_party_aircraft
+    - HITL
+    - real_flight
+    - direct_actuator_flight
+    - emergency_motor_stop
+    - high_speed_mission
+    - B1_execution
+    - M_FINAL_execution
+    - Stateful_Testing
+
+research_question: >-
+  Determine whether one real ROS 2 UAV workload adds information beyond
+  synthetic behavior and official examples, while separating route-replacing
+  authority transitions from task-only lifecycle transitions and timing or
+  physical context.
+questions:
+  - whether_a_new_lifecycle_sequence_is_observed
+  - relation_of_cancel_completion_hover_and_Land_phases
+  - whether_a_new_PX4_mode_request_or_route_replacement_is_observed
+  - whether_producer_or_session_identity_changes_by_task_phase
+  - whether_setpoint_type_topic_or_publication_timing_changes
+  - whether_new_recovery_semantics_are_observed
+  - whether_value_is_only_realistic_timing_or_physical_context
+  - whether_Native_Adapter_has_route_or_lifecycle_semantics_absent_from_Canonical_Adapter
+behavior_phase_change_is_not_presumed_to_be_route_replacement: true
+
+primary_workload:
+  name: Aerostack2
+  exact_commit: a8e7318b8d1d7c5adc580e8a16374357773bc11a
+  platform_plugin:
+    name: as2_platform_pixhawk
+    exact_commit: 482563ba979baea965df918995c141a362e26637
+  simulation_project:
+    name: project_px4_vision
+    exact_commit: 22d945c956ae234839b3c48555ab2c1ba40eaee3
+  fallback_workload: MRS_UAV_System_ROS_2
+  fallback_authorization: >-
+    Only an objective bounded Aerostack2 build or runtime environment blocker
+    permits a separately pushed phase amendment that pins all MRS repositories,
+    simulator, and example mission before any MRS formal attempt. Two large
+    integrations may not proceed concurrently.
+  no_core_behavior_modification: true
+
+low_risk_mission:
+  sequence:
+    - internal_ground
+    - arm
+    - internal_takeoff
+    - Aerostack2_Offboard
+    - go_to
+    - follow_path
+    - cancel_to_hover
+    - explicit_aircraft_Land
+    - disarm
+  vehicle: gz_x500
+  world: default
+  vehicle_count: 1
+  takeoff_height_m: 1.5
+  maximum_altitude_agl_m: 3.0
+  maximum_horizontal_distance_from_origin_m: 5.0
+  maximum_commanded_horizontal_speed_m_s: 1.0
+  maximum_commanded_vertical_speed_m_s: 0.6
+  maximum_commanded_acceleration_m_s2: 2.0
+  maximum_attitude_deg: 35.0
+  maximum_angular_rate_rad_s: 2.0
+  maximum_yaw_rate_rad_s: 0.6
+  all_position_velocity_acceleration_yaw_attitude_and_rate_values_must_be_finite: true
+  task_geometry:
+    go_to_xyz_m: [1.5, 0.0, 1.5]
+    follow_path_xyz_m:
+      - [1.5, 1.0, 1.5]
+      - [0.5, 1.0, 1.5]
+    cancel_during_follow_path: true
+    hover_minimum_s: 1.0
+  terminal_cleanup:
+    command: explicit_public_aircraft_Land_then_Disarm
+    required_state: LANDED_AND_DISARMED
+
+phase_order:
+  sequence:
+    - W1-A_source_build_interface_audit
+    - W1-B_one_accepted_real_workload_trace_acquisition
+    - W1-C_trace_only_deterministic_replay_validation
+    - W1-D_Canonical_Adapter_command_replay
+    - W1-E_conditional_Native_Adapter_spike
+    - W1-F_final_adjudication_and_Gate
+  order_is_mandatory: true
+
+formal_runtime_caps:
+  W1-B:
+    target_accepted: 1
+    maximum_formal_attempts: 3
+  W1-C:
+    target_accepted: 1
+    maximum_formal_attempts: 3
+  W1-D:
+    target_accepted: 3
+    maximum_formal_attempts: 6
+  W1-E:
+    target_accepted_if_authorized: 1
+    maximum_formal_attempts: 3
+    conditional: true
+  maximum_possible_formal_runtime_attempts: 15
+  build_and_dependency_diagnostics_are_not_formal_runtime_attempts: true
+  build_and_dependency_diagnostics_must_be_recorded: true
+  no_unbounded_retry: true
+
+attempt_classification:
+  allowed:
+    - ACCEPTED
+    - OBSERVABILITY_REJECTED
+    - MEASUREMENT_INSUFFICIENT
+    - ENVIRONMENT_FAILURE
+    - CAMPAIGN_CONFIGURATION_FAILURE
+    - FORMAL_SAFETY_STOP
+    - NOT_APPLICABLE
+  failed_attempts_are_append_only: true
+  failed_attempts_may_not_be_deleted_or_overwritten: true
+  excluded_attempts_do_not_enter_SUT_denominator: true
+
+safety_stop_conditions:
+  conditions:
+    - PX4_abort
+    - Gazebo_or_simulator_clock_stall
+    - unexpected_early_ground_contact
+    - non_finite_control_value
+    - frozen_speed_altitude_attitude_or_angular_rate_bound_exceeded
+    - incomplete_critical_window
+    - invalid_clock_bridge
+    - missing_critical_route_controller_or_writer_evidence
+    - safe_Land_or_Disarm_cleanup_not_possible
+    - unexplained_departure_from_preregistered_mission_sequence
+  action: >-
+    Stop command publication, request the normal public Land and Disarm cleanup
+    when safe, preserve evidence, then perform a controlled local process stop.
+    Classify the attempt FORMAL_SAFETY_STOP and do not produce an Oracle outcome.
+
+source_trace_acceptance:
+  requirements:
+    - exact_source_build_and_environment_identity_matches_source_lock
+    - mission_preconditions_satisfied
+    - complete_preregistered_mission_sequence
+    - action_service_request_cancel_ack_and_result_complete
+    - motion_reference_complete_and_all_values_finite
+    - PX4_route_trace_and_ULog_present
+    - clock_bridge_VALID
+    - applicable_route_windows_COMPLETE
+    - controller_allocator_and_writer_lineage_complete
+    - terminal_Land_and_Disarm_successful
+    - no_formal_safety_stop
+    - raw_and_compact_artifact_hashes_complete
+    - no_residual_PX4_Gazebo_ROS_DDS_recorder_replay_process_or_W1_port
+
+trace_acquisition_requirements:
+  workload_side:
+    - service_and_action_request_id
+    - goal_id_and_goal_timestamp
+    - feedback_result_cancel_request_and_cancel_ack_timestamp
+    - alert_and_event
+    - motion_reference_topic_type_QoS_and_publication_timestamp
+    - finite_position_velocity_acceleration_and_yaw
+    - platform_status
+    - ROS_clock
+    - rosbag_metadata_and_sha256
+  PX4_side:
+    - canonical_route_trace
+    - RouteObservability_profile
+    - PX4_nav_state
+    - user_intended_nav_state_when_available
+    - setpoint_type_topic_and_subject_timestamp
+    - producer_and_session_identity_when_available
+    - controller_consumption
+    - allocator_input
+    - writer_lineage
+    - ULog_and_sha256
+    - parameters
+    - dependency_lock
+    - clock_bridge_segments
+  inference_from_topic_or_behavior_name_alone: FORBIDDEN
+
+route_classification:
+  internal_to_Offboard: EXPECTED_ROUTE_REPLACEMENT
+  Offboard_to_aircraft_Land: EXPECTED_ROUTE_REPLACEMENT
+  go_to_to_follow_path: >-
+    EXPECTED_TASK_TRANSITION unless runtime route identity, producer,
+    controller graph, or writer changes.
+  cancel_to_hover: >-
+    EXPECTED_TASK_TRANSITION unless runtime route identity, producer,
+    controller graph, or writer changes.
+  missing_clock_bridge_sequence_plugin_identity_or_runtime_lineage: UNKNOWN_AND_NOT_ACCEPTED
+
+trace_manifest_contract:
+  required_fields:
+    - exact_workload_and_dependency_commits
+    - source_artifact_hashes
+    - rosbag_and_ULog_hashes
+    - topic_names_type_hashes_and_QoS
+    - start_and_end_timestamps
+    - ROS_and_PX4_clock_domain_description
+    - clock_bridge_VALID_intervals
+    - expected_lifecycle_edges
+    - expected_route_replacements
+    - expected_non_route_task_transitions
+    - expected_setpoint_level_and_rate_range
+    - speed_altitude_and_task_bounds
+    - cleanup_expectation
+    - source_trace_id
+    - canonical_replay_ids
+
+trace_only_replay:
+  command_publication: FORBIDDEN
+  flight_or_SITL_start: FORBIDDEN
+  requirements:
+    - parse_bag_or_compact_trace_into_canonical_workload_schema
+    - validate_temporal_order
+    - correlate_request_result_cancel_and_ack
+    - validate_topic_type_and_QoS
+    - validate_all_numeric_control_values_are_finite
+    - validate_state_machine_edges_and_route_classification
+    - identical_input_produces_byte_identical_compact_event_sequence
+    - explicit_zero_command_publication_evidence
+  accepted_before_W1_D: REQUIRED
+
+canonical_adapter_replay:
+  explicit_test_environment_gate: REQUIRED
+  internal_PX4_state_injection: FORBIDDEN
+  bypass_of_arm_takeoff_Offboard_Land_or_Disarm: FORBIDDEN
+  task_transitions_are_not_automatic_route_replacements: true
+  lifecycle_timing: retain_source_trace
+  deterministic_timing_scale_range: [0.8, 1.25]
+  requirements:
+    - independent_run_id_and_manifest
+    - trace_identity_match
+    - explainably_consistent_route_classification
+    - no_UNKNOWN_applicable_Route_Oracle_clause
+    - complete_internal_to_Offboard_installation
+    - complete_Offboard_to_Land_revocation_and_installation
+    - no_illegal_writer_overlap
+    - no_route_gap_beyond_policy
+    - task_only_transition_not_misclassified
+    - finite_commands_within_frozen_bounds
+    - clock_bridge_VALID
+    - critical_and_target_windows_COMPLETE
+    - terminal_Land_and_Disarm_successful
+    - raw_and_compact_artifacts_complete
+
+native_adapter_gate:
+  decision_fields:
+    - native_adapter_adds_new_semantics
+    - supporting_source_evidence
+    - estimated_integration_cost
+    - native_spike_authorized
+    - decision
+  authorization_requires_all:
+    - PX4_route_producer_lifecycle_owner_cancel_completion_or_fallback_semantic_absent_from_Canonical_Adapter
+    - runtime_evidence_is_observable
+    - no_large_refactor
+    - no_Aerostack2_core_behavior_change
+    - judgment_possible_with_at_most_three_runtime_spikes
+  if_not_authorized:
+    attempt_classification: NOT_APPLICABLE
+    runtime_attempts: 0
+  native_only_failure_default_attribution: integration_layer
+
+final_dispositions:
+  mutually_exclusive: true
+  values:
+    - PASS_REAL_WORKLOAD_ADDS_NEW_ROUTE_OR_LIFECYCLE_SEMANTICS
+    - CONDITIONAL_PASS_REAL_WORKLOAD_ADDS_TRACE_OR_TIMING_VALUE
+    - NEGATIVE_SCOPE_DECISION_NO_ADDITIONAL_ROUTE_SEMANTICS
+    - MEASUREMENT_INSUFFICIENT
+    - ENVIRONMENT_BLOCKED
+  selection_rules:
+    PASS_REAL_WORKLOAD_ADDS_NEW_ROUTE_OR_LIFECYCLE_SEMANTICS: >-
+      Accepted runtime evidence proves at least one route or lifecycle semantic
+      absent from the Canonical Adapter evidence.
+    CONDITIONAL_PASS_REAL_WORKLOAD_ADDS_TRACE_OR_TIMING_VALUE: >-
+      Accepted source and replay evidence adds realistic trace timing or
+      physical context but no additional route semantic.
+    NEGATIVE_SCOPE_DECISION_NO_ADDITIONAL_ROUTE_SEMANTICS: >-
+      Admissible audit or runtime evidence establishes that the bounded
+      workload adds no route semantic requiring a Native Adapter spike.
+    MEASUREMENT_INSUFFICIENT: >-
+      The relevant formal attempt cap is reached without the evidence needed
+      to choose a semantic or timing disposition, excluding a persistent
+      environment blocker.
+    ENVIRONMENT_BLOCKED: >-
+      Objective source, build, simulator, ROS, or integration environment
+      failures exhaust the bounded available attempts or registered stop path.
+  negative_scope_decision_is_valid_closure: true
+
+claim_boundaries:
+  - one_real_stack_does_not_represent_all_UAV_workloads
+  - task_transitions_are_not_all_authority_transitions
+  - three_replays_do_not_estimate_population_frequency
+  - Native_Adapter_is_not_presumed_safer
+  - W1_does_not_validate_later_search_methods
+  - environment_failure_is_not_a_SUT_violation
+  - absence_of_new_route_semantics_does_not_mean_absence_of_research_value
+  - no_disposition_authorizes_large_integration
+  - no_disposition_authorizes_random_campaign_or_full_Stateful_Testing
+
+protected_evidence:
+  p5_v6_gate: 9542eb7c98dfd4df1ab50026c149f21fb719fc6a2a09d040a9db4df647f132bc
+  p5_v6_manifest: 02d857f555623c10dc44998cd202c2da6226ec5c40a94a75020d75df87f02518
+  issue_162_preregistration: 11cc54e73dc03192374b4d877cf84cf3b864d9f084b8aa00549d1cdc3b52d060
+  issue_162_report: 41fcbb85cfcf5c82f58ad1e2c7b857c6864f7105ee65d0889ce7803709aad680
+  freshness_preregistration: fbbac59f943f499b6cc16e2787976c4ea1814dba1ce89efe8d40c23c0603f05f
+  freshness_gate: 71ad5ebb9ee305919381217092d4d80d6dcf6d0141cfe7a413ed219835e5d99c
+  freshness_ledger: 099a75a0166c0d3bbd08c28c6e9c8a9a78be98c04a0446669e192e5336b5d0dd
+  freshness_matrix: d52dbdaaed9e73ac510de80db49531e5745444122c4e0d69822244be04cfa841
+
+next_phase_after_W1: B1_REGISTERED_CONTROLLER_INVENTORY_AND_FAMILY_B_GATE
+authorizes_B1_only_when_w1_gate_authorizes_next_phase: true

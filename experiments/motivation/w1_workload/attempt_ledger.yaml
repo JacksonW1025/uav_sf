@@ -1,0 +1,29 @@
+schema_version: "1.0"
+study_id: w1_real_workload_runtime_trace_spike
+status: FROZEN_EMPTY_LEDGER
+preregistration_commit: PENDING_FIRST_PUSH
+starting_repository_head: 6f5abd682cca47b9e8febdbdcfb8ea0a9714e236
+allowed_classifications:
+  - ACCEPTED
+  - OBSERVABILITY_REJECTED
+  - MEASUREMENT_INSUFFICIENT
+  - ENVIRONMENT_FAILURE
+  - CAMPAIGN_CONFIGURATION_FAILURE
+  - FORMAL_SAFETY_STOP
+  - NOT_APPLICABLE
+formal_attempt_counts:
+  W1-B: {accepted: 0, attempts: 0, maximum_attempts: 3}
+  W1-C: {accepted: 0, attempts: 0, maximum_attempts: 3}
+  W1-D: {accepted: 0, attempts: 0, maximum_attempts: 6}
+  W1-E: {accepted: 0, attempts: 0, maximum_attempts: 3, conditional: true}
+classification_counts:
+  ACCEPTED: 0
+  OBSERVABILITY_REJECTED: 0
+  MEASUREMENT_INSUFFICIENT: 0
+  ENVIRONMENT_FAILURE: 0
+  CAMPAIGN_CONFIGURATION_FAILURE: 0
+  FORMAL_SAFETY_STOP: 0
+  NOT_APPLICABLE: 0
+diagnostics: []
+attempts: []
+append_only: true
