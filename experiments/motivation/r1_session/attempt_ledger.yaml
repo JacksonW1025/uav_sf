@@ -1,13 +1,13 @@
 schema_version: "1.0"
 study_id: r1_session_isolation
-status: EMPTY_PREREGISTERED_LEDGER
+status: STOP_RULE_REACHED_R1_A_CAP
 preregistration_commit: 9faad09d0e9e7631497034e7ee27f8ab2ce9d896
 selected_r1_c_semantic: ModeCompleted
 accepted_target: 9
 accepted_runs: 0
 maximum_attempts_per_scenario: 6
 maximum_total_attempts: 18
-total_attempts: 0
+total_attempts: 6
 outcomes:
   PASS: 0
   EXPOSURE: 0
@@ -20,10 +20,140 @@ attempt_classifications:
   MEASUREMENT_INSUFFICIENT: 0
   ENVIRONMENT_FAILURE: 0
   CAMPAIGN_CONFIGURATION_FAILURE: 0
-  FORMAL_SAFETY_STOP: 0
+  FORMAL_SAFETY_STOP: 6
   NOT_APPLICABLE: 0
 scenarios:
-  R1-A: {accepted_runs: 0, attempts: 0, maximum_attempts: 6}
+  R1-A: {accepted_runs: 0, attempts: 6, maximum_attempts: 6, status: ATTEMPT_LIMIT_REACHED_MEASUREMENT_INSUFFICIENT}
   R1-B: {accepted_runs: 0, attempts: 0, maximum_attempts: 6}
   R1-C: {accepted_runs: 0, attempts: 0, maximum_attempts: 6}
-attempts: []
+attempts:
+  - run_id: r1-a-a01
+    scenario_id: R1-A
+    attempt: 1
+    simulation_seed: 410101
+    repository_commit_at_start: ca875a19290cfb25008e34f7eafab369a71aac06
+    disposition: FORMAL_SAFETY_STOP
+    counted_as_accepted: false
+    oracle: NOT_PRODUCED
+    runner_exit: 13
+    monitor: INCOMPLETE_AFTER_PX4_ABORT
+    clock_sample_count: 46
+    identity: OLD_AND_NEW_REGISTRATION_COMPLETE_NEW_ACTIVATION_INCOMPLETE
+    observation_window: NOT_ESTABLISHED
+    cleanup: SUT_STATE_UNAVAILABLE_LOCAL_PROCESSES_AND_PORT_CLEANED
+    rejection_reasons: [PX4_abort_pthread_mutex_owner_assertion]
+    artifact_sha256:
+      px4_log: b03917a85255011dd46439cd9d6ab781be2f7b1bf215c9b025ce4e40deaa3552
+      monitor_events: 59537384410f276bfb8ed5ceb142316e8b5369b9cce71b4b285c1e1ee816325d
+      old_lifecycle: e75a1a2e299cc870ba450ef991a2fa34162a1f06d8db1f847acd68a9627139a8
+      new_lifecycle: 78b7286cde6b1763bb8734881cf94a003b225cea9d3be6fce1bac268f0f7cabc
+  - run_id: r1-a-a02
+    scenario_id: R1-A
+    attempt: 2
+    simulation_seed: 410102
+    repository_commit_at_start: ca875a19290cfb25008e34f7eafab369a71aac06
+    disposition: FORMAL_SAFETY_STOP
+    counted_as_accepted: false
+    oracle: NOT_PRODUCED
+    runner_exit: 1
+    monitor: FORMAL_SAFETY_STOP
+    clock_sample_count: 51
+    identity: OLD_AND_NEW_REGISTRATION_COMPLETE_NEW_ACTIVATION_INCOMPLETE
+    observation_window: NOT_ESTABLISHED
+    cleanup: LANDED_AND_DISARMED
+    physical: {maximum_tilt_deg: 3.7903653914591535, maximum_angular_rate_rad_s: 0.0}
+    rejection_reasons: [unexpected_ground_contact_before_terminal_phase]
+    artifact_sha256:
+      monitor_result: f35d07e8fd40a0063f36da52fe5420376b52d5755e6159757e7d8521b5aef0fc
+      monitor_events: df492df850a1598381cf0010acb2450aa55344f744e08c03c5d552e4a352fe98
+      px4_log: 6560e988a4072a3d947e3b2b44dd8d937f4ec7be110249a9667589219c843080
+      old_lifecycle: c924d3e00203ea0352c7989515b6b62d8c3645b2c455a053ead52e7856d836b0
+      new_lifecycle: da1226fc40f5223b1be1fb074e12324790f824129cdeea759deb9ff74b90a813
+  - run_id: r1-a-a03
+    scenario_id: R1-A
+    attempt: 3
+    simulation_seed: 410103
+    repository_commit_at_start: ca875a19290cfb25008e34f7eafab369a71aac06
+    disposition: FORMAL_SAFETY_STOP
+    counted_as_accepted: false
+    oracle: NOT_PRODUCED
+    runner_exit: 1
+    monitor: FORMAL_SAFETY_STOP
+    clock_sample_count: 50
+    identity: OLD_AND_NEW_REGISTRATION_COMPLETE_NEW_ACTIVATION_INCOMPLETE
+    observation_window: NOT_ESTABLISHED
+    cleanup: LANDED_AND_DISARMED
+    physical: {maximum_tilt_deg: 3.336022233106143, maximum_angular_rate_rad_s: 0.0}
+    rejection_reasons: [unexpected_ground_contact_before_terminal_phase]
+    artifact_sha256:
+      monitor_result: 044229a72bd9006b02af6c7a4119902dfa6ac614410e897b0aaac985bbb840f5
+      monitor_events: 2f51effe1a89789f0c43d9c935c832d8371ea432994f1935d819188a99c7fca0
+      px4_log: 9056999ca5f39648266bff2b60545e83a8f6e8b944ca34d9c0d53ac66ebba46d
+      old_lifecycle: ac4bd671c023dab7651a084a1add1b9ca3bbf7a93d66becc08b72f62a0ad3f3e
+      new_lifecycle: 3d54b316bdba1878ceb9a65a58900c7e8fe389cb70e18413f819207163a9413d
+  - run_id: r1-a-a04
+    scenario_id: R1-A
+    attempt: 4
+    simulation_seed: 410104
+    repository_commit_at_start: ca875a19290cfb25008e34f7eafab369a71aac06
+    disposition: FORMAL_SAFETY_STOP
+    counted_as_accepted: false
+    oracle: NOT_PRODUCED
+    runner_exit: 1
+    monitor: FORMAL_SAFETY_STOP
+    clock_sample_count: 50
+    identity: OLD_AND_NEW_REGISTRATION_COMPLETE_NEW_ACTIVATION_INCOMPLETE
+    observation_window: NOT_ESTABLISHED
+    cleanup: LANDED_AND_DISARMED
+    physical: {maximum_tilt_deg: 4.103551770670585, maximum_angular_rate_rad_s: 0.0}
+    rejection_reasons: [unexpected_ground_contact_before_terminal_phase]
+    artifact_sha256:
+      monitor_result: f55a24945d0a62d53e566efd639eb7f55e0c3ab08a0290af9acf5d5933ba43a8
+      monitor_events: 98eb6e22389618e1537f3b13391be915aff373454afa3f761818510be7c592d9
+      px4_log: 93150795f944933ebcae4adbcbffb66cdf7fd8dece76579b3d488b27eb0d3f56
+      old_lifecycle: e65fddd0d0d9bcf1d68d01fe1e31a51b95244c0d69eeae6e6379d179eadeb744
+      new_lifecycle: b761d972125a0fb7913b4464950bf9ec5808ac3b821ce424879aa9aaea733f92
+  - run_id: r1-a-a05
+    scenario_id: R1-A
+    attempt: 5
+    simulation_seed: 410105
+    repository_commit_at_start: ca875a19290cfb25008e34f7eafab369a71aac06
+    disposition: FORMAL_SAFETY_STOP
+    counted_as_accepted: false
+    oracle: NOT_PRODUCED
+    runner_exit: 1
+    monitor: FORMAL_SAFETY_STOP
+    clock_sample_count: 50
+    identity: OLD_AND_NEW_REGISTRATION_COMPLETE_NEW_ACTIVATION_INCOMPLETE
+    observation_window: NOT_ESTABLISHED
+    cleanup: LANDED_AND_DISARMED
+    physical: {maximum_tilt_deg: 4.689374433206913, maximum_angular_rate_rad_s: 0.0}
+    rejection_reasons: [unexpected_ground_contact_before_terminal_phase]
+    artifact_sha256:
+      monitor_result: 405f7e233c27ae085f053e8988afda53b68f3f79fb94c2920f8c5c9b5298d0e2
+      monitor_events: 859b4df07281f57ef7c5ab62ad8fe23307e5a171dc754958c0250cbb0d1fae05
+      px4_log: 2ebf2714af0b28a8c56c5d58ae9aaea9c7374b75e5bac6004a3ff304dfee2aa5
+      old_lifecycle: b43e581a53f151f885a51f85e081aae9853a867433f2b45c196c23eb4cccf0f5
+      new_lifecycle: a81ff73ccaed2b20f46ea0f73719c2186d0eac9f37586ac220d48fbce8b4dd90
+  - run_id: r1-a-a06
+    scenario_id: R1-A
+    attempt: 6
+    simulation_seed: 410106
+    repository_commit_at_start: ca875a19290cfb25008e34f7eafab369a71aac06
+    disposition: FORMAL_SAFETY_STOP
+    counted_as_accepted: false
+    oracle: NOT_PRODUCED
+    runner_exit: 1
+    monitor: FORMAL_SAFETY_STOP
+    clock_sample_count: 53
+    identity: OLD_AND_NEW_REGISTRATION_COMPLETE_NEW_ACTIVATION_INCOMPLETE
+    observation_window: NOT_ESTABLISHED
+    cleanup: LANDED_AND_DISARMED
+    physical: {maximum_tilt_deg: 3.9972528291731955, maximum_angular_rate_rad_s: 0.0}
+    rejection_reasons: [unexpected_ground_contact_before_terminal_phase]
+    artifact_sha256:
+      monitor_result: 592775f6addb3914645a5bfa2379df97cb96b814919e645b6ca8497ce4d34534
+      monitor_events: 36522b9387f815e2b88168aa3bb19ee07dcb01f79256bb23adec2bf06b3a8ff6
+      px4_log: d290c1cf620240e027af5bce1ea2fe440438d5b872cc68092d831d65cb0063ae
+      old_lifecycle: 1357f1aa528693a84bd7c50446b4b36656a3f3972f42b4ec8a535963faff25af
+      new_lifecycle: 77eecb19b301b831217a2a1527a4ea7eca588fda73d730f22504d84f89164485

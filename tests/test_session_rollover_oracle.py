@@ -352,7 +352,7 @@ def test_not_applicable_without_distinct_session_relation() -> None:
     assert result["clauses"]["session_relation"]["status"] == "NOT_APPLICABLE"
 
 
-def test_preregistration_matrix_caps_and_empty_ledger() -> None:
+def test_preregistration_matrix_caps_and_ledger_consistency() -> None:
     preregistration = yaml.safe_load((BASE / "preregistration.yaml").read_text(encoding="utf-8"))
     matrix = yaml.safe_load((BASE / "matrix.yaml").read_text(encoding="utf-8"))
     ledger = yaml.safe_load((BASE / "attempt_ledger.yaml").read_text(encoding="utf-8"))
@@ -373,9 +373,28 @@ def test_preregistration_matrix_caps_and_empty_ledger() -> None:
     assert len(matrix["scenarios"]) == 3
     assert sum(item["accepted_runs_required"] for item in matrix["scenarios"]) == 9
     assert sum(item["maximum_attempts"] for item in matrix["scenarios"]) == 18
-    assert ledger["status"] == "EMPTY_PREREGISTERED_LEDGER"
-    assert ledger["accepted_runs"] == ledger["total_attempts"] == 0
-    assert ledger["attempts"] == []
+    assert ledger["preregistration_commit"] == (
+        "9faad09d0e9e7631497034e7ee27f8ab2ce9d896"
+    )
+    attempts = ledger["attempts"]
+    accepted = [item for item in attempts if item["counted_as_accepted"]]
+    assert matrix["accepted_runs"] == ledger["accepted_runs"] == len(accepted)
+    assert matrix["total_attempts"] == ledger["total_attempts"] == len(attempts)
+    assert ledger["attempt_classifications"]["FORMAL_SAFETY_STOP"] == sum(
+        item["disposition"] == "FORMAL_SAFETY_STOP" for item in attempts
+    )
+    for scenario in matrix["scenarios"]:
+        scenario_attempts = [
+            item for item in attempts if item["scenario_id"] == scenario["scenario_id"]
+        ]
+        assert scenario["attempts"] == len(scenario_attempts)
+        assert scenario["accepted_runs"] == sum(
+            item["counted_as_accepted"] for item in scenario_attempts
+        )
+        assert scenario["attempts"] <= scenario["maximum_attempts"]
+        assert [item["simulation_seed"] for item in scenario_attempts] == (
+            scenario["seed_schedule"][: len(scenario_attempts)]
+        )
 
 
 def test_preregistered_source_and_binary_identity_is_exact() -> None:

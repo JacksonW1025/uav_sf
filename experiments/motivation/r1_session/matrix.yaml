@@ -1,12 +1,12 @@
 schema_version: "1.0"
 study_id: r1_session_isolation
-status: PREREGISTERED_NOT_STARTED
+status: STOP_RULE_REACHED_R1_A_CAP
 selected_r1_c_semantic: ModeCompleted
 accepted_target: 9
 accepted_runs: 0
 maximum_attempts_per_scenario: 6
 maximum_total_attempts: 18
-total_attempts: 0
+total_attempts: 6
 execution_order: [R1-A, R1-B, R1-C]
 scenarios:
   - scenario_id: R1-A
@@ -22,9 +22,9 @@ scenarios:
     accepted_runs_required: 3
     accepted_runs: 0
     maximum_attempts: 6
-    attempts: 0
+    attempts: 6
     seed_schedule: [410101, 410102, 410103, 410104, 410105, 410106]
-    status: NOT_STARTED
+    status: ATTEMPT_LIMIT_REACHED_MEASUREMENT_INSUFFICIENT
   - scenario_id: R1-B
     short_id: B
     name: local_component_restart_after_fallback
@@ -41,7 +41,7 @@ scenarios:
     maximum_attempts: 6
     attempts: 0
     seed_schedule: [410201, 410202, 410203, 410204, 410205, 410206]
-    status: NOT_STARTED
+    status: NOT_STARTED_STOP_RULE_REACHED_R1_A_CAP
   - scenario_id: R1-C
     short_id: C
     name: completion_session_isolation_check
@@ -60,4 +60,4 @@ scenarios:
     maximum_attempts: 6
     attempts: 0
     seed_schedule: [410301, 410302, 410303, 410304, 410305, 410306]
-    status: NOT_STARTED
+    status: NOT_STARTED_STOP_RULE_REACHED_R1_A_CAP
