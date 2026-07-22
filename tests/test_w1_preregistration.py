@@ -50,11 +50,12 @@ def test_w1_preregistration_freezes_workload_sequence_caps_and_dispositions() ->
     }
 
 
-def test_w1_ledger_is_empty_append_only_and_has_only_registered_classes() -> None:
+def test_w1_ledger_has_no_runtime_attempt_and_diagnostics_are_non_formal() -> None:
     prereg = _yaml("preregistration.yaml")
     ledger = _yaml("attempt_ledger.yaml")
     assert ledger["attempts"] == []
-    assert ledger["diagnostics"] == []
+    assert ledger["diagnostics"]
+    assert all(item["formal_runtime"] is False for item in ledger["diagnostics"])
     assert ledger["append_only"] is True
     assert ledger["allowed_classifications"] == prereg["attempt_classification"][
         "allowed"

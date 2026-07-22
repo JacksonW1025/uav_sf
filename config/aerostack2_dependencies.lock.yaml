@@ -10,6 +10,9 @@ source_dependencies:
   project_px4_vision:
     url: https://github.com/aerostack2/project_px4_vision.git
     commit: 22d945c956ae234839b3c48555ab2c1ba40eaee3
+  mocap4r2_msgs:
+    url: https://github.com/MOCAP4ROS2-Project/mocap4r2_msgs.git
+    commit: ceaec260c8b6d393995ae5d4188eccb9265f66ad
   px4_msgs:
     url: https://github.com/PX4/px4_msgs.git
     commit: 18ecff03041c6f8d8a0012fbc63af0b23dd60af1

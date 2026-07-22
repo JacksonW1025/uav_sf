@@ -1,0 +1,59 @@
+schema_version: "1.0"
+amendment_id: w1_compatibility_amendment_001
+study_id: w1_real_workload_runtime_trace_spike
+status: READY_FOR_PUSH_BEFORE_FORMAL_RUNTIME
+preregistration_commit: 1f41229d17e42af6945bd040ccb1579128b1229e
+scope: source_build_compatibility_only
+trigger:
+  diagnostic_id: W1-A-BUILD-001
+  observed_condition: >-
+    The exact as2_platform_pixhawk source did not compile against the exact
+    current px4_msgs source because removed observation-field aliases were
+    still referenced.
+  raw_log: runs/motivation/w1_workload/diagnostics/w1-a-build-01.log
+  raw_log_sha256: 7955dc7bb2dc663e8bce9d6a8024756c51d52bbea6b134f624391efcd41555bf
+changes:
+  compatibility_patch:
+    path: patches/aerostack2/px4_msgs_current_compatibility.patch
+    sha256: 6f82c7012ee5d56cf015f6f41752c1ab7839332bf27faae715d1af6bf9245bc1
+    applies_to_commit: 482563ba979baea965df918995c141a362e26637
+    purpose: current_px4_msgs_build_and_observation_field_mapping
+  exact_build_dependency:
+    name: mocap4r2_msgs
+    url: https://github.com/MOCAP4ROS2-Project/mocap4r2_msgs.git
+    commit: ceaec260c8b6d393995ae5d4188eccb9265f66ad
+    purpose: compile_time_message_dependency_of_as2_state_estimator
+  setup_script:
+    path: scripts/workloads/setup_aerostack2_spike.sh
+    sha256: 2633887aad6c3a169235fcc9e3112949c3ac7d4e50883163def55d944688e910
+diagnostics:
+  - diagnostic_id: W1-A-BUILD-001
+    result: PX4_MSGS_INTERFACE_MISMATCH
+    raw_log_sha256: 7955dc7bb2dc663e8bce9d6a8024756c51d52bbea6b134f624391efcd41555bf
+  - diagnostic_id: W1-A-BUILD-002
+    result: PLATFORM_PLUGIN_BUILD_ACCEPTED_AFTER_PATCH
+    raw_log_sha256: e32eb84ccce98a43041f1d5e18d59cd6f7b5d2cd8cdfd9147e89277d4a147477
+  - diagnostic_id: W1-A-BUILD-003
+    result: MISSING_MOCAP4R2_MSGS_EXACT_DEPENDENCY
+    raw_log_sha256: 1aaa7c48d845416fdd8ed1d0aad5b49c141446282b46834d6715c230ef21067a
+  - diagnostic_id: W1-A-BUILD-004
+    result: REQUIRED_AEROSTACK2_TASK_STACK_BUILD_ACCEPTED
+    raw_log_sha256: 14dacacc54573395d0e8a731ed7f070a483cf3af505648fd6206f8ff52c909b3
+semantic_invariance:
+  changes_mission_logic: false
+  changes_route_selection: false
+  changes_setpoint_selection: false
+  changes_mode_requests: false
+  changes_fallback: false
+  changes_behavior_cancel_or_completion: false
+  changes_controller_lifecycle: false
+  changes_final_writer: false
+  modifies_aerostack2_behavior_core: false
+frozen_preregistration_invariance:
+  research_question_changed: false
+  mission_sequence_changed: false
+  attempt_caps_changed: false
+  acceptance_rules_changed: false
+  safety_bounds_changed: false
+  dispositions_changed: false
+formal_runtime_attempts_before_amendment_push: 0

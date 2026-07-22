@@ -1,9 +1,9 @@
 schema_version: "1.0"
 study_id: w1_real_workload_runtime_trace_spike
-status: PREREGISTRATION_SOURCE_LOCK
+status: W1_A_COMPLETE_IMPLEMENTATION_PENDING
 repository:
   starting_head: 6f5abd682cca47b9e8febdbdcfb8ea0a9714e236
-  preregistration_commit: PENDING_FIRST_PUSH
+  preregistration_commit: 1f41229d17e42af6945bd040ccb1579128b1229e
   required_branch: main
   required_remote: origin/main
 workload:
@@ -29,6 +29,9 @@ flight_stack:
   px4_ros2_interface_lib:
     url: https://github.com/Auterion/px4-ros2-interface-lib.git
     commit: c3e410f035806e8c56246708432ded09c976434b
+  mocap4r2_msgs:
+    url: https://github.com/MOCAP4ROS2-Project/mocap4r2_msgs.git
+    commit: ceaec260c8b6d393995ae5d4188eccb9265f66ad
 simulator:
   name: Gazebo_SITL_gz_x500_default_world
   gz_sim_source_commit: bb0b9cf974acf4f1bcb5f5fcf80b88841562dea9
@@ -62,8 +65,9 @@ runtime_environment:
     python: 3.10.12
     build_type: RelWithDebInfo
   micro_xrce_dds_agent:
-    logical_identity: local_Micro_XRCE_DDS_Agent
-    sha256: 7a4a2e8d0eebf1a78ed5bd98c5656c5f0b0cdaea33de68a231e9c0de419137d5
+    logical_identity: locked_freshness_agent_build
+    executable_sha256: 75f4ebcff6773fff460a8a50b1810f6a2ae2bee6c1ae1ec0d050e77dbaeb38e9
+    library_sha256: e860e9962df5a484dda15c5212f9bbb0f255048c6e8f10f5d7cc44ea7febf101
 container:
   source_tag_for_audit: ros:humble-ros-base-jammy
   architecture: linux_arm64_v8
@@ -82,7 +86,9 @@ mission_and_launch_artifacts:
   upstream_mission_behavior_tree_py_for_interface_audit_only: e5ebc77d3a48354c6994694938480755fcb3688871e6e4a700df0b44d52cbdb4
   w1_low_risk_mission_overlay: PENDING_IMPLEMENTATION_CHECKPOINT_BEFORE_FORMAL_ATTEMPT
 repository_artifacts:
-  config/aerostack2_dependencies.lock.yaml: a117848fad8a64ec32cf8d6d50afc708d544f79fcf189db9da8d037f0552c8c3
+  config/aerostack2_dependencies.lock.yaml: 4f36415d5d51d1c3edb1a098bcfbdc7710f44d811c8ce22a0a94359fbc9ebd1f
+  scripts/workloads/setup_aerostack2_spike.sh: 2633887aad6c3a169235fcc9e3112949c3ac7d4e50883163def55d944688e910
+  patches/aerostack2/px4_msgs_current_compatibility.patch: 6f82c7012ee5d56cf015f6f41752c1ab7839332bf27faae715d1af6bf9245bc1
   scripts/workloads/aerostack2_trace_adapter.py: eb863c2b720195433755614f8fcd9b6d716fd441da744dd03fa268154db30464
   scripts/tracing/route_trace_collector.py: 446d1dad803e8599003ea5fb65216c19c854e7f04c72642d675113420c1c62a4
   scripts/tracing/clock_bridge_collector.py: 1140be063ce1e75835ec1f9fe3c3eea55aab7a483d99799a323e0d57353f4ed2
@@ -93,8 +99,20 @@ repository_artifacts:
     replay, mission overlay, or analysis tool must be hash-locked and pushed
     in a non-semantic implementation checkpoint before formal use.
 build_products:
-  Aerostack2_binary_snapshot: PENDING_W1_A_BUILD_AUDIT
-  PX4_SITL_binary: PENDING_W1_A_BUILD_AUDIT
+  Aerostack2_install_snapshot_sha256: bb9deeb67ba207a0062e2a2b228fb2ed751b46412248e8a0f4c299cdabf9600b
+  Aerostack2_install_snapshot_file: runs/motivation/w1_workload/environment/aerostack2_install.sha256
+  key_executables:
+    as2_platform_pixhawk_node: 5fc07d8111c4dde141f2e60398a24c0d515140b99bd98632129140c710b5bf06
+    as2_motion_controller_node: 682233f1f12210dafcf71048b4aa27803b63c4aaef4758522ccf869072aa41f9
+    go_to_behavior_node: ce992f30987956db8f0f26e9a5a28eb335828bebd7d98a7b0cb930c15bbc33e7
+    follow_path_behavior_node: 7b85a94470d61fa0ae2765b020b9abff67922cde1d4649aa07c718829e4aaee7
+    state_estimator_node: 7f3481d1b487f0f28114a95bd0ef8e8dfb657e23a4536c3bccdf42f138cc756b
+  PX4_SITL_binary:
+    profile: route_and_freshness_observation_only_control
+    sha256: d5cd7df0efd24f7f5509e8c4e5699a709cd8e4df42b0b64e453edab815471612
+    source_commit: 4ae21a5e569d3d89c2f6366688cbacb3e93437c9
+    base_patch_sha256: 735555764c175ebd0a318723d4e76b8898965c4728ee4cab9b05b6c34d5e8b7c
+    freshness_patch_sha256: 7cc9aa3a99ba34ebd75094e291a357e679ce7176d112687ed75d1bf4b2339141
   rule: exact_binary_hashes_must_be_added_and_pushed_before_formal_runtime
 external_source_storage:
   large_dependencies_are_not_vendored: true
