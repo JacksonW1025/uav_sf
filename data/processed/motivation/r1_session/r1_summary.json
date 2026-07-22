@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0",
+  "study_id": "r1_session_isolation",
+  "disposition": "MEASUREMENT_INSUFFICIENT_AT_R1_A_ATTEMPT_LIMIT",
+  "formal_matrix": {
+    "accepted_target": 9,
+    "accepted_runs": 0,
+    "attempts": 6,
+    "maximum_attempts": 18,
+    "oracle_pass": 0,
+    "oracle_exposure": 0,
+    "oracle_violation": 0,
+    "formal_safety_stops": 6
+  },
+  "scenarios": {
+    "R1-A": {
+      "status": "ATTEMPT_LIMIT_REACHED_MEASUREMENT_INSUFFICIENT",
+      "accepted": 0,
+      "attempts": 6,
+      "px4_aborts": 1,
+      "pre_window_ground_contact_safety_stops": 5
+    },
+    "R1-B": {
+      "status": "NOT_STARTED_STOP_RULE_REACHED_R1_A_CAP",
+      "accepted": 0,
+      "attempts": 0
+    },
+    "R1-C": {
+      "status": "NOT_STARTED_STOP_RULE_REACHED_R1_A_CAP",
+      "accepted": 0,
+      "attempts": 0
+    }
+  },
+  "accepted_outcome_counts": {
+    "PASS": 0,
+    "EXPOSURE": 0,
+    "VIOLATION": 0
+  },
+  "accepted_run_invariants": null,
+  "claim_boundary": {
+    "session_isolation_conclusion": false,
+    "mode_completed_released": false,
+    "r1_c_identity_ambiguity_observed": false,
+    "r1_c_progression_violation_proved": false
+  },
+  "raw_evidence": {
+    "namespace": "runs/motivation/r1_session",
+    "ignored": true,
+    "attempt_directories": 6,
+    "size_at_closure": "800K"
+  },
+  "next_registered_phase": "W1_REAL_WORKLOAD_RUNTIME_TRACE_SPIKE",
+  "next_phase_started": false
+}

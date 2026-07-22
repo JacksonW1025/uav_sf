@@ -460,3 +460,34 @@ def test_semantic_audit_is_revision_locked_and_neutral() -> None:
     )
     assert "Record and push final C1 commit" not in state
     assert "d78a206080a033f20fbd66fdb940c2ff8b1040d2" in state
+
+
+def test_r1_closure_gate_summary_and_claim_boundary() -> None:
+    matrix = yaml.safe_load((BASE / "matrix.yaml").read_text(encoding="utf-8"))
+    ledger = yaml.safe_load((BASE / "attempt_ledger.yaml").read_text(encoding="utf-8"))
+    gate = json.loads((BASE / "r1_gate.json").read_text(encoding="utf-8"))
+    summary = json.loads(
+        (
+            ROOT
+            / "data/processed/motivation/r1_session/r1_summary.json"
+        ).read_text(encoding="utf-8")
+    )
+    report = (ROOT / "docs/motivation/R1_SESSION_ROLLOVER_REPORT.md").read_text(
+        encoding="utf-8"
+    )
+
+    disposition = "MEASUREMENT_INSUFFICIENT_AT_R1_A_ATTEMPT_LIMIT"
+    assert matrix["status"] == ledger["status"] == "FINAL_ANALYSIS_COMPLETE"
+    assert matrix["final_disposition"] == ledger["final_disposition"] == disposition
+    assert gate["disposition"] == summary["disposition"] == disposition
+    assert gate["stop_rule"]["reached"] is True
+    assert gate["stop_rule"]["later_scenarios_started"] is False
+    assert gate["accepted_runs"] == summary["formal_matrix"]["accepted_runs"] == 0
+    assert gate["excluded_attempts"]["FORMAL_SAFETY_STOP"] == 6
+    assert gate["claims"]["session_isolation_conclusion"] is False
+    assert gate["claims"]["ownership_violation_proved"] is False
+    assert gate["next_phase_started"] is False
+    assert summary["scenarios"]["R1-B"]["attempts"] == 0
+    assert summary["scenarios"]["R1-C"]["attempts"] == 0
+    assert "bounded non-observation is not proof of absence" in report
+    assert "W1 was not started" in report

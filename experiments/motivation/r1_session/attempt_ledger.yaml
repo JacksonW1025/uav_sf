@@ -1,6 +1,7 @@
 schema_version: "1.0"
 study_id: r1_session_isolation
-status: STOP_RULE_REACHED_R1_A_CAP
+status: FINAL_ANALYSIS_COMPLETE
+final_disposition: MEASUREMENT_INSUFFICIENT_AT_R1_A_ATTEMPT_LIMIT
 preregistration_commit: 9faad09d0e9e7631497034e7ee27f8ab2ce9d896
 selected_r1_c_semantic: ModeCompleted
 accepted_target: 9

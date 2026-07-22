@@ -12,8 +12,8 @@ Freshness pilot denominator.
 - Starting `origin/main`: `955e7c98e3b29ddd21fa4d44fb562065700fa832`
 - Starting ahead/behind: `0/0`
 - Protected ancestor: `955e7c98e3b29ddd21fa4d44fb562065700fa832`
-- Current phase: R1 session-rollover execution
-- Phase status: `R1_READY_FOR_FORMAL_EXECUTION`
+- Current phase: R1 session-rollover closure complete; W1 is next but unstarted
+- Phase status: `R1_COMPLETE_MEASUREMENT_INSUFFICIENT_AT_R1_A_CAP`
 
 ## Frozen evidence
 
@@ -50,7 +50,7 @@ testing is authorized.
 | N1 reduced confirmation | `COMPLETE` | 1 / 1 | 1 / 3 | 0 | accepted Route PASS; no matching residue; stopped at target |
 | C1 concurrency | `COMPLETE` | 14 / 15 | 17 / 30 | 1 configuration failure, 2 observability rejections | `CONDITIONAL_PASS_BOUNDED_LINEARIZATION_CONFORMANCE`; 0 violations |
 | C1 minimal confirmations | `NOT_TRIGGERED` | 0 | 0 / 3 | 0 | no accepted violation |
-| R1 session rollover | `READY` | 0 / 9 | 0 / 18 | 0 | preregistration pushed; no formal attempt has run |
+| R1 session rollover | `COMPLETE` | 0 / 9 | 6 / 18 | 6 formal safety stops | `MEASUREMENT_INSUFFICIENT_AT_R1_A_ATTEMPT_LIMIT` |
 | W1 workload spike | `NOT_STARTED` | 0 / 3 canonical | 0 | 0 | pending |
 | B1 Family B | `NOT_STARTED` | 0 / 6 if executable | 0 | 0 | pending feasibility Gate |
 | M-FINAL | `NOT_STARTED` | n/a | n/a | n/a | pending |
@@ -111,15 +111,22 @@ All future rejected attempts must be explicitly classified as
 - `9faad09d0e9e7631497034e7ee27f8ab2ce9d896` —
   `oracle: preregister r1 session isolation study` (pushed before every
   formal R1 attempt).
-- `e132665a9bec5fb542085748b241150cb3c21e65` —
+- `e132665d7f38ee7fa4e2c66120ceb4d6f0617fbc` —
   `test: handle local-only provenance binaries` (pushed clean-checkout
   validation-contract correction; no frozen R1 artifact changed).
+- `ca875a19290cfb25008e34f7eafab369a71aac06` —
+  `docs: activate r1 execution checkpoint` (pushed post-freeze bookkeeping;
+  formal R1 attempt starting revision).
+- `f1be7d2aa138a003bb311e04f2e5d4fb4396c6e9` —
+  `experiment: checkpoint r1 scenario a cap` (pushed six-attempt R1-A ledger
+  and registered stop-rule checkpoint).
 
 ## Next exact action
 
-Push this post-freeze ledger/state bookkeeping correction, then execute R1-A
-attempt 1 with seed `410101` from that clean pushed revision. `ModeCompleted`
-is the sole R1-C semantic; no other delayed message type is authorized.
+The exact next registered phase is W1, the bounded real-workload runtime/trace
+spike. It has not started. Any W1 execution must first freeze its exact source,
+workload, trace, acceptance, attempt, and cleanup contract in a pushed
+preregistration checkpoint.
 
 ## Current blockers
 
@@ -135,6 +142,11 @@ is the sole R1-C semantic; no other delayed message type is authorized.
 - C1-A/near reached its two-attempt cap with two clock-bridge sample-count
   rejections (16 valid samples versus the frozen minimum 20). The cell is
   closed measurement-insufficient and will not be retried.
+- R1-A reached its six-attempt cap with zero accepted runs. Attempt 1 ended in
+  a PX4 abort after new registration; attempts 2–6 crossed the frozen
+  pre-cleanup ground-contact boundary before new activation. All six are
+  `FORMAL_SAFETY_STOP`, no Oracle outcome was produced, and R1-B/R1-C were not
+  started under the registered stop rule.
 
 ## Protected hashes
 

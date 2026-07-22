@@ -114,10 +114,12 @@ confirmation attempts in this phase and does not authorize a timing sweep.
 
 ### R1 — Rapid re-entry and session rollover
 
-Status: `PREREGISTERED`; no formal R1 attempt has run. The Oracle, semantic
-audit, three-scenario matrix, empty ledger, event order, identity rules,
-timing/safety bounds, and attempt caps are frozen by the pushed
-preregistration checkpoint before execution.
+Status: `COMPLETE` —
+`MEASUREMENT_INSUFFICIENT_AT_R1_A_ATTEMPT_LIMIT`. R1-A reached its six-attempt
+cap with zero accepted runs: one PX4-abort safety stop and five pre-window
+ground-contact safety stops. No Session Rollover Oracle outcome entered the
+denominator. The registered stop rule closed the ordered matrix before R1-B or
+R1-C started.
 
 Outputs:
 
@@ -135,6 +137,10 @@ attempts per scenario.
 
 Stop at nine accepted runs or a scenario's cap. Do not add more delayed message
 types during this phase; record non-selected types only in a future matrix.
+
+Closure note: the scenario-cap branch of this rule was reached. The result
+does not support a conformance, exposure, or violation claim; it preserves the
+six excluded attempts and advances only the registered workflow bookkeeping.
 
 ### W1 — Real-workload runtime/trace spike
 

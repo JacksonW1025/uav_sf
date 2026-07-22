@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "gate_id": "R1_RAPID_REENTRY_SESSION_ROLLOVER_GATE",
+  "status": "MEASUREMENT_INSUFFICIENT",
+  "disposition": "MEASUREMENT_INSUFFICIENT_AT_R1_A_ATTEMPT_LIMIT",
+  "preregistration_commit": "9faad09d0e9e7631497034e7ee27f8ab2ce9d896",
+  "contract_classification": "B_IMPLIED_OWNERSHIP_PROGRESSION_CONTRACT",
+  "selected_r1_c_semantic": "ModeCompleted",
+  "accepted_runs": 0,
+  "accepted_target": 9,
+  "formal_attempts": 6,
+  "maximum_formal_attempts": 18,
+  "oracle_outcomes": {
+    "PASS": 0,
+    "EXPOSURE": 0,
+    "VIOLATION": 0,
+    "UNKNOWN": 0,
+    "NOT_APPLICABLE": 0
+  },
+  "excluded_attempts": {
+    "OBSERVABILITY_REJECTED": 0,
+    "MEASUREMENT_INSUFFICIENT": 0,
+    "ENVIRONMENT_FAILURE": 0,
+    "CAMPAIGN_CONFIGURATION_FAILURE": 0,
+    "FORMAL_SAFETY_STOP": 6,
+    "NOT_APPLICABLE": 0
+  },
+  "coverage": {
+    "R1-A": {"accepted": 0, "attempts": 6, "maximum_attempts": 6},
+    "R1-B": {"accepted": 0, "attempts": 0, "maximum_attempts": 6},
+    "R1-C": {"accepted": 0, "attempts": 0, "maximum_attempts": 6}
+  },
+  "stop_rule": {
+    "reached": true,
+    "trigger": "R1_A_REACHED_SIX_ATTEMPT_CAP_WITH_ZERO_ACCEPTED_RUNS",
+    "later_scenarios_started": false
+  },
+  "claims": {
+    "session_isolation_conclusion": false,
+    "design_exposure_observed": false,
+    "ownership_violation_proved": false,
+    "bounded_non_observation_is_proof_of_absence": false,
+    "physical_safety_claim": false,
+    "population_frequency_claim": false,
+    "stateful_fuzzer_search_gain_claim": false
+  },
+  "next_registered_phase": "W1_REAL_WORKLOAD_RUNTIME_TRACE_SPIKE",
+  "next_phase_started": false,
+  "authorizes_full_fuzzer_campaign": false
+}

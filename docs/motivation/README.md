@@ -1,8 +1,9 @@
 # Motivation Study workspace
 
-This directory is the active entry point for the completed Phase A Motivation
-Study. It contains the P-1 feasibility result, M2 source audit, M4 official-test
-coverage audit, and the gated P0 normal-flow baselines.
+This directory is the entry point for the bounded Motivation studies. It
+contains the Phase A foundations and the later frozen N1, C1, and R1 closure
+records. Raw runtime evidence remains outside this directory under ignored
+`runs/` namespaces.
 
 ## Completed work
 
@@ -20,6 +21,12 @@ coverage audit, and the gated P0 normal-flow baselines.
    attempts confirm bounded design exposure; one accepted Trajectory run has a
    natural post-fallback Route violation, while the Attitude cell is
    measurement-insufficient at its frozen attempt cap.
+6. **N1 Trajectory Residue:** closed with 8 accepted runs from 14 attempts and
+   a phase-dependent re-observation disposition.
+7. **C1 Concurrent Authority Events:** closed conditionally with 14 accepted
+   runs from 17 attempts and no accepted linearization violation.
+8. **R1 Session Rollover:** closed measurement-insufficient when R1-A reached
+   its six-attempt cap with zero accepted runs; R1-B/R1-C were not started.
 
 ## Files
 
@@ -32,6 +39,9 @@ coverage audit, and the gated P0 normal-flow baselines.
 - `P0_OFFICIAL_HANDOFF_BASELINE_REPORT.md`: P0-A/B/C results and limitations.
 - `SETPOINT_FRESHNESS_SOURCE_AUDIT.md`: revision-locked freshness and health-path source audit.
 - `SETPOINT_FRESHNESS_PILOT_REPORT.md`: final four-cell bounded pilot analysis and Gate disposition.
+- `N1_TRAJECTORY_RESIDUE_REPORT.md`: bounded natural-event adjudication.
+- `C1_CONCURRENT_AUTHORITY_EVENTS_REPORT.md`: deterministic authority-event probe closure.
+- `R1_SESSION_ROLLOVER_REPORT.md`: rapid re-entry/session-rollover closure and claim boundary.
 
 ## Evidence rules
 
@@ -41,5 +51,6 @@ coverage audit, and the gated P0 normal-flow baselines.
 - Do not import legacy Family B results into a Family A evidence row without a new, explicit validation link.
 - Put raw captures under ignored `runs/` or the external archive, never in this directory.
 
-Phase A stops here. Do not treat P0 as authorization to start a fault campaign,
-random search, full fuzzer, or later-phase probes.
+The Motivation completion workflow has advanced through R1. W1 is the exact
+next registered phase, but it has not started. No existing result authorizes a
+random campaign or full fuzzer execution.

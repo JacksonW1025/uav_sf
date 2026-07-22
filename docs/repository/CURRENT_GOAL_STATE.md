@@ -1,6 +1,26 @@
 # Current Goal state
 
-## Active Current-Version freshness pilot
+## Active Motivation completion state
+
+- Current phase: R1 rapid re-entry/session rollover complete at its registered
+  R1-A attempt cap
+- Goal disposition: `MEASUREMENT_INSUFFICIENT_AT_R1_A_ATTEMPT_LIMIT`
+- Formal accounting: 0 accepted / 6 attempts; all six attempts are excluded
+  `FORMAL_SAFETY_STOP`
+- Scientific outcomes: 0 PASS, 0 EXPOSURE, 0 VIOLATION; no Session Rollover
+  Oracle result was produced
+- Coverage: R1-A closed at 0/3 accepted and 6/6 attempts; R1-B and R1-C were
+  not started because the ordered matrix stop rule had fired
+- Claim boundary: no route/session conformance or violation conclusion, no
+  R1-C completion-identity finding, and no physical or population-frequency
+  claim
+- Final analysis: `docs/motivation/R1_SESSION_ROLLOVER_REPORT.md` and
+  `experiments/motivation/r1_session/r1_gate.json`
+- Next registered phase: W1 bounded real-workload runtime/trace spike; not
+  started
+- Last update: 2026-07-21
+
+## Frozen Current-Version freshness pilot
 
 - Current phase: Current-Version External Mode Setpoint Freshness bounded pilot
   complete and frozen
