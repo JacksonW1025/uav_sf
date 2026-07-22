@@ -27,6 +27,10 @@ records. Raw runtime evidence remains outside this directory under ignored
    runs from 17 attempts and no accepted linearization violation.
 8. **R1 Session Rollover:** closed measurement-insufficient when R1-A reached
    its six-attempt cap with zero accepted runs; R1-B/R1-C were not started.
+9. **W1 Real Workload:** closed measurement-insufficient when source trace
+   acquisition reached its three-attempt cap with zero accepted runs. All
+   three attempts were formal safety stops; trace-only and Canonical replays
+   were not applicable, and the Native Adapter Gate did not authorize a spike.
 
 ## Files
 
@@ -42,6 +46,8 @@ records. Raw runtime evidence remains outside this directory under ignored
 - `N1_TRAJECTORY_RESIDUE_REPORT.md`: bounded natural-event adjudication.
 - `C1_CONCURRENT_AUTHORITY_EVENTS_REPORT.md`: deterministic authority-event probe closure.
 - `R1_SESSION_ROLLOVER_REPORT.md`: rapid re-entry/session-rollover closure and claim boundary.
+- `W1_AEROSTACK2_SOURCE_BUILD_AUDIT.md`: exact Aerostack2 build and public-interface audit.
+- `W1_REAL_WORKLOAD_SPIKE_REPORT.md`: bounded source-trace attempt-cap closure and W1 Gate interpretation.
 
 ## Evidence rules
 
@@ -51,6 +57,6 @@ records. Raw runtime evidence remains outside this directory under ignored
 - Do not import legacy Family B results into a Family A evidence row without a new, explicit validation link.
 - Put raw captures under ignored `runs/` or the external archive, never in this directory.
 
-The Motivation completion workflow has advanced through R1. W1 is the exact
-next registered phase, but it has not started. No existing result authorizes a
-random campaign or full fuzzer execution.
+The Motivation completion workflow has advanced through W1. B1 is the exact
+next registered phase, but it has not started. W1 authorizes no random campaign
+or full Stateful Testing.

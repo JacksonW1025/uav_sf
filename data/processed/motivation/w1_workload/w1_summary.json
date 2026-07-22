@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "study_id": "w1_real_workload_runtime_trace_spike",
+  "disposition": "MEASUREMENT_INSUFFICIENT",
+  "workload": "Aerostack2@a8e7318b8d1d7c5adc580e8a16374357773bc11a",
+  "source_trace": {
+    "accepted": 0,
+    "attempts": 3,
+    "maximum_attempts": 3,
+    "excluded_FORMAL_SAFETY_STOP": 3
+  },
+  "trace_only_replay": {
+    "accepted": 0,
+    "attempts": 0,
+    "status": "NOT_APPLICABLE_NO_ACCEPTED_SOURCE_TRACE"
+  },
+  "canonical_replay": {
+    "accepted": 0,
+    "attempts": 0,
+    "target": 3,
+    "status": "NOT_APPLICABLE_NO_ACCEPTED_TRACE_ONLY_REPLAY"
+  },
+  "native_adapter": {
+    "authorized": false,
+    "accepted": 0,
+    "attempts": 0,
+    "status": "NOT_APPLICABLE_NATIVE_ADAPTER_GATE_NOT_AUTHORIZED"
+  },
+  "accepted_route_replacements": 0,
+  "partial_excluded_internal_to_Offboard_replacements": 2,
+  "accepted_task_only_transitions": 0,
+  "raw_total_size_bytes": 134425141,
+  "raw_artifacts_ignored": true,
+  "attempt_summaries": [
+    {
+      "run_id": "w1b_seed510101_a1",
+      "sha256": "5b4b0266291aab98042e598f766c22dbfc883095ab04bd9ffc5731b0aac7a034"
+    },
+    {
+      "run_id": "w1b_seed510102_a2",
+      "sha256": "dd8fb6b90a4baaf4d815d7c6e5d91a9f45f5010cab0afb932e0112b40f022399"
+    },
+    {
+      "run_id": "w1b_seed510103_a3",
+      "sha256": "c174f680e725596a502764d12acc57eeab4f7bf067fba8b7e460d1e1ea5500e1"
+    }
+  ],
+  "enters_SUT_violation_denominator": false
+}

@@ -17,5 +17,11 @@ the ignored `runs/motivation/w1_workload/` tree. Only compact processed evidence
 hashes, manifests, the append-only attempt ledger, report, and Gate may be
 tracked.
 
+W1 closed `MEASUREMENT_INSUFFICIENT` after W1-B reached its three-attempt cap
+with zero accepted source traces and three `FORMAL_SAFETY_STOP` exclusions.
+The unavailable trace manifest, final Gate, per-attempt summaries, and compact
+closure summary preserve this result. W1-C and W1-D were not applicable, and
+the Native Adapter Gate did not authorize W1-E.
+
 The exact next phase after W1 is B1, but W1 does not start B1 and does not
 authorize a random campaign or full Stateful Testing.

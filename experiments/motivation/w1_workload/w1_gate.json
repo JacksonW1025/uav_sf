@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0",
+  "gate_id": "W1_REAL_WORKLOAD_RUNTIME_TRACE_SPIKE",
+  "status": "CLOSED_AT_W1_B_ATTEMPT_CAP",
+  "disposition": "MEASUREMENT_INSUFFICIENT",
+  "preregistration_commit": "1f41229d17e42af6945bd040ccb1579128b1229e",
+  "workload_name": "Aerostack2",
+  "workload_commit": "a8e7318b8d1d7c5adc580e8a16374357773bc11a",
+  "source_trace_id": null,
+  "source_trace_acquired": false,
+  "trace_only_replay_accepted": false,
+  "canonical_accepted": 0,
+  "canonical_target": 3,
+  "canonical_attempts": 0,
+  "native_adapter_authorized": false,
+  "native_attempts": 0,
+  "native_accepted": 0,
+  "route_replacements_observed": {
+    "accepted_evidence": 0,
+    "partial_excluded_internal_to_Offboard": 2,
+    "accepted_edges": []
+  },
+  "task_only_transitions_observed": {
+    "accepted_evidence": 0,
+    "partial_excluded_evidence": 0,
+    "accepted_edges": []
+  },
+  "new_route_semantics": false,
+  "new_lifecycle_semantics": false,
+  "timing_or_context_value": false,
+  "excluded_attempts": {
+    "OBSERVABILITY_REJECTED": 0,
+    "MEASUREMENT_INSUFFICIENT": 0,
+    "ENVIRONMENT_FAILURE": 0,
+    "CAMPAIGN_CONFIGURATION_FAILURE": 0,
+    "FORMAL_SAFETY_STOP": 3,
+    "NOT_APPLICABLE": 0
+  },
+  "phase_closures": {
+    "W1-B": "MEASUREMENT_INSUFFICIENT_AT_ATTEMPT_CAP",
+    "W1-C": "NOT_APPLICABLE_NO_ACCEPTED_SOURCE_TRACE",
+    "W1-D": "NOT_APPLICABLE_NO_ACCEPTED_TRACE_ONLY_REPLAY",
+    "W1-E": "NOT_APPLICABLE_NATIVE_ADAPTER_GATE_NOT_AUTHORIZED"
+  },
+  "evidence_complete": false,
+  "raw_artifacts_ignored": true,
+  "authorizes_large_integration": false,
+  "authorizes_random_campaign": false,
+  "authorizes_next_phase": true,
+  "next_registered_phase": "B1_REGISTERED_CONTROLLER_INVENTORY_AND_FAMILY_B_GATE",
+  "claims": {
+    "accepted_real_workload_trace_acquired": false,
+    "deterministic_trace_only_replay_validated": false,
+    "canonical_command_replay_validated": false,
+    "new_route_semantics_established": false,
+    "new_lifecycle_semantics_established": false,
+    "timing_or_physical_context_value_established": false,
+    "task_transitions_are_authority_transitions": false,
+    "native_adapter_is_safer": false,
+    "one_workload_represents_all_UAV_workloads": false,
+    "three_replays_estimate_population_frequency": false,
+    "later_search_method_effectiveness_established": false,
+    "environment_or_safety_stop_is_a_SUT_violation": false,
+    "bounded_W1_closure_authorizes_B1_registration": true
+  }
+}

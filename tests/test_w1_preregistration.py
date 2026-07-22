@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
+import jsonschema
 import yaml
 
 
@@ -88,7 +90,26 @@ def test_w1_matrix_enforces_phase_order_and_native_gate() -> None:
     matrix = _yaml("matrix.yaml")
     assert matrix["execution_order"] == ["W1-A", "W1-B", "W1-C", "W1-D", "W1-E", "W1-F"]
     phases = {phase["phase_id"]: phase for phase in matrix["phases"]}
-    assert phases["W1-C"]["status"] == "BLOCKED_PENDING_ACCEPTED_W1_B"
-    assert phases["W1-D"]["status"] == "BLOCKED_PENDING_ACCEPTED_W1_C"
+    assert phases["W1-B"]["status"] == "COMPLETE_CAP_REACHED_MEASUREMENT_INSUFFICIENT"
+    assert phases["W1-C"]["status"] == "NOT_APPLICABLE_NO_ACCEPTED_W1_B_SOURCE_TRACE"
+    assert phases["W1-D"]["status"] == "NOT_APPLICABLE_NO_ACCEPTED_W1_C_TRACE_ONLY_REPLAY"
     assert phases["W1-E"]["conditional"] is True
     assert matrix["native_adapter_gate"]["native_spike_authorized"] is False
+
+
+def test_w1_final_gate_and_unavailable_trace_manifest_validate() -> None:
+    for instance_name, schema_name in (
+        ("w1_gate.json", "w1_gate.schema.json"),
+        ("trace_manifest.json", "w1_trace_manifest.schema.json"),
+    ):
+        instance = json.loads((W1 / instance_name).read_text(encoding="utf-8"))
+        schema = json.loads(
+            (ROOT / "data" / "schemas" / schema_name).read_text(encoding="utf-8")
+        )
+        jsonschema.validate(instance=instance, schema=schema)
+
+    gate = json.loads((W1 / "w1_gate.json").read_text(encoding="utf-8"))
+    assert gate["disposition"] == "MEASUREMENT_INSUFFICIENT"
+    assert gate["canonical_attempts"] == 0
+    assert gate["native_attempts"] == 0
+    assert gate["authorizes_random_campaign"] is False

@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0",
+  "run_id": "w1b_seed510103_a3",
+  "phase": "W1-B",
+  "attempt_number": 3,
+  "simulation_seed": 510103,
+  "repository_head": "b29949654070c45ceb7fb2135eaa12c9951ab87b",
+  "classification": "FORMAL_SAFETY_STOP",
+  "accepted": false,
+  "mission": {
+    "status": "FAIL",
+    "completed_phases": [
+      "internal_ground",
+      "arm",
+      "internal_takeoff",
+      "Aerostack2_Offboard",
+      "go_to"
+    ],
+    "initial_stop_reason": "formal safety bound exceeded altitude=0.745 distance=0.062 speed=3.182",
+    "final_cleanup_reason": "timeout waiting for cleanup landing",
+    "terminal_landed": false,
+    "terminal_disarmed": false,
+    "PX4_abort_observed": true
+  },
+  "observation": {
+    "sidecar_status": "ACCEPTED_OBSERVATION_ONLY_ACQUISITION",
+    "clock_bridge_status": "DEGRADED",
+    "clock_bridge_samples": 50,
+    "clock_bridge_residual_max_ns": 122698382,
+    "route_trace_full_events": 44371,
+    "route_trace_compact_events": 21101,
+    "route_epochs": 5,
+    "allocator_input_events_compact": 109,
+    "actuator_output_events_compact": 4112,
+    "final_writer": "control_allocator",
+    "partial_internal_to_Offboard_route_replacement": true,
+    "partial_evidence_admissible_for_semantic_claim": false
+  },
+  "cleanup": {
+    "normal_Land_and_Disarm_completed": false,
+    "controlled_local_process_stop": true,
+    "residual_owned_processes": 0,
+    "port_8888_occupied": false
+  },
+  "artifacts": {
+    "artifact_set_sha256": "d17f36f87e911bbd7e0cac591974c1d4a27ed1169e3b14de6afe430c558fb1f7",
+    "raw_total_size_bytes": 71935273,
+    "rosbag_metadata_sha256": "b8213da79a3c3f56ec38a6fb2bdc409853c624bf49d0019462b3f9d5d6e93797",
+    "rosbag_db3_sha256": "e5100442c5bb73155c2f79c69bf8e622568f8fe92fe7c15e8b314a0d189d968f",
+    "ulog_sha256": "c1beca3f2cbb6fc22b4d992b75b1581dd5557263d2ccec1812dfb18d6dfb55e1",
+    "mission_events_sha256": "87afd320bd10b381ce260b8fd43b861047330f288687eb44ca22948a08e48582",
+    "sidecar_events_sha256": "b8f1da480f754e5e2a5ad3ee135e7f0067d593808881cee5a77f4f5037b64d3a",
+    "compact_workload_trace_sha256": "0f39571516ab91c5e5b3c584136c757657d2ea65c56e9a29521d553ac7f9a16d",
+    "compact_route_trace_sha256": "fa045c7fad1f9ba6c8433dd5fe758321717a860d812d1bf6a447a9ff877e066b"
+  },
+  "raw_artifacts_ignored": true,
+  "enters_SUT_violation_denominator": false
+}

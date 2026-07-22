@@ -2,23 +2,24 @@
 
 ## Active Motivation completion state
 
-- Current phase: R1 rapid re-entry/session rollover complete at its registered
-  R1-A attempt cap
-- Goal disposition: `MEASUREMENT_INSUFFICIENT_AT_R1_A_ATTEMPT_LIMIT`
-- Formal accounting: 0 accepted / 6 attempts; all six attempts are excluded
+- Current phase: W1 real-workload runtime/trace spike complete at its
+  registered W1-B attempt cap
+- Goal disposition: `MEASUREMENT_INSUFFICIENT`
+- Formal accounting: 0 accepted source traces / 3 source attempts; all three
+  attempts are excluded
   `FORMAL_SAFETY_STOP`
-- Scientific outcomes: 0 PASS, 0 EXPOSURE, 0 VIOLATION; no Session Rollover
-  Oracle result was produced
-- Coverage: R1-A closed at 0/3 accepted and 6/6 attempts; R1-B and R1-C were
-  not started because the ordered matrix stop rule had fired
-- Claim boundary: no route/session conformance or violation conclusion, no
-  R1-C completion-identity finding, and no physical or population-frequency
-  claim
-- Final analysis: `docs/motivation/R1_SESSION_ROLLOVER_REPORT.md` and
-  `experiments/motivation/r1_session/r1_gate.json`
-- Next registered phase: W1 bounded real-workload runtime/trace spike; not
-  started
-- Last update: 2026-07-21
+- Scientific outcomes: no accepted source route/lifecycle result, no
+  deterministic replay result, and no Canonical replay result
+- Coverage: W1-B closed at 0/1 accepted and 3/3 attempts; W1-C and W1-D were
+  not applicable, and the Native Adapter Gate did not authorize W1-E
+- Claim boundary: no new route/lifecycle semantic or timing-context conclusion;
+  no safety stop is a SUT violation; no random campaign or full Stateful
+  Testing is authorized
+- Final analysis: `docs/motivation/W1_REAL_WORKLOAD_SPIKE_REPORT.md` and
+  `experiments/motivation/w1_workload/w1_gate.json`
+- Next registered phase: B1 registered-controller inventory and Family B Gate;
+  not started
+- Last update: 2026-07-22
 
 ## Frozen Current-Version freshness pilot
 

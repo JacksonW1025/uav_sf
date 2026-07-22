@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0",
+  "status": "UNAVAILABLE_NO_ACCEPTED_SOURCE_TRACE",
+  "workload": {
+    "name": "Aerostack2",
+    "commit": "a8e7318b8d1d7c5adc580e8a16374357773bc11a",
+    "platform_plugin": "as2_platform_pixhawk@482563ba979baea965df918995c141a362e26637",
+    "simulation_project": "project_px4_vision@22d945c956ae234839b3c48555ab2c1ba40eaee3"
+  },
+  "dependencies": {
+    "PX4_Autopilot": "4ae21a5e569d3d89c2f6366688cbacb3e93437c9",
+    "px4_msgs": "18ecff03041c6f8d8a0012fbc63af0b23dd60af1",
+    "px4_ros2_interface_lib": "c3e410f035806e8c56246708432ded09c976434b"
+  },
+  "source_artifact_hashes": {},
+  "rosbag_sha256": null,
+  "ulog_sha256": null,
+  "topics": [],
+  "start_timestamp_ns": null,
+  "end_timestamp_ns": null,
+  "clock_domains": {
+    "ROS": "ros_node_ns",
+    "PX4": "px4_boot_us",
+    "status": "NO_ACCEPTED_VALID_BRIDGE"
+  },
+  "clock_bridge_valid_intervals": [],
+  "expected_lifecycle_edges": [
+    "internal_ground_to_arm",
+    "arm_to_internal_takeoff",
+    "internal_takeoff_to_Aerostack2_Offboard",
+    "go_to_completion_to_follow_path",
+    "follow_path_cancel_to_hover",
+    "hover_to_explicit_aircraft_Land",
+    "Land_to_disarm"
+  ],
+  "expected_route_replacements": [
+    "internal_to_Offboard",
+    "Offboard_to_aircraft_Land"
+  ],
+  "expected_non_route_task_transitions": [
+    "go_to_to_follow_path_unless_runtime_route_identity_changes",
+    "cancel_to_hover_unless_runtime_route_identity_changes"
+  ],
+  "expected_setpoint": {
+    "workload_reference_level": "position",
+    "PX4_topic": "/fmu/in/trajectory_setpoint",
+    "PX4_type": "px4_msgs/msg/TrajectorySetpoint",
+    "configured_rate_hz": 100.0,
+    "accepted_rate_range_hz": null,
+    "status": "NOT_ESTABLISHED_WITH_ACCEPTED_SOURCE_TRACE"
+  },
+  "bounds": {
+    "maximum_altitude_agl_m": 3.0,
+    "maximum_horizontal_distance_m": 5.0,
+    "maximum_commanded_horizontal_speed_m_s": 1.0,
+    "maximum_commanded_vertical_speed_m_s": 0.6,
+    "maximum_commanded_acceleration_m_s2": 2.0,
+    "maximum_attitude_deg": 35.0,
+    "maximum_angular_rate_rad_s": 2.0,
+    "maximum_yaw_rate_rad_s": 0.6
+  },
+  "cleanup_expectation": {
+    "sequence": "explicit_public_aircraft_Land_then_Disarm",
+    "residual_owned_processes": 0,
+    "port_8888_unoccupied": true
+  },
+  "source_trace_id": null,
+  "canonical_replay_ids": [],
+  "unavailability_reason": "W1-B reached its three-attempt cap with zero accepted source traces"
+}

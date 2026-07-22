@@ -144,7 +144,7 @@ six excluded attempts and advances only the registered workflow bookkeeping.
 
 ### W1 — Real-workload runtime/trace spike
 
-Status: `NOT_STARTED`.
+Status: `COMPLETE_MEASUREMENT_INSUFFICIENT_AT_W1_B_ATTEMPT_CAP`.
 
 Outputs:
 
@@ -161,6 +161,14 @@ integration cost.
 
 Stop with one of the preregistered workload dispositions; do not perform a
 large integration or refactor solely for realism.
+
+Closure note: Aerostack2 source/build audit completed, but W1-B reached its
+three-attempt cap with zero accepted traces and three excluded
+`FORMAL_SAFETY_STOP` attempts. W1-C and W1-D were not applicable because no
+accepted source trace existed. The source audit did not authorize W1-E, so the
+Native Adapter has zero runtime attempts and is `NOT_APPLICABLE`. The final
+disposition is `MEASUREMENT_INSUFFICIENT`; W1 authorizes no random campaign or
+full Stateful Testing.
 
 ### B1 — Registered-controller inventory and Family B Gate
 

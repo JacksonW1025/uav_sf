@@ -1,6 +1,6 @@
 # Motivation Completion State
 
-Last updated: 2026-07-21
+Last updated: 2026-07-22
 
 This file is the durable resume point for the bounded Motivation Completion
 Study. It does not reopen, extend, or alter any frozen P5 v6, Issue #162, or
@@ -12,8 +12,9 @@ Freshness pilot denominator.
 - Starting `origin/main`: `955e7c98e3b29ddd21fa4d44fb562065700fa832`
 - Starting ahead/behind: `0/0`
 - Protected ancestor: `955e7c98e3b29ddd21fa4d44fb562065700fa832`
-- Current phase: R1 session-rollover closure complete; W1 is next but unstarted
-- Phase status: `R1_COMPLETE_MEASUREMENT_INSUFFICIENT_AT_R1_A_CAP`
+- Current phase: W1 real-workload runtime/trace spike complete; B1 is next but
+  unstarted
+- Phase status: `W1_COMPLETE_MEASUREMENT_INSUFFICIENT_AT_W1_B_CAP`
 
 ## Frozen evidence
 
@@ -51,7 +52,7 @@ testing is authorized.
 | C1 concurrency | `COMPLETE` | 14 / 15 | 17 / 30 | 1 configuration failure, 2 observability rejections | `CONDITIONAL_PASS_BOUNDED_LINEARIZATION_CONFORMANCE`; 0 violations |
 | C1 minimal confirmations | `NOT_TRIGGERED` | 0 | 0 / 3 | 0 | no accepted violation |
 | R1 session rollover | `COMPLETE` | 0 / 9 | 6 / 18 | 6 formal safety stops | `MEASUREMENT_INSUFFICIENT_AT_R1_A_ATTEMPT_LIMIT` |
-| W1 workload spike | `NOT_STARTED` | 0 / 3 canonical | 0 | 0 | pending |
+| W1 workload spike | `COMPLETE` | 0 source; 0 / 3 canonical | 3 source; 0 replay | 3 formal safety stops | `MEASUREMENT_INSUFFICIENT` |
 | B1 Family B | `NOT_STARTED` | 0 / 6 if executable | 0 | 0 | pending feasibility Gate |
 | M-FINAL | `NOT_STARTED` | n/a | n/a | n/a | pending |
 
@@ -120,13 +121,27 @@ All future rejected attempts must be explicitly classified as
 - `f1be7d2aa138a003bb311e04f2e5d4fb4396c6e9` —
   `experiment: checkpoint r1 scenario a cap` (pushed six-attempt R1-A ledger
   and registered stop-rule checkpoint).
+- `1f41229d17e42af6945bd040ccb1579128b1229e` —
+  `experiment: preregister w1 real workload spike` (pushed before every formal
+  W1 runtime attempt).
+- `a599cffffd29bf64072dc84cf338d43575d48c97` —
+  `experiment: amend w1 runtime compatibility` (pushed source/build/interface
+  audit and compatibility lock).
+- `b1b0b32671c8fb02dd63b719c9fe7718e5deaa4f` —
+  `experiment: lock w1 runtime trace tooling` (pushed before W1-B attempt 1).
+- `a394d0f92c0ff8339ccb272e0b4d66d0bdb736b6` —
+  `experiment: amend w1 flight-safety runtime tooling` (pushed before W1-B
+  attempt 2).
+- `b29949654070c45ceb7fb2135eaa12c9951ab87b` —
+  `experiment: amend w1 bounded SITL trace acquisition` (pushed before W1-B
+  attempt 3).
 
 ## Next exact action
 
-The exact next registered phase is W1, the bounded real-workload runtime/trace
-spike. It has not started. Any W1 execution must first freeze its exact source,
-workload, trace, acceptance, attempt, and cleanup contract in a pushed
-preregistration checkpoint.
+The exact next registered phase is B1, registered-controller inventory and the
+Family B Gate. B1 has not started. W1 authorizes only this bounded registration
+progression; it does not authorize a random campaign, full Stateful Testing,
+or an M-FINAL conclusion.
 
 ## Current blockers
 
@@ -147,6 +162,13 @@ preregistration checkpoint.
   pre-cleanup ground-contact boundary before new activation. All six are
   `FORMAL_SAFETY_STOP`, no Oracle outcome was produced, and R1-B/R1-C were not
   started under the registered stop rule.
+- W1-B reached its three-attempt cap with zero accepted source traces. Attempts
+  1 and 3 crossed the frozen speed boundary after entering go-to; attempt 2
+  crossed the altitude boundary during internal takeoff. All three are
+  `FORMAL_SAFETY_STOP`. W1-C and W1-D were not executed because no accepted
+  source trace existed, and W1-E was not authorized by the Native Adapter Gate.
+  No route, lifecycle, timing, or replay conclusion entered an accepted
+  denominator.
 
 ## Protected hashes
 
