@@ -1,6 +1,6 @@
 # Motivation Completion State
 
-Last updated: 2026-07-20
+Last updated: 2026-07-21
 
 This file is the durable resume point for the bounded Motivation Completion
 Study. It does not reopen, extend, or alter any frozen P5 v6, Issue #162, or
@@ -12,8 +12,8 @@ Freshness pilot denominator.
 - Starting `origin/main`: `955e7c98e3b29ddd21fa4d44fb562065700fa832`
 - Starting ahead/behind: `0/0`
 - Protected ancestor: `955e7c98e3b29ddd21fa4d44fb562065700fa832`
-- Current phase: R1 session-rollover preregistration
-- Phase status: `R1_PREREGISTERED_NO_EXECUTION`
+- Current phase: R1 session-rollover execution
+- Phase status: `R1_READY_FOR_FORMAL_EXECUTION`
 
 ## Frozen evidence
 
@@ -50,7 +50,7 @@ testing is authorized.
 | N1 reduced confirmation | `COMPLETE` | 1 / 1 | 1 / 3 | 0 | accepted Route PASS; no matching residue; stopped at target |
 | C1 concurrency | `COMPLETE` | 14 / 15 | 17 / 30 | 1 configuration failure, 2 observability rejections | `CONDITIONAL_PASS_BOUNDED_LINEARIZATION_CONFORMANCE`; 0 violations |
 | C1 minimal confirmations | `NOT_TRIGGERED` | 0 | 0 / 3 | 0 | no accepted violation |
-| R1 session rollover | `PREREGISTERED` | 0 / 9 | 0 / 18 | 0 | no formal attempt has run |
+| R1 session rollover | `READY` | 0 / 9 | 0 / 18 | 0 | preregistration pushed; no formal attempt has run |
 | W1 workload spike | `NOT_STARTED` | 0 / 3 canonical | 0 | 0 | pending |
 | B1 Family B | `NOT_STARTED` | 0 / 6 if executable | 0 | 0 | pending feasibility Gate |
 | M-FINAL | `NOT_STARTED` | n/a | n/a | n/a | pending |
@@ -108,13 +108,18 @@ All future rejected attempts must be explicitly classified as
 - `d78a206080a033f20fbd66fdb940c2ff8b1040d2` —
   `docs: record c1 phase closure` (pushed durable C1 closure and R1-next
   state).
+- `9faad09d0e9e7631497034e7ee27f8ab2ce9d896` —
+  `oracle: preregister r1 session isolation study` (pushed before every
+  formal R1 attempt).
+- `e132665a9bec5fb542085748b241150cb3c21e65` —
+  `test: handle local-only provenance binaries` (pushed clean-checkout
+  validation-contract correction; no frozen R1 artifact changed).
 
 ## Next exact action
 
-Push the R1 preregistration checkpoint, then stop. In a later execution window,
-confirm that the preregistration commit is already present on `origin/main`
-before starting the bounded R1-A, R1-B, or R1-C matrix. `ModeCompleted` is the
-sole R1-C semantic; no other delayed message type is authorized.
+Push this post-freeze ledger/state bookkeeping correction, then execute R1-A
+attempt 1 with seed `410101` from that clean pushed revision. `ModeCompleted`
+is the sole R1-C semantic; no other delayed message type is authorized.
 
 ## Current blockers
 
