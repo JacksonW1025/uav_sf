@@ -1,0 +1,28 @@
+schema_version: "1.0"
+study_id: b1_registered_controller_inventory_family_b_gate
+status: PREREGISTERED_NO_FORMAL_ATTEMPTS
+starting_repository_head: e7b28518bdd3afc58696878bf1c0f2b39fd8e218
+preregistration_commit: PENDING_FIRST_PUSH
+allowed_classifications:
+  - ACCEPTED
+  - OBSERVABILITY_REJECTED
+  - MEASUREMENT_INSUFFICIENT
+  - ENVIRONMENT_FAILURE
+  - CAMPAIGN_CONFIGURATION_FAILURE
+  - FORMAL_SAFETY_STOP
+  - NOT_APPLICABLE
+formal_attempt_counts:
+  B1-D: {accepted: 0, attempts: 0, maximum_attempts: 3}
+  B1-E: {accepted: 0, attempts: 0, maximum_attempts: 6}
+  B1-F: {accepted: 0, attempts: 0, maximum_attempts: 6}
+classification_counts:
+  ACCEPTED: 0
+  OBSERVABILITY_REJECTED: 0
+  MEASUREMENT_INSUFFICIENT: 0
+  ENVIRONMENT_FAILURE: 0
+  CAMPAIGN_CONFIGURATION_FAILURE: 0
+  FORMAL_SAFETY_STOP: 0
+  NOT_APPLICABLE: 0
+attempts: []
+append_only: true
+failed_attempts_may_not_be_deleted_overwritten_or_renumbered: true

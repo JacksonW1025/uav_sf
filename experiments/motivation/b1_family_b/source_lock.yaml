@@ -1,0 +1,92 @@
+schema_version: "1.0"
+study_id: b1_registered_controller_inventory_family_b_gate
+status: PREREGISTRATION_SOURCE_LOCK
+repository:
+  starting_head: e7b28518bdd3afc58696878bf1c0f2b39fd8e218
+  preregistration_commit: PENDING_FIRST_PUSH
+  required_branch: main
+  required_remote: origin/main
+dependencies:
+  px4_autopilot:
+    repository: https://github.com/PX4/PX4-Autopilot.git
+    commit: 4ae21a5e569d3d89c2f6366688cbacb3e93437c9
+    checkout: external/PX4-Autopilot
+  px4_msgs:
+    repository: https://github.com/PX4/px4_msgs.git
+    commit: 18ecff03041c6f8d8a0012fbc63af0b23dd60af1
+    checkout: ros2_ws/src/px4_msgs
+  px4_ros2_interface_lib:
+    repository: https://github.com/Auterion/px4-ros2-interface-lib.git
+    commit: c3e410f035806e8c56246708432ded09c976434b
+    checkout: ros2_ws/src/px4_ros2_interface_lib
+simulator:
+  identity: Gazebo_SITL_gz_x500_default_world
+  gz_sim_source_commit: bb0b9cf974acf4f1bcb5f5fcf80b88841562dea9
+  world:
+    path: Tools/simulation/gz/worlds/default.sdf
+    sha256: 457a363a22c437b788a4aaf1e2335aa149efce4e5b988cdc108065663cd879b2
+  model:
+    path: Tools/simulation/gz/models/x500/model.sdf
+    sha256: cb76a4afd439f253a8c516b1fcd3528f80347619cfa46bebb620557054fbf125
+  base_model:
+    path: Tools/simulation/gz/models/x500_base/model.sdf
+    sha256: e807dca3406f7cd5cb3d545898601c3ec17e0e5242e25cf467a69df1812cf436
+build_and_runtime:
+  host_os: Ubuntu_22.04.5_LTS_arm64
+  gcc: Ubuntu_11.4.0-1ubuntu1~22.04.3
+  gxx: Ubuntu_11.4.0-1ubuntu1~22.04.3
+  cmake: 3.22.1
+  python: 3.10.12
+  ros_distribution: humble
+  dds_implementation: rmw_fastrtps_cpp
+  dds_version: 6.2.10-1jammy.20260217.034238
+  rmw_selection: default_when_RMW_IMPLEMENTATION_unset
+  board_at_preregistration: px4_sitl_default
+  conditional_reference_board: px4_sitl_default_plus_separately_pushed_bounded_glue
+  airframe: SYS_AUTOSTART_4001_gz_x500
+  build_type: RelWithDebInfo
+container:
+  source_tag_for_audit: ros:humble-ros-base-jammy
+  architecture: linux_arm64_v8
+  manifest_digest: sha256:9bdda47f584f33aae18456225a8a95fe7bcde821727757f02a3252cbc46e8188
+  execution_status: DEFINED_NOT_EXECUTED_FOR_B1_AT_PREREGISTRATION
+  active_runtime_path: locked_host_ROS_Humble_environment
+relevant_parameters:
+  SYS_AUTOSTART: 4001
+  COM_RC_IN_MODE: 4
+  COM_DISARM_LAND: 2.0
+  NAV_DLL_ACT: locked_default_to_be_captured_before_any_runtime
+  COM_OF_LOSS_T: locked_default_to_be_captured_before_any_runtime
+  MC_RAPTOR_ENABLE: subject_specific_not_enabled_by_default
+  MC_RAPTOR_OFFB: subject_specific_not_enabled_by_default
+  MC_RAPTOR_INTREF: subject_specific_not_enabled_by_default
+  parameter_snapshot_rule: exact_px4_parameter_export_required_before_formal_runtime
+candidate_source_hashes:
+  hash_method: sha256_of_sorted_per_file_sha256_manifest
+  px4_classic_mc_pos_control: d91c85b68bed085bce455eba4579d58ce0abf8a7b4620e39996cef2a77a482fa
+  px4_classic_mc_att_control: cd6bc225241292fdf3a81642f70fc0e9a13573f5b1e6d97708225e04d783a7d5
+  px4_classic_mc_rate_control: 9f67480f84f3f97e0090f1d2e2562ee68a5dae412941acce27a1e349561a0aff
+  px4_mc_nn_control: 003e12e7fb83fdf8ebbf8d48c6d5e0d8903e6d7e529af4d9570c10652eb201e7
+  px4_mc_raptor: 891154977fafd5efe2dfa74605ae7263f7633dc38875a06962736e8ebc5acdeb
+  retained_family_b_assets_history_only: 9bd58fad557c9bcc5d5b63000b1b4effc25913b0c75cef5713c9fcc6b3ead914
+  deterministic_reference_registered_controller: NOT_IMPLEMENTED_AT_PREREGISTRATION
+observation_and_oracle_hashes:
+  scripts/tracing/route_trace_collector.py: 446d1dad803e8599003ea5fb65216c19c854e7f04c72642d675113420c1c62a4
+  scripts/tracing/actuator_writer_collector.py: 140e717fe3c08ebf65afbcd332753393e9c721f22ba546681f48a84393391244
+  scripts/tracing/clock_bridge_collector.py: 1140be063ce1e75835ec1f9fe3c3eea55aab7a483d99799a323e0d57353f4ed2
+  scripts/oracles/route_oracle_v0.py: 32cf3b5dd0d4e4ea2f535d5a006aa8782dab86397b16a1b5c70d625a8af751e2
+  data/schemas/route_trace.schema.json: b38d428a4c88563d0ff5892237131533033e970c82d3d30c81fb49668a5df152
+  data/schemas/route_oracle_result.schema.json: e83822786145a761b8ec82e9063ff0f4cc9c8b83497786ba929535264a29ac35
+message_interfaces:
+  register_ext_component_request: msg/versioned/RegisterExtComponentRequest.msg
+  setpoint_config: msg/versioned/SetpointConfig.msg
+  setpoint_config_reply: msg/versioned/SetpointConfigReply.msg
+  vehicle_control_mode: msg/VehicleControlMode.msg
+  vehicle_torque_setpoint: msg/VehicleTorqueSetpoint.msg
+  vehicle_thrust_setpoint: msg/VehicleThrustSetpoint.msg
+  actuator_motors: msg/versioned/ActuatorMotors.msg
+  actuator_servos: msg/versioned/ActuatorServos.msg
+raw_storage:
+  path: runs/motivation/b1_family_b
+  ignored_required: true
+  tracked_raw_files_required: 0

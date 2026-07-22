@@ -1,0 +1,61 @@
+schema_version: "1.0"
+study_id: b1_registered_controller_inventory_family_b_gate
+status: PREREGISTERED_PENDING_PUSH_ACTIVATION
+starting_repository_head: e7b28518bdd3afc58696878bf1c0f2b39fd8e218
+preregistration_commit: PENDING_FIRST_PUSH
+execution_order: [B1-A, B1-B, B1-C, B1-D, B1-E, B1-F, B1-G]
+phases:
+  - phase_id: B1-A
+    name: source_and_mechanism_inventory
+    formal_runtime: false
+    status: NOT_STARTED
+  - phase_id: B1-B
+    name: controller_graph_and_writer_observability_audit
+    formal_runtime: false
+    status: NOT_STARTED
+  - phase_id: B1-C
+    name: reference_subject_feasibility_gate
+    formal_runtime: false
+    status: NOT_STARTED
+  - phase_id: B1-D
+    name: conditional_build_and_static_integration_probe
+    formal_runtime: false
+    conditional: true
+    successful_build_target: 1
+    maximum_attempts: 3
+    status: PENDING_B1_C_GATE
+  - phase_id: B1-E
+    name: conditional_normal_classic_reference_classic_SITL_baseline
+    formal_runtime: true
+    conditional: true
+    accepted_target: 3
+    maximum_attempts: 6
+    status: PENDING_B1_C_AND_B1_D_GATES
+  - phase_id: B1-F
+    name: conditional_controlled_release_recovery_SITL_probe
+    formal_runtime: true
+    conditional: true
+    accepted_target: 3
+    maximum_attempts: 6
+    status: PENDING_B1_E_TARGET
+  - phase_id: B1-G
+    name: final_adjudication_and_Family_B_gate
+    formal_runtime: false
+    status: NOT_STARTED
+stop_rules:
+  - no_formal_evidence_before_preregistration_push_confirmation
+  - no_B1_D_without_all_reference_authorization_clauses
+  - no_B1_E_without_one_successful_B1_D_build
+  - no_B1_F_without_three_accepted_B1_E_runs
+  - stop_each_conditional_phase_at_target_or_attempt_cap
+  - unauthorized_phases_close_as_NOT_APPLICABLE
+  - no_random_campaign_or_complete_Stateful_Testing
+  - close_B1_before_progressing_only_to_M_FINAL
+candidates:
+  - PX4_classic_multicopter_cascade
+  - PX4_mc_nn_control
+  - PX4_mc_raptor
+  - locked_tree_registration_users
+  - reproducible_out_of_tree_registered_controller
+  - retained_family_b_prototype_history_only
+  - deterministic_reference_registered_controller

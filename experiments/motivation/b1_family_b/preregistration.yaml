@@ -1,0 +1,300 @@
+schema_version: "1.0"
+study_id: b1_registered_controller_inventory_family_b_gate
+status: FROZEN_BEFORE_FORMAL_B1_EVIDENCE_COLLECTION
+created_at: 2026-07-22T00:00:00-07:00
+starting_repository_head: e7b28518bdd3afc58696878bf1c0f2b39fd8e218
+preregistration_commit: PENDING_FIRST_PUSH
+freeze_mechanism: >-
+  The first pushed Git commit containing this file freezes the B1 questions,
+  candidate scope, phase order, authorization clauses, attempt caps, safety
+  stops, admissibility rules, dispositions, and claim boundaries before the
+  formal locked-source inventory, build probe, or runtime probe.
+
+execution_gate:
+  required_branch: main
+  required_remote: origin/main
+  clean_worktree_required: true
+  pull_strategy: ff_only
+  preregistration_commit_must_be_pushed: true
+  formal_inventory_before_push: FORBIDDEN
+  formal_build_before_push: FORBIDDEN
+  formal_runtime_before_push: FORBIDDEN
+  formal_attempts_completed_at_freeze: 0
+  amendment_rule: >-
+    Observation-only instrumentation, a bounded deterministic reference
+    controller, build glue, schemas, or focused tests required by B1-C must be
+    hash-locked in a separately pushed amendment before the first formal
+    attempt using them. An amendment may not change the research questions,
+    attempt caps, safety bounds, acceptance thresholds, fallback policy, or
+    final dispositions.
+
+namespace:
+  preregistration: experiments/motivation/b1_family_b/preregistration.yaml
+  source_lock: experiments/motivation/b1_family_b/source_lock.yaml
+  matrix: experiments/motivation/b1_family_b/matrix.yaml
+  ledger: experiments/motivation/b1_family_b/attempt_ledger.yaml
+  inventory: experiments/motivation/b1_family_b/inventory.tsv
+  observability: experiments/motivation/b1_family_b/observability_matrix.tsv
+  feasibility: experiments/motivation/b1_family_b/feasibility_matrix.tsv
+  gate: experiments/motivation/b1_family_b/b1_gate.json
+  reference_decision: experiments/motivation/b1_family_b/reference_decision.yaml
+  compact_evidence: data/processed/motivation/b1_family_b
+  raw_runs: runs/motivation/b1_family_b
+  raw_artifacts_are_ignored: true
+
+scope:
+  description: >-
+    Revision-locked flight-safety validation and software-reliability study of
+    PX4 registered controller-graph replacement, runtime consistency,
+    controller lifecycle, route conformance, writer observability, and a
+    conditional bounded SITL probe.
+  permitted:
+    - locked_source_and_dependency_inventory
+    - observation_only_controller_graph_and_writer_audit
+    - bounded_deterministic_reference_controller_if_authorized
+    - low_height_low_speed_PX4_Gazebo_SITL_if_authorized
+    - public_registration_configuration_and_lifecycle_paths
+    - normal_release_or_supported_controlled_lifecycle_loss
+  excluded:
+    - mc_nn_or_RAPTOR_performance_ranking
+    - neural_policy_or_model_quality_evaluation
+    - planner_or_airframe_ranking
+    - real_flight
+    - HITL
+    - hardware_specific_testing
+    - direct_actuator_high_dynamic_tasks
+    - random_campaign
+    - large_scale_controller_campaign
+    - complete_Stateful_Testing
+    - M_FINAL_execution
+    - changing_Commander_Control_Allocator_or_classic_controller_semantics_to_create_success
+
+research_questions:
+  - reproducible_registered_custom_controller_subjects_at_locked_revision
+  - true_classic_controller_graph_replacement_vs_module_or_setpoint_producer
+  - registration_activation_graph_allocator_and_writer_observability
+  - complete_classic_graph_restoration_after_release_or_controlled_interruption
+  - bounded_deterministic_reference_registered_controller_feasibility
+  - Family_A_route_instance_command_lineage_and_Route_Oracle_reuse_at_controller_writer_layer
+  - evidence_sufficiency_for_a_later_formal_Family_B_campaign
+
+phase_order:
+  sequence:
+    - B1-A_source_and_mechanism_inventory
+    - B1-B_controller_graph_and_writer_observability_audit
+    - B1-C_reference_subject_feasibility_gate
+    - B1-D_conditional_build_and_static_integration_probe
+    - B1-E_conditional_normal_classic_reference_classic_SITL_baseline
+    - B1-F_conditional_controlled_release_recovery_SITL_probe
+    - B1-G_final_adjudication_and_Family_B_gate
+  mandatory: true
+
+candidate_subjects:
+  required:
+    - PX4_classic_multicopter_cascade
+    - PX4_mc_nn_control
+    - PX4_mc_raptor
+    - all_registration_users_in_locked_PX4_tree
+    - reproducible_out_of_tree_registered_controller_in_locked_dependencies
+    - retained_family_b_prototype_as_history_only
+    - deterministic_reference_registered_controller_candidate
+  inclusion_rule: >-
+    A Family B candidate must change controller-graph participation,
+    allocator participation, authoritative writer lineage, or explicitly
+    bypass a classic control segment. A controller-like name, ordinary module,
+    setpoint producer, or parameter-only controller variant is insufficient.
+  historical_assets_rule: >-
+    Existing family_b assets are leads only and require revalidation against
+    the exact dependency identity; they are not accepted current-revision
+    evidence.
+  classifications:
+    - TRUE_REGISTERED_CONTROLLER_ROUTE
+    - PARTIAL_CONTROLLER_SUBGRAPH_REPLACEMENT
+    - SETPOINT_PRODUCER_ONLY
+    - ORDINARY_INTERNAL_MODULE
+    - PERFORMANCE_VARIANT_WITHOUT_ROUTE_REPLACEMENT
+    - UNRESOLVED
+    - EXCLUDED
+
+formal_attempt_caps:
+  B1-D:
+    target_successful_builds: 1
+    maximum_formal_attempts: 3
+  B1-E:
+    target_accepted: 3
+    maximum_formal_attempts: 6
+  B1-F:
+    target_accepted: 3
+    maximum_formal_attempts: 6
+  stop_at_target_or_cap: true
+  diagnostics_before_formal_attempts_are_not_formal_attempts: true
+  no_attempt_may_start_without_all_predecessor_gates: true
+
+attempt_classification:
+  allowed:
+    - ACCEPTED
+    - OBSERVABILITY_REJECTED
+    - MEASUREMENT_INSUFFICIENT
+    - ENVIRONMENT_FAILURE
+    - CAMPAIGN_CONFIGURATION_FAILURE
+    - FORMAL_SAFETY_STOP
+    - NOT_APPLICABLE
+  append_only: true
+  deletion_overwrite_or_renumbering: FORBIDDEN
+  excluded_attempts_do_not_enter_SUT_denominator: true
+
+safety_stop_conditions:
+  conditions:
+    - PX4_abort
+    - simulator_clock_stall
+    - non_finite_setpoint_controller_output_or_actuator_value
+    - frozen_height_speed_attitude_angular_rate_or_output_bound_exceeded
+    - unexpected_ground_contact
+    - incomplete_route_controller_or_writer_critical_window
+    - target_controller_unstable_after_installation
+    - source_classic_controller_not_revoked_or_bypassed_as_specified
+    - unexplained_multiple_authoritative_writer_overlap
+    - classic_graph_not_restored_after_custom_route_release
+    - invalid_clock_bridge_when_cross_clock_adjudication_is_required
+    - Land_or_Disarm_cleanup_cannot_complete
+    - missing_route_epoch_controller_consumption_allocator_input_or_writer_lineage
+  action: >-
+    Stop the attempt, preserve all raw evidence, request normal public Land and
+    Disarm cleanup when safe, stop only locally owned processes, classify the
+    attempt FORMAL_SAFETY_STOP, and do not issue a Route PASS.
+
+reference_subject_authorization_gate:
+  all_clauses_required: true
+  clauses:
+    B1-REF-01: identifiable_registration_or_configuration_mechanism_exists
+    B1-REF-02: reference_changes_controller_graph_or_authoritative_writer_lineage
+    B1-REF-03: registration_activation_route_installation_source_bypass_target_writer_release_and_restoration_observable
+    B1-REF-04: no_learning_model_external_weights_or_capability_benchmark
+    B1-REF-05: no_large_Commander_Control_Allocator_or_classic_semantics_change
+    B1-REF-06: existing_fallback_policy_unchanged
+    B1-REF-07: bounded_small_deterministic_module_build_glue_and_observation_hooks_only
+    B1-REF-08: low_height_low_speed_SITL_execution_possible
+    B1-REF-09: explicit_normal_release_path
+    B1-REF-10: explicit_controlled_release_process_stop_or_lifecycle_loss_path
+    B1-REF-11: feasibility_answerable_within_attempt_caps
+    B1-REF-12: no_real_flight_HITL_or_special_hardware
+  failure_action: >-
+    Close with a preregistered negative-scope, measurement-insufficient, or
+    environment-blocked disposition. Do not broaden implementation solely to
+    make Family B executable.
+  runtime_probe_authorization: B1_D_E_F_require_all_clauses_and_pushed_implementation_checkpoint
+
+reference_design_constraints:
+  - simple_deterministic_explainable_control_law
+  - no_training_model_or_random_output
+  - explicit_finite_checks_and_output_saturation
+  - preserve_Control_Allocator_in_preference_to_direct_motor_writes
+  - explicit_observable_target_topic
+  - do_not_copy_complete_classic_controller
+  - do_not_forward_classic_output_to_simulate_replacement
+  - actual_controller_graph_or_ownership_change_required
+  - restoration_through_existing_PX4_mechanism
+  - do_not_modify_Commander_or_allocator_logic_to_create_success
+  - do_not_modify_Oracle_to_fit_results
+
+conditional_runtime_profile:
+  simulator: Gazebo_SITL_gz_x500_default_world
+  board: px4_sitl_default_plus_only_pushed_bounded_reference_glue
+  airframe: SYS_AUTOSTART_4001_gz_x500
+  task:
+    - internal_takeoff
+    - stable_low_altitude_classic_hover
+    - register_or_configure_reference
+    - activate_reference_route
+    - bounded_stable_reference_window
+    - normal_release_or_supported_controlled_interruption
+    - complete_classic_restoration
+    - Land
+    - Disarm
+  safety_bounds:
+    takeoff_height_m: 1.5
+    maximum_altitude_agl_m: 3.0
+    maximum_horizontal_distance_m: 4.0
+    maximum_horizontal_speed_m_s: 1.0
+    maximum_vertical_speed_m_s: 0.6
+    maximum_attitude_deg: 30.0
+    maximum_angular_rate_rad_s: 2.0
+    maximum_normalized_controller_output_abs: 1.0
+    target_stable_window_minimum_s: 2.0
+    source_revocation_deadline_ms: 300
+    target_installation_deadline_ms: 300
+    restoration_deadline_ms: 300
+    writer_overlap_policy: no_unexplained_overlap
+    continuity_gap_allowance: three_observed_publication_periods_with_20_ms_floor
+  cleanup: explicit_public_Land_then_Disarm
+
+normal_run_acceptance:
+  - exact_source_build_environment_identity_match
+  - complete_initial_classic_route
+  - successful_reference_registration
+  - distinguishable_new_route_epoch_or_equivalent_route_instance
+  - source_classic_controller_revoked_or_bypassed_per_RouteProfile
+  - continuous_finite_reference_output
+  - allocator_participation_matches_RouteProfile
+  - unique_explainable_authoritative_writer
+  - no_illegal_overlap
+  - no_excess_route_gap
+  - complete_target_stable_window
+  - observed_normal_release
+  - target_controller_ceases_participation
+  - complete_classic_controller_graph_restoration
+  - no_post_revocation_custom_subject_or_output_residue
+  - successful_terminal_Land_and_Disarm
+  - complete_critical_windows
+  - VALID_clock_bridge_if_required
+  - complete_raw_and_compact_evidence
+  - no_FORMAL_SAFETY_STOP
+
+recovery_run_acceptance:
+  - complete_interruption_marker
+  - reference_route_revocation_adjudicable
+  - no_reference_subject_or_output_influence_after_revocation
+  - classic_controller_reenabled
+  - allocator_state_matches_RouteProfile
+  - writer_restoration_complete
+  - no_illegal_writer_overlap
+  - no_excess_unowned_gap
+  - complete_recovery_window
+  - successful_terminal_Land_and_Disarm
+  - complete_required_lineage
+  - no_FORMAL_SAFETY_STOP
+
+final_dispositions:
+  mutually_exclusive:
+    - PASS_FAMILY_B_REFERENCE_AND_OBSERVABILITY_ESTABLISHED
+    - CONDITIONAL_PASS_FAMILY_B_STATIC_FEASIBILITY_ONLY
+    - NEGATIVE_SCOPE_DECISION_INSUFFICIENT_REGISTERED_SUBJECTS
+    - NEGATIVE_SCOPE_DECISION_INSUFFICIENT_WRITER_OBSERVABILITY
+    - NEGATIVE_SCOPE_DECISION_REFERENCE_CONTROLLER_NOT_BOUNDED
+    - MEASUREMENT_INSUFFICIENT
+    - ENVIRONMENT_BLOCKED
+
+claim_boundaries:
+  - static_inventory_does_not_prove_runtime_handoff
+  - successful_build_does_not_prove_route_installation
+  - mode_or_module_name_does_not_substitute_for_writer_lineage
+  - one_control_allocator_writer_name_does_not_identify_route_epoch
+  - controller_performance_anomaly_does_not_automatically_imply_route_violation
+  - unauthorized_runtime_phases_are_NOT_APPLICABLE_not_PASS
+  - negative_scope_decision_is_a_valid_completion
+  - B1_does_not_authorize_a_full_Family_B_campaign
+  - B1_does_not_authorize_random_testing_or_Stateful_Testing
+  - compliant_B1_closure_only_authorizes_progression_to_M_FINAL
+  - B1_does_not_execute_or_complete_M_FINAL
+  - absence_of_a_subject_does_not_prove_no_other_custom_controller_exists
+  - three_runs_do_not_establish_a_population_failure_rate_or_general_controller_safety
+
+protected_evidence_rule:
+  forbidden_modification:
+    - P5_frozen_denominators_gates_raw_conclusions_ledgers_and_hashes
+    - S1_frozen_denominators_gates_raw_conclusions_ledgers_and_hashes
+    - Freshness_frozen_denominators_gates_raw_conclusions_ledgers_and_hashes
+    - N1_frozen_denominators_gates_raw_conclusions_ledgers_and_hashes
+    - C1_frozen_denominators_gates_raw_conclusions_ledgers_and_hashes
+    - R1_frozen_denominators_gates_raw_conclusions_ledgers_and_hashes
+    - W1_frozen_denominators_gates_raw_conclusions_ledgers_and_hashes
