@@ -1,9 +1,9 @@
 schema_version: "1.0"
 study_id: b1_registered_controller_inventory_family_b_gate
-status: B1_C_REFERENCE_AUTHORIZED_PENDING_AMENDMENT_PUSH
+status: B1_D_AUTHORIZED
 starting_repository_head: e7b28518bdd3afc58696878bf1c0f2b39fd8e218
 preregistration_commit: 792a36d6ff9a26202e9fde31e4b085eff90b65c8
-amendment_commits: [PENDING_PUSH]
+amendment_commits: [091f48ddd1776af0d54d22b51d466377547b6374]
 execution_order: [B1-A, B1-B, B1-C, B1-D, B1-E, B1-F, B1-G]
 phases:
   - phase_id: B1-A
@@ -27,7 +27,7 @@ phases:
     conditional: true
     successful_build_target: 1
     maximum_attempts: 3
-    status: AUTHORIZED_PENDING_AMENDMENT_PUSH
+    status: AUTHORIZED
   - phase_id: B1-E
     name: conditional_normal_classic_reference_classic_SITL_baseline
     formal_runtime: true
