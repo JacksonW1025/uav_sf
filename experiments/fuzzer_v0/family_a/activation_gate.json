@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "gate_id": "FAMILY_A_FUZZER_V0_ACTIVATION_GATE",
+  "status": "PREREGISTERED_NOT_ACTIVATED",
+  "preregistration_complete": true,
+  "source_lock_complete": true,
+  "seed_catalog_complete": true,
+  "state_model_complete": true,
+  "event_grammar_complete": true,
+  "mutation_grammar_complete": true,
+  "strategy_matrix_complete": true,
+  "budgets_frozen": true,
+  "oracle_identity_complete": true,
+  "evidence_rules_complete": true,
+  "safety_rules_complete": true,
+  "analysis_plan_complete": true,
+  "consistency_check_passed": true,
+  "focused_tests_passed": true,
+  "validate_repo_passed": true,
+  "campaign_activated": false,
+  "runtime_authorized": false,
+  "formal_attempts_authorized": false,
+  "authorized_family": "FAMILY_A_ONLY",
+  "excluded_scopes": [
+    "FAMILY_B",
+    "R1_SESSION_ROLLOVER",
+    "W1_REAL_WORKLOAD_RUNTIME",
+    "DIRECT_ACTUATOR",
+    "UNBOUNDED_CAMPAIGN",
+    "HITL",
+    "REAL_FLIGHT"
+  ],
+  "activation_requires_separate_commit": true,
+  "activation_requires_explicit_review": true,
+  "activation_blockers": [
+    "SEPARATE_EXPLICIT_REVIEW_AND_ACTIVATION_DECISION_REQUIRED"
+  ],
+  "next_exact_action": "review the frozen Family A Fuzzer v0 preregistration and create a separate activation decision"
+}

@@ -1,0 +1,162 @@
+schema_version: "1.0"
+gate_id: FAMILY_A_FUZZER_V0_EVIDENCE_ADMISSIBILITY_GATE
+gate_version: "1.0"
+status: FROZEN_NOT_EXECUTED
+
+oracle_outcomes: [PASS, EXPOSURE, VIOLATION, UNKNOWN, NOT_APPLICABLE]
+attempt_classifications:
+  - ACCEPTED
+  - OBSERVABILITY_REJECTED
+  - MEASUREMENT_INSUFFICIENT
+  - ENVIRONMENT_FAILURE
+  - CAMPAIGN_CONFIGURATION_FAILURE
+  - FORMAL_SAFETY_STOP
+  - NOT_APPLICABLE
+
+acceptance_gate:
+  identity:
+    - activation_commit_is_pushed_and_matches_activation_gate
+    - preregistration_and_source_lock_hashes_match
+    - repository_and_dependency_revisions_match
+    - seed_row_is_ACCEPTED_RUNTIME_SEED
+    - event_and_mutation_are_allowlisted_and_source_predicate_holds
+    - Oracle_executables_schemas_thresholds_and_profiles_match_oracle_lock
+    - worktree_clean_at_attempt_start
+  environment:
+    - no_preexisting_PX4_Gazebo_ROS_DDS_or_campaign_process
+    - campaign_port_unoccupied
+    - runner_exit_zero
+    - monitor_status_PASS
+    - no_simulator_clock_stall_or_PX4_abort
+    - cleanup_landed_and_disarmed
+  scenario:
+    - unique_run_id_registered_before_formal_start
+    - reachable_source_state_observed
+    - public_trigger_observed
+    - requested_event_timing_or_order_within_frozen_domain
+    - no_prohibited_event_or_mutation
+    - source_and_target_or_retained_route_identity_resolved
+  observability:
+    - raw_artifact_preserved_and_hashed
+    - compact_evidence_generated
+    - complete_formal_target_window
+    - cleanup_window_separate_from_formal_target_window
+    - clock_bridge_VALID_or_NOT_REQUIRED
+    - route_epoch_complete_when_route_Oracle_applicable
+    - controller_allocator_and_writer_lineage_complete_when_applicable
+    - lifecycle_owner_and_successor_window_complete_when_successor_Oracle_applicable
+    - every_applicable_Oracle_is_not_UNKNOWN
+  outcome_rule: >-
+    An attempt is ACCEPTED only when identity, environment, scenario, and
+    observability gates all pass. PASS, EXPOSURE, and VIOLATION are Oracle
+    outcomes within an ACCEPTED attempt, not attempt classifications.
+
+classification_rules:
+  OBSERVABILITY_REJECTED:
+    when:
+      - invalid_missing_or_out_of_interval_clock_bridge
+      - incomplete_critical_or_target_window
+      - missing_route_epoch_when_required
+      - missing_controller_allocator_or_writer_lineage_when_required
+      - missing_lifecycle_owner_or_successor_evidence_when_required
+      - applicable_Oracle_returns_UNKNOWN_due_to_measurement
+    enters_SUT_outcome_denominator: false
+  MEASUREMENT_INSUFFICIENT:
+    when:
+      - arm_closes_with_fewer_than_8_ACCEPTED_attempts
+      - registered_measurement_target_cannot_be_met_at_attempt_cap
+    enters_SUT_outcome_denominator: false
+  ENVIRONMENT_FAILURE:
+    when:
+      - simulator_or_transport_failure_unrelated_to_target_mechanism
+      - host_resource_or_clock_failure
+      - required_artifact_missing_due_to_environment
+    enters_SUT_outcome_denominator: false
+  CAMPAIGN_CONFIGURATION_FAILURE:
+    when:
+      - requested_case_cannot_be_compiled_from_frozen_grammar
+      - frozen_identity_or_parameter_mismatch
+      - source_state_precondition_miss_caused_by_campaign_configuration
+      - occupied_campaign_port_after_attempt_registration
+    enters_SUT_outcome_denominator: false
+  FORMAL_SAFETY_STOP:
+    when: safety_rules.yaml_immediate_or_cleanup_stop
+    enters_SUT_outcome_denominator: false
+  NOT_APPLICABLE:
+    when:
+      - historical_replay_only_case_presented_to_current_runtime
+      - frozen_profile_excludes_the_requested_Oracle_or_phase
+    enters_SUT_outcome_denominator: false
+
+non_collapsing_semantics:
+  UNKNOWN_to_PASS: forbidden
+  NOT_APPLICABLE_to_PASS: forbidden
+  EXPOSURE_to_VIOLATION: forbidden
+  rejected_attempt_to_SUT_failure: forbidden
+  historical_replay_to_current_natural_finding: forbidden
+  cleanup_event_to_formal_target_outcome: forbidden
+
+attempt_accounting:
+  formal_attempt_definition: >-
+    One preregistered strategy-arm case whose unique run ID has been entered in
+    the append-only ledger and whose runtime launch sequence has begun after
+    activation.
+  static_parser_schema_unit_and_consistency_tests_are_attempts: false
+  rejected_attempt_consumes_arm_budget: true
+  automatic_replacement_after_rejection: false
+  delete_or_overwrite_attempt: forbidden
+  new_attempt_after_retry_requires_new_run_id: true
+  raw_artifact_required_for_every_registered_attempt: true
+  compact_evidence_required_for_every_registered_attempt: true
+  cleanup_audit_required_for_every_registered_attempt: true
+
+finding_signature:
+  canonical_fields:
+    - SUT_revision
+    - route_pair
+    - route_epoch_relation
+    - Oracle
+    - violated_clause
+    - producer_session_relation
+    - command_age_bucket
+    - executor_owner_relation
+    - writer_lineage_relation
+    - fallback_or_successor_outcome
+    - relevant_event_ordering
+  algorithm: SHA256_of_canonical_JSON
+  duplicate_rule: same_signature_increments_reproduction_count_not_unique_finding_count
+
+finding_admission:
+  required:
+    - evidence_Gate_ACCEPTED
+    - exact_revision
+    - complete_target_window
+    - Oracle_applicable
+    - source_provenance
+    - compact_evidence
+    - raw_artifact_SHA256
+    - independent_replay_plan
+    - no_environment_blocker
+
+minimization:
+  allowed:
+    - delete_irrelevant_event
+    - shorten_timing_within_frozen_domain
+    - simplify_motion_within_accepted_context
+    - lower_Reality_Distance
+    - preserve_same_Oracle_signature
+  forbidden:
+    - modify_SUT
+    - bypass_public_interface
+    - relax_threshold
+    - delete_failure_evidence
+    - rewrite_expected_route
+
+historical_replay:
+  source: frozen_Issue_162_processed_artifacts
+  launches_flight: false
+  accepted_status: ACCEPTED_REPLAY_BENCHMARK
+  benchmark_detection_only: true
+  comparison_runtime_attempts: 0
+  current_natural_denominator: false
+  unique_current_finding_count: false

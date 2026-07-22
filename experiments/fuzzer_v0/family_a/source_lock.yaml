@@ -1,0 +1,67 @@
+schema_version: "1.0"
+lock_id: FAMILY_A_FUZZER_V0_SOURCE_LOCK
+captured_at: "2026-07-22"
+branch: main
+remote: origin
+starting_commit: 38725e87d8d0ebe03b1fe1712055725338332d83
+starting_origin_main: 38725e87d8d0ebe03b1fe1712055725338332d83
+starting_ahead: 0
+starting_behind: 0
+preregistration_commit: COMMIT_CONTAINING_THIS_SOURCE_LOCK_REPORTED_BY_GIT_AFTER_PUSH
+evidence_cutoff_commit: 3665337673e7e0a62ea204ac64f5644b8e428c25
+M_FINAL_commit: 38725e87d8d0ebe03b1fe1712055725338332d83
+M_FINAL_disposition: CONDITIONAL_PASS_MOTIVATION_COMPLETE_AUTHORIZE_FAMILY_A_FUZZER_V0
+
+authorization:
+  M_FINAL_gate: experiments/motivation/m_final/motivation_completion_gate.json
+  authorizes_preregistration: true
+  authorizes_family_a_only: true
+  authorizes_runtime: false
+  authorizes_random_campaign: false
+  authorizes_full_stateful_campaign: false
+
+dependency_identity:
+  PX4: 4ae21a5e569d3d89c2f6366688cbacb3e93437c9
+  px4_msgs: 18ecff03041c6f8d8a0012fbc63af0b23dd60af1
+  px4_ros2_interface_lib: c3e410f035806e8c56246708432ded09c976434b
+  Micro_XRCE_DDS_Agent: 73622810d984349b80bbac0ef55fc0b694d62222
+  simulator: Gazebo_Harmonic_SITL_gz_x500_default_world
+  dependency_lock: config/dependencies.lock.yaml
+  dependency_lock_sha256: 355408a6e8a2ea540f33de3ba6e9c656b13a10329537ec718354f9727313ac09
+
+accepted_evidence_source_commits:
+  P0_P0D_P2_P3: e7718e2de6b7ada4472fcbc1fc428cb84da39e92
+  P5_v6: 75a5217e0e0bfab232d03c30dcc22088aa16624d
+  Issue_162: c62452cf020f2851040fc9fa8a9611575d892e3d
+  Freshness_F1_F4: 955e7c98e3b29ddd21fa4d44fb562065700fa832
+  N1: fd9b93fb0d2f50554d6f52d19ac3cd573d7ae2f9
+  C1: b24cfb4fb18c175856f2d01991c8d498f1d2710f
+
+historical_replay_identity:
+  benchmark: Issue_162
+  use: deterministic_replay_for_Oracle_regression_only
+  current_runtime_seed: false
+  PX4: 6ea3539157ca358c70a515878b77077af7d4611d
+  px4_ros2_interface_lib: a5b9f3cb7cb65d2be80183bad31e9a7ce9f02684
+
+protected_authority_artifacts:
+  - path: experiments/motivation/m_final/motivation_completion_gate.json
+    sha256: e1d4abf4ca07180b5d4a737767543c010090346c74fc823acf13bff03a2b25cf
+  - path: docs/motivation/MOTIVATION_STUDY_FINAL_REPORT.md
+    sha256: a8cdc3cdfc1357f8c134c3e47714f91ba165fda0cb32075a2d31c5cd8f076eef
+  - path: experiments/motivation/m_final/evidence_ledger.tsv
+    sha256: 6dcf5d8962616e4d9d1b56c491ed1dcee9748efdb2576a5d6cea5607f542a3af
+  - path: experiments/motivation/m_final/source_lock.yaml
+    sha256: 9d6ce8307d513e644f27c11a22668cf747d0936e0642b2cd133f824811b7cef7
+  - path: docs/narrative/NEW_NARRATIVE_v7.md
+    sha256: 33d426acdf2a9cf82a9dfc1d3c71492f3abda26434041baf7ce95ca33ada9316
+  - path: docs/design/ROUTE_EPOCH_MODEL.md
+    sha256: 6f24e53c8aec47215985b26aee2bb629a94de364814f275ed26e021a2c4865de
+
+repository_policy:
+  raw_runtime_root: runs/fuzzer_v0/family_a
+  raw_artifacts_ignored: true
+  tracked_raw_files: 0
+  private_absolute_paths_allowed: false
+  activation_requires_separate_commit: true
+  runtime_requires_separate_explicit_authorization: true

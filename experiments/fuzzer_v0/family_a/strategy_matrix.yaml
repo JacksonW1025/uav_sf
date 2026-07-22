@@ -1,0 +1,60 @@
+schema_version: "1.0"
+matrix_id: FAMILY_A_FUZZER_V0_STRATEGIES
+status: FROZEN_NOT_EXECUTED
+shared_contract:
+  seed_pool: seed_catalog.tsv_rows_with_inclusion_status_ACCEPTED_RUNTIME_SEED
+  event_grammar: event_grammar.yaml
+  runtime_revision: source_lock.yaml
+  adapter_identity: source_lock.yaml_and_seed_catalog.tsv
+  simulator: {vehicle: gz_x500, world: default, sitl_only: true}
+  formal_attempt_budget_per_arm: 12
+  minimum_accepted_per_arm: 8
+  acceptance_gate: evidence_rules.yaml
+  cleanup: safety_rules.yaml
+  oracle_suite: oracle_lock.yaml
+  raw_and_compact_evidence: REQUIRED
+  attempt_replacement_after_rejection: FORBIDDEN
+  unused_budget_transfer: FORBIDDEN
+
+strategies:
+  - strategy_id: OFFICIAL_SEQUENCE
+    arm: V0-A
+    selection: canonical_seed_catalog_order
+    mutation: deterministic_replay_parameterization_only
+    searches_new_timing_interleavings: false
+    role: lowest_exploration_baseline
+    future_formal_attempt_budget: 12
+    minimum_accepted_for_comparison: 8
+  - strategy_id: BOUNDED_RANDOM_TIMING_COMPARATOR
+    arm: V0-B
+    selection: uniform_from_legal_seed_operator_parameter_tuples
+    rng_algorithm: Python_random_MT19937_semantics
+    rng_seed: 2026072202
+    illegal_event_generation: false
+    internal_PX4_state_mutation: false
+    route_pair_expansion: false
+    unbounded_random_campaign: false
+    future_formal_attempt_budget: 12
+    minimum_accepted_for_comparison: 8
+  - strategy_id: STATE_AWARE_MUTATION
+    arm: V0-C
+    selection: frozen_lexicographic_priority_in_analysis_plan
+    rng_algorithm_for_final_ties: Python_random_MT19937_semantics
+    rng_seed: 2026072203
+    primary_targets:
+      - uncovered_admissible_state
+      - uncovered_route_epoch_transition
+      - uncovered_health_setpoint_owner_combination
+      - uncovered_oracle_applicability_tuple
+    physical_anomaly_only_optimization: false
+    provenance_and_source_predicate_required: true
+    runtime_weight_adjustment: forbidden
+    future_formal_attempt_budget: 12
+    minimum_accepted_for_comparison: 8
+
+equal_budget_assertions:
+  budget_vector: [12, 12, 12]
+  total_future_formal_runtime_budget: 36
+  shared_simulator_seed_schedule: [410101, 410102, 410103, 410104, 410105, 410106, 410107, 410108, 410109, 410110, 410111, 410112]
+  rejected_attempts_count_toward_arm_budget: true
+  comparison_requires_per_arm_accepted_count_disclosure: true

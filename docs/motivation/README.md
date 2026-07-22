@@ -72,7 +72,10 @@ scope; Family B remains static evidence and future work. R1 session rollover,
 W1 real-workload runtime value, state-aware search gain, and full fuzzing
 effectiveness are not established.
 
-The exact next action is to create and push an independent Family A Fuzzer v0
-preregistration. No Fuzzer v0 implementation or runtime, real-workload campaign,
-Family B campaign, random campaign, or full stateful campaign is authorized by
-M-FINAL.
+The independent Family A Fuzzer v0 preregistration now exists as
+`PREREGISTERED_NOT_ACTIVATED` with formal attempts: `0`. State-aware search
+gain: `NOT_ESTABLISHED`. Full method effectiveness: `NOT_ESTABLISHED`. The next
+exact action is to review the frozen Family A Fuzzer v0 preregistration and
+create a separate activation decision. No Fuzzer v0 flight runtime,
+real-workload campaign, Family B campaign, random campaign, or full stateful
+campaign is authorized by the preregistration itself.

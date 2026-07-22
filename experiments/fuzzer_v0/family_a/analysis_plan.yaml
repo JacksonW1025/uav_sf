@@ -1,0 +1,159 @@
+schema_version: "1.0"
+plan_id: FAMILY_A_FUZZER_V0_ANALYSIS
+status: FROZEN_NOT_EXECUTED
+primary_metric: unique_admissible_FuzzState_count_at_12_formal_attempts
+primary_comparison: STATE_AWARE_MUTATION_minus_each_comparator
+
+state_aware_selection:
+  ordering: lexicographic
+  priority_tier_1:
+    - new_admissible_route_lifecycle_freshness_state
+    - new_route_epoch_transition
+    - new_Oracle_applicability_combination
+    - new_owner_health_setpoint_failsafe_combination
+  priority_tier_2:
+    - new_event_ordering
+    - new_command_age_bucket
+    - new_vehicle_state_context
+    - new_accepted_evidence_signature
+  priority_tier_3:
+    - previously_reached_state_with_lower_reproduction_count
+    - N1_like_late_phase_window
+    - benchmark_compatible_condition
+  tie_break:
+    - higher_realism_level_where_R1_precedes_R2_precedes_R3
+    - lower_Reality_Distance
+    - fewer_prior_formal_executions
+    - deterministic_seeded_tie_break
+  rng_algorithm: Python_random_MT19937_semantics
+  rng_seed: 2026072203
+  coverage_map_update: after_ACCEPTED_attempt_only
+  rejected_attempt_updates_coverage: false
+  rejected_attempt_updates_execution_count: true
+  history_scope: STATE_AWARE_MUTATION_arm_only
+  runtime_weight_or_priority_change: forbidden
+
+official_sequence_selection:
+  order: seed_catalog_lexicographic_by_seed_id
+  mutation: deterministic_replay_parameterization_only
+  wrap_if_more_attempts_than_unique_primary_classes: cycle_to_next_seed_without_changing_distribution
+
+bounded_random_selection:
+  sample_space: all_legal_seed_operator_parameter_tuples_materialized_before_arm_start
+  sampling: uniform_without_replacement_until_exhaustion_then_uniform_with_recorded_replacement
+  rng_algorithm: Python_random_MT19937_semantics
+  rng_seed: 2026072202
+  illegal_or_precondition_false_candidate: grammar_rejection_not_runtime_attempt_before_registration
+  distribution_change_after_execution_starts: forbidden
+
+reality_distance:
+  formula: provenance_distance_plus_timing_plus_order_plus_partial_failure_plus_motion_plus_setpoint_level
+  provenance_distance: {R1: 0, R2: 1, R3: 2}
+  component_values: {unchanged: 0, changed_once_within_frozen_domain: 1}
+  range: [0, 7]
+  lower_is_more_realistic: true
+  one_mutation_operator_per_generated_case: true
+
+coverage_metrics:
+  - unique_admissible_FuzzState_count
+  - unique_source_target_route_pair_count
+  - unique_route_epoch_transition_count
+  - unique_lifecycle_edge_count
+  - unique_executor_ownership_combination_count
+  - unique_health_setpoint_combination_count
+  - unique_command_age_bucket_count
+  - unique_setpoint_level_count
+  - unique_failsafe_authority_event_ordering_count
+  - unique_Oracle_applicability_tuple_count
+
+evidence_yield_metrics:
+  - formal_attempts
+  - accepted_attempts
+  - acceptance_ratio
+  - rejection_class_distribution
+  - evidence_complete_outcome_count
+  - UNKNOWN_count
+  - EXPOSURE_count
+  - VIOLATION_count
+  - duplicate_signature_count
+
+search_effectiveness_metrics:
+  - new_states_per_formal_attempt
+  - new_states_per_accepted_attempt
+  - attempts_to_first_new_route_state
+  - attempts_to_first_Oracle_relevant_outcome
+  - attempts_to_first_N1_like_signature
+  - benchmark_detection_result
+  - state_saturation_curve
+
+realism_metrics:
+  - R1_R2_R3_distribution
+  - Reality_Distance_distribution
+  - source_provenance_distribution
+  - unsupported_testcase_count
+  - grammar_rejection_count
+
+attribution_categories:
+  - PX4_mechanism_candidate
+  - integration_or_adapter_candidate
+  - policy_exposure
+  - measurement_limitation
+  - environment_or_configuration_limitation
+  - unresolved
+
+metric_formulas:
+  acceptance_ratio: accepted_attempts_divided_by_formal_attempts
+  measurement_rejection_ratio: OBSERVABILITY_REJECTED_divided_by_formal_attempts
+  environment_configuration_failure_ratio: ENVIRONMENT_FAILURE_plus_CAMPAIGN_CONFIGURATION_FAILURE_divided_by_formal_attempts
+  new_states_per_formal_attempt: unique_first_seen_accepted_states_divided_by_formal_attempts
+  new_states_per_accepted_attempt: unique_first_seen_accepted_states_divided_by_accepted_attempts
+  state_saturation_curve: cumulative_unique_accepted_FuzzStates_after_each_formal_attempt_slot
+  zero_denominator: report_NOT_APPLICABLE_never_zero
+
+comparison_rules:
+  equal_formal_attempt_budget: 12_per_arm
+  same_seed_pool_and_acceptance_gate: true
+  per_arm_accepted_count_disclosure: required
+  descriptive_effect_size:
+    - absolute_difference_in_primary_metric
+    - ratio_of_primary_metric_with_zero_denominator_reported_NOT_APPLICABLE
+    - absolute_difference_in_acceptance_ratio
+  uncertainty_intervals:
+    proportions: Wilson_95_percent
+    primary_difference: paired_formal_slot_bootstrap_95_percent
+    bootstrap_resamples: 10000
+    bootstrap_rng_seed: 2026072299
+  measurement_insufficient_rule: >-
+    If any arm has fewer than 8 ACCEPTED attempts, make no strong strategy
+    ranking; report the measurement limitation and do not interpret another
+    arm's higher accepted count as search gain.
+  smoke_campaign_defect_rate_inference: forbidden
+
+primary_gain_rule:
+  state_aware_gain_observed_requires:
+    - all_three_arms_have_at_least_8_ACCEPTED_attempts
+    - state_aware_primary_metric_exceeds_each_comparator
+    - paired_bootstrap_95_percent_interval_for_each_difference_excludes_zero
+    - at_least_one_new_admissible_state_or_Oracle_relevant_condition
+    - rejection_distribution_does_not_explain_the_gain
+    - no_unsupported_or_stress_only_testcase_contributes
+  otherwise: no_resolved_primary_gain
+
+finding_deduplication:
+  signature_source: evidence_rules.yaml
+  duplicate_counts_as_unique: false
+  duplicate_use: reproduction_rate_only
+
+historical_benchmark_analysis:
+  input: ACCEPTED_REPLAY_BENCHMARK_rows_only
+  runtime_launch: false
+  detected_when: frozen_Successor_Oracle_signature_matches
+  enters_runtime_coverage: false
+  enters_current_natural_finding_count: false
+
+claim_limits:
+  - no_PX4_population_defect_rate
+  - no_general_state_aware_superiority
+  - no_full_method_effectiveness
+  - no_real_world_deployment_validity
+  - no_Family_B_runtime_generality

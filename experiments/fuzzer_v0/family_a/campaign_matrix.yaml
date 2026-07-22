@@ -1,0 +1,62 @@
+schema_version: "1.0"
+campaign_id: FAMILY_A_FUZZER_V0
+status: PREREGISTERED_NOT_ACTIVATED
+current_formal_attempts: 0
+phases:
+  - phase_id: V0-P
+    name: Activation_and_Infrastructure_Qualification
+    execution_in_current_task: false
+    accepted_qualification_target: 3
+    maximum_future_formal_attempts: 6
+    prerequisite_for_strategy_arms: true
+    included_in_comparison_budget: false
+  - phase_id: V0-A
+    name: Official_Sequence
+    strategy: OFFICIAL_SEQUENCE
+    maximum_future_formal_attempts: 12
+    minimum_accepted_for_comparison: 8
+    included_in_comparison_budget: true
+  - phase_id: V0-B
+    name: Bounded_Random_Timing_Comparator
+    strategy: BOUNDED_RANDOM_TIMING_COMPARATOR
+    maximum_future_formal_attempts: 12
+    minimum_accepted_for_comparison: 8
+    included_in_comparison_budget: true
+  - phase_id: V0-C
+    name: State_Aware_Mutation
+    strategy: STATE_AWARE_MUTATION
+    maximum_future_formal_attempts: 12
+    minimum_accepted_for_comparison: 8
+    included_in_comparison_budget: true
+  - phase_id: V0-H
+    name: Historical_Replay_Benchmark
+    launches_flight: false
+    input: frozen_Issue_162_processed_artifacts
+    runtime_attempts: 0
+    included_in_comparison_budget: false
+    counts_as_natural_finding: false
+    purpose: Oracle_regression_and_benchmark_detection_only
+  - phase_id: V0-F
+    name: Final_Adjudication
+    execution_in_current_task: false
+    starts_only_after_all_separately_authorized_phases_close: true
+    included_in_comparison_budget: false
+
+budget_rules:
+  total_future_formal_comparison_attempts: 36
+  rejected_attempt_automatic_replacement: false
+  close_arm_at_attempts: 12
+  accepted_below_8_disposition: MEASUREMENT_INSUFFICIENT
+  unused_budget_transfer_between_arms: false
+  qualification_budget_is_not_comparison_budget: true
+  historical_replay_is_not_runtime_budget: true
+  current_task_formal_attempts: 0
+
+campaign_stop_rules:
+  - each_strategy_arm_closes_at_12_formal_attempts
+  - no_attempt_is_added_to_replace_a_rejection
+  - any_FORMAL_SAFETY_STOP_ends_the_current_attempt_and_requires_review
+  - three_consecutive_environment_or_configuration_failures_pause_future_execution_for_review
+  - missing_or_changed_frozen_identity_stops_the_campaign
+  - activation_revocation_stops_all_new_attempt_registration
+  - final_adjudication_never_runs_before_all_authorized_arms_close

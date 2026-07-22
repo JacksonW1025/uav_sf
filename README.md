@@ -27,9 +27,15 @@ The core Motivation and Family A formal empirical scope are supported. R1
 session rollover, W1 real-workload runtime value, Family B runtime generality,
 state-aware search gain, and full fuzzing effectiveness are not established.
 
-The exact next action is to create and push an independent Family A Fuzzer v0
-preregistration. No fuzzer implementation, runtime, random campaign, large
-campaign, real-workload campaign, or Family B campaign has started.
+The independent [Family A Fuzzer v0 preregistration](experiments/fuzzer_v0/family_a/README.md)
+now exists as `PREREGISTERED_NOT_ACTIVATED`. Its frozen comparison is limited
+to Family A and retains formal attempts: `0`. Campaign activation, runtime, and
+formal attempts remain unauthorized. State-aware search gain:
+`NOT_ESTABLISHED`. Full method effectiveness: `NOT_ESTABLISHED`.
+
+The next exact action is to review the frozen Family A Fuzzer v0
+preregistration and create a separate activation decision. No Family A Fuzzer
+v0 flight runtime, real-workload campaign, or Family B runtime has started.
 
 ## Quick start
 
@@ -53,7 +59,8 @@ Dependency sources and builds live in ignored `external/`, `ros2_ws/`, and
 5. [Route model](docs/design/ROUTE_MODEL.md)
 6. [Observability matrix](docs/design/OBSERVABILITY_MATRIX.tsv)
 7. [Repository map](docs/repository/REPOSITORY_MAP.md)
-8. [Agent guide](AGENT.md)
+8. [Family A Fuzzer v0 preregistration](docs/design/FAMILY_A_FUZZER_V0_PREREGISTRATION.md)
+9. [Agent guide](AGENT.md)
 
 ## Data and validation
 

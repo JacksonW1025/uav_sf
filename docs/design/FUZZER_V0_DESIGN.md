@@ -1,5 +1,12 @@
 # Fuzzer v0 Design
 
+> **Pre-M-FINAL prototype:** this file and the associated 200-evaluation plan,
+> Route Oracle 0.3 identity, prototype seed manifest, and validation-only
+> mutant seeds are not the current formal protocol. The authoritative frozen
+> Family A protocol is the
+> [Family A Fuzzer v0 preregistration](FAMILY_A_FUZZER_V0_PREREGISTRATION.md),
+> which is `PREREGISTERED_NOT_ACTIVATED` with zero formal attempts.
+
 ## Purpose and authorization
 
 Fuzzer v0 searches bounded SITL route-transition schedules for evidence that Route

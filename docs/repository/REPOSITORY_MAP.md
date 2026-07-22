@@ -17,8 +17,14 @@
 | `data/schemas/` | machine-readable contracts | tested |
 | `data/processed/` | compact reproducible outputs | source provenance required |
 | `experiments/motivation/` | preregistrations, ledgers, and machine Gates | append-only phase evidence |
+| `experiments/fuzzer_v0/family_a/` | frozen Family A Fuzzer v0 preregistration and artifact index | `PREREGISTERED_NOT_ACTIVATED`; zero attempts |
 | `experiments/probes/p0/` | reproducible P0 procedure | gate passed; normal flow only |
 | `external/`, `ros2_ws/`, `runs/` | ignored dependencies/build/raw runtime | never tracked |
 
 The former in-tree legacy archive is intentionally absent. Use
 `docs/repository/LEGACY_RECOVERY.md` for the protected Git recovery point.
+
+The pre-M-FINAL Fuzzer v0 design and utilities remain prototype material. The
+only current preregistration authority is the Family A bundle above together
+with its source lock, Oracle lock, Evidence Admissibility Gate, activation
+Gate, and zero attempt ledger.

@@ -1,0 +1,182 @@
+schema_version: "1.0"
+preregistration_id: FAMILY_A_FUZZER_V0
+status: PREREGISTERED_NOT_ACTIVATED
+created_at: "2026-07-22"
+starting_repository_commit: 38725e87d8d0ebe03b1fe1712055725338332d83
+motivation_evidence_cutoff: 3665337673e7e0a62ea204ac64f5644b8e428c25
+m_final_commit: 38725e87d8d0ebe03b1fe1712055725338332d83
+m_final_disposition: CONDITIONAL_PASS_MOTIVATION_COMPLETE_AUTHORIZE_FAMILY_A_FUZZER_V0
+freeze_rule: >-
+  This pushed preregistration freezes the future bounded campaign before any
+  qualification or formal attempt. Campaign activation requires explicit
+  review and a separate pushed activation decision. Runtime is not authorized
+  by this file.
+
+purpose:
+  positioning: flight-software reliability and runtime consistency
+  method: state-aware testing with deterministic replay
+  campaign_kind: bounded strategy comparison
+  study_form: controlled SITL study
+  primary_limit: >-
+    Fuzzer v0 evaluates method-entry feasibility and search signal. It does
+    not establish a PX4-wide defect rate or complete a full method
+    effectiveness claim.
+
+goals:
+  FZ-G1:
+    name: Reachable State Exploration
+    question: >-
+      Under equal formal-attempt budgets, which strategy reaches more
+      admissible runtime-route, command-freshness, and lifecycle states?
+  FZ-G2:
+    name: Transition and Interleaving Exploration
+    question: >-
+      Does state-aware mutation reach more legal event interleavings, route
+      epoch transitions, and supported partial-failure combinations than the
+      official sequence and bounded random-timing comparator?
+  FZ-G3:
+    name: Oracle-Relevant Evidence
+    outcomes:
+      - route_oracle_applicable_window
+      - freshness_oracle_applicable_window
+      - successor_oracle_applicable_window
+      - evidence_complete_EXPOSURE
+      - evidence_complete_VIOLATION
+      - benchmark_compatible_signature
+  FZ-G4:
+    name: Known Evidence Rediscovery
+    future_checks:
+      - reproduce_accepted_baseline
+      - detect_frozen_historical_benchmark_artifact
+      - reach_N1_like_late_phase_state
+      - never_treat_unsupported_current_historical_composition_as_natural_current_testcase
+  FZ-G5:
+    name: Evidence Efficiency
+    measures:
+      - accepted_evidence_ratio
+      - measurement_rejection_ratio
+      - environment_or_configuration_failure_ratio
+      - attempts_and_time_to_first_new_admissible_state
+      - attempts_and_time_to_first_oracle_relevant_outcome
+  FZ-G6:
+    name: Realism and Attribution
+    requirements:
+      - legal_public_trigger
+      - reachable_source_state
+      - R1_R2_R3_provenance
+      - mechanism_grounded_process_or_communication_event
+      - exact_Family_A_attribution
+
+formal_scope:
+  authorized_family: FAMILY_A_ONLY
+  runtime_mechanisms:
+    - PX4_internal_route
+    - Legacy_Offboard
+    - Dynamic_External_Mode
+    - Mode_Executor
+    - External_Mode_Replacement
+    - supported_internal_fallback
+    - RC_or_GCS_mode_request
+    - supported_failsafe
+    - process_lifecycle
+    - health_or_proof_of_life
+    - setpoint_publication
+    - command_freshness_and_lineage
+    - completion_and_successor_progression
+  setpoint_levels:
+    - trajectory_position_velocity_acceleration
+    - attitude
+    - body_rate
+  simulator:
+    vehicle: gz_x500
+    world: default
+    sitl_only: true
+  excluded:
+    - Family_B
+    - mc_nn
+    - RAPTOR
+    - registered_controller_reference
+    - direct_actuator
+    - control_allocation_replacement
+    - W1_real_workload
+    - Aerostack2
+    - Native_Adapter
+    - R1_delayed_old_session_packet
+    - producer_session_rollover
+    - delayed_old_session_message
+    - unsupported_current_replacement_executor_composition
+    - VTOL
+    - terminal_output_gating
+    - kill_lockdown_or_flight_termination
+    - arbitrary_internal_state_mutation
+    - stress_only_primary_input
+    - unbounded_campaign
+    - HITL
+    - real_flight
+
+frozen_artifacts:
+  source_lock: source_lock.yaml
+  seed_catalog: seed_catalog.tsv
+  state_model: state_model.yaml
+  event_grammar: event_grammar.yaml
+  mutation_grammar: mutation_grammar.yaml
+  strategy_matrix: strategy_matrix.yaml
+  campaign_matrix: campaign_matrix.yaml
+  oracle_lock: oracle_lock.yaml
+  evidence_rules: evidence_rules.yaml
+  safety_rules: safety_rules.yaml
+  analysis_plan: analysis_plan.yaml
+  final_adjudication_template: final_adjudication_template.yaml
+  activation_gate: activation_gate.json
+  attempt_ledger: attempt_ledger.yaml
+
+comparison_contract:
+  strategies:
+    - OFFICIAL_SEQUENCE
+    - BOUNDED_RANDOM_TIMING_COMPARATOR
+    - STATE_AWARE_MUTATION
+  shared_requirements:
+    - same_Family_A_seed_pool
+    - same_reachable_event_grammar
+    - same_runtime_revision
+    - same_simulator_and_vehicle_configuration
+    - same_maximum_formal_attempt_budget
+    - same_evidence_acceptance_gate
+    - same_cleanup
+    - same_oracle_suite
+    - same_raw_and_compact_evidence_requirements
+  formal_attempt_budget_per_strategy: 12
+  minimum_accepted_per_strategy: 8
+  total_future_comparison_budget: 36
+  rejected_attempts_consume_budget: true
+  unused_budget_transfer: false
+
+oracle_statuses: [PASS, EXPOSURE, VIOLATION, UNKNOWN, NOT_APPLICABLE]
+evidence_gate_statuses:
+  - ACCEPTED
+  - OBSERVABILITY_REJECTED
+  - MEASUREMENT_INSUFFICIENT
+  - ENVIRONMENT_FAILURE
+  - CAMPAIGN_CONFIGURATION_FAILURE
+  - FORMAL_SAFETY_STOP
+  - NOT_APPLICABLE
+
+non_collapsing_rules:
+  UNKNOWN_is_PASS: false
+  NOT_APPLICABLE_is_PASS: false
+  EXPOSURE_is_VIOLATION: false
+  rejected_attempt_enters_SUT_violation_denominator: false
+  cleanup_window_is_formal_target_window: false
+  historical_replay_enters_current_natural_finding_count: false
+  duplicate_signature_is_new_unique_finding: false
+
+current_state:
+  campaign_activated: false
+  runtime_authorized: false
+  formal_attempts_authorized: false
+  formal_attempts: 0
+  method_evaluation_started: false
+  state_aware_search_gain_supported: false
+  full_method_effectiveness_supported: false
+  next_exact_action: >-
+    review the frozen Family A Fuzzer v0 preregistration and create a separate activation decision

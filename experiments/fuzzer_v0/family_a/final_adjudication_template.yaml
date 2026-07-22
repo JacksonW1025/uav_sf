@@ -1,0 +1,61 @@
+schema_version: "1.0"
+template_id: FAMILY_A_FUZZER_V0_FINAL_ADJUDICATION
+status: TEMPLATE_NOT_EVALUATED
+campaign_identity:
+  preregistration_commit: null
+  activation_commit: null
+  runtime_revision: null
+  Oracle_lock_sha256: null
+  completed_strategy_arms: []
+formal_accounting:
+  total_formal_attempts: null
+  by_strategy: {}
+  historical_replay_runtime_attempts: 0
+evidence_accounting:
+  accepted: null
+  rejection_classes: {}
+  Oracle_outcomes: {}
+coverage: {}
+search_effectiveness: {}
+realism: {}
+attribution: {}
+unique_findings: []
+duplicate_signatures: []
+consistency_check_passed: null
+
+mutually_exclusive_dispositions:
+  PASS_STATE_AWARE_SEARCH_GAIN_OBSERVED:
+    requires:
+      - all_three_arms_meet_minimum_accepted
+      - equal_budget_comparison_complete
+      - state_aware_primary_metric_has_clear_preregistered_gain
+      - evidence_rejection_does_not_explain_gain
+      - at_least_one_new_admissible_state_or_Oracle_relevant_condition
+      - no_unsupported_or_stress_only_testcase_supports_gain
+      - consistency_check_passes
+  CONDITIONAL_PASS_STATE_AWARE_SIGNAL_WITH_LIMITED_EVIDENCE:
+    requires:
+      - bounded_positive_signal_exists
+      - one_or_more_primary_PASS_requirements_not_met
+      - limitation_is_reported_without_strong_ranking
+  NO_RESOLVED_SEARCH_GAIN:
+    requires:
+      - all_three_arms_meet_minimum_accepted
+      - equal_budget_comparison_complete
+      - primary_gain_rule_not_satisfied
+  MEASUREMENT_INSUFFICIENT:
+    requires:
+      - at_least_one_arm_has_fewer_than_8_ACCEPTED_attempts
+  ENVIRONMENT_BLOCKED:
+    requires:
+      - environment_failures_prevent_preregistered_comparison
+  CAMPAIGN_CONFIGURATION_FAILURE:
+    requires:
+      - frozen_campaign_configuration_prevents_valid_comparison
+
+selected_disposition: null
+claim_guardrails:
+  full_method_effectiveness: false
+  PX4_population_defect_rate: false
+  general_state_aware_superiority: false
+  real_world_deployment_validity: false

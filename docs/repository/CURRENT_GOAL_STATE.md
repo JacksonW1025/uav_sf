@@ -2,7 +2,7 @@
 
 Last updated: 2026-07-22
 
-## Closed goal
+## Closed Motivation goal
 
 M-FINAL — Unified Motivation Study Completion Gate is `CLOSED`.
 
@@ -45,15 +45,35 @@ MG10 CONDITIONAL_PASS
   runtime graph-replacement evidence.
 - State-aware search gain and full fuzzing effectiveness are not established.
 
+## Current preregistration state
+
+Family A Fuzzer v0 is `PREREGISTERED_NOT_ACTIVATED`.
+
+- Authorized family: `FAMILY_A_ONLY`.
+- Formal attempts: `0`.
+- Campaign activated: `false`.
+- Runtime authorized: `false`.
+- Formal attempts authorized: `false`.
+- Method evaluation: `NOT_STARTED`.
+- State-aware search gain: `NOT_ESTABLISHED`.
+- Full method effectiveness: `NOT_ESTABLISHED`.
+- Attempt ledger: `NOT_STARTED`; activation commit: `null`.
+
+The frozen assets are indexed in
+`experiments/fuzzer_v0/family_a/README.md`. The preregistration does not import
+R1 session rollover, W1 runtime, Family B, direct actuator, the old
+200-evaluation prototype plan, Route Oracle 0.3, or validation-only mutant
+seeds.
+
 ## Current authorization
 
-The only authorized next action is:
+The next exact action is:
 
-> create and push an independent Family A Fuzzer v0 preregistration
+> review the frozen Family A Fuzzer v0 preregistration and create a separate activation decision
 
-No method implementation or runtime has started. Real-workload runtime, Family
-B, direct actuator, HITL, real flight, unprovenanced random events, and large or
-full stateful campaigns remain unauthorized.
+No Family A Fuzzer v0 flight runtime has executed. Real-workload runtime,
+Family B, direct actuator, HITL, real flight, unprovenanced random events, and
+large or full stateful campaigns remain unauthorized.
 
 ## Current artifacts
 
@@ -62,3 +82,6 @@ full stateful campaigns remain unauthorized.
 - `data/processed/motivation/m_final/m_final_summary.json`
 - `docs/narrative/NEW_NARRATIVE_v7.md`
 - `docs/repository/MOTIVATION_COMPLETION_STATE.md`
+- `docs/design/FAMILY_A_FUZZER_V0_PREREGISTRATION.md`
+- `experiments/fuzzer_v0/family_a/activation_gate.json`
+- `experiments/fuzzer_v0/family_a/attempt_ledger.yaml`

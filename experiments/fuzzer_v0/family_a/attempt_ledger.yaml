@@ -1,0 +1,13 @@
+schema_version: "1.0"
+campaign_id: FAMILY_A_FUZZER_V0
+preregistration_commit: COMMIT_CONTAINING_THIS_PREREGISTRATION_REPORTED_BY_GIT_AFTER_PUSH
+activation_commit: null
+status: NOT_STARTED
+formal_attempts: 0
+strategy_counts:
+  OFFICIAL_SEQUENCE: 0
+  BOUNDED_RANDOM_TIMING_COMPARATOR: 0
+  STATE_AWARE_MUTATION: 0
+qualification_attempts: 0
+next_attempt_id: null
+attempts: []

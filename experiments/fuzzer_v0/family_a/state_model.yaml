@@ -1,0 +1,88 @@
+schema_version: "1.0"
+model_id: FAMILY_A_FUZZ_STATE_V0
+status: FROZEN_NOT_EXECUTED
+state_fields:
+  - {name: declared_mode, domain: mode_identifier_or_UNKNOWN, semantic: PX4_selected_control_plane_mode}
+  - {name: user_intended_mode, domain: public_request_identifier_or_UNKNOWN, semantic: latest_admissible_public_intent}
+  - {name: source_route_epoch, domain: nonnegative_integer_or_UNKNOWN, semantic: epoch_before_target_event}
+  - {name: target_route_epoch, domain: nonnegative_integer_or_UNKNOWN_or_NOT_APPLICABLE, semantic: expected_successor_epoch}
+  - {name: active_route_epoch, domain: nonnegative_integer_or_UNKNOWN, semantic: epoch_at_observation}
+  - {name: registration_state, domain: [UNREGISTERED, REGISTERING, REGISTERED, UNRESPONSIVE, RELEASED, NOT_APPLICABLE, UNKNOWN], semantic: external_component_registration_lifecycle}
+  - {name: registration_instance_id, domain: scalar_or_UNKNOWN_or_NOT_APPLICABLE, semantic: one_successful_registration_lifetime}
+  - {name: activation_id, domain: scalar_or_UNKNOWN_or_NOT_APPLICABLE, semantic: one_external_mode_activation}
+  - {name: executor_in_charge, domain: executor_identifier_or_UNKNOWN_or_NOT_APPLICABLE, semantic: active_executor_owner}
+  - {name: lifecycle_owner, domain: [AUTOPILOT, REGISTERED_EXECUTOR, EXTERNAL_MODE, OFFBOARD_PRODUCER, UNKNOWN, NOT_APPLICABLE], semantic: owner_responsible_for_progression}
+  - {name: producer_identity, domain: producer_identifier_or_UNKNOWN_or_NOT_APPLICABLE, semantic: authority_bearing_command_source}
+  - {name: producer_session_id, domain: scalar_or_UNKNOWN_or_NOT_APPLICABLE, semantic: continuous_producer_session}
+  - {name: active_producers, domain: ordered_unique_producer_set_or_UNKNOWN, semantic: producers_with_observed_current_influence}
+  - {name: setpoint_level, domain: [POSITION, VELOCITY, ACCELERATION, ATTITUDE, BODY_RATE, INTERNAL, UNKNOWN], semantic: active_command_abstraction}
+  - {name: setpoint_publication_state, domain: [ACTIVE, STALLED, STOPPED, NOT_APPLICABLE, UNKNOWN], semantic: producer_publication_channel}
+  - {name: setpoint_subject_timestamp, domain: px4_microseconds_or_UNKNOWN_or_NOT_APPLICABLE, semantic: lineage_subject_time_not_output_time}
+  - {name: command_age_bucket, domain: [FRESH, RETAINED_SHORT, RETAINED_MEDIUM, RETAINED_LONG, POST_REVOCATION, UNKNOWN], semantic: frozen_age_classification}
+  - {name: controller_consumption_state, domain: [CURRENT_SUBJECT, RETAINED_SUBJECT, NO_CONSUMPTION, NOT_APPLICABLE, UNKNOWN], semantic: controller_use_of_command_subject}
+  - {name: controller_lineage, domain: lineage_identifier_or_UNKNOWN_or_NOT_APPLICABLE, semantic: route_epoch_and_subject_at_controller}
+  - {name: allocator_lineage, domain: lineage_identifier_or_UNKNOWN_or_NOT_APPLICABLE, semantic: route_epoch_and_subject_at_allocator_input}
+  - {name: actuator_writer_lineage, domain: lineage_identifier_or_UNKNOWN_or_NOT_APPLICABLE, semantic: route_epoch_writer_and_subject_at_output}
+  - {name: health_request_state, domain: [REQUESTED, NOT_REQUESTED, NOT_APPLICABLE, UNKNOWN], semantic: proof_of_life_request_state}
+  - {name: health_reply_state, domain: [ALIVE, MISSED, TIMED_OUT, STOPPED, NOT_APPLICABLE, UNKNOWN], semantic: proof_of_life_reply_state}
+  - {name: failsafe_state, domain: [CLEAR, ACTIVE, CLEARING, NOT_APPLICABLE, UNKNOWN], semantic: selected_failsafe_condition}
+  - {name: completion_state, domain: [NOT_REACHED, GENERATED, DELIVERED, FAILED, NOT_APPLICABLE, UNKNOWN], semantic: external_task_or_mode_completion}
+  - {name: successor_state, domain: [NOT_REQUESTED, REQUESTED, SELECTED, INSTALLED, TERMINAL, NOT_APPLICABLE, UNKNOWN], semantic: lifecycle_progression_after_completion}
+  - {name: task_phase, domain: [PRE_ACTIVATION, STABLE, EARLY, MIDDLE, LATE, COMPLETION, FALLBACK, CLEANUP, UNKNOWN], semantic: legal_harness_phase_not_internal_state_rewrite}
+  - {name: vehicle_state_bucket, domain: [HOVER, LOW_SPEED_TRANSLATION, ACCELERATION, BRAKING, BOUNDED_TURN, BOUNDED_ASCENT, BOUNDED_DESCENT, LANDED, UNKNOWN], semantic: accepted_motion_context}
+  - {name: evidence_completeness, domain: [COMPLETE, BOUNDED, INSUFFICIENT, NOT_APPLICABLE, UNKNOWN], semantic: target_window_evidence_state}
+  - {name: clock_bridge_state, domain: [VALID, DEGRADED, INVALID, MISSING, NOT_REQUIRED], semantic: cross_domain_time_admissibility}
+  - {name: route_observation_kind, domain: [TRANSITION, RETAINED_ROUTE, LIFECYCLE_ONLY, UNKNOWN], semantic: route_or_lifecycle_contract_kind}
+  - {name: oracle_applicability, domain: route_freshness_successor_boolean_tuple, semantic: applicable_oracle_combination}
+  - {name: outcome_semantics, domain: [PASS, EXPOSURE, VIOLATION, EVIDENCE_INSUFFICIENT, NOT_APPLICABLE, PENDING], semantic: non_collapsing_outcome_class}
+
+command_age_buckets:
+  precedence: [POST_REVOCATION, UNKNOWN, FRESH, RETAINED_SHORT, RETAINED_MEDIUM, RETAINED_LONG]
+  FRESH:
+    interval_ms: "0 <= age <= 50"
+    provenance: accepted_20_Hz_external_setpoint_publication_one_period
+  RETAINED_SHORT:
+    interval_ms: "50 < age <= 150"
+    provenance: three_observed_20_Hz_periods_used_by_continuity_policy
+  RETAINED_MEDIUM:
+    interval_ms: "150 < age <= 1000"
+    provenance: accepted_COM_OF_LOSS_T_1_0_second_Family_A_configuration
+  RETAINED_LONG:
+    interval_ms: "1000 < age <= 1500"
+    provenance: frozen_external_health_loss_deadline_1500_ms
+  POST_REVOCATION:
+    interval_ms: route_epoch_exit_or_fallback_installation_precedes_consumption
+    provenance: Route_Oracle_0_4_epoch_and_freshness_contract
+    precedence_over_numeric_age: true
+  UNKNOWN:
+    interval_ms: missing_subject_timestamp_consumption_time_or_valid_clock_mapping
+    provenance: conservative_evidence_rule
+
+canonical_state_hash:
+  algorithm: SHA256_of_canonical_JSON
+  array_order_rule: semantic_arrays_preserve_order_sets_sort_lexicographically
+  excluded_fields:
+    - run_id
+    - attempt_id
+    - wall_clock_timestamp
+    - raw_artifact_path
+    - simulator_process_id
+  required_identity_fields:
+    - source_route_epoch
+    - target_route_epoch
+    - active_route_epoch
+    - registration_instance_id
+    - activation_id
+    - producer_session_id
+    - controller_lineage
+    - allocator_lineage
+    - actuator_writer_lineage
+    - task_phase
+    - route_observation_kind
+    - evidence_completeness
+    - outcome_semantics
+  invariants:
+    - same_writer_name_in_different_route_epochs_hashes_differently
+    - task_transition_and_route_replacement_hash_differently
+    - EXPOSURE_VIOLATION_and_EVIDENCE_INSUFFICIENT_hash_differently
+    - producer_session_identity_is_never_inferred_from_writer_name

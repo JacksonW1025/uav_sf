@@ -114,4 +114,11 @@ Not authorized:
 
 ## Next exact action
 
-Create and push an independent Family A Fuzzer v0 preregistration.
+The independent Family A Fuzzer v0 preregistration now exists with status
+`PREREGISTERED_NOT_ACTIVATED` and formal attempts: `0`. Campaign activation,
+runtime authorization, and formal-attempt authorization remain false.
+State-aware search gain: `NOT_ESTABLISHED`. Full method effectiveness:
+`NOT_ESTABLISHED`.
+
+Review the frozen Family A Fuzzer v0 preregistration and create a separate
+activation decision. No Family A Fuzzer v0 flight runtime has executed.

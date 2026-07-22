@@ -1,0 +1,163 @@
+schema_version: "1.0"
+lock_id: FAMILY_A_FUZZER_V0_ORACLE_AND_EVIDENCE_LOCK
+status: FROZEN_NOT_EXECUTED
+
+route_oracle:
+  name: Route_Oracle
+  version: "0.4"
+  executable:
+    path: scripts/oracles/route_oracle_v0.py
+    sha256: 32cf3b5dd0d4e4ea2f535d5a006aa8782dab86397b16a1b5c70d625a8af751e2
+  specification:
+    path: docs/design/ROUTE_ORACLE_V0.md
+    sha256: 3196ca6588cfe6f7430bb6272623c2355512d69c74d5aad0494637f4f76e728e
+  result_schema:
+    version: "1.3"
+    path: data/schemas/route_oracle_result.schema.json
+    sha256: e83822786145a761b8ec82e9063ff0f4cc9c8b83497786ba929535264a29ac35
+  trace_schema:
+    version: "1.2"
+    path: data/schemas/route_trace.schema.json
+    sha256: b38d428a4c88563d0ff5892237131533033e970c82d3d30c81fb49668a5df152
+  transition_profile:
+    profile_id: route-oracle-v0.3-default
+    note: threshold_profile_name_retained_by_Route_Oracle_0_4_not_an_Oracle_0_3_identity
+    installation_deadline_ms: 300.0
+    recovery_deadline_ms: 300.0
+    minimum_continuity_gap_ms: 20.0
+    continuity_period_multiplier: 3.0
+  retained_route_profile:
+    contract_id: RETAINED_ROUTE_OBSERVATION_CONTRACT
+    path: docs/design/RETAINED_ROUTE_OBSERVATION_CONTRACT.md
+    sha256: 41be4cef1d541c8a8d6457d6cc200f1c292a2075d587b50055a4268e72490e4c
+    settle_ms: 500.0
+    duration_ms: 3000.0
+  gap_policy: period_derived_allowance_with_complete_sequence_otherwise_UNKNOWN
+  overlap_policy: competing_stable_writers_or_old_new_epoch_overlap_is_VIOLATION
+
+freshness_oracle:
+  name: Pre_Revocation_Freshness_Oracle
+  version: "0.1"
+  executable:
+    path: scripts/oracles/pre_revocation_freshness_oracle.py
+    sha256: b7c3d116cba7ed7e9ec959b01bad9d88fdda8ae4967a3dcd51d5648711a11ea2
+  specification:
+    path: docs/design/PRE_REVOCATION_FRESHNESS_ORACLE.md
+    sha256: 5d2ed30e12e11b2890d7ed4469c36bc7d2e9f6100a05f1eae05d1388f8d6a820
+  result_schema:
+    version: "1.0"
+    path: data/schemas/pre_revocation_freshness_result.schema.json
+    sha256: 498e1b3dccf4a8ad937d17891a4427551487dbaef43a8d247b0949ed78fff019
+  runtime_profile:
+    profile_id: current-version-external-mode-freshness-v1
+    path: experiments/motivation/freshness/primary_preregistration.yaml
+    sha256: fbbac59f943f499b6cc16e2787976c4ea1814dba1ce89efe8d40c23c0603f05f
+  policy:
+    explicit_setpoint_timeout_ms: null
+    measurement_tolerance_ms: 5.0
+    maximum_publish_after_fault_ms: 10.0
+    health_loss_deadline_ms: 1500.0
+    fallback_installation_after_health_ms: 250.0
+    post_fallback_external_effect_grace_ms: 20.0
+    physical_recovery_after_fallback_ms: 2000.0
+  classification_precedence: [VIOLATION, UNKNOWN, EXPOSURE, PASS, NOT_APPLICABLE]
+  exposure_is_violation: false
+
+successor_progression_oracle:
+  name: Successor_Progression_Oracle
+  version: "0.1"
+  executable:
+    path: scripts/oracles/successor_progression_oracle.py
+    sha256: 8c5f7d91a1d7d7035bb97389963d2ff550bd206fb66b30da8e56bab66d23d5ae
+  specification:
+    path: docs/design/SUCCESSOR_PROGRESSION_ORACLE.md
+    sha256: 09fe0793a3d1a15faa58558a75b2c00eb9edba213813e57aba50883ca8194f49
+  result_schema:
+    version: "1.0"
+    path: data/schemas/successor_oracle_result.schema.json
+    sha256: b9c68451e459501159e00102dea2fbab743b6bc850c3aadcc5c7139d1d8002f2
+  lifecycle_event_schema:
+    version: "1.0"
+    path: data/schemas/successor_lifecycle_event.schema.json
+    sha256: d8035a0f6125576b12e998f1fa089be2e6d0994debd7ed6107e54a3ab41c372c
+  current_baseline_profile:
+    profile_id: external-mode-completion-land-disarm-baseline-v1
+    path: experiments/motivation/successor/baseline_lifecycle_profile.yaml
+    sha256: 8d3c0213f91542f73ddbf56a66ace65c6a016d9e9ae0dbbae95d20a576960063
+  historical_replay_profile:
+    profile_id: external-rtl-historical-issue162-completion-land-disarm-v1
+    path: experiments/motivation/successor/historical_lifecycle_profile.yaml
+    sha256: e9f06a9685d56361cd381497576fb47f5b9db6ae6a4954a7e08b0e4108e65d9c
+    current_runtime_allowed: false
+  timing_policy:
+    successor_request_after_completion_deadline_ms: 1000.0
+    successor_selection_after_request_deadline_ms: 1000.0
+    route_installation_deadline_ms: 300.0
+    disarm_after_land_selection_deadline_ms: 60000.0
+
+authority_event_linearization_oracle:
+  name: Authority_Event_Linearization_Oracle
+  version: "0.2"
+  role: accepted_C1_event_pair_grammar_adjudication
+  executable:
+    path: scripts/oracles/authority_event_linearization_oracle.py
+    sha256: ab5b38101396976c99215552dbf6fe80cd4bee926afe75a22d8e8d8894e8ff88
+  specification:
+    path: docs/design/AUTHORITY_EVENT_LINEARIZATION_ORACLE.md
+    sha256: f2a8473e6d2d8fb8cbd57c58924fe6c3ab2331c392971cdfe96d8f26d73d4f01
+  result_schema:
+    path: data/schemas/authority_event_linearization_result.schema.json
+    sha256: c7685e36a956968f1a5a618ca9535f203015c0c9bd618cfc4fec7034db64ad96
+
+evidence_admissibility_gate:
+  name: FAMILY_A_FUZZER_V0_EVIDENCE_ADMISSIBILITY_GATE
+  version: "1.0"
+  path: experiments/fuzzer_v0/family_a/evidence_rules.yaml
+  sha256: 5d9ae09b8f04fe594839ab8970df4b34e81ca40a953b699c792bf573754f6361
+
+clock_bridge:
+  specification:
+    path: docs/design/CLOCK_BRIDGE_IMPLEMENTATION.md
+    sha256: 6a2369fc11bbfcc29847595d78fd599ed95bc0732118d25abfc6f3209b03baf3
+  implementation:
+    path: scripts/tracing/clock_bridge_collector.py
+    sha256: 1140be063ce1e75835ec1f9fe3c3eea55aab7a483d99799a323e0d57353f4ed2
+  schema:
+    path: data/schemas/clock_bridge.schema.json
+    sha256: eeab81018732f54817da1c8662f86bacb9e3223565c00a72391a7c1f203920a7
+  minimum_unique_samples: 20
+  valid_maximum_residual_ms: 100.0
+  degraded_maximum_residual_ms: 250.0
+  maximum_DDS_round_trip_ms: 20.0
+  reset_or_jump_boundary_ms: 50.0
+  invalid_cross_domain_result: UNKNOWN
+
+outcome_semantics:
+  Oracle: [PASS, EXPOSURE, VIOLATION, UNKNOWN, NOT_APPLICABLE]
+  evidence:
+    - ACCEPTED
+    - OBSERVABILITY_REJECTED
+    - MEASUREMENT_INSUFFICIENT
+    - ENVIRONMENT_FAILURE
+    - CAMPAIGN_CONFIGURATION_FAILURE
+    - FORMAL_SAFETY_STOP
+    - NOT_APPLICABLE
+  UNKNOWN_is_PASS: false
+  NOT_APPLICABLE_is_PASS: false
+  EXPOSURE_is_VIOLATION: false
+
+environment_and_configuration_rejection_rules:
+  - identity_or_hash_mismatch
+  - invalid_or_out_of_interval_clock_bridge
+  - incomplete_target_window
+  - missing_route_epoch_or_lineage
+  - source_state_precondition_miss
+  - illegal_grammar_case
+  - residual_local_process
+  - occupied_campaign_port
+  - runner_or_simulator_environment_failure
+
+identity_consistency:
+  document_code_schema_versions_match: true
+  old_Route_Oracle_0_3_identity_used: false
+  unresolved_identity_blockers: []

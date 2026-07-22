@@ -1,0 +1,102 @@
+schema_version: "1.0"
+rules_id: FAMILY_A_FUZZER_V0_SAFETY_RULES
+status: FROZEN_NOT_EXECUTED
+scope: controlled_SITL_study_for_flight_software_reliability
+
+physical_boundaries:
+  target_takeoff_altitude_minimum_m: 2.0
+  maximum_altitude_loss_from_stable_baseline_m: 1.0
+  maximum_commanded_horizontal_speed_m_s: 0.5
+  maximum_observed_horizontal_speed_m_s: 0.5
+  maximum_commanded_vertical_speed_abs_m_s: 0.2
+  maximum_observed_vertical_speed_abs_m_s: 0.5
+  maximum_attitude_excursion_deg: 45.0
+  maximum_body_rate_rad_s: 3.0
+  unexpected_ground_contact_before_cleanup: forbidden
+  provenance:
+    takeoff_and_altitude_loss: accepted_Freshness_and_N1_Family_A_preregistrations
+    commanded_motion: accepted_P5_and_Freshness_Family_A_setpoint_values
+    observed_speed_envelope: conservative_bound_equal_to_maximum_accepted_Family_A_command
+    attitude_and_body_rate: accepted_C1_N1_and_R1_Family_A_safety_monitors
+  W1_or_B1_envelope_used: false
+
+immediate_stop_conditions:
+  - PX4_abort
+  - Gazebo_clock_stall
+  - non_finite_command
+  - non_finite_controller_observation
+  - non_finite_actuator_observation
+  - height_boundary_exceeded
+  - horizontal_speed_boundary_exceeded
+  - vertical_speed_boundary_exceeded
+  - attitude_boundary_exceeded
+  - body_rate_boundary_exceeded
+  - unexpected_ground_contact
+  - loss_of_simulator_control
+  - runner_timeout
+
+route_and_evidence_stop_conditions:
+  conditions:
+    - incomplete_critical_or_target_window
+    - invalid_clock_bridge
+    - missing_route_epoch
+    - missing_controller_lineage
+    - missing_writer_lineage
+    - illegal_writer_overlap
+    - unbounded_route_gap
+  disposition_rule: >-
+    Missing evidence produces OBSERVABILITY_REJECTED after safe cleanup.
+    A proved illegal overlap or unbounded gap triggers immediate controlled
+    cleanup and remains an ACCEPTED Oracle outcome only if the complete target
+    window, identity, lineage, and cleanup requirements remain satisfied;
+    otherwise it is FORMAL_SAFETY_STOP.
+
+cleanup_stop_conditions:
+  - failed_Land_cleanup
+  - failed_Disarm_cleanup
+  - residual_PX4_process
+  - residual_Gazebo_process
+  - residual_ROS_process
+  - residual_DDS_process
+  - occupied_campaign_port
+
+preflight_rules:
+  no_residual_processes: [PX4, Gazebo, ROS, DDS, prior_campaign_runner]
+  campaign_ports_must_be_unoccupied: true
+  identity_and_hash_check_before_run_registration: true
+  activation_gate_must_be_true_in_separate_commit: true
+  current_preregistration_activation_gate_is_false: true
+
+future_attempt_invariants:
+  - unique_run_id
+  - register_before_formal_runtime_start
+  - append_only_record
+  - never_delete_attempt
+  - record_exact_classification
+  - preserve_raw_artifact
+  - generate_compact_evidence
+  - complete_cleanup_audit
+  - never_overwrite_previous_attempt
+
+cleanup_sequence:
+  - stop_mutated_publication_or_resume_paused_owned_process_as_required
+  - request_supported_internal_Hold_if_needed
+  - request_Land_through_public_interface
+  - observe_land_detected
+  - request_or_observe_Disarm
+  - terminate_only_owned_experiment_processes
+  - verify_no_residual_process_or_campaign_port
+  - hash_and_seal_raw_artifact
+  - write_compact_evidence_and_classification
+
+timeout_policy:
+  per_attempt_runner_timeout_s: 150
+  source: existing_Family_A_P2_P5_and_fuzzer_case_envelope
+  timeout_classification: FORMAL_SAFETY_STOP
+
+current_task_assertions:
+  PX4_started: false
+  Gazebo_started: false
+  ROS_started: false
+  DDS_started: false
+  runtime_attempts: 0

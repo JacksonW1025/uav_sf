@@ -1,0 +1,345 @@
+schema_version: "1.0"
+grammar_id: FAMILY_A_BOUNDED_MUTATION_GRAMMAR_V0
+status: FROZEN_NOT_EXECUTED
+operator_count: 27
+operator_required_fields:
+  - operator_id
+  - applicable_seed_classes
+  - source_state_predicate
+  - parameter_domain
+  - parameter_provenance
+  - realism_level
+  - expected_state_effect
+  - safety_constraints
+  - applicable_oracles
+  - minimization_rule
+  - prohibited_combinations
+
+operators:
+  - operator_id: TM_EVENT_RELATIVE_TIMING
+    applicable_seed_classes: [P0, P2, P3, P5, FRESHNESS, N1, C1]
+    source_state_predicate: both_events_are_legal_from_the_observed_source_state
+    parameter_domain: {relative_separation_ms: [-400, -250, -100, 0, 100, 250, 400]}
+    parameter_provenance: C1_frozen_order_regions_and_requested_separations
+    realism_level: R2
+    expected_state_effect: different_legal_event_order_or_timing_bin
+    safety_constraints: [maximum_two_authority_events, preserve_source_preconditions]
+    applicable_oracles: [route, freshness, successor_as_seed_profiled]
+    minimization_rule: move_separation_toward_zero_while_preserving_signature
+    prohibited_combinations: [unbounded_sweep, third_authority_event, R1_session_rollover]
+  - operator_id: TM_LIFECYCLE_PHASE
+    applicable_seed_classes: [FRESHNESS_F1, N1]
+    source_state_predicate: active_Dynamic_External_Mode_with_observed_health_reply_phase
+    parameter_domain: {phase_offset_after_reply_ms: [30, 150, 260]}
+    parameter_provenance: N1_accepted_A_B_C_phase_buckets
+    realism_level: R2
+    expected_state_effect: EARLY_MIDDLE_or_LATE_task_phase
+    safety_constraints: [legal_harness_wait_only, no_health_state_write]
+    applicable_oracles: [route, freshness]
+    minimization_rule: retain_nearest_registered_phase_bucket
+    prohibited_combinations: [continuous_phase_sweep, controller_or_timeout_change]
+  - operator_id: TM_LEGAL_SHORT_DELAY
+    applicable_seed_classes: [P0, P2, P3, P5, C1]
+    source_state_predicate: pending_event_remains_inside_complete_target_window
+    parameter_domain: {delay_ms: [0, 50, 100, 150]}
+    parameter_provenance: accepted_20_Hz_period_and_N1_short_phase_offsets
+    realism_level: R2
+    expected_state_effect: adjacent_legal_timing_bin
+    safety_constraints: [complete_clock_bridge_interval, no_deadline_extension]
+    applicable_oracles: [route, freshness, successor_as_seed_profiled]
+    minimization_rule: reduce_delay_in_50_ms_steps
+    prohibited_combinations: [delay_beyond_source_window, post_run_domain_change]
+  - operator_id: TM_NEAR_BOUNDARY_DELAY
+    applicable_seed_classes: [C1]
+    source_state_predicate: accepted_C1_event_pair_precondition_satisfied
+    parameter_domain: {absolute_event_separation_ms: [0, 50, 100]}
+    parameter_provenance: C1_NEAR_SIMULTANEOUS_maximum_100_ms
+    realism_level: R2
+    expected_state_effect: near_simultaneous_ordering_bin
+    safety_constraints: [one_registered_pair_only, exact_pair_events_once]
+    applicable_oracles: [route, authority_linearization]
+    minimization_rule: reduce_absolute_separation
+    prohibited_combinations: [A_near_as_accepted_source, more_than_two_events]
+  - operator_id: TM_UPDATE_INTERVAL
+    applicable_seed_classes: [P0, P3, P5, FRESHNESS, N1, C1]
+    source_state_predicate: active_external_setpoint_publication_with_same_setpoint_semantics
+    parameter_domain: {publication_interval_ms: [50]}
+    parameter_provenance: accepted_C1_20_Hz_setpoint_publication
+    realism_level: R2
+    expected_state_effect: frozen_20_Hz_update_interval_bucket
+    safety_constraints: [no_setpoint_value_change, source_route_remains_healthy_before_target_event]
+    applicable_oracles: [route, freshness]
+    minimization_rule: restore_50_ms_interval_if_signature_persists
+    prohibited_combinations: [zero_rate, stress_only_rate, rate_outside_frozen_values]
+  - operator_id: TM_PROCESS_STOP_TIMING
+    applicable_seed_classes: [P2, P5_T4, P5_T5, FRESHNESS_F1_F3, N1]
+    source_state_predicate: active_external_route_and_stable_window_complete
+    parameter_domain: {stable_seconds_before_stop: [2.0, 5.0], phase_offset_ms: [30, 150, 260]}
+    parameter_provenance: P5_fault_offset_2_s_Freshness_settle_5_s_and_N1_phase_buckets
+    realism_level: R3
+    expected_state_effect: different_legal_process_loss_phase
+    safety_constraints: [target_PID_verified, exactly_one_stop_action]
+    applicable_oracles: [route, freshness]
+    minimization_rule: earliest_supported_stop_time_preserving_signature
+    prohibited_combinations: [restart_or_session_rollover, unrelated_process_stop]
+  - operator_id: TM_HEALTH_SETPOINT_STOP_ORDER
+    applicable_seed_classes: [P3, FRESHNESS]
+    source_state_predicate: independent_health_and_setpoint_channels_observable
+    parameter_domain: {health_minus_setpoint_ms: [-100, 0, 100]}
+    parameter_provenance: P3_channel_matrix_with_C1_near_timing_bound
+    realism_level: R2
+    expected_state_effect: new_health_setpoint_ordering
+    safety_constraints: [both_channel_markers_required, bounded_complete_window]
+    applicable_oracles: [route, freshness]
+    minimization_rule: move_skew_toward_zero
+    prohibited_combinations: [unbounded_channel_loss, missing_health_observation]
+  - operator_id: TM_COMPLETION_MANUAL_ORDER
+    applicable_seed_classes: [C1_B, P0_Mode_Executor]
+    source_state_predicate: active_external_route_with_legal_completion_and_takeover
+    parameter_domain: {manual_minus_completion_ms: [-400, 0, 400]}
+    parameter_provenance: C1_pair_B_three_registered_orders
+    realism_level: R2
+    expected_state_effect: new_completion_takeover_order
+    safety_constraints: [both_events_once, legal_Hold_request_only]
+    applicable_oracles: [route, successor, authority_linearization]
+    minimization_rule: reduce_absolute_separation_with_same_outcome
+    prohibited_combinations: [unsupported_successor, third_authority_event]
+  - operator_id: TM_FALLBACK_CLEAR_ORDER
+    applicable_seed_classes: [C1_D, C1_E]
+    source_state_predicate: supported_fallback_installed_or_installation_observed
+    parameter_domain: {second_event_minus_first_ms: [-400, 0, 400]}
+    parameter_provenance: C1_pairs_D_and_E_three_registered_orders
+    realism_level: R2
+    expected_state_effect: new_fallback_clear_or_reentry_order
+    safety_constraints: [fallback_epoch_known, no_old_session_packet]
+    applicable_oracles: [route, authority_linearization]
+    minimization_rule: reduce_absolute_separation
+    prohibited_combinations: [R1_session_rollover, direct_failsafe_state_write]
+
+  - operator_id: EO_COMPLETION_VS_MANUAL_TAKEOVER
+    applicable_seed_classes: [C1_B]
+    source_state_predicate: C1_pair_B_precondition
+    parameter_domain: {orders: [A_FIRST, NEAR_SIMULTANEOUS, B_FIRST]}
+    parameter_provenance: accepted_C1_pair_B
+    realism_level: R2
+    expected_state_effect: legal_serialization_of_completion_and_Hold
+    safety_constraints: [C1_pair_contract, maximum_two_events]
+    applicable_oracles: [route, authority_linearization]
+    minimization_rule: keep_two_events_and_reduce_gap
+    prohibited_combinations: [event_semantic_change, full_timing_sweep]
+  - operator_id: EO_RELEASE_VS_FAILSAFE_CLEAR
+    applicable_seed_classes: [C1_E]
+    source_state_predicate: C1_pair_E_precondition
+    parameter_domain: {orders: [A_FIRST, NEAR_SIMULTANEOUS, B_FIRST]}
+    parameter_provenance: accepted_C1_pair_E
+    realism_level: R2
+    expected_state_effect: legal_release_clear_serialization
+    safety_constraints: [automatic_RTL_already_installed, maximum_two_events]
+    applicable_oracles: [route, authority_linearization]
+    minimization_rule: keep_two_events_and_reduce_gap
+    prohibited_combinations: [unsupported_release, internal_state_clear]
+  - operator_id: EO_ACTIVATION_VS_GCS_REQUEST
+    applicable_seed_classes: [C1_A]
+    source_state_predicate: C1_pair_A_precondition
+    parameter_domain: {orders: [A_FIRST, B_FIRST]}
+    parameter_provenance: accepted_C1_pair_A_slots_A_FIRST_and_B_FIRST
+    realism_level: R2
+    expected_state_effect: legal_activation_Hold_serialization
+    safety_constraints: [exclude_measurement_insufficient_A_NEAR_as_source, maximum_two_events]
+    applicable_oracles: [route, authority_linearization]
+    minimization_rule: retain_registered_order_and_reduce_nonsemantic_waits
+    prohibited_combinations: [A_NEAR_as_accepted_seed, third_authority_event]
+  - operator_id: EO_PROCESS_LOSS_VS_GCS_REQUEST
+    applicable_seed_classes: [C1_C]
+    source_state_predicate: C1_pair_C_precondition
+    parameter_domain: {orders: [A_FIRST, NEAR_SIMULTANEOUS, B_FIRST]}
+    parameter_provenance: accepted_C1_pair_C
+    realism_level: R3
+    expected_state_effect: legal_process_loss_RTL_serialization
+    safety_constraints: [owned_process_only, GCS_RTL_only]
+    applicable_oracles: [route, freshness, authority_linearization]
+    minimization_rule: keep_two_events_and_reduce_gap
+    prohibited_combinations: [different_process, unsupported_failsafe]
+  - operator_id: EO_FALLBACK_VS_BOUNDED_REENTRY
+    applicable_seed_classes: [C1_D]
+    source_state_predicate: C1_pair_D_precondition
+    parameter_domain: {orders: [A_FIRST, NEAR_SIMULTANEOUS, B_FIRST]}
+    parameter_provenance: accepted_C1_pair_D
+    realism_level: R2
+    expected_state_effect: legal_fallback_reentry_serialization
+    safety_constraints: [clean_same_process_reentry, current_session_only]
+    applicable_oracles: [route, authority_linearization]
+    minimization_rule: keep_two_events_and_reduce_gap
+    prohibited_combinations: [producer_session_rollover, delayed_old_session_packet]
+
+  - operator_id: PF_PROCESS_SIGTERM
+    applicable_seed_classes: [P2, P5_T4]
+    source_state_predicate: accepted_local_external_producer_active
+    parameter_domain: {signal: [SIGTERM]}
+    parameter_provenance: accepted_P2_and_P5_graceful_process_loss
+    realism_level: R3
+    expected_state_effect: health_loss_then_supported_fallback
+    safety_constraints: [verified_owned_PID, exactly_one_signal]
+    applicable_oracles: [route, freshness]
+    minimization_rule: remove_unrelated_events
+    prohibited_combinations: [SIGKILL_same_case, process_restart]
+  - operator_id: PF_PROCESS_SIGKILL
+    applicable_seed_classes: [P2, P5_T5, FRESHNESS_F1_F3, N1]
+    source_state_predicate: accepted_local_external_producer_active
+    parameter_domain: {signal: [SIGKILL]}
+    parameter_provenance: accepted_P2_P5_Freshness_and_N1_process_stop
+    realism_level: R3
+    expected_state_effect: abrupt_health_and_setpoint_loss_then_fallback
+    safety_constraints: [verified_owned_PID, exactly_one_signal]
+    applicable_oracles: [route, freshness]
+    minimization_rule: remove_unrelated_events
+    prohibited_combinations: [restart, session_rollover, unrelated_PID]
+  - operator_id: PF_PROCESS_PAUSE
+    applicable_seed_classes: [P2, P5_T6]
+    source_state_predicate: accepted_local_external_producer_active
+    parameter_domain: {pause_seconds: [2.0]}
+    parameter_provenance: accepted_P2_SIGSTOP_SIGCONT_and_P5_T6
+    realism_level: R3
+    expected_state_effect: bounded_publication_and_health_pause
+    safety_constraints: [verified_owned_PID, mandatory_SIGCONT_cleanup]
+    applicable_oracles: [route, freshness]
+    minimization_rule: no_duration_change_in_v0
+    prohibited_combinations: [unbounded_pause, second_process_fault]
+  - operator_id: PF_CALLBACK_SETPOINT_STALL
+    applicable_seed_classes: [FRESHNESS_F4, P3, P5_T7]
+    source_state_predicate: active_route_health_alive_and_setpoint_callback_observable
+    parameter_domain: {target_window_seconds: [3.0]}
+    parameter_provenance: accepted_Freshness_F4_and_P5_retained_route_window
+    realism_level: R2
+    expected_state_effect: health_alive_setpoint_stopped_retained_route
+    safety_constraints: [complete_bounded_window, explicit_Hold_cleanup]
+    applicable_oracles: [route, freshness]
+    minimization_rule: remove_other_events_not_shorten_below_3_s
+    prohibited_combinations: [unbounded_stall, hidden_health_stop]
+  - operator_id: PF_HEALTH_STOP
+    applicable_seed_classes: [P3, C1_D, C1_E]
+    source_state_predicate: Dynamic_External_Mode_health_channel_observable
+    parameter_domain: {health_reply: [STOPPED]}
+    parameter_provenance: accepted_P3_and_C1_health_reply_pause
+    realism_level: R2
+    expected_state_effect: health_timeout_and_supported_fallback
+    safety_constraints: [no_direct_health_state_write, reply_marker_required]
+    applicable_oracles: [route, freshness]
+    minimization_rule: remove_unrelated_events
+    prohibited_combinations: [forged_timeout, direct_failsafe_write]
+  - operator_id: PF_HEALTH_ALIVE_SETPOINT_STOP
+    applicable_seed_classes: [P3, P5_T7, FRESHNESS_F4]
+    source_state_predicate: independent_channels_active_and_observable
+    parameter_domain: {health_reply: [ALIVE], setpoint_publication: [STOPPED]}
+    parameter_provenance: accepted_P3_P5_T7_and_Freshness_F4
+    realism_level: R2
+    expected_state_effect: retained_external_route_with_stale_command_exposure
+    safety_constraints: [bounded_3_s_window, public_Hold_cleanup]
+    applicable_oracles: [route, freshness]
+    minimization_rule: remove_other_events
+    prohibited_combinations: [VIOLATION_label_from_EXPOSURE_alone, unbounded_window]
+  - operator_id: PF_HEALTH_STOP_SETPOINT_CONTINUE
+    applicable_seed_classes: [P3, P5_T8]
+    source_state_predicate: independent_channels_active_and_lineage_observable
+    parameter_domain: {health_reply: [STOPPED], setpoint_publication: [ACTIVE]}
+    parameter_provenance: accepted_P3_and_P5_T8
+    realism_level: R2
+    expected_state_effect: fallback_despite_continued_setpoint_publication
+    safety_constraints: [stop_publication_during_cleanup, old_epoch_lineage_required]
+    applicable_oracles: [route, freshness]
+    minimization_rule: remove_other_events
+    prohibited_combinations: [arbitrary_message_injection, direct_actuator]
+
+  - operator_id: MC_HOVER
+    applicable_seed_classes: [P0, P2, P3, P5, FRESHNESS, N1, C1]
+    source_state_predicate: stable_airborne_window
+    parameter_domain: {context: [HOVER], commanded_horizontal_speed_m_s: [0.0]}
+    parameter_provenance: accepted_P0_P2_P3_and_C1_hover_contexts
+    realism_level: R1
+    expected_state_effect: HOVER_vehicle_state_bucket
+    safety_constraints: [accepted_takeoff_sequence, no_ground_contact]
+    applicable_oracles: [route, freshness, successor_as_seed_profiled]
+    minimization_rule: prefer_hover_when_signature_persists
+    prohibited_combinations: [direct_position_state_write]
+  - operator_id: MC_LOW_SPEED_TRANSLATION
+    applicable_seed_classes: [P5, FRESHNESS_F1, N1]
+    source_state_predicate: active_trajectory_route_and_stable_window
+    parameter_domain: {horizontal_speed_m_s: [0.3, 0.5]}
+    parameter_provenance: accepted_route_transition_mode_and_Freshness_trajectory_setpoints
+    realism_level: R1
+    expected_state_effect: LOW_SPEED_TRANSLATION_vehicle_state_bucket
+    safety_constraints: [maximum_horizontal_speed_0_5_m_s, accepted_vehicle_envelope]
+    applicable_oracles: [route, freshness]
+    minimization_rule: reduce_to_0_3_m_s_then_hover
+    prohibited_combinations: [speed_above_accepted_envelope]
+  - operator_id: MC_BOUNDED_TURN
+    applicable_seed_classes: [P5_T4, P5_T7]
+    source_state_predicate: active_trajectory_route_in_accepted_turn_context
+    parameter_domain: {horizontal_speed_m_s: [0.3], turn_rate_rad_s: [0.15]}
+    parameter_provenance: accepted_P5_route_transition_mode_turn_values
+    realism_level: R1
+    expected_state_effect: BOUNDED_TURN_vehicle_state_bucket
+    safety_constraints: [attitude_below_45_deg, body_rate_below_3_rad_s]
+    applicable_oracles: [route, freshness_as_seed_profiled]
+    minimization_rule: reduce_to_low_speed_translation
+    prohibited_combinations: [aggressive_turn, VTOL]
+  - operator_id: MC_BOUNDED_DESCENT
+    applicable_seed_classes: [P5_T3, P5_T8]
+    source_state_predicate: active_trajectory_route_in_accepted_vertical_context
+    parameter_domain: {vertical_speed_m_s_NED: [0.2], direction: [DESCENT]}
+    parameter_provenance: accepted_route_transition_mode_descent_value
+    realism_level: R1
+    expected_state_effect: BOUNDED_DESCENT_vehicle_state_bucket
+    safety_constraints: [absolute_vertical_speed_below_0_5_m_s, altitude_loss_below_1_m]
+    applicable_oracles: [route]
+    minimization_rule: reduce_vertical_speed_to_zero
+    prohibited_combinations: [vertical_speed_above_envelope, ground_contact]
+  - operator_id: MC_TRAJECTORY_PHASE
+    applicable_seed_classes: [P5, N1]
+    source_state_predicate: accepted_trajectory_behavior_phase_observed
+    parameter_domain: {phase: [STABLE, EARLY, MIDDLE, LATE, COMPLETION]}
+    parameter_provenance: P5_behavior_phases_and_N1_A_B_C_buckets
+    realism_level: R2
+    expected_state_effect: new_task_phase_vehicle_state_tuple
+    safety_constraints: [legal_harness_wait_only, no_route_state_write]
+    applicable_oracles: [route, freshness]
+    minimization_rule: nearest_earlier_phase_preserving_signature
+    prohibited_combinations: [unbounded_phase_search]
+  - operator_id: MC_SETPOINT_LEVEL
+    applicable_seed_classes: [FRESHNESS_F1, FRESHNESS_F2, FRESHNESS_F3, FRESHNESS_F4]
+    source_state_predicate: seed_has_accepted_setpoint_level_and_matching_observation_support
+    parameter_domain: {setpoint_level: [TRAJECTORY, ATTITUDE, BODY_RATE]}
+    parameter_provenance: accepted_Freshness_F1_F4_contexts
+    realism_level: R1
+    expected_state_effect: new_supported_setpoint_level
+    safety_constraints: [use_exact_accepted_values, matching_controller_lineage_required]
+    applicable_oracles: [route, freshness]
+    minimization_rule: preserve_level_for_signature_then_simplify_motion_only
+    prohibited_combinations: [direct_actuator, torque, unsupported_level]
+
+conditionally_disabled:
+  acceleration_and_braking_parameterization:
+    enabled: false
+    reason: no_exact_accepted_in_scope_acceleration_or_braking_command_domain_is_frozen
+    activation_rule: requires_new_separate_preregistration_and_accepted_Family_A_evidence
+  bounded_ascent:
+    enabled: false
+    reason: no_exact_accepted_in_scope_ascent_command_value_is_frozen_in_the_current_seed_evidence
+    activation_rule: requires_new_separate_preregistration_and_accepted_Family_A_evidence
+  bounded_DDS_delay_drop_reorder:
+    enabled: false
+    reason: no_accepted_in_scope_Family_A_seed_proves_a_formal_DDS_delivery_control_mechanism
+    activation_rule: requires_new_separate_preregistration_and_accepted_mechanism_support
+
+globally_prohibited_mutations:
+  - producer_session_rollover
+  - delayed_old_session_packet
+  - Family_B_controller_switch
+  - direct_actuator
+  - unsupported_replacement_executor_composition
+  - arbitrary_internal_state
+  - unbounded_event_sequence
+  - stress_only_primary_input
+  - accepted_vehicle_envelope_exceedance
+  - Oracle_threshold_change
+  - post_execution_mutation_distribution_change

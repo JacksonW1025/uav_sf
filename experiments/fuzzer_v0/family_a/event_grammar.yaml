@@ -1,0 +1,433 @@
+schema_version: "1.0"
+grammar_id: FAMILY_A_REACHABLE_EVENT_GRAMMAR_V0
+status: FROZEN_NOT_EXECUTED
+edge_count: 26
+realism_levels:
+  R1: accepted_public_sequence_without_added_delivery_control
+  R2: accepted_public_sequence_with_bounded_lifecycle_or_timing_control
+  R3: accepted_local_process_or_supported_communication_condition_with_exact_provenance
+
+edge_required_fields:
+  - edge_id
+  - source_state_predicate
+  - public_event
+  - public_trigger
+  - preconditions
+  - expected_control_plane_effect
+  - expected_route_effect
+  - expected_data_plane_effect
+  - expected_owner_effect
+  - legal_successor_states
+  - prohibited_successor_states
+  - applicable_oracles
+  - realism_level
+  - cleanup_requirement
+  - provenance
+
+edges:
+  - edge_id: EA_TASK_COMPLETION
+    source_state_predicate: active_external_route_and_registered_completion_source
+    public_event: task_completion
+    public_trigger: ModeBase_completed_or_accepted_task_completion_api
+    preconditions: [completion_condition_observed, lifecycle_owner_known]
+    expected_control_plane_effect: completion_event_delivered
+    expected_route_effect: retained_or_expected_successor_selected
+    expected_data_plane_effect: old_external_influence_released_if_successor_selected
+    expected_owner_effect: registered_owner_progresses
+    legal_successor_states: [SUCCESSOR_REQUESTED, SUCCESSOR_INSTALLED, RETAINED_ROUTE_IF_PROFILED]
+    prohibited_successor_states: [UNOWNED_ACTIVE_ROUTE, UNSUPPORTED_REPLACEMENT_COMPOSITION]
+    applicable_oracles: [route_conditional, freshness_false, successor_true]
+    provenance: [P0_P2_P3_P5_Freshness_N1_accepted_Family_A_evidence_as_applicable]
+    realism_level: R1
+    cleanup_requirement: Land_then_Disarm
+  - edge_id: EA_SUPPORTED_TASK_CANCEL
+    source_state_predicate: active_external_task_with_public_cancel_contract
+    public_event: supported_task_cancel
+    public_trigger: supported_task_cancel_API
+    preconditions: [cancel_supported_by_source_profile, active_route_epoch_known]
+    expected_control_plane_effect: cancellation_acknowledged
+    expected_route_effect: profiled_internal_fallback_or_release
+    expected_data_plane_effect: old_epoch_consumption_ceases
+    expected_owner_effect: lifecycle_owner_releases
+    legal_successor_states: [INTERNAL_HOLD, INTERNAL_RTL, RELEASED]
+    prohibited_successor_states: [OLD_EPOCH_REENTRY, UNBOUNDED_GAP]
+    applicable_oracles: [route_true, freshness_false, successor_conditional]
+    provenance: [P0_P2_P3_P5_Freshness_N1_accepted_Family_A_evidence_as_applicable]
+    realism_level: R1
+    cleanup_requirement: Land_then_Disarm
+  - edge_id: EA_EXPLICIT_RELEASE
+    source_state_predicate: active_Offboard_or_Dynamic_External_route
+    public_event: explicit_release
+    public_trigger: registered_release_or_public_mode_change
+    preconditions: [source_route_active, fallback_profile_frozen]
+    expected_control_plane_effect: external_authority_released
+    expected_route_effect: supported_internal_route_selected
+    expected_data_plane_effect: source_epoch_revoked_and_fallback_installed
+    expected_owner_effect: autopilot_owner_restored
+    legal_successor_states: [INTERNAL_HOLD, INTERNAL_RTL, INTERNAL_LAND]
+    prohibited_successor_states: [OLD_EXTERNAL_EPOCH_ACTIVE, WRITER_CONFLICT]
+    applicable_oracles: [route_true, freshness_conditional, successor_false]
+    provenance: [P0_P2_P3_P5_Freshness_N1_accepted_Family_A_evidence_as_applicable]
+    realism_level: R1
+    cleanup_requirement: Land_then_Disarm
+  - edge_id: EA_RC_MODE_REQUEST
+    source_state_predicate: active_external_route_and_RC_request_enabled
+    public_event: RC_mode_request
+    public_trigger: supported_RC_mode_switch
+    preconditions: [requested_mode_allowlisted, public_input_observed]
+    expected_control_plane_effect: requested_internal_mode_selected_or_rejected_explicitly
+    expected_route_effect: legal_internal_takeover
+    expected_data_plane_effect: external_epoch_revoked_after_selection
+    expected_owner_effect: autopilot_owner_installed
+    legal_successor_states: [INTERNAL_HOLD, INTERNAL_RTL, INTERNAL_LAND]
+    prohibited_successor_states: [ARBITRARY_NAV_STATE, MULTIPLE_OWNERS]
+    applicable_oracles: [route_true, freshness_conditional, successor_false]
+    provenance: [P0_P2_P3_P5_Freshness_N1_accepted_Family_A_evidence_as_applicable]
+    realism_level: R1
+    cleanup_requirement: Land_then_Disarm
+  - edge_id: EA_GCS_MODE_REQUEST
+    source_state_predicate: active_external_route_and_GCS_command_path_ready
+    public_event: GCS_mode_request
+    public_trigger: VehicleCommand_set_mode_or_set_nav_state
+    preconditions: [requester_identity_known, requested_mode_allowlisted]
+    expected_control_plane_effect: command_ack_and_mode_selection_observed
+    expected_route_effect: legal_internal_takeover
+    expected_data_plane_effect: external_epoch_revoked_and_internal_writer_continues
+    expected_owner_effect: autopilot_owner_installed
+    legal_successor_states: [INTERNAL_HOLD, INTERNAL_RTL, INTERNAL_LAND]
+    prohibited_successor_states: [ARBITRARY_NAV_STATE, WRITER_OVERLAP]
+    applicable_oracles: [route_true, freshness_conditional, successor_false]
+    provenance: [P0_P2_P3_P5_Freshness_N1_accepted_Family_A_evidence_as_applicable]
+    realism_level: R1
+    cleanup_requirement: Land_then_Disarm
+  - edge_id: EA_SUPPORTED_FAILSAFE_TRIGGER
+    source_state_predicate: active_external_route_with_frozen_supported_failsafe
+    public_event: supported_failsafe_trigger
+    public_trigger: accepted_health_loss_or_supported_public_failsafe_condition
+    preconditions: [failsafe_profile_frozen, no_direct_failsafe_state_write]
+    expected_control_plane_effect: failsafe_detected
+    expected_route_effect: configured_fallback_selected
+    expected_data_plane_effect: fallback_installed_without_old_epoch_influence
+    expected_owner_effect: autopilot_owner_restored
+    legal_successor_states: [INTERNAL_HOLD, INTERNAL_RTL]
+    prohibited_successor_states: [KILL, LOCKDOWN, FLIGHT_TERMINATION, UNBOUNDED_GAP]
+    applicable_oracles: [route_true, freshness_true, successor_false]
+    provenance: [P0_P2_P3_P5_Freshness_N1_accepted_Family_A_evidence_as_applicable]
+    realism_level: R2
+    cleanup_requirement: Land_then_Disarm
+  - edge_id: EA_PROCESS_STOP
+    source_state_predicate: active_route_owned_by_local_accepted_producer_process
+    public_event: process_stop
+    public_trigger: SIGTERM_or_SIGKILL_to_owned_process
+    preconditions: [target_PID_identity_verified, exactly_one_signal, fallback_profile_frozen]
+    expected_control_plane_effect: health_or_Offboard_loss_detected
+    expected_route_effect: configured_fallback_selected
+    expected_data_plane_effect: producer_stops_and_fallback_lineage_installs
+    expected_owner_effect: external_owner_removed
+    legal_successor_states: [INTERNAL_HOLD, INTERNAL_RTL]
+    prohibited_successor_states: [WRONG_PROCESS_STOPPED, RESIDUAL_EXTERNAL_WRITER]
+    applicable_oracles: [route_true, freshness_true, successor_false]
+    provenance: [P0_P2_P3_P5_Freshness_N1_accepted_Family_A_evidence_as_applicable]
+    realism_level: R3
+    cleanup_requirement: verify_process_absence_then_Land_Disarm
+  - edge_id: EA_PROCESS_PAUSE
+    source_state_predicate: active_route_owned_by_local_accepted_producer_process
+    public_event: process_pause
+    public_trigger: bounded_SIGSTOP_then_SIGCONT_to_owned_process
+    preconditions: [target_PID_identity_verified, pause_duration_in_source_domain]
+    expected_control_plane_effect: bounded_health_loss_or_retention_per_profile
+    expected_route_effect: fallback_or_profiled_retention
+    expected_data_plane_effect: publication_pause_then_no_illegal_reentry
+    expected_owner_effect: owner_loss_or_retention_explained
+    legal_successor_states: [INTERNAL_HOLD, INTERNAL_RTL, RETAINED_EXTERNAL_ROUTE]
+    prohibited_successor_states: [UNBOUNDED_PAUSE, SESSION_ROLLOVER]
+    applicable_oracles: [route_true, freshness_true, successor_false]
+    provenance: [P0_P2_P3_P5_Freshness_N1_accepted_Family_A_evidence_as_applicable]
+    realism_level: R3
+    cleanup_requirement: resume_if_needed_then_Land_Disarm
+  - edge_id: EA_SETPOINT_PUBLICATION_STOP
+    source_state_predicate: active_external_route_with_observable_setpoint_channel
+    public_event: setpoint_publication_stop
+    public_trigger: accepted_local_callback_stall_or_setpoint_channel_disable
+    preconditions: [health_behavior_declared, stop_marker_observed]
+    expected_control_plane_effect: route_retained_if_health_alive_otherwise_fallback
+    expected_route_effect: profile_specific_retention_or_fallback
+    expected_data_plane_effect: no_new_subject_timestamp_after_marker
+    expected_owner_effect: unchanged_until_health_or_public_takeover
+    legal_successor_states: [RETAINED_EXTERNAL_ROUTE, INTERNAL_RTL, INTERNAL_HOLD]
+    prohibited_successor_states: [SYNTHETIC_SETPOINT_INJECTION, DIRECT_ACTUATOR]
+    applicable_oracles: [route_true, freshness_true, successor_false]
+    provenance: [P0_P2_P3_P5_Freshness_N1_accepted_Family_A_evidence_as_applicable]
+    realism_level: R2
+    cleanup_requirement: explicit_Hold_then_Land_Disarm_if_retained
+  - edge_id: EA_HEALTH_STOP
+    source_state_predicate: active_Dynamic_External_route_with_health_reply_channel
+    public_event: health_proof_of_life_stop
+    public_trigger: accepted_health_reply_disable_or_owned_process_stop
+    preconditions: [health_request_and_reply_observable, setpoint_behavior_declared]
+    expected_control_plane_effect: external_component_unresponsive
+    expected_route_effect: configured_fallback_selected
+    expected_data_plane_effect: external_epoch_revoked
+    expected_owner_effect: external_owner_removed
+    legal_successor_states: [INTERNAL_RTL, INTERNAL_HOLD]
+    prohibited_successor_states: [FORGED_REGISTRATION_OWNER, DIRECT_FAILSAFE_WRITE]
+    applicable_oracles: [route_true, freshness_true, successor_false]
+    provenance: [P0_P2_P3_P5_Freshness_N1_accepted_Family_A_evidence_as_applicable]
+    realism_level: R2
+    cleanup_requirement: Land_then_Disarm
+  - edge_id: EA_HEALTH_ALIVE_SETPOINT_STOPPED
+    source_state_predicate: active_Dynamic_External_route_with_independent_channels
+    public_event: health_alive_setpoint_stopped
+    public_trigger: accepted_setpoint_only_stall_while_health_replies_continue
+    preconditions: [complete_health_reply_window, setpoint_stop_marker]
+    expected_control_plane_effect: external_route_retained
+    expected_route_effect: no_automatic_fallback_in_bounded_window
+    expected_data_plane_effect: retained_subject_influence_measured
+    expected_owner_effect: external_owner_retained
+    legal_successor_states: [RETAINED_EXTERNAL_ROUTE]
+    prohibited_successor_states: [UNBOUNDED_TARGET_WINDOW, FORCED_INTERNAL_STATE]
+    applicable_oracles: [route_true, freshness_true, successor_false]
+    provenance: [P0_P2_P3_P5_Freshness_N1_accepted_Family_A_evidence_as_applicable]
+    realism_level: R2
+    cleanup_requirement: explicit_Hold_then_Land_Disarm
+  - edge_id: EA_HEALTH_STOPPED_SETPOINT_CONTINUING
+    source_state_predicate: active_external_route_with_independent_health_and_setpoint_channels
+    public_event: health_stopped_setpoint_continuing
+    public_trigger: accepted_health_channel_disable_while_publication_continues
+    preconditions: [health_stop_marker, publication_lineage_complete]
+    expected_control_plane_effect: health_loss_detected
+    expected_route_effect: configured_fallback_selected
+    expected_data_plane_effect: continued_new_setpoints_do_not_retain_old_epoch_after_fallback
+    expected_owner_effect: external_owner_removed
+    legal_successor_states: [INTERNAL_RTL, INTERNAL_HOLD]
+    prohibited_successor_states: [OLD_EPOCH_POST_REVOCATION_INFLUENCE]
+    applicable_oracles: [route_true, freshness_true, successor_false]
+    provenance: [P0_P2_P3_P5_Freshness_N1_accepted_Family_A_evidence_as_applicable]
+    realism_level: R2
+    cleanup_requirement: stop_publication_then_Land_Disarm
+  - edge_id: EA_SUPPORTED_FALLBACK
+    source_state_predicate: external_route_exit_or_loss_detected
+    public_event: supported_fallback
+    public_trigger: PX4_configured_Hold_or_RTL_fallback
+    preconditions: [fallback_target_frozen, source_epoch_known]
+    expected_control_plane_effect: fallback_declared
+    expected_route_effect: distinct_internal_epoch_installed
+    expected_data_plane_effect: internal_controller_allocator_writer_lineage_complete
+    expected_owner_effect: autopilot_owner_installed
+    legal_successor_states: [INTERNAL_HOLD, INTERNAL_RTL]
+    prohibited_successor_states: [KILL, FLIGHT_TERMINATION, MISSING_ROUTE_EPOCH]
+    applicable_oracles: [route_true, freshness_conditional, successor_false]
+    provenance: [P0_P2_P3_P5_Freshness_N1_accepted_Family_A_evidence_as_applicable]
+    realism_level: R1
+    cleanup_requirement: Land_then_Disarm
+  - edge_id: EA_SUPPORTED_REENTRY
+    source_state_predicate: clean_internal_route_after_external_release_with_no_session_rollover
+    public_event: supported_reentry
+    public_trigger: fresh_registration_or_clean_bounded_activation_request
+    preconditions: [old_registration_removed_or_same_clean_lifetime, no_delayed_old_session_packet]
+    expected_control_plane_effect: supported_registration_and_activation
+    expected_route_effect: new_external_activation_epoch
+    expected_data_plane_effect: new_producer_lineage_installed
+    expected_owner_effect: external_owner_installed
+    legal_successor_states: [ACTIVE_DYNAMIC_EXTERNAL_ROUTE, ACTIVE_OFFBOARD_ROUTE]
+    prohibited_successor_states: [R1_SESSION_ROLLOVER, OLD_SESSION_INFLUENCE]
+    applicable_oracles: [route_true, freshness_false, successor_false]
+    provenance: [P0_P2_P3_P5_Freshness_N1_accepted_Family_A_evidence_as_applicable]
+    realism_level: R1
+    cleanup_requirement: release_then_Land_Disarm
+
+  - edge_id: EO_COMPLETION
+    source_state_predicate: active_executor_owned_external_route
+    public_event: executor_owned_completion
+    public_trigger: ModeBase_completed_success
+    preconditions: [registered_executor_identity_known, completion_condition_observed]
+    expected_control_plane_effect: completion_delivered_to_owner
+    expected_route_effect: expected_successor_requested_and_selected
+    expected_data_plane_effect: successor_route_installed_if_requested
+    expected_owner_effect: owning_executor_progresses_schedule
+    legal_successor_states: [SUCCESSOR_REQUESTED, INTERNAL_LAND]
+    prohibited_successor_states: [LIFECYCLE_DEAD_END, WRONG_EXECUTOR_OWNER]
+    applicable_oracles: [route_conditional, freshness_false, successor_true]
+    provenance: [P0_Mode_Executor_accepted_baseline, C1_accepted_event_pair_or_Issue162_legal_baseline_as_applicable]
+    realism_level: R1
+    cleanup_requirement: Land_then_Disarm
+  - edge_id: EO_SUPPORTED_SUCCESSOR_REQUEST
+    source_state_predicate: completion_delivered_to_registered_executor
+    public_event: supported_successor_request
+    public_trigger: ModeExecutor_public_schedule_request
+    preconditions: [expected_successor_profile_frozen, requester_matches_executor]
+    expected_control_plane_effect: successor_command_acknowledged
+    expected_route_effect: expected_successor_selected
+    expected_data_plane_effect: successor_route_installed_on_distinct_epoch
+    expected_owner_effect: autopilot_or_profiled_successor_owner_installed
+    legal_successor_states: [INTERNAL_LAND, INTERNAL_HOLD, INTERNAL_RTL]
+    prohibited_successor_states: [WRONG_SUCCESSOR, NO_REQUEST_AFTER_COMPLETE_WINDOW]
+    applicable_oracles: [route_true, freshness_false, successor_true]
+    provenance: [P0_Mode_Executor_accepted_baseline, C1_accepted_event_pair_or_Issue162_legal_baseline_as_applicable]
+    realism_level: R1
+    cleanup_requirement: Land_then_Disarm
+  - edge_id: EO_SUPPORTED_CANCEL
+    source_state_predicate: active_executor_owned_route_with_cancel_contract
+    public_event: supported_executor_cancel
+    public_trigger: public_executor_cancel
+    preconditions: [cancel_profile_supported, owner_identity_known]
+    expected_control_plane_effect: cancel_delivered
+    expected_route_effect: profiled_internal_successor_or_release
+    expected_data_plane_effect: external_epoch_revoked
+    expected_owner_effect: executor_releases_schedule
+    legal_successor_states: [INTERNAL_HOLD, INTERNAL_RTL, INTERNAL_LAND]
+    prohibited_successor_states: [ORPHANED_OWNER, OLD_EPOCH_REENTRY]
+    applicable_oracles: [route_true, freshness_false, successor_true]
+    provenance: [P0_Mode_Executor_accepted_baseline, C1_accepted_event_pair_or_Issue162_legal_baseline_as_applicable]
+    realism_level: R1
+    cleanup_requirement: Land_then_Disarm
+  - edge_id: EO_MANUAL_TAKEOVER
+    source_state_predicate: active_executor_owned_external_route
+    public_event: manual_takeover
+    public_trigger: RC_or_GCS_supported_mode_request
+    preconditions: [requested_mode_allowlisted, public_request_observed]
+    expected_control_plane_effect: manual_request_wins_or_is_explicitly_rejected
+    expected_route_effect: legal_internal_route_selected
+    expected_data_plane_effect: external_epoch_revoked
+    expected_owner_effect: executor_no_longer_in_charge
+    legal_successor_states: [INTERNAL_HOLD, INTERNAL_RTL]
+    prohibited_successor_states: [MULTIPLE_EXECUTORS, WRITER_CONFLICT]
+    applicable_oracles: [route_true, freshness_conditional, successor_true]
+    provenance: [P0_Mode_Executor_accepted_baseline, C1_accepted_event_pair_or_Issue162_legal_baseline_as_applicable]
+    realism_level: R1
+    cleanup_requirement: Land_then_Disarm
+  - edge_id: EO_SUPPORTED_FAILSAFE
+    source_state_predicate: active_executor_owned_external_route_with_frozen_failsafe
+    public_event: executor_route_supported_failsafe
+    public_trigger: accepted_health_loss_or_supported_public_condition
+    preconditions: [failsafe_profile_frozen, no_direct_state_write]
+    expected_control_plane_effect: failsafe_selected
+    expected_route_effect: configured_internal_fallback
+    expected_data_plane_effect: external_epoch_revoked_and_fallback_installed
+    expected_owner_effect: executor_released
+    legal_successor_states: [INTERNAL_RTL, INTERNAL_HOLD]
+    prohibited_successor_states: [KILL, LOCKDOWN, FLIGHT_TERMINATION]
+    applicable_oracles: [route_true, freshness_true, successor_true]
+    provenance: [P0_Mode_Executor_accepted_baseline, C1_accepted_event_pair_or_Issue162_legal_baseline_as_applicable]
+    realism_level: R2
+    cleanup_requirement: Land_then_Disarm
+  - edge_id: EO_RELEASE
+    source_state_predicate: active_executor_owned_external_route
+    public_event: executor_release
+    public_trigger: supported_executor_or_mode_release
+    preconditions: [release_source_identified, fallback_profile_frozen]
+    expected_control_plane_effect: executor_and_mode_release_observed
+    expected_route_effect: supported_internal_route_selected
+    expected_data_plane_effect: external_epoch_revoked
+    expected_owner_effect: autopilot_owner_restored
+    legal_successor_states: [INTERNAL_HOLD, INTERNAL_RTL, INTERNAL_LAND]
+    prohibited_successor_states: [ORPHANED_LIFECYCLE_OWNER, UNBOUNDED_GAP]
+    applicable_oracles: [route_true, freshness_false, successor_true]
+    provenance: [P0_Mode_Executor_accepted_baseline, C1_accepted_event_pair_or_Issue162_legal_baseline_as_applicable]
+    realism_level: R1
+    cleanup_requirement: Land_then_Disarm
+
+  - edge_id: IR_EXTERNAL_ACTIVATION_REQUEST
+    source_state_predicate: stable_internal_route_with_registered_inactive_external_component
+    public_event: external_activation_request
+    public_trigger: registered_mode_request
+    preconditions: [registration_success, arming_checks_pass, source_route_epoch_known]
+    expected_control_plane_effect: external_nav_state_selected
+    expected_route_effect: new_external_route_epoch
+    expected_data_plane_effect: external_producer_controller_writer_lineage_installed
+    expected_owner_effect: external_owner_installed
+    legal_successor_states: [ACTIVE_DYNAMIC_EXTERNAL_ROUTE]
+    prohibited_successor_states: [UNREGISTERED_ACTIVE_ROUTE, FORGED_OWNER]
+    applicable_oracles: [route_true, freshness_false, successor_conditional]
+    provenance: [P0_accepted_official_flow, P0D_accepted_clean_reentry, C1_accepted_event_pair_as_applicable]
+    realism_level: R1
+    cleanup_requirement: release_then_Land_Disarm
+  - edge_id: IR_OFFBOARD_ACTIVATION
+    source_state_predicate: stable_internal_route_with_valid_Offboard_prestream
+    public_event: Offboard_activation
+    public_trigger: public_Offboard_mode_request
+    preconditions: [fresh_Offboard_control_mode_and_setpoint, source_epoch_known]
+    expected_control_plane_effect: Offboard_nav_state_selected
+    expected_route_effect: new_Offboard_route_epoch
+    expected_data_plane_effect: Offboard_producer_lineage_installed
+    expected_owner_effect: Offboard_producer_authority_installed
+    legal_successor_states: [ACTIVE_OFFBOARD_ROUTE]
+    prohibited_successor_states: [ACTIVATION_WITHOUT_PRESTREAM, DIRECT_ACTUATOR]
+    applicable_oracles: [route_true, freshness_false, successor_false]
+    provenance: [P0_accepted_official_flow, P0D_accepted_clean_reentry, C1_accepted_event_pair_as_applicable]
+    realism_level: R1
+    cleanup_requirement: release_then_Land_Disarm
+  - edge_id: IR_DYNAMIC_EXTERNAL_ACTIVATION
+    source_state_predicate: stable_internal_route_with_registered_Dynamic_External_Mode
+    public_event: Dynamic_External_Mode_activation
+    public_trigger: public_registered_external_mode_request
+    preconditions: [registration_instance_known, activation_preconditions_satisfied]
+    expected_control_plane_effect: assigned_external_mode_selected
+    expected_route_effect: new_external_activation_epoch
+    expected_data_plane_effect: configured_setpoint_level_and_lineage_installed
+    expected_owner_effect: registered_external_owner_installed
+    legal_successor_states: [ACTIVE_DYNAMIC_EXTERNAL_ROUTE]
+    prohibited_successor_states: [CONSTRUCTOR_GUARD_BYPASS, FORGED_REGISTRATION]
+    applicable_oracles: [route_true, freshness_false, successor_conditional]
+    provenance: [P0_accepted_official_flow, P0D_accepted_clean_reentry, C1_accepted_event_pair_as_applicable]
+    realism_level: R1
+    cleanup_requirement: release_then_Land_Disarm
+  - edge_id: IR_RC_GCS_MODE_REQUEST
+    source_state_predicate: stable_internal_route
+    public_event: internal_RC_or_GCS_mode_request
+    public_trigger: supported_RC_or_GCS_mode_request
+    preconditions: [requested_mode_allowlisted, public_request_observed]
+    expected_control_plane_effect: requested_internal_mode_selected_or_rejected
+    expected_route_effect: legal_internal_epoch_transition_or_retention
+    expected_data_plane_effect: matching_internal_controller_writer_lineage
+    expected_owner_effect: autopilot_owner_retained
+    legal_successor_states: [INTERNAL_HOLD, INTERNAL_RTL, INTERNAL_LAND]
+    prohibited_successor_states: [ARBITRARY_NAV_STATE, UNEXPLAINED_OWNER]
+    applicable_oracles: [route_true, freshness_false, successor_false]
+    provenance: [P0_accepted_official_flow, P0D_accepted_clean_reentry, C1_accepted_event_pair_as_applicable]
+    realism_level: R1
+    cleanup_requirement: Land_then_Disarm
+  - edge_id: IR_SUPPORTED_FAILSAFE_CLEAR
+    source_state_predicate: configured_internal_fallback_installed_after_supported_failsafe
+    public_event: supported_failsafe_clear
+    public_trigger: accepted_health_reply_resumption_or_public_clear_condition
+    preconditions: [clear_mechanism_source_supported, fallback_epoch_known]
+    expected_control_plane_effect: failsafe_flags_clear
+    expected_route_effect: internal_route_retained_until_new_public_request
+    expected_data_plane_effect: no_automatic_old_external_epoch_reentry
+    expected_owner_effect: autopilot_owner_retained
+    legal_successor_states: [INTERNAL_RTL, INTERNAL_HOLD]
+    prohibited_successor_states: [AUTOMATIC_OLD_SESSION_REENTRY, DIRECT_FAILSAFE_WRITE]
+    applicable_oracles: [route_true, freshness_false, successor_false]
+    provenance: [P0_accepted_official_flow, P0D_accepted_clean_reentry, C1_accepted_event_pair_as_applicable]
+    realism_level: R2
+    cleanup_requirement: Land_then_Disarm
+  - edge_id: IR_BOUNDED_EXTERNAL_REENTRY
+    source_state_predicate: clean_internal_route_after_supported_external_exit
+    public_event: bounded_external_reentry
+    public_trigger: clean_registration_or_activation_request
+    preconditions: [no_R1_session_rollover, no_delayed_old_packet, source_epoch_known]
+    expected_control_plane_effect: legal_external_activation
+    expected_route_effect: distinct_new_external_epoch
+    expected_data_plane_effect: current_producer_lineage_only
+    expected_owner_effect: current_external_owner_installed
+    legal_successor_states: [ACTIVE_DYNAMIC_EXTERNAL_ROUTE, ACTIVE_OFFBOARD_ROUTE]
+    prohibited_successor_states: [OLD_SESSION_INFLUENCE, UNSUPPORTED_REPLACEMENT_EXECUTOR_COMPOSITION]
+    applicable_oracles: [route_true, freshness_false, successor_false]
+    provenance: [P0_accepted_official_flow, P0D_accepted_clean_reentry, C1_accepted_event_pair_as_applicable]
+    realism_level: R2
+    cleanup_requirement: release_then_Land_Disarm
+
+composition_rules:
+  maximum_authority_events_initial_v0: 2
+  more_than_two_authority_events: forbidden_unless_a_future_registration_cites_new_accepted_C1_evidence
+  source_state_predicate_required: true
+  public_trigger_required: true
+  prohibited:
+    - direct_nav_state_write
+    - direct_route_epoch_write
+    - forged_registration_ownership
+    - constructor_guard_bypass
+    - arbitrary_uORB_message_injection
+    - arbitrary_actuator_command
+    - random_event_without_source_state_predicate
