@@ -115,18 +115,21 @@ def run(args: argparse.Namespace) -> int:
         def _status(self, msg: Any) -> None:
             self.status = msg
 
+        def _declare_safety_stop(self, reason: str) -> None:
+            if not self.safety_stop:
+                self.failure_reason = reason
+            self.safety_stop = True
+
         def _position(self, msg: Any) -> None:
             self.position = msg
             values = (float(msg.x), float(msg.y), float(msg.z), float(msg.vx), float(msg.vy), float(msg.vz))
             if not all(math.isfinite(value) for value in values):
-                self.safety_stop = True
-                self.failure_reason = "non-finite vehicle local position or velocity"
+                self._declare_safety_stop("non-finite vehicle local position or velocity")
             distance = math.hypot(float(msg.x), float(msg.y))
             altitude = -float(msg.z)
             speed = math.sqrt(float(msg.vx) ** 2 + float(msg.vy) ** 2 + float(msg.vz) ** 2)
             if altitude > 3.0 or distance > 5.0 or speed > 3.0:
-                self.safety_stop = True
-                self.failure_reason = (
+                self._declare_safety_stop(
                     f"formal safety bound exceeded altitude={altitude:.3f} "
                     f"distance={distance:.3f} speed={speed:.3f}"
                 )
@@ -137,8 +140,7 @@ def run(args: argparse.Namespace) -> int:
         def _attitude(self, msg: Any) -> None:
             w, x, y, z = (float(value) for value in msg.q)
             if not all(math.isfinite(value) for value in (w, x, y, z)):
-                self.safety_stop = True
-                self.failure_reason = "non-finite vehicle attitude"
+                self._declare_safety_stop("non-finite vehicle attitude")
                 return
             sin_roll = 2.0 * (w * x + y * z)
             cos_roll = 1.0 - 2.0 * (x * x + y * y)
@@ -146,8 +148,7 @@ def run(args: argparse.Namespace) -> int:
             sin_pitch = max(-1.0, min(1.0, 2.0 * (w * y - z * x)))
             pitch = math.asin(sin_pitch)
             if max(abs(math.degrees(roll)), abs(math.degrees(pitch))) > 35.0:
-                self.safety_stop = True
-                self.failure_reason = (
+                self._declare_safety_stop(
                     f"formal attitude bound exceeded roll={math.degrees(roll):.3f} "
                     f"pitch={math.degrees(pitch):.3f}"
                 )
@@ -155,11 +156,11 @@ def run(args: argparse.Namespace) -> int:
         def _angular_velocity(self, msg: Any) -> None:
             rates = tuple(float(value) for value in msg.xyz)
             if not all(math.isfinite(value) for value in rates):
-                self.safety_stop = True
-                self.failure_reason = "non-finite vehicle angular velocity"
+                self._declare_safety_stop("non-finite vehicle angular velocity")
             elif max(abs(value) for value in rates) > 2.0:
-                self.safety_stop = True
-                self.failure_reason = f"formal angular-rate bound exceeded rates={rates}"
+                self._declare_safety_stop(
+                    f"formal angular-rate bound exceeded rates={rates}"
+                )
 
         def _spin_until(self, predicate: Callable[[], bool], timeout: float, label: str) -> bool:
             deadline = time.monotonic() + timeout
@@ -507,11 +508,9 @@ def run(args: argparse.Namespace) -> int:
                     stable["since"] = None
                     return False
 
-                if not self._periodic_command_until(
-                    VehicleCommand.VEHICLE_CMD_NAV_TAKEOFF,
-                    takeoff_complete,
-                    40.0,
-                    "stable 1.5 m internal takeoff completion",
+                self._command(VehicleCommand.VEHICLE_CMD_NAV_TAKEOFF)
+                if not self._spin_until(
+                    takeoff_complete, 40.0, "stable 1.5 m internal takeoff completion"
                 ):
                     raise RuntimeError(self.failure_reason)
                 self._state_event(PlatformStateMachineEvent.TAKE_OFF, "TAKE_OFF")

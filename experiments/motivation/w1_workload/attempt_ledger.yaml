@@ -1,6 +1,6 @@
 schema_version: "1.0"
 study_id: w1_real_workload_runtime_trace_spike
-status: W1_B_IN_PROGRESS_ATTEMPT_1_RECORDED
+status: W1_B_IN_PROGRESS_ATTEMPT_2_RECORDED
 preregistration_commit: 1f41229d17e42af6945bd040ccb1579128b1229e
 starting_repository_head: 6f5abd682cca47b9e8febdbdcfb8ea0a9714e236
 allowed_classifications:
@@ -12,7 +12,7 @@ allowed_classifications:
   - FORMAL_SAFETY_STOP
   - NOT_APPLICABLE
 formal_attempt_counts:
-  W1-B: {accepted: 0, attempts: 1, maximum_attempts: 3}
+  W1-B: {accepted: 0, attempts: 2, maximum_attempts: 3}
   W1-C: {accepted: 0, attempts: 0, maximum_attempts: 3}
   W1-D: {accepted: 0, attempts: 0, maximum_attempts: 6}
   W1-E: {accepted: 0, attempts: 0, maximum_attempts: 3, conditional: true}
@@ -22,7 +22,7 @@ classification_counts:
   MEASUREMENT_INSUFFICIENT: 0
   ENVIRONMENT_FAILURE: 0
   CAMPAIGN_CONFIGURATION_FAILURE: 0
-  FORMAL_SAFETY_STOP: 1
+  FORMAL_SAFETY_STOP: 2
   NOT_APPLICABLE: 0
 diagnostics:
   - diagnostic_id: W1-A-BUILD-001
@@ -67,4 +67,27 @@ attempts:
     raw_artifact_set_sha256: 0627f87aca983a8c1432b05c02df8e112a72104e0068c6b49a03336bac661fee
     compact_evidence: data/processed/motivation/w1_workload/w1b_seed510101_a1/attempt_summary.json
     raw_evidence: runs/motivation/w1_workload/w1b_seed510101_a1/raw
+  - run_id: w1b_seed510102_a2
+    phase: W1-B
+    attempt_number: 2
+    formal_runtime: true
+    simulation_seed: 510102
+    repository_head: a394d0f92c0ff8339ccb272e0b4d66d0bdb736b6
+    classification: FORMAL_SAFETY_STOP
+    accepted: false
+    completed_mission_phases:
+      - internal_ground
+      - arm
+      - internal_takeoff
+    stop_reason: formal_safety_bound_exceeded_altitude_3_008_m
+    sidecar_status: ACCEPTED_OBSERVATION_ONLY_ACQUISITION
+    clock_bridge_status: VALID_DIRECT_TIMESYNC_STATUS_DIAGNOSTIC
+    terminal_Land: true
+    terminal_Disarm: true
+    controlled_local_process_stop: true
+    residual_owned_processes: 0
+    port_8888_occupied_after_cleanup: false
+    raw_artifact_set_sha256: 1d5b5d9cf334b7edf070c051ad8b475db3a7a1819d992f4ae9d4bb2a9eadeae6
+    compact_evidence: data/processed/motivation/w1_workload/w1b_seed510102_a2/attempt_summary.json
+    raw_evidence: runs/motivation/w1_workload/w1b_seed510102_a2/raw
 append_only: true

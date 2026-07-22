@@ -6,7 +6,12 @@ from pathlib import Path
 
 import yaml
 
-from scripts.workloads import w1_compact_trace, w1_evaluate_attempt, w1_trace_replay
+from scripts.workloads import (
+    w1_clock_sample_filter,
+    w1_compact_trace,
+    w1_evaluate_attempt,
+    w1_trace_replay,
+)
 
 
 PHASES = [
@@ -105,6 +110,33 @@ def test_trace_only_replay_rejects_incomplete_cancel_correlation(tmp_path: Path)
     _, validation = w1_trace_replay.replay(source)
     assert validation["valid"] is False
     assert any("cancel" in error for error in validation["errors"])
+
+
+def test_clock_sample_filter_selects_only_direct_timesync_status(tmp_path: Path) -> None:
+    source = tmp_path / "sidecar.jsonl"
+    _write_jsonl(
+        source,
+        [
+            {
+                "event_type": "clock_bridge_sample",
+                "sample_source": "vehicle_local_position",
+                "px4_us": 1,
+            },
+            {
+                "event_type": "clock_bridge_sample",
+                "sample_source": "timesync_status",
+                "px4_us": 2,
+            },
+            {"event_type": "physical_state", "px4_us": 3},
+        ],
+    )
+    assert w1_clock_sample_filter.select(source) == [
+        {
+            "event_type": "clock_bridge_sample",
+            "sample_source": "timesync_status",
+            "px4_us": 2,
+        }
+    ]
 
 
 def test_compact_trace_keeps_lifecycle_and_samples_continuous_evidence(tmp_path: Path, monkeypatch) -> None:

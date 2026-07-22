@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0",
+  "run_id": "w1b_seed510102_a2",
+  "phase": "W1-B",
+  "attempt_number": 2,
+  "simulation_seed": 510102,
+  "repository_head": "a394d0f92c0ff8339ccb272e0b4d66d0bdb736b6",
+  "classification": "FORMAL_SAFETY_STOP",
+  "accepted": false,
+  "mission": {
+    "status": "FAIL",
+    "completed_phases": [
+      "internal_ground",
+      "arm",
+      "internal_takeoff"
+    ],
+    "initial_stop_reason": "formal safety bound exceeded altitude=3.008 distance=0.013 speed=0.679",
+    "terminal_landed": true,
+    "terminal_disarmed": true
+  },
+  "observation": {
+    "sidecar_status": "ACCEPTED_OBSERVATION_ONLY_ACQUISITION",
+    "original_mixed_clock_bridge_status": "DEGRADED",
+    "direct_timesync_clock_bridge_status": "VALID",
+    "direct_timesync_samples": 33,
+    "direct_timesync_residual_max_ns": 45149660,
+    "route_trace_full_events": 28631,
+    "route_trace_compact_events": 12386,
+    "route_epochs": 4,
+    "allocator_input_events_compact": 78,
+    "actuator_output_events_compact": 2923,
+    "final_writer": "control_allocator"
+  },
+  "cleanup": {
+    "normal_Land_and_Disarm_completed": true,
+    "controlled_local_process_stop": true,
+    "residual_owned_processes": 0,
+    "port_8888_occupied": false
+  },
+  "artifacts": {
+    "artifact_set_sha256": "1d5b5d9cf334b7edf070c051ad8b475db3a7a1819d992f4ae9d4bb2a9eadeae6",
+    "raw_total_size_bytes": 45583292,
+    "rosbag_metadata_sha256": "0dace67d48b2590afb4c7f4290047e897ba53a2f74d1fef3945c15896b0245a4",
+    "rosbag_db3_sha256": "e0f070c965182aebd247b4a85494e27f5494585b9a92693c162df1a0bdef8c64",
+    "ulog_sha256": "7466f9c841299eff9ed5f419c7c076dc9afa55a6ee838f6e4a790cd8da2f5d68",
+    "mission_events_sha256": "6a04fe72abe282dc02072b2b112f018878f5e61361627c38a74138cbfa07b737",
+    "sidecar_events_sha256": "75b712daf2bc8cf8cf73a3dfcea75d9ea0e9f0323f0f22f9169101899ce7908a",
+    "compact_workload_trace_sha256": "22775ad21d4352e03ddce4fd61287efc6e28b4c637e9546bae873341496cd9b4",
+    "compact_route_trace_sha256": "dbe24c987048a6a20cf660b57ef6eb942b8ad00425c4700eea09822512b72049"
+  },
+  "raw_artifacts_ignored": true,
+  "enters_SUT_violation_denominator": false
+}

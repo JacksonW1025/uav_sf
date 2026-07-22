@@ -1,0 +1,55 @@
+schema_version: "1.0"
+amendment_id: w1_runtime_tooling_amendment_003
+study_id: w1_real_workload_runtime_trace_spike
+status: READY_FOR_PUSH_BEFORE_W1_B_ATTEMPT_3
+preregistration_commit: 1f41229d17e42af6945bd040ccb1579128b1229e
+parent_runtime_tooling_commit: a394d0f92c0ff8339ccb272e0b4d66d0bdb736b6
+trigger_attempt: w1b_seed510102_a2
+trigger_classification: FORMAL_SAFETY_STOP
+formal_attempts_before_amendment_push: 2
+observed_conditions:
+  - >-
+    Repeated NAV_TAKEOFF requests reset the PX4 relative takeoff target while
+    the mission driver waited for stable completion. The aircraft crossed the
+    frozen 3.0 m altitude bound at 3.008 m and triggered a formal safety stop.
+  - >-
+    The observation-only sidecar completed, but the generic clock input mixed
+    local-position timestamps with direct PX4 TimesyncStatus samples. That
+    mixed fit was DEGRADED; a diagnostic fit using the 33 direct TimesyncStatus
+    samples was VALID with a 45,149,660 ns maximum residual.
+  - >-
+    Aircraft Land, Disarm, controlled local process stop, and the residual
+    process and port checks all completed successfully after the safety stop.
+changes:
+  - path: scripts/workloads/w1_mission_driver.py
+    sha256: fb0079721c625577b2317b8efc51939776454d985e3da9eb37c85c8df5eec068
+    effect: >-
+      issue one public NAV_TAKEOFF request before observing stable completion,
+      and preserve the first formal safety-stop reason during cleanup
+  - path: scripts/workloads/w1_sidecar_recorder.py
+    sha256: 7ce6e878d3e301c4f42a1398a27c9d9200733f9ae6c99ec801e125cdc628bcdf
+    effect: use observation QoS compatible with the public VehicleCommand writer
+  - path: scripts/workloads/w1_clock_sample_filter.py
+    sha256: d134bd9f1f00703d472174cf4f382565204794ed57c7349be43cee8a06514c03
+    effect: select direct PX4 TimesyncStatus samples for clock-bridge validation
+  - path: scripts/workloads/run_w1_workload.sh
+    sha256: f3507ab37536957d1003087ec0dbc2f566935fbf25f8669517a9e32235285c92
+    effect: run the locked direct-timesync filter before clock-bridge fitting
+diagnostic_evidence:
+  storage: runs/motivation/w1_workload/w1b_seed510102_a2/diagnostics
+  timesync_status_samples_sha256: e846256dc3d48085402f6e466a52c20b25d46d00917f4a8039ef778fdae7a90d
+  timesync_status_clock_bridge_sha256: 5654885a09ff98dd308e51f6929baf673db1fb9fc38ea66ecfcb1c200ace49a9
+  status: VALID
+  sample_count: 33
+  residual_max_ns: 45149660
+semantic_invariance:
+  mission_geometry_changed: false
+  commanded_speed_changed: false
+  takeoff_or_altitude_changed: false
+  route_selection_changed: false
+  PX4_mode_requests_changed: false
+  task_cancel_or_completion_changed: false
+  acceptance_rules_changed: false
+  attempt_caps_changed: false
+  preregistered_phase_sequence_changed: false
+  observation_only_sidecar_command_publishers: 0

@@ -81,7 +81,7 @@ def run(args: argparse.Namespace) -> int:
                 (TimesyncStatus, "/fmu/out/timesync_status", self._timesync, best_effort),
                 (TrajectorySetpoint, "/fmu/in/trajectory_setpoint", self._trajectory, best_effort),
                 (OffboardControlMode, "/fmu/in/offboard_control_mode", self._offboard, best_effort),
-                (VehicleCommand, "/fmu/in/vehicle_command", self._vehicle_command, reliable),
+                (VehicleCommand, "/fmu/in/vehicle_command", self._vehicle_command, best_effort),
                 (PlatformInfo, "/drone0/platform/info", self._platform, reliable),
                 (ControllerInfo, "/drone0/controller/info", self._controller, reliable),
                 (AlertEvent, "/drone0/alert_event", self._alert, reliable),

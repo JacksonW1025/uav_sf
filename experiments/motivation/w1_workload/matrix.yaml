@@ -1,6 +1,6 @@
 schema_version: "1.0"
 study_id: w1_real_workload_runtime_trace_spike
-status: W1_B_IN_PROGRESS_ATTEMPT_1_RECORDED
+status: W1_B_IN_PROGRESS_ATTEMPT_2_RECORDED
 preregistration_commit: 1f41229d17e42af6945bd040ccb1579128b1229e
 starting_repository_head: 6f5abd682cca47b9e8febdbdcfb8ea0a9714e236
 execution_order: [W1-A, W1-B, W1-C, W1-D, W1-E, W1-F]
@@ -17,8 +17,8 @@ phases:
     maximum_attempts: 3
     seed_schedule: [510101, 510102, 510103]
     accepted: 0
-    attempts: 1
-    status: IN_PROGRESS_AMENDMENT_REQUIRED_BEFORE_ATTEMPT_2
+    attempts: 2
+    status: IN_PROGRESS_AMENDMENT_REQUIRED_BEFORE_ATTEMPT_3
   - phase_id: W1-C
     name: trace_only_deterministic_replay
     formal_runtime: true

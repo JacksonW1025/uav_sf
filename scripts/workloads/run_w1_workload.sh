@@ -275,8 +275,13 @@ if [[ -n "${ULOG}" && -f "${ULOG}" ]]; then
 fi
 
 set +e
+python3 "${REPO_ROOT}/scripts/workloads/w1_clock_sample_filter.py" \
+  --input "${RAW_DIR}/sidecar_events.jsonl" \
+  --output "${PROCESSED_DIR}/clock_bridge_samples.jsonl"
+CLOCK_FILTER_STATUS=$?
 python3 "${REPO_ROOT}/scripts/tracing/clock_bridge_collector.py" \
-  --samples "${RAW_DIR}/sidecar_events.jsonl" --output "${PROCESSED_DIR}/clock_bridge.json"
+  --samples "${PROCESSED_DIR}/clock_bridge_samples.jsonl" \
+  --output "${PROCESSED_DIR}/clock_bridge.json"
 CLOCK_STATUS=$?
 set -e
 
@@ -316,5 +321,5 @@ python3 "${REPO_ROOT}/scripts/workloads/w1_evaluate_attempt.py" \
   --output "${PROCESSED_DIR}/attempt_result.json"
 EVALUATION_STATUS=$?
 set -e
-echo "W1_RUN=${RUN_ID} PHASE=${PHASE} MISSION_STATUS=${MISSION_STATUS} CLOCK_STATUS=${CLOCK_STATUS} EVALUATION_STATUS=${EVALUATION_STATUS}"
+echo "W1_RUN=${RUN_ID} PHASE=${PHASE} MISSION_STATUS=${MISSION_STATUS} CLOCK_FILTER_STATUS=${CLOCK_FILTER_STATUS} CLOCK_STATUS=${CLOCK_STATUS} EVALUATION_STATUS=${EVALUATION_STATUS}"
 exit "${EVALUATION_STATUS}"
