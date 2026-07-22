@@ -1,6 +1,6 @@
 schema_version: "1.0"
 study_id: w1_real_workload_runtime_trace_spike
-status: W1_A_COMPLETE_IMPLEMENTATION_PENDING
+status: W1_RUNTIME_TOOLING_HASH_LOCKED_PENDING_PUSH
 repository:
   starting_head: 6f5abd682cca47b9e8febdbdcfb8ea0a9714e236
   preregistration_commit: 1f41229d17e42af6945bd040ccb1579128b1229e
@@ -84,7 +84,9 @@ mission_and_launch_artifacts:
   simulation_tmux_launch_yaml: c4f40071bcb0402885636cf87fda8a0be7b9cb20316b73bc02dcebe5f6041c4f
   upstream_mission_py_for_interface_audit_only: c2556e79c01c73be0caeab36daadc695c2fb1d64f857e1122bbf4036be7a509f
   upstream_mission_behavior_tree_py_for_interface_audit_only: e5ebc77d3a48354c6994694938480755fcb3688871e6e4a700df0b44d52cbdb4
-  w1_low_risk_mission_overlay: PENDING_IMPLEMENTATION_CHECKPOINT_BEFORE_FORMAL_ATTEMPT
+  w1_low_risk_mission_overlay: 9acb10ce72fe0ab00448924de16c0632e435c10693919961b9732c5832334df7
+  w1_pid_speed_controller_overlay: 13e98debf4602ec69aba336feb1fc1e8477cf53c3abb345d19d22416f653a771
+  w1_rosbag_topics: b982ec629239298a99647116836d0b9e6b4e2bf8a82f20ca6ef092a7e3228346
 repository_artifacts:
   config/aerostack2_dependencies.lock.yaml: 4f36415d5d51d1c3edb1a098bcfbdc7710f44d811c8ce22a0a94359fbc9ebd1f
   scripts/workloads/setup_aerostack2_spike.sh: 2633887aad6c3a169235fcc9e3112949c3ac7d4e50883163def55d944688e910
@@ -94,10 +96,16 @@ repository_artifacts:
   scripts/tracing/clock_bridge_collector.py: 1140be063ce1e75835ec1f9fe3c3eea55aab7a483d99799a323e0d57353f4ed2
   scripts/tracing/compact_route_trace.py: 3bd0bfb77c5c408161884823ec9199a3e684595bc4031118399be932dc6dae35
   scripts/analysis/summarize_route_trace.py: 945dc20a9d741ec8b794845991e5b5dfcd4d4fdb532809f3b74cfea59a796e33
-  future_w1_artifacts: >-
-    Any added sidecar recorder, canonical schema, trace-only replay, command
-    replay, mission overlay, or analysis tool must be hash-locked and pushed
-    in a non-semantic implementation checkpoint before formal use.
+  scripts/workloads/run_w1_workload.sh: baa761ca5f8942397c223dae21b4c50a3cd84d39a97ef7639a3a4e6bb57a2f9d
+  scripts/workloads/w1_mission_driver.py: 51e84bffafc960c612e3f75991676df6bf22612eef048c297b182ed2509e67ae
+  scripts/workloads/w1_sidecar_recorder.py: 82cf7728c0bdee8c69db570ac3d4c9ac5e7eed0e47cf843eb3c1d9f393319683
+  scripts/workloads/w1_compact_trace.py: 82c677fd3ccf4e5322a37b33e06650f8bd00feb452356b68c4d08533d0b7d956
+  scripts/workloads/w1_trace_replay.py: 4f4d912568e8ef1fc6c47acb884d761f8878809dac204e6c3da97f9172acc3e8
+  scripts/workloads/w1_artifact_manifest.py: 12c8d29bcb81a916fececb84da4590512d2c898351bb9c5d14fb8a9f5b990b91
+  scripts/workloads/w1_evaluate_attempt.py: f19309be037935da5d4cb1c8bba3c4fb531b29aedfbb09446bbba505e374c3d8
+  data/schemas/w1_trace_manifest.schema.json: 4795fcc8865cd4ac70ae5d87346332113d6e9b023c2f788bc81f0a3eb7aa50ad
+  data/schemas/w1_gate.schema.json: 379e9721fad1381e702341be7eb2ed98b8a608e0b5380920d7070076db7f8b5d
+  future_w1_artifacts_rule: additional_runtime_artifacts_require_a_pushed_hash_lock_before_use
 build_products:
   Aerostack2_install_snapshot_sha256: bb9deeb67ba207a0062e2a2b228fb2ed751b46412248e8a0f4c299cdabf9600b
   Aerostack2_install_snapshot_file: runs/motivation/w1_workload/environment/aerostack2_install.sha256

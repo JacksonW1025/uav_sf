@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uav-sf.local/schemas/w1_gate.schema.json",
+  "title": "W1 final machine-readable Gate",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "gate_id",
+    "status",
+    "disposition",
+    "preregistration_commit",
+    "workload_name",
+    "workload_commit",
+    "source_trace_id",
+    "source_trace_acquired",
+    "trace_only_replay_accepted",
+    "canonical_accepted",
+    "canonical_target",
+    "canonical_attempts",
+    "native_adapter_authorized",
+    "native_attempts",
+    "native_accepted",
+    "route_replacements_observed",
+    "task_only_transitions_observed",
+    "new_route_semantics",
+    "new_lifecycle_semantics",
+    "timing_or_context_value",
+    "excluded_attempts",
+    "evidence_complete",
+    "raw_artifacts_ignored",
+    "authorizes_large_integration",
+    "authorizes_random_campaign",
+    "authorizes_next_phase",
+    "next_registered_phase",
+    "claims"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "gate_id": {"const": "W1_REAL_WORKLOAD_RUNTIME_TRACE_SPIKE"},
+    "status": {"type": "string"},
+    "disposition": {
+      "enum": [
+        "PASS_REAL_WORKLOAD_ADDS_NEW_ROUTE_OR_LIFECYCLE_SEMANTICS",
+        "CONDITIONAL_PASS_REAL_WORKLOAD_ADDS_TRACE_OR_TIMING_VALUE",
+        "NEGATIVE_SCOPE_DECISION_NO_ADDITIONAL_ROUTE_SEMANTICS",
+        "MEASUREMENT_INSUFFICIENT",
+        "ENVIRONMENT_BLOCKED"
+      ]
+    },
+    "canonical_accepted": {"type": "integer", "minimum": 0},
+    "canonical_target": {"const": 3},
+    "canonical_attempts": {"type": "integer", "minimum": 0, "maximum": 6},
+    "authorizes_large_integration": {"const": false},
+    "authorizes_random_campaign": {"const": false},
+    "next_registered_phase": {"const": "B1_REGISTERED_CONTROLLER_INVENTORY_AND_FAMILY_B_GATE"},
+    "claims": {"type": "object", "additionalProperties": {"type": "boolean"}}
+  },
+  "additionalProperties": true
+}

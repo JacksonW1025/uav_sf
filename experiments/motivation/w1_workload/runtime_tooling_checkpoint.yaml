@@ -1,0 +1,32 @@
+schema_version: "1.0"
+checkpoint_id: w1_runtime_tooling_checkpoint
+study_id: w1_real_workload_runtime_trace_spike
+status: READY_FOR_PUSH_BEFORE_FORMAL_RUNTIME
+preregistration_commit: 1f41229d17e42af6945bd040ccb1579128b1229e
+compatibility_amendment_commit: a599cffffd29bf64072dc84cf338d43575d48c97
+checkpoint_commit_resolution: GIT_COMMIT_CONTAINING_THIS_HASH_LOCK
+formal_runtime_attempts_before_checkpoint_push: 0
+scope:
+  - bounded_low_risk_mission_overlay
+  - observation_only_sidecar_recorder
+  - raw_rosbag_and_ULog_artifact_hashing
+  - canonical_route_trace_processing
+  - trace_only_deterministic_replay
+  - canonical_adapter_command_replay_runner
+  - preregistered_acceptance_evaluation
+safety_properties:
+  test_environment_gate_required: true
+  direct_actuator_commands: false
+  public_arm_takeoff_Offboard_Land_disarm_path: true
+  finite_and_bounded_command_values: true
+  normal_Land_and_Disarm_cleanup: true
+  controlled_local_process_stop: true
+  observation_only_sidecar_command_publishers: 0
+frozen_preregistration_invariance:
+  research_question_changed: false
+  mission_sequence_changed: false
+  attempt_caps_changed: false
+  acceptance_rules_changed: false
+  safety_bounds_changed: false
+  dispositions_changed: false
+hash_lock_source: experiments/motivation/w1_workload/source_lock.yaml
