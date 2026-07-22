@@ -97,3 +97,32 @@ def test_b1_summarizer_rejects_missing_lineage(tmp_path: Path) -> None:
     encoded = json.dumps(result)
     assert "MEASUREMENT_INSUFFICIENT" in encoded
     assert "ACCEPTED" not in encoded
+
+
+def test_b1_final_gate_preserves_build_failures_and_runtime_non_applicability() -> None:
+    gate = json.loads((B1 / "b1_gate.json").read_text(encoding="utf-8"))
+    ledger = yaml.safe_load((B1 / "attempt_ledger.yaml").read_text(encoding="utf-8"))
+    assert gate["disposition"] == "ENVIRONMENT_BLOCKED"
+    assert gate["static_build_attempts"] == 3
+    assert gate["static_build_success"] is False
+    assert gate["normal_attempts"] == gate["normal_accepted"] == 0
+    assert gate["recovery_attempts"] == gate["recovery_accepted"] == 0
+    assert gate["authorizes_family_b_full_campaign"] is False
+    assert gate["authorizes_random_campaign"] is False
+    assert gate["authorizes_stateful_testing"] is False
+    assert gate["authorizes_m_final"] is True
+    formal_builds = [
+        attempt
+        for attempt in ledger["attempts"]
+        if attempt["phase"] == "B1-D" and attempt["formal_attempt"]
+    ]
+    assert len(formal_builds) == 3
+    assert all(
+        attempt["classification"] == "CAMPAIGN_CONFIGURATION_FAILURE"
+        for attempt in formal_builds
+    )
+    assert {
+        attempt["phase"]: attempt["classification"]
+        for attempt in ledger["attempts"]
+        if attempt["phase"] in {"B1-E", "B1-F"}
+    } == {"B1-E": "NOT_APPLICABLE", "B1-F": "NOT_APPLICABLE"}

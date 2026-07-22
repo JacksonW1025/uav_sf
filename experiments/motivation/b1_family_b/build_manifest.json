@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "manifest_id": "b1_build_static_manifest",
+  "status": "ATTEMPT_CAP_REACHED_NO_ACCEPTED_COMBINED_BUILD",
+  "repository_commit": "0cb95ef61781fa87e69f50ccb18bc41acbdefe5e",
+  "preregistration_commit": "792a36d6ff9a26202e9fde31e4b085eff90b65c8",
+  "amendment_commits": [
+    "091f48ddd1776af0d54d22b51d466377547b6374",
+    "0cb95ef61781fa87e69f50ccb18bc41acbdefe5e"
+  ],
+  "px4_commit": "4ae21a5e569d3d89c2f6366688cbacb3e93437c9",
+  "px4_build_configuration": "px4_sitl_default TRANSITION",
+  "px4_component_build_observed": true,
+  "px4_component_build_attempt": "b1d_build_a2",
+  "px4_binary_sha256": "84c4ca62868f02a0434bcce503d6baf5ff4f538678ccb4eeb2a5bd1fa91323ce",
+  "route_observability_header_sha256": "432daad15587cf6cc9b2c13136bb20f6d427dabef357ce0d343c8075f5a28d1e",
+  "route_observability_patch_sha256": "735555764c175ebd0a318723d4e76b8898965c4728ee4cab9b05b6c34d5e8b7c",
+  "freshness_observability_patch_sha256": "7cc9aa3a99ba34ebd75094e291a357e679ce7176d112687ed75d1bf4b2339141",
+  "reference_build_target": "b1_reference_controller:b1_reference_controller",
+  "reference_binary_present": false,
+  "reference_binary_sha256": null,
+  "combined_build_success": false,
+  "loadability_confirmed": false,
+  "formal_attempts": 3,
+  "accepted_attempts": 0,
+  "attempt_classifications": {
+    "CAMPAIGN_CONFIGURATION_FAILURE": 3
+  },
+  "runtime_authorized": false,
+  "raw_logs": [
+    "runs/motivation/b1_family_b/b1d_build_a1/raw",
+    "runs/motivation/b1_family_b/b1d_build_a2/raw",
+    "runs/motivation/b1_family_b/b1d_build_a3/raw"
+  ],
+  "claim_boundary": "The PX4 component build does not constitute an accepted combined B1-D build, controller loadability, route installation, or runtime PASS."
+}

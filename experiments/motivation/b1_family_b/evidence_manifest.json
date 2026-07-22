@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "manifest_id": "b1_tracked_compact_evidence_manifest",
+  "hash_algorithm": "sha256",
+  "tracked_artifacts": {
+    "experiments/motivation/b1_family_b/preregistration.yaml": "986685db9d11f079dbb1bb760170a59a950683b3d484be099a5ac2e5fc2134e1",
+    "experiments/motivation/b1_family_b/source_lock.yaml": "4a6e0c754ba1c83063955671da23704592e66242b00b9b228aada8d09b84c83d",
+    "experiments/motivation/b1_family_b/matrix.yaml": "e9fff08522a860fec58953d44e6b2d7f9c7573940d3b864014ef94b210f55966",
+    "experiments/motivation/b1_family_b/attempt_ledger.yaml": "c75d37347cbd5c62d4de7052fef1483b607be7e7f6ea01d4183619c440cfcf58",
+    "experiments/motivation/b1_family_b/inventory.tsv": "502c7ffdb2e09f23724f5cd24a16810fd174f9d9dfbd574f5f2dbd049de2f0d4",
+    "experiments/motivation/b1_family_b/observability_matrix.tsv": "3c5e192d83712e651d4dd75d1687a42132c68d8e5942b7ef7c2cb3465c18e5f7",
+    "experiments/motivation/b1_family_b/feasibility_matrix.tsv": "8bc1c7792fa5822c9501c93e787b97cbedacfcd99d443540d1de04d92be53c7a",
+    "experiments/motivation/b1_family_b/reference_decision.yaml": "0da2e98b70ead02e13ac047e7fd9ca33b500cd44dd15176889394552d1897fed",
+    "experiments/motivation/b1_family_b/amendment_001.yaml": "11f666e0549943d57e326084ccd85ab2a1518a5322d9599891eb5cb202c70632",
+    "experiments/motivation/b1_family_b/build_manifest.json": "3cf7e12e7ef12df5d048e56375cb194fe7d1c2772568138334d20064627470fe",
+    "experiments/motivation/b1_family_b/b1_gate.json": "52a4ee45c154b6042933239309c0147514a53086e33806bea12aa8696815231d",
+    "data/processed/motivation/b1_family_b/b1_summary.json": "2890f4aa4f894fe1ee02085719421d0513f9f7e97666833252d9ff5b5be26e33",
+    "docs/motivation/B1_FAMILY_B_GATE_REPORT.md": "c13cb3fe8bafcb8717de966d8510e48c81dc92c6365909db7bec1586d39db0df"
+  },
+  "ignored_raw_artifacts": {
+    "root": "runs/motivation/b1_family_b",
+    "apparent_size_bytes": 1152411384,
+    "file_count": 19001,
+    "tracked_file_count": 0,
+    "formal_log_hashes": {
+      "b1d_build_a1/px4_build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "b1d_build_a1/precondition_status.log": "c496aeab7c4cbdfc3e587eafc82e051b2a0013b30a64ec28c9fb5fa2569088cf",
+      "b1d_build_a2/px4_build.log": "93649ac5f440d0fc699d76236716be2ad925a1837399f1b1a0a3c98e29f19acb",
+      "b1d_build_a2/ros_build.log": "064ed1b1829b35b61f875bba5d16b33d08548ea6bf69e45cae0f66bd01221fa2",
+      "b1d_build_a3/px4_build.log": "4f0352351d1804501cedbadd8b251c05103aa9488e949f44b8b6f52aa69481ec"
+    }
+  }
+}

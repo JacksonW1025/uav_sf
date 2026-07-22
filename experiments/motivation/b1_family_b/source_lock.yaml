@@ -108,3 +108,12 @@ raw_storage:
   path: runs/motivation/b1_family_b
   ignored_required: true
   tracked_raw_files_required: 0
+formal_execution:
+  starting_repository_commit: 0cb95ef61781fa87e69f50ccb18bc41acbdefe5e
+  B1_D: {accepted: 0, attempts: 3, cap: 3, status: ATTEMPT_CAP_REACHED}
+  B1_E: {accepted: 0, attempts: 0, status: NOT_APPLICABLE}
+  B1_F: {accepted: 0, attempts: 0, status: NOT_APPLICABLE}
+  px4_component_binary_sha256: 84c4ca62868f02a0434bcce503d6baf5ff4f538678ccb4eeb2a5bd1fa91323ce
+  reference_binary_sha256: null
+  combined_build_success: false
+  runtime_probe_authorized_after_build_gate: false

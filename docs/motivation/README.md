@@ -31,6 +31,11 @@ records. Raw runtime evidence remains outside this directory under ignored
    acquisition reached its three-attempt cap with zero accepted runs. All
    three attempts were formal safety stops; trace-only and Canonical replays
    were not applicable, and the Native Adapter Gate did not authorize a spike.
+10. **B1 Registered Controller Inventory:** closed environment-blocked after
+    identifying 8 subjects, including 2 true registered controller routes,
+    authorizing and implementing a deterministic partial-subgraph reference,
+    and reaching the three-attempt combined-build cap with zero accepted
+    builds. No B1 runtime phase was authorized.
 
 ## Files
 
@@ -48,6 +53,8 @@ records. Raw runtime evidence remains outside this directory under ignored
 - `R1_SESSION_ROLLOVER_REPORT.md`: rapid re-entry/session-rollover closure and claim boundary.
 - `W1_AEROSTACK2_SOURCE_BUILD_AUDIT.md`: exact Aerostack2 build and public-interface audit.
 - `W1_REAL_WORKLOAD_SPIKE_REPORT.md`: bounded source-trace attempt-cap closure and W1 Gate interpretation.
+- `B1_FAMILY_B_GATE_REPORT.md`: locked controller inventory, observability and
+  reference Gate, build-attempt accounting, and Family B scope decision.
 
 ## Evidence rules
 
@@ -57,6 +64,6 @@ records. Raw runtime evidence remains outside this directory under ignored
 - Do not import legacy Family B results into a Family A evidence row without a new, explicit validation link.
 - Put raw captures under ignored `runs/` or the external archive, never in this directory.
 
-The Motivation completion workflow has advanced through W1. B1 is the exact
-next registered phase, but it has not started. W1 authorizes no random campaign
-or full Stateful Testing.
+The Motivation completion workflow has advanced through B1. M-FINAL is the
+exact next registered phase, but it has not started. B1 authorizes no full
+Family B campaign, random campaign, or full Stateful Testing.

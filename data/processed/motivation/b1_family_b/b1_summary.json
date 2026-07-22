@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "study_id": "b1_registered_controller_inventory_family_b_gate",
+  "status": "CLOSED",
+  "disposition": "ENVIRONMENT_BLOCKED",
+  "inventory": {
+    "total": 8,
+    "true_registered_routes": 2,
+    "partial_subgraph_replacements": 1,
+    "excluded": 4,
+    "unresolved": 0,
+    "mc_nn": "TRUE_REGISTERED_CONTROLLER_ROUTE",
+    "mc_raptor": "TRUE_REGISTERED_CONTROLLER_ROUTE"
+  },
+  "reference": {
+    "authorized": true,
+    "implemented_in_source": true,
+    "formal_build_success": false,
+    "runtime_authorized_after_build_gate": false,
+    "selected_subject": "b1_deterministic_attitude_reference"
+  },
+  "observability": {
+    "static_reference_contract_complete": true,
+    "runtime_graph_complete": false,
+    "runtime_writer_complete": false,
+    "runtime_restoration_complete": false
+  },
+  "formal_accounting": {
+    "build": {"accepted": 0, "attempts": 3, "target": 1, "cap": 3},
+    "normal": {"accepted": 0, "attempts": 0, "target": 3, "cap": 6, "status": "NOT_APPLICABLE"},
+    "recovery": {"accepted": 0, "attempts": 0, "target": 3, "cap": 6, "status": "NOT_APPLICABLE"},
+    "classifications": {
+      "CAMPAIGN_CONFIGURATION_FAILURE": 3,
+      "NOT_APPLICABLE": 2
+    }
+  },
+  "family_a_abstraction_reuse": "STATIC_DESIGN_AND_ADJUDICATION_ONLY",
+  "family_b_representative": false,
+  "recommended_paper_role": "future_work",
+  "authorizes_family_b_full_campaign": false,
+  "authorizes_random_campaign": false,
+  "authorizes_stateful_testing": false,
+  "authorizes_m_final": true,
+  "next_registered_phase": "M_FINAL",
+  "m_final_started": false,
+  "raw_artifacts_ignored": true,
+  "tracked_raw_files": 0
+}

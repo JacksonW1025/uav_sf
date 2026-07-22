@@ -2,23 +2,24 @@
 
 ## Active Motivation completion state
 
-- Current phase: W1 real-workload runtime/trace spike complete at its
-  registered W1-B attempt cap
-- Goal disposition: `MEASUREMENT_INSUFFICIENT`
-- Formal accounting: 0 accepted source traces / 3 source attempts; all three
-  attempts are excluded
-  `FORMAL_SAFETY_STOP`
-- Scientific outcomes: no accepted source route/lifecycle result, no
-  deterministic replay result, and no Canonical replay result
-- Coverage: W1-B closed at 0/1 accepted and 3/3 attempts; W1-C and W1-D were
-  not applicable, and the Native Adapter Gate did not authorize W1-E
-- Claim boundary: no new route/lifecycle semantic or timing-context conclusion;
-  no safety stop is a SUT violation; no random campaign or full Stateful
-  Testing is authorized
-- Final analysis: `docs/motivation/W1_REAL_WORKLOAD_SPIKE_REPORT.md` and
-  `experiments/motivation/w1_workload/w1_gate.json`
-- Next registered phase: B1 registered-controller inventory and Family B Gate;
-  not started
+- Current phase: B1 registered-controller inventory and Family B Gate complete
+  at the B1-D build-attempt cap
+- Goal disposition: `ENVIRONMENT_BLOCKED`
+- Inventory: 8 subjects; 2 true registered controller routes (`mc_nn`,
+  `mc_raptor`); 1 selected partial-subgraph reference; 4 exclusions; 0 unresolved
+- Reference Gate: authorized and implemented in source; formal combined build
+  and loadability not established
+- Formal accounting: B1-D 0 accepted / 3 attempts, all
+  `CAMPAIGN_CONFIGURATION_FAILURE`; B1-E and B1-F `NOT_APPLICABLE`, each with
+  zero attempts and zero accepted runs
+- Observability: selected reference static contract complete; runtime graph,
+  writer, and restoration completeness not established; mc_nn/RAPTOR direct
+  writers remain uninstrumented
+- Paper role: Family B future work; no full Family B campaign, random campaign,
+  or full Stateful Testing is authorized
+- Final analysis: `docs/motivation/B1_FAMILY_B_GATE_REPORT.md` and
+  `experiments/motivation/b1_family_b/b1_gate.json`
+- Next registered phase: M-FINAL; not started and no result predeclared
 - Last update: 2026-07-22
 
 ## Frozen Current-Version freshness pilot

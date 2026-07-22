@@ -12,9 +12,9 @@ Freshness pilot denominator.
 - Starting `origin/main`: `955e7c98e3b29ddd21fa4d44fb562065700fa832`
 - Starting ahead/behind: `0/0`
 - Protected ancestor: `955e7c98e3b29ddd21fa4d44fb562065700fa832`
-- Current phase: W1 real-workload runtime/trace spike complete; B1 is next but
-  unstarted
-- Phase status: `W1_COMPLETE_MEASUREMENT_INSUFFICIENT_AT_W1_B_CAP`
+- Current phase: B1 registered-controller inventory and Family B Gate complete;
+  M-FINAL is next but has not started
+- Phase status: `B1_COMPLETE_ENVIRONMENT_BLOCKED_AT_BUILD_CAP`
 
 ## Frozen evidence
 
@@ -53,7 +53,7 @@ testing is authorized.
 | C1 minimal confirmations | `NOT_TRIGGERED` | 0 | 0 / 3 | 0 | no accepted violation |
 | R1 session rollover | `COMPLETE` | 0 / 9 | 6 / 18 | 6 formal safety stops | `MEASUREMENT_INSUFFICIENT_AT_R1_A_ATTEMPT_LIMIT` |
 | W1 workload spike | `COMPLETE` | 0 source; 0 / 3 canonical | 3 source; 0 replay | 3 formal safety stops | `MEASUREMENT_INSUFFICIENT` |
-| B1 Family B | `NOT_STARTED` | 0 / 6 if executable | 0 | 0 | pending feasibility Gate |
+| B1 Family B | `COMPLETE` | 0 build; 0 / 3 normal; 0 / 3 recovery | 3 build; 0 runtime | 3 configuration failures; B1-E/F not applicable | `ENVIRONMENT_BLOCKED`; future work |
 | M-FINAL | `NOT_STARTED` | n/a | n/a | n/a | pending |
 
 All future rejected attempts must be explicitly classified as
@@ -135,13 +135,22 @@ All future rejected attempts must be explicitly classified as
 - `b29949654070c45ceb7fb2135eaa12c9951ab87b` —
   `experiment: amend w1 bounded SITL trace acquisition` (pushed before W1-B
   attempt 3).
+- `792a36d6ff9a26202e9fde31e4b085eff90b65c8` —
+  `experiment: preregister b1 family b gate` (pushed before formal B1 source,
+  build, or runtime evidence).
+- `4c48621e08027c4a8eeff206d7fd63bfe55257c4` —
+  `experiment: activate b1 preregistration` (pushed identity checkpoint).
+- `091f48ddd1776af0d54d22b51d466377547b6374` —
+  `experiment: prepare b1 reference controller probe` (pushed before B1-D).
+- `0cb95ef61781fa87e69f50ccb18bc41acbdefe5e` —
+  `experiment: lock b1 reference probe identity` (formal-attempt identity).
 
 ## Next exact action
 
-The exact next registered phase is B1, registered-controller inventory and the
-Family B Gate. B1 has not started. W1 authorizes only this bounded registration
-progression; it does not authorize a random campaign, full Stateful Testing,
-or an M-FINAL conclusion.
+The exact next registered phase is M-FINAL, the unified Motivation Completion
+Gate. M-FINAL has not started. B1 authorizes only this registered progression;
+it does not authorize a Family B campaign, random campaign, or full Stateful
+Testing, and it does not predeclare an M-FINAL result.
 
 ## Current blockers
 
@@ -169,6 +178,13 @@ or an M-FINAL conclusion.
   source trace existed, and W1-E was not authorized by the Native Adapter Gate.
   No route, lifecycle, timing, or replay conclusion entered an accepted
   denominator.
+- B1-D reached its three-attempt cap with zero accepted combined builds. All
+  three are `CAMPAIGN_CONFIGURATION_FAILURE`: a generated submodule cache
+  tripped the clean guard, a colcon global option was ordered incorrectly after
+  a successful PX4 component build, and the shared patch preparation script
+  rejected a correctly base-plus-incrementally-patched worktree as partial.
+  The reference binary/loadability was not established; B1-E and B1-F are
+  `NOT_APPLICABLE`. No runtime controller, writer, or restoration result exists.
 
 ## Protected hashes
 

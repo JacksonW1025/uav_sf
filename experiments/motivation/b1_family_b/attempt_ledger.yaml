@@ -1,6 +1,6 @@
 schema_version: "1.0"
 study_id: b1_registered_controller_inventory_family_b_gate
-status: PREREGISTERED_PUSH_CONFIRMED_NO_FORMAL_ATTEMPTS
+status: CLOSED_ENVIRONMENT_BLOCKED
 starting_repository_head: e7b28518bdd3afc58696878bf1c0f2b39fd8e218
 preregistration_commit: 792a36d6ff9a26202e9fde31e4b085eff90b65c8
 amendment_commits: [091f48ddd1776af0d54d22b51d466377547b6374]
@@ -13,7 +13,7 @@ allowed_classifications:
   - FORMAL_SAFETY_STOP
   - NOT_APPLICABLE
 formal_attempt_counts:
-  B1-D: {accepted: 0, attempts: 0, maximum_attempts: 3}
+  B1-D: {accepted: 0, attempts: 3, maximum_attempts: 3}
   B1-E: {accepted: 0, attempts: 0, maximum_attempts: 6}
   B1-F: {accepted: 0, attempts: 0, maximum_attempts: 6}
 classification_counts:
@@ -21,9 +21,100 @@ classification_counts:
   OBSERVABILITY_REJECTED: 0
   MEASUREMENT_INSUFFICIENT: 0
   ENVIRONMENT_FAILURE: 0
-  CAMPAIGN_CONFIGURATION_FAILURE: 0
+  CAMPAIGN_CONFIGURATION_FAILURE: 3
   FORMAL_SAFETY_STOP: 0
-  NOT_APPLICABLE: 0
-attempts: []
+  NOT_APPLICABLE: 2
+attempts:
+  - attempt_id: b1d_build_a1
+    phase: B1-D
+    ordinal: 1
+    formal_attempt: true
+    started_at: 2026-07-22T03:07:00-07:00
+    ended_at: 2026-07-22T03:08:15-07:00
+    classification: CAMPAIGN_CONFIGURATION_FAILURE
+    counted_as_accepted: false
+    repository_commit: 0cb95ef61781fa87e69f50ccb18bc41acbdefe5e
+    px4_commit: 4ae21a5e569d3d89c2f6366688cbacb3e93437c9
+    target: px4_sitl_default_TRANSITION_plus_b1_reference_controller
+    result: >-
+      Shared PX4 preparation exited at its clean-source guard before configure
+      or compile because the exact locked gz submodule contained one generated,
+      untracked pytest __pycache__ directory.
+    build_started: false
+    loadability_checked: false
+    runtime_started: false
+    remediation: >-
+      Move only the 3594-byte generated cache into this attempt's ignored raw
+      directory; do not change source commits, patches, build flags, controller,
+      acceptance rules, or attempt caps.
+    raw_artifacts:
+      - runs/motivation/b1_family_b/b1d_build_a1/raw/px4_build.log
+      - runs/motivation/b1_family_b/b1d_build_a1/raw/precondition_status.log
+      - runs/motivation/b1_family_b/b1d_build_a1/raw/generated_pycache
+  - attempt_id: b1d_build_a2
+    phase: B1-D
+    ordinal: 2
+    formal_attempt: true
+    started_at: 2026-07-22T03:08:30-07:00
+    ended_at: 2026-07-22T03:14:58-07:00
+    classification: CAMPAIGN_CONFIGURATION_FAILURE
+    counted_as_accepted: false
+    repository_commit: 0cb95ef61781fa87e69f50ccb18bc41acbdefe5e
+    px4_commit: 4ae21a5e569d3d89c2f6366688cbacb3e93437c9
+    target: px4_sitl_default_TRANSITION_plus_b1_reference_controller
+    result: >-
+      The locked PX4 observability target built successfully through 1214
+      targets. The following colcon invocation rejected --log-base because the
+      global option was placed after the build subcommand, before ROS configure
+      or compile; the combined B1-D target was therefore not complete.
+    build_started: true
+    px4_build_success: true
+    reference_build_success: false
+    loadability_checked: false
+    runtime_started: false
+    remediation: >-
+      Place the unchanged colcon --log-base global option before the build
+      subcommand. No source, build flag, threshold, safety bound, or cap changes.
+    raw_artifacts:
+      - runs/motivation/b1_family_b/b1d_build_a2/raw/px4_build.log
+      - runs/motivation/b1_family_b/b1d_build_a2/raw/ros_build.log
+  - attempt_id: b1d_build_a3
+    phase: B1-D
+    ordinal: 3
+    formal_attempt: true
+    started_at: 2026-07-22T03:15:05-07:00
+    ended_at: 2026-07-22T03:15:46-07:00
+    classification: CAMPAIGN_CONFIGURATION_FAILURE
+    counted_as_accepted: false
+    repository_commit: 0cb95ef61781fa87e69f50ccb18bc41acbdefe5e
+    px4_commit: 4ae21a5e569d3d89c2f6366688cbacb3e93437c9
+    target: px4_sitl_default_TRANSITION_plus_b1_reference_controller
+    result: >-
+      The shared preparation script rejected the already correctly patched
+      worktree as partial: the later freshness patch changes base-patch hunks,
+      so neither reapplying nor reverse-checking the base patch succeeds. The
+      script exited before the incremental PX4 confirmation and ROS build.
+    build_started: false
+    loadability_checked: false
+    runtime_started: false
+    remediation: NONE_CAP_REACHED
+    raw_artifacts:
+      - runs/motivation/b1_family_b/b1d_build_a3/raw/px4_build.log
+  - attempt_id: b1e_not_applicable
+    phase: B1-E
+    ordinal: 0
+    formal_attempt: false
+    classification: NOT_APPLICABLE
+    counted_as_accepted: false
+    reason: B1_D_reached_three_attempt_cap_without_an_accepted_combined_build
+    runtime_started: false
+  - attempt_id: b1f_not_applicable
+    phase: B1-F
+    ordinal: 0
+    formal_attempt: false
+    classification: NOT_APPLICABLE
+    counted_as_accepted: false
+    reason: B1_E_was_not_authorized_and_could_not_reach_three_accepted_runs
+    runtime_started: false
 append_only: true
 failed_attempts_may_not_be_deleted_overwritten_or_renumbered: true

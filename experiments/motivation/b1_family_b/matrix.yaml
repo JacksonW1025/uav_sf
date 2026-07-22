@@ -1,6 +1,6 @@
 schema_version: "1.0"
 study_id: b1_registered_controller_inventory_family_b_gate
-status: B1_D_AUTHORIZED
+status: CLOSED_ENVIRONMENT_BLOCKED
 starting_repository_head: e7b28518bdd3afc58696878bf1c0f2b39fd8e218
 preregistration_commit: 792a36d6ff9a26202e9fde31e4b085eff90b65c8
 amendment_commits: [091f48ddd1776af0d54d22b51d466377547b6374]
@@ -27,25 +27,39 @@ phases:
     conditional: true
     successful_build_target: 1
     maximum_attempts: 3
-    status: AUTHORIZED
+    attempts: 3
+    accepted: 0
+    status: CLOSED_ATTEMPT_CAP_REACHED
+    classification_counts: {CAMPAIGN_CONFIGURATION_FAILURE: 3}
   - phase_id: B1-E
     name: conditional_normal_classic_reference_classic_SITL_baseline
     formal_runtime: true
     conditional: true
     accepted_target: 3
     maximum_attempts: 6
-    status: PENDING_B1_C_AND_B1_D_GATES
+    attempts: 0
+    accepted: 0
+    status: NOT_APPLICABLE
+    reason: B1_D_no_accepted_combined_build
   - phase_id: B1-F
     name: conditional_controlled_release_recovery_SITL_probe
     formal_runtime: true
     conditional: true
     accepted_target: 3
     maximum_attempts: 6
-    status: PENDING_B1_E_TARGET
+    attempts: 0
+    accepted: 0
+    status: NOT_APPLICABLE
+    reason: B1_E_not_authorized
   - phase_id: B1-G
     name: final_adjudication_and_Family_B_gate
     formal_runtime: false
-    status: NOT_STARTED
+    status: COMPLETE
+    disposition: ENVIRONMENT_BLOCKED
+    recommended_paper_role: future_work
+    authorizes_family_b_full_campaign: false
+    next_registered_phase: M_FINAL
+    m_final_started: false
 stop_rules:
   - no_formal_evidence_before_preregistration_push_confirmation
   - no_B1_D_without_all_reference_authorization_clauses

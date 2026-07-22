@@ -172,7 +172,7 @@ full Stateful Testing.
 
 ### B1 — Registered-controller inventory and Family B Gate
 
-Status: `NOT_STARTED`.
+Status: `COMPLETE_ENVIRONMENT_BLOCKED_AT_B1_D_ATTEMPT_CAP`.
 
 Outputs:
 
@@ -192,6 +192,18 @@ If feasible, stop after three normal Classic→Reference→Classic runs and thre
 controlled local-process/release recovery runs. If not feasible within the
 bound, stop with an inventory/scope Gate instead of developing a large new
 flight-control module. Direct-actuator flight is excluded.
+
+Closure note: the locked inventory contains 8 subjects, including 2 concrete
+`TRUE_REGISTERED_CONTROLLER_ROUTE` subjects (`mc_nn`, `mc_raptor`) and one
+authorized/implemented deterministic partial-subgraph reference. Its static
+observation contract is complete, while mc_nn/RAPTOR direct-writer coverage is
+not. B1-D reached `0 accepted / 3 attempts`, all
+`CAMPAIGN_CONFIGURATION_FAILURE`; a PX4 component build succeeded within
+attempt 2, but the combined reference build and loadability did not. B1-E and
+B1-F are `NOT_APPLICABLE` with zero runtime attempts. Final disposition is
+`ENVIRONMENT_BLOCKED`; Family B is future work and no full Family B, random,
+or Stateful Testing campaign is authorized. The next registered phase is
+M-FINAL, which has not started.
 
 ### M-FINAL — Unified Motivation Completion Gate
 
