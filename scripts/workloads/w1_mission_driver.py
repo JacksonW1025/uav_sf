@@ -26,9 +26,16 @@ def run(args: argparse.Namespace) -> int:
         import rclpy
         from action_msgs.msg import GoalStatus
         from as2_msgs.action import FollowPath, GoToWaypoint
-        from as2_msgs.msg import PlatformStateMachineEvent, PoseWithID, YawMode
-        from as2_msgs.srv import SetPlatformStateMachineEvent
-        from px4_msgs.msg import VehicleCommand, VehicleLandDetected, VehicleLocalPosition, VehicleStatus
+        from as2_msgs.msg import ControlMode, PlatformStateMachineEvent, PoseWithID, YawMode
+        from as2_msgs.srv import SetControlMode, SetPlatformStateMachineEvent
+        from px4_msgs.msg import (
+            VehicleAngularVelocity,
+            VehicleAttitude,
+            VehicleCommand,
+            VehicleLandDetected,
+            VehicleLocalPosition,
+            VehicleStatus,
+        )
         from rclpy.action import ActionClient
         from rclpy.node import Node
         from rclpy.qos import DurabilityPolicy, HistoryPolicy, QoSProfile, ReliabilityPolicy
@@ -48,6 +55,9 @@ def run(args: argparse.Namespace) -> int:
             self.position: Any | None = None
             self.land: Any | None = None
             self.feedback_counts = {"go_to": 0, "follow_path": 0}
+            self.active_goal_handle: Any | None = None
+            self.active_goal_id: str | None = None
+            self.active_action: str | None = None
             self.failure_reason: str | None = None
             self.safety_stop = False
             best_effort = QoSProfile(
@@ -60,6 +70,12 @@ def run(args: argparse.Namespace) -> int:
                 (VehicleStatus, "/fmu/out/vehicle_status", self._status),
                 (VehicleLocalPosition, "/fmu/out/vehicle_local_position", self._position),
                 (VehicleLandDetected, "/fmu/out/vehicle_land_detected", self._land),
+                (VehicleAttitude, "/fmu/out/vehicle_attitude", self._attitude),
+                (
+                    VehicleAngularVelocity,
+                    "/fmu/out/vehicle_angular_velocity",
+                    self._angular_velocity,
+                ),
             ):
                 self.create_subscription(
                     message_type, _versioned_topic(topic, message_type), callback, best_effort
@@ -69,6 +85,9 @@ def run(args: argparse.Namespace) -> int:
             self.offboard_client = self.create_client(SetBool, "/drone0/set_offboard_mode")
             self.state_client = self.create_client(
                 SetPlatformStateMachineEvent, "/drone0/platform/state_machine_event"
+            )
+            self.controller_mode_client = self.create_client(
+                SetControlMode, "/drone0/controller/set_control_mode"
             )
             self.go_to_client = ActionClient(self, GoToWaypoint, "/drone0/GoToBehavior")
             self.follow_path_client = ActionClient(self, FollowPath, "/drone0/FollowPathBehavior")
@@ -114,6 +133,33 @@ def run(args: argparse.Namespace) -> int:
 
         def _land(self, msg: Any) -> None:
             self.land = msg
+
+        def _attitude(self, msg: Any) -> None:
+            w, x, y, z = (float(value) for value in msg.q)
+            if not all(math.isfinite(value) for value in (w, x, y, z)):
+                self.safety_stop = True
+                self.failure_reason = "non-finite vehicle attitude"
+                return
+            sin_roll = 2.0 * (w * x + y * z)
+            cos_roll = 1.0 - 2.0 * (x * x + y * y)
+            roll = math.atan2(sin_roll, cos_roll)
+            sin_pitch = max(-1.0, min(1.0, 2.0 * (w * y - z * x)))
+            pitch = math.asin(sin_pitch)
+            if max(abs(math.degrees(roll)), abs(math.degrees(pitch))) > 35.0:
+                self.safety_stop = True
+                self.failure_reason = (
+                    f"formal attitude bound exceeded roll={math.degrees(roll):.3f} "
+                    f"pitch={math.degrees(pitch):.3f}"
+                )
+
+        def _angular_velocity(self, msg: Any) -> None:
+            rates = tuple(float(value) for value in msg.xyz)
+            if not all(math.isfinite(value) for value in rates):
+                self.safety_stop = True
+                self.failure_reason = "non-finite vehicle angular velocity"
+            elif max(abs(value) for value in rates) > 2.0:
+                self.safety_stop = True
+                self.failure_reason = f"formal angular-rate bound exceeded rates={rates}"
 
         def _spin_until(self, predicate: Callable[[], bool], timeout: float, label: str) -> bool:
             deadline = time.monotonic() + timeout
@@ -176,6 +222,17 @@ def run(args: argparse.Namespace) -> int:
             request.event.event = int(value)
             self._service(f"/drone0/platform/state_machine_event:{label}", self.state_client, request)
 
+        def _prepare_offboard_hover(self) -> None:
+            request = SetControlMode.Request()
+            request.control_mode.control_mode = ControlMode.HOVER
+            request.control_mode.yaw_mode = ControlMode.NONE
+            request.control_mode.reference_frame = ControlMode.UNDEFINED_FRAME
+            self._service(
+                "/drone0/controller/set_control_mode:offboard_preinstallation_hover",
+                self.controller_mode_client,
+                request,
+            )
+
         def _command(self, command: int, **params: float) -> None:
             message = VehicleCommand()
             message.timestamp = self.get_clock().now().nanoseconds // 1000
@@ -197,6 +254,7 @@ def run(args: argparse.Namespace) -> int:
             timeout: float,
             label: str,
             period: float = 0.5,
+            ignore_safety_stop: bool = False,
             **params: float,
         ) -> bool:
             deadline = time.monotonic() + timeout
@@ -207,7 +265,7 @@ def run(args: argparse.Namespace) -> int:
                     self._command(command, **params)
                     last = now
                 rclpy.spin_once(self, timeout_sec=0.05)
-                if self.safety_stop:
+                if self.safety_stop and not ignore_safety_stop:
                     return False
                 if predicate():
                     return True
@@ -252,8 +310,14 @@ def run(args: argparse.Namespace) -> int:
             if not handle.accepted:
                 raise RuntimeError("go-to goal rejected")
             goal_id = _goal_id(handle)
+            self.active_goal_handle = handle
+            self.active_goal_id = goal_id
+            self.active_action = "go_to"
             self._event("action_goal_accepted", action="go_to", request_id=request_id, goal_id=goal_id)
             result = self._future(handle.get_result_async(), 45.0, "go-to result")
+            self.active_goal_handle = None
+            self.active_goal_id = None
+            self.active_action = None
             self._event(
                 "action_result",
                 action="go_to",
@@ -301,6 +365,9 @@ def run(args: argparse.Namespace) -> int:
             if not handle.accepted:
                 raise RuntimeError("follow-path goal rejected")
             goal_id = _goal_id(handle)
+            self.active_goal_handle = handle
+            self.active_goal_id = goal_id
+            self.active_action = "follow_path"
             self._event(
                 "action_goal_accepted",
                 action="follow_path",
@@ -331,6 +398,9 @@ def run(args: argparse.Namespace) -> int:
             if not acknowledged:
                 raise RuntimeError("follow-path cancel was not acknowledged")
             result = self._future(handle.get_result_async(), 15.0, "follow-path canceled result")
+            self.active_goal_handle = None
+            self.active_goal_id = None
+            self.active_action = None
             self._event(
                 "action_result",
                 action="follow_path",
@@ -348,6 +418,37 @@ def run(args: argparse.Namespace) -> int:
             return self.land is not None and bool(self.land.landed)
 
         def cleanup(self) -> None:
+            if self.active_goal_handle is not None and self.active_goal_id is not None:
+                goal_id = self.active_goal_id
+                action = self.active_action or "unknown"
+                self._event(
+                    "action_cancel_request",
+                    action=action,
+                    goal_id=goal_id,
+                    cleanup=True,
+                    cancel_request_timestamp_ns=self.get_clock().now().nanoseconds,
+                )
+                future = self.active_goal_handle.cancel_goal_async()
+                deadline = time.monotonic() + 5.0
+                while rclpy.ok() and time.monotonic() < deadline and not future.done():
+                    rclpy.spin_once(self, timeout_sec=0.05)
+                acknowledged = False
+                if future.done() and future.result() is not None:
+                    acknowledged = any(
+                        bytes(item.goal_id.uuid).hex() == goal_id
+                        for item in future.result().goals_canceling
+                    )
+                self._event(
+                    "action_cancel_ack",
+                    action=action,
+                    goal_id=goal_id,
+                    cleanup=True,
+                    acknowledged=acknowledged,
+                    cancel_ack_timestamp_ns=self.get_clock().now().nanoseconds,
+                )
+                self.active_goal_handle = None
+                self.active_goal_id = None
+                self.active_action = None
             if self._armed() and not self._landed():
                 self._event("cleanup_land_requested", reason=self.failure_reason)
                 self._periodic_command_until(
@@ -356,6 +457,7 @@ def run(args: argparse.Namespace) -> int:
                     25.0,
                     "cleanup landing",
                     period=1.0,
+                    ignore_safety_stop=True,
                 )
             if self._armed() and self._landed():
                 self._event("cleanup_disarm_requested", reason=self.failure_reason)
@@ -364,6 +466,7 @@ def run(args: argparse.Namespace) -> int:
                     lambda: not self._armed(),
                     10.0,
                     "cleanup disarm",
+                    ignore_safety_stop=True,
                     param1=0.0,
                 )
 
@@ -389,15 +492,31 @@ def run(args: argparse.Namespace) -> int:
                     raise RuntimeError(self.failure_reason)
 
                 self._phase("internal_takeoff")
+                stable = {"since": None}
+
+                def takeoff_complete() -> bool:
+                    if self.position is None:
+                        stable["since"] = None
+                        return False
+                    altitude = -float(self.position.z)
+                    vertical_speed = abs(float(self.position.vz))
+                    if 1.3 <= altitude <= 1.8 and vertical_speed <= 0.15:
+                        if stable["since"] is None:
+                            stable["since"] = time.monotonic()
+                        return time.monotonic() - float(stable["since"]) >= 1.0
+                    stable["since"] = None
+                    return False
+
                 if not self._periodic_command_until(
                     VehicleCommand.VEHICLE_CMD_NAV_TAKEOFF,
-                    lambda: self.position is not None and float(self.position.z) <= -1.2,
-                    30.0,
-                    "1.2 m takeoff altitude",
+                    takeoff_complete,
+                    40.0,
+                    "stable 1.5 m internal takeoff completion",
                 ):
                     raise RuntimeError(self.failure_reason)
                 self._state_event(PlatformStateMachineEvent.TAKE_OFF, "TAKE_OFF")
                 self._state_event(PlatformStateMachineEvent.TOOK_OFF, "TOOK_OFF")
+                self._prepare_offboard_hover()
 
                 self._phase("Aerostack2_Offboard")
                 self._set_bool("/drone0/set_offboard_mode", self.offboard_client, True)

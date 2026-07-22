@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0",
+  "run_id": "w1b_seed510101_a1",
+  "phase": "W1-B",
+  "attempt_number": 1,
+  "simulation_seed": 510101,
+  "repository_head": "b1b0b32671c8fb02dd63b719c9fe7718e5deaa4f",
+  "classification": "FORMAL_SAFETY_STOP",
+  "accepted": false,
+  "mission": {
+    "status": "FAIL",
+    "completed_phases": [
+      "internal_ground",
+      "arm",
+      "internal_takeoff",
+      "Aerostack2_Offboard",
+      "go_to"
+    ],
+    "stop_reason": "formal safety bound exceeded altitude=0.665 distance=0.043 speed=3.200",
+    "terminal_landed": false,
+    "terminal_disarmed": false
+  },
+  "observation": {
+    "sidecar_status": "FAILED_AT_START_RESERVED_RCLPY_NODE_ATTRIBUTE",
+    "clock_bridge_status": "INVALID",
+    "clock_bridge_samples": 0,
+    "route_trace_full_events": 11120,
+    "route_trace_compact_events": 2600,
+    "route_epochs": 4,
+    "allocator_input_events_compact": 45,
+    "actuator_output_events_compact": 1534,
+    "final_writer": "control_allocator"
+  },
+  "cleanup": {
+    "normal_Land_and_Disarm_completed": false,
+    "controlled_local_process_stop": true,
+    "residual_owned_processes": 0,
+    "port_8888_occupied": false
+  },
+  "artifacts": {
+    "artifact_set_sha256": "0627f87aca983a8c1432b05c02df8e112a72104e0068c6b49a03336bac661fee",
+    "raw_total_size_bytes": 16906576,
+    "rosbag_metadata_sha256": "b23eddae043710c16d607dac35b9f55d6c723dd689ba34903828e6b27bd2967f",
+    "rosbag_db3_sha256": "0a8d83185dc205b9ba6e9239710adf573dedf6fc9b0b4cf6d5bf142c919bb667",
+    "ulog_sha256": "4d3599c102fc9062220fde0c127bf6899ccab5347ded44dc385d7210e0386ead",
+    "mission_events_sha256": "ce4ab5abe140bf3d45c0dd30ae2b1f33706a30994b97031c23c8df4e2b1d8f4f",
+    "compact_workload_trace_sha256": "8b157cc9ca75e06ed8920a65f768e255230d3c8df8350c68d4193d07858005ae",
+    "compact_route_trace_sha256": "7f44b785bbdb0cb97e6d5e05988a7086c9227b3485b05ba8a9b73ae93f37052a"
+  },
+  "raw_artifacts_ignored": true,
+  "enters_SUT_violation_denominator": false
+}

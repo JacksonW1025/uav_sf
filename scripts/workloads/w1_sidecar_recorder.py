@@ -53,7 +53,7 @@ def run(args: argparse.Namespace) -> int:
     class Recorder(Node):
         def __init__(self) -> None:
             super().__init__(f"w1_{args.run_id.replace('-', '_')}_sidecar")
-            self.handle = args.output.open("w", encoding="utf-8")
+            self.events_handle = args.output.open("w", encoding="utf-8")
             self.started = time.monotonic()
             self.last_nav_state: int | None = None
             self.timesync: Any | None = None
@@ -109,8 +109,8 @@ def run(args: argparse.Namespace) -> int:
                 "ros_time_ns": self.get_clock().now().nanoseconds,
                 **fields,
             }
-            self.handle.write(json.dumps(record, sort_keys=True, allow_nan=False) + "\n")
-            self.handle.flush()
+            self.events_handle.write(json.dumps(record, sort_keys=True, allow_nan=False) + "\n")
+            self.events_handle.flush()
 
         def _status(self, msg: Any) -> None:
             current = int(msg.nav_state)
@@ -334,7 +334,7 @@ def run(args: argparse.Namespace) -> int:
                 observation_only=True,
                 command_publications=0,
             )
-            self.handle.close()
+            self.events_handle.close()
 
     rclpy.init()
     node = Recorder()

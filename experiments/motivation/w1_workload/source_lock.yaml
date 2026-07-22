@@ -1,6 +1,6 @@
 schema_version: "1.0"
 study_id: w1_real_workload_runtime_trace_spike
-status: W1_RUNTIME_TOOLING_HASH_LOCKED_PENDING_PUSH
+status: W1_RUNTIME_TOOLING_AMENDMENT_002_PENDING_PUSH
 repository:
   starting_head: 6f5abd682cca47b9e8febdbdcfb8ea0a9714e236
   preregistration_commit: 1f41229d17e42af6945bd040ccb1579128b1229e
@@ -97,8 +97,8 @@ repository_artifacts:
   scripts/tracing/compact_route_trace.py: 3bd0bfb77c5c408161884823ec9199a3e684595bc4031118399be932dc6dae35
   scripts/analysis/summarize_route_trace.py: 945dc20a9d741ec8b794845991e5b5dfcd4d4fdb532809f3b74cfea59a796e33
   scripts/workloads/run_w1_workload.sh: baa761ca5f8942397c223dae21b4c50a3cd84d39a97ef7639a3a4e6bb57a2f9d
-  scripts/workloads/w1_mission_driver.py: 51e84bffafc960c612e3f75991676df6bf22612eef048c297b182ed2509e67ae
-  scripts/workloads/w1_sidecar_recorder.py: 82cf7728c0bdee8c69db570ac3d4c9ac5e7eed0e47cf843eb3c1d9f393319683
+  scripts/workloads/w1_mission_driver.py: 8273047598dc90c5d2423b1d082166e2157a19dc0c4786d37ea170c755a32121
+  scripts/workloads/w1_sidecar_recorder.py: 77a1e64c6f44a652314c95d8f97dd072b8fa1bb5e9dc446a74755ecb89dc696f
   scripts/workloads/w1_compact_trace.py: 82c677fd3ccf4e5322a37b33e06650f8bd00feb452356b68c4d08533d0b7d956
   scripts/workloads/w1_trace_replay.py: 4f4d912568e8ef1fc6c47acb884d761f8878809dac204e6c3da97f9172acc3e8
   scripts/workloads/w1_artifact_manifest.py: 12c8d29bcb81a916fececb84da4590512d2c898351bb9c5d14fb8a9f5b990b91

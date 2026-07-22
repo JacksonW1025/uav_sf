@@ -50,17 +50,22 @@ def test_w1_preregistration_freezes_workload_sequence_caps_and_dispositions() ->
     }
 
 
-def test_w1_ledger_has_no_runtime_attempt_and_diagnostics_are_non_formal() -> None:
+def test_w1_ledger_is_append_only_and_counts_registered_attempt_classes() -> None:
     prereg = _yaml("preregistration.yaml")
     ledger = _yaml("attempt_ledger.yaml")
-    assert ledger["attempts"] == []
     assert ledger["diagnostics"]
     assert all(item["formal_runtime"] is False for item in ledger["diagnostics"])
     assert ledger["append_only"] is True
     assert ledger["allowed_classifications"] == prereg["attempt_classification"][
         "allowed"
     ]
-    assert sum(ledger["classification_counts"].values()) == 0
+    attempt_count = sum(item["attempts"] for item in ledger["formal_attempt_counts"].values())
+    assert len(ledger["attempts"]) == attempt_count
+    assert sum(ledger["classification_counts"].values()) == attempt_count
+    assert all(
+        item["classification"] in ledger["allowed_classifications"]
+        for item in ledger["attempts"]
+    )
 
 
 def test_w1_source_lock_pins_runtime_and_container_identity() -> None:

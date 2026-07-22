@@ -1,0 +1,45 @@
+schema_version: "1.0"
+amendment_id: w1_runtime_tooling_amendment_002
+study_id: w1_real_workload_runtime_trace_spike
+status: READY_FOR_PUSH_BEFORE_W1_B_ATTEMPT_2
+preregistration_commit: 1f41229d17e42af6945bd040ccb1579128b1229e
+parent_runtime_tooling_commit: b1b0b32671c8fb02dd63b719c9fe7718e5deaa4f
+trigger_attempt: w1b_seed510101_a1
+trigger_classification: FORMAL_SAFETY_STOP
+formal_attempts_before_amendment_push: 1
+observed_conditions:
+  - >-
+    The observation-only sidecar used the reserved rclpy Node attribute name
+    handle for its JSONL file and exited before recording a clock bridge.
+  - >-
+    The formal safety stop correctly requested aircraft Land, but the cleanup
+    wait helper also stopped on the already-latched safety flag and therefore
+    could not wait for Land or request Disarm before controlled local process
+    stop.
+changes:
+  - path: scripts/workloads/w1_sidecar_recorder.py
+    sha256: 77a1e64c6f44a652314c95d8f97dd072b8fa1bb5e9dc446a74755ecb89dc696f
+    effect: rename_file_handle_without_changing_subscriptions_or_publications
+  - path: scripts/workloads/w1_mission_driver.py
+    sha256: 8273047598dc90c5d2423b1d082166e2157a19dc0c4786d37ea170c755a32121
+    effect: >-
+      allow normal public Land and Disarm cleanup to continue after a latched
+      formal safety stop; cancel an active public action before cleanup;
+      enforce the frozen attitude and angular-rate bounds; require stable
+      internal-takeoff completion; and prepare a finite controller hover output
+      before requesting Offboard
+semantic_invariance:
+  mission_geometry_changed: false
+  commanded_speed_changed: false
+  takeoff_or_altitude_changed: false
+  route_selection_changed: false
+  PX4_mode_requests_changed: false
+  task_cancel_or_completion_changed: false
+  acceptance_rules_changed: false
+  attempt_caps_changed: false
+  preregistered_phase_sequence_changed: false
+  adds_unregistered_mission_phase: false
+  adds_preinstallation_controller_setup: true
+  controller_preinstallation_request_added: true
+  changes_expected_route_replacements: false
+  observation_only_sidecar_command_publishers: 0

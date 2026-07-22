@@ -237,3 +237,9 @@ def test_runtime_tooling_matches_w1_source_hash_lock() -> None:
     )
     for relative, expected in selected.items():
         assert hashlib.sha256((root / relative).read_bytes()).hexdigest() == expected
+
+
+def test_sidecar_does_not_reuse_reserved_rclpy_node_handle() -> None:
+    source = Path(w1_trace_replay.__file__).with_name("w1_sidecar_recorder.py").read_text()
+    assert "self.handle" not in source
+    assert "create_publisher" not in source
