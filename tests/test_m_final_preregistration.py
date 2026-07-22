@@ -56,6 +56,7 @@ def test_source_lock_hashes_and_commits_are_present():
             cwd=ROOT,
             check=True,
         )
+    assert lock["preregistration_commit"] == "2f20fb0cf140a27ebdb379a08a176c0a929c6125"
 
 
 def test_gate_matrix_and_ledger_scope_are_complete():
@@ -84,3 +85,4 @@ def test_gate_matrix_and_ledger_scope_are_complete():
             cwd=ROOT,
             check=True,
         )
+    assert matrix["preregistration_commit"] == "2f20fb0cf140a27ebdb379a08a176c0a929c6125"

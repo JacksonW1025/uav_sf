@@ -64,6 +64,15 @@ records. Raw runtime evidence remains outside this directory under ignored
 - Do not import legacy Family B results into a Family A evidence row without a new, explicit validation link.
 - Put raw captures under ignored `runs/` or the external archive, never in this directory.
 
-The Motivation completion workflow has advanced through B1. M-FINAL is the
-exact next registered phase, but it has not started. B1 authorizes no full
-Family B campaign, random campaign, or full Stateful Testing.
+The Motivation completion workflow is closed through M-FINAL. The final
+disposition is
+`CONDITIONAL_PASS_MOTIVATION_COMPLETE_AUTHORIZE_FAMILY_A_FUZZER_V0`, and the
+Motivation Study is `CONDITIONALLY_COMPLETE`. Family A is the formal empirical
+scope; Family B remains static evidence and future work. R1 session rollover,
+W1 real-workload runtime value, state-aware search gain, and full fuzzing
+effectiveness are not established.
+
+The exact next action is to create and push an independent Family A Fuzzer v0
+preregistration. No Fuzzer v0 implementation or runtime, real-workload campaign,
+Family B campaign, random campaign, or full stateful campaign is authorized by
+M-FINAL.

@@ -19,3 +19,13 @@ is restricted to a separately preregistered Family A bounded smoke evaluation
 with its own attempt cap, Oracle freeze, evidence Gate, and provenance rules.
 
 Raw evidence remains ignored under `runs/`; no raw artifact is tracked here.
+
+## Final adjudication
+
+M-FINAL is closed with disposition
+`CONDITIONAL_PASS_MOTIVATION_COMPLETE_AUTHORIZE_FAMILY_A_FUZZER_V0`. The
+[machine Gate](motivation_completion_gate.json) and
+[final report](../../../docs/motivation/MOTIVATION_STUDY_FINAL_REPORT.md)
+contain the complete adjudication. This result authorizes only an independent
+Family A Fuzzer v0 preregistration; no next-stage implementation or runtime is
+part of M-FINAL.

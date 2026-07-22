@@ -1,6 +1,6 @@
 # Motivation Completion Plan
 
-Date: 2026-07-20
+Date: 2026-07-22
 
 Study boundary: bounded, defensive PX4/Gazebo SITL research on flight-safety,
 software-reliability, and runtime-consistency properties. The workflow uses
@@ -202,30 +202,39 @@ not. B1-D reached `0 accepted / 3 attempts`, all
 attempt 2, but the combined reference build and loadability did not. B1-E and
 B1-F are `NOT_APPLICABLE` with zero runtime attempts. Final disposition is
 `ENVIRONMENT_BLOCKED`; Family B is future work and no full Family B, random,
-or Stateful Testing campaign is authorized. The next registered phase is
-M-FINAL, which has not started.
+or Stateful Testing campaign is authorized. B1 authorized only progression to
+M-FINAL. M-FINAL is now closed under its own pushed preregistration below.
 
 ### M-FINAL — Unified Motivation Completion Gate
 
-Status: `NOT_STARTED`.
+Status: `CLOSED` —
+`CONDITIONAL_PASS_MOTIVATION_COMPLETE_AUTHORIZE_FAMILY_A_FUZZER_V0`.
 
 Outputs:
 
 - `docs/motivation/MOTIVATION_STUDY_FINAL_REPORT.md`
-- `experiments/motivation/motivation_completion_gate.json`
+- `experiments/motivation/m_final/motivation_completion_gate.json`
 - `docs/narrative/NEW_NARRATIVE_v7.md`
 - updates to `docs/narrative/CURRENT_NARRATIVE.md`
 - updates to `docs/narrative/SCOPE.md`
 - updates to `docs/repository/CURRENT_GOAL_STATE.md`
 - final update to `docs/repository/MOTIVATION_COMPLETION_STATE.md`
 
-Evaluate MG1–MG10 using only `PASS`, `CONDITIONAL_PASS`,
-`NEGATIVE_SCOPE_DECISION`, or `FAIL`. Keep Method Evaluation Gates—guided
-search gain, random comparison, campaign yield, and full fuzzer
-effectiveness—explicitly deferred. Select the final Motivation disposition
-from the four authorized values and let the machine-readable Gate decide
-whether Stateful Testing/Fuzzer v0 is the exact next phase.
+The pushed preregistration at
+`2f20fb0cf140a27ebdb379a08a176c0a929c6125` froze the evidence cutoff,
+non-collapsing clause states, five mutually exclusive dispositions, MG1–MG10,
+and next-stage boundary before adjudication.
 
-Stop after all reports, compact evidence, Gates, tests, validator stages,
-integrity checks, pushes, raw-artifact audit, and local-process/port cleanup
-pass. Do not automatically begin the next phase.
+Final clause results are: MG1–MG4 `PASS`, MG5 `CONDITIONAL_PASS`, MG6 `PASS`,
+MG7 `PARTIAL_PASS`, MG8 `MEASUREMENT_INSUFFICIENT`, MG9
+`ENVIRONMENT_BLOCKED`, and MG10 `CONDITIONAL_PASS`. Guided search gain, random
+comparison, campaign yield, and full fuzzing effectiveness remain deferred.
+
+M-FINAL conditionally completes the Motivation Study for Family A and
+authorizes only creation and push of an independent Family A Fuzzer v0
+preregistration. It does not start implementation or execution. R1, W1, and B1
+unfinished scopes, Family B, real workloads, direct actuator, HITL, real flight,
+random campaigns, and full stateful campaigns are not authorized.
+
+Next exact action: create and push an independent Family A Fuzzer v0
+preregistration.

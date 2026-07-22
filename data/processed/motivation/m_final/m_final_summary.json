@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "gate_id": "M_FINAL_UNIFIED_MOTIVATION_COMPLETION_GATE",
+  "evidence_cutoff_commit": "3665337673e7e0a62ea204ac64f5644b8e428c25",
+  "preregistration_commit": "2f20fb0cf140a27ebdb379a08a176c0a929c6125",
+  "evidence_units": 23,
+  "integrity": {
+    "passed": true,
+    "blocking_findings": 0,
+    "unresolved_non_blocking_structure_findings": 1,
+    "tracked_raw_files": 0
+  },
+  "mg_statuses": {
+    "MG1": "PASS", "MG2": "PASS", "MG3": "PASS", "MG4": "PASS",
+    "MG5": "CONDITIONAL_PASS", "MG6": "PASS", "MG7": "PARTIAL_PASS",
+    "MG8": "MEASUREMENT_INSUFFICIENT", "MG9": "ENVIRONMENT_BLOCKED",
+    "MG10": "CONDITIONAL_PASS"
+  },
+  "disposition": "CONDITIONAL_PASS_MOTIVATION_COMPLETE_AUTHORIZE_FAMILY_A_FUZZER_V0",
+  "motivation_study_status": "CONDITIONALLY_COMPLETE",
+  "core_motivation_supported": true,
+  "method_evaluation_complete": false,
+  "family_a_formal_empirical_scope": true,
+  "family_b_runtime_generality": false,
+  "real_workload_runtime_value": false,
+  "session_rollover_supported": false,
+  "state_aware_search_gain_supported": false,
+  "full_fuzzing_effectiveness_supported": false,
+  "authorizes_fuzzer_v0_preregistration": true,
+  "authorization_scope": "Family_A_bounded_Fuzzer_v0_preregistration_only",
+  "next_exact_action": "create and push an independent Family A Fuzzer v0 preregistration"
+}

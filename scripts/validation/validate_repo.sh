@@ -46,7 +46,11 @@ PY
 
 echo "[6/15] Narrative uniqueness and legacy-headline scan"
 mapfile -t narrative_files < <(git ls-files docs/narrative)
-expected_narratives=(docs/narrative/CURRENT_NARRATIVE.md docs/narrative/SCOPE.md)
+expected_narratives=(
+  docs/narrative/CURRENT_NARRATIVE.md
+  docs/narrative/NEW_NARRATIVE_v7.md
+  docs/narrative/SCOPE.md
+)
 if [[ "${narrative_files[*]}" != "${expected_narratives[*]}" ]]; then
   printf 'unexpected narrative files: %s\n' "${narrative_files[*]}" >&2
   exit 1

@@ -14,23 +14,22 @@ PX4 Internal Route
 ↔ Internal Fallback / RTL / Land / RC takeover
 ```
 
-Family B (classical cascade ↔ registered learned controller ↔ classical
-fallback) is retained only as a future cross-family case under `family_b/`.
+Family B (classical cascade ↔ registered controller ↔ classical fallback) has
+revision-locked static mechanism evidence but no accepted runtime evidence. It
+remains a future independent cross-depth study.
 
 ## Current phase
 
-Phase A locked dependencies and established route observability before any
-large experiment. The completed deliverables are:
+M-FINAL closed the bounded Motivation Study as `CONDITIONALLY_COMPLETE` with
+disposition
+`CONDITIONAL_PASS_MOTIVATION_COMPLETE_AUTHORIZE_FAMILY_A_FUZZER_V0`.
+The core Motivation and Family A formal empirical scope are supported. R1
+session rollover, W1 real-workload runtime value, Family B runtime generality,
+state-aware search gain, and full fuzzing effectiveness are not established.
 
-1. Family A dependency lock and reproducible bootstrap;
-2. P-1 route-observability feasibility;
-3. M2 External Mode registration evidence;
-4. M4 official-test coverage audit;
-5. P0 normal handoff baselines, only if the P-1 gate passes.
-
-This phase does not develop a complete fuzzer or start random campaigns.
-The P-1 gate passed 10/10 and all three legal P0 normal-flow baselines passed;
-see the [P0 report](docs/motivation/P0_OFFICIAL_HANDOFF_BASELINE_REPORT.md).
+The exact next action is to create and push an independent Family A Fuzzer v0
+preregistration. No fuzzer implementation, runtime, random campaign, large
+campaign, real-workload campaign, or Family B campaign has started.
 
 ## Quick start
 
@@ -50,10 +49,11 @@ Dependency sources and builds live in ignored `external/`, `ros2_ws/`, and
 1. [Current narrative](docs/narrative/CURRENT_NARRATIVE.md)
 2. [Dependency lock](config/dependencies.lock.yaml)
 3. [Motivation study](docs/motivation/README.md)
-4. [Route model](docs/design/ROUTE_MODEL.md)
-5. [Observability matrix](docs/design/OBSERVABILITY_MATRIX.tsv)
-6. [Repository map](docs/repository/REPOSITORY_MAP.md)
-7. [Agent guide](AGENT.md)
+4. [Motivation final report](docs/motivation/MOTIVATION_STUDY_FINAL_REPORT.md)
+5. [Route model](docs/design/ROUTE_MODEL.md)
+6. [Observability matrix](docs/design/OBSERVABILITY_MATRIX.tsv)
+7. [Repository map](docs/repository/REPOSITORY_MAP.md)
+8. [Agent guide](AGENT.md)
 
 ## Data and validation
 

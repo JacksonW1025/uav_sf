@@ -2,10 +2,10 @@
 
 | Path | Role | Policy |
 |---|---|---|
-| `docs/narrative/` | unique current narrative and scope | exactly two files |
+| `docs/narrative/` | current pointer, complete Narrative V7, and scope | exactly three files |
 | `config/dependencies.lock.yaml` | exact dependency/environment identity | no floating refs |
 | `docs/design/` | route, timestamp, writer, and trace contracts | source-backed |
-| `docs/motivation/` | P-1, M2, M4, and gated P0 evidence | no fabricated results |
+| `docs/motivation/` | frozen stage reports and M-FINAL report | preserve historical conclusions |
 | `scripts/setup/` | Family A/B profile bootstrap | Family A has no B dependency |
 | `scripts/behavior/` | interface-neutral behavior core | no ROS/PX4 imports |
 | `scripts/adapters/` | Family A control adapters | no Family B imports |
@@ -16,7 +16,7 @@
 | `family_b/` | future cross-family build assets | optional, revalidate first |
 | `data/schemas/` | machine-readable contracts | tested |
 | `data/processed/` | compact reproducible outputs | source provenance required |
-| `experiments/motivation/` | gate result | machine readable |
+| `experiments/motivation/` | preregistrations, ledgers, and machine Gates | append-only phase evidence |
 | `experiments/probes/p0/` | reproducible P0 procedure | gate passed; normal flow only |
 | `external/`, `ros2_ws/`, `runs/` | ignored dependencies/build/raw runtime | never tracked |
 

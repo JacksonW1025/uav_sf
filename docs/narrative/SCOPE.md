@@ -1,8 +1,11 @@
 # Current research scope
 
 The current topic is **Testing Route-Replacing Authority Transitions in PX4**.
+M-FINAL conditionally completed the bounded Motivation Study at evidence cutoff
+`3665337673e7e0a62ea204ac64f5644b8e428c25`.
 
-The central question is whether a declared transfer from Route A to Route B is reflected by the complete runtime control path:
+The central question is whether a declared transfer from Route A to Route B is
+reflected by the complete runtime control path:
 
 1. the old path is revoked promptly;
 2. the new path is completely installed;
@@ -18,7 +21,7 @@ contracts are complementary and are not substituted for one another.
 
 ## Subject families
 
-**Family A — primary reality-facing subjects**
+**Family A — formal empirical scope**
 
 ```text
 PX4 Internal Route
@@ -27,7 +30,7 @@ PX4 Internal Route
 ↔ Internal Fallback / RTL / Land / RC takeover
 ```
 
-**Family B — representative deep-route case**
+**Family B — static evidence and future independent study**
 
 ```text
 PX4 Classical Cascade
@@ -35,22 +38,41 @@ PX4 Classical Cascade
 ↔ Classical Fallback
 ```
 
-Existing mc_nn/RAPTOR/classical results are legacy evidence and future cross-family validation material. They are not automatically evidence about Family A.
+The locked B1 inventory proves that `mc_nn` and `mc_raptor` are true registered
+controller routes and that a bounded partial-subgraph reference contract can be
+defined. B1 has no accepted combined build or runtime evidence. Family B is not
+part of the current runtime generality claim and is not authorized for the next
+phase.
 
-## Current sequence
+## Completed Motivation sequence
 
 ```text
 Repository recovery and route observability (complete)
 → P5 v6 bounded differential campaign (complete and frozen)
 → Motivation Case 1: Issue #162 successor failure (complete and frozen)
 → Current-version External Mode setpoint freshness bounded pilot (complete and frozen)
-→ freshness Pilot Gate: CURRENT_NATURAL_VIOLATION_FOUND
+→ N1 / C1 / R1 / W1 / B1 bounded closure (complete and frozen)
+→ M-FINAL: CONDITIONALLY_COMPLETE
 ```
 
-The bounded authorization ended after 16 attempts and 10 accepted runs. F1,
-F3, and F4 completed; F2 stopped at its frozen attempt cap with one accepted
-run. All accepted runs show Freshness exposure, and one accepted F1 run has an
-evidence-complete natural post-fallback Route violation. The result does not
-authorize a 54-run matrix, generic mode fuzzing, a new P5 campaign,
-direct-actuator flight, Aerostack2, rapid-restart/concurrency work, or Stateful
-Fuzzer v0. Family B remains future deep-route validation material.
+The final Motivation disposition is
+`CONDITIONAL_PASS_MOTIVATION_COMPLETE_AUTHORIZE_FAMILY_A_FUZZER_V0`.
+It authorizes only creation and push of an independent Family A Fuzzer v0
+preregistration. It does not authorize implementation or execution.
+
+| Evidence area | Final scope status |
+|---|---|
+| Family A normal route conformance | bounded formal empirical support |
+| current natural event | re-observed but phase-dependent |
+| C1 concurrency | bounded event-pair conformance only |
+| R1 session rollover | `MEASUREMENT_INSUFFICIENT` |
+| W1 real-workload runtime value | `MEASUREMENT_INSUFFICIENT` |
+| Family B static mechanism | supported |
+| Family B runtime generality | `ENVIRONMENT_BLOCKED`; future work |
+| state-aware search gain | not evaluated |
+| full fuzzing effectiveness | not evaluated |
+
+The next phase must exclude R1's unfinished session scope, Aerostack2 runtime,
+Family B, direct actuator, HITL, real flight, unprovenanced random events, and
+large or full stateful campaigns unless a later independent registration
+explicitly authorizes them.

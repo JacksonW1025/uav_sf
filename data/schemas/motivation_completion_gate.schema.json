@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uav-sf.local/schemas/motivation_completion_gate.schema.json",
+  "title": "M-FINAL Motivation Completion Gate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "gate_id", "status", "disposition", "starting_commit",
+    "preregistration_commit", "final_commit_placeholder", "adjudication_timestamp",
+    "evidence_cutoff_commit", "evidence_units_total", "evidence_integrity_passed",
+    "consistency_findings", "mg1_status", "mg2_status", "mg3_status", "mg4_status",
+    "mg5_status", "mg6_status", "mg7_status", "mg8_status", "mg9_status",
+    "mg10_status", "mg_results", "core_problem_supported",
+    "oracle_incremental_value_supported", "normal_baseline_supported",
+    "historical_benchmark_supported", "current_natural_event_supported",
+    "current_natural_event_stable_reproduction_supported", "freshness_exposure_supported",
+    "bounded_concurrency_supported", "session_rollover_supported",
+    "real_workload_runtime_value_supported", "family_b_static_mechanism_supported",
+    "family_b_runtime_generality_supported", "attribution_protocol_supported",
+    "evidence_admissibility_supported", "state_aware_search_gain_supported",
+    "full_fuzzing_effectiveness_supported", "motivation_study_complete",
+    "authorized_empirical_family", "recommended_research_positioning",
+    "authorizes_fuzzer_v0_preregistration", "authorizes_family_a_only",
+    "authorizes_real_workload_campaign", "authorizes_family_b_campaign",
+    "authorizes_random_campaign", "authorizes_stateful_testing_full_campaign",
+    "authorizes_hitl", "authorizes_real_flight", "next_registered_phase",
+    "required_next_phase_preregistration", "claims", "prohibited_claims",
+    "limitations", "raw_artifacts_ignored", "tracked_raw_files", "source_reports",
+    "source_gates", "source_commits"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "gate_id": {"const": "M_FINAL_UNIFIED_MOTIVATION_COMPLETION_GATE"},
+    "status": {"enum": ["COMPLETE", "CONDITIONALLY_COMPLETE", "FAILED"]},
+    "disposition": {
+      "enum": [
+        "PASS_MOTIVATION_COMPLETE_AUTHORIZE_SCOPED_FUZZER_V0",
+        "CONDITIONAL_PASS_MOTIVATION_COMPLETE_AUTHORIZE_FAMILY_A_FUZZER_V0",
+        "CONDITIONAL_PASS_MOTIVATION_COMPLETE_REPOSITION_TO_RUNTIME_VERIFICATION",
+        "NEGATIVE_SCOPE_DECISION_MOTIVATION_COMPLETE_NO_FUZZER_AUTHORIZATION",
+        "FAIL_MOTIVATION_EVIDENCE_INSUFFICIENT"
+      ]
+    },
+    "starting_commit": {"$ref": "#/$defs/commit"},
+    "preregistration_commit": {"$ref": "#/$defs/commit"},
+    "final_commit_placeholder": {"type": "string", "minLength": 1},
+    "adjudication_timestamp": {"type": "string", "format": "date-time"},
+    "evidence_cutoff_commit": {"$ref": "#/$defs/commit"},
+    "evidence_units_total": {"const": 23},
+    "evidence_integrity_passed": {"type": "boolean"},
+    "consistency_findings": {"type": "array", "items": {"$ref": "#/$defs/finding"}},
+    "mg1_status": {"$ref": "#/$defs/status"},
+    "mg2_status": {"$ref": "#/$defs/status"},
+    "mg3_status": {"$ref": "#/$defs/status"},
+    "mg4_status": {"$ref": "#/$defs/status"},
+    "mg5_status": {"$ref": "#/$defs/status"},
+    "mg6_status": {"$ref": "#/$defs/status"},
+    "mg7_status": {"$ref": "#/$defs/status"},
+    "mg8_status": {"$ref": "#/$defs/status"},
+    "mg9_status": {"$ref": "#/$defs/status"},
+    "mg10_status": {"$ref": "#/$defs/status"},
+    "mg_results": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["MG1", "MG2", "MG3", "MG4", "MG5", "MG6", "MG7", "MG8", "MG9", "MG10"],
+      "properties": {
+        "MG1": {"$ref": "#/$defs/mgResult"}, "MG2": {"$ref": "#/$defs/mgResult"},
+        "MG3": {"$ref": "#/$defs/mgResult"}, "MG4": {"$ref": "#/$defs/mgResult"},
+        "MG5": {"$ref": "#/$defs/mgResult"}, "MG6": {"$ref": "#/$defs/mgResult"},
+        "MG7": {"$ref": "#/$defs/mgResult"}, "MG8": {"$ref": "#/$defs/mgResult"},
+        "MG9": {"$ref": "#/$defs/mgResult"}, "MG10": {"$ref": "#/$defs/mgResult"}
+      }
+    },
+    "core_problem_supported": {"type": "boolean"},
+    "oracle_incremental_value_supported": {"type": "boolean"},
+    "normal_baseline_supported": {"type": "boolean"},
+    "historical_benchmark_supported": {"type": "boolean"},
+    "current_natural_event_supported": {"type": "boolean"},
+    "current_natural_event_stable_reproduction_supported": {"type": "boolean"},
+    "freshness_exposure_supported": {"type": "boolean"},
+    "bounded_concurrency_supported": {"type": "boolean"},
+    "session_rollover_supported": {"type": "boolean"},
+    "real_workload_runtime_value_supported": {"type": "boolean"},
+    "family_b_static_mechanism_supported": {"type": "boolean"},
+    "family_b_runtime_generality_supported": {"type": "boolean"},
+    "attribution_protocol_supported": {"type": "boolean"},
+    "evidence_admissibility_supported": {"type": "boolean"},
+    "state_aware_search_gain_supported": {"type": "boolean"},
+    "full_fuzzing_effectiveness_supported": {"type": "boolean"},
+    "motivation_study_complete": {"type": "boolean"},
+    "authorized_empirical_family": {"type": "array", "items": {"enum": ["Family_A", "Family_B"]}, "uniqueItems": true},
+    "recommended_research_positioning": {"type": "string", "minLength": 1},
+    "authorizes_fuzzer_v0_preregistration": {"type": "boolean"},
+    "authorizes_family_a_only": {"type": "boolean"},
+    "authorizes_real_workload_campaign": {"const": false},
+    "authorizes_family_b_campaign": {"const": false},
+    "authorizes_random_campaign": {"const": false},
+    "authorizes_stateful_testing_full_campaign": {"const": false},
+    "authorizes_hitl": {"const": false},
+    "authorizes_real_flight": {"const": false},
+    "next_registered_phase": {"type": "string", "minLength": 1},
+    "required_next_phase_preregistration": {"const": true},
+    "claims": {"$ref": "#/$defs/stringArray"},
+    "prohibited_claims": {"$ref": "#/$defs/stringArray"},
+    "limitations": {"$ref": "#/$defs/stringArray"},
+    "raw_artifacts_ignored": {"const": true},
+    "tracked_raw_files": {"const": 0},
+    "source_reports": {"$ref": "#/$defs/stringArray"},
+    "source_gates": {"$ref": "#/$defs/stringArray"},
+    "source_commits": {"type": "array", "items": {"$ref": "#/$defs/commit"}, "minItems": 1, "uniqueItems": true}
+  },
+  "$defs": {
+    "commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "status": {
+      "enum": ["PASS", "CONDITIONAL_PASS", "PARTIAL_PASS", "NEGATIVE_SCOPE_DECISION", "MEASUREMENT_INSUFFICIENT", "ENVIRONMENT_BLOCKED", "FAIL", "NOT_APPLICABLE"]
+    },
+    "stringArray": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["finding_id", "status", "evidence_id", "finding", "adjudication", "blocks_m_final"],
+      "properties": {
+        "finding_id": {"type": "string"}, "status": {"type": "string"},
+        "evidence_id": {"type": "string"}, "finding": {"type": "string"},
+        "adjudication": {"type": "string"}, "blocks_m_final": {"type": "boolean"}
+      }
+    },
+    "mgResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "status", "supporting_evidence_ids", "limiting_evidence_ids", "exact_claim", "prohibited_stronger_claim", "consequence_for_final_disposition", "consequence_for_next_stage_authorization"],
+      "properties": {
+        "name": {"type": "string"}, "status": {"$ref": "#/$defs/status"},
+        "supporting_evidence_ids": {"$ref": "#/$defs/stringArray"},
+        "limiting_evidence_ids": {"type": "array", "items": {"type": "string"}},
+        "exact_claim": {"type": "string"}, "prohibited_stronger_claim": {"type": "string"},
+        "consequence_for_final_disposition": {"type": "string"},
+        "consequence_for_next_stage_authorization": {"type": "string"}
+      }
+    }
+  }
+}
