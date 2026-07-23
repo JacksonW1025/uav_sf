@@ -48,6 +48,7 @@ RUN unset http_proxy https_proxy all_proxy HTTP_PROXY HTTPS_PROXY ALL_PROXY \
            break; \
          fi; \
          sleep "$((attempt * 2))"; \
+         apt-get update; \
        done \
     && test "${install_status}" -eq 0 \
     && python3 -m pip install --break-system-packages --no-cache-dir \
