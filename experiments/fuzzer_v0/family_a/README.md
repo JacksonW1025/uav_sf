@@ -6,6 +6,8 @@ Qualification activation: `DECLINE_IMPLEMENTATION_NOT_READY`
 
 Qualification status: `QUALIFICATION_NOT_AUTHORIZED`
 
+Independent activation re-review: `DECLINE_IMPLEMENTATION_NOT_READY`
+
 This directory is the frozen, machine-verifiable preregistration for a future
 controlled SITL study of flight-software reliability, runtime consistency,
 route conformance, command freshness, lifecycle progression, and state-aware
@@ -32,6 +34,7 @@ testing. It contains zero formal attempts and authorizes no runtime.
 | [adjudication template](final_adjudication_template.yaml) | future results structure without a predeclared result |
 | [activation review](activation_review/README.md) | independent qualification readiness review and decline decision |
 | [readiness amendment](readiness_amendment/README.md) | independent static resolution of the 11 activation-review blockers without runtime authorization |
+| [activation re-review](activation_rereview/README.md) | new independent source-backed re-review, nine blockers, decline decision, and zero-attempt authorization boundary |
 
 The machine Gate is validated against the
 [activation Gate schema](../../../data/schemas/family_a_fuzzer_v0_activation_gate.schema.json).
@@ -71,13 +74,19 @@ budget does not transfer, and no attempt is replaced automatically.
 - qualification authorized: `false`
 - qualification formal attempts: `0`
 - comparison arms authorized: `false`
+- independent re-review blockers: `9`
 
 The independent activation review found 11 blocking clauses and decided
 `DECLINE_IMPLEMENTATION_NOT_READY`. The original activation Gate and decision
 remain frozen and closed. A subsequent readiness amendment now records
 `READINESS_RESOLVED_PENDING_INDEPENDENT_REVIEW` with 11 resolved and zero
-remaining implementation/environment blockers. This static readiness result
-does not authorize qualification or runtime.
+remaining amendment-claimed blockers. A new independent re-review confirmed
+the frozen source, seed, scope, six-slot mapping, Oracle identity, plan,
+preflight, refusal, and fixture-level checks, but found nine blocking clauses
+in authorization identity, actual orchestration/evidence binding, runtime
+safety monitoring, append-only accounting, and the reproducible environment.
+It independently decided `DECLINE_IMPLEMENTATION_NOT_READY`; qualification and
+runtime remain unauthorized.
 
-The next exact action is to perform a new independent static qualification
-activation review. No Family A Fuzzer v0 runtime has executed.
+The next exact action is to create an independent blocker-resolution amendment
+for the new review findings. No Family A Fuzzer v0 runtime has executed.

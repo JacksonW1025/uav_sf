@@ -33,15 +33,20 @@ to Family A and retains formal attempts: `0`. The independent qualification
 activation review decided `DECLINE_IMPLEMENTATION_NOT_READY`, with status
 `QUALIFICATION_NOT_AUTHORIZED` and 11 blocking clauses. The independent
 readiness amendment subsequently resolved all 11 blockers statically and is
-`READINESS_RESOLVED_PENDING_INDEPENDENT_REVIEW`. The original decision is
-unchanged. Campaign activation, qualification runtime, comparison runtime, and
-formal attempts remain unauthorized. State-aware search gain:
-`NOT_ESTABLISHED`. Full method effectiveness: `NOT_ESTABLISHED`.
+`READINESS_RESOLVED_PENDING_INDEPENDENT_REVIEW`. A new independent activation
+re-review did not accept those self-reported readiness fields as approval. It
+confirmed the frozen design and deterministic six-slot map but found nine
+blocking implementation, identity, safety monitoring, accounting, and
+reproducible-environment clauses, and decided
+`DECLINE_IMPLEMENTATION_NOT_READY`. The original decision is unchanged.
+Campaign activation, qualification runtime, comparison runtime, and formal
+attempts remain unauthorized. State-aware search gain: `NOT_ESTABLISHED`.
+Full method effectiveness: `NOT_ESTABLISHED`.
 
-The next exact action is to perform a new independent static qualification
-activation review. No Family A Fuzzer v0 flight runtime, qualification
-attempt, comparison attempt, real-workload campaign, or Family B runtime has
-started.
+The next exact action is to create an independent blocker-resolution amendment
+for the new review findings. No Family A Fuzzer v0 flight runtime,
+qualification attempt, comparison attempt, real-workload campaign, or Family
+B runtime has started.
 
 ## Quick start
 
@@ -68,7 +73,8 @@ Dependency sources and builds live in ignored `external/`, `ros2_ws/`, and
 8. [Family A Fuzzer v0 preregistration](docs/design/FAMILY_A_FUZZER_V0_PREREGISTRATION.md)
 9. [Family A Fuzzer v0 activation review](docs/design/FAMILY_A_FUZZER_V0_ACTIVATION_REVIEW.md)
 10. [Family A Fuzzer v0 readiness amendment](docs/design/FAMILY_A_FUZZER_V0_READINESS_AMENDMENT.md)
-11. [Agent guide](AGENT.md)
+11. [Family A Fuzzer v0 activation re-review](docs/design/FAMILY_A_FUZZER_V0_ACTIVATION_REREVIEW.md)
+12. [Agent guide](AGENT.md)
 
 ## Data and validation
 

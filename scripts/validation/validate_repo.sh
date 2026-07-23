@@ -80,6 +80,7 @@ echo "[9/15] TSV, JSON-schema, behavior, adapter, patch, and repository tests"
 python3 scripts/validation/check_family_a_fuzzer_v0_preregistration.py
 python3 scripts/validation/check_family_a_fuzzer_v0_activation_review.py
 python3 scripts/validation/check_family_a_fuzzer_v0_readiness_amendment.py
+python3 scripts/validation/check_family_a_fuzzer_v0_activation_rereview.py
 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH="${REPO_ROOT}" python3 -m pytest -q -p no:cacheprovider tests
 
 echo "[10/15] Whitespace errors"

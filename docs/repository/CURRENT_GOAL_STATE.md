@@ -1,6 +1,6 @@
 # Current Goal State
 
-Last updated: 2026-07-22
+Last updated: 2026-07-23
 
 ## Closed Motivation goal
 
@@ -71,6 +71,10 @@ Family A Fuzzer v0 is `PREREGISTERED_NOT_ACTIVATED`.
   `e6128fdf5028c91673392d42f9736cbd5ac5b562`.
 - Readiness blockers resolved: `11`.
 - Readiness blockers remaining: `0`.
+- Independent re-review decision: `DECLINE_IMPLEMENTATION_NOT_READY`.
+- Independent re-review status: `QUALIFICATION_NOT_AUTHORIZED`.
+- Independent re-review blocking clauses: `9`.
+- Independent re-review non-blocking findings: `4`.
 - Comparison arms: `NOT_AUTHORIZED`.
 
 The frozen assets are indexed in
@@ -83,17 +87,21 @@ seeds.
 
 The next exact action is:
 
-> perform a new independent static qualification activation review
+> create an independent blocker-resolution amendment for the new review findings
 
 The readiness amendment adds the V0-P-only runner, six-slot deterministic
 scenario mapping, integrated collector/Oracle/evidence path, unified safety
 entry, cleanup verification, common residual-process and port checks, and the
 digest-locked ROS Jazzy reproducible environment contract. These are static
-readiness results only. The original DECLINE remains unchanged. No Family A
-Fuzzer v0 flight runtime has executed. Qualification and comparison runtime,
-real-workload runtime, Family B, direct actuator, HITL, real flight,
-unprovenanced random events, and large or full stateful campaigns remain
-unauthorized.
+readiness claims only. A new independent source review confirmed the frozen
+design and six-slot mapping but found nine blockers in exact authorization
+identity, actual collector/Oracle/evidence binding, runtime safety monitoring,
+append-only attempt accounting, and the ROS Jazzy reproducible environment.
+The original DECLINE remains unchanged, and the new re-review also declines
+qualification. No Family A Fuzzer v0 flight runtime has executed.
+Qualification and comparison runtime, real-workload runtime, Family B, direct
+actuator, HITL, real flight, unprovenanced random events, and large or full
+stateful campaigns remain unauthorized.
 
 ## Current artifacts
 
@@ -110,3 +118,5 @@ unauthorized.
 - `experiments/fuzzer_v0/family_a/activation_review/qualification_attempt_ledger.yaml`
 - `experiments/fuzzer_v0/family_a/readiness_amendment/static_readiness_gate.json`
 - `docs/design/FAMILY_A_FUZZER_V0_READINESS_AMENDMENT.md`
+- `experiments/fuzzer_v0/family_a/activation_rereview/qualification_activation_decision.json`
+- `docs/design/FAMILY_A_FUZZER_V0_ACTIVATION_REREVIEW.md`

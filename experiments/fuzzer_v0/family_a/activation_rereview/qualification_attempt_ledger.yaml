@@ -1,0 +1,14 @@
+schema_version: "1.0"
+campaign_id: FAMILY_A_FUZZER_V0
+phase_id: V0_P_QUALIFICATION
+status: NOT_AUTHORIZED
+activation_decision: DECLINE_IMPLEMENTATION_NOT_READY
+authorization_decision_commit: COMMIT_CONTAINING_THIS_DECLINED_REREVIEW_REPORTED_BY_GIT_AFTER_PUSH
+qualification_target_accepted: 3
+qualification_maximum_formal_attempts: 6
+formal_attempts: 0
+accepted_attempts: 0
+comparison_attempts: 0
+next_attempt_id: V0P-A1
+runtime_executed: false
+attempts: []

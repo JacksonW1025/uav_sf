@@ -1,0 +1,315 @@
+schema_version: "1.0"
+manifest_id: FAMILY_A_FUZZER_V0_ACTIVATION_REREVIEW_INDEPENDENT_TESTS
+reviewed_at: "2026-07-23"
+runtime_started: false
+tests:
+  - test_id: IR-T001
+    reviewed_clause: B-01
+    command_or_fixture: git rev-parse HEAD; git rev-parse origin/main; git rev-list --left-right --count HEAD...origin/main
+    source_under_review: repository main identity
+    expected_result: exact bae8794 identity and 0/0
+    observed_result: exact bae8794 identity and 0/0
+    exit_code: 0
+    runtime_started: false
+    artifact_hash: bae879484abab51e369af13ed46db5762f457242
+    status: PASS
+  - test_id: IR-T002
+    reviewed_clause: C-01 through C-10
+    command_or_fixture: independent SHA-256 comparison with original review frozen_bundle
+    source_under_review: fifteen frozen preregistration assets
+    expected_result: 15 of 15 hashes match
+    observed_result: 15 of 15 hashes match
+    exit_code: 0
+    runtime_started: false
+    artifact_hash: 81104e900fe6acfffdb1ab5316ec6f4b12f12861f730bd2995e1cb2cc9f04e4d
+    status: PASS
+  - test_id: IR-T003
+    reviewed_clause: D-01 through D-05
+    command_or_fixture: independent csv.DictReader cross-tabulation
+    source_under_review: experiments/fuzzer_v0/family_a/seed_catalog.tsv
+    expected_result: total 61 current runtime 50 historical 1 excluded 10 unresolved 0
+    observed_result: total 61 current runtime 50 historical 1 excluded 10 unresolved 0
+    exit_code: 0
+    runtime_started: false
+    artifact_hash: 3e9d1e848f6633646c21f3e6fed65c0c7c60eef18ca5ae4ca56d2f41185a115b
+    status: PASS
+  - test_id: IR-T004
+    reviewed_clause: D-06 through D-12
+    command_or_fixture: independent six-slot join against seed catalog and manifest
+    source_under_review: experiments/fuzzer_v0/family_a/readiness_amendment/qualification_scenario_map.tsv
+    expected_result: six accepted current Family A slots with exact source and bindings
+    observed_result: six accepted current Family A slots with exact source and declared bindings
+    exit_code: 0
+    runtime_started: false
+    artifact_hash: 5825f4f4a4496aff61d44e7fabaa8a7fc99b38272e21c1ee125232d325cdf9a0
+    status: PASS
+  - test_id: IR-T005
+    reviewed_clause: B-06 and F-01 through F-06
+    command_or_fixture: independent component path and SHA-256 validation
+    source_under_review: experiments/fuzzer_v0/family_a/readiness_amendment/implementation_manifest.yaml
+    expected_result: 25 component identities and six declared bindings match
+    observed_result: 25 component identities and six declared bindings match
+    exit_code: 0
+    runtime_started: false
+    artifact_hash: 231a6a1e2678e4bc7ec8a0fd1f896286ae4890708a9ecdd588926d063fe15db4
+    status: PASS
+  - test_id: IR-T006
+    reviewed_clause: B-08
+    command_or_fixture: independent Oracle executable schema profile and threshold hash validation
+    source_under_review: experiments/fuzzer_v0/family_a/oracle_lock.yaml
+    expected_result: 22 identities match and Route Oracle identity is 0.4
+    observed_result: 22 identities match and Route Oracle identity is 0.4
+    exit_code: 0
+    runtime_started: false
+    artifact_hash: 2f0211a771de6bacc56f386dcf81babad2514227ea0cdf727a64e9ebea0980c2
+    status: PASS
+  - test_id: IR-T007
+    reviewed_clause: E-02
+    command_or_fixture: python3 scripts/fuzzer_v0/family_a/run_v0p_qualification.py
+    source_under_review: scripts/fuzzer_v0/family_a/run_v0p_qualification.py
+    expected_result: exit 2 with no runtime
+    observed_result: exit 2 with help and no runtime
+    exit_code: 2
+    runtime_started: false
+    artifact_hash: 9fc2f122996fe91bbd57789ea8632147f81b35710c107c6d8fc6d0af5b5df5f5
+    status: PASS
+  - test_id: IR-T008
+    reviewed_clause: E-03
+    command_or_fixture: python3 scripts/fuzzer_v0/family_a/run_v0p_qualification.py plan
+    source_under_review: scripts/fuzzer_v0/family_a/run_v0p_qualification.py
+    expected_result: STATIC_PLAN_PASS with six slots and runtime_started false
+    observed_result: STATIC_PLAN_PASS with six slots and runtime_started false
+    exit_code: 0
+    runtime_started: false
+    artifact_hash: 9fc2f122996fe91bbd57789ea8632147f81b35710c107c6d8fc6d0af5b5df5f5
+    status: PASS
+  - test_id: IR-T009
+    reviewed_clause: E-04
+    command_or_fixture: python3 scripts/fuzzer_v0/family_a/run_v0p_qualification.py preflight
+    source_under_review: scripts/fuzzer_v0/family_a/run_v0p_qualification.py
+    expected_result: STATIC_PREFLIGHT_PASS with runtime_started false
+    observed_result: STATIC_PREFLIGHT_PASS with runtime_started false
+    exit_code: 0
+    runtime_started: false
+    artifact_hash: 9fc2f122996fe91bbd57789ea8632147f81b35710c107c6d8fc6d0af5b5df5f5
+    status: PASS
+  - test_id: IR-T010
+    reviewed_clause: E-05
+    command_or_fixture: runner execute with original decline and V0P-A1 arguments
+    source_under_review: scripts/fuzzer_v0/family_a/run_v0p_qualification.py
+    expected_result: exit 4 EXECUTE_REFUSED before scenario
+    observed_result: exit 4 original DECLINE cannot authorize execute
+    exit_code: 4
+    runtime_started: false
+    artifact_hash: 9fc2f122996fe91bbd57789ea8632147f81b35710c107c6d8fc6d0af5b5df5f5
+    status: PASS
+  - test_id: IR-T011
+    reviewed_clause: E-06
+    command_or_fixture: three plan fixtures for OFFICIAL_SEQUENCE BOUNDED_RANDOM_TIMING_COMPARATOR STATE_AWARE_MUTATION
+    source_under_review: scripts/fuzzer_v0/family_a/common.py
+    expected_result: all comparison strategies refused
+    observed_result: all comparison strategies refused
+    exit_code: 0
+    runtime_started: false
+    artifact_hash: b0547f569f21f014f83b7b1394b6d9c11c199099cc0aae89dad3ce3eec627a2d
+    status: PASS
+  - test_id: IR-T012
+    reviewed_clause: E-07 through E-09
+    command_or_fixture: historical unmapped attempt-seven and non-V0-P refusal fixtures
+    source_under_review: scripts/fuzzer_v0/family_a/common.py
+    expected_result: every invalid request refused before runtime
+    observed_result: every invalid request refused before runtime
+    exit_code: 0
+    runtime_started: false
+    artifact_hash: b0547f569f21f014f83b7b1394b6d9c11c199099cc0aae89dad3ce3eec627a2d
+    status: PASS
+  - test_id: IR-T013
+    reviewed_clause: E-11
+    command_or_fixture: required APPROVE_QUALIFICATION_ONLY decision fixture
+    source_under_review: scripts/fuzzer_v0/family_a/run_v0p_qualification.py
+    expected_result: independent test detects contract rejection
+    observed_result: fixture rejected because runner requires APPROVE_QUALIFICATION and AUTHORIZED_NOT_STARTED
+    exit_code: 0
+    runtime_started: false
+    artifact_hash: 9fc2f122996fe91bbd57789ea8632147f81b35710c107c6d8fc6d0af5b5df5f5
+    status: PASS
+  - test_id: IR-T014
+    reviewed_clause: E-12
+    command_or_fixture: source inspection for origin/main ancestry decision fields and ledger identity
+    source_under_review: scripts/fuzzer_v0/family_a/run_v0p_qualification.py
+    expected_result: independent test detects missing exact pushed identity enforcement
+    observed_result: only local git rev-parse decision blob and ledger shape are checked
+    exit_code: 0
+    runtime_started: false
+    artifact_hash: 9fc2f122996fe91bbd57789ea8632147f81b35710c107c6d8fc6d0af5b5df5f5
+    status: PASS
+  - test_id: IR-T015
+    reviewed_clause: F-07
+    command_or_fixture: independent per-slot scenario call-graph search
+    source_under_review: scripts/probes mapped scenario entries
+    expected_result: detect every declared collector and Oracle not invoked
+    observed_result: missing Successor Freshness Route and Successor invocations by mapped slots
+    exit_code: 0
+    runtime_started: false
+    artifact_hash: 231a6a1e2678e4bc7ec8a0fd1f896286ae4890708a9ecdd588926d063fe15db4
+    status: PASS
+  - test_id: IR-T016
+    reviewed_clause: F-08
+    command_or_fixture: producer search for safety_evidence.json cleanup_evidence.json compact_evidence.json
+    source_under_review: scripts/probes mapped scenario entries
+    expected_result: detect missing producers
+    observed_result: all three inputs are required by runner and produced by no scenario
+    exit_code: 0
+    runtime_started: false
+    artifact_hash: 9fc2f122996fe91bbd57789ea8632147f81b35710c107c6d8fc6d0af5b5df5f5
+    status: PASS
+  - test_id: IR-T017
+    reviewed_clause: G-01
+    command_or_fixture: complete compact-evidence fixture for V0P-S1
+    source_under_review: scripts/fuzzer_v0/family_a/build_v0p_compact_evidence.py
+    expected_result: valid completed fixture passes schema and semantic checks
+    observed_result: valid completed fixture passes
+    exit_code: 0
+    runtime_started: false
+    artifact_hash: 31741f1c420b048168797f0a0c10a1cb046c079027d5cb9eafbe145702c90d97
+    status: PASS
+  - test_id: IR-T018
+    reviewed_clause: G-02 through G-04
+    command_or_fixture: missing identity raw hash and critical-window fixtures
+    source_under_review: scripts/fuzzer_v0/family_a/build_v0p_compact_evidence.py
+    expected_result: all incomplete evidence fixtures rejected
+    observed_result: all incomplete evidence fixtures rejected
+    exit_code: 0
+    runtime_started: false
+    artifact_hash: 31741f1c420b048168797f0a0c10a1cb046c079027d5cb9eafbe145702c90d97
+    status: PASS
+  - test_id: IR-T019
+    reviewed_clause: G-05 through G-10
+    command_or_fixture: invalid clock UNKNOWN NOT_APPLICABLE EXPOSURE cleanup and safety fixtures
+    source_under_review: scripts/fuzzer_v0/family_a/build_v0p_compact_evidence.py
+    expected_result: non-collapsing outcomes preserved and invalid ACCEPTED records rejected
+    observed_result: non-collapsing outcomes preserved and invalid ACCEPTED records rejected
+    exit_code: 0
+    runtime_started: false
+    artifact_hash: 31741f1c420b048168797f0a0c10a1cb046c079027d5cb9eafbe145702c90d97
+    status: PASS
+  - test_id: IR-T020
+    reviewed_clause: H-01 through H-15
+    command_or_fixture: independent finite boundary evidence lineage timeout and terminal fixtures
+    source_under_review: scripts/fuzzer_v0/family_a/check_v0p_safety.py
+    expected_result: pass fixture passes and every negative fixture stops or rejects
+    observed_result: pass fixture passes and every negative fixture stops or rejects
+    exit_code: 0
+    runtime_started: false
+    artifact_hash: c9710c701bdd8d70130924acd423abc9735a767c91dd14565055cb6a8471c96b
+    status: PASS
+  - test_id: IR-T021
+    reviewed_clause: H-16
+    command_or_fixture: runner control-flow inspection around subprocess and safety checker
+    source_under_review: scripts/fuzzer_v0/family_a/run_v0p_qualification.py
+    expected_result: detect absence of active safety monitoring
+    observed_result: safety checker runs only after scenario subprocess returns
+    exit_code: 0
+    runtime_started: false
+    artifact_hash: 9fc2f122996fe91bbd57789ea8632147f81b35710c107c6d8fc6d0af5b5df5f5
+    status: PASS
+  - test_id: IR-T022
+    reviewed_clause: I-01 through I-09
+    command_or_fixture: CLEAN residual process UDP TCP stale state closure and terminal fixtures
+    source_under_review: cleanup and runtime residue checkers
+    expected_result: CLEAN passes and every negative fixture has exact rejection
+    observed_result: CLEAN passes and every negative fixture has exact rejection
+    exit_code: 0
+    runtime_started: false
+    artifact_hash: 8b8bcb53ce624fbc747b384f5c0474c8714160fd1f45d11e1d5614da239abf35
+    status: PASS
+  - test_id: IR-T023
+    reviewed_clause: I-10
+    command_or_fixture: python3 scripts/fuzzer_v0/family_a/check_v0p_runtime_residue.py preflight
+    source_under_review: current process table and UDP/TCP 8888
+    expected_result: CLEAN read-only with no terminated process
+    observed_result: CLEAN read-only with no terminated process
+    exit_code: 0
+    runtime_started: false
+    artifact_hash: 8b8bcb53ce624fbc747b384f5c0474c8714160fd1f45d11e1d5614da239abf35
+    status: PASS
+  - test_id: IR-T024
+    reviewed_clause: J-02
+    command_or_fixture: docker manifest inspect exact base digest
+    source_under_review: public.ecr.aws docker library ubuntu locked digest
+    expected_result: digest resolves and arm64 manifest is present
+    observed_result: digest resolves with arm64 manifest sha256 ea0b2b8607a6
+    exit_code: 0
+    runtime_started: false
+    artifact_hash: 62f6c5179bdd8ecfbf94089fcf025cfdde25bcf53e929fdf349956e61973449b
+    status: PASS
+  - test_id: IR-T025
+    reviewed_clause: J-01 through J-11
+    command_or_fixture: environment YAML hash dependency and source identity checks
+    source_under_review: experiments/fuzzer_v0/family_a/readiness_amendment/environment_lock.yaml
+    expected_result: declared base contract and source identities match
+    observed_result: declared base contract and source identities match
+    exit_code: 0
+    runtime_started: false
+    artifact_hash: 62f6c5179bdd8ecfbf94089fcf025cfdde25bcf53e929fdf349956e61973449b
+    status: PASS
+  - test_id: IR-T026
+    reviewed_clause: J-12
+    command_or_fixture: Dockerfile and lock reproducibility inspection
+    source_under_review: docker/Dockerfile
+    expected_result: detect missing full qualification image and package identity
+    observed_result: only base image is digest locked and package sources are not snapshotted
+    exit_code: 0
+    runtime_started: false
+    artifact_hash: 96ee0a979366370d88ec3ffe342c8ed82a1653048658a4ad4feb9f648d73d9f8
+    status: PASS
+  - test_id: IR-T027
+    reviewed_clause: J-13
+    command_or_fixture: selected environment ros2 help and required import checks
+    source_under_review: ROS Jazzy qualification environment
+    expected_result: detect unconfirmed selected environment
+    observed_result: container daemon inaccessible host is Humble and interface import is unavailable
+    exit_code: 1
+    runtime_started: false
+    artifact_hash: 3832066c3a22a0c98a6c7e97091759741d6404cc4b86ea8a3913ace33372fbf4
+    status: PASS
+  - test_id: IR-T028
+    reviewed_clause: J-14
+    command_or_fixture: C1 runner environment and default binary identity inspection
+    source_under_review: scripts/probes/run_c1_concurrency.sh and V0-P runner
+    expected_result: detect ignored Humble binary defaults and missing Jazzy binding
+    observed_result: C1 Agent and mode defaults point to runs and are not overridden or manifest hashed
+    exit_code: 0
+    runtime_started: false
+    artifact_hash: 9fc2f122996fe91bbd57789ea8632147f81b35710c107c6d8fc6d0af5b5df5f5
+    status: PASS
+  - test_id: IR-T029
+    reviewed_clause: K-01 through K-08
+    command_or_fixture: independent accounting cross-check
+    source_under_review: campaign matrix analysis plan and all ledgers
+    expected_result: target 3 cap 6 formal 0 accepted 0 attempts empty comparison unchanged
+    observed_result: target 3 cap 6 formal 0 accepted 0 attempts empty comparison unchanged
+    exit_code: 0
+    runtime_started: false
+    artifact_hash: c1711ee22d4d31173a7102bf47b6d5572a56cb7765306a118c07a900ff9cdc94
+    status: PASS
+  - test_id: IR-T030
+    reviewed_clause: K-09
+    command_or_fixture: runner control-flow and ledger write-path inspection
+    source_under_review: scripts/fuzzer_v0/family_a/run_v0p_qualification.py
+    expected_result: detect missing register-before-launch and append-only closure
+    observed_result: scenario subprocess launches before any ledger write and no ledger update exists
+    exit_code: 0
+    runtime_started: false
+    artifact_hash: 9fc2f122996fe91bbd57789ea8632147f81b35710c107c6d8fc6d0af5b5df5f5
+    status: PASS
+  - test_id: IR-T031
+    reviewed_clause: L-02 through L-04
+    command_or_fixture: rereview schema and cross-file decision validation
+    source_under_review: activation_rereview bundle
+    expected_result: decline with all authorization false zero attempts and exact next action
+    observed_result: decline with all authorization false zero attempts and exact next action
+    exit_code: 0
+    runtime_started: false
+    artifact_hash: 13c5184f68a48a40129516dc7df0c41593cdb05aea0033c046d6153b13ae6eb1
+    status: PASS

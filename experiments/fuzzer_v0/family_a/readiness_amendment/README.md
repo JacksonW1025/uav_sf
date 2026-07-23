@@ -30,5 +30,19 @@ The unique runner is
 `preflight` commands were run. Its `execute` command refuses the current
 DECLINE state before any runtime process can start.
 
-The next exact action is: perform a new independent static qualification
-activation review.
+## Subsequent independent re-review
+
+The [activation re-review](../activation_rereview/README.md) independently
+checked these readiness claims rather than accepting the amendment Gate. It
+confirmed the frozen source, six-slot deterministic scenario mapping, Oracle
+identity, static plan/preflight, refusal paths, and fixture checks, but found
+nine blockers in exact authorization identity, actual per-slot
+collector/Oracle/evidence invocation, runtime safety monitoring, append-only
+attempt accounting, and the selected ROS Jazzy reproducible environment.
+
+The amendment status and original review are unchanged. The new decision is
+`DECLINE_IMPLEMENTATION_NOT_READY`, qualification is not authorized, and no
+runtime or formal attempt was executed.
+
+The next exact action is: create an independent blocker-resolution amendment
+for the new review findings.

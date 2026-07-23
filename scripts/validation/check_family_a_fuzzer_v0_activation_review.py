@@ -313,10 +313,21 @@ def validate() -> dict[str, int]:
         FAMILY_BASE / "readiness_amendment/static_readiness_gate.json"
     )
     if readiness_gate.is_file():
-        assert (
-            "perform a new independent static qualification activation review"
-            in current_text
+        rereview_decision = (
+            FAMILY_BASE
+            / "activation_rereview/qualification_activation_decision.json"
         )
+        if rereview_decision.is_file():
+            assert (
+                "create an independent blocker-resolution amendment for "
+                "the new review findings"
+                in current_text
+            )
+        else:
+            assert (
+                "perform a new independent static qualification activation review"
+                in current_text
+            )
     else:
         assert NEXT_ACTION in current_text
     assert "formal attempts: `0`" in current_text

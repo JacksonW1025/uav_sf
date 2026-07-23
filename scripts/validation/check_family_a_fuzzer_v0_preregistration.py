@@ -417,10 +417,21 @@ def validate() -> dict[str, int]:
         assert review_decision["current_formal_attempts"] == 0
         readiness_gate = BASE / "readiness_amendment/static_readiness_gate.json"
         if readiness_gate.is_file():
-            assert (
-                "perform a new independent static qualification activation review"
-                in current_text
+            rereview_decision = (
+                BASE
+                / "activation_rereview/qualification_activation_decision.json"
             )
+            if rereview_decision.is_file():
+                assert (
+                    "create an independent blocker-resolution amendment for "
+                    "the new review findings"
+                    in current_text
+                )
+            else:
+                assert (
+                    "perform a new independent static qualification activation review"
+                    in current_text
+                )
         else:
             assert review_decision["next_exact_action"] in current_text
     else:

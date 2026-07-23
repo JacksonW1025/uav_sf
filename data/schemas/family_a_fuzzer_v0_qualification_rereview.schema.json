@@ -1,0 +1,203 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "family_a_fuzzer_v0_qualification_rereview.schema.json",
+  "title": "Family A Fuzzer v0 independent qualification activation re-review",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "decision_id",
+    "decision",
+    "status",
+    "authorized_scope",
+    "reviewed_at",
+    "starting_repository_commit",
+    "reviewed_preregistration_commit",
+    "original_activation_review_commit",
+    "readiness_implementation_commit",
+    "readiness_identity_lock_commit",
+    "rereview_commit",
+    "activation_decision_commit",
+    "qualification_authorized",
+    "runtime_authorized",
+    "qualification_runtime_authorized",
+    "comparison_runtime_authorized",
+    "official_sequence_authorized",
+    "bounded_random_timing_authorized",
+    "state_aware_authorized",
+    "historical_replay_runtime_authorized",
+    "real_workload_authorized",
+    "family_b_authorized",
+    "direct_actuator_authorized",
+    "hitl_authorized",
+    "real_flight_authorized",
+    "qualification_target_accepted",
+    "qualification_maximum_formal_attempts",
+    "current_formal_attempts",
+    "current_accepted_attempts",
+    "next_attempt_id",
+    "formal_attempts",
+    "activation_review_complete",
+    "qualification_execution_requires_separate_task",
+    "execution_not_started",
+    "runtime_executed_during_review",
+    "independence_established",
+    "blocking_clause_count",
+    "blocking_clauses",
+    "secondary_blocker_categories",
+    "non_blocking_finding_count",
+    "non_blocking_findings",
+    "blocker_summary",
+    "required_independent_action",
+    "next_exact_action"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "decision_id": {
+      "const": "FAMILY_A_FUZZER_V0_QUALIFICATION_ACTIVATION_REREVIEW"
+    },
+    "decision": {
+      "enum": [
+        "APPROVE_QUALIFICATION_ONLY",
+        "DECLINE_IMPLEMENTATION_NOT_READY",
+        "DECLINE_IDENTITY_OR_CONTRACT_MISMATCH",
+        "DECLINE_ENVIRONMENT_NOT_READY",
+        "DECLINE_PREREGISTRATION_INCONSISTENT",
+        "DECLINE_INDEPENDENCE_NOT_ESTABLISHED"
+      ]
+    },
+    "status": {
+      "enum": [
+        "QUALIFICATION_AUTHORIZED_NOT_STARTED",
+        "QUALIFICATION_NOT_AUTHORIZED"
+      ]
+    },
+    "authorized_scope": {
+      "enum": ["V0_P_QUALIFICATION_ONLY", "NONE"]
+    },
+    "reviewed_at": {"format": "date", "type": "string"},
+    "starting_repository_commit": {"$ref": "#/$defs/commit"},
+    "reviewed_preregistration_commit": {"$ref": "#/$defs/commit"},
+    "original_activation_review_commit": {"$ref": "#/$defs/commit"},
+    "readiness_implementation_commit": {"$ref": "#/$defs/commit"},
+    "readiness_identity_lock_commit": {"$ref": "#/$defs/commit"},
+    "rereview_commit": {
+      "oneOf": [
+        {"$ref": "#/$defs/commit"},
+        {
+          "const": "COMMIT_CONTAINING_THIS_DECLINED_REREVIEW_REPORTED_BY_GIT_AFTER_PUSH"
+        }
+      ]
+    },
+    "activation_decision_commit": {
+      "oneOf": [
+        {"$ref": "#/$defs/commit"},
+        {"type": "null"}
+      ]
+    },
+    "qualification_authorized": {"type": "boolean"},
+    "runtime_authorized": {"type": "boolean"},
+    "qualification_runtime_authorized": {"type": "boolean"},
+    "comparison_runtime_authorized": {"type": "boolean"},
+    "official_sequence_authorized": {"type": "boolean"},
+    "bounded_random_timing_authorized": {"type": "boolean"},
+    "state_aware_authorized": {"type": "boolean"},
+    "historical_replay_runtime_authorized": {"type": "boolean"},
+    "real_workload_authorized": {"type": "boolean"},
+    "family_b_authorized": {"type": "boolean"},
+    "direct_actuator_authorized": {"type": "boolean"},
+    "hitl_authorized": {"type": "boolean"},
+    "real_flight_authorized": {"type": "boolean"},
+    "qualification_target_accepted": {"const": 3},
+    "qualification_maximum_formal_attempts": {"const": 6},
+    "current_formal_attempts": {"const": 0},
+    "current_accepted_attempts": {"const": 0},
+    "next_attempt_id": {"const": "V0P-A1"},
+    "formal_attempts": {"const": 0},
+    "activation_review_complete": {"const": true},
+    "qualification_execution_requires_separate_task": {"const": true},
+    "execution_not_started": {"const": true},
+    "runtime_executed_during_review": {"const": false},
+    "independence_established": {"type": "boolean"},
+    "blocking_clause_count": {"minimum": 0, "type": "integer"},
+    "blocking_clauses": {
+      "items": {"pattern": "^[A-L]-[0-9]{2}$", "type": "string"},
+      "type": "array",
+      "uniqueItems": true
+    },
+    "secondary_blocker_categories": {
+      "items": {
+        "enum": [
+          "IMPLEMENTATION_NOT_READY",
+          "IDENTITY_OR_CONTRACT_MISMATCH",
+          "ENVIRONMENT_NOT_READY",
+          "PREREGISTRATION_INCONSISTENT",
+          "INDEPENDENCE_NOT_ESTABLISHED"
+        ]
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "non_blocking_finding_count": {"minimum": 0, "type": "integer"},
+    "non_blocking_findings": {
+      "items": {"minLength": 1, "type": "string"},
+      "type": "array"
+    },
+    "blocker_summary": {
+      "items": {"minLength": 1, "type": "string"},
+      "type": "array"
+    },
+    "required_independent_action": {"minLength": 1, "type": "string"},
+    "next_exact_action": {
+      "const": "create an independent blocker-resolution amendment for the new review findings"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "decision": {"const": "APPROVE_QUALIFICATION_ONLY"}
+        }
+      },
+      "then": {
+        "properties": {
+          "status": {"const": "QUALIFICATION_AUTHORIZED_NOT_STARTED"},
+          "authorized_scope": {"const": "V0_P_QUALIFICATION_ONLY"},
+          "qualification_authorized": {"const": true},
+          "runtime_authorized": {"const": true},
+          "qualification_runtime_authorized": {"const": true},
+          "blocking_clause_count": {"const": 0},
+          "blocking_clauses": {"maxItems": 0}
+        }
+      },
+      "else": {
+        "properties": {
+          "status": {"const": "QUALIFICATION_NOT_AUTHORIZED"},
+          "authorized_scope": {"const": "NONE"},
+          "activation_decision_commit": {"type": "null"},
+          "qualification_authorized": {"const": false},
+          "runtime_authorized": {"const": false},
+          "qualification_runtime_authorized": {"const": false},
+          "comparison_runtime_authorized": {"const": false},
+          "official_sequence_authorized": {"const": false},
+          "bounded_random_timing_authorized": {"const": false},
+          "state_aware_authorized": {"const": false},
+          "historical_replay_runtime_authorized": {"const": false},
+          "real_workload_authorized": {"const": false},
+          "family_b_authorized": {"const": false},
+          "direct_actuator_authorized": {"const": false},
+          "hitl_authorized": {"const": false},
+          "real_flight_authorized": {"const": false},
+          "blocking_clause_count": {"minimum": 1},
+          "blocking_clauses": {"minItems": 1}
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "commit": {
+      "pattern": "^[0-9a-f]{40}$",
+      "type": "string"
+    }
+  }
+}

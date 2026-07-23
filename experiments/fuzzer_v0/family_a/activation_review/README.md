@@ -44,3 +44,9 @@ The historical conclusion above is unchanged. A later independent
 resolution evidence for all 11 blockers and requires a new independent static
 qualification activation review. It does not revise this DECLINE decision or
 authorize qualification.
+
+The later
+[independent activation re-review](../activation_rereview/README.md) preserves
+this historical decision and independently reviews the amendment. It finds
+nine new blocking clauses and also decides
+`DECLINE_IMPLEMENTATION_NOT_READY`; qualification remains unauthorized.

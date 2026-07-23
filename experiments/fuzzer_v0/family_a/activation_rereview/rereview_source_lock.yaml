@@ -1,0 +1,98 @@
+schema_version: "1.0"
+lock_id: FAMILY_A_FUZZER_V0_ACTIVATION_REREVIEW_SOURCE_LOCK
+review_kind: INDEPENDENT_QUALIFICATION_ACTIVATION_REREVIEW
+captured_at: "2026-07-23"
+branch: main
+remote: origin
+starting_head: bae879484abab51e369af13ed46db5762f457242
+starting_origin_main: bae879484abab51e369af13ed46db5762f457242
+starting_ahead: 0
+starting_behind: 0
+preregistration_commit: 426f4c7316e973c6a4dab84a202fdb75ea65b7c1
+original_activation_review_commit: 5db3934c58553e491b19fe8da106948fe8cd1d16
+readiness_implementation_commit: e6128fdf5028c91673392d42f9736cbd5ac5b562
+readiness_identity_lock_commit: bae879484abab51e369af13ed46db5762f457242
+rereview_commit: COMMIT_CONTAINING_THIS_DECLINED_REREVIEW_REPORTED_BY_GIT_AFTER_PUSH
+authorization_identity_lock_commit: NOT_APPLICABLE_DECISION_DECLINED
+implementation_manifest_sha256: 231a6a1e2678e4bc7ec8a0fd1f896286ae4890708a9ecdd588926d063fe15db4
+environment_lock_sha256: 62f6c5179bdd8ecfbf94089fcf025cfdde25bcf53e929fdf349956e61973449b
+scenario_map_sha256: 5825f4f4a4496aff61d44e7fabaa8a7fc99b38272e21c1ee125232d325cdf9a0
+
+required_ancestor_commits:
+  - 426f4c7316e973c6a4dab84a202fdb75ea65b7c1
+  - 5db3934c58553e491b19fe8da106948fe8cd1d16
+  - e6128fdf5028c91673392d42f9736cbd5ac5b562
+  - bae879484abab51e369af13ed46db5762f457242
+
+frozen_bundle:
+  - path: experiments/fuzzer_v0/family_a/preregistration.yaml
+    sha256: c28861c363b92bbaddc473006bc7a9cd7bec34eb55a723f63159f5f0d0eeb978
+  - path: experiments/fuzzer_v0/family_a/source_lock.yaml
+    sha256: fe06830d18e4eaacc4e092d87aa6b59ec78c47c1a04664eb576d74656ad33f88
+  - path: experiments/fuzzer_v0/family_a/seed_catalog.tsv
+    sha256: 3e9d1e848f6633646c21f3e6fed65c0c7c60eef18ca5ae4ca56d2f41185a115b
+  - path: experiments/fuzzer_v0/family_a/state_model.yaml
+    sha256: 613ecc5e9cd0828f9e5670243b0c0613e813f1649aa08f5185f3a08928e3afdb
+  - path: experiments/fuzzer_v0/family_a/event_grammar.yaml
+    sha256: 44dfdc0f74f1233fe3bfa1245a5b373f823c7ce3c1ac45687097b79fc4782192
+  - path: experiments/fuzzer_v0/family_a/mutation_grammar.yaml
+    sha256: 8046ca1c1fa0b116597c6e5c3cf3a50f03e0821097ef22e6bc43a8a17c6b1bad
+  - path: experiments/fuzzer_v0/family_a/strategy_matrix.yaml
+    sha256: 2d1d8b968f7d125a525e1d4b3284c1ada69413755f7e69fd0b72cd801bdf419c
+  - path: experiments/fuzzer_v0/family_a/campaign_matrix.yaml
+    sha256: c1711ee22d4d31173a7102bf47b6d5572a56cb7765306a118c07a900ff9cdc94
+  - path: experiments/fuzzer_v0/family_a/oracle_lock.yaml
+    sha256: 2f0211a771de6bacc56f386dcf81babad2514227ea0cdf727a64e9ebea0980c2
+  - path: experiments/fuzzer_v0/family_a/evidence_rules.yaml
+    sha256: 5d9ae09b8f04fe594839ab8970df4b34e81ca40a953b699c792bf573754f6361
+  - path: experiments/fuzzer_v0/family_a/safety_rules.yaml
+    sha256: e73849e0c7c929b319a10a0905a5b39f554d7bd55429878a10d3346ae312bd00
+  - path: experiments/fuzzer_v0/family_a/analysis_plan.yaml
+    sha256: b2a352beb688dfb828afc11c77ab52fc045d31ecd9627954aca4e477252c30fd
+  - path: experiments/fuzzer_v0/family_a/activation_gate.json
+    sha256: 2913a785b8e934a7c3549f990950ba02458b96f03415f05094b36124a7655c39
+  - path: experiments/fuzzer_v0/family_a/attempt_ledger.yaml
+    sha256: cc1e34eb3a20d26d028fd050ced2b53e074b6f957b1e64788f82c7fa285023e1
+  - path: experiments/fuzzer_v0/family_a/final_adjudication_template.yaml
+    sha256: 918fe418e8bb118d4730973e53f8a677a7f3516d4c2fafc03b758b44fac6a0a1
+
+readiness_inputs:
+  - path: experiments/fuzzer_v0/family_a/readiness_amendment/amendment.yaml
+    sha256: b87109e50f27c2f31a4ae63db173af23fa65764c8968c086851fedd0f7742018
+  - path: experiments/fuzzer_v0/family_a/readiness_amendment/amendment_source_lock.yaml
+    sha256: 5e4bb6b19ed50d1902c04740e78732a58f6e6cefba53072f62513e4b9f7992ed
+  - path: experiments/fuzzer_v0/family_a/readiness_amendment/blocker_resolution_matrix.tsv
+    sha256: 63f06293e5b039864a326a3dba3980b6aead95d67c6f2147e469d6cf28d61eb8
+  - path: experiments/fuzzer_v0/family_a/readiness_amendment/implementation_manifest.yaml
+    sha256: 231a6a1e2678e4bc7ec8a0fd1f896286ae4890708a9ecdd588926d063fe15db4
+  - path: experiments/fuzzer_v0/family_a/readiness_amendment/environment_lock.yaml
+    sha256: 62f6c5179bdd8ecfbf94089fcf025cfdde25bcf53e929fdf349956e61973449b
+  - path: experiments/fuzzer_v0/family_a/readiness_amendment/qualification_scenario_map.tsv
+    sha256: 5825f4f4a4496aff61d44e7fabaa8a7fc99b38272e21c1ee125232d325cdf9a0
+  - path: experiments/fuzzer_v0/family_a/readiness_amendment/static_readiness_gate.json
+    sha256: fde0e08143f4b97d94a0981652a604be1e41dc9c4df5f007789951aa8bfdd6e8
+
+independent_environment_observation:
+  host_architecture: aarch64
+  base_image_digest_resolved: true
+  arm64_manifest_present: true
+  arm64_manifest_digest: sha256:ea0b2b8607a61f981b2461f21edc27c0b37ddd53d23d4d350936480adf5de28c
+  complete_qualification_image_digest_locked: false
+  container_daemon_accessible: false
+  selected_jazzy_environment_executed: false
+  selected_jazzy_imports_confirmed: false
+  host_ros_distribution: humble
+  host_ros2_help_exit_code: 0
+  host_px4_ros2_interface_lib_import_available: false
+  environment_status: BLOCKING_FAIL
+
+runtime_observation:
+  PX4_started: false
+  Gazebo_started: false
+  ROS_launch_started: false
+  DDS_flight_communication_started: false
+  flight_scenario_started: false
+  qualification_attempts_created: 0
+  comparison_attempts_created: 0
+  ULog_created: false
+  rosbag_created: false
