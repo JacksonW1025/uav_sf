@@ -246,7 +246,7 @@ components:
   - component_id: environment_verifier
     role: environment
     source_path: scripts/fuzzer_v0/family_a/environment_contract.py
-    sha256: 0a2ee0628269d2e8861fe6c50664baf0a4c938cd0fa594edb959e29e1759d4bd
+    sha256: f21c1b834753691c35994fc5a62f8e524cab2d13d4f67acafa148f37c3ed7eaa
     module_or_command: "containers/family_a_fuzzer_v0/verify_environment.sh"
     build_target: python_compileall_and_shell_syntax
     input_contract: locked_container_workspace
