@@ -148,6 +148,7 @@ def env_build() -> int:
         "docker",
         "buildx",
         "bake",
+        "--allow=network.host",
         "--file",
         str(CONTAINER_DIR / "docker-bake.hcl"),
         "--load",
