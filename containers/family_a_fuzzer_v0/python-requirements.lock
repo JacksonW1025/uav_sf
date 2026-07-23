@@ -1,4 +1,6 @@
 # The PX4 Python build dependencies are exact apt packages in
-# apt-packages.lock. PyULog is the sole pip-installed distribution.
+# apt-packages.lock except for the upstream pyros-genmsg wheel.
+pyros-genmsg==0.5.8 \
+    --hash=sha256:2319ae7e66f8f3d03d13d9927cf5938131fdeaacc38cc1727c9af1b11c29a784
 pyulog==1.2.2 \
     --hash=sha256:43cb20d493158226a6d309c45e23ffab47eebc69cfaafa15277463804c5338e1
