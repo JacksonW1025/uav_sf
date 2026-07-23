@@ -10,6 +10,19 @@ DDS_BUILD="${WORKSPACE}/dds"
 INVENTORY=/opt/family_a/build-inventory
 PARALLEL="${FAMILY_A_BUILD_JOBS:-$(nproc)}"
 
+retry() {
+  local attempt
+  for attempt in 1 2 3 4 5; do
+    if "$@"; then
+      return 0
+    fi
+    if [[ "${attempt}" == 5 ]]; then
+      return 1
+    fi
+    sleep "$((attempt * 2))"
+  done
+}
+
 lock_value() {
   python3 - "${LOCK}" "$1" <<'PY'
 import sys
@@ -30,7 +43,8 @@ checkout_exact() {
   commit="$(lock_value "sources.${name}.commit")"
   git init -q "${destination}"
   git -C "${destination}" remote add origin "${repository}"
-  git -C "${destination}" fetch -q --depth=1 origin "${commit}"
+  git -C "${destination}" config http.version HTTP/1.1
+  retry git -C "${destination}" fetch -q --depth=1 origin "${commit}"
   git -C "${destination}" checkout -q --detach FETCH_HEAD
   test "$(git -C "${destination}" rev-parse HEAD)" = "${commit}"
 }
@@ -38,7 +52,7 @@ checkout_exact() {
 mkdir -p "${SOURCE}" "${ROS_WS}/src" "${DDS_BUILD}" "${INVENTORY}"
 
 checkout_exact PX4 "${SOURCE}/PX4-Autopilot"
-git -C "${SOURCE}/PX4-Autopilot" submodule update --init --depth=1 --recursive \
+retry git -C "${SOURCE}/PX4-Autopilot" submodule update --init --depth=1 --recursive \
   Tools/simulation/gz \
   src/lib/cdrstream/cyclonedds \
   src/lib/cdrstream/rosidl \
