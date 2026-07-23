@@ -30,18 +30,22 @@ COPY containers/family_a_fuzzer_v0/apt-packages.lock /tmp/locks/apt-packages.loc
 COPY containers/family_a_fuzzer_v0/ros-packages.lock /tmp/locks/ros-packages.lock
 COPY containers/family_a_fuzzer_v0/python-requirements.lock /tmp/locks/python-requirements.lock
 
-RUN unset http_proxy https_proxy all_proxy HTTP_PROXY HTTPS_PROXY ALL_PROXY \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    unset http_proxy https_proxy all_proxy HTTP_PROXY HTTPS_PROXY ALL_PROXY \
+    && rm -f /etc/apt/apt.conf.d/docker-clean \
+    && printf 'Binary::apt::APT::Keep-Downloaded-Packages "true";\n' \
+      > /etc/apt/apt.conf.d/80-family-a-keep-archives \
     && apt_update() { \
-         for update_attempt in 1 2 3 4 5; do \
+       for update_attempt in 1 2 3 4 5; do \
+           rm -rf /var/lib/apt/lists/*; \
            if apt-get update; then \
              return 0; \
            fi; \
-           rm -rf /var/lib/apt/lists/*; \
            sleep "$((update_attempt * 10))"; \
          done; \
          return 1; \
        } \
-    && printf 'Acquire::Retries "5";\nAcquire::http::Timeout "60";\nAcquire::https::Timeout "60";\n' \
+    && printf 'Acquire::Retries "5";\nAcquire::http::Timeout "60";\nAcquire::https::Timeout "60";\nAcquire::http::No-Cache "true";\n' \
       > /etc/apt/apt.conf.d/80-family-a-retries \
     && curl --retry 5 --retry-delay 2 --retry-all-errors -fsSL \
       https://packages.osrfoundation.org/gazebo.gpg \
