@@ -31,6 +31,16 @@ COPY containers/family_a_fuzzer_v0/ros-packages.lock /tmp/locks/ros-packages.loc
 COPY containers/family_a_fuzzer_v0/python-requirements.lock /tmp/locks/python-requirements.lock
 
 RUN unset http_proxy https_proxy all_proxy HTTP_PROXY HTTPS_PROXY ALL_PROXY \
+    && apt_update() { \
+         for update_attempt in 1 2 3 4 5; do \
+           if apt-get update; then \
+             return 0; \
+           fi; \
+           rm -rf /var/lib/apt/lists/*; \
+           sleep "$((update_attempt * 10))"; \
+         done; \
+         return 1; \
+       } \
     && printf 'Acquire::Retries "5";\nAcquire::http::Timeout "60";\nAcquire::https::Timeout "60";\n' \
       > /etc/apt/apt.conf.d/80-family-a-retries \
     && curl --retry 5 --retry-delay 2 --retry-all-errors -fsSL \
@@ -38,7 +48,7 @@ RUN unset http_proxy https_proxy all_proxy HTTP_PROXY HTTPS_PROXY ALL_PROXY \
       -o /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
     && echo "deb [arch=arm64 signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable noble main" \
       > /etc/apt/sources.list.d/gazebo-stable.list \
-    && apt-get update \
+    && apt_update \
     && mapfile -t apt_packages < <(grep -Ev '^[[:space:]]*(#|$)' /tmp/locks/apt-packages.lock) \
     && mapfile -t ros_packages < <(grep -Ev '^[[:space:]]*(#|$)' /tmp/locks/ros-packages.lock) \
     && install_status=1 \
@@ -48,7 +58,7 @@ RUN unset http_proxy https_proxy all_proxy HTTP_PROXY HTTPS_PROXY ALL_PROXY \
            break; \
          fi; \
          sleep "$((attempt * 2))"; \
-         apt-get update; \
+         apt_update; \
        done \
     && test "${install_status}" -eq 0 \
     && python3 -m pip install --break-system-packages --no-cache-dir \
