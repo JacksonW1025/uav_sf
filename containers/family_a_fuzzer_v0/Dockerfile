@@ -30,7 +30,8 @@ COPY containers/family_a_fuzzer_v0/apt-packages.lock /tmp/locks/apt-packages.loc
 COPY containers/family_a_fuzzer_v0/ros-packages.lock /tmp/locks/ros-packages.lock
 COPY containers/family_a_fuzzer_v0/python-requirements.lock /tmp/locks/python-requirements.lock
 
-RUN printf 'Acquire::Retries "5";\nAcquire::http::Timeout "60";\nAcquire::https::Timeout "60";\n' \
+RUN unset http_proxy https_proxy all_proxy HTTP_PROXY HTTPS_PROXY ALL_PROXY \
+    && printf 'Acquire::Retries "5";\nAcquire::http::Timeout "60";\nAcquire::https::Timeout "60";\n' \
       > /etc/apt/apt.conf.d/80-family-a-retries \
     && curl --retry 5 --retry-delay 2 --retry-all-errors -fsSL \
       https://packages.osrfoundation.org/gazebo.gpg \
@@ -40,7 +41,15 @@ RUN printf 'Acquire::Retries "5";\nAcquire::http::Timeout "60";\nAcquire::https:
     && apt-get update \
     && mapfile -t apt_packages < <(grep -Ev '^[[:space:]]*(#|$)' /tmp/locks/apt-packages.lock) \
     && mapfile -t ros_packages < <(grep -Ev '^[[:space:]]*(#|$)' /tmp/locks/ros-packages.lock) \
-    && apt-get install -y --no-install-recommends "${apt_packages[@]}" "${ros_packages[@]}" \
+    && install_status=1 \
+    && for attempt in 1 2 3 4 5; do \
+         if apt-get install -y --no-install-recommends "${apt_packages[@]}" "${ros_packages[@]}"; then \
+           install_status=0; \
+           break; \
+         fi; \
+         sleep "$((attempt * 2))"; \
+       done \
+    && test "${install_status}" -eq 0 \
     && python3 -m pip install --break-system-packages --no-cache-dir \
       --require-hashes --no-deps -r /tmp/locks/python-requirements.lock \
     && rm -rf /var/lib/apt/lists/*
