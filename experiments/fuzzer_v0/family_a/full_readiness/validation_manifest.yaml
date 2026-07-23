@@ -1,0 +1,696 @@
+{
+  "schema_version": "1.0",
+  "manifest_id": "FAMILY_A_FUZZER_V0_CONTAINER_VALIDATION",
+  "status": "PASS",
+  "image_id": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b",
+  "container_network": "none",
+  "container_root_filesystem": "read_only",
+  "runtime_started": false,
+  "formal_flight_communication_started": false,
+  "failed_checks": [],
+  "checks": [
+    {
+      "check_id": "formal_container_marker",
+      "command": [
+        "internal-value-check"
+      ],
+      "exit_code": 0,
+      "expected": "1",
+      "observed": "1",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "ros_distribution",
+      "command": [
+        "internal-value-check"
+      ],
+      "exit_code": 0,
+      "expected": "jazzy",
+      "observed": "jazzy",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "rmw_implementation",
+      "command": [
+        "internal-value-check"
+      ],
+      "exit_code": 0,
+      "expected": "rmw_fastrtps_cpp",
+      "observed": "rmw_fastrtps_cpp",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "architecture",
+      "command": [
+        "internal-value-check"
+      ],
+      "exit_code": 0,
+      "expected": "aarch64",
+      "observed": "aarch64",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "base_index_digest",
+      "command": [
+        "internal-value-check"
+      ],
+      "exit_code": 0,
+      "expected": true,
+      "observed": true,
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "base_platform_digest",
+      "command": [
+        "internal-value-check"
+      ],
+      "exit_code": 0,
+      "expected": true,
+      "observed": true,
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "no_floating_final_base",
+      "command": [
+        "internal-value-check"
+      ],
+      "exit_code": 0,
+      "expected": false,
+      "observed": false,
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "no_host_ros_leakage",
+      "command": [
+        "internal-value-check"
+      ],
+      "exit_code": 0,
+      "expected": [],
+      "observed": [],
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "ros2_help",
+      "command": [
+        "ros2",
+        "--help"
+      ],
+      "exit_code": 0,
+      "expected": "exit 0",
+      "observed": "usage: ros2 [-h] [--use-python-default-buffering]\n            Call `ros2 <command> -h` for more detailed usage. ...\n\nros2 is an extensible command-line tool for ROS 2.\n\noptions:\n  -h, --help            show this help message and exit\n  --use-python-default-buffering\n                        Do not force line buffering in stdout and instead use\n                        the python default buffering, which might be affected\n                        by PYTHONUNBUFFERED/-u and depends on whatever stdout\n                        is interactive or not\n\nCommands:\n  action     Various action related sub-commands\n  bag        Various rosbag related sub-commands\n  component  Various component related sub-commands\n  daemon     Various daemon related sub-commands\n  doctor     Check ROS setup and other potential issues\n  interface  Show information about ROS interfaces\n  launch     Run a launch file\n  lifecycle  Various lifecycle related sub-commands\n  multicast  Various multicast related sub-commands\n  node       Various node related sub-commands\n  param      Various param related sub-commands\n  pkg        Various package related sub-commands\n  plugin     Various plugin related sub-commands\n  run        Run a package specific executable\n  security   Various security related sub-commands\n  service    Various service related sub-commands\n  topic      Various topic related sub-commands\n  wtf        Use `wtf` as alias to `doctor`\n\n  Call `ros2 <command> -h` for more detailed usage.",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "gazebo_identity",
+      "command": [
+        "gz",
+        "--versions"
+      ],
+      "exit_code": 255,
+      "expected": "Gazebo command inventory; exit 0 or 255",
+      "observed": "The 'gz' command provides a command line interface to the Gazebo Tools.\n\n  gz <command> [options]\n\nList of available commands:\n\n  help:          Print this help text.\n  fuel:          Manage simulation resources.\n  gui:           Launch graphical interfaces.\n  log:           Record or playback topics.\n  model:         Print information about models.\n  msg:           Print information about messages.\n  param:         List, get or set parameters.\n  plugin:        Print information about plugins.\n  sdf:           Utilities for SDF files.\n  service:       Print information about services.\n  sim:           Run and manage the Gazebo Simulator.\n  topic:         Print information about topics.\n\nOptions:\n\n  --force-version <VERSION>  Use a specific library version.\n  --versions                 Show the available versions.\n  --commands                 Show the available commands.\nUse 'gz help <command>' to print help for a command.",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "python_identity",
+      "command": [
+        "python3",
+        "--version"
+      ],
+      "exit_code": 0,
+      "expected": "exit 0",
+      "observed": "Python 3.12.3",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "compiler_identity",
+      "command": [
+        "gcc",
+        "--version"
+      ],
+      "exit_code": 0,
+      "expected": "exit 0",
+      "observed": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "cmake_identity",
+      "command": [
+        "cmake",
+        "--version"
+      ],
+      "exit_code": 0,
+      "expected": "exit 0",
+      "observed": "cmake version 3.28.3\n\nCMake suite maintained and supported by Kitware (kitware.com/cmake).",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "colcon_identity",
+      "command": [
+        "colcon",
+        "list",
+        "--help"
+      ],
+      "exit_code": 0,
+      "expected": "exit 0",
+      "observed": "-ignore [PKG_NAME ...]\n                        Ignore packages as if they were not discovered\n  --packages-ignore-regex [PATTERN ...]\n                        Ignore packages where any of the patterns match the\n                        package name\n  --paths [PATH ...]    The paths to check for a package. Use shell wildcards\n                        (e.g. `src/*`) to select all direct subdirectories\n\nPackage selection arguments:\n  --packages-up-to [PKG_NAME ...]\n                        Only process a subset of packages and their recursive\n                        dependencies\n  --packages-up-to-regex [PATTERN ...]\n                        Only process a subset of packages and their recursive\n                        dependencies, where any of the patterns match the\n                        package name\n  --packages-above [PKG_NAME ...]\n                        Only process a subset of packages and packages which\n                        recursively depend on them\n  --packages-above-and-dependencies [PKG_NAME ...]\n                        Only process a subset of packages and packages which\n                        recursively depend on them including all their\n                        recursive dependencies\n  --packages-above-depth DEPTH [PKG_NAME ...]\n                        Only process a subset of packages and packages which\n                        recursively depend on them up to a given depth\n  --packages-select-by-dep [PKG_NAME ...]\n                        Only process packages which (recursively) depend on\n                        this\n  --packages-skip-by-dep [PKG_NAME ...]\n                        Skip packages which (recursively) depend on this\n  --packages-skip-up-to [PKG_NAME ...]\n                        Skip a subset of packages and their recursive\n                        dependencies\n  --packages-select-build-failed\n                        Only process a subset of packages which have failed to\n                        build previously (aborted packages are not considered\n                        errors)\n  --packages-skip-build-finished\n                        Skip a set of packages which have finished to build\n                        previously\n  --packages-select-test-failures\n                        Only process a subset of packages which had test\n                        failures previously\n  --packages-skip-test-passed\n                        Skip a set of packages which had no test failures\n                        previously\n  --packages-select [PKG_NAME ...]\n                        Only process a subset of packages\n  --packages-skip [PKG_NAME ...]\n                        Skip a set of packages\n  --packages-select-regex [PATTERN ...]\n                        Only process a subset of packages where any of the\n                        patterns match the package name\n  --packages-skip-regex [PATTERN ...]\n                        Skip a set of packages where any of the patterns match\n                        the package name\n  --packages-start PKG_NAME\n                        Skip packages before this in flat topological ordering\n  --packages-end PKG_NAME\n                        Skip packages after this in flat topological ordering\n\nObsolete arguments:\n  --topological-graph, -g\n                        Instead use `colcon graph`\n  --topological-graph-dot\n                        Instead use `colcon graph --dot`\n  --topological-graph-density\n                        Instead use `colcon graph --density`\n  --topological-graph-legend\n                        Instead use `colcon graph --legend`\n  --topological-graph-dot-cluster\n                        Instead use `colcon graph --dot --dot-cluster`\n  --topological-graph-dot-include-skipped\n                        Instead use `colcon graph --dot --dot-include-skipped`\n\nMixin predefined sets of command line parameters:\n  --mixin-files [FILE ...]\n                        Additional files providing mixins\n  --mixin [mixin1 [mixin2 ...]]\n                        No mixins are available for this verb",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "vcstool_identity",
+      "command": [
+        "vcs",
+        "--help"
+      ],
+      "exit_code": 0,
+      "expected": "exit 0",
+      "observed": "usage: vcs [-h] [--clients] [--commands] [--commands-descriptions] [--version]\n           [<command>]\n\nMost commands take directory arguments, recursively searching for repositories\nin these directories. If no arguments are supplied to a command, it recurses\non the current directory (inclusive) by default.\n\npositional arguments:\n  <command>             The available commands: branch, custom, diff, export,\n                        import, log, pull, push, remotes, status, validate\n\noptions:\n  -h, --help            show this help message and exit\n  --clients             Show the available VCS clients\n  --commands            Output the available commands for auto-completion\n  --commands-descriptions\n                        Output the available commands along with their\n                        descriptions\n  --version             Show the vcstool version\n\nSee 'vcs <command> --help' for more information on a specific command.\n/usr/bin/vcs:6: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html\n  from pkg_resources import load_entry_point",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "rosdep_identity",
+      "command": [
+        "rosdep",
+        "--version"
+      ],
+      "exit_code": 0,
+      "expected": "exit 0",
+      "observed": "0.26.0\n/usr/bin/rosdep:6: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html\n  from pkg_resources import load_entry_point",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "ros_package_rclcpp",
+      "command": [
+        "ros2",
+        "pkg",
+        "prefix",
+        "rclcpp"
+      ],
+      "exit_code": 0,
+      "expected": "package prefix exists",
+      "observed": "/opt/ros/jazzy",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "ros_package_rclpy",
+      "command": [
+        "ros2",
+        "pkg",
+        "prefix",
+        "rclpy"
+      ],
+      "exit_code": 0,
+      "expected": "package prefix exists",
+      "observed": "/opt/ros/jazzy",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "ros_package_rmw_fastrtps_cpp",
+      "command": [
+        "ros2",
+        "pkg",
+        "prefix",
+        "rmw_fastrtps_cpp"
+      ],
+      "exit_code": 0,
+      "expected": "package prefix exists",
+      "observed": "/opt/ros/jazzy",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "ros_package_ros_gz_sim",
+      "command": [
+        "ros2",
+        "pkg",
+        "prefix",
+        "ros_gz_sim"
+      ],
+      "exit_code": 0,
+      "expected": "package prefix exists",
+      "observed": "/opt/ros/jazzy",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "ros_package_px4_msgs",
+      "command": [
+        "ros2",
+        "pkg",
+        "prefix",
+        "px4_msgs"
+      ],
+      "exit_code": 0,
+      "expected": "package prefix exists",
+      "observed": "/opt/family_a/workspace/ros/install",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "ros_package_px4_ros2_cpp",
+      "command": [
+        "ros2",
+        "pkg",
+        "prefix",
+        "px4_ros2_cpp"
+      ],
+      "exit_code": 0,
+      "expected": "package prefix exists",
+      "observed": "/opt/family_a/workspace/ros/install",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "ros_package_px4_ros2_py",
+      "command": [
+        "ros2",
+        "pkg",
+        "prefix",
+        "px4_ros2_py"
+      ],
+      "exit_code": 0,
+      "expected": "package prefix exists",
+      "observed": "/opt/family_a/workspace/ros/install",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "ros_package_route_transition_external_mode",
+      "command": [
+        "ros2",
+        "pkg",
+        "prefix",
+        "route_transition_external_mode"
+      ],
+      "exit_code": 0,
+      "expected": "package prefix exists",
+      "observed": "/opt/family_a/workspace/ros/install",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "python_import_rclpy",
+      "command": [
+        "python3",
+        "-c",
+        "import rclpy"
+      ],
+      "exit_code": 0,
+      "expected": "import succeeds",
+      "observed": "",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "python_import_px4_msgs.msg",
+      "command": [
+        "python3",
+        "-c",
+        "import px4_msgs.msg"
+      ],
+      "exit_code": 0,
+      "expected": "import succeeds",
+      "observed": "",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "python_import_px4_ros2",
+      "command": [
+        "python3",
+        "-c",
+        "import px4_ros2"
+      ],
+      "exit_code": 0,
+      "expected": "import succeeds",
+      "observed": "",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "python_import_jsonschema",
+      "command": [
+        "python3",
+        "-c",
+        "import jsonschema"
+      ],
+      "exit_code": 0,
+      "expected": "import succeeds",
+      "observed": "",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "python_import_yaml",
+      "command": [
+        "python3",
+        "-c",
+        "import yaml"
+      ],
+      "exit_code": 0,
+      "expected": "import succeeds",
+      "observed": "",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "python_import_scripts.fuzzer_v0.family_a.state_space_evaluator",
+      "command": [
+        "python3",
+        "-c",
+        "import scripts.fuzzer_v0.family_a.state_space_evaluator"
+      ],
+      "exit_code": 0,
+      "expected": "import succeeds",
+      "observed": "",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "python_import_scripts.tracing.route_trace_collector",
+      "command": [
+        "python3",
+        "-c",
+        "import scripts.tracing.route_trace_collector"
+      ],
+      "exit_code": 0,
+      "expected": "import succeeds",
+      "observed": "",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "python_import_scripts.tracing.clock_bridge_collector",
+      "command": [
+        "python3",
+        "-c",
+        "import scripts.tracing.clock_bridge_collector"
+      ],
+      "exit_code": 0,
+      "expected": "import succeeds",
+      "observed": "",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "python_import_scripts.oracles.route_oracle_v0",
+      "command": [
+        "python3",
+        "-c",
+        "import scripts.oracles.route_oracle_v0"
+      ],
+      "exit_code": 0,
+      "expected": "import succeeds",
+      "observed": "",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "python_import_scripts.oracles.pre_revocation_freshness_oracle",
+      "command": [
+        "python3",
+        "-c",
+        "import scripts.oracles.pre_revocation_freshness_oracle"
+      ],
+      "exit_code": 0,
+      "expected": "import succeeds",
+      "observed": "",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "python_import_scripts.oracles.successor_progression_oracle",
+      "command": [
+        "python3",
+        "-c",
+        "import scripts.oracles.successor_progression_oracle"
+      ],
+      "exit_code": 0,
+      "expected": "import succeeds",
+      "observed": "",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "python_import_scripts.oracles.authority_event_linearization_oracle",
+      "command": [
+        "python3",
+        "-c",
+        "import scripts.oracles.authority_event_linearization_oracle"
+      ],
+      "exit_code": 0,
+      "expected": "import succeeds",
+      "observed": "",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "binary_exists_px4",
+      "command": [
+        "internal-value-check"
+      ],
+      "exit_code": 0,
+      "expected": true,
+      "observed": true,
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "linked_libraries_container_px4",
+      "command": [
+        "internal-value-check"
+      ],
+      "exit_code": 0,
+      "expected": false,
+      "observed": false,
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "binary_exists_c1_concurrency_probe",
+      "command": [
+        "internal-value-check"
+      ],
+      "exit_code": 0,
+      "expected": true,
+      "observed": true,
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "linked_libraries_container_c1_concurrency_probe",
+      "command": [
+        "internal-value-check"
+      ],
+      "exit_code": 0,
+      "expected": false,
+      "observed": false,
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "binary_exists_route_transition_external_mode",
+      "command": [
+        "internal-value-check"
+      ],
+      "exit_code": 0,
+      "expected": true,
+      "observed": true,
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "linked_libraries_container_route_transition_external_mode",
+      "command": [
+        "internal-value-check"
+      ],
+      "exit_code": 0,
+      "expected": false,
+      "observed": false,
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "binary_exists_p0_external_mode_executor",
+      "command": [
+        "internal-value-check"
+      ],
+      "exit_code": 0,
+      "expected": true,
+      "observed": true,
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "linked_libraries_container_p0_external_mode_executor",
+      "command": [
+        "internal-value-check"
+      ],
+      "exit_code": 0,
+      "expected": false,
+      "observed": false,
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "binary_exists_MicroXRCEAgent",
+      "command": [
+        "internal-value-check"
+      ],
+      "exit_code": 0,
+      "expected": true,
+      "observed": true,
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "linked_libraries_container_MicroXRCEAgent",
+      "command": [
+        "internal-value-check"
+      ],
+      "exit_code": 0,
+      "expected": false,
+      "observed": false,
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "exact_debian_and_ros_packages",
+      "command": [
+        "dpkg-query",
+        "--locked-package-set"
+      ],
+      "exit_code": 0,
+      "expected": "70 exact package versions",
+      "observed": "70 exact package versions",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "source_commit_PX4",
+      "command": [
+        "internal-value-check"
+      ],
+      "exit_code": 0,
+      "expected": "4ae21a5e569d3d89c2f6366688cbacb3e93437c9",
+      "observed": "4ae21a5e569d3d89c2f6366688cbacb3e93437c9",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "source_commit_px4_msgs",
+      "command": [
+        "internal-value-check"
+      ],
+      "exit_code": 0,
+      "expected": "18ecff03041c6f8d8a0012fbc63af0b23dd60af1",
+      "observed": "18ecff03041c6f8d8a0012fbc63af0b23dd60af1",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "source_commit_px4_ros2_interface_lib",
+      "command": [
+        "internal-value-check"
+      ],
+      "exit_code": 0,
+      "expected": "c3e410f035806e8c56246708432ded09c976434b",
+      "observed": "c3e410f035806e8c56246708432ded09c976434b",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "source_commit_Micro_XRCE_DDS_Agent",
+      "command": [
+        "internal-value-check"
+      ],
+      "exit_code": 0,
+      "expected": "73622810d984349b80bbac0ef55fc0b694d62222",
+      "observed": "73622810d984349b80bbac0ef55fc0b694d62222",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    },
+    {
+      "check_id": "binary_manifest",
+      "command": [
+        "sha256",
+        "all-formal-binaries"
+      ],
+      "exit_code": 0,
+      "expected": "MATCH",
+      "observed": "MATCH",
+      "runtime_started": false,
+      "status": "PASS",
+      "container_identity": "sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b"
+    }
+  ]
+}

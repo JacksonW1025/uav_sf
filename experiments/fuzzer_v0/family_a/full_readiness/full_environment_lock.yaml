@@ -1,0 +1,135 @@
+schema_version: "1.0"
+environment_id: FAMILY_A_FUZZER_V0_JAZZY_ARM64
+status: LOCKED_CONTAINER_READY
+architecture: linux/arm64
+os_release:
+  name: Ubuntu
+  pretty_name: Ubuntu_24.04.4_LTS
+  version_id: "24.04"
+  codename: noble
+base_image:
+  repository: public.ecr.aws/docker/library/ros
+  tag_observed_only: jazzy-ros-base
+  oci_index_digest: sha256:31daab66eef9139933379fb67159449944f4e2dcf2e22c2d12cc715f29873e0f
+  platform_digest: sha256:b82a5ba3869a81196414cf34e4fc25c7935aab78b1f5187570ca9362c478cdbd
+full_image:
+  tag: uav_sf/family-a-fuzzer-v0:jazzy-arm64
+  repository_digest: uav_sf/family-a-fuzzer-v0@sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b
+  image_id: sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b
+  oci_index_digest: sha256:e6a33e800592b291bc4241cc515eb4e2bc440cc1fcdde40da6f02710c3a3298b
+  platform_manifest_digest: sha256:9872db08099b79833b2435bf0d184ad03517cecd15804e58ef154c7e21275228
+  config_digest: sha256:5ba0933d19a59b6a19d63256e65d2b0ac9f7a9e917e180f30373928f286d5826
+  os: linux
+  architecture: arm64
+  size_bytes: 2298429414
+  created: "2026-07-23T10:13:35.852006108-07:00"
+  implementation_commit: c729749e0e15476ac543f2133b5923c61799bd25
+toolchain:
+  ros_distribution: jazzy
+  ros_base_package: 0.11.0-1noble.20260614.091815
+  ros_gz_package: 1.0.22-1noble.20260615.095917
+  gazebo_distribution: harmonic
+  gazebo_meta_package: 1.0.0-1~noble
+  gazebo_sim_cli: 8.14.0-1~noble
+  rmw_implementation: rmw_fastrtps_cpp
+  rmw_fastrtps_cpp_package: 8.4.4-1noble.20260612.092346
+  micro_xrce_dds_agent: 2.4.3
+  fast_dds_superbuild: 2.14.6
+  fast_cdr_superbuild: 2.2.7
+  python: Python_3.12.3
+  gcc: GCC_13.3.0
+  cmake: 3.28.3
+  ninja: 1.11.1
+  make: GNU_Make_4.3
+  colcon_core: 0.21.0
+  vcstool: 0.3.0
+  rosdep: 0.26.0
+  pip_locked:
+    pyros-genmsg:
+      version: 0.5.8
+      wheel_sha256: 2319ae7e66f8f3d03d13d9927cf5938131fdeaacc38cc1727c9af1b11c29a784
+    pyulog:
+      version: 1.2.2
+      wheel_sha256: 43cb20d493158226a6d309c45e23ffab47eebc69cfaafa15277463804c5338e1
+source_commits:
+  repository_implementation: c729749e0e15476ac543f2133b5923c61799bd25
+  PX4: 4ae21a5e569d3d89c2f6366688cbacb3e93437c9
+  px4_msgs: 18ecff03041c6f8d8a0012fbc63af0b23dd60af1
+  px4_ros2_interface_lib: c3e410f035806e8c56246708432ded09c976434b
+  Micro_XRCE_DDS_Agent: 73622810d984349b80bbac0ef55fc0b694d62222
+px4_dependency_gitlinks:
+  PX4_gazebo_models: bb0b9cf974acf4f1bcb5f5fcf80b88841562dea9
+  cyclonedds: 314887ca403c2fb0a0316add22672102936ed36c
+  rosidl: bf5682e4747843d1d5133b9a2b54ce6f12f166c7
+  libevents: 9ef591c447fe0386d698bf6fb9a6d27e43988ee4
+  heatshrink: 052e6de72f67f1777198bce98f3de62f7f3c16a0
+  mavlink: f9cb1f9e482977446c3dd953a16368d4834c6aa5
+  pymavlink: 5977f44504f01715a44bed44a4601e6c12cef92d
+  PX4_OpticalFlow: a4d4cfde0c023be6b1ff8c8e796862413bc99272
+  klt_feature_tracker: a2733b54f17b571dd958be498b57479a4104d8cd
+  Micro_XRCE_DDS_Client: 711aef423edd1820347b866d1e4164832df35d04
+  Micro_XRCE_DDS_Client_v3: c88fb537e89a1095c49a6a535a55378d4c14cf2c
+package_inventory:
+  path: experiments/fuzzer_v0/family_a/full_readiness/package_inventory.json
+  sha256: ab45f7aecee65c340c1fd45243c09904669f20064cd84b092ae5bbedc10312f6
+  dpkg_packages: 1586
+  python_packages: 214
+  colcon_packages: 18
+  ros_packages: 273
+binary_inventory:
+  path: experiments/fuzzer_v0/family_a/full_readiness/binary_manifest.json
+  sha256: 41074d13fe4e5859ed7d2ca8fc7c4ef19a0a7a400a96a504c17eead1e1c2f226
+  component_count: 29
+build:
+  builder_architecture: aarch64
+  platform: linux/arm64
+  buildkit: 0.28.0
+  buildx: 0.31.1
+  docker_engine: 29.3.0
+  build_network: host
+  build_network_scope: source_and_package_acquisition_only
+  verification_network: none
+  runtime_network_default: none
+  px4_target: px4_sitl_default
+  px4_build_type: RelWithDebInfo
+  ros_build_type: Release
+  ros_build_testing: false
+  agent_build_type: Release
+  agent_superbuild: true
+  workspace_overlay_order:
+    - /opt/ros/jazzy
+    - /opt/family_a/workspace/ros/install
+  environment:
+    ROS_DISTRO: jazzy
+    RMW_IMPLEMENTATION: rmw_fastrtps_cpp
+    FAMILY_A_FORMAL_CONTAINER: "1"
+    SOURCE_DATE_EPOCH: "0"
+    AMENT_PREFIX_PATH: /opt/family_a/workspace/ros/install:/opt/ros/jazzy
+    COLCON_PREFIX_PATH: /opt/family_a/workspace/ros/install
+build_evidence:
+  build_log_sha256: a62f43bffe6e80ea7498d1535d9bea1185cf909b08a52e17c75ff7c6efecf974
+  build_metadata_sha256: df112a1c306e2d7d839e89731cac1de32a9f5033610b94ebe2f834f5fe8742bc
+  build_time_environment_status: PASS
+  host_ros_modified: false
+lock_hashes:
+  containers/family_a_fuzzer_v0/Dockerfile: abb7e1f4b04336600fac9ddff597b9ce4d8640f237d746c9a7e8b469ade0d6de
+  containers/family_a_fuzzer_v0/docker-bake.hcl: 7edd5d9b8d3dae808d5cf55cbb6509d4bcc7490aa1cdcd916b21d2d510a3b4e6
+  containers/family_a_fuzzer_v0/apt-packages.lock: 39ec1bffe068cd291c9a0714ee9b6c073904b6677cee5388f89aedb657ce02e2
+  containers/family_a_fuzzer_v0/ros-packages.lock: 3a77285d9bdb92be1a01591e4efa662b1a002a4db46dd5b07f5f7bd6327ee2fc
+  containers/family_a_fuzzer_v0/python-requirements.lock: 040ac131514f04ab144af5cbc7259993450b13f6fe977735f1f8c36db85fd0cd
+  containers/family_a_fuzzer_v0/source-commits.lock.yaml: 30b3936cfe1ef98113a813da7491c3fe35589fea1cebebfcd92bc95dc969c565
+  containers/family_a_fuzzer_v0/workspace-layout.yaml: 11e0e5f32ef5185cb03a98250d810913bde562842f3e10c2f2b197d9bd3e9a50
+  experiments/fuzzer_v0/family_a/full_readiness/source_lock.yaml: 9f045ec322e3d213b3af20049a382d7712ac01799a82999be6d1e38c7ac71719
+  experiments/fuzzer_v0/family_a/full_readiness/package_inventory.json: ab45f7aecee65c340c1fd45243c09904669f20064cd84b092ae5bbedc10312f6
+  experiments/fuzzer_v0/family_a/full_readiness/binary_manifest.json: 41074d13fe4e5859ed7d2ca8fc7c4ef19a0a7a400a96a504c17eead1e1c2f226
+  experiments/fuzzer_v0/family_a/full_readiness/component_manifest.yaml: 44aebb3fa9a6908cff78ef65ad168d88d2203072db690312fb27ad4165bbd69b
+  experiments/fuzzer_v0/family_a/full_readiness/slot_execution_graph.yaml: de5107515b51ff2d922ba83a9e991672cbb2265451089a0648aed24be663b0da
+  data/schemas/family_a_fuzzer_v0_full_environment_lock.schema.json: 052b61276f1a6d721bd94315fd6694a97621d4905792e03e807576945d818dfc
+  data/schemas/family_a_fuzzer_v0_binary_manifest.schema.json: 5c9288524d10a8741d27e03772a491d44ee73c94eedc34b50cd7d47976222d27
+  data/schemas/family_a_fuzzer_v0_component_graph.schema.json: 9135a8a7f238de11ef10d5067d883f95a59121d3a846af87cd12bcd1061c1c18
+  scripts/fuzzer_v0/family_a/capture_environment.py: c9fd9c490429429cf139aaea810af3c2772107ca844fe50ac7d16449e50213a1
+  scripts/fuzzer_v0/family_a/environment_contract.py: f21c1b834753691c35994fc5a62f8e524cab2d13d4f67acafa148f37c3ed7eaa
+  scripts/fuzzer_v0/family_a/state_space_evaluator.py: 41d0107c38f880c12efda16deaa16415f4a4f9e822b56ed60b997176878e75e6
+runtime_started: false
+formal_flight_communication_started: false
+host_ros_modified: false
