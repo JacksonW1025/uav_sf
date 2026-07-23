@@ -67,6 +67,8 @@ Family A Fuzzer v0 is `PREREGISTERED_NOT_ACTIVATED`.
 - Blocking clauses: `11`.
 - Readiness amendment status:
   `READINESS_RESOLVED_PENDING_INDEPENDENT_REVIEW`.
+- Readiness implementation commit:
+  `e6128fdf5028c91673392d42f9736cbd5ac5b562`.
 - Readiness blockers resolved: `11`.
 - Readiness blockers remaining: `0`.
 - Comparison arms: `NOT_AUTHORIZED`.
