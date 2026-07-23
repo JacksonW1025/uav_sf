@@ -53,8 +53,9 @@ COPY . /opt/family_a/repository
 WORKDIR /opt/family_a/repository
 
 RUN containers/family_a_fuzzer_v0/build_all.sh \
-    && ln -s /opt/family_a/workspace/ros /opt/family_a/repository/ros2_ws \
-    && python3 -m compileall -q scripts \
+    && ln -s /opt/family_a/workspace/ros /opt/family_a/repository/ros2_ws
+
+RUN python3 -m compileall -q scripts \
     && containers/family_a_fuzzer_v0/verify_environment.sh --build-time
 
 ENTRYPOINT ["/opt/family_a/repository/containers/family_a_fuzzer_v0/entrypoint.sh"]
