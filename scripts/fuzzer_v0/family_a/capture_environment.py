@@ -35,6 +35,22 @@ def _run(*command: str, check: bool = True) -> str:
     return (process.stdout + process.stderr).strip()
 
 
+def _gazebo_identity() -> str:
+    process = subprocess.run(
+        ["gz", "--versions"],
+        capture_output=True,
+        text=True,
+    )
+    observed = (process.stdout + process.stderr).strip()
+    # Gazebo Tools 2 prints its valid command/version inventory and exits 255.
+    # Require that inventory and accept only the two documented success shapes.
+    if process.returncode not in {0, 255} or "gz <command>" not in observed:
+        raise CaptureError(
+            f"gz --versions failed with {process.returncode}: {observed}"
+        )
+    return observed
+
+
 def _git_commit(path: Path) -> str:
     return _run("git", "-C", str(path), "rev-parse", "HEAD")
 
@@ -244,9 +260,23 @@ def capture(image_id: str) -> tuple[dict[str, Any], dict[str, Any]]:
             "python": _run("python3", "--version"),
             "gcc": _run("gcc", "--version").splitlines()[0],
             "cmake": _run("cmake", "--version").splitlines()[0],
-            "gazebo": _run("gz", "--versions"),
-            "colcon": _run("colcon", "version-check", check=False),
+            "ninja": _run("ninja", "--version"),
+            "make": _run("make", "--version").splitlines()[0],
+            "gazebo": _gazebo_identity(),
+            "colcon": _run(
+                "python3",
+                "-c",
+                "import importlib.metadata; print(importlib.metadata.version('colcon-core'))",
+            ),
+            "vcstool": _run("vcs", "--version"),
+            "rosdep": _run("rosdep", "--version"),
             "ros2": _run("ros2", "--help").splitlines()[0],
+            "rmw_fastrtps_cpp_package": _run(
+                "dpkg-query",
+                "-W",
+                "-f=${Version}",
+                "ros-jazzy-rmw-fastrtps-cpp",
+            ),
         },
         "source_commits": {
             "repository_implementation": implementation,

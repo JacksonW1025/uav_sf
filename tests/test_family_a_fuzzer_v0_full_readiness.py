@@ -14,6 +14,7 @@ import pytest
 import yaml
 
 from scripts.fuzzer_v0.family_a import attempt_accounting as accounting
+from scripts.fuzzer_v0.family_a import capture_environment
 from scripts.fuzzer_v0.family_a import compact_evidence
 from scripts.fuzzer_v0.family_a import execution_graph
 from scripts.fuzzer_v0.family_a import qualification_freshness_collector
@@ -58,6 +59,23 @@ def test_unique_runner_help_starts_nothing() -> None:
     process = _run()
     assert process.returncode == evaluator.EXIT_SCOPE
     assert "env-build" in process.stderr
+
+
+def test_environment_capture_accepts_gazebo_tools_inventory_exit_255(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    completed = subprocess.CompletedProcess(
+        ["gz", "--versions"],
+        returncode=255,
+        stdout="gz <command> [options]\n",
+        stderr="",
+    )
+    monkeypatch.setattr(
+        capture_environment.subprocess,
+        "run",
+        lambda *args, **kwargs: completed,
+    )
+    assert capture_environment._gazebo_identity() == "gz <command> [options]"
 
 
 def test_plan_and_preflight_are_static() -> None:

@@ -256,7 +256,7 @@ components:
   - component_id: environment_capture
     role: environment
     source_path: scripts/fuzzer_v0/family_a/capture_environment.py
-    sha256: 3404f1f2570da06b8afcdb200c285b9e001d268b2c8fb86ffb150036ec53abe9
+    sha256: c9fd9c490429429cf139aaea810af3c2772107ca844fe50ac7d16449e50213a1
     module_or_command: "python3 scripts/fuzzer_v0/family_a/capture_environment.py"
     build_target: python_compileall
     input_contract: locked_container_image_and_workspace
