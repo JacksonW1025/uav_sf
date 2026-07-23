@@ -1,0 +1,32 @@
+schema_version: "1.0"
+contract_id: FAMILY_A_V0P_APPEND_ONLY_ACCOUNTING
+status: IMPLEMENTED_STATICALLY_NOT_EXECUTED
+event_schema: data/schemas/family_a_fuzzer_v0_attempt_event.schema.json
+tool: scripts/fuzzer_v0/family_a/attempt_accounting.py
+lifecycle:
+  - REGISTERED_PRELAUNCH
+  - AUTHORIZATION_VERIFIED
+  - PREFLIGHT_PASSED
+  - LAUNCH_STARTED
+  - SCENARIO_COMPLETED_OR_SAFETY_STOPPED
+  - COLLECTION_CLOSED
+  - ORACLES_COMPLETED
+  - CLEANUP_COMPLETED
+  - CLASSIFIED
+  - CLOSED
+invariants:
+  append_only: true
+  hash_chain: true
+  monotonically_increasing_sequence: true
+  unique_attempt_id: true
+  registration_commit_pushed_before_launch: true
+  seventh_formal_attempt_refused: true
+  closed_attempt_cannot_reopen: true
+  incomplete_attempt_cannot_be_overwritten: true
+  rejected_attempt_retained: true
+  prelaunch_rejection_consumes_budget: false
+  launch_consumes_budget: true
+  aggregate_ledger_derived_from_event_stream: true
+current_formal_attempts: 0
+current_accepted_attempts: 0
+V0P_A1_created: false

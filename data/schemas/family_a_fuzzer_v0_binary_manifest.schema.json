@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "family_a_fuzzer_v0_binary_manifest.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "manifest_id", "image_id", "binaries"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "manifest_id": {"const": "FAMILY_A_FUZZER_V0_FORMAL_BINARIES"},
+    "image_id": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "binaries": {
+      "type": "array",
+      "minItems": 10,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "component_id",
+          "source_commit",
+          "source_path",
+          "build_target",
+          "build_command",
+          "build_flags",
+          "output_path",
+          "sha256",
+          "linked_libraries",
+          "ros_distro",
+          "rmw_implementation",
+          "architecture",
+          "binary_type",
+          "read_only_entry_check"
+        ],
+        "properties": {
+          "component_id": {"type": "string", "minLength": 1},
+          "source_commit": {"type": "string", "minLength": 7},
+          "source_path": {"type": "string", "minLength": 1},
+          "build_target": {"type": "string", "minLength": 1},
+          "build_command": {"type": "string", "minLength": 1},
+          "build_flags": {"type": "array", "items": {"type": "string"}},
+          "output_path": {"type": "string", "pattern": "^/opt/family_a/"},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "linked_libraries": {"type": "array", "items": {"type": "string"}},
+          "ros_distro": {"const": "jazzy"},
+          "rmw_implementation": {"const": "rmw_fastrtps_cpp"},
+          "architecture": {"const": "aarch64"},
+          "binary_type": {"enum": ["ELF_EXECUTABLE", "ELF_SHARED_LIBRARY", "PYTHON_ENTRY", "SHELL_ENTRY"]},
+          "read_only_entry_check": {
+            "type": "object",
+            "required": ["command", "exit_code", "status"],
+            "properties": {
+              "command": {"type": "string"},
+              "exit_code": {"type": "integer"},
+              "status": {"const": "PASS"}
+            }
+          }
+        }
+      }
+    }
+  }
+}

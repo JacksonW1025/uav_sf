@@ -1,0 +1,23 @@
+schema_version: "1.0"
+workspace_id: FAMILY_A_FUZZER_V0_JAZZY_WORKSPACE
+root: /opt/family_a
+overlay_order:
+  - /opt/ros/jazzy/setup.bash
+  - /opt/family_a/workspace/ros/install/setup.bash
+paths:
+  repository: /opt/family_a/repository
+  source: /opt/family_a/workspace/src
+  px4_source: /opt/family_a/workspace/src/PX4-Autopilot
+  px4_build: /opt/family_a/workspace/src/PX4-Autopilot/build/px4_sitl_default
+  ros_source: /opt/family_a/workspace/ros/src
+  ros_build: /opt/family_a/workspace/ros/build
+  ros_install: /opt/family_a/workspace/ros/install
+  dds_source: /opt/family_a/workspace/src/Micro-XRCE-DDS-Agent
+  dds_build: /opt/family_a/workspace/dds
+  build_inventory: /opt/family_a/build-inventory
+formal_output_mount: /attempts
+authorization_repository_mount: /authorization/repository
+host_paths_permitted:
+  - read_only_git_authorization_repository
+  - attempt_output_directory
+host_ros_paths_permitted: []

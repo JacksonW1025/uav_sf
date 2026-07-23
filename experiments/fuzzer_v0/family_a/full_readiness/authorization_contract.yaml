@@ -1,0 +1,29 @@
+schema_version: "1.0"
+contract_id: FAMILY_A_V0P_PUSHED_MAIN_AUTHORIZATION
+status: IMPLEMENTED_PENDING_FINAL_IDENTITY_LOCK
+authorized_decision: APPROVE_QUALIFICATION_ONLY
+authorized_statuses:
+  - QUALIFICATION_AUTHORIZED_NOT_STARTED
+  - QUALIFICATION_IN_PROGRESS
+authorized_scope: V0_P_QUALIFICATION_ONLY
+qualification_target_accepted: 3
+qualification_maximum_formal_attempts: 6
+comparison_runtime_authorized: false
+identity_lock_policy: SUPPLIED_COMMIT_MUST_CONTAIN_THIS_EXACT_MANIFEST_BLOB
+self_reference_avoidance: >-
+  The manifest does not embed the hash of its own containing commit. The
+  caller supplies the authorization identity-lock commit, and the runner
+  requires that commit to be in pushed origin/main ancestry and to contain
+  the exact current manifest blob at the locked path.
+execute_preconditions:
+  - attached_branch_main
+  - worktree_clean
+  - HEAD_equals_origin_main
+  - ahead_behind_0_0
+  - decision_and_initial_ledger_hashes_match
+  - all_locked_commits_in_HEAD_ancestry
+  - authorization_manifest_exactly_in_supplied_identity_lock_commit
+  - registration_file_exactly_in_supplied_pushed_registration_commit
+  - comparison_authorization_fields_false
+  - fixed_attempt_slot_seed_match
+runtime_started_by_contract_validation: false

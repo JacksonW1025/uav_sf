@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "family_a_fuzzer_v0_component_graph.schema.json",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "graph_id",
+    "environment_id",
+    "runtime_executed",
+    "comparison_components_reachable",
+    "pipeline",
+    "slots"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "graph_id": {"const": "FAMILY_A_V0P_SIX_SLOT_EXECUTION_GRAPH"},
+    "environment_id": {"const": "FAMILY_A_FUZZER_V0_JAZZY_ARM64"},
+    "runtime_executed": {"const": false},
+    "comparison_components_reachable": {"const": false},
+    "pipeline": {
+      "type": "array",
+      "minItems": 20,
+      "items": {
+        "type": "object",
+        "required": [
+          "node_id",
+          "order",
+          "component_source",
+          "input_from",
+          "output",
+          "timeout_s",
+          "failure_classification"
+        ]
+      }
+    },
+    "slots": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "required": [
+          "slot_id",
+          "attempt_id",
+          "seed_id",
+          "simulation_seed",
+          "scenario_family",
+          "bindings",
+          "node_applicability"
+        ]
+      }
+    }
+  }
+}

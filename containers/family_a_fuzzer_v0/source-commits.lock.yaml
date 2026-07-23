@@ -1,0 +1,30 @@
+schema_version: "1.0"
+lock_id: FAMILY_A_FUZZER_V0_PUBLIC_SOURCES
+architecture: linux/arm64
+sources:
+  PX4:
+    repository: https://github.com/PX4/PX4-Autopilot.git
+    commit: 4ae21a5e569d3d89c2f6366688cbacb3e93437c9
+    patches:
+      - path: patches/px4/route_observability/route_observability_topics.patch
+        sha256: 735555764c175ebd0a318723d4e76b8898965c4728ee4cab9b05b6c34d5e8b7c
+      - path: patches/px4/route_observability/freshness_observability.patch
+        sha256: 7cc9aa3a99ba34ebd75094e291a357e679ce7176d112687ed75d1bf4b2339141
+  px4_msgs:
+    repository: https://github.com/PX4/px4_msgs.git
+    commit: 18ecff03041c6f8d8a0012fbc63af0b23dd60af1
+  px4_ros2_interface_lib:
+    repository: https://github.com/Auterion/px4-ros2-interface-lib.git
+    commit: c3e410f035806e8c56246708432ded09c976434b
+    patches:
+      - path: patches/px4_ros2_interface/health_reply_gate.patch
+        sha256: 82d29cad82141fe7ac59db1849ecf62a1916e0194488bfedacbb5b12c4d28747
+  Micro_XRCE_DDS_Agent:
+    repository: https://github.com/eProsima/Micro-XRCE-DDS-Agent.git
+    commit: 73622810d984349b80bbac0ef55fc0b694d62222
+base_image:
+  repository: public.ecr.aws/docker/library/ros
+  tag_observed_only: jazzy-ros-base
+  oci_index_digest: sha256:31daab66eef9139933379fb67159449944f4e2dcf2e22c2d12cc715f29873e0f
+  linux_arm64_platform_digest: sha256:b82a5ba3869a81196414cf34e4fc25c7935aab78b1f5187570ca9362c478cdbd
+  docker_official_images_revision: 0038f1c3a11aa0fc573d698b39ab5c204aad5a40

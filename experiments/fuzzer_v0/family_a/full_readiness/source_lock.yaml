@@ -1,0 +1,52 @@
+schema_version: "1.0"
+lock_id: FAMILY_A_FUZZER_V0_FULL_READINESS_SOURCES
+starting_repository_commit: 3803756e5ad6c0c70f32f90b15109c16e39a7eb5
+branch: main
+starting_ahead_behind: [0, 0]
+history:
+  preregistration_commit: 426f4c7316e973c6a4dab84a202fdb75ea65b7c1
+  original_activation_review_commit: 5db3934c58553e491b19fe8da106948fe8cd1d16
+  readiness_implementation_commit: e6128fdf5028c91673392d42f9736cbd5ac5b562
+  readiness_identity_lock_commit: bae879484abab51e369af13ed46db5762f457242
+  independent_rereview_commit: 3803756e5ad6c0c70f32f90b15109c16e39a7eb5
+  independent_rereview_decision: DECLINE_IMPLEMENTATION_NOT_READY
+implementation_commit: COMMIT_CONTAINING_THIS_IMPLEMENTATION_REPORTED_AFTER_PUSH
+host_observation:
+  os: Ubuntu_22.04.5_LTS
+  kernel: 5.15.148-tegra
+  architecture: aarch64
+  docker_client: "29.3.0"
+  docker_server: "29.3.0"
+  buildx: "0.31.1"
+  buildkit: "0.28.0"
+  available_disk_at_start: 1.1T
+  available_memory_at_start: 47Gi
+  host_ros_observed: humble
+  host_ros_modified: false
+  host_ros_selected: false
+frozen_assets:
+  - {path: experiments/fuzzer_v0/family_a/preregistration.yaml, sha256: c28861c363b92bbaddc473006bc7a9cd7bec34eb55a723f63159f5f0d0eeb978}
+  - {path: experiments/fuzzer_v0/family_a/source_lock.yaml, sha256: fe06830d18e4eaacc4e092d87aa6b59ec78c47c1a04664eb576d74656ad33f88}
+  - {path: experiments/fuzzer_v0/family_a/seed_catalog.tsv, sha256: 3e9d1e848f6633646c21f3e6fed65c0c7c60eef18ca5ae4ca56d2f41185a115b}
+  - {path: experiments/fuzzer_v0/family_a/state_model.yaml, sha256: 613ecc5e9cd0828f9e5670243b0c0613e813f1649aa08f5185f3a08928e3afdb}
+  - {path: experiments/fuzzer_v0/family_a/event_grammar.yaml, sha256: 44dfdc0f74f1233fe3bfa1245a5b373f823c7ce3c1ac45687097b79fc4782192}
+  - {path: experiments/fuzzer_v0/family_a/mutation_grammar.yaml, sha256: 8046ca1c1fa0b116597c6e5c3cf3a50f03e0821097ef22e6bc43a8a17c6b1bad}
+  - {path: experiments/fuzzer_v0/family_a/strategy_matrix.yaml, sha256: 2d1d8b968f7d125a525e1d4b3284c1ada69413755f7e69fd0b72cd801bdf419c}
+  - {path: experiments/fuzzer_v0/family_a/campaign_matrix.yaml, sha256: c1711ee22d4d31173a7102bf47b6d5572a56cb7765306a118c07a900ff9cdc94}
+  - {path: experiments/fuzzer_v0/family_a/oracle_lock.yaml, sha256: 2f0211a771de6bacc56f386dcf81babad2514227ea0cdf727a64e9ebea0980c2}
+  - {path: experiments/fuzzer_v0/family_a/evidence_rules.yaml, sha256: 5d9ae09b8f04fe594839ab8970df4b34e81ca40a953b699c792bf573754f6361}
+  - {path: experiments/fuzzer_v0/family_a/safety_rules.yaml, sha256: e73849e0c7c929b319a10a0905a5b39f554d7bd55429878a10d3346ae312bd00}
+  - {path: experiments/fuzzer_v0/family_a/analysis_plan.yaml, sha256: b2a352beb688dfb828afc11c77ab52fc045d31ecd9627954aca4e477252c30fd}
+  - {path: experiments/fuzzer_v0/family_a/attempt_ledger.yaml, sha256: cc1e34eb3a20d26d028fd050ced2b53e074b6f957b1e64788f82c7fa285023e1}
+frozen_counts:
+  seeds_total: 61
+  accepted_current_runtime: 50
+  historical_replay_only: 1
+  excluded: 10
+  unresolved: 0
+  qualification_slots: 6
+  qualification_target_accepted: 3
+  qualification_maximum_formal_attempts: 6
+  comparison_budgets: [12, 12, 12]
+  formal_attempts: 0
+runtime_started: false

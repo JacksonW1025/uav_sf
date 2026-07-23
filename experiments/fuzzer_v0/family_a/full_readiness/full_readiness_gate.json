@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "gate_id": "FAMILY_A_FUZZER_V0_FULL_READINESS",
+  "status": "PENDING",
+  "runtime_started": false,
+  "formal_attempts": 0,
+  "blocking_findings": [
+    "E-11",
+    "E-12",
+    "F-07",
+    "F-08",
+    "H-16",
+    "J-12",
+    "J-13",
+    "J-14",
+    "K-09"
+  ],
+  "checks": {
+    "E-11": "PENDING",
+    "E-12": "PENDING",
+    "F-07": "PENDING",
+    "F-08": "PENDING",
+    "H-16": "PENDING",
+    "J-12": "PENDING",
+    "J-13": "PENDING",
+    "J-14": "PENDING",
+    "K-09": "PENDING"
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "family_a_fuzzer_v0_authorization_manifest.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "manifest_id",
+    "identity_lock_policy",
+    "branch",
+    "qualification_target_accepted",
+    "qualification_maximum_formal_attempts",
+    "comparison_runtime_authorized",
+    "decision",
+    "initial_ledger",
+    "commits",
+    "locked_assets"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "manifest_id": {"const": "FAMILY_A_V0P_AUTHORIZATION_IDENTITY"},
+    "identity_lock_policy": {
+      "const": "SUPPLIED_COMMIT_MUST_CONTAIN_THIS_EXACT_MANIFEST_BLOB"
+    },
+    "branch": {"const": "main"},
+    "qualification_target_accepted": {"const": 3},
+    "qualification_maximum_formal_attempts": {"const": 6},
+    "comparison_runtime_authorized": {"const": false},
+    "decision": {"$ref": "#/$defs/identity"},
+    "initial_ledger": {"$ref": "#/$defs/identity"},
+    "commits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "preregistration",
+        "implementation",
+        "environment_identity_lock",
+        "independent_review"
+      ],
+      "properties": {
+        "preregistration": {"$ref": "#/$defs/commit"},
+        "implementation": {"$ref": "#/$defs/commit"},
+        "environment_identity_lock": {"$ref": "#/$defs/commit"},
+        "independent_review": {"$ref": "#/$defs/commit"}
+      }
+    },
+    "locked_assets": {
+      "type": "object",
+      "minProperties": 6,
+      "additionalProperties": {"$ref": "#/$defs/identity"}
+    }
+  },
+  "$defs": {
+    "commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  }
+}

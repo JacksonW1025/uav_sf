@@ -1,0 +1,385 @@
+schema_version: "1.0"
+manifest_id: FAMILY_A_FUZZER_V0_FULL_COMPONENTS
+environment_id: FAMILY_A_FUZZER_V0_JAZZY_ARM64
+status: IMPLEMENTED_PENDING_CONTAINER_BUILD
+components:
+  - component_id: scenario_p0
+    role: scenario
+    source_path: scripts/probes/run_p0_scenario.sh
+    sha256: ee0f879c46ca45fcb3dac3a8a3f64575fd758b518bc7ba1387984be4663682db
+    module_or_command: "scripts/probes/run_p0_scenario.sh {adapter_mode} {attempt_id}"
+    build_target: shell_syntax_and_container_install
+    input_contract: scenario_environment_and_fixed_seed
+    output_contract: raw_scenario_artifacts
+    timeout_s: 150
+    failure_classification: FORMAL_SAFETY_STOP
+  - component_id: scenario_p2
+    role: scenario
+    source_path: scripts/probes/run_p2_scenario.sh
+    sha256: 219e8d6f2b8fa0de582c66faf7c3eacd3a77be4f3e981fdc874f0a6af0cb7ccb
+    module_or_command: "scripts/probes/run_p2_scenario.sh external sigterm {attempt_id}"
+    build_target: shell_syntax_and_container_install
+    input_contract: scenario_environment_and_fixed_seed
+    output_contract: raw_scenario_artifacts
+    timeout_s: 150
+    failure_classification: FORMAL_SAFETY_STOP
+  - component_id: scenario_p3
+    role: scenario
+    source_path: scripts/probes/run_p3_scenario.sh
+    sha256: 77c777638c0fa01e15a830dd39d8a1eb4358b630c720693c2a154fb9aa6f1f5c
+    module_or_command: "scripts/probes/run_p3_scenario.sh offboard on off {attempt_id}"
+    build_target: shell_syntax_and_container_install
+    input_contract: scenario_environment_and_fixed_seed
+    output_contract: raw_scenario_artifacts
+    timeout_s: 150
+    failure_classification: FORMAL_SAFETY_STOP
+  - component_id: scenario_c1
+    role: scenario
+    source_path: scripts/probes/run_c1_concurrency.sh
+    sha256: 7dfa827621b095979c9998d8211dcb2a10edd2baeb1fe8c2022a0f59bec9164a
+    module_or_command: scripts/probes/run_c1_concurrency.sh
+    build_target: shell_syntax_and_container_install
+    input_contract: C1_pair_B_A_FIRST_and_fixed_seed
+    output_contract: raw_scenario_artifacts
+    timeout_s: 150
+    failure_classification: FORMAL_SAFETY_STOP
+  - component_id: adapter_offboard
+    role: adapter
+    source_path: scripts/adapters/offboard_adapter.py
+    sha256: c2ce2fc5dfe3a91b621defc90c89ae4fae7eef193b4fd3ef6e68e2f99eddc7ab
+    module_or_command: scripts.adapters.offboard_adapter
+    build_target: python_compileall
+    input_contract: public_PX4_Offboard_topics
+    output_contract: bounded_trajectory_setpoints
+    timeout_s: 150
+    failure_classification: CAMPAIGN_CONFIGURATION_FAILURE
+  - component_id: adapter_dynamic
+    role: adapter
+    source_path: scripts/adapters/external_mode_adapter/src/external_mode.cpp
+    sha256: ded38cca4044124ab114b88322fa65a40b105b5d9d9326614cfaefa72e2ba92c
+    module_or_command: /opt/family_a/workspace/ros/install/lib/route_transition_external_mode/route_transition_external_mode
+    build_target: route_transition_external_mode
+    input_contract: public_px4_ros2_interface
+    output_contract: dynamic_external_mode_events
+    timeout_s: 150
+    failure_classification: CAMPAIGN_CONFIGURATION_FAILURE
+  - component_id: adapter_executor
+    role: adapter
+    source_path: scripts/adapters/external_mode_adapter/src/p0_executor.cpp
+    sha256: 4673e49176cd3893da1725487794da98dac5161bcba8d250f1fe18258fb8df18
+    module_or_command: /opt/family_a/workspace/ros/install/lib/route_transition_external_mode/p0_external_mode_executor
+    build_target: p0_external_mode_executor
+    input_contract: public_px4_ros2_interface
+    output_contract: executor_completion_events
+    timeout_s: 150
+    failure_classification: CAMPAIGN_CONFIGURATION_FAILURE
+  - component_id: adapter_c1
+    role: adapter
+    source_path: scripts/adapters/external_mode_adapter/src/c1_concurrency_probe.cpp
+    sha256: 5d43baefead1593ca327f58308a2279f63e24e00cd40ad990e656111e1089391
+    module_or_command: /opt/family_a/workspace/ros/install/lib/route_transition_external_mode/c1_concurrency_probe
+    build_target: c1_concurrency_probe
+    input_contract: pair_B_event_control
+    output_contract: authority_event_runner_result
+    timeout_s: 150
+    failure_classification: CAMPAIGN_CONFIGURATION_FAILURE
+  - component_id: collector_route
+    role: collector
+    source_path: scripts/tracing/route_trace_collector.py
+    sha256: 446d1dad803e8599003ea5fb65216c19c854e7f04c72642d675113420c1c62a4
+    module_or_command: "python3 scripts/tracing/route_trace_collector.py --ulog {ulog} --output {route_trace} --run-id {attempt_id}"
+    build_target: python_compileall
+    input_contract: ULog_and_producer_lifecycle_events
+    output_contract: route_trace_jsonl_1_2
+    timeout_s: 60
+    failure_classification: OBSERVABILITY_REJECTED
+  - component_id: collector_writer_controller
+    role: collector
+    source_path: scripts/tracing/actuator_writer_collector.py
+    sha256: 140e717fe3c08ebf65afbcd332753393e9c721f22ba546681f48a84393391244
+    module_or_command: "python3 scripts/tracing/actuator_writer_collector.py {route_trace}"
+    build_target: python_compileall
+    input_contract: route_trace_jsonl_1_2
+    output_contract: writer_controller_lineage_summary
+    timeout_s: 30
+    failure_classification: OBSERVABILITY_REJECTED
+  - component_id: collector_clock
+    role: collector
+    source_path: scripts/tracing/clock_bridge_collector.py
+    sha256: 1140be063ce1e75835ec1f9fe3c3eea55aab7a483d99799a323e0d57353f4ed2
+    module_or_command: "python3 scripts/tracing/clock_bridge_collector.py --samples {clock_samples} --output {clock_bridge}"
+    build_target: python_compileall
+    input_contract: timesync_and_receive_samples
+    output_contract: clock_bridge_json
+    timeout_s: 30
+    failure_classification: OBSERVABILITY_REJECTED
+  - component_id: collector_freshness
+    role: collector
+    source_path: scripts/fuzzer_v0/family_a/qualification_freshness_collector.py
+    sha256: 4e098ecb1511b708ba40e593e3ff1474fdf309b94ec90d6f549cef0881bed747
+    module_or_command: "python3 scripts/fuzzer_v0/family_a/qualification_freshness_collector.py --run-id {attempt_id} --fault-type {fault_type} --monitor-result {monitor_result} --monitor-events {monitor_events} --route-trace {route_trace} --clock-bridge {clock_bridge} --output {freshness_observation}"
+    build_target: python_compileall
+    input_contract: P2_or_P3_monitor_route_and_clock_artifacts
+    output_contract: conservative_freshness_observation_with_no_default_PASS
+    timeout_s: 30
+    failure_classification: OBSERVABILITY_REJECTED
+  - component_id: collector_successor
+    role: collector
+    source_path: scripts/tracing/successor_lifecycle_monitor.py
+    sha256: 2a07f326cce079783efd088338d864f6e9cd5eb62789291e9b95a31fc934aed6
+    module_or_command: "python3 scripts/tracing/successor_lifecycle_monitor.py --run-id {attempt_id} --output {successor_observation} --events {successor_events}"
+    build_target: python_compileall
+    input_contract: live_PX4_ROS_lifecycle_topics
+    output_contract: lifecycle_event_jsonl
+    timeout_s: 150
+    failure_classification: OBSERVABILITY_REJECTED
+  - component_id: collector_linearization
+    role: collector
+    source_path: scripts/probes/c1_concurrency_monitor.py
+    sha256: 008796132d6759a70e842ed56d9794fee801bcebed24dbe2987ef841ba021a01
+    module_or_command: "python3 scripts/probes/c1_concurrency_monitor.py --run-id {attempt_id} --pair B --order A_FIRST --output {c1_result} --events {c1_events} --control-dir {control_dir} --mode-pid-file {mode_pid}"
+    build_target: python_compileall
+    input_contract: live_C1_authority_events
+    output_contract: linearization_events_and_runner_result
+    timeout_s: 150
+    failure_classification: OBSERVABILITY_REJECTED
+  - component_id: oracle_route
+    role: oracle
+    source_path: scripts/oracles/route_oracle_v0.py
+    sha256: 32cf3b5dd0d4e4ea2f535d5a006aa8782dab86397b16a1b5c70d625a8af751e2
+    module_or_command: "python3 scripts/oracles/route_oracle_v0.py --trace {route_trace} --clock-bridge {clock_bridge} --output {route_result}"
+    build_target: python_compileall
+    input_contract: route_trace_and_clock_bridge
+    output_contract: route_oracle_result_1_3
+    timeout_s: 30
+    failure_classification: OBSERVABILITY_REJECTED
+  - component_id: oracle_freshness
+    role: oracle
+    source_path: scripts/oracles/pre_revocation_freshness_oracle.py
+    sha256: b7c3d116cba7ed7e9ec959b01bad9d88fdda8ae4967a3dcd51d5648711a11ea2
+    module_or_command: "python3 scripts/oracles/pre_revocation_freshness_oracle.py --profile {freshness_profile} --observation {freshness_observation} --output {freshness_result}"
+    build_target: python_compileall
+    input_contract: freshness_profile_and_observation
+    output_contract: freshness_oracle_result_1_0
+    timeout_s: 30
+    failure_classification: OBSERVABILITY_REJECTED
+  - component_id: oracle_successor
+    role: oracle
+    source_path: scripts/oracles/successor_progression_oracle.py
+    sha256: 8c5f7d91a1d7d7035bb97389963d2ff550bd206fb66b30da8e56bab66d23d5ae
+    module_or_command: "python3 scripts/oracles/successor_progression_oracle.py --lifecycle-events {successor_events} --executor-log {executor_log} --route-trace {route_trace} --route-oracle {route_result} --clock-bridge {clock_bridge} --profile {successor_profile} --output {successor_result}"
+    build_target: python_compileall
+    input_contract: lifecycle_route_clock_and_profile
+    output_contract: successor_oracle_result_1_0
+    timeout_s: 30
+    failure_classification: OBSERVABILITY_REJECTED
+  - component_id: oracle_linearization
+    role: oracle
+    source_path: scripts/oracles/authority_event_linearization_oracle.py
+    sha256: ab5b38101396976c99215552dbf6fe80cd4bee926afe75a22d8e8d8894e8ff88
+    module_or_command: "python3 scripts/oracles/authority_event_linearization_oracle.py --runner-result {c1_result} --events {c1_events} --trace {route_trace} --clock-bridge {clock_bridge} --output {linearization_result}"
+    build_target: python_compileall
+    input_contract: C1_events_route_and_clock
+    output_contract: authority_event_linearization_result_0_2
+    timeout_s: 30
+    failure_classification: OBSERVABILITY_REJECTED
+  - component_id: safety_supervisor
+    role: safety
+    source_path: scripts/fuzzer_v0/family_a/safety_supervisor.py
+    sha256: 74aca2b545ec75390982a75ea7f58f6c05226f7d45225456240a9509cd57f3c7
+    module_or_command: "python3 scripts/fuzzer_v0/family_a/safety_supervisor.py --events {safety_events} --ready {supervisor_ready} --output {safety_result} --attempt-process-group {attempt_pgid}"
+    build_target: python_compileall
+    input_contract: continuous_live_monitor_events
+    output_contract: safety_supervisor_result
+    timeout_s: 155
+    failure_classification: FORMAL_SAFETY_STOP
+  - component_id: cleanup_audit
+    role: cleanup
+    source_path: scripts/fuzzer_v0/family_a/check_v0p_cleanup.py
+    sha256: 7006b8bbb4a9c409318e5bceb03bb8b93f800e9d181d164fbd8bb4194631f81f
+    module_or_command: "python3 scripts/fuzzer_v0/family_a/check_v0p_cleanup.py --input {cleanup_input} --run-dir {attempt_root} --output {cleanup_result}"
+    build_target: python_compileall
+    input_contract: terminal_process_collector_port_and_flush_evidence
+    output_contract: cleanup_audit_json
+    timeout_s: 30
+    failure_classification: OBSERVABILITY_REJECTED
+  - component_id: compact_evidence
+    role: evidence
+    source_path: scripts/fuzzer_v0/family_a/compact_evidence.py
+    sha256: d85886a4a13a9ef46c5f5a48c3fa6eb6ebe68ee447fd5b048f80032e205d16be
+    module_or_command: "python3 scripts/fuzzer_v0/family_a/compact_evidence.py build --input {compact_input} --output {compact_output} --raw-root {raw_root}"
+    build_target: python_compileall
+    input_contract: closed_attempt_complete_evidence
+    output_contract: compact_evidence_2_0
+    timeout_s: 30
+    failure_classification: OBSERVABILITY_REJECTED
+  - component_id: evidence_gate
+    role: evidence
+    source_path: scripts/fuzzer_v0/family_a/evidence_gate.py
+    sha256: 77a3b448033e7fe2d5fe7b735f8053e9956ed67a166f4076413f059fe8a06939
+    module_or_command: "python3 scripts/fuzzer_v0/family_a/evidence_gate.py --input {gate_input} --output {classification}"
+    build_target: python_compileall
+    input_contract: Oracle_safety_cleanup_results
+    output_contract: Evidence_Gate_1_0_classification
+    timeout_s: 30
+    failure_classification: OBSERVABILITY_REJECTED
+  - component_id: accounting
+    role: accounting
+    source_path: scripts/fuzzer_v0/family_a/attempt_accounting.py
+    sha256: 9a5bec65e01c077f6e15e878cc07de2072a2c53eb3619b19ea4ab1b1a4a7d72b
+    module_or_command: scripts.fuzzer_v0.family_a.attempt_accounting
+    build_target: python_compileall
+    input_contract: lifecycle_event_and_prior_chain_head
+    output_contract: append_only_hash_chained_event
+    timeout_s: 10
+    failure_classification: CAMPAIGN_CONFIGURATION_FAILURE
+  - component_id: authorization
+    role: authorization
+    source_path: scripts/fuzzer_v0/family_a/authorization.py
+    sha256: 381f9559b9f07569e7d661f91c8406c4bf32516671ffbce168d8aaf39fd644dc
+    module_or_command: scripts.fuzzer_v0.family_a.authorization
+    build_target: python_compileall
+    input_contract: pushed_main_decision_ledger_manifest_and_registration
+    output_contract: verified_authorization_state
+    timeout_s: 10
+    failure_classification: CAMPAIGN_CONFIGURATION_FAILURE
+  - component_id: environment_verifier
+    role: environment
+    source_path: scripts/fuzzer_v0/family_a/environment_contract.py
+    sha256: 0a2ee0628269d2e8861fe6c50664baf0a4c938cd0fa594edb959e29e1759d4bd
+    module_or_command: "containers/family_a_fuzzer_v0/verify_environment.sh"
+    build_target: python_compileall_and_shell_syntax
+    input_contract: locked_container_workspace
+    output_contract: environment_verification_record
+    timeout_s: 60
+    failure_classification: ENVIRONMENT_FAILURE
+  - component_id: environment_capture
+    role: environment
+    source_path: scripts/fuzzer_v0/family_a/capture_environment.py
+    sha256: 3404f1f2570da06b8afcdb200c285b9e001d268b2c8fb86ffb150036ec53abe9
+    module_or_command: "python3 scripts/fuzzer_v0/family_a/capture_environment.py"
+    build_target: python_compileall
+    input_contract: locked_container_image_and_workspace
+    output_contract: exact_package_inventory_and_binary_manifest
+    timeout_s: 120
+    failure_classification: ENVIRONMENT_FAILURE
+  - component_id: process_port_audit
+    role: environment
+    source_path: scripts/fuzzer_v0/family_a/check_v0p_runtime_residue.py
+    sha256: 8b8bcb53ce624fbc747b384f5c0474c8714160fd1f45d11e1d5614da239abf35
+    module_or_command: "python3 scripts/fuzzer_v0/family_a/check_v0p_runtime_residue.py preflight"
+    build_target: python_compileall
+    input_contract: process_table_and_campaign_port
+    output_contract: process_port_audit_json
+    timeout_s: 10
+    failure_classification: ENVIRONMENT_FAILURE
+  - component_id: evaluator_runner
+    role: runner
+    source_path: scripts/fuzzer_v0/family_a/state_space_evaluator.py
+    sha256: b014fcb701052621dbec75890acbc535f473c603b38c9f5c3dd480a87b8c1640
+    module_or_command: "python3 scripts/fuzzer_v0/family_a/state_space_evaluator.py"
+    build_target: python_compileall
+    input_contract: subcommand_and_locked_contract_assets
+    output_contract: static_or_formal_orchestration_result
+    timeout_s: 180
+    failure_classification: CAMPAIGN_CONFIGURATION_FAILURE
+  - component_id: formal_orchestrator
+    role: runner
+    source_path: scripts/fuzzer_v0/family_a/formal_orchestrator.py
+    sha256: 3d483dfeee16efa4244c0a12b5bfdb0e222453960b9ed0dce307315f9fcdcc7b
+    module_or_command: scripts.fuzzer_v0.family_a.formal_orchestrator.execute
+    build_target: python_compileall
+    input_contract: authorized_registered_fixed_slot
+    output_contract: closed_attempt_and_compact_evidence
+    timeout_s: 240
+    failure_classification: FORMAL_SAFETY_STOP
+  - component_id: collector_live_telemetry
+    role: collector
+    source_path: scripts/fuzzer_v0/family_a/runtime_telemetry_collector.py
+    sha256: be87eb78dcf3ab89fdb71397c25c1b01b4639b337d148dea4f67cd24038d274d
+    module_or_command: "python3 scripts/fuzzer_v0/family_a/runtime_telemetry_collector.py --attempt-id {attempt_id} --events {safety_events} --ready {collector_ready} --stop {collector_stop} --output {collector_result}"
+    build_target: python_compileall
+    input_contract: live_PX4_ROS_telemetry
+    output_contract: supervisor_events_and_terminal_summary
+    timeout_s: 155
+    failure_classification: FORMAL_SAFETY_STOP
+  - component_id: graph_executor
+    role: static_execution_graph
+    source_path: scripts/fuzzer_v0/family_a/execution_graph.py
+    sha256: 8d9d998c864a757e70c41ce836d9f77576de0a6c009860d53df2c582e3140632
+    module_or_command: scripts.fuzzer_v0.family_a.execution_graph
+    build_target: python_compileall
+    input_contract: six_slot_graph_and_component_manifest
+    output_contract: validated_graph_or_complete_fixture_trace
+    timeout_s: 180
+    failure_classification: CAMPAIGN_CONFIGURATION_FAILURE
+  - component_id: graph_fixture_component
+    role: static_fixture
+    source_path: scripts/fuzzer_v0/family_a/mock_component.py
+    sha256: 3e85bf7ca2778aa1bc9e8ff71a0affccc138ea1b79c839b7d96898288fe5b98f
+    module_or_command: "python3 scripts/fuzzer_v0/family_a/mock_component.py"
+    build_target: python_compileall
+    input_contract: graph_node_and_upstream_fixture_hashes
+    output_contract: consumed_input_hash_record
+    timeout_s: 10
+    failure_classification: CAMPAIGN_CONFIGURATION_FAILURE
+  - component_id: collector_freshness_live_harness
+    role: common_collector
+    source_path: scripts/probes/freshness_flight_monitor.py
+    sha256: 119210e8d4ca9484e8dd80fb393e96d78e4d0cbcbad216ac1f2ad857c07befc0
+    module_or_command: scripts.probes.freshness_flight_monitor
+    build_target: python_compileall
+    input_contract: live_PX4_ROS_topics
+    output_contract: freshness_monitor_result_and_events
+    timeout_s: 150
+    failure_classification: OBSERVABILITY_REJECTED
+  - component_id: collector_p5_plan
+    role: common_collector
+    source_path: scripts/probes/p5_runner.py
+    sha256: b693fe802ed1d832488cd4218c9710ef38d9399a0dbdb2e748400d3aed293a08
+    module_or_command: scripts.probes.p5_runner
+    build_target: python_compileall
+    input_contract: frozen_P5_matrix
+    output_contract: paired_execution_and_artifact_plan
+    timeout_s: 30
+    failure_classification: CAMPAIGN_CONFIGURATION_FAILURE
+  - component_id: collector_n1_harness
+    role: common_collector
+    source_path: scripts/probes/run_n1_trajectory_residue.sh
+    sha256: b3f86a1cc6562ba7ee9969c7847ac154a7a996f83880ba1eb97c46e38337f84d
+    module_or_command: scripts/probes/run_n1_trajectory_residue.sh
+    build_target: shell_syntax_and_container_install
+    input_contract: frozen_N1_phase_bucket_and_container_environment
+    output_contract: N1_route_and_freshness_artifacts
+    timeout_s: 150
+    failure_classification: OBSERVABILITY_REJECTED
+  - component_id: strategy_official_sequence
+    role: comparison_strategy
+    source_path: scripts/fuzzer_v0/family_a/strategies.py
+    sha256: 07916f0769b388b8e4a70122b4cb9ae27525d87a4de576ab693a1a6ed6be33b5
+    module_or_command: scripts.fuzzer_v0.family_a.strategies.official_sequence
+    build_target: python_compileall
+    input_contract: frozen_current_runtime_seed_pool
+    output_contract: unified_testcase
+    timeout_s: 10
+    failure_classification: CAMPAIGN_CONFIGURATION_FAILURE
+  - component_id: strategy_bounded_random
+    role: comparison_strategy
+    source_path: scripts/fuzzer_v0/family_a/strategies.py
+    sha256: 07916f0769b388b8e4a70122b4cb9ae27525d87a4de576ab693a1a6ed6be33b5
+    module_or_command: scripts.fuzzer_v0.family_a.strategies.bounded_random_sequence
+    build_target: python_compileall
+    input_contract: materialized_legal_testcase_space_and_seed_2026072202
+    output_contract: unified_testcase
+    timeout_s: 10
+    failure_classification: CAMPAIGN_CONFIGURATION_FAILURE
+  - component_id: strategy_state_aware
+    role: comparison_strategy
+    source_path: scripts/fuzzer_v0/family_a/strategies.py
+    sha256: 07916f0769b388b8e4a70122b4cb9ae27525d87a4de576ab693a1a6ed6be33b5
+    module_or_command: scripts.fuzzer_v0.family_a.strategies.choose_state_aware
+    build_target: python_compileall
+    input_contract: frozen_priority_tiers_coverage_and_seed_2026072203
+    output_contract: unified_testcase
+    timeout_s: 10
+    failure_classification: CAMPAIGN_CONFIGURATION_FAILURE

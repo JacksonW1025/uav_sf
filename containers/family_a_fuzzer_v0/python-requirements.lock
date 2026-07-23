@@ -1,0 +1,4 @@
+# The PX4 Python build dependencies are exact apt packages in
+# apt-packages.lock. PyULog is the sole pip-installed distribution.
+pyulog==1.2.2 \
+    --hash=sha256:43cb20d493158226a6d309c45e23ffab47eebc69cfaafa15277463804c5338e1

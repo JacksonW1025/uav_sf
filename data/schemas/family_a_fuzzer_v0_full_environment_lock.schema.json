@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "family_a_fuzzer_v0_full_environment_lock.schema.json",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "environment_id",
+    "status",
+    "architecture",
+    "base_image",
+    "full_image",
+    "toolchain",
+    "source_commits",
+    "lock_hashes",
+    "runtime_started"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "environment_id": {"const": "FAMILY_A_FUZZER_V0_JAZZY_ARM64"},
+    "status": {"enum": ["PENDING_BUILD", "LOCKED_CONTAINER_READY", "FAIL"]},
+    "architecture": {"const": "linux/arm64"},
+    "base_image": {
+      "type": "object",
+      "required": ["repository", "oci_index_digest", "platform_digest"],
+      "properties": {
+        "repository": {"type": "string"},
+        "oci_index_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "platform_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      }
+    },
+    "full_image": {"type": "object"},
+    "toolchain": {"type": "object"},
+    "source_commits": {"type": "object"},
+    "lock_hashes": {"type": "object"},
+    "runtime_started": {"const": false}
+  }
+}

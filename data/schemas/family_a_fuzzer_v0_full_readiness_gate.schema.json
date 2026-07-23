@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "family_a_fuzzer_v0_full_readiness_gate.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "gate_id",
+    "status",
+    "runtime_started",
+    "formal_attempts",
+    "blocking_findings",
+    "checks"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "gate_id": {"const": "FAMILY_A_FUZZER_V0_FULL_READINESS"},
+    "status": {
+      "enum": ["PENDING", "PASS", "FAIL", "OBJECTIVE_ENVIRONMENT_LIMITATION"]
+    },
+    "runtime_started": {"const": false},
+    "formal_attempts": {"const": 0},
+    "blocking_findings": {
+      "type": "array",
+      "items": {
+        "enum": ["E-11", "E-12", "F-07", "F-08", "H-16", "J-12", "J-13", "J-14", "K-09"]
+      },
+      "uniqueItems": true
+    },
+    "checks": {
+      "type": "object",
+      "minProperties": 9,
+      "additionalProperties": {"enum": ["PASS", "FAIL", "PENDING"]}
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "family_a_fuzzer_v0_attempt_event.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "attempt_id",
+    "slot_id",
+    "seed_id",
+    "sequence",
+    "event_type",
+    "timestamp",
+    "previous_event_hash",
+    "event_hash",
+    "repository_commit",
+    "authorization_commit",
+    "registration_commit",
+    "payload_hash",
+    "payload",
+    "tool_identity"
+  ],
+  "properties": {
+    "attempt_id": {"type": "string", "pattern": "^(V0P-A[1-6]|FIXTURE-[A-Z0-9_-]+)$"},
+    "slot_id": {"type": "string", "pattern": "^V0P-S[1-6]$"},
+    "seed_id": {"type": "string", "minLength": 1},
+    "sequence": {"type": "integer", "minimum": 0},
+    "event_type": {
+      "enum": [
+        "REGISTERED_PRELAUNCH",
+        "AUTHORIZATION_VERIFIED",
+        "PREFLIGHT_PASSED",
+        "LAUNCH_STARTED",
+        "SCENARIO_COMPLETED",
+        "SAFETY_STOPPED",
+        "COLLECTION_CLOSED",
+        "ORACLES_COMPLETED",
+        "CLEANUP_COMPLETED",
+        "CLASSIFIED",
+        "CLOSED",
+        "REJECTED_PRELAUNCH"
+      ]
+    },
+    "timestamp": {"type": "string", "format": "date-time"},
+    "previous_event_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "event_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "repository_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "authorization_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "registration_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "payload_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "payload": {"type": "object"},
+    "tool_identity": {"const": "family-a-attempt-accounting-1.0"}
+  }
+}

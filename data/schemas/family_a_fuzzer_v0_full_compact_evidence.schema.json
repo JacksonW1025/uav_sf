@@ -1,0 +1,181 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "family_a_fuzzer_v0_full_compact_evidence.schema.json",
+  "title": "Family A Fuzzer v0 closed-attempt compact evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "attempt",
+    "authorization",
+    "registration",
+    "source_and_build_identities",
+    "component_identities",
+    "raw_artifacts",
+    "clock_bridge",
+    "critical_windows",
+    "oracles",
+    "safety",
+    "cleanup",
+    "classification",
+    "closure"
+  ],
+  "properties": {
+    "schema_version": {"const": "2.0"},
+    "attempt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["attempt_id", "slot_id", "seed_id"],
+      "properties": {
+        "attempt_id": {
+          "type": "string",
+          "pattern": "^(V0P-A[1-6]|FIXTURE-[A-Z0-9_-]+)$"
+        },
+        "slot_id": {"type": "string", "pattern": "^V0P-S[1-6]$"},
+        "seed_id": {"type": "string", "minLength": 1}
+      }
+    },
+    "authorization": {"$ref": "#/$defs/hashIdentity"},
+    "registration": {"$ref": "#/$defs/hashIdentity"},
+    "source_and_build_identities": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/hashIdentity"}
+    },
+    "component_identities": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/hashIdentity"}
+    },
+    "raw_artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256", "flushed"],
+        "properties": {
+          "path": {"type": "string", "minLength": 1},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "flushed": {"const": true}
+        }
+      }
+    },
+    "clock_bridge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "sha256"],
+      "properties": {
+        "status": {"const": "VALID"},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "critical_windows": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["window_id", "status", "sha256"],
+        "properties": {
+          "window_id": {"type": "string", "minLength": 1},
+          "status": {"const": "COMPLETE"},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        }
+      }
+    },
+    "oracles": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["oracle_id", "applicability", "result", "sha256"],
+        "properties": {
+          "oracle_id": {
+            "enum": ["ROUTE", "FRESHNESS", "SUCCESSOR", "LINEARIZATION"]
+          },
+          "applicability": {"enum": ["REQUIRED", "NOT_APPLICABLE"]},
+          "result": {
+            "enum": ["PASS", "EXPOSURE", "VIOLATION", "UNKNOWN", "NOT_APPLICABLE"]
+          },
+          "sha256": {
+            "oneOf": [
+              {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+              {"type": "null"}
+            ]
+          }
+        }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["completed", "result", "sha256"],
+      "properties": {
+        "completed": {"const": true},
+        "result": {
+          "enum": [
+            "PASS",
+            "FORMAL_SAFETY_STOP",
+            "MEASUREMENT_INSUFFICIENT",
+            "ENVIRONMENT_FAILURE",
+            "CAMPAIGN_CONFIGURATION_FAILURE"
+          ]
+        },
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "cleanup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["completed", "result", "sha256"],
+      "properties": {
+        "completed": {"const": true},
+        "result": {
+          "enum": [
+            "CLEAN",
+            "RESIDUAL_PROCESS",
+            "OCCUPIED_PORT",
+            "INCOMPLETE_ARTIFACT_CLOSE",
+            "MISSING_TERMINAL_STATE",
+            "UNKNOWN"
+          ]
+        },
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "classification": {
+      "enum": [
+        "ACCEPTED",
+        "EXPOSURE",
+        "UNKNOWN",
+        "OBSERVABILITY_REJECTED",
+        "MEASUREMENT_INSUFFICIENT",
+        "ENVIRONMENT_FAILURE",
+        "CAMPAIGN_CONFIGURATION_FAILURE",
+        "FORMAL_SAFETY_STOP"
+      ]
+    },
+    "closure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["event_type", "event_hash"],
+      "properties": {
+        "event_type": {"const": "CLOSED"},
+        "event_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  },
+  "$defs": {
+    "hashIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  }
+}

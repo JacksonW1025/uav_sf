@@ -1,0 +1,188 @@
+schema_version: "1.0"
+graph_id: FAMILY_A_V0P_SIX_SLOT_EXECUTION_GRAPH
+environment_id: FAMILY_A_FUZZER_V0_JAZZY_ARM64
+runtime_executed: false
+comparison_components_reachable: false
+pipeline:
+  - {node_id: authorization_identity_verification, order: 0, component_source: authorization, input_from: [], output: "manifests/graph/00-authorization.json", timeout_s: 10, failure_classification: CAMPAIGN_CONFIGURATION_FAILURE}
+  - {node_id: prelaunch_registration_verification, order: 1, component_source: accounting, input_from: [authorization_identity_verification], output: "manifests/graph/01-registration.json", timeout_s: 10, failure_classification: CAMPAIGN_CONFIGURATION_FAILURE}
+  - {node_id: container_identity_verification, order: 2, component_source: environment_verifier, input_from: [prelaunch_registration_verification], output: "manifests/graph/02-container.json", timeout_s: 60, failure_classification: ENVIRONMENT_FAILURE}
+  - {node_id: process_port_preflight, order: 3, component_source: process_port_audit, input_from: [container_identity_verification], output: "manifests/graph/03-preflight.json", timeout_s: 10, failure_classification: ENVIRONMENT_FAILURE}
+  - {node_id: route_collector_start, order: 4, component_source: "binding:live_telemetry_collector", input_from: [process_port_preflight], output: "manifests/graph/04-route-ready.json", timeout_s: 30, failure_classification: OBSERVABILITY_REJECTED}
+  - {node_id: writer_controller_collector_start, order: 5, component_source: "binding:writer_controller_collector", input_from: [route_collector_start], output: "manifests/graph/05-writer-ready.json", timeout_s: 30, failure_classification: OBSERVABILITY_REJECTED}
+  - {node_id: clock_collector_start, order: 6, component_source: "binding:clock_collector", input_from: [writer_controller_collector_start], output: "manifests/graph/06-clock-ready.json", timeout_s: 30, failure_classification: OBSERVABILITY_REJECTED}
+  - {node_id: freshness_collector_start, order: 7, component_source: "binding:freshness_collector", input_from: [clock_collector_start], output: "manifests/graph/07-freshness-ready.json", timeout_s: 30, failure_classification: OBSERVABILITY_REJECTED}
+  - {node_id: successor_collector_start, order: 8, component_source: "binding:successor_collector", input_from: [freshness_collector_start], output: "manifests/graph/08-successor-ready.json", timeout_s: 30, failure_classification: OBSERVABILITY_REJECTED}
+  - {node_id: linearization_collector_start, order: 9, component_source: "binding:linearization_collector", input_from: [successor_collector_start], output: "manifests/graph/09-linearization-ready.json", timeout_s: 30, failure_classification: OBSERVABILITY_REJECTED}
+  - {node_id: safety_supervisor_start, order: 10, component_source: safety_supervisor, input_from: [linearization_collector_start], output: "manifests/graph/10-supervisor-start.json", timeout_s: 10, failure_classification: FORMAL_SAFETY_STOP}
+  - {node_id: supervisor_ready_acknowledgement, order: 11, component_source: safety_supervisor, input_from: [safety_supervisor_start], output: "manifests/graph/11-supervisor-ready.json", timeout_s: 10, failure_classification: FORMAL_SAFETY_STOP}
+  - {node_id: scenario_start, order: 12, component_source: "binding:scenario", input_from: [supervisor_ready_acknowledgement], output: "manifests/graph/12-scenario-start.json", timeout_s: 10, failure_classification: FORMAL_SAFETY_STOP}
+  - {node_id: live_supervision, order: 13, component_source: safety_supervisor, input_from: [scenario_start], output: "manifests/graph/13-live-supervision.json", timeout_s: 155, failure_classification: FORMAL_SAFETY_STOP}
+  - {node_id: scenario_terminal, order: 14, component_source: "binding:scenario", input_from: [live_supervision], output: "manifests/graph/14-scenario-terminal.json", timeout_s: 10, failure_classification: FORMAL_SAFETY_STOP}
+  - {node_id: collector_shutdown, order: 15, component_source: "binding:route_collector", input_from: [scenario_terminal], output: "manifests/graph/15-collectors-closed.json", timeout_s: 30, failure_classification: OBSERVABILITY_REJECTED}
+  - {node_id: artifact_flush, order: 16, component_source: accounting, input_from: [collector_shutdown], output: "manifests/graph/16-artifacts-flushed.json", timeout_s: 30, failure_classification: OBSERVABILITY_REJECTED}
+  - {node_id: route_oracle, order: 17, component_source: "binding:route_oracle", input_from: [artifact_flush], output: "manifests/graph/17-route-oracle.json", timeout_s: 30, failure_classification: OBSERVABILITY_REJECTED}
+  - {node_id: freshness_oracle, order: 18, component_source: "binding:freshness_oracle", input_from: [route_oracle], output: "manifests/graph/18-freshness-oracle.json", timeout_s: 30, failure_classification: OBSERVABILITY_REJECTED}
+  - {node_id: successor_oracle, order: 19, component_source: "binding:successor_oracle", input_from: [freshness_oracle], output: "manifests/graph/19-successor-oracle.json", timeout_s: 30, failure_classification: OBSERVABILITY_REJECTED}
+  - {node_id: linearization_oracle, order: 20, component_source: "binding:linearization_oracle", input_from: [successor_oracle], output: "manifests/graph/20-linearization-oracle.json", timeout_s: 30, failure_classification: OBSERVABILITY_REJECTED}
+  - {node_id: cleanup_audit, order: 21, component_source: cleanup_audit, input_from: [linearization_oracle], output: "manifests/graph/21-cleanup.json", timeout_s: 30, failure_classification: OBSERVABILITY_REJECTED}
+  - {node_id: evidence_gate, order: 22, component_source: evidence_gate, input_from: [cleanup_audit], output: "manifests/graph/22-evidence-gate.json", timeout_s: 30, failure_classification: OBSERVABILITY_REJECTED}
+  - {node_id: classification, order: 23, component_source: evidence_gate, input_from: [evidence_gate], output: "manifests/graph/23-classification.json", timeout_s: 30, failure_classification: OBSERVABILITY_REJECTED}
+  - {node_id: append_only_closure, order: 24, component_source: accounting, input_from: [classification], output: "manifests/graph/24-closure.json", timeout_s: 10, failure_classification: CAMPAIGN_CONFIGURATION_FAILURE}
+  - {node_id: compact_evidence_generation, order: 25, component_source: compact_evidence, input_from: [append_only_closure], output: "manifests/graph/25-compact-evidence.json", timeout_s: 30, failure_classification: OBSERVABILITY_REJECTED}
+
+route_only: &route_only
+  authorization_identity_verification: REQUIRED
+  prelaunch_registration_verification: REQUIRED
+  container_identity_verification: REQUIRED
+  process_port_preflight: REQUIRED
+  route_collector_start: REQUIRED
+  writer_controller_collector_start: REQUIRED
+  clock_collector_start: REQUIRED
+  freshness_collector_start: NOT_APPLICABLE
+  successor_collector_start: NOT_APPLICABLE
+  linearization_collector_start: NOT_APPLICABLE
+  safety_supervisor_start: REQUIRED
+  supervisor_ready_acknowledgement: REQUIRED
+  scenario_start: REQUIRED
+  live_supervision: REQUIRED
+  scenario_terminal: REQUIRED
+  collector_shutdown: REQUIRED
+  artifact_flush: REQUIRED
+  route_oracle: REQUIRED
+  freshness_oracle: NOT_APPLICABLE
+  successor_oracle: NOT_APPLICABLE
+  linearization_oracle: NOT_APPLICABLE
+  evidence_gate: REQUIRED
+  compact_evidence_generation: REQUIRED
+  cleanup_audit: REQUIRED
+  classification: REQUIRED
+  append_only_closure: REQUIRED
+
+route_freshness: &route_freshness
+  authorization_identity_verification: REQUIRED
+  prelaunch_registration_verification: REQUIRED
+  container_identity_verification: REQUIRED
+  process_port_preflight: REQUIRED
+  route_collector_start: REQUIRED
+  writer_controller_collector_start: REQUIRED
+  clock_collector_start: REQUIRED
+  freshness_collector_start: REQUIRED
+  successor_collector_start: NOT_APPLICABLE
+  linearization_collector_start: NOT_APPLICABLE
+  safety_supervisor_start: REQUIRED
+  supervisor_ready_acknowledgement: REQUIRED
+  scenario_start: REQUIRED
+  live_supervision: REQUIRED
+  scenario_terminal: REQUIRED
+  collector_shutdown: REQUIRED
+  artifact_flush: REQUIRED
+  route_oracle: REQUIRED
+  freshness_oracle: REQUIRED
+  successor_oracle: NOT_APPLICABLE
+  linearization_oracle: NOT_APPLICABLE
+  evidence_gate: REQUIRED
+  compact_evidence_generation: REQUIRED
+  cleanup_audit: REQUIRED
+  classification: REQUIRED
+  append_only_closure: REQUIRED
+
+route_successor: &route_successor
+  authorization_identity_verification: REQUIRED
+  prelaunch_registration_verification: REQUIRED
+  container_identity_verification: REQUIRED
+  process_port_preflight: REQUIRED
+  route_collector_start: REQUIRED
+  writer_controller_collector_start: REQUIRED
+  clock_collector_start: REQUIRED
+  freshness_collector_start: NOT_APPLICABLE
+  successor_collector_start: REQUIRED
+  linearization_collector_start: NOT_APPLICABLE
+  safety_supervisor_start: REQUIRED
+  supervisor_ready_acknowledgement: REQUIRED
+  scenario_start: REQUIRED
+  live_supervision: REQUIRED
+  scenario_terminal: REQUIRED
+  collector_shutdown: REQUIRED
+  artifact_flush: REQUIRED
+  route_oracle: REQUIRED
+  freshness_oracle: NOT_APPLICABLE
+  successor_oracle: REQUIRED
+  linearization_oracle: NOT_APPLICABLE
+  evidence_gate: REQUIRED
+  compact_evidence_generation: REQUIRED
+  cleanup_audit: REQUIRED
+  classification: REQUIRED
+  append_only_closure: REQUIRED
+
+route_successor_linearization: &route_successor_linearization
+  authorization_identity_verification: REQUIRED
+  prelaunch_registration_verification: REQUIRED
+  container_identity_verification: REQUIRED
+  process_port_preflight: REQUIRED
+  route_collector_start: REQUIRED
+  writer_controller_collector_start: REQUIRED
+  clock_collector_start: REQUIRED
+  freshness_collector_start: NOT_APPLICABLE
+  successor_collector_start: REQUIRED
+  linearization_collector_start: REQUIRED
+  safety_supervisor_start: REQUIRED
+  supervisor_ready_acknowledgement: REQUIRED
+  scenario_start: REQUIRED
+  live_supervision: REQUIRED
+  scenario_terminal: REQUIRED
+  collector_shutdown: REQUIRED
+  artifact_flush: REQUIRED
+  route_oracle: REQUIRED
+  freshness_oracle: NOT_APPLICABLE
+  successor_oracle: REQUIRED
+  linearization_oracle: REQUIRED
+  evidence_gate: REQUIRED
+  compact_evidence_generation: REQUIRED
+  cleanup_audit: REQUIRED
+  classification: REQUIRED
+  append_only_closure: REQUIRED
+
+slots:
+  - slot_id: V0P-S1
+    attempt_id: V0P-A1
+    seed_id: P0_A_OFFBOARD_ADMISSION
+    simulation_seed: 410101
+    scenario_family: P0_OFFBOARD_ADMISSION
+    bindings: {scenario: scenario_p0, adapters: [adapter_offboard], live_telemetry_collector: collector_live_telemetry, route_collector: collector_route, writer_controller_collector: collector_writer_controller, clock_collector: collector_clock, freshness_collector: collector_freshness, successor_collector: collector_successor, linearization_collector: collector_linearization, route_oracle: oracle_route, freshness_oracle: oracle_freshness, successor_oracle: oracle_successor, linearization_oracle: oracle_linearization, evidence_gate: evidence_gate, safety_supervisor: safety_supervisor, cleanup: cleanup_audit, compact_evidence: compact_evidence, accounting: accounting}
+    node_applicability: *route_only
+  - slot_id: V0P-S2
+    attempt_id: V0P-A2
+    seed_id: P0_B_DYNAMIC_ADMISSION
+    simulation_seed: 410102
+    scenario_family: P0_DYNAMIC_ADMISSION
+    bindings: {scenario: scenario_p0, adapters: [adapter_dynamic], live_telemetry_collector: collector_live_telemetry, route_collector: collector_route, writer_controller_collector: collector_writer_controller, clock_collector: collector_clock, freshness_collector: collector_freshness, successor_collector: collector_successor, linearization_collector: collector_linearization, route_oracle: oracle_route, freshness_oracle: oracle_freshness, successor_oracle: oracle_successor, linearization_oracle: oracle_linearization, evidence_gate: evidence_gate, safety_supervisor: safety_supervisor, cleanup: cleanup_audit, compact_evidence: compact_evidence, accounting: accounting}
+    node_applicability: *route_only
+  - slot_id: V0P-S3
+    attempt_id: V0P-A3
+    seed_id: P0_C_EXECUTOR_COMPLETION
+    simulation_seed: 410103
+    scenario_family: P0_EXECUTOR_COMPLETION
+    bindings: {scenario: scenario_p0, adapters: [adapter_dynamic, adapter_executor], live_telemetry_collector: collector_live_telemetry, route_collector: collector_route, writer_controller_collector: collector_writer_controller, clock_collector: collector_clock, freshness_collector: collector_freshness, successor_collector: collector_successor, linearization_collector: collector_linearization, route_oracle: oracle_route, freshness_oracle: oracle_freshness, successor_oracle: oracle_successor, linearization_oracle: oracle_linearization, evidence_gate: evidence_gate, safety_supervisor: safety_supervisor, cleanup: cleanup_audit, compact_evidence: compact_evidence, accounting: accounting}
+    node_applicability: *route_successor
+  - slot_id: V0P-S4
+    attempt_id: V0P-A4
+    seed_id: P3_OFFBOARD_H1_S0
+    simulation_seed: 410104
+    scenario_family: P3_RETAINED_ROUTE_FRESHNESS
+    bindings: {scenario: scenario_p3, adapters: [adapter_offboard], live_telemetry_collector: collector_live_telemetry, route_collector: collector_route, writer_controller_collector: collector_writer_controller, clock_collector: collector_clock, freshness_collector: collector_freshness, successor_collector: collector_successor, linearization_collector: collector_linearization, route_oracle: oracle_route, freshness_oracle: oracle_freshness, successor_oracle: oracle_successor, linearization_oracle: oracle_linearization, evidence_gate: evidence_gate, safety_supervisor: safety_supervisor, cleanup: cleanup_audit, compact_evidence: compact_evidence, accounting: accounting}
+    node_applicability: *route_freshness
+  - slot_id: V0P-S5
+    attempt_id: V0P-A5
+    seed_id: P2_DYNAMIC_SIGTERM
+    simulation_seed: 410105
+    scenario_family: P2_OWNED_PROCESS_LOSS
+    bindings: {scenario: scenario_p2, adapters: [adapter_dynamic], live_telemetry_collector: collector_live_telemetry, route_collector: collector_route, writer_controller_collector: collector_writer_controller, clock_collector: collector_clock, freshness_collector: collector_freshness, successor_collector: collector_successor, linearization_collector: collector_linearization, route_oracle: oracle_route, freshness_oracle: oracle_freshness, successor_oracle: oracle_successor, linearization_oracle: oracle_linearization, evidence_gate: evidence_gate, safety_supervisor: safety_supervisor, cleanup: cleanup_audit, compact_evidence: compact_evidence, accounting: accounting}
+    node_applicability: *route_freshness
+  - slot_id: V0P-S6
+    attempt_id: V0P-A6
+    seed_id: C1_PAIR_B
+    simulation_seed: 410106
+    scenario_family: C1_AUTHORITY_EVENT_LINEARIZATION
+    bindings: {scenario: scenario_c1, adapters: [adapter_c1], live_telemetry_collector: collector_live_telemetry, route_collector: collector_route, writer_controller_collector: collector_writer_controller, clock_collector: collector_clock, freshness_collector: collector_freshness, successor_collector: collector_successor, linearization_collector: collector_linearization, route_oracle: oracle_route, freshness_oracle: oracle_freshness, successor_oracle: oracle_successor, linearization_oracle: oracle_linearization, evidence_gate: evidence_gate, safety_supervisor: safety_supervisor, cleanup: cleanup_audit, compact_evidence: compact_evidence, accounting: accounting}
+    node_applicability: *route_successor_linearization

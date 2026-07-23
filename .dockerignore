@@ -1,9 +1,12 @@
 .git
 external
 ros2_ws
+ros2_ws_aerostack2
+ros2_ws_humble_live
 build
 install
 log
+runs
 docs/*.log
 docs/phase1_*.log
 **/.ccache
