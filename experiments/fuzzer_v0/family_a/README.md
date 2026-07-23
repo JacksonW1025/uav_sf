@@ -2,6 +2,10 @@
 
 Status: `PREREGISTERED_NOT_ACTIVATED`
 
+Qualification activation: `DECLINE_IMPLEMENTATION_NOT_READY`
+
+Qualification status: `QUALIFICATION_NOT_AUTHORIZED`
+
 This directory is the frozen, machine-verifiable preregistration for a future
 controlled SITL study of flight-software reliability, runtime consistency,
 route conformance, command freshness, lifecycle progression, and state-aware
@@ -26,6 +30,7 @@ testing. It contains zero formal attempts and authorizes no runtime.
 | [activation Gate](activation_gate.json) | closed activation and runtime authorization state |
 | [attempt ledger](attempt_ledger.yaml) | append-only future accounting, currently zero |
 | [adjudication template](final_adjudication_template.yaml) | future results structure without a predeclared result |
+| [activation review](activation_review/README.md) | independent qualification readiness review and decline decision |
 
 The machine Gate is validated against the
 [activation Gate schema](../../../data/schemas/family_a_fuzzer_v0_activation_gate.schema.json).
@@ -62,8 +67,12 @@ budget does not transfer, and no attempt is replaced automatically.
 - activation commit: `null`
 - state-aware search gain: `NOT_ESTABLISHED`
 - full method effectiveness: `NOT_ESTABLISHED`
+- qualification authorized: `false`
+- qualification formal attempts: `0`
+- comparison arms authorized: `false`
 
-The next exact action is to review the frozen Family A Fuzzer v0
-preregistration and create a separate activation decision. That review must be
-a separate commit and must not infer activation from the existence of these
-assets.
+The independent activation review found 11 blocking clauses and decided
+`DECLINE_IMPLEMENTATION_NOT_READY`. The original activation Gate remains
+frozen and closed. The next exact action is to create an independent amendment
+or readiness-resolution plan for the recorded blockers. No Family A Fuzzer v0
+runtime has executed.

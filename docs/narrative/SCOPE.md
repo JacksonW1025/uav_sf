@@ -76,3 +76,10 @@ The next phase must exclude R1's unfinished session scope, Aerostack2 runtime,
 Family B, direct actuator, HITL, real flight, unprovenanced random events, and
 large or full stateful campaigns unless a later independent registration
 explicitly authorizes them.
+
+The independent Family A Fuzzer v0 preregistration remains frozen and
+`PREREGISTERED_NOT_ACTIVATED`. Its qualification activation review decided
+`DECLINE_IMPLEMENTATION_NOT_READY`; qualification and all comparison arms are
+unauthorized, and formal attempts remain zero. The next exact action is to
+create an independent amendment or readiness-resolution plan for the recorded
+blockers. No Family A Fuzzer v0 runtime has executed.

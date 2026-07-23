@@ -15,9 +15,12 @@ full fuzzing effectiveness are not established.
 The independent Family A Fuzzer v0 preregistration exists but is not activated
 and has zero formal attempts. Its status is `PREREGISTERED_NOT_ACTIVATED`, its
 scope is `FAMILY_A_ONLY`, and its formal attempts: `0`. Runtime and formal
-attempts remain unauthorized. State-aware search gain: `NOT_ESTABLISHED`. Full
-method effectiveness: `NOT_ESTABLISHED`.
+attempts remain unauthorized. The independent qualification activation review
+decided `DECLINE_IMPLEMENTATION_NOT_READY`; qualification status is
+`QUALIFICATION_NOT_AUTHORIZED`, with 11 blocking clauses. Comparison arms remain
+unauthorized. State-aware search gain: `NOT_ESTABLISHED`. Full method
+effectiveness: `NOT_ESTABLISHED`.
 
-The next exact action is to review the frozen Family A Fuzzer v0
-preregistration and create a separate activation decision. No Family A Fuzzer
-v0 flight runtime has executed.
+The next exact action is to create an independent amendment or
+readiness-resolution plan for the recorded blockers. No Family A Fuzzer v0
+flight runtime has executed, and no qualification or comparison attempt exists.

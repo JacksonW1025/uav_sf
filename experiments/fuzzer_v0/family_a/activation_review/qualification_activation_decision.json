@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0",
+  "decision_id": "FAMILY_A_FUZZER_V0_QUALIFICATION_ACTIVATION",
+  "decision": "DECLINE_IMPLEMENTATION_NOT_READY",
+  "status": "QUALIFICATION_NOT_AUTHORIZED",
+  "authorized_scope": "NONE",
+  "reviewed_at": "2026-07-22",
+  "starting_repository_commit": "426f4c7316e973c6a4dab84a202fdb75ea65b7c1",
+  "reviewed_preregistration_commit": "426f4c7316e973c6a4dab84a202fdb75ea65b7c1",
+  "review_commit": "COMMIT_CONTAINING_THIS_REVIEW_REPORTED_BY_GIT_AFTER_PUSH",
+  "activation_decision_commit": "COMMIT_CONTAINING_THIS_DECLINED_DECISION_REPORTED_BY_GIT_AFTER_PUSH",
+  "qualification_authorized": false,
+  "runtime_authorized": false,
+  "qualification_target_accepted": 3,
+  "qualification_maximum_formal_attempts": 6,
+  "current_formal_attempts": 0,
+  "comparison_runtime_authorized": false,
+  "official_sequence_authorized": false,
+  "bounded_random_timing_authorized": false,
+  "state_aware_authorized": false,
+  "historical_replay_runtime_authorized": false,
+  "real_workload_authorized": false,
+  "family_b_authorized": false,
+  "direct_actuator_authorized": false,
+  "hitl_authorized": false,
+  "real_flight_authorized": false,
+  "qualification_execution_requires_separate_task": true,
+  "activation_review_complete": true,
+  "runtime_executed_during_review": false,
+  "blocking_clause_count": 11,
+  "blocking_clauses": [
+    "G-01",
+    "G-02",
+    "G-05",
+    "G-07",
+    "G-08",
+    "G-10",
+    "H-01",
+    "H-02",
+    "H-07",
+    "H-08",
+    "J-03"
+  ],
+  "secondary_blocker_categories": [
+    "ENVIRONMENT_NOT_READY"
+  ],
+  "non_blocking_findings": [
+    "The Issue 162 historical checkpoint ledger remains an early structural record; the accepted processed evidence and final report continue to control.",
+    "The route-oracle-v0.3-default string is a retained Route Oracle 0.4 threshold-profile identifier, not a Route Oracle 0.3 executable or result identity.",
+    "Individual route, freshness, successor, linearization, tracing, and clock components exist and retain matching hashes, but no frozen V0-P integration path binds them.",
+    "The locked dependency source commits resolve locally; the required ROS Jazzy setup does not."
+  ],
+  "blocker_summary": [
+    "No unique V0-P qualification runner, scenario mapping, or exact qualification seed-selection entry exists.",
+    "No qualification-only registration, compact-evidence, cleanup-audit, residual-process, or occupied-port checker is integrated.",
+    "The existing pre-M-FINAL fuzzer executor uses the old seed manifest and Route Oracle 0.3 result identity and is inadmissible for this protocol.",
+    "The frozen ROS Jazzy environment is unavailable while the legacy P5 execution path is wired to ROS Humble."
+  ],
+  "required_independent_action": "Create an independent readiness-resolution plan that implements and statically qualifies a V0-P-only runner, scenario mapping, evidence and cleanup integration, and the exact locked ROS Jazzy environment without changing the frozen research design.",
+  "next_exact_action": "create an independent amendment or readiness-resolution plan for the recorded blockers"
+}

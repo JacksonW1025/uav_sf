@@ -45,7 +45,7 @@ MG10 CONDITIONAL_PASS
   runtime graph-replacement evidence.
 - State-aware search gain and full fuzzing effectiveness are not established.
 
-## Current preregistration state
+## Current preregistration and activation-review state
 
 Family A Fuzzer v0 is `PREREGISTERED_NOT_ACTIVATED`.
 
@@ -58,6 +58,14 @@ Family A Fuzzer v0 is `PREREGISTERED_NOT_ACTIVATED`.
 - State-aware search gain: `NOT_ESTABLISHED`.
 - Full method effectiveness: `NOT_ESTABLISHED`.
 - Attempt ledger: `NOT_STARTED`; activation commit: `null`.
+- Qualification activation decision: `DECLINE_IMPLEMENTATION_NOT_READY`.
+- Qualification status: `QUALIFICATION_NOT_AUTHORIZED`.
+- Qualification formal attempts: `0`.
+- Qualification accepted attempts: `0`.
+- Qualification target: `3` accepted.
+- Qualification maximum: `6` formal attempts.
+- Blocking clauses: `11`.
+- Comparison arms: `NOT_AUTHORIZED`.
 
 The frozen assets are indexed in
 `experiments/fuzzer_v0/family_a/README.md`. The preregistration does not import
@@ -69,11 +77,15 @@ seeds.
 
 The next exact action is:
 
-> review the frozen Family A Fuzzer v0 preregistration and create a separate activation decision
+> create an independent amendment or readiness-resolution plan for the recorded blockers
 
-No Family A Fuzzer v0 flight runtime has executed. Real-workload runtime,
-Family B, direct actuator, HITL, real flight, unprovenanced random events, and
-large or full stateful campaigns remain unauthorized.
+The review found no V0-P-only runner, executable scenario mapping, integrated
+evidence and cleanup path, unified safety entry, or common residual-process and
+port checker; the locked ROS Jazzy setup is also unavailable. No Family A
+Fuzzer v0 flight runtime has executed. Qualification and comparison runtime,
+real-workload runtime, Family B, direct actuator, HITL, real flight,
+unprovenanced random events, and large or full stateful campaigns remain
+unauthorized.
 
 ## Current artifacts
 
@@ -83,5 +95,8 @@ large or full stateful campaigns remain unauthorized.
 - `docs/narrative/NEW_NARRATIVE_v7.md`
 - `docs/repository/MOTIVATION_COMPLETION_STATE.md`
 - `docs/design/FAMILY_A_FUZZER_V0_PREREGISTRATION.md`
+- `docs/design/FAMILY_A_FUZZER_V0_ACTIVATION_REVIEW.md`
 - `experiments/fuzzer_v0/family_a/activation_gate.json`
 - `experiments/fuzzer_v0/family_a/attempt_ledger.yaml`
+- `experiments/fuzzer_v0/family_a/activation_review/qualification_activation_decision.json`
+- `experiments/fuzzer_v0/family_a/activation_review/qualification_attempt_ledger.yaml`

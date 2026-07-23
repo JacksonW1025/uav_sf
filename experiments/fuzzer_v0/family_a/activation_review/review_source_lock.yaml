@@ -1,0 +1,105 @@
+schema_version: "1.0"
+lock_id: FAMILY_A_FUZZER_V0_ACTIVATION_REVIEW_SOURCE_LOCK
+review_kind: QUALIFICATION_ACTIVATION_REVIEW
+captured_at: "2026-07-22"
+branch: main
+remote: origin
+starting_head: 426f4c7316e973c6a4dab84a202fdb75ea65b7c1
+starting_origin_main: 426f4c7316e973c6a4dab84a202fdb75ea65b7c1
+starting_ahead: 0
+starting_behind: 0
+reviewed_preregistration_commit: 426f4c7316e973c6a4dab84a202fdb75ea65b7c1
+preregistration_authority_base_commit: 38725e87d8d0ebe03b1fe1712055725338332d83
+motivation_evidence_cutoff_commit: 3665337673e7e0a62ea204ac64f5644b8e428c25
+m_final_preregistration_commit: 2f20fb0cf140a27ebdb379a08a176c0a929c6125
+review_commit: COMMIT_CONTAINING_THIS_REVIEW_REPORTED_BY_GIT_AFTER_PUSH
+
+required_ancestor_commits:
+  - 2f20fb0cf140a27ebdb379a08a176c0a929c6125
+  - 3665337673e7e0a62ea204ac64f5644b8e428c25
+  - 38725e87d8d0ebe03b1fe1712055725338332d83
+  - 426f4c7316e973c6a4dab84a202fdb75ea65b7c1
+  - e7718e2de6b7ada4472fcbc1fc428cb84da39e92
+  - 75a5217e0e0bfab232d03c30dcc22088aa16624d
+  - c62452cf020f2851040fc9fa8a9611575d892e3d
+  - 955e7c98e3b29ddd21fa4d44fb562065700fa832
+  - fd9b93fb0d2f50554d6f52d19ac3cd573d7ae2f9
+  - b24cfb4fb18c175856f2d01991c8d498f1d2710f
+
+dependency_identity:
+  PX4: 4ae21a5e569d3d89c2f6366688cbacb3e93437c9
+  px4_msgs: 18ecff03041c6f8d8a0012fbc63af0b23dd60af1
+  px4_ros2_interface_lib: c3e410f035806e8c56246708432ded09c976434b
+  Micro_XRCE_DDS_Agent: 73622810d984349b80bbac0ef55fc0b694d62222
+  dependency_lock: config/dependencies.lock.yaml
+  dependency_lock_sha256: 355408a6e8a2ea540f33de3ba6e9c656b13a10329537ec718354f9727313ac09
+  architecture: aarch64
+  required_ros_distro: jazzy
+  required_gazebo_distribution: harmonic
+
+frozen_bundle:
+  - path: experiments/fuzzer_v0/family_a/preregistration.yaml
+    sha256: c28861c363b92bbaddc473006bc7a9cd7bec34eb55a723f63159f5f0d0eeb978
+  - path: experiments/fuzzer_v0/family_a/source_lock.yaml
+    sha256: fe06830d18e4eaacc4e092d87aa6b59ec78c47c1a04664eb576d74656ad33f88
+  - path: experiments/fuzzer_v0/family_a/seed_catalog.tsv
+    sha256: 3e9d1e848f6633646c21f3e6fed65c0c7c60eef18ca5ae4ca56d2f41185a115b
+  - path: experiments/fuzzer_v0/family_a/state_model.yaml
+    sha256: 613ecc5e9cd0828f9e5670243b0c0613e813f1649aa08f5185f3a08928e3afdb
+  - path: experiments/fuzzer_v0/family_a/event_grammar.yaml
+    sha256: 44dfdc0f74f1233fe3bfa1245a5b373f823c7ce3c1ac45687097b79fc4782192
+  - path: experiments/fuzzer_v0/family_a/mutation_grammar.yaml
+    sha256: 8046ca1c1fa0b116597c6e5c3cf3a50f03e0821097ef22e6bc43a8a17c6b1bad
+  - path: experiments/fuzzer_v0/family_a/strategy_matrix.yaml
+    sha256: 2d1d8b968f7d125a525e1d4b3284c1ada69413755f7e69fd0b72cd801bdf419c
+  - path: experiments/fuzzer_v0/family_a/campaign_matrix.yaml
+    sha256: c1711ee22d4d31173a7102bf47b6d5572a56cb7765306a118c07a900ff9cdc94
+  - path: experiments/fuzzer_v0/family_a/oracle_lock.yaml
+    sha256: 2f0211a771de6bacc56f386dcf81babad2514227ea0cdf727a64e9ebea0980c2
+  - path: experiments/fuzzer_v0/family_a/evidence_rules.yaml
+    sha256: 5d9ae09b8f04fe594839ab8970df4b34e81ca40a953b699c792bf573754f6361
+  - path: experiments/fuzzer_v0/family_a/safety_rules.yaml
+    sha256: e73849e0c7c929b319a10a0905a5b39f554d7bd55429878a10d3346ae312bd00
+  - path: experiments/fuzzer_v0/family_a/analysis_plan.yaml
+    sha256: b2a352beb688dfb828afc11c77ab52fc045d31ecd9627954aca4e477252c30fd
+  - path: experiments/fuzzer_v0/family_a/activation_gate.json
+    sha256: 2913a785b8e934a7c3549f990950ba02458b96f03415f05094b36124a7655c39
+  - path: experiments/fuzzer_v0/family_a/attempt_ledger.yaml
+    sha256: cc1e34eb3a20d26d028fd050ced2b53e074b6f957b1e64788f82c7fa285023e1
+  - path: experiments/fuzzer_v0/family_a/final_adjudication_template.yaml
+    sha256: 918fe418e8bb118d4730973e53f8a677a7f3516d4c2fafc03b758b44fac6a0a1
+
+review_support_at_starting_commit:
+  - path: experiments/fuzzer_v0/family_a/README.md
+    sha256: 73e317c04a9e5f5368950fc12caed1af3d6ffe8b525b913bfab67f73f8324df4
+  - path: docs/design/FAMILY_A_FUZZER_V0_PREREGISTRATION.md
+    sha256: f4f8db3fb46bd07fdc7a2781caab42b4816e99a8831dabac02daef4b4a0d9e3c
+  - path: data/schemas/family_a_fuzzer_v0_activation_gate.schema.json
+    sha256: f20ea6d86e6ec47de048016085fcf4ff6ab7429ca965660d4142e5f082e267d9
+  - path: scripts/validation/check_family_a_fuzzer_v0_preregistration.py
+    sha256: b6de3cb21e90162ca21c5a1383ae932f4032b23ca1a8fdb2839baa406a33f136
+  - path: tests/test_family_a_fuzzer_v0_preregistration.py
+    sha256: 475551b424e53af19882e1c3a0bc2cc5055c46499f5f7822d7d1120db561c976
+
+static_environment_observation:
+  dependency_lock_validation: PASS
+  locked_dependency_commits_resolve: true
+  PX4_checkout_matches: true
+  px4_msgs_checkout_matches: true
+  px4_ros2_interface_lib_checkout_matches: true
+  Micro_XRCE_DDS_Agent_checkout_matches: true
+  required_ros_jazzy_setup_present: false
+  legacy_p5_ros_humble_setup_present: true
+  frozen_qualification_runner_present: false
+  qualification_scenario_mapping_present: false
+  qualification_cleanup_audit_checker_present: false
+  unresolved_blockers:
+    - QUALIFICATION_RUNNER_AND_SCENARIO_MAPPING_MISSING
+    - QUALIFICATION_CLEANUP_AND_ACCOUNTING_INTEGRATION_MISSING
+    - REQUIRED_ROS_JAZZY_ENVIRONMENT_NOT_AVAILABLE
+
+runtime_observation:
+  runtime_executed_during_review: false
+  formal_attempts_created: 0
+  qualification_attempts_created: 0
+  comparison_attempts_created: 0

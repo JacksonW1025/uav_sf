@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uav-sf.local/schemas/family_a_fuzzer_v0_qualification_activation.schema.json",
+  "title": "Family A Fuzzer v0 qualification activation decision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "decision_id",
+    "decision",
+    "status",
+    "authorized_scope",
+    "reviewed_at",
+    "starting_repository_commit",
+    "reviewed_preregistration_commit",
+    "review_commit",
+    "activation_decision_commit",
+    "qualification_authorized",
+    "runtime_authorized",
+    "qualification_target_accepted",
+    "qualification_maximum_formal_attempts",
+    "current_formal_attempts",
+    "comparison_runtime_authorized",
+    "official_sequence_authorized",
+    "bounded_random_timing_authorized",
+    "state_aware_authorized",
+    "historical_replay_runtime_authorized",
+    "real_workload_authorized",
+    "family_b_authorized",
+    "direct_actuator_authorized",
+    "hitl_authorized",
+    "real_flight_authorized",
+    "qualification_execution_requires_separate_task",
+    "activation_review_complete",
+    "runtime_executed_during_review",
+    "blocking_clause_count",
+    "blocking_clauses",
+    "secondary_blocker_categories",
+    "non_blocking_findings",
+    "blocker_summary",
+    "required_independent_action",
+    "next_exact_action"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "decision_id": {"const": "FAMILY_A_FUZZER_V0_QUALIFICATION_ACTIVATION"},
+    "decision": {
+      "enum": [
+        "APPROVE_QUALIFICATION_ONLY",
+        "DECLINE_IMPLEMENTATION_NOT_READY",
+        "DECLINE_IDENTITY_OR_CONTRACT_MISMATCH",
+        "DECLINE_ENVIRONMENT_NOT_READY",
+        "DECLINE_PREREGISTRATION_INCONSISTENT"
+      ]
+    },
+    "status": {
+      "enum": [
+        "QUALIFICATION_AUTHORIZED_NOT_STARTED",
+        "QUALIFICATION_NOT_AUTHORIZED"
+      ]
+    },
+    "authorized_scope": {"enum": ["V0_P_QUALIFICATION_ONLY", "NONE"]},
+    "reviewed_at": {"type": "string", "format": "date"},
+    "starting_repository_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "reviewed_preregistration_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "review_commit": {"type": "string", "minLength": 1},
+    "activation_decision_commit": {"type": "string", "minLength": 1},
+    "qualification_authorized": {"type": "boolean"},
+    "runtime_authorized": {"type": "boolean"},
+    "qualification_target_accepted": {"const": 3},
+    "qualification_maximum_formal_attempts": {"const": 6},
+    "current_formal_attempts": {"const": 0},
+    "comparison_runtime_authorized": {"const": false},
+    "official_sequence_authorized": {"const": false},
+    "bounded_random_timing_authorized": {"const": false},
+    "state_aware_authorized": {"const": false},
+    "historical_replay_runtime_authorized": {"const": false},
+    "real_workload_authorized": {"const": false},
+    "family_b_authorized": {"const": false},
+    "direct_actuator_authorized": {"const": false},
+    "hitl_authorized": {"const": false},
+    "real_flight_authorized": {"const": false},
+    "qualification_execution_requires_separate_task": {"const": true},
+    "activation_review_complete": {"const": true},
+    "runtime_executed_during_review": {"const": false},
+    "blocking_clause_count": {"type": "integer", "minimum": 0},
+    "blocking_clauses": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[A-J]-[0-9]{2}$"}
+    },
+    "secondary_blocker_categories": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "non_blocking_findings": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "blocker_summary": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "required_independent_action": {"type": "string", "minLength": 1},
+    "next_exact_action": {"type": "string", "minLength": 1}
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"decision": {"const": "APPROVE_QUALIFICATION_ONLY"}},
+        "required": ["decision"]
+      },
+      "then": {
+        "properties": {
+          "status": {"const": "QUALIFICATION_AUTHORIZED_NOT_STARTED"},
+          "authorized_scope": {"const": "V0_P_QUALIFICATION_ONLY"},
+          "qualification_authorized": {"const": true},
+          "runtime_authorized": {"const": true},
+          "blocking_clause_count": {"const": 0},
+          "blocking_clauses": {"maxItems": 0}
+        }
+      },
+      "else": {
+        "properties": {
+          "status": {"const": "QUALIFICATION_NOT_AUTHORIZED"},
+          "authorized_scope": {"const": "NONE"},
+          "qualification_authorized": {"const": false},
+          "runtime_authorized": {"const": false},
+          "blocking_clause_count": {"minimum": 1},
+          "blocking_clauses": {"minItems": 1},
+          "next_exact_action": {
+            "const": "create an independent amendment or readiness-resolution plan for the recorded blockers"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -74,8 +74,11 @@ effectiveness are not established.
 
 The independent Family A Fuzzer v0 preregistration now exists as
 `PREREGISTERED_NOT_ACTIVATED` with formal attempts: `0`. State-aware search
-gain: `NOT_ESTABLISHED`. Full method effectiveness: `NOT_ESTABLISHED`. The next
-exact action is to review the frozen Family A Fuzzer v0 preregistration and
-create a separate activation decision. No Fuzzer v0 flight runtime,
-real-workload campaign, Family B campaign, random campaign, or full stateful
-campaign is authorized by the preregistration itself.
+gain: `NOT_ESTABLISHED`. Full method effectiveness: `NOT_ESTABLISHED`. Its
+independent qualification activation review decided
+`DECLINE_IMPLEMENTATION_NOT_READY`; qualification is
+`QUALIFICATION_NOT_AUTHORIZED` with zero attempts, and all comparison arms
+remain unauthorized. The next exact action is to create an independent
+amendment or readiness-resolution plan for the recorded blockers. No Fuzzer v0
+flight runtime, real-workload campaign, Family B campaign, random campaign, or
+full stateful campaign is authorized.

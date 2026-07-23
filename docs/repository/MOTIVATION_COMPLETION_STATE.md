@@ -120,5 +120,10 @@ runtime authorization, and formal-attempt authorization remain false.
 State-aware search gain: `NOT_ESTABLISHED`. Full method effectiveness:
 `NOT_ESTABLISHED`.
 
-Review the frozen Family A Fuzzer v0 preregistration and create a separate
-activation decision. No Family A Fuzzer v0 flight runtime has executed.
+The independent qualification activation review decided
+`DECLINE_IMPLEMENTATION_NOT_READY`. Qualification is
+`QUALIFICATION_NOT_AUTHORIZED`, has 11 blocking clauses, and retains zero
+formal attempts. All comparison arms remain unauthorized.
+
+Create an independent amendment or readiness-resolution plan for the recorded
+blockers. No Family A Fuzzer v0 flight runtime has executed.

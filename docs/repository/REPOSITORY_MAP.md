@@ -18,6 +18,7 @@
 | `data/processed/` | compact reproducible outputs | source provenance required |
 | `experiments/motivation/` | preregistrations, ledgers, and machine Gates | append-only phase evidence |
 | `experiments/fuzzer_v0/family_a/` | frozen Family A Fuzzer v0 preregistration and artifact index | `PREREGISTERED_NOT_ACTIVATED`; zero attempts |
+| `experiments/fuzzer_v0/family_a/activation_review/` | independent V0-P static readiness review, decision, ledger, and future runbook | `DECLINE_IMPLEMENTATION_NOT_READY`; no runtime authorization |
 | `experiments/probes/p0/` | reproducible P0 procedure | gate passed; normal flow only |
 | `external/`, `ros2_ws/`, `runs/` | ignored dependencies/build/raw runtime | never tracked |
 

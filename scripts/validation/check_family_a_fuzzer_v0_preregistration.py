@@ -407,7 +407,17 @@ def validate() -> dict[str, int]:
     assert "formal attempts: `0`" in current_text
     assert "state-aware search gain: `not_established`" in current_text.lower()
     assert "full method effectiveness: `not_established`" in current_text.lower()
-    assert next_action in current_text
+    review_decision_path = BASE / "activation_review/qualification_activation_decision.json"
+    if review_decision_path.is_file():
+        review_decision = read_json(review_decision_path)
+        assert review_decision["decision"] == "DECLINE_IMPLEMENTATION_NOT_READY"
+        assert review_decision["status"] == "QUALIFICATION_NOT_AUTHORIZED"
+        assert review_decision["qualification_authorized"] is False
+        assert review_decision["runtime_authorized"] is False
+        assert review_decision["current_formal_attempts"] == 0
+        assert review_decision["next_exact_action"] in current_text
+    else:
+        assert next_action in current_text
     for false_claim in (
         "campaign is activated",
         "state-aware search gain is established",
