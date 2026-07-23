@@ -12,6 +12,14 @@ SITL target, `px4_msgs`, `px4-ros2-interface-lib`, the Family A adapter
 package including C1, Micro-XRCE-DDS-Agent, collectors, Oracles, runner,
 schemas, and fixtures. No host ROS workspace is mounted or sourced.
 
+The locked BuildKit target uses host networking only while acquiring public,
+commit-pinned source dependencies. This is required on builders whose outbound
+proxy is bound to host loopback. Standard BuildKit proxy arguments are
+ephemeral and omitted from image history. The build opens no ports, the proxy
+is not retained in the image, and this exception does not apply to container
+verification or formal execution: those commands are always launched with
+`--network none`.
+
 Use the unique repository entry:
 
 ```sh

@@ -35,6 +35,10 @@ target "qualification" {
   dockerfile = "containers/family_a_fuzzer_v0/Dockerfile"
   tags = ["${IMAGE_NAME}"]
   platforms = ["linux/arm64"]
+  # Source acquisition may use a loopback-bound host proxy. This applies only
+  # while BuildKit constructs the image; formal and static container commands
+  # are separately forced to --network none by the evaluator.
+  network = "host"
   pull = false
   no-cache-filter = []
   args = {
