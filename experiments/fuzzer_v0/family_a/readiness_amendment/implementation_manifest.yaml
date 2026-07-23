@@ -1,0 +1,326 @@
+schema_version: "1.0"
+manifest_id: FAMILY_A_V0P_QUALIFICATION_IMPLEMENTATION
+status: STATICALLY_VALIDATED_NOT_AUTHORIZED
+components:
+  - path: scripts/probes/run_p0_scenario.sh
+    version: P0_CURRENT
+    sha256: ee0f879c46ca45fcb3dac3a8a3f64575fd758b518bc7ba1387984be4663682db
+    interface: scenario_shell_offboard_external_executor
+    role: scenario_entry
+    reused_or_new: REUSED
+    static_validation_status: PASS
+  - path: scripts/probes/run_p2_scenario.sh
+    version: P2_CURRENT
+    sha256: 219e8d6f2b8fa0de582c66faf7c3eacd3a77be4f3e981fdc874f0a6af0cb7ccb
+    interface: scenario_shell_object_fault_run_id
+    role: scenario_entry
+    reused_or_new: REUSED
+    static_validation_status: PASS
+  - path: scripts/probes/run_p3_scenario.sh
+    version: P3_CURRENT
+    sha256: 77c777638c0fa01e15a830dd39d8a1eb4358b630c720693c2a154fb9aa6f1f5c
+    interface: scenario_shell_object_health_setpoint_run_id
+    role: scenario_entry
+    reused_or_new: REUSED
+    static_validation_status: PASS
+  - path: scripts/probes/run_c1_concurrency.sh
+    version: C1_CURRENT
+    sha256: 7dfa827621b095979c9998d8211dcb2a10edd2baeb1fe8c2022a0f59bec9164a
+    interface: scenario_shell_locked_environment
+    role: scenario_entry
+    reused_or_new: REUSED
+    static_validation_status: PASS
+  - path: scripts/adapters/offboard_adapter.py
+    version: CURRENT
+    sha256: c2ce2fc5dfe3a91b621defc90c89ae4fae7eef193b4fd3ef6e68e2f99eddc7ab
+    interface: Px4OffboardAdapter
+    role: adapter
+    reused_or_new: REUSED
+    static_validation_status: PASS
+  - path: scripts/adapters/external_mode_adapter/src/external_mode.cpp
+    version: CURRENT
+    sha256: ded38cca4044124ab114b88322fa65a40b105b5d9d9326614cfaefa72e2ba92c
+    interface: route_transition_external_mode
+    role: adapter
+    reused_or_new: REUSED
+    static_validation_status: PASS
+  - path: scripts/adapters/external_mode_adapter/src/p0_executor.cpp
+    version: CURRENT
+    sha256: 4673e49176cd3893da1725487794da98dac5161bcba8d250f1fe18258fb8df18
+    interface: p0_external_mode_executor
+    role: adapter
+    reused_or_new: REUSED
+    static_validation_status: PASS
+  - path: scripts/adapters/external_mode_adapter/src/c1_concurrency_probe.cpp
+    version: CURRENT
+    sha256: 5d43baefead1593ca327f58308a2279f63e24e00cd40ad990e656111e1089391
+    interface: c1_concurrency_probe
+    role: adapter
+    reused_or_new: REUSED
+    static_validation_status: PASS
+  - path: scripts/tracing/route_trace_collector.py
+    version: "1.2"
+    sha256: 446d1dad803e8599003ea5fb65216c19c854e7f04c72642d675113420c1c62a4
+    interface: route_trace_jsonl
+    role: collector
+    reused_or_new: REUSED
+    static_validation_status: PASS
+  - path: scripts/tracing/actuator_writer_collector.py
+    version: CURRENT
+    sha256: 140e717fe3c08ebf65afbcd332753393e9c721f22ba546681f48a84393391244
+    interface: writer_and_controller_lineage_summary
+    role: collector
+    reused_or_new: REUSED
+    static_validation_status: PASS
+  - path: scripts/tracing/clock_bridge_collector.py
+    version: CURRENT
+    sha256: 1140be063ce1e75835ec1f9fe3c3eea55aab7a483d99799a323e0d57353f4ed2
+    interface: bounded_clock_bridge_json
+    role: collector
+    reused_or_new: REUSED
+    static_validation_status: PASS
+  - path: scripts/tracing/successor_lifecycle_monitor.py
+    version: CURRENT
+    sha256: 2a07f326cce079783efd088338d864f6e9cd5eb62789291e9b95a31fc934aed6
+    interface: lifecycle_event_jsonl
+    role: collector
+    reused_or_new: REUSED
+    static_validation_status: PASS
+  - path: scripts/oracles/route_oracle_v0.py
+    version: "0.4"
+    sha256: 32cf3b5dd0d4e4ea2f535d5a006aa8782dab86397b16a1b5c70d625a8af751e2
+    interface: route_oracle_result_1_3
+    role: oracle
+    reused_or_new: REUSED
+    static_validation_status: PASS
+  - path: scripts/oracles/pre_revocation_freshness_oracle.py
+    version: "0.1"
+    sha256: b7c3d116cba7ed7e9ec959b01bad9d88fdda8ae4967a3dcd51d5648711a11ea2
+    interface: pre_revocation_freshness_result_1_0
+    role: oracle
+    reused_or_new: REUSED
+    static_validation_status: PASS
+  - path: scripts/oracles/successor_progression_oracle.py
+    version: "0.1"
+    sha256: 8c5f7d91a1d7d7035bb97389963d2ff550bd206fb66b30da8e56bab66d23d5ae
+    interface: successor_oracle_result_1_0
+    role: oracle
+    reused_or_new: REUSED
+    static_validation_status: PASS
+  - path: scripts/oracles/authority_event_linearization_oracle.py
+    version: "0.2"
+    sha256: ab5b38101396976c99215552dbf6fe80cd4bee926afe75a22d8e8d8894e8ff88
+    interface: authority_event_linearization_result
+    role: oracle
+    reused_or_new: REUSED
+    static_validation_status: PASS
+  - path: experiments/fuzzer_v0/family_a/evidence_rules.yaml
+    version: "1.0"
+    sha256: 5d9ae09b8f04fe594839ab8970df4b34e81ca40a953b699c792bf573754f6361
+    interface: evidence_admissibility_gate
+    role: evidence_profile
+    reused_or_new: REUSED
+    static_validation_status: PASS
+  - path: experiments/fuzzer_v0/family_a/safety_rules.yaml
+    version: "1.0"
+    sha256: e73849e0c7c929b319a10a0905a5b39f554d7bd55429878a10d3346ae312bd00
+    interface: frozen_physical_and_cleanup_boundaries
+    role: safety_profile
+    reused_or_new: REUSED
+    static_validation_status: PASS
+  - path: scripts/fuzzer_v0/family_a/run_v0p_qualification.py
+    version: "1.0"
+    sha256: 9fc2f122996fe91bbd57789ea8632147f81b35710c107c6d8fc6d0af5b5df5f5
+    interface: plan_preflight_execute
+    role: qualification_runner
+    reused_or_new: NEW
+    static_validation_status: PASS
+  - path: scripts/fuzzer_v0/family_a/build_v0p_compact_evidence.py
+    version: "1.0"
+    sha256: 31741f1c420b048168797f0a0c10a1cb046c079027d5cb9eafbe145702c90d97
+    interface: template_and_completed_evidence_validation
+    role: evidence_generator
+    reused_or_new: NEW
+    static_validation_status: PASS
+  - path: scripts/fuzzer_v0/family_a/check_v0p_cleanup.py
+    version: "1.0"
+    sha256: 7006b8bbb4a9c409318e5bceb03bb8b93f800e9d181d164fbd8bb4194631f81f
+    interface: cleanup_audit_json
+    role: cleanup_checker
+    reused_or_new: NEW
+    static_validation_status: PASS
+  - path: scripts/fuzzer_v0/family_a/check_v0p_safety.py
+    version: "1.0"
+    sha256: c9710c701bdd8d70130924acd423abc9735a767c91dd14565055cb6a8471c96b
+    interface: frozen_safety_result_json
+    role: safety_monitor_entry
+    reused_or_new: NEW
+    static_validation_status: PASS
+  - path: scripts/fuzzer_v0/family_a/check_v0p_runtime_residue.py
+    version: "1.0"
+    sha256: 8b8bcb53ce624fbc747b384f5c0474c8714160fd1f45d11e1d5614da239abf35
+    interface: preflight_and_post_attempt_json
+    role: process_port_checker
+    reused_or_new: NEW
+    static_validation_status: PASS
+  - path: scripts/setup/verify_family_a_v0p_environment.py
+    version: "1.0"
+    sha256: 3832066c3a22a0c98a6c7e97091759741d6404cc4b86ea8a3913ace33372fbf4
+    interface: static_ros_jazzy_environment_validation
+    role: environment_checker
+    reused_or_new: NEW
+    static_validation_status: PASS
+  - path: data/schemas/family_a_fuzzer_v0_compact_evidence.schema.json
+    version: "1.0"
+    sha256: 82d9ef8d0699246e6941abe42a8d865e7d23768c82ade8e4bf17912efe82ebb6
+    interface: draft_2020_12_json_schema
+    role: evidence_schema
+    reused_or_new: NEW
+    static_validation_status: PASS
+orchestration_bindings:
+  - slot_id: V0P-S1
+    runner_adapter: P0_OFFBOARD_CANONICAL
+    scenario_entry: scripts/probes/run_p0_scenario.sh
+    adapter_entries:
+      - scripts/adapters/offboard_adapter.py
+    collector_bundle:
+      - scripts/tracing/route_trace_collector.py
+      - scripts/tracing/actuator_writer_collector.py
+      - scripts/tracing/clock_bridge_collector.py
+      - scripts/tracing/successor_lifecycle_monitor.py
+    oracle_bundle:
+      - scripts/oracles/route_oracle_v0.py
+    evidence_profile:
+      - scripts/fuzzer_v0/family_a/build_v0p_compact_evidence.py
+      - data/schemas/family_a_fuzzer_v0_compact_evidence.schema.json
+      - experiments/fuzzer_v0/family_a/evidence_rules.yaml
+    safety_profile:
+      - scripts/fuzzer_v0/family_a/check_v0p_safety.py
+      - experiments/fuzzer_v0/family_a/safety_rules.yaml
+    cleanup_profile:
+      - scripts/fuzzer_v0/family_a/check_v0p_cleanup.py
+      - scripts/fuzzer_v0/family_a/check_v0p_runtime_residue.py
+  - slot_id: V0P-S2
+    runner_adapter: P0_DYNAMIC_CANONICAL
+    scenario_entry: scripts/probes/run_p0_scenario.sh
+    adapter_entries:
+      - scripts/adapters/external_mode_adapter/src/external_mode.cpp
+    collector_bundle:
+      - scripts/tracing/route_trace_collector.py
+      - scripts/tracing/actuator_writer_collector.py
+      - scripts/tracing/clock_bridge_collector.py
+      - scripts/tracing/successor_lifecycle_monitor.py
+    oracle_bundle:
+      - scripts/oracles/route_oracle_v0.py
+    evidence_profile:
+      - scripts/fuzzer_v0/family_a/build_v0p_compact_evidence.py
+      - data/schemas/family_a_fuzzer_v0_compact_evidence.schema.json
+      - experiments/fuzzer_v0/family_a/evidence_rules.yaml
+    safety_profile:
+      - scripts/fuzzer_v0/family_a/check_v0p_safety.py
+      - experiments/fuzzer_v0/family_a/safety_rules.yaml
+    cleanup_profile:
+      - scripts/fuzzer_v0/family_a/check_v0p_cleanup.py
+      - scripts/fuzzer_v0/family_a/check_v0p_runtime_residue.py
+  - slot_id: V0P-S3
+    runner_adapter: P0_EXECUTOR_CANONICAL
+    scenario_entry: scripts/probes/run_p0_scenario.sh
+    adapter_entries:
+      - scripts/adapters/external_mode_adapter/src/external_mode.cpp
+      - scripts/adapters/external_mode_adapter/src/p0_executor.cpp
+    collector_bundle:
+      - scripts/tracing/route_trace_collector.py
+      - scripts/tracing/actuator_writer_collector.py
+      - scripts/tracing/clock_bridge_collector.py
+      - scripts/tracing/successor_lifecycle_monitor.py
+    oracle_bundle:
+      - scripts/oracles/route_oracle_v0.py
+      - scripts/oracles/successor_progression_oracle.py
+    evidence_profile:
+      - scripts/fuzzer_v0/family_a/build_v0p_compact_evidence.py
+      - data/schemas/family_a_fuzzer_v0_compact_evidence.schema.json
+      - experiments/fuzzer_v0/family_a/evidence_rules.yaml
+    safety_profile:
+      - scripts/fuzzer_v0/family_a/check_v0p_safety.py
+      - experiments/fuzzer_v0/family_a/safety_rules.yaml
+    cleanup_profile:
+      - scripts/fuzzer_v0/family_a/check_v0p_cleanup.py
+      - scripts/fuzzer_v0/family_a/check_v0p_runtime_residue.py
+  - slot_id: V0P-S4
+    runner_adapter: P3_OFFBOARD_RETAINED_CANONICAL
+    scenario_entry: scripts/probes/run_p3_scenario.sh
+    adapter_entries:
+      - scripts/adapters/offboard_adapter.py
+    collector_bundle:
+      - scripts/tracing/route_trace_collector.py
+      - scripts/tracing/actuator_writer_collector.py
+      - scripts/tracing/clock_bridge_collector.py
+      - scripts/tracing/successor_lifecycle_monitor.py
+    oracle_bundle:
+      - scripts/oracles/route_oracle_v0.py
+      - scripts/oracles/pre_revocation_freshness_oracle.py
+    evidence_profile:
+      - scripts/fuzzer_v0/family_a/build_v0p_compact_evidence.py
+      - data/schemas/family_a_fuzzer_v0_compact_evidence.schema.json
+      - experiments/fuzzer_v0/family_a/evidence_rules.yaml
+    safety_profile:
+      - scripts/fuzzer_v0/family_a/check_v0p_safety.py
+      - experiments/fuzzer_v0/family_a/safety_rules.yaml
+    cleanup_profile:
+      - scripts/fuzzer_v0/family_a/check_v0p_cleanup.py
+      - scripts/fuzzer_v0/family_a/check_v0p_runtime_residue.py
+  - slot_id: V0P-S5
+    runner_adapter: P2_DYNAMIC_SIGTERM_CANONICAL
+    scenario_entry: scripts/probes/run_p2_scenario.sh
+    adapter_entries:
+      - scripts/adapters/external_mode_adapter/src/external_mode.cpp
+    collector_bundle:
+      - scripts/tracing/route_trace_collector.py
+      - scripts/tracing/actuator_writer_collector.py
+      - scripts/tracing/clock_bridge_collector.py
+      - scripts/tracing/successor_lifecycle_monitor.py
+    oracle_bundle:
+      - scripts/oracles/route_oracle_v0.py
+      - scripts/oracles/pre_revocation_freshness_oracle.py
+    evidence_profile:
+      - scripts/fuzzer_v0/family_a/build_v0p_compact_evidence.py
+      - data/schemas/family_a_fuzzer_v0_compact_evidence.schema.json
+      - experiments/fuzzer_v0/family_a/evidence_rules.yaml
+    safety_profile:
+      - scripts/fuzzer_v0/family_a/check_v0p_safety.py
+      - experiments/fuzzer_v0/family_a/safety_rules.yaml
+    cleanup_profile:
+      - scripts/fuzzer_v0/family_a/check_v0p_cleanup.py
+      - scripts/fuzzer_v0/family_a/check_v0p_runtime_residue.py
+  - slot_id: V0P-S6
+    runner_adapter: C1_PAIR_B_CANONICAL
+    scenario_entry: scripts/probes/run_c1_concurrency.sh
+    adapter_entries:
+      - scripts/adapters/external_mode_adapter/src/c1_concurrency_probe.cpp
+    collector_bundle:
+      - scripts/tracing/route_trace_collector.py
+      - scripts/tracing/actuator_writer_collector.py
+      - scripts/tracing/clock_bridge_collector.py
+      - scripts/tracing/successor_lifecycle_monitor.py
+    oracle_bundle:
+      - scripts/oracles/route_oracle_v0.py
+      - scripts/oracles/successor_progression_oracle.py
+      - scripts/oracles/authority_event_linearization_oracle.py
+    evidence_profile:
+      - scripts/fuzzer_v0/family_a/build_v0p_compact_evidence.py
+      - data/schemas/family_a_fuzzer_v0_compact_evidence.schema.json
+      - experiments/fuzzer_v0/family_a/evidence_rules.yaml
+    safety_profile:
+      - scripts/fuzzer_v0/family_a/check_v0p_safety.py
+      - experiments/fuzzer_v0/family_a/safety_rules.yaml
+    cleanup_profile:
+      - scripts/fuzzer_v0/family_a/check_v0p_cleanup.py
+      - scripts/fuzzer_v0/family_a/check_v0p_runtime_residue.py
+prohibitions:
+  old_pre_m_final_executor_imported: false
+  Route_Oracle_0_3_identity_emitted: false
+  comparison_strategy_reachable: false
+  historical_replay_reachable: false
+  Family_B_reachable: false
+  direct_actuator_reachable: false
+  frozen_attempt_ledger_modified: false

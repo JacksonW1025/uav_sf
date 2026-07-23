@@ -65,6 +65,10 @@ Family A Fuzzer v0 is `PREREGISTERED_NOT_ACTIVATED`.
 - Qualification target: `3` accepted.
 - Qualification maximum: `6` formal attempts.
 - Blocking clauses: `11`.
+- Readiness amendment status:
+  `READINESS_RESOLVED_PENDING_INDEPENDENT_REVIEW`.
+- Readiness blockers resolved: `11`.
+- Readiness blockers remaining: `0`.
 - Comparison arms: `NOT_AUTHORIZED`.
 
 The frozen assets are indexed in
@@ -77,11 +81,13 @@ seeds.
 
 The next exact action is:
 
-> create an independent amendment or readiness-resolution plan for the recorded blockers
+> perform a new independent static qualification activation review
 
-The review found no V0-P-only runner, executable scenario mapping, integrated
-evidence and cleanup path, unified safety entry, or common residual-process and
-port checker; the locked ROS Jazzy setup is also unavailable. No Family A
+The readiness amendment adds the V0-P-only runner, six-slot deterministic
+scenario mapping, integrated collector/Oracle/evidence path, unified safety
+entry, cleanup verification, common residual-process and port checks, and the
+digest-locked ROS Jazzy reproducible environment contract. These are static
+readiness results only. The original DECLINE remains unchanged. No Family A
 Fuzzer v0 flight runtime has executed. Qualification and comparison runtime,
 real-workload runtime, Family B, direct actuator, HITL, real flight,
 unprovenanced random events, and large or full stateful campaigns remain
@@ -100,3 +106,5 @@ unauthorized.
 - `experiments/fuzzer_v0/family_a/attempt_ledger.yaml`
 - `experiments/fuzzer_v0/family_a/activation_review/qualification_activation_decision.json`
 - `experiments/fuzzer_v0/family_a/activation_review/qualification_attempt_ledger.yaml`
+- `experiments/fuzzer_v0/family_a/readiness_amendment/static_readiness_gate.json`
+- `docs/design/FAMILY_A_FUZZER_V0_READINESS_AMENDMENT.md`

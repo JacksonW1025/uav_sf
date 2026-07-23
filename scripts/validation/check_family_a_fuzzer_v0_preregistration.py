@@ -415,7 +415,14 @@ def validate() -> dict[str, int]:
         assert review_decision["qualification_authorized"] is False
         assert review_decision["runtime_authorized"] is False
         assert review_decision["current_formal_attempts"] == 0
-        assert review_decision["next_exact_action"] in current_text
+        readiness_gate = BASE / "readiness_amendment/static_readiness_gate.json"
+        if readiness_gate.is_file():
+            assert (
+                "perform a new independent static qualification activation review"
+                in current_text
+            )
+        else:
+            assert review_decision["next_exact_action"] in current_text
     else:
         assert next_action in current_text
     for false_claim in (

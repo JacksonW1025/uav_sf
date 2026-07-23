@@ -1,0 +1,44 @@
+schema_version: "1.0"
+amendment_id: FAMILY_A_FUZZER_V0_V0P_QUALIFICATION_READINESS_AMENDMENT
+amendment_kind: STATIC_READINESS_ONLY
+status: READINESS_RESOLVED_PENDING_INDEPENDENT_REVIEW
+created_at: "2026-07-22"
+starting_commit: 5db3934c58553e491b19fe8da106948fe8cd1d16
+original_activation_review_commit: 5db3934c58553e491b19fe8da106948fe8cd1d16
+implementation_commit: IMPLEMENTATION_COMMIT_RECORDED_BY_IDENTITY_LOCK
+identity_lock_commit: COMMIT_CONTAINING_THIS_IDENTITY_LOCK_REPORTED_BY_GIT_AFTER_PUSH
+original_decision:
+  decision: DECLINE_IMPLEMENTATION_NOT_READY
+  status: QUALIFICATION_NOT_AUTHORIZED
+  remains_correct_for_reviewed_commit: true
+  superseded_or_modified: false
+scope:
+  family: FAMILY_A_ONLY
+  phase: V0_P_QUALIFICATION
+  strategy: QUALIFICATION
+  qualification_target_accepted: 3
+  qualification_maximum_formal_attempts: 6
+  deterministic_scenario_slots: 6
+  comparison_arms_included: false
+resolution:
+  original_blocking_clauses: 11
+  resolved_clauses: 11
+  remaining_clauses: 0
+  environment_proof: LOCKED_REPRODUCIBLE_CONTAINER_STATICALLY_AVAILABLE
+authorization:
+  qualification_authorized: false
+  runtime_authorized: false
+  formal_attempts_authorized: false
+  comparison_runtime_authorized: false
+accounting:
+  formal_attempts: 0
+  accepted_attempts: 0
+  comparison_attempts: 0
+  runtime_executed: false
+invariants:
+  - Frozen research design, seed rows, budgets, Oracle thresholds, safety boundaries, and attempt ledgers are unchanged.
+  - Plan and preflight are static readiness validation only.
+  - Execute remains refused under the original DECLINE decision.
+  - Comparison strategies, historical replay, real workload, Family B, and direct actuator paths are unreachable.
+  - Static readiness does not constitute runtime PASS or qualification authorization.
+next_exact_action: perform a new independent static qualification activation review

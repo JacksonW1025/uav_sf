@@ -31,6 +31,7 @@ testing. It contains zero formal attempts and authorizes no runtime.
 | [attempt ledger](attempt_ledger.yaml) | append-only future accounting, currently zero |
 | [adjudication template](final_adjudication_template.yaml) | future results structure without a predeclared result |
 | [activation review](activation_review/README.md) | independent qualification readiness review and decline decision |
+| [readiness amendment](readiness_amendment/README.md) | independent static resolution of the 11 activation-review blockers without runtime authorization |
 
 The machine Gate is validated against the
 [activation Gate schema](../../../data/schemas/family_a_fuzzer_v0_activation_gate.schema.json).
@@ -72,7 +73,11 @@ budget does not transfer, and no attempt is replaced automatically.
 - comparison arms authorized: `false`
 
 The independent activation review found 11 blocking clauses and decided
-`DECLINE_IMPLEMENTATION_NOT_READY`. The original activation Gate remains
-frozen and closed. The next exact action is to create an independent amendment
-or readiness-resolution plan for the recorded blockers. No Family A Fuzzer v0
-runtime has executed.
+`DECLINE_IMPLEMENTATION_NOT_READY`. The original activation Gate and decision
+remain frozen and closed. A subsequent readiness amendment now records
+`READINESS_RESOLVED_PENDING_INDEPENDENT_REVIEW` with 11 resolved and zero
+remaining implementation/environment blockers. This static readiness result
+does not authorize qualification or runtime.
+
+The next exact action is to perform a new independent static qualification
+activation review. No Family A Fuzzer v0 runtime has executed.

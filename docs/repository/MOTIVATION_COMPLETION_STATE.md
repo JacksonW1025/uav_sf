@@ -125,5 +125,9 @@ The independent qualification activation review decided
 `QUALIFICATION_NOT_AUTHORIZED`, has 11 blocking clauses, and retains zero
 formal attempts. All comparison arms remain unauthorized.
 
-Create an independent amendment or readiness-resolution plan for the recorded
-blockers. No Family A Fuzzer v0 flight runtime has executed.
+The subsequent V0-P readiness amendment statically resolved all 11 blockers
+and is `READINESS_RESOLVED_PENDING_INDEPENDENT_REVIEW`. It does not replace the
+DECLINE decision or authorize runtime.
+
+Perform a new independent static qualification activation review. No Family A
+Fuzzer v0 flight runtime has executed.

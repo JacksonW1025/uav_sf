@@ -1,0 +1,57 @@
+schema_version: "1.0"
+environment_id: FAMILY_A_V0P_ROS_JAZZY_STATIC_ENVIRONMENT
+environment_kind: LOCKED_REPRODUCIBLE_CONTAINER
+ros_distribution: jazzy
+gazebo_distribution: harmonic
+base_image: public.ecr.aws/docker/library/ubuntu
+base_image_digest: sha256:786a8b558f7be160c6c8c4a54f9a57274f3b4fb1491cf65146521ae77ff1dc54
+architecture: aarch64
+os_identity: Ubuntu_24.04_container_locked_by_digest
+python_identity: "3.12.3"
+DDS_identity:
+  implementation: Micro_XRCE_DDS_Agent
+  commit: 73622810d984349b80bbac0ef55fc0b694d62222
+  campaign_port: 8888
+workspace_identity:
+  PX4: 4ae21a5e569d3d89c2f6366688cbacb3e93437c9
+  px4_msgs: 18ecff03041c6f8d8a0012fbc63af0b23dd60af1
+  px4_ros2_interface_lib: c3e410f035806e8c56246708432ded09c976434b
+  Micro_XRCE_DDS_Agent: 73622810d984349b80bbac0ef55fc0b694d62222
+  workspace_setup: ros2_ws/install/setup.bash
+setup_script_path: scripts/setup/bootstrap_family_a.sh
+file_identities:
+  - path: docker/Dockerfile
+    sha256: 96ee0a979366370d88ec3ffe342c8ed82a1653048658a4ad4feb9f648d73d9f8
+  - path: docker/build.sh
+    sha256: c68a572de4fe1304dfa829dcdc3c6bb3979a2e3d247934bcf6f902ef2b187cd0
+  - path: docker/run.sh
+    sha256: 148fbe2ae9d0c61bc7f845d98b33101986f4e33b89e365e0460e96bbcf42d72c
+  - path: config/dependencies.lock.yaml
+    sha256: 355408a6e8a2ea540f33de3ba6e9c656b13a10329537ec718354f9727313ac09
+  - path: scripts/setup/bootstrap_family_a.sh
+    sha256: 9395f6fb6934e472044415a5c839e878be4fcd3150aae059885317d95ec65095
+  - path: scripts/setup/setup_ros2_ws.sh
+    sha256: 627450e357e093c6ef426f6cdd3c5f153a4e3f20957232c6cd21b28d3453f570
+  - path: scripts/setup/verify_dependency_lock.py
+    sha256: 366ec252d62e0456e296c633b74177106201966d5c5da57af1c797d8c1db68b5
+  - path: scripts/profiles/family_a.env
+    sha256: 0836863bc036f4312c54c462d059a48496d71ba3038854004be17c9f5a4f28c6
+verification_commands:
+  - python3 scripts/setup/verify_dependency_lock.py --json
+  - python3 scripts/setup/verify_family_a_v0p_environment.py --json
+  - bash -n scripts/setup/bootstrap_family_a.sh
+  - python3 scripts/fuzzer_v0/family_a/run_v0p_qualification.py plan
+  - python3 scripts/fuzzer_v0/family_a/run_v0p_qualification.py preflight
+runtime_read_only_verification_commands:
+  - ros2 --help
+  - ros2 pkg executables
+host_observation:
+  ros_distribution: humble
+  required_jazzy_setup_present: false
+  host_selected_for_qualification: false
+status: STATICALLY_AVAILABLE
+blocker: null
+limitations:
+  - Static readiness proves the exact container contract; it does not prove a flight runtime.
+  - The host ROS Humble installation is not an admissible substitute.
+  - Container execution and ros2 read-only checks remain for the independent activation re-review.

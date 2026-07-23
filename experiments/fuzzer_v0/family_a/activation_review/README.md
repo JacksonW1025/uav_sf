@@ -36,3 +36,11 @@ and the [focused tests](../../../../tests/test_family_a_fuzzer_v0_activation_rev
 The next exact action is: create an independent amendment or
 readiness-resolution plan for the recorded blockers. No Family A Fuzzer v0
 runtime or formal attempt was executed.
+
+## Subsequent readiness amendment
+
+The historical conclusion above is unchanged. A later independent
+[readiness amendment](../readiness_amendment/README.md) records static
+resolution evidence for all 11 blockers and requires a new independent static
+qualification activation review. It does not revise this DECLINE decision or
+authorize qualification.

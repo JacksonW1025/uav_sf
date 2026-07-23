@@ -1,0 +1,43 @@
+schema_version: "1.0"
+lock_id: FAMILY_A_FUZZER_V0_V0P_READINESS_AMENDMENT_SOURCE_LOCK
+captured_at: "2026-07-22"
+branch: main
+remote: origin
+starting_head: 5db3934c58553e491b19fe8da106948fe8cd1d16
+starting_origin_main: 5db3934c58553e491b19fe8da106948fe8cd1d16
+starting_ahead: 0
+starting_behind: 0
+original_activation_review_commit: 5db3934c58553e491b19fe8da106948fe8cd1d16
+amendment_commit: IMPLEMENTATION_COMMIT_RECORDED_BY_IDENTITY_LOCK
+identity_lock_commit: COMMIT_CONTAINING_THIS_IDENTITY_LOCK_REPORTED_BY_GIT_AFTER_PUSH
+implementation_manifest_sha256: IMPLEMENTATION_MANIFEST_SHA256_RECORDED_BY_IDENTITY_LOCK
+original_review_inputs:
+  - path: experiments/fuzzer_v0/family_a/activation_review/qualification_activation_decision.json
+    sha256: 1d5c8a63cdb273e878a8cf266f38e7fbd8c8be433a1043daad0cc0ba57387802
+  - path: experiments/fuzzer_v0/family_a/activation_review/activation_review_checklist.tsv
+    sha256: 7464727ceb358f932a516624d0669ffa202e21644ede4d65502f7736c7ffd1d9
+  - path: experiments/fuzzer_v0/family_a/activation_review/qualification_attempt_ledger.yaml
+    sha256: 59cabb7c8766f06c3e275958fc8e3605fde47e215b11e84ce7421491abc261bf
+  - path: experiments/fuzzer_v0/family_a/activation_review/qualification_runbook.md
+    sha256: fc0bb47e72c5424189302f1494066994fffceb9e6d56cbed9190a067fe91ce02
+  - path: experiments/fuzzer_v0/family_a/activation_review/review_source_lock.yaml
+    sha256: 81104e900fe6acfffdb1ab5316ec6f4b12f12861f730bd2995e1cb2cc9f04e4d
+  - path: experiments/fuzzer_v0/family_a/activation_gate.json
+    sha256: 2913a785b8e934a7c3549f990950ba02458b96f03415f05094b36124a7655c39
+  - path: experiments/fuzzer_v0/family_a/attempt_ledger.yaml
+    sha256: cc1e34eb3a20d26d028fd050ced2b53e074b6f957b1e64788f82c7fa285023e1
+amendment_contract_inputs:
+  qualification_scenario_map:
+    path: experiments/fuzzer_v0/family_a/readiness_amendment/qualification_scenario_map.tsv
+    sha256: 5825f4f4a4496aff61d44e7fabaa8a7fc99b38272e21c1ee125232d325cdf9a0
+  environment_lock:
+    path: experiments/fuzzer_v0/family_a/readiness_amendment/environment_lock.yaml
+    sha256: 62f6c5179bdd8ecfbf94089fcf025cfdde25bcf53e929fdf349956e61973449b
+runtime_observation:
+  PX4_started: false
+  Gazebo_started: false
+  ROS_launch_started: false
+  DDS_flight_communication_started: false
+  flight_scenario_started: false
+  qualification_attempts_created: 0
+  comparison_attempts_created: 0

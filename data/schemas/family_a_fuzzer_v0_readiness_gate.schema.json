@@ -1,0 +1,181 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "family_a_fuzzer_v0_readiness_gate.schema.json",
+  "title": "Family A Fuzzer v0 V0-P static readiness Gate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "gate_id",
+    "status",
+    "starting_commit",
+    "review_commit",
+    "amendment_commit",
+    "identity_lock_commit",
+    "implementation_manifest_sha256",
+    "original_decision",
+    "original_blocking_clause_count",
+    "resolved_clause_count",
+    "remaining_clause_count",
+    "resolved_clauses",
+    "remaining_clauses",
+    "runner_ready",
+    "scenario_mapping_ready",
+    "collectors_bound",
+    "evidence_generator_ready",
+    "cleanup_checker_ready",
+    "v0p_only_enforced",
+    "safety_monitor_ready",
+    "physical_bounds_integrated",
+    "residual_process_checker_ready",
+    "port_checker_ready",
+    "ros_jazzy_environment_ready",
+    "static_plan_passed",
+    "static_preflight_passed",
+    "execute_refusal_passed",
+    "focused_tests_passed",
+    "repository_validation_passed",
+    "formal_attempts",
+    "qualification_authorized",
+    "runtime_authorized",
+    "formal_attempts_authorized",
+    "comparison_runtime_authorized",
+    "requires_independent_activation_rereview",
+    "next_exact_action",
+    "limitations"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "gate_id": {"const": "FAMILY_A_FUZZER_V0_V0P_STATIC_READINESS"},
+    "status": {
+      "enum": [
+        "READINESS_RESOLVED_PENDING_INDEPENDENT_REVIEW",
+        "PARTIAL_READINESS_REMAINING_BLOCKERS",
+        "ENVIRONMENT_READINESS_BLOCKED",
+        "READINESS_AMENDMENT_CONFIGURATION_FAILURE"
+      ]
+    },
+    "starting_commit": {"$ref": "#/$defs/commit"},
+    "review_commit": {"$ref": "#/$defs/commit"},
+    "amendment_commit": {
+      "oneOf": [
+        {"$ref": "#/$defs/commit"},
+        {"const": "IMPLEMENTATION_COMMIT_RECORDED_BY_IDENTITY_LOCK"}
+      ]
+    },
+    "identity_lock_commit": {
+      "oneOf": [
+        {"$ref": "#/$defs/commit"},
+        {"const": "COMMIT_CONTAINING_THIS_IDENTITY_LOCK_REPORTED_BY_GIT_AFTER_PUSH"}
+      ]
+    },
+    "implementation_manifest_sha256": {
+      "oneOf": [
+        {"$ref": "#/$defs/hash"},
+        {"const": "IMPLEMENTATION_MANIFEST_SHA256_RECORDED_BY_IDENTITY_LOCK"}
+      ]
+    },
+    "original_decision": {"const": "DECLINE_IMPLEMENTATION_NOT_READY"},
+    "original_blocking_clause_count": {"const": 11},
+    "resolved_clause_count": {"minimum": 0, "maximum": 11, "type": "integer"},
+    "remaining_clause_count": {"minimum": 0, "maximum": 11, "type": "integer"},
+    "resolved_clauses": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/clause"},
+      "uniqueItems": true
+    },
+    "remaining_clauses": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/clause"},
+      "uniqueItems": true
+    },
+    "runner_ready": {"type": "boolean"},
+    "scenario_mapping_ready": {"type": "boolean"},
+    "collectors_bound": {"type": "boolean"},
+    "evidence_generator_ready": {"type": "boolean"},
+    "cleanup_checker_ready": {"type": "boolean"},
+    "v0p_only_enforced": {"type": "boolean"},
+    "safety_monitor_ready": {"type": "boolean"},
+    "physical_bounds_integrated": {"type": "boolean"},
+    "residual_process_checker_ready": {"type": "boolean"},
+    "port_checker_ready": {"type": "boolean"},
+    "ros_jazzy_environment_ready": {"type": "boolean"},
+    "static_plan_passed": {"type": "boolean"},
+    "static_preflight_passed": {"type": "boolean"},
+    "execute_refusal_passed": {"type": "boolean"},
+    "focused_tests_passed": {"type": "boolean"},
+    "repository_validation_passed": {"type": "boolean"},
+    "formal_attempts": {"const": 0},
+    "qualification_authorized": {"const": false},
+    "runtime_authorized": {"const": false},
+    "formal_attempts_authorized": {"const": false},
+    "comparison_runtime_authorized": {"const": false},
+    "requires_independent_activation_rereview": {"const": true},
+    "next_exact_action": {
+      "enum": [
+        "perform a new independent static qualification activation review",
+        "resolve the remaining readiness blockers in a separate amendment"
+      ]
+    },
+    "limitations": {
+      "type": "array",
+      "items": {"minLength": 1, "type": "string"},
+      "minItems": 1
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {"const": "READINESS_RESOLVED_PENDING_INDEPENDENT_REVIEW"}
+        },
+        "required": ["status"]
+      },
+      "then": {
+        "properties": {
+          "resolved_clause_count": {"const": 11},
+          "remaining_clause_count": {"const": 0},
+          "remaining_clauses": {"maxItems": 0},
+          "runner_ready": {"const": true},
+          "scenario_mapping_ready": {"const": true},
+          "collectors_bound": {"const": true},
+          "evidence_generator_ready": {"const": true},
+          "cleanup_checker_ready": {"const": true},
+          "v0p_only_enforced": {"const": true},
+          "safety_monitor_ready": {"const": true},
+          "physical_bounds_integrated": {"const": true},
+          "residual_process_checker_ready": {"const": true},
+          "port_checker_ready": {"const": true},
+          "ros_jazzy_environment_ready": {"const": true},
+          "static_plan_passed": {"const": true},
+          "static_preflight_passed": {"const": true},
+          "execute_refusal_passed": {"const": true},
+          "focused_tests_passed": {"const": true},
+          "repository_validation_passed": {"const": true},
+          "next_exact_action": {
+            "const": "perform a new independent static qualification activation review"
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "commit": {"pattern": "^[0-9a-f]{40}$", "type": "string"},
+    "hash": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "clause": {
+      "enum": [
+        "G-01",
+        "G-02",
+        "G-05",
+        "G-07",
+        "G-08",
+        "G-10",
+        "H-01",
+        "H-02",
+        "H-07",
+        "H-08",
+        "J-03"
+      ]
+    }
+  }
+}

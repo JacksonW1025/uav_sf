@@ -1,0 +1,12 @@
+clause_id	original_status	resolution_status	resolution_evidence	static_validation
+G-01	FAIL	RESOLVED	scripts/fuzzer_v0/family_a/run_v0p_qualification.py	unique plan/preflight/execute entry; execute refusal tested
+G-02	FAIL	RESOLVED	experiments/fuzzer_v0/family_a/readiness_amendment/qualification_scenario_map.tsv	exact six-slot fixed schedule validated against accepted seed rows
+G-05	FAIL	RESOLVED	experiments/fuzzer_v0/family_a/readiness_amendment/implementation_manifest.yaml	six scenario/adapter/collector/Oracle bindings with matching hashes
+G-07	FAIL	RESOLVED	scripts/fuzzer_v0/family_a/build_v0p_compact_evidence.py	template and completed-evidence validation preserve non-collapsing outcomes
+G-08	FAIL	RESOLVED	scripts/fuzzer_v0/family_a/check_v0p_cleanup.py	static cleanup fixtures cover terminal state, artifact, collector, flush, process, and port closure
+G-10	FAIL	RESOLVED	scripts/fuzzer_v0/family_a/run_v0p_qualification.py	V0-P-only phase/strategy/seed/attempt enforcement and comparison refusal tested
+H-01	FAIL	RESOLVED	scripts/fuzzer_v0/family_a/check_v0p_safety.py	unified static safety entry uses only frozen Family A boundaries
+H-02	FAIL	RESOLVED	scripts/fuzzer_v0/family_a/check_v0p_safety.py	finite values and height, speed, attitude, and body-rate boundaries tested
+H-07	FAIL	RESOLVED	scripts/fuzzer_v0/family_a/check_v0p_runtime_residue.py	read-only preflight/post-attempt process tree and stale-state checks
+H-08	FAIL	RESOLVED	scripts/fuzzer_v0/family_a/check_v0p_runtime_residue.py	deterministic UDP/TCP port 8888 preflight/post-attempt check
+J-03	FAIL	RESOLVED	experiments/fuzzer_v0/family_a/readiness_amendment/environment_lock.yaml	exact ROS Jazzy container digest, dependency identities, setup, and static verifier

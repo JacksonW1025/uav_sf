@@ -309,7 +309,16 @@ def validate() -> dict[str, int]:
     )
     assert "DECLINE_IMPLEMENTATION_NOT_READY" in current_text
     assert "QUALIFICATION_NOT_AUTHORIZED" in current_text
-    assert NEXT_ACTION in current_text
+    readiness_gate = (
+        FAMILY_BASE / "readiness_amendment/static_readiness_gate.json"
+    )
+    if readiness_gate.is_file():
+        assert (
+            "perform a new independent static qualification activation review"
+            in current_text
+        )
+    else:
+        assert NEXT_ACTION in current_text
     assert "formal attempts: `0`" in current_text
     assert "state-aware search gain: `not_established`" in current_text.lower()
     assert "full method effectiveness: `not_established`" in current_text.lower()

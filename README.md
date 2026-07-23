@@ -31,15 +31,17 @@ The independent [Family A Fuzzer v0 preregistration](experiments/fuzzer_v0/famil
 now exists as `PREREGISTERED_NOT_ACTIVATED`. Its frozen comparison is limited
 to Family A and retains formal attempts: `0`. The independent qualification
 activation review decided `DECLINE_IMPLEMENTATION_NOT_READY`, with status
-`QUALIFICATION_NOT_AUTHORIZED` and 11 blocking clauses. Campaign activation,
-qualification runtime, comparison runtime, and formal attempts remain
-unauthorized. State-aware search gain:
+`QUALIFICATION_NOT_AUTHORIZED` and 11 blocking clauses. The independent
+readiness amendment subsequently resolved all 11 blockers statically and is
+`READINESS_RESOLVED_PENDING_INDEPENDENT_REVIEW`. The original decision is
+unchanged. Campaign activation, qualification runtime, comparison runtime, and
+formal attempts remain unauthorized. State-aware search gain:
 `NOT_ESTABLISHED`. Full method effectiveness: `NOT_ESTABLISHED`.
 
-The next exact action is to create an independent amendment or
-readiness-resolution plan for the recorded blockers. No Family A Fuzzer v0
-flight runtime, qualification attempt, comparison attempt, real-workload
-campaign, or Family B runtime has started.
+The next exact action is to perform a new independent static qualification
+activation review. No Family A Fuzzer v0 flight runtime, qualification
+attempt, comparison attempt, real-workload campaign, or Family B runtime has
+started.
 
 ## Quick start
 
@@ -65,7 +67,8 @@ Dependency sources and builds live in ignored `external/`, `ros2_ws/`, and
 7. [Repository map](docs/repository/REPOSITORY_MAP.md)
 8. [Family A Fuzzer v0 preregistration](docs/design/FAMILY_A_FUZZER_V0_PREREGISTRATION.md)
 9. [Family A Fuzzer v0 activation review](docs/design/FAMILY_A_FUZZER_V0_ACTIVATION_REVIEW.md)
-10. [Agent guide](AGENT.md)
+10. [Family A Fuzzer v0 readiness amendment](docs/design/FAMILY_A_FUZZER_V0_READINESS_AMENDMENT.md)
+11. [Agent guide](AGENT.md)
 
 ## Data and validation
 

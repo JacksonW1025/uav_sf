@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "family_a_fuzzer_v0_compact_evidence.schema.json",
+  "title": "Family A Fuzzer v0 V0-P compact evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "template_only",
+    "attempt_identity",
+    "repository_identity",
+    "dependency_identity",
+    "slot_id",
+    "seed_id",
+    "scenario_identity",
+    "adapter_identity",
+    "collector_identities",
+    "oracle_identities",
+    "raw_artifact_manifest_hashes",
+    "critical_window_status",
+    "clock_status",
+    "route_result",
+    "freshness_result",
+    "successor_result",
+    "linearization_result",
+    "evidence_gate_classification",
+    "safety_result",
+    "cleanup_result",
+    "process_port_audit",
+    "final_attempt_classification"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "template_only": {"type": "boolean"},
+    "attempt_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["attempt_id", "phase", "formal_attempt_registered"],
+      "properties": {
+        "attempt_id": {"pattern": "^V0P-A[1-6]$", "type": "string"},
+        "phase": {"const": "V0_P_QUALIFICATION"},
+        "formal_attempt_registered": {"type": "boolean"}
+      }
+    },
+    "repository_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commit", "worktree_clean"],
+      "properties": {
+        "commit": {
+          "oneOf": [
+            {"pattern": "^[0-9a-f]{40}$", "type": "string"},
+            {"type": "null"}
+          ]
+        },
+        "worktree_clean": {"type": ["boolean", "null"]}
+      }
+    },
+    "dependency_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lock_path", "lock_sha256"],
+      "properties": {
+        "lock_path": {"const": "config/dependencies.lock.yaml"},
+        "lock_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+      }
+    },
+    "slot_id": {"pattern": "^V0P-S[1-6]$", "type": "string"},
+    "seed_id": {"minLength": 1, "type": "string"},
+    "scenario_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scenario_family", "simulation_seed", "scenario_entry"],
+      "properties": {
+        "scenario_family": {"minLength": 1, "type": "string"},
+        "simulation_seed": {"minimum": 1, "type": "integer"},
+        "scenario_entry": {"minLength": 1, "type": "string"}
+      }
+    },
+    "adapter_identity": {"$ref": "#/$defs/identities"},
+    "collector_identities": {"$ref": "#/$defs/identities"},
+    "oracle_identities": {"$ref": "#/$defs/identities"},
+    "raw_artifact_manifest_hashes": {
+      "type": "object",
+      "additionalProperties": {
+        "pattern": "^[0-9a-f]{64}$",
+        "type": "string"
+      }
+    },
+    "critical_window_status": {
+      "enum": ["COMPLETE", "INCOMPLETE", "UNKNOWN", null]
+    },
+    "clock_status": {
+      "enum": ["VALID", "DEGRADED", "INVALID", "UNKNOWN", "NOT_REQUIRED", null]
+    },
+    "route_result": {"$ref": "#/$defs/oracleOutcome"},
+    "freshness_result": {"$ref": "#/$defs/oracleOutcome"},
+    "successor_result": {"$ref": "#/$defs/oracleOutcome"},
+    "linearization_result": {"$ref": "#/$defs/oracleOutcome"},
+    "evidence_gate_classification": {
+      "enum": [
+        "ACCEPTED",
+        "OBSERVABILITY_REJECTED",
+        "MEASUREMENT_INSUFFICIENT",
+        "ENVIRONMENT_FAILURE",
+        "CAMPAIGN_CONFIGURATION_FAILURE",
+        "FORMAL_SAFETY_STOP",
+        "NOT_APPLICABLE",
+        null
+      ]
+    },
+    "safety_result": {
+      "enum": [
+        "PASS",
+        "FORMAL_SAFETY_STOP",
+        "MEASUREMENT_INSUFFICIENT",
+        "ENVIRONMENT_FAILURE",
+        "CAMPAIGN_CONFIGURATION_FAILURE",
+        null
+      ]
+    },
+    "cleanup_result": {
+      "enum": [
+        "CLEAN",
+        "RESIDUAL_PROCESS",
+        "OCCUPIED_PORT",
+        "INCOMPLETE_ARTIFACT_CLOSE",
+        "MISSING_TERMINAL_STATE",
+        "UNKNOWN",
+        null
+      ]
+    },
+    "process_port_audit": {
+      "enum": [
+        "CLEAN",
+        "RESIDUAL_PROCESS",
+        "OCCUPIED_PORT",
+        "STALE_STATE",
+        "INCOMPLETE_RUN_DIRECTORY",
+        "UNKNOWN",
+        null
+      ]
+    },
+    "final_attempt_classification": {
+      "enum": [
+        "ACCEPTED",
+        "OBSERVABILITY_REJECTED",
+        "MEASUREMENT_INSUFFICIENT",
+        "ENVIRONMENT_FAILURE",
+        "CAMPAIGN_CONFIGURATION_FAILURE",
+        "FORMAL_SAFETY_STOP",
+        "NOT_APPLICABLE",
+        null
+      ]
+    }
+  },
+  "$defs": {
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "version", "sha256"],
+      "properties": {
+        "path": {"minLength": 1, "type": "string"},
+        "version": {"minLength": 1, "type": "string"},
+        "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+      }
+    },
+    "identities": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/identity"},
+      "minItems": 1
+    },
+    "oracleOutcome": {
+      "enum": ["PASS", "EXPOSURE", "VIOLATION", "UNKNOWN", "NOT_APPLICABLE", null]
+    }
+  }
+}
