@@ -78,6 +78,29 @@ def test_environment_capture_accepts_gazebo_tools_inventory_exit_255(
     assert capture_environment._gazebo_identity() == "gz <command> [options]"
 
 
+def test_container_dispatch_passes_exact_git_safe_directory_and_valid_mounts(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    commands: list[list[str]] = []
+
+    def capture(command: list[str], *, capture: bool = False) -> int:
+        commands.append(command)
+        return 0
+
+    monkeypatch.setattr(evaluator, "_docker_run", capture)
+    assert evaluator._container_dispatch(["plan"]) == 0
+    assert evaluator._container_dispatch(
+        ["register"], writable_repository=True
+    ) == 0
+    read_only, writable = commands
+    assert "GIT_CONFIG_KEY_0=safe.directory" in read_only
+    assert "GIT_CONFIG_VALUE_0=/authorization/repository" in read_only
+    read_only_mount = read_only[read_only.index("--mount") + 1]
+    writable_mount = writable[writable.index("--mount") + 1]
+    assert read_only_mount.endswith(",readonly")
+    assert not writable_mount.endswith((",ro", ",rw", ",readonly"))
+
+
 def test_plan_and_preflight_are_static() -> None:
     plan = evaluator.build_plan()
     assert plan["status"] == "STATIC_PLAN_PASS"

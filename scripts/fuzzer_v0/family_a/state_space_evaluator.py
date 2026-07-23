@@ -179,7 +179,10 @@ def env_build() -> int:
 
 
 def _container_dispatch(args: list[str], *, writable_repository: bool = False) -> int:
-    repository_mode = "rw" if writable_repository else "ro"
+    repository_mount = (
+        f"type=bind,src={ROOT},dst=/authorization/repository"
+        + ("" if writable_repository else ",readonly")
+    )
     command = [
         "docker",
         "run",
@@ -191,8 +194,14 @@ def _container_dispatch(args: list[str], *, writable_repository: bool = False) -
         "--read-only",
         "--tmpfs",
         "/tmp:rw,noexec,nosuid,size=1g",
+        "--env",
+        "GIT_CONFIG_COUNT=1",
+        "--env",
+        "GIT_CONFIG_KEY_0=safe.directory",
+        "--env",
+        "GIT_CONFIG_VALUE_0=/authorization/repository",
         "--mount",
-        f"type=bind,src={ROOT},dst=/authorization/repository,{repository_mode}",
+        repository_mount,
     ]
     if writable_repository:
         command.remove("--read-only")
@@ -202,7 +211,7 @@ def _container_dispatch(args: list[str], *, writable_repository: bool = False) -
         command.extend(
             [
                 "--mount",
-                f"type=bind,src={attempt_root},dst=/attempts,rw",
+                f"type=bind,src={attempt_root},dst=/attempts",
             ]
         )
     command.extend(
@@ -296,16 +305,24 @@ def preflight(*, require_clean: bool = True) -> dict[str, Any]:
             "observed": "HOST_STATIC_ONLY_CONTAINER_CHECK_DEFERRED_TO_WRAPPER",
         }
 
-    worktree = subprocess.run(
+    worktree_process = subprocess.run(
         ["git", "status", "--porcelain"],
         cwd=CONTRACT_ROOT,
         capture_output=True,
         text=True,
-    ).stdout
+    )
+    worktree = worktree_process.stdout
+    worktree_valid = worktree_process.returncode == 0
     checks["worktree"] = {
-        "status": "PASS" if not worktree or not require_clean else "FAIL",
-        "clean": not bool(worktree),
+        "status": (
+            "PASS"
+            if worktree_valid and (not worktree or not require_clean)
+            else "FAIL"
+        ),
+        "clean": worktree_valid and not bool(worktree),
         "required": require_clean,
+        "git_exit_code": worktree_process.returncode,
+        "error": worktree_process.stderr.strip(),
     }
     passed = all(record["status"] == "PASS" for record in checks.values())
     return {

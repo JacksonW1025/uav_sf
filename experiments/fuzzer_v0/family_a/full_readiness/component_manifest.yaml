@@ -276,7 +276,7 @@ components:
   - component_id: evaluator_runner
     role: runner
     source_path: scripts/fuzzer_v0/family_a/state_space_evaluator.py
-    sha256: 6e56dc0658c7f998234d917e512d8d7ac718bdd8e5c11eb8355325437c6fb681
+    sha256: 41d0107c38f880c12efda16deaa16415f4a4f9e822b56ed60b997176878e75e6
     module_or_command: "python3 scripts/fuzzer_v0/family_a/state_space_evaluator.py"
     build_target: python_compileall
     input_contract: subcommand_and_locked_contract_assets
