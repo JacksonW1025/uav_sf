@@ -3,7 +3,6 @@ FROM ${BASE_IMAGE}
 
 ARG BASE_INDEX_DIGEST
 ARG BASE_PLATFORM_DIGEST
-ARG REPOSITORY_COMMIT
 ARG DEBIAN_FRONTEND=noninteractive
 
 LABEL org.opencontainers.image.title="Family A Fuzzer v0 qualification environment" \
@@ -11,7 +10,6 @@ LABEL org.opencontainers.image.title="Family A Fuzzer v0 qualification environme
       org.opencontainers.image.base.index.digest="${BASE_INDEX_DIGEST}" \
       org.opencontainers.image.base.platform.digest="${BASE_PLATFORM_DIGEST}" \
       org.opencontainers.image.platform="linux/arm64" \
-      org.opencontainers.image.revision="${REPOSITORY_COMMIT}" \
       org.opencontainers.image.runtime-authorized="false"
 
 ENV LANG=C.UTF-8 \
@@ -24,7 +22,6 @@ ENV LANG=C.UTF-8 \
     FAMILY_A_REPOSITORY=/opt/family_a/repository \
     FAMILY_A_AUTHORIZATION_REPO=/authorization/repository \
     FAMILY_A_ATTEMPT_ROOT=/attempts \
-    FAMILY_A_IMPLEMENTATION_COMMIT=${REPOSITORY_COMMIT} \
     SOURCE_DATE_EPOCH=0
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -47,6 +44,10 @@ RUN printf 'Acquire::Retries "5";\nAcquire::http::Timeout "60";\nAcquire::https:
     && python3 -m pip install --break-system-packages --no-cache-dir \
       --require-hashes --no-deps -r /tmp/locks/python-requirements.lock \
     && rm -rf /var/lib/apt/lists/*
+
+ARG REPOSITORY_COMMIT
+LABEL org.opencontainers.image.revision="${REPOSITORY_COMMIT}"
+ENV FAMILY_A_IMPLEMENTATION_COMMIT=${REPOSITORY_COMMIT}
 
 COPY . /opt/family_a/repository
 WORKDIR /opt/family_a/repository
