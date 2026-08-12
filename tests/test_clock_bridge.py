@@ -17,7 +17,7 @@ class ClockBridgeTests(unittest.TestCase):
         self.assertEqual(_route(2, plan), "px4_internal")
         self.assertEqual(_route(23, plan), "mode_executor")
 
-    def test_closed_trace_prefers_dense_gazebo_clock(self) -> None:
+    def test_closed_trace_prefers_direct_px4_timesync(self) -> None:
         records = [
             {
                 "kind": "gazebo_clock_sample",
@@ -36,7 +36,7 @@ class ClockBridgeTests(unittest.TestCase):
         )
         bridge = _clock_bridge(records, 1_000_000)
         self.assertEqual(bridge.sample_count, 8)
-        self.assertEqual(bridge.map(8_000_000), 1_008_000_000)
+        self.assertEqual(bridge.map(2_000_000), 9_002_000_000)
 
     def test_affine_mapping_and_bound(self) -> None:
         samples = [

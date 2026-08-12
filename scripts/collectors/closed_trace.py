@@ -81,8 +81,27 @@ def _read_jsonl(paths: Iterable[Path]) -> list[dict[str, Any]]:
 
 def _clock_bridge(sidecar: list[dict[str, Any]], maximum_uncertainty_ns: int) -> ClockBridge:
     by_source: dict[int, dict[str, int | str]] = {}
-    gazebo = [record for record in sidecar if record.get("kind") == "gazebo_clock_sample"]
-    if len(gazebo) >= 5:
+    # TimesyncStatus is PX4's direct boot-time contract, which is also the
+    # timestamp domain retained by ULog. Gazebo /clock is simulation time and
+    # its transport callback can be delayed independently of PX4; keep that
+    # stream as a fail-closed fallback rather than silently equating the two
+    # domains when direct PX4 samples are available.
+    timesync = [record for record in sidecar if record.get("kind") == "timesync_sample"]
+    if len(timesync) >= 5:
+        for record in timesync:
+            if "source_us" not in record or "analysis_projection_ns" not in record:
+                continue
+            source_ns = int(record["source_us"]) * 1000
+            by_source[source_ns] = {
+                "source_domain": "px4_boot_ns",
+                "source_ns": source_ns,
+                "analysis_ns": int(record["analysis_projection_ns"]),
+                "round_trip_ns": max(0, int(record.get("round_trip_us", 0))) * 1000,
+            }
+    else:
+        gazebo = [
+            record for record in sidecar if record.get("kind") == "gazebo_clock_sample"
+        ]
         for record in gazebo:
             source_ns = int(record["source_ns"])
             by_source[source_ns] = {
@@ -91,22 +110,6 @@ def _clock_bridge(sidecar: list[dict[str, Any]], maximum_uncertainty_ns: int) ->
                 "analysis_ns": int(record["analysis_projection_ns"]),
                 "round_trip_ns": 0,
             }
-        return fit_clock_bridge(
-            [by_source[key] for key in sorted(by_source)],
-            maximum_uncertainty_ns=maximum_uncertainty_ns,
-        )
-    for record in sidecar:
-        if record.get("kind") != "timesync_sample":
-            continue
-        if "source_us" not in record or "analysis_projection_ns" not in record:
-            continue
-        source_ns = int(record["source_us"]) * 1000
-        by_source[source_ns] = {
-            "source_domain": "px4_boot_ns",
-            "source_ns": source_ns,
-            "analysis_ns": int(record["analysis_projection_ns"]),
-            "round_trip_ns": max(0, int(record.get("round_trip_us", 0))) * 1000,
-        }
     return fit_clock_bridge(
         [by_source[key] for key in sorted(by_source)],
         maximum_uncertainty_ns=maximum_uncertainty_ns,
