@@ -1,0 +1,52 @@
+diff --git a/px4_ros2_cpp/include/px4_ros2/components/health_and_arming_checks.hpp b/px4_ros2_cpp/include/px4_ros2/components/health_and_arming_checks.hpp
+index 120445c..9e4ae04 100644
+--- a/px4_ros2_cpp/include/px4_ros2/components/health_and_arming_checks.hpp
++++ b/px4_ros2_cpp/include/px4_ros2/components/health_and_arming_checks.hpp
+@@ -103,6 +103,8 @@ class HealthAndArmingChecks {
+ 
+   void disableWatchdogTimer() { _watchdog_timer = nullptr; }
+ 
++  void setReplyEnabled(bool enabled) { _reply_enabled = enabled; }
++
+  private:
+   friend class ModeBase;
+   friend class ModeExecutorBase;
+@@ -115,6 +117,7 @@ class HealthAndArmingChecks {
+   CheckCallback _check_callback;
+   bool _check_triggered{true};
+   bool _first_request{true};
++  bool _reply_enabled{true};
+ 
+   rclcpp::Subscription<px4_msgs::msg::ArmingCheckRequest>::SharedPtr _arming_check_request_sub;
+   rclcpp::Publisher<px4_msgs::msg::ArmingCheckReply>::SharedPtr _arming_check_reply_pub;
+diff --git a/px4_ros2_cpp/include/px4_ros2/components/mode.hpp b/px4_ros2_cpp/include/px4_ros2/components/mode.hpp
+index 6a2146d..d45ec1f 100644
+--- a/px4_ros2_cpp/include/px4_ros2/components/mode.hpp
++++ b/px4_ros2_cpp/include/px4_ros2/components/mode.hpp
+@@ -182,6 +182,10 @@ class ModeBase : public Context {
+   void setSkipMessageCompatibilityCheck() { _skip_message_compatibility_check = true; }
+   void setSkipSetpointCheck() { _skip_setpoint_check = true; }
+   void overrideRegistration(const std::shared_ptr<Registration>& registration);
++  void setArmingCheckReplyEnabled(bool enabled)
++  {
++    _health_and_arming_checks.setReplyEnabled(enabled);
++  }
+ 
+   void disableWatchdogTimer() { _health_and_arming_checks.disableWatchdogTimer(); }
+ 
+diff --git a/px4_ros2_cpp/src/components/health_and_arming_checks.cpp b/px4_ros2_cpp/src/components/health_and_arming_checks.cpp
+index 743cefb..1a53ba3 100644
+--- a/px4_ros2_cpp/src/components/health_and_arming_checks.cpp
++++ b/px4_ros2_cpp/src/components/health_and_arming_checks.cpp
+@@ -34,6 +34,11 @@ HealthAndArmingChecks::HealthAndArmingChecks(rclcpp::Node& node, CheckCallback c
+                           msg->request_id);
+ 
+         if (_registration->registered()) {
++          if (!_reply_enabled) {
++            _check_triggered = true;
++            return;
++          }
++
+           px4_msgs::msg::ArmingCheckReply reply{};
+           reply.registration_id = _registration->armingCheckId();
+           reply.request_id = msg->request_id;

@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jacksonw1025.github.io/uav_sf/attempt_event.schema.json",
+  "title": "Formal attempt accounting event",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "attempt_id",
+    "plan_id",
+    "sequence",
+    "state",
+    "timestamp",
+    "previous_hash",
+    "payload",
+    "event_hash"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "attempt_id": {"type": "string", "minLength": 1},
+    "plan_id": {"type": "string", "minLength": 1},
+    "sequence": {"type": "integer", "minimum": 0},
+    "state": {
+      "enum": [
+        "REGISTERED",
+        "PREFLIGHT_PASSED",
+        "LAUNCHED",
+        "SAFETY_STOPPED",
+        "COLLECTION_CLOSED",
+        "EVALUATED",
+        "CLEANUP_COMPLETED",
+        "CLOSED",
+        "REJECTED"
+      ]
+    },
+    "timestamp": {"type": "string", "minLength": 1},
+    "previous_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "payload": {"type": "object"},
+    "event_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": false
+}

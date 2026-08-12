@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jacksonw1025.github.io/uav_sf/route_event.schema.json",
+  "title": "Family A route event",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "run_id",
+    "sequence",
+    "kind",
+    "timestamp_ns",
+    "source_domain",
+    "previous_hash",
+    "event_hash"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "run_id": {"type": "string", "minLength": 1},
+    "sequence": {"type": "integer", "minimum": 0},
+    "kind": {
+      "enum": [
+        "collection_started",
+        "collection_stopped",
+        "environment_attested",
+        "clock_bridge",
+        "collector_gap",
+        "transition_requested",
+        "registration",
+        "activation",
+        "revocation",
+        "command_published",
+        "command_consumed",
+        "controller_output",
+        "allocator_output",
+        "actuator_write",
+        "owner_changed",
+        "completion",
+        "fault_detected",
+        "fallback_triggered",
+        "terminal_state",
+        "cleanup_completed"
+      ]
+    },
+    "timestamp_ns": {"type": "integer", "minimum": 0},
+    "source_domain": {"type": "string", "minLength": 1},
+    "clock_bridge_id": {"type": "string", "minLength": 1},
+    "execution_environment": {"type": "object"},
+    "route": {"$ref": "#/$defs/route"},
+    "source_route": {"$ref": "#/$defs/route"},
+    "target_route": {"$ref": "#/$defs/route"},
+    "route_epoch": {"type": "string", "minLength": 1},
+    "producer_session": {"type": "string", "minLength": 1},
+    "registration_id": {"type": "string", "minLength": 1},
+    "activation_id": {"type": "string", "minLength": 1},
+    "command_subject_ns": {"type": "integer", "minimum": 0},
+    "controller_id": {"type": "string", "minLength": 1},
+    "allocator_id": {"type": "string", "minLength": 1},
+    "writer_id": {"type": "string", "minLength": 1},
+    "lifecycle_owner": {"type": "string", "minLength": 1},
+    "executor_owner": {"type": "string", "minLength": 1},
+    "previous_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "event_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "$defs": {
+    "route": {
+      "enum": [
+        "px4_internal",
+        "legacy_offboard",
+        "dynamic_external_mode",
+        "mode_executor",
+        "internal_hold",
+        "internal_rtl",
+        "internal_land",
+        "internal_recovery"
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"kind": {"const": "environment_attested"}},
+        "required": ["kind"]
+      },
+      "then": {"required": ["execution_environment"]}
+    }
+  ],
+  "additionalProperties": true
+}

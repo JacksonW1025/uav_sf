@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "tooling_platform": "linux/arm64",
+  "sources": {
+    "PX4-Autopilot": {
+      "repository": "https://github.com/PX4/PX4-Autopilot.git",
+      "commit": "4ae21a5e569d3d89c2f6366688cbacb3e93437c9"
+    },
+    "px4_msgs": {
+      "repository": "https://github.com/PX4/px4_msgs.git",
+      "commit": "18ecff03041c6f8d8a0012fbc63af0b23dd60af1"
+    },
+    "px4_ros2_interface_lib": {
+      "repository": "https://github.com/Auterion/px4-ros2-interface-lib.git",
+      "commit": "c3e410f035806e8c56246708432ded09c976434b"
+    },
+    "Micro-XRCE-DDS-Agent": {
+      "repository": "https://github.com/eProsima/Micro-XRCE-DDS-Agent.git",
+      "commit": "73622810d984349b80bbac0ef55fc0b694d62222"
+    }
+  },
+  "validation_container": {
+    "base_repository": "public.ecr.aws/docker/library/ros",
+    "base_index_digest": "sha256:31daab66eef9139933379fb67159449944f4e2dcf2e22c2d12cc715f29873e0f",
+    "base_platform_digest": "sha256:b82a5ba3869a81196414cf34e4fc25c7935aab78b1f5187570ca9362c478cdbd",
+    "ros_distribution": "jazzy",
+    "gazebo_distribution": "harmonic"
+  }
+}

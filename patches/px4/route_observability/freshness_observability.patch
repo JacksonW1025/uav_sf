@@ -1,0 +1,135 @@
+diff --git a/msg/RouteObservability.msg b/msg/RouteObservability.msg
+--- a/msg/RouteObservability.msg
++++ b/msg/RouteObservability.msg
+@@ -31,10 +31,14 @@
+ uint8 SOURCE_UAVCANNODE_ESC_RAW=9
+ uint8 SOURCE_SPACECRAFT=10
+ uint8 SOURCE_MIXER_TEST=11
++uint8 SOURCE_EXTERNAL_ATTITUDE=12
++uint8 SOURCE_EXTERNAL_RATE=13
+ 
+ uint8 TOPIC_TRAJECTORY_SETPOINT=1
+ uint8 TOPIC_VEHICLE_TORQUE_SETPOINT=2
+ uint8 TOPIC_ACTUATOR_MOTORS=3
++uint8 TOPIC_VEHICLE_ATTITUDE_SETPOINT=4
++uint8 TOPIC_VEHICLE_RATES_SETPOINT=5
+ 
+ uint8 WRITER_UNKNOWN=0
+ uint8 WRITER_MC_RATE_CONTROL=1
+diff --git a/src/modules/logger/logged_topics.cpp b/src/modules/logger/logged_topics.cpp
+--- a/src/modules/logger/logged_topics.cpp
++++ b/src/modules/logger/logged_topics.cpp
+@@ -136,7 +136,7 @@ void LoggedTopics::add_default_topics()
+ 	add_optional_topic("tiltrotor_extra_controls", 100);
+ 	add_topic("trajectory_setpoint", 200);
+ 	// interval 0 means every update; the publisher applies the selected observation profile.
+-	add_topic_multi("route_observability", 0, 8);
++	add_topic_multi("route_observability", 0, 12);
+ 	add_topic("transponder_report");
+ 	add_topic("vehicle_acceleration", 50);
+ 	add_topic("vehicle_air_data", 200);
+diff --git a/src/modules/mc_pos_control/MulticopterPositionControl.cpp b/src/modules/mc_pos_control/MulticopterPositionControl.cpp
+--- a/src/modules/mc_pos_control/MulticopterPositionControl.cpp
++++ b/src/modules/mc_pos_control/MulticopterPositionControl.cpp
+@@ -438,7 +438,9 @@ void MulticopterPositionControl::Run()
+ 			_goto_control.update(dt, states.position, states.velocity, states.acceleration, states.yaw);
+ 		}
+ 
+-		if (_trajectory_setpoint_sub.update(&_setpoint)) {
++		_trajectory_setpoint_sub.update(&_setpoint);
++
++		if (_vehicle_control_mode.flag_multicopter_position_control_enabled && _setpoint.timestamp > 0) {
+ 			route_observability::publish(
+ 				_route_observability_pub, _route_observability_sequence, _last_route_observability_pub,
+ 				route_observability_s::EVENT_SETPOINT_CONSUMED,
+diff --git a/src/modules/mc_att_control/mc_att_control.hpp b/src/modules/mc_att_control/mc_att_control.hpp
+--- a/src/modules/mc_att_control/mc_att_control.hpp
++++ b/src/modules/mc_att_control/mc_att_control.hpp
+@@ -56,6 +56,7 @@
+ #include <uORB/topics/vehicle_rates_setpoint.h>
+ #include <uORB/topics/vehicle_status.h>
+ #include <lib/mathlib/math/filter/AlphaFilter.hpp>
++#include <lib/route_observability/RouteObservability.hpp>
+ #include <lib/slew_rate/SlewRate.hpp>
+ #include <lib/stick_yaw/StickYaw.hpp>
+ 
+@@ -116,6 +117,7 @@ private:
+ 
+ 	uORB::Publication<vehicle_rates_setpoint_s>     _vehicle_rates_setpoint_pub{ORB_ID(vehicle_rates_setpoint)};    /**< rate setpoint publication */
+ 	uORB::Publication<vehicle_attitude_setpoint_s>  _vehicle_attitude_setpoint_pub;
++	uORB::PublicationMulti<route_observability_s>   _route_observability_pub{ORB_ID(route_observability)};
+ 
+ 	manual_control_setpoint_s       _manual_control_setpoint {};    /**< manual control setpoint */
+ 	vehicle_control_mode_s          _vehicle_control_mode {};       /**< vehicle control mode */
+@@ -138,6 +140,8 @@ private:
+ 
+ 	hrt_abstime _last_run{0};
+ 	hrt_abstime _last_attitude_setpoint{0};
++	uint32_t _route_observability_sequence{0};
++	hrt_abstime _last_route_observability_pub{0};
+ 
+ 	bool _spooled_up{false}; ///< used to make sure the vehicle cannot take off during the spoolup time
+ 	bool _landed{true};
+diff --git a/src/modules/mc_att_control/mc_att_control_main.cpp b/src/modules/mc_att_control/mc_att_control_main.cpp
+--- a/src/modules/mc_att_control/mc_att_control_main.cpp
++++ b/src/modules/mc_att_control/mc_att_control_main.cpp
+@@ -330,6 +330,16 @@ MulticopterAttitudeControl::Run()
+ 				}
+ 			}
+ 
++			if (!_vehicle_control_mode.flag_multicopter_position_control_enabled
++			    && _last_attitude_setpoint > 0) {
++				route_observability::publish(
++					_route_observability_pub, _route_observability_sequence, _last_route_observability_pub,
++					route_observability_s::EVENT_SETPOINT_CONSUMED,
++					route_observability_s::SOURCE_EXTERNAL_ATTITUDE,
++					route_observability_s::TOPIC_VEHICLE_ATTITUDE_SETPOINT,
++					route_observability_s::WRITER_UNKNOWN, _last_attitude_setpoint);
++			}
++
+ 			// Check for a heading reset
+ 			if (_quat_reset_counter != v_att.quat_reset_counter) {
+ 				const Quatf delta_q_reset(v_att.delta_q_reset);
+diff --git a/src/modules/mc_rate_control/MulticopterRateControl.hpp b/src/modules/mc_rate_control/MulticopterRateControl.hpp
+--- a/src/modules/mc_rate_control/MulticopterRateControl.hpp
++++ b/src/modules/mc_rate_control/MulticopterRateControl.hpp
+@@ -130,11 +130,13 @@ private:
+ 
+ 	float _battery_status_scale{0.0f};
+ 	matrix::Vector3f _thrust_setpoint{};
++	hrt_abstime _last_external_rates_setpoint{0};
+ 
+ 	float _energy_integration_time{0.0f};
+ 	float _control_energy[4] {};
+ 	uint32_t _route_observability_sequence{0};
+ 	hrt_abstime _last_route_observability_pub{0};
++	hrt_abstime _last_setpoint_observability_pub{0};
+ 
+ 	AlphaFilter<float> _output_lpf_yaw;
+ 
+diff --git a/src/modules/mc_rate_control/MulticopterRateControl.cpp b/src/modules/mc_rate_control/MulticopterRateControl.cpp
+--- a/src/modules/mc_rate_control/MulticopterRateControl.cpp
++++ b/src/modules/mc_rate_control/MulticopterRateControl.cpp
+@@ -183,10 +183,22 @@ MulticopterRateControl::Run()
+ 			_rates_setpoint(1) = PX4_ISFINITE(vehicle_rates_setpoint.pitch) ? vehicle_rates_setpoint.pitch : rates(1);
+ 			_rates_setpoint(2) = PX4_ISFINITE(vehicle_rates_setpoint.yaw)   ? vehicle_rates_setpoint.yaw   : rates(2);
+ 			_thrust_setpoint = Vector3f(vehicle_rates_setpoint.thrust_body);
++
++			if (!_vehicle_control_mode.flag_control_attitude_enabled) {
++				_last_external_rates_setpoint = vehicle_rates_setpoint.timestamp;
++			}
+ 		}
+ 
+ 		// run the rate controller
+ 		if (_vehicle_control_mode.flag_control_rates_enabled) {
++			if (!_vehicle_control_mode.flag_control_attitude_enabled && _last_external_rates_setpoint > 0) {
++				route_observability::publish(
++					_route_observability_pub, _route_observability_sequence, _last_setpoint_observability_pub,
++					route_observability_s::EVENT_SETPOINT_CONSUMED,
++					route_observability_s::SOURCE_EXTERNAL_RATE,
++					route_observability_s::TOPIC_VEHICLE_RATES_SETPOINT,
++					route_observability_s::WRITER_UNKNOWN, _last_external_rates_setpoint);
++			}
+ 
+ 			// reset integral if disarmed
+ 			if (!_vehicle_control_mode.flag_armed || _vehicle_status.vehicle_type != vehicle_status_s::VEHICLE_TYPE_ROTARY_WING) {

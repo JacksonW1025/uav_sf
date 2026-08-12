@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jacksonw1025.github.io/uav_sf/evaluation_result.schema.json",
+  "title": "Family A evaluation result",
+  "type": "object",
+  "required": ["schema_version", "plan_id", "run_id", "status", "evidence_gate", "oracles"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "plan_id": {"type": "string", "minLength": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "status": {"enum": ["PASS", "VIOLATION", "INCONCLUSIVE"]},
+    "evidence_gate": {
+      "type": "object",
+      "required": ["status", "checks", "reasons"],
+      "properties": {
+        "status": {"enum": ["ADMISSIBLE", "INADMISSIBLE"]},
+        "checks": {"type": "object"},
+        "reasons": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "oracles": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["oracle", "clauses"],
+        "properties": {
+          "oracle": {"type": "string"},
+          "clauses": {"type": "object"}
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}
