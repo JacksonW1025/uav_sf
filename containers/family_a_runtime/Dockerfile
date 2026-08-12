@@ -3,7 +3,6 @@ FROM ${BASE_IMAGE}
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG BUILD_JOBS=12
-ARG REPOSITORY_COMMIT=UNCOMMITTED
 
 LABEL org.opencontainers.image.title="PX4 Family A Thor experiment runtime" \
       org.opencontainers.image.base.digest="sha256:b82a5ba3869a81196414cf34e4fc25c7935aab78b1f5187570ca9362c478cdbd" \
@@ -56,6 +55,7 @@ RUN ./scripts/setup/build_candidates.sh --jobs "${BUILD_JOBS}" --prefix /opt --p
 RUN ./scripts/setup/build_candidates.sh --jobs "${BUILD_JOBS}" --prefix /opt --phase upstream-workspace
 
 COPY . /opt/uav_sf
+ARG REPOSITORY_COMMIT=UNCOMMITTED
 RUN printf '%s\n' "${REPOSITORY_COMMIT}" > /opt/family_a_repository_revision \
     && ./scripts/validation/validate_repo.sh \
     && ./scripts/setup/build_candidates.sh --jobs "${BUILD_JOBS}" --prefix /opt --phase project-workspace
