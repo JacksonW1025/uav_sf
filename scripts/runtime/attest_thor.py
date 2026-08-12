@@ -4,8 +4,10 @@
 from __future__ import annotations
 
 import argparse
+import glob
 import hashlib
 import json
+import os
 import platform
 import subprocess
 from pathlib import Path
@@ -36,6 +38,25 @@ def _dpkg(package: str) -> str | None:
         "dpkg-query", "-W", "-f=${db:Status-Abbrev}|${Version}", package, check=False
     )
     return value if value.startswith("ii ") else None
+
+
+def _text_values(pattern: str) -> list[str]:
+    values: set[str] = set()
+    for name in glob.glob(pattern):
+        try:
+            value = Path(name).read_text(encoding="utf-8").strip()
+        except OSError:
+            continue
+        if value:
+            values.add(value)
+    return sorted(values)
+
+
+def _memory_total_bytes() -> int:
+    for line in Path("/proc/meminfo").read_text(encoding="utf-8").splitlines():
+        if line.startswith("MemTotal:"):
+            return int(line.split()[1]) * 1024
+    raise AttestationError("MemTotal is absent from /proc/meminfo")
 
 
 def _container_json(image: str, path: str) -> dict[str, Any]:
@@ -92,6 +113,18 @@ def attest(image: str, environment_id: str) -> dict[str, Any]:
             "nvidia_jetpack": _dpkg("nvidia-jetpack"),
             "operating_system": os_release.get("PRETTY_NAME"),
             "kernel": platform.release(),
+            "logical_cpu_count": os.cpu_count(),
+            "memory_total_bytes": _memory_total_bytes(),
+            "cpu_governors": _text_values(
+                "/sys/devices/system/cpu/cpu*/cpufreq/scaling_governor"
+            ),
+            "nvpmodel": _command("nvpmodel", "-q", check=False),
+            "nvidia_driver": _command(
+                "nvidia-smi",
+                "--query-gpu=driver_version",
+                "--format=csv,noheader",
+                check=False,
+            ),
             "docker_version": docker_info.get("ServerVersion"),
             "docker_default_runtime": docker_info.get("DefaultRuntime"),
             "experiment_container_runtime": "runc",
