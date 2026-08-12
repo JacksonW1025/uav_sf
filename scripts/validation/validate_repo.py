@@ -18,6 +18,8 @@ from scripts.model.runtime_route import EVENT_KINDS, ROUTES
 ROOT = Path(__file__).resolve().parents[2]
 IGNORED_ROOTS = {
     ".git",
+    ".ccache",
+    ".venv",
     "__pycache__",
     "external",
     "ros2_ws",
@@ -37,7 +39,9 @@ ALLOWED_TOP = {
     "containers",
     "data",
     "docs",
+    "experiments",
     "patches",
+    "runtime",
     "scripts",
     "tests",
 }
@@ -61,7 +65,6 @@ FORBIDDEN = (
     re.compile(r"\bW" + r"1\b"),
     re.compile(r"\bB" + r"1\b"),
     re.compile("Issue" + r" #162", re.IGNORECASE),
-    re.compile("Motivation" + r" Study", re.IGNORECASE),
     re.compile("Route Oracle" + r" 0\.3", re.IGNORECASE),
     re.compile("200" + r"[- ]evaluation", re.IGNORECASE),
     re.compile("readiness" + r" amendment", re.IGNORECASE),
@@ -117,8 +120,6 @@ def check_layout(files: list[Path]) -> None:
     large = [path for path in files if path.stat().st_size > 10 * 1024 * 1024]
     if large:
         raise ValidationError("files exceed 10 MiB: " + ", ".join(str(path.relative_to(ROOT)) for path in large))
-    if (ROOT / "runs").exists():
-        raise ValidationError("runtime result directory exists in the repository worktree")
     if (ROOT / "data/processed").exists():
         raise ValidationError("processed experiment data must not be retained")
 
@@ -217,9 +218,12 @@ def check_locks() -> None:
         digest = hashlib.sha256(path.read_bytes()).hexdigest()
         if digest != record["sha256"]:
             raise ValidationError(f"patch digest differs: {record['path']}")
-    for path in (ROOT / "containers/family_a").glob("*-packages.lock"):
+    for path in (ROOT / "containers").glob("**/*-packages.lock"):
         for line in path.read_text(encoding="utf-8").splitlines():
-            if line and not line.startswith("#") and "=" not in line:
+            if not line or line.startswith("#"):
+                continue
+            separator = "==" if path.name == "python-packages.lock" else "="
+            if separator not in line or line.startswith(separator) or line.endswith(separator):
                 raise ValidationError(f"unversioned package in {path.relative_to(ROOT)}")
 
 

@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "safety": {
+    "heartbeat_timeout_ns": 500000000,
+    "collector_timeout_ns": 1500000000,
+    "run_timeout_ns": 90000000000,
+    "maximum_altitude_loss_m": 5.0,
+    "maximum_horizontal_speed_m_s": 10.0,
+    "maximum_vertical_speed_m_s": 5.0,
+    "maximum_attitude_excursion_deg": 70.0,
+    "maximum_body_rate_rad_s": 8.0
+  }
+}

@@ -1,4 +1,6 @@
 .git
+.ccache
+.venv
 external
 ros2_ws
 runs
@@ -6,6 +8,9 @@ build
 install
 log
 __pycache__
+.pytest_cache
+.mypy_cache
+.ruff_cache
 *.pyc
 *.ulg
 *.log

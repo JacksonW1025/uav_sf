@@ -1,0 +1,187 @@
+from __future__ import annotations
+
+import math
+import time
+
+import rclpy
+from px4_msgs.msg import (
+    RegisterExtComponentReply,
+    VehicleCommand,
+    VehicleLandDetected,
+    VehicleStatus,
+)
+from rclpy.node import Node
+
+from family_a_runtime.common import DurableJsonl, PX4_QOS, versioned_topic
+
+
+class ExternalModeRequester(Node):
+    def __init__(self) -> None:
+        super().__init__("family_a_external_mode_requester")
+        defaults = {
+            "run_id": "",
+            "lifecycle_path": "",
+            "component_name": "Family A External",
+            "active_s": 8.0,
+        }
+        for name, value in defaults.items():
+            self.declare_parameter(name, value)
+        self._run_id = self.get_parameter("run_id").value
+        lifecycle_path = self.get_parameter("lifecycle_path").value
+        self._component_name = self.get_parameter("component_name").value
+        self._active_s = float(self.get_parameter("active_s").value)
+        if not self._run_id or not lifecycle_path:
+            raise RuntimeError("run_id and lifecycle_path are required")
+        self._log = DurableJsonl(lifecycle_path)
+        self._mode_id: int | None = None
+        self._status: VehicleStatus | None = None
+        self._arm_sent_ns: int | None = None
+        self._takeoff_sent = False
+        self._airborne = False
+        self._mode_sent = False
+        self._activated_ns: int | None = None
+        self._land_sent = False
+        self._command_pub = self.create_publisher(
+            VehicleCommand, "/fmu/in/vehicle_command", PX4_QOS
+        )
+        self.create_subscription(
+            RegisterExtComponentReply,
+            versioned_topic(
+                "/fmu/out/register_ext_component_reply", RegisterExtComponentReply
+            ),
+            self._registration_reply,
+            PX4_QOS,
+        )
+        self.create_subscription(
+            VehicleStatus,
+            versioned_topic("/fmu/out/vehicle_status", VehicleStatus),
+            self._status_callback,
+            PX4_QOS,
+        )
+        self.create_subscription(
+            VehicleLandDetected,
+            "/fmu/out/vehicle_land_detected",
+            self._land_callback,
+            PX4_QOS,
+        )
+        self.create_timer(0.1, self._tick)
+        self._log.append("requester_started", run_id=self._run_id)
+
+    @staticmethod
+    def _name(value: object) -> str:
+        try:
+            return bytes(value).split(b"\0", 1)[0].decode("utf-8")
+        except (TypeError, UnicodeDecodeError):
+            return str(value).split("\0", 1)[0]
+
+    def _registration_reply(self, message: RegisterExtComponentReply) -> None:
+        if self._name(message.name) != self._component_name:
+            return
+        self._log.append(
+            "registration_reply",
+            run_id=self._run_id,
+            success=bool(message.success),
+            mode_id=int(message.mode_id),
+            executor_id=int(message.mode_executor_id),
+        )
+        if message.success and message.mode_id >= 0:
+            self._mode_id = int(message.mode_id)
+
+    def _status_callback(self, message: VehicleStatus) -> None:
+        self._status = message
+        if self._mode_id is not None and int(message.nav_state) == self._mode_id:
+            if self._activated_ns is None:
+                self._activated_ns = time.monotonic_ns()
+                self._log.append(
+                    "dynamic_mode_observed_active",
+                    run_id=self._run_id,
+                    mode_id=self._mode_id,
+                )
+
+    def _land_callback(self, message: VehicleLandDetected) -> None:
+        if not message.landed:
+            self._airborne = True
+
+    def _command(self, command: int, *, param1: float = math.nan) -> None:
+        message = VehicleCommand()
+        message.timestamp = self.get_clock().now().nanoseconds // 1000
+        message.command = command
+        message.param1 = math.nan
+        message.param2 = math.nan
+        message.param3 = math.nan
+        message.param4 = math.nan
+        message.param5 = math.nan
+        message.param6 = math.nan
+        message.param7 = math.nan
+        message.param1 = param1
+        message.target_system = 1
+        message.target_component = 1
+        message.source_system = 1
+        message.source_component = 190
+        message.from_external = True
+        self._command_pub.publish(message)
+
+    def _tick(self) -> None:
+        if self._mode_id is None or self._status is None:
+            return
+        now = time.monotonic_ns()
+        if self._land_sent:
+            if self._status.arming_state == VehicleStatus.ARMING_STATE_DISARMED:
+                self._log.append("requester_completed", run_id=self._run_id)
+                self._log.close()
+                rclpy.shutdown()
+            return
+        if self._status.arming_state != VehicleStatus.ARMING_STATE_ARMED:
+            if not self._takeoff_sent:
+                self._command(VehicleCommand.VEHICLE_CMD_NAV_TAKEOFF, param1=math.nan)
+                self._takeoff_sent = True
+                self._log.append("takeoff_requested", run_id=self._run_id)
+            if self._arm_sent_ns is None or now - self._arm_sent_ns >= 1_000_000_000:
+                self._command(VehicleCommand.VEHICLE_CMD_COMPONENT_ARM_DISARM, param1=1.0)
+                self._arm_sent_ns = now
+            return
+        if self._airborne and not self._mode_sent:
+            self._log.append(
+                "transition_requested",
+                run_id=self._run_id,
+                source_route="px4_internal",
+                target_route="dynamic_external_mode",
+            )
+            self._command(
+                VehicleCommand.VEHICLE_CMD_SET_NAV_STATE, param1=float(self._mode_id)
+            )
+            self._mode_sent = True
+            return
+        if (
+            self._activated_ns is not None
+            and not self._land_sent
+            and now - self._activated_ns >= int(self._active_s * 1_000_000_000)
+        ):
+            self._log.append(
+                "completion",
+                run_id=self._run_id,
+                route="dynamic_external_mode",
+            )
+            self._log.append(
+                "transition_requested",
+                run_id=self._run_id,
+                source_route="dynamic_external_mode",
+                target_route="internal_land",
+            )
+            self._command(VehicleCommand.VEHICLE_CMD_NAV_LAND)
+            self._land_sent = True
+
+    def destroy_node(self) -> bool:
+        self._log.close()
+        return super().destroy_node()
+
+
+def main() -> None:
+    rclpy.init()
+    node = ExternalModeRequester()
+    try:
+        rclpy.spin(node)
+    finally:
+        node.destroy_node()
+        if rclpy.ok():
+            rclpy.shutdown()

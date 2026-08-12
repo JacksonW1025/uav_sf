@@ -5,7 +5,7 @@ repository_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$repository_root"
 
 python3 -m scripts.validation.validate_repo
-python3 -m compileall -q scripts tests
+python3 -m compileall -q scripts runtime tests
 python3 -m unittest discover -s tests -v
 
 while IFS= read -r -d '' shell_file; do

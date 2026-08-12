@@ -5,6 +5,7 @@ import unittest
 from pathlib import Path
 
 from scripts.accounting.attempts import AccountingError, AttemptLedger, verify_ledger
+from scripts.accounting.study import StudyAccountingError, StudyLedger, verify_study_ledger
 from scripts.evaluator.plan import PlanError, validate_plan
 from tests.helpers import plan
 
@@ -53,6 +54,41 @@ class PlanAndAccountingTests(unittest.TestCase):
             ledger.append("REGISTERED")
             with self.assertRaises(AccountingError):
                 ledger.append("LAUNCHED")
+
+    def test_study_ledger_counts_every_launch_and_outcome(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "study.jsonl"
+            ledger = StudyLedger(path, study_id="motivation-v1")
+            for state, payload in (
+                ("REGISTERED", {}),
+                ("LAUNCHED", {}),
+                ("CLOSED", {"outcome": "OBSERVABILITY_REJECTED"}),
+            ):
+                ledger.append(
+                    attempt_id="motivation-001",
+                    cell_id="normal-offboard",
+                    state=state,
+                    payload=payload,
+                )
+            summary = verify_study_ledger(path)
+            self.assertEqual(summary["launched_count"], 1)
+            self.assertEqual(summary["closed_count"], 1)
+            self.assertEqual(summary["accepted_count"], 0)
+
+    def test_study_ledger_forbids_silent_relaunch(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            ledger = StudyLedger(Path(directory) / "study.jsonl", study_id="motivation-v1")
+            ledger.append(
+                attempt_id="motivation-001",
+                cell_id="normal-offboard",
+                state="REGISTERED",
+            )
+            with self.assertRaises(StudyAccountingError):
+                ledger.append(
+                    attempt_id="motivation-001",
+                    cell_id="normal-offboard",
+                    state="REGISTERED",
+                )
 
 
 if __name__ == "__main__":
