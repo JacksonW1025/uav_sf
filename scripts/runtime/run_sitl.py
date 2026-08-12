@@ -458,11 +458,6 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     ],
                 )
         elif args.mechanism == "mode_executor":
-            lifecycle.append(
-                "transition_requested",
-                source_route="px4_internal",
-                target_route="mode_executor",
-            )
             workload = start(
                 "mode_executor",
                 [
@@ -471,6 +466,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     "family_a_modes",
                     "mode_executor",
                     "--ros-args",
+                    "-p",
+                    f"run_id:={args.run_id}",
+                    "-p",
+                    f"lifecycle_path:={raw / 'workload.lifecycle.jsonl'}",
                     "-p",
                     f"mode_duration_s:={args.active_s}",
                 ],
