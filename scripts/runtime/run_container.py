@@ -115,6 +115,8 @@ def launch(args: argparse.Namespace) -> dict[str, object]:
         args.run_id,
         "--mechanism",
         args.mechanism,
+        "--source-route",
+        args.source_route,
         "--setpoint-kind",
         args.setpoint_kind,
         "--fault-mode",
@@ -189,6 +191,11 @@ def main() -> int:
         "--mechanism",
         choices=["legacy_offboard", "dynamic_external_mode", "mode_executor"],
         default="legacy_offboard",
+    )
+    parser.add_argument(
+        "--source-route",
+        choices=["px4_internal", "internal_hold", "internal_rtl"],
+        default="internal_hold",
     )
     parser.add_argument(
         "--setpoint-kind",

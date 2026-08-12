@@ -210,6 +210,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         args.attempt_id,
         "--mechanism",
         runtime["mechanism"],
+        "--source-route",
+        plan_spec["source_route"],
         "--setpoint-kind",
         runtime.get("setpoint_kind", "trajectory"),
         "--fault-mode",

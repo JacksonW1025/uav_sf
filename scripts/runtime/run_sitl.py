@@ -395,7 +395,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     "-p",
                     f"active_s:={args.active_s}",
                     "-p",
-                    "source_route:=internal_hold",
+                    f"source_route:={args.source_route}",
                     "-p",
                     f"successor_route:={args.successor_route}",
                     "-p",
@@ -638,6 +638,11 @@ def main() -> int:
         "--mechanism",
         choices=["legacy_offboard", "dynamic_external_mode", "mode_executor"],
         default="legacy_offboard",
+    )
+    parser.add_argument(
+        "--source-route",
+        choices=["px4_internal", "internal_hold", "internal_rtl"],
+        default="internal_hold",
     )
     parser.add_argument("--setpoint-kind", choices=["trajectory", "attitude", "body_rate"], default="trajectory")
     parser.add_argument("--fault-mode", choices=["normal", "process_exit", "setpoint_stall"], default="normal")

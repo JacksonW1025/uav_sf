@@ -68,6 +68,9 @@ class OffboardController(Node):
         self._log = DurableJsonl(lifecycle_path)
         self._started_ns = time.monotonic_ns()
         self._commanded = False
+        self._takeoff_sent = False
+        self._arm_sent_ns: int | None = None
+        self._airborne_ns: int | None = None
         self._landing_commanded = False
         self._released = False
         self._fault_logged = False
@@ -148,15 +151,23 @@ class OffboardController(Node):
         self._land = message
         if not message.landed:
             self._ever_airborne = True
+            if self._airborne_ns is None:
+                self._airborne_ns = time.monotonic_ns()
 
     def _timestamp_us(self) -> int:
         return self.get_clock().now().nanoseconds // 1000
 
-    def _vehicle_command(self, command: int, *, param1: float = 0.0) -> None:
+    def _vehicle_command(self, command: int, *, param1: float = math.nan) -> None:
         message = VehicleCommand()
         message.timestamp = self._timestamp_us()
         message.command = command
         message.param1 = param1
+        message.param2 = math.nan
+        message.param3 = math.nan
+        message.param4 = math.nan
+        message.param5 = math.nan
+        message.param6 = math.nan
+        message.param7 = math.nan
         message.target_system = 1
         message.target_component = 1
         message.source_system = 1
@@ -214,7 +225,8 @@ class OffboardController(Node):
         self._control_pub.publish(message)
 
     def _tick(self) -> None:
-        elapsed = (time.monotonic_ns() - self._started_ns) / 1_000_000_000
+        now_ns = time.monotonic_ns()
+        elapsed = (now_ns - self._started_ns) / 1_000_000_000
         active_elapsed = (
             (time.monotonic_ns() - self._activation_ns) / 1_000_000_000
             if self._activation_ns is not None
@@ -241,7 +253,28 @@ class OffboardController(Node):
                 # Preserve the Offboard proof-of-life while withholding only
                 # the selected stream; this is the freshness/health split.
                 self._publish_proof_of_life()
-        if not self._commanded and elapsed >= self._prestream_s:
+        if self._setpoint_kind != "trajectory" and not self._ever_airborne:
+            # Attitude and body-rate setpoints cannot establish a repeatable
+            # takeoff precondition from rest. Reach an airborne PX4-internal
+            # state using public vehicle commands, then prestream the selected
+            # Offboard interface before requesting the authority transition.
+            if not self._takeoff_sent:
+                self._vehicle_command(VehicleCommand.VEHICLE_CMD_NAV_TAKEOFF)
+                self._takeoff_sent = True
+                self._log.append("takeoff_requested", run_id=self._run_id)
+            if self._arm_sent_ns is None or now_ns - self._arm_sent_ns >= 1_000_000_000:
+                self._vehicle_command(
+                    VehicleCommand.VEHICLE_CMD_COMPONENT_ARM_DISARM, param1=1.0
+                )
+                self._arm_sent_ns = now_ns
+            return
+        prestream_complete = elapsed >= self._prestream_s
+        if self._setpoint_kind != "trajectory":
+            prestream_complete = (
+                self._airborne_ns is not None
+                and now_ns - self._airborne_ns >= int(self._prestream_s * 1_000_000_000)
+            )
+        if not self._commanded and prestream_complete:
             self._log.append(
                 "transition_requested",
                 run_id=self._run_id,

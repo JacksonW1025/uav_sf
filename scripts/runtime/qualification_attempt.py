@@ -80,6 +80,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         args.run_id,
         "--mechanism",
         args.mechanism,
+        "--source-route",
+        args.source_route,
         "--setpoint-kind",
         args.setpoint_kind,
         "--fault-mode",
