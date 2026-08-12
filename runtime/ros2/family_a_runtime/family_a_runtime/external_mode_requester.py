@@ -53,6 +53,7 @@ class ExternalModeRequester(Node):
         self._registered_ns: int | None = None
         self._status: VehicleStatus | None = None
         self._arm_sent_ns: int | None = None
+        self._activation_request_logged = False
         self._takeoff_sent = False
         self._airborne = False
         self._mode_sent = False
@@ -215,6 +216,14 @@ class ExternalModeRequester(Node):
             rclpy.shutdown()
             return
         if self._status.arming_state != VehicleStatus.ARMING_STATE_ARMED:
+            if self._fault_mode == "health_loss" and not self._activation_request_logged:
+                self._log.append(
+                    "activation_requested",
+                    run_id=self._run_id,
+                    source_route="px4_internal",
+                    target_route="dynamic_external_mode",
+                )
+                self._activation_request_logged = True
             if not self._takeoff_sent:
                 self._command(VehicleCommand.VEHICLE_CMD_NAV_TAKEOFF, param1=math.nan)
                 self._takeoff_sent = True

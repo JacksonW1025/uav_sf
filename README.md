@@ -36,14 +36,18 @@ controller/allocator/writer lineage, and lifecycle/executor ownership. A new
 instance begins whenever authority-relevant identity changes, even if the
 declared mode does not.
 
-The implementation evaluates three contracts:
+The implementation evaluates three route contracts and one rejection contract:
 
 1. **Route conformance** checks timely revocation, complete installation,
    exclusivity, and continuity.
 2. **Freshness and lineage** checks the age of the consumed command and the
    identity chain from producer through actuator writer.
 3. **Successor progression** checks the expected route after completion and
-   the complete safety route after a fault.
+   independently checks fault observation and complete safety-route
+   installation when a fallback is expected.
+4. **Registration and activation rejection** checks that preregistered
+   negative cases are explicitly rejected and never treats non-activation as
+   proof by itself.
 
 The Evidence Admissibility Gate runs before those contracts. Missing critical
 events, incomplete collection windows, sequence gaps, invalid clock mapping,

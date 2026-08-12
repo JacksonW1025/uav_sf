@@ -20,6 +20,7 @@ setup(
             "telemetry_sidecar = family_a_runtime.telemetry_sidecar:main",
             "offboard_controller = family_a_runtime.offboard_controller:main",
             "external_mode_requester = family_a_runtime.external_mode_requester:main",
+            "manual_requester = family_a_runtime.manual_requester:main",
             "safety_supervisor = family_a_runtime.safety_supervisor:main",
         ]
     },

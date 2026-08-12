@@ -475,6 +475,30 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     f"mode_duration_s:={args.active_s}",
                 ],
             )
+            if args.manual_land_offset_s is not None:
+                bucket = (
+                    "before"
+                    if args.manual_land_offset_s < 0
+                    else ("after" if args.manual_land_offset_s > 0 else "near")
+                )
+                start(
+                    "manual_requester",
+                    [
+                        "ros2",
+                        "run",
+                        "family_a_runtime",
+                        "manual_requester",
+                        "--ros-args",
+                        "-p",
+                        f"run_id:={args.run_id}",
+                        "-p",
+                        f"output_path:={raw / 'adjacent.lifecycle.jsonl'}",
+                        "-p",
+                        f"request_delay_s:={max(0.0, args.active_s + args.manual_land_offset_s)}",
+                        "-p",
+                        f"timing_bucket:={bucket}",
+                    ],
+                )
         else:
             raise RuntimeFailure(f"qualification mechanism is not implemented: {args.mechanism}")
         deadline = time.monotonic() + args.attempt_timeout_s
@@ -620,6 +644,7 @@ def main() -> int:
         default="internal_land",
     )
     parser.add_argument("--repeat-count", type=int, default=1)
+    parser.add_argument("--manual-land-offset-s", type=float)
     parser.add_argument("--slot", type=int, default=0)
     parser.add_argument("--cpu-set", default="0-11")
     parser.add_argument("--active-s", type=float, default=8.0)

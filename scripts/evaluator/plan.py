@@ -56,8 +56,8 @@ def validate_plan(plan: dict[str, Any], *, allow_template: bool = False) -> None
     }
     if set(plan) != required:
         raise PlanError("plan fields differ from the current schema")
-    if plan["schema_version"] != "1.0":
-        raise PlanError("plan schema_version must be 1.0")
+    if plan["schema_version"] != "1.1":
+        raise PlanError("plan schema_version must be 1.1")
     for field in ("plan_id", "run_id"):
         value = plan[field]
         if not isinstance(value, str) or not value.strip():
@@ -93,8 +93,12 @@ def validate_plan(plan: dict[str, Any], *, allow_template: bool = False) -> None
         "expected_fallback",
         "expected_lifecycle_owner",
         "expected_executor_owner",
+        "target_activation_expected",
+        "registration_rejection_expected",
+        "activation_rejection_expected",
         "completion_expected",
         "fault_expected",
+        "fallback_expected",
     }
     if set(transition) != transition_fields:
         raise PlanError("transition fields differ from the current schema")
@@ -108,9 +112,29 @@ def validate_plan(plan: dict[str, Any], *, allow_template: bool = False) -> None
     for field in ("expected_lifecycle_owner", "expected_executor_owner"):
         if not isinstance(transition[field], str) or not transition[field].strip():
             raise PlanError(f"{field} must be a non-empty string")
-    for field in ("completion_expected", "fault_expected"):
+    for field in (
+        "target_activation_expected",
+        "registration_rejection_expected",
+        "activation_rejection_expected",
+        "completion_expected",
+        "fault_expected",
+        "fallback_expected",
+    ):
         if not isinstance(transition[field], bool):
             raise PlanError(f"{field} must be boolean")
+    if transition["completion_expected"] and not transition["target_activation_expected"]:
+        raise PlanError("completion requires target activation")
+    if transition["activation_rejection_expected"]:
+        if transition["target_activation_expected"]:
+            raise PlanError("target activation and activation rejection are mutually exclusive")
+        if not transition["fault_expected"]:
+            raise PlanError("activation rejection requires an expected fault observation")
+    if not transition["target_activation_expected"] and not transition[
+        "activation_rejection_expected"
+    ]:
+        raise PlanError("a plan must expect target activation or its explicit rejection")
+    if transition["fallback_expected"] and not transition["fault_expected"]:
+        raise PlanError("fallback installation requires an expected fault")
 
     thresholds = _mapping(plan["thresholds"], "thresholds")
     if set(thresholds) != THRESHOLDS or any(
@@ -129,14 +153,29 @@ def validate_plan(plan: dict[str, Any], *, allow_template: bool = False) -> None
         "collection_started",
         "collection_stopped",
         "environment_attested",
-        "transition_requested",
-        "revocation",
-        "activation",
-        "command_consumed",
-        "controller_output",
-        "allocator_output",
-        "actuator_write",
     }
+    if transition["target_activation_expected"]:
+        mandatory.update(
+            {
+                "transition_requested",
+                "revocation",
+                "activation",
+                "command_consumed",
+                "controller_output",
+                "allocator_output",
+                "actuator_write",
+            }
+        )
+    if transition["activation_rejection_expected"]:
+        mandatory.add("activation_requested")
+    if transition["registration_rejection_expected"]:
+        mandatory.add("registration")
+    if transition["completion_expected"]:
+        mandatory.add("completion")
+    if transition["fault_expected"]:
+        mandatory.add("fault_detected")
+    if transition["fallback_expected"]:
+        mandatory.add("fallback_triggered")
     if not mandatory <= set(kinds):
         raise PlanError("required_event_kinds omits a mandatory route contract event")
 

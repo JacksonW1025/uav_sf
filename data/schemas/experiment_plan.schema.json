@@ -16,7 +16,7 @@
     "cleanup"
   ],
   "properties": {
-    "schema_version": {"const": "1.0"},
+    "schema_version": {"const": "1.1"},
     "plan_id": {"type": "string", "minLength": 1},
     "run_id": {"type": "string", "minLength": 1},
     "strategy": {
@@ -38,8 +38,12 @@
         "expected_fallback",
         "expected_lifecycle_owner",
         "expected_executor_owner",
+        "target_activation_expected",
+        "registration_rejection_expected",
+        "activation_rejection_expected",
         "completion_expected",
-        "fault_expected"
+        "fault_expected",
+        "fallback_expected"
       ],
       "properties": {
         "source_route": {"$ref": "#/$defs/route"},
@@ -48,8 +52,12 @@
         "expected_fallback": {"$ref": "#/$defs/safe_route"},
         "expected_lifecycle_owner": {"type": "string", "minLength": 1},
         "expected_executor_owner": {"type": "string", "minLength": 1},
+        "target_activation_expected": {"type": "boolean"},
+        "registration_rejection_expected": {"type": "boolean"},
+        "activation_rejection_expected": {"type": "boolean"},
         "completion_expected": {"type": "boolean"},
-        "fault_expected": {"type": "boolean"}
+        "fault_expected": {"type": "boolean"},
+        "fallback_expected": {"type": "boolean"}
       },
       "additionalProperties": false
     },

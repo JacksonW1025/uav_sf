@@ -30,6 +30,20 @@ def evaluate_route_conformance(
     events: list[dict[str, Any]], plan: dict[str, Any]
 ) -> dict[str, Any]:
     transition = plan["transition"]
+    if not transition["target_activation_expected"]:
+        not_applicable = clause(
+            "NOT_APPLICABLE", "the preregistered target activation is expected to be rejected"
+        )
+        return {
+            "oracle": "route_conformance",
+            "clauses": {
+                "revocation": not_applicable,
+                "installation": not_applicable,
+                "exclusivity": not_applicable,
+                "continuity": not_applicable,
+                "ownership": not_applicable,
+            },
+        }
     thresholds = plan["thresholds"]
     source = transition["source_route"]
     target = transition["target_route"]

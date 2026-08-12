@@ -39,6 +39,14 @@ def _sha256(path: Path) -> str:
 
 
 def _gazebo_metrics(path: Path) -> dict[str, Any]:
+    if not path.is_file():
+        return {
+            "status": "MISSING",
+            "sample_count": 0,
+            "minimum": None,
+            "median": None,
+            "central_minimum": None,
+        }
     values = [
         float(match.group(1))
         for match in re.finditer(
@@ -54,6 +62,7 @@ def _gazebo_metrics(path: Path) -> dict[str, Any]:
     trim = len(ordered) // 10
     central = ordered[trim : len(ordered) - trim] if trim and len(ordered) > 2 * trim else ordered
     return {
+        "status": "PASS" if values else "EMPTY",
         "sample_count": len(values),
         "minimum": min(values) if values else None,
         "median": central[len(central) // 2] if central else None,
@@ -90,17 +99,19 @@ def process_attempt(
         _write_new(derived / "route-observations.json", observations)
         if ulog_summary["status"] != "PASS":
             raise ProcessingError("ULog integrity rejected the source window")
+        sidecar_paths = [
+            raw / "telemetry.sidecar.jsonl",
+            raw / "workload.lifecycle.jsonl",
+            raw / "runner.lifecycle.jsonl",
+            raw / "gazebo.clock.jsonl",
+            raw / "adjacent.lifecycle.jsonl",
+        ]
         close_trace(
             plan_path=plan_path,
             environment_path=environment_path,
             ulog_summary_path=derived / "ulog-summary.json",
             observations_path=derived / "route-observations.json",
-            sidecar_paths=[
-                raw / "telemetry.sidecar.jsonl",
-                raw / "workload.lifecycle.jsonl",
-                raw / "runner.lifecycle.jsonl",
-                raw / "gazebo.clock.jsonl",
-            ],
+            sidecar_paths=[path for path in sidecar_paths if path.is_file()],
             output_path=derived / "closed.trace.jsonl",
             maximum_clock_uncertainty_ns=maximum_clock_uncertainty_ns,
         )

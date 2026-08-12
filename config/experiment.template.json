@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "plan_id": "REPLACE-BEFORE-EXECUTION",
   "run_id": "REPLACE-BEFORE-EXECUTION",
   "strategy": {
@@ -14,8 +14,12 @@
     "expected_fallback": "internal_land",
     "expected_lifecycle_owner": "REPLACE-BEFORE-EXECUTION",
     "expected_executor_owner": "REPLACE-BEFORE-EXECUTION",
+    "target_activation_expected": true,
+    "registration_rejection_expected": false,
+    "activation_rejection_expected": false,
     "completion_expected": true,
-    "fault_expected": false
+    "fault_expected": false,
+    "fallback_expected": false
   },
   "thresholds": {
     "revocation_deadline_ns": 300000000,
@@ -35,6 +39,7 @@
     "controller_output",
     "allocator_output",
     "actuator_write",
+    "completion",
     "collection_stopped"
   ],
   "source_identity": {

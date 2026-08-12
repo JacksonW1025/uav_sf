@@ -44,6 +44,7 @@ class TraceClosureError(ValueError):
 
 EVENT_ORDER = {
     "revocation": 10,
+    "activation_requested": 15,
     "transition_requested": 20,
     "activation": 30,
     "owner_changed": 40,
@@ -52,6 +53,7 @@ EVENT_ORDER = {
     "controller_output": 70,
     "allocator_output": 80,
     "actuator_write": 90,
+    "adjacent_request": 95,
     "completion": 100,
     "fault_detected": 110,
     "fallback_triggered": 120,
@@ -368,6 +370,8 @@ def close_trace(
     lifecycle = []
     supported = {
         "transition_requested",
+        "activation_requested",
+        "adjacent_request",
         "command_published",
         "completion",
         "fault_detected",
@@ -378,6 +382,14 @@ def close_trace(
     for record in sidecars:
         record_kind = record.get("kind")
         if record_kind == "mode_completed":
+            # PX4 also reports completion for preparatory and successor
+            # internal modes (for example Takeoff and Land). Only a
+            # completion belonging to the preregistered target route can
+            # anchor the Successor Oracle.
+            if _route(int(record.get("nav_state", -1)), plan) != str(
+                plan["transition"]["target_route"]
+            ):
+                continue
             record = {
                 **record,
                 "kind": "completion",

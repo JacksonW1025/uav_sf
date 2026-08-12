@@ -3,10 +3,20 @@ from __future__ import annotations
 import unittest
 
 from scripts.collectors.clock_bridge import ClockBridgeError, fit_clock_bridge
-from scripts.collectors.closed_trace import _clock_bridge
+from scripts.collectors.closed_trace import _clock_bridge, _route
 
 
 class ClockBridgeTests(unittest.TestCase):
+    def test_internal_mode_completion_cannot_impersonate_external_target(self) -> None:
+        plan = {
+            "transition": {
+                "source_route": "px4_internal",
+                "target_route": "mode_executor",
+            }
+        }
+        self.assertEqual(_route(2, plan), "px4_internal")
+        self.assertEqual(_route(23, plan), "mode_executor")
+
     def test_closed_trace_prefers_dense_gazebo_clock(self) -> None:
         records = [
             {

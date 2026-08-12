@@ -60,10 +60,25 @@ def evaluate_successor_progression(
         successor = installation_clause(installation, label="expected successor")
 
     fault = _event_after(events, "fault_detected", anchor)
-    if not transition["fault_expected"] and fault is None:
+    if transition["fault_expected"] and fault is not None:
+        fault_observation = clause(
+            "PASS", evidence={"fault_sequence": fault["sequence"]}
+        )
+    elif transition["fault_expected"]:
+        fault_observation = clause("VIOLATION", "expected fault event is missing")
+    elif fault is not None:
+        fault_observation = clause(
+            "VIOLATION",
+            "an unexpected fault was observed",
+            evidence={"fault_sequence": fault["sequence"]},
+        )
+    else:
+        fault_observation = clause("NOT_APPLICABLE", "fault is not part of this plan")
+
+    if not transition["fallback_expected"]:
         fallback = clause("NOT_APPLICABLE", "fault is not part of this plan")
     elif fault is None:
-        fallback = clause("VIOLATION", "expected fault event is missing")
+        fallback = clause("UNKNOWN", "fallback cannot be anchored without the expected fault")
     else:
         fallback_trigger = _event_after(
             events,
@@ -89,6 +104,7 @@ def evaluate_successor_progression(
         "oracle": "successor_progression",
         "clauses": {
             "expected_successor": successor,
+            "fault_observation": fault_observation,
             "safe_fallback": fallback,
         },
     }

@@ -13,6 +13,14 @@ def evaluate_freshness_lineage(
     events: list[dict[str, Any]], plan: dict[str, Any]
 ) -> dict[str, Any]:
     transition = plan["transition"]
+    if not transition["target_activation_expected"]:
+        not_applicable = clause(
+            "NOT_APPLICABLE", "the preregistered target activation is expected to be rejected"
+        )
+        return {
+            "oracle": "freshness_lineage",
+            "clauses": {"freshness": not_applicable, "lineage": not_applicable},
+        }
     target = transition["target_route"]
     request = next(
         (
@@ -43,12 +51,26 @@ def evaluate_freshness_lineage(
         }
 
     identity = RuntimeRouteInstance(**installation["identity"])
+    # Freshness is an authority-window invariant, not merely an installation
+    # precondition. Continue checking the installed route until its first
+    # explicit revocation (or the bounded collection end). This is what makes
+    # a setpoint-only stall observable while proof-of-life remains healthy.
+    revocation_ns = min(
+        (
+            int(event["timestamp_ns"])
+            for event in events
+            if event["kind"] == "revocation"
+            and event.get("route") == target
+            and int(event["timestamp_ns"]) >= anchor
+        ),
+        default=max(int(event["timestamp_ns"]) for event in events),
+    )
     target_effects = [
         event
         for event in events
         if event["kind"] in EFFECT_EVENT_KINDS
         and event.get("route") == target
-        and anchor <= int(event["timestamp_ns"]) <= int(installation["completed_at_ns"])
+        and anchor <= int(event["timestamp_ns"]) <= revocation_ns
     ]
     ages = [
         int(event["timestamp_ns"]) - int(event["command_subject_ns"])
@@ -67,7 +89,11 @@ def evaluate_freshness_lineage(
     else:
         freshness = clause(
             "PASS",
-            evidence={"maximum_observed_age_ns": max(ages), "checked_events": len(ages)},
+            evidence={
+                "maximum_observed_age_ns": max(ages),
+                "checked_events": len(ages),
+                "authority_window_end_ns": revocation_ns,
+            },
         )
 
     conflicts = [

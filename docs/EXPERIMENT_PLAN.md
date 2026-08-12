@@ -8,6 +8,9 @@ execution and must identify:
 - exactly one controlled generation strategy and its seed where applicable;
 - source and target routes;
 - expected successor and safety fallback behavior;
+- whether target activation, registration rejection, activation rejection,
+  fault observation, completion, and fallback installation are independently
+  expected;
 - revocation, installation, continuity, freshness, and progression bounds;
 - required evidence event kinds;
 - safety limits and terminal cleanup requirements;

@@ -23,7 +23,7 @@ def identity(route: str, label: str) -> dict[str, str]:
 
 def plan() -> dict[str, Any]:
     return {
-        "schema_version": "1.0",
+        "schema_version": "1.1",
         "plan_id": "plan-family-a-001",
         "run_id": "run-family-a-001",
         "strategy": {
@@ -38,8 +38,12 @@ def plan() -> dict[str, Any]:
             "expected_fallback": "internal_land",
             "expected_lifecycle_owner": "lifecycle-target",
             "expected_executor_owner": "executor-target",
+            "target_activation_expected": True,
+            "registration_rejection_expected": False,
+            "activation_rejection_expected": False,
             "completion_expected": True,
             "fault_expected": False,
+            "fallback_expected": False,
         },
         "thresholds": {
             "revocation_deadline_ns": 300_000_000,
@@ -60,6 +64,7 @@ def plan() -> dict[str, Any]:
             "controller_output",
             "allocator_output",
             "actuator_write",
+            "completion",
         ],
         "source_identity": {
             "repository_commit": "1" * 40,

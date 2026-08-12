@@ -31,6 +31,8 @@ EVENT_KINDS = frozenset(
         "clock_bridge",
         "collector_gap",
         "transition_requested",
+        "activation_requested",
+        "adjacent_request",
         "registration",
         "activation",
         "revocation",

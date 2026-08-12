@@ -138,6 +138,8 @@ def launch(args: argparse.Namespace) -> dict[str, object]:
         command.append("--health-loss")
     if args.duplicate_registration:
         command.append("--duplicate-registration")
+    if args.manual_land_offset_s is not None:
+        command.extend(["--manual-land-offset-s", str(args.manual_land_offset_s)])
     process = subprocess.Popen(command, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     timed_out = False
     try:
@@ -206,6 +208,7 @@ def main() -> int:
         default="internal_land",
     )
     parser.add_argument("--repeat-count", type=int, default=1)
+    parser.add_argument("--manual-land-offset-s", type=float)
     parser.add_argument("--slot", type=int, default=0)
     parser.add_argument("--cpu-set", default="0-11")
     parser.add_argument("--memory", default="24g")

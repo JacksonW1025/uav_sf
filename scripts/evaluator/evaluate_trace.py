@@ -13,6 +13,7 @@ from scripts.evaluator.plan import PlanError, load_plan
 from scripts.model.runtime_route import RouteModelError, read_trace
 from scripts.oracles.evidence_gate import evaluate_evidence
 from scripts.oracles.freshness_lineage import evaluate_freshness_lineage
+from scripts.oracles.registration_contract import evaluate_registration_contract
 from scripts.oracles.route_conformance import evaluate_route_conformance
 from scripts.oracles.successor_progression import evaluate_successor_progression
 
@@ -23,6 +24,7 @@ def evaluate(events: list[dict[str, Any]], plan: dict[str, Any]) -> dict[str, An
         evaluate_route_conformance(events, plan),
         evaluate_freshness_lineage(events, plan),
         evaluate_successor_progression(events, plan),
+        evaluate_registration_contract(events, plan),
     ]
     statuses = [
         clause["status"]

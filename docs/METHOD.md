@@ -38,9 +38,13 @@ favorable.
 
 The Route Conformance Oracle checks source revocation, target installation,
 exclusive writers, and actuator-effect continuity. The Freshness and Lineage
-Oracle checks consumed command age and end-to-end identity. The Successor
-Progression Oracle checks complete successor installation after completion and
-complete safety-route installation after a fault.
+Oracle checks consumed command age and end-to-end identity across the complete
+target-authority window, so a setpoint-only stall remains visible even when
+proof-of-life continues. The Successor Progression Oracle independently checks
+completion successor installation, explicit fault observation, and complete
+safety-route installation only when a fallback is preregistered. The
+Registration Contract Oracle checks explicit registration and activation
+rejections; lack of activation alone is never accepted as rejection evidence.
 
 Clause states are `PASS`, `VIOLATION`, `UNKNOWN`, and `NOT_APPLICABLE`. Overall
 `PASS` requires an admissible trace and every applicable clause to pass.
