@@ -14,6 +14,8 @@ IDENTIFIER = re.compile(r"^[a-z0-9][a-z0-9_-]{0,63}$")
 
 @dataclass(frozen=True)
 class IsolationAllocation:
+    study_id: str
+    attempt_id: str
     slot: int
     px4_instance: int
     vehicle_identity: str
@@ -65,6 +67,8 @@ def allocate_isolation(
     if run_root.resolve() not in attempt_root.parents:
         raise ValueError("attempt directory escapes the configured run root")
     return IsolationAllocation(
+        study_id=study_id,
+        attempt_id=attempt_id,
         slot=slot,
         px4_instance=slot,
         # PX4's gz_x500 startup rule materializes this exact Gazebo entity.
@@ -88,6 +92,7 @@ def allocate_isolation(
 def verify_unique(allocations: Iterable[IsolationAllocation]) -> None:
     values = list(allocations)
     fields = (
+        "attempt_id",
         "px4_instance",
         "vehicle_identity",
         "gazebo_partition",

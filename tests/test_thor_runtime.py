@@ -32,6 +32,8 @@ class ThorRuntimeTests(unittest.TestCase):
             for slot in range(4)
         ]
         verify_unique(allocations)
+        self.assertEqual({item.study_id for item in allocations}, {"motivation-v1"})
+        self.assertEqual({item.attempt_id for item in allocations}, {"a-0", "a-1", "a-2", "a-3"})
         self.assertEqual({item.ros_domain_id for item in allocations}, {40, 41, 42, 43})
         self.assertEqual(len({item.xrce_agent_port for item in allocations}), 4)
         self.assertEqual(
