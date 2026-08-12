@@ -67,7 +67,8 @@ def allocate_isolation(
     return IsolationAllocation(
         slot=slot,
         px4_instance=slot,
-        vehicle_identity=f"family_a_x500_{slot}",
+        # PX4's gz_x500 startup rule materializes this exact Gazebo entity.
+        vehicle_identity=f"x500_{slot}",
         gazebo_partition=f"family_a_{study_id}_{slot}",
         ros_domain_id=domain,
         xrce_agent_port=xrce_port_base + slot,

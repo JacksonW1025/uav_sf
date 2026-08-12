@@ -6,6 +6,7 @@
   <maintainer email="noreply@example.invalid">Family A maintainers</maintainer>
   <license>BSD-3-Clause</license>
   <buildtool_depend>ament_cmake</buildtool_depend>
+  <depend>gz_transport_vendor</depend>
   <depend>px4_msgs</depend>
   <depend>px4_ros2_cpp</depend>
   <depend>rclcpp</depend>

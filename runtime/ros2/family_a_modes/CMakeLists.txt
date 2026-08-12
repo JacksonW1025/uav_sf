@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_compile_options(-Wall -Wextra -Wpedantic -Werror)
 
 find_package(ament_cmake REQUIRED)
+find_package(gz-transport13 REQUIRED)
 find_package(px4_ros2_cpp REQUIRED)
 find_package(rclcpp REQUIRED)
 
@@ -16,4 +17,8 @@ add_executable(mode_executor src/mode_executor.cpp)
 target_link_libraries(mode_executor px4_ros2_cpp::px4_ros2_cpp rclcpp::rclcpp)
 
 install(TARGETS external_mode mode_executor DESTINATION lib/${PROJECT_NAME})
+
+add_executable(gazebo_clock_sidecar src/gazebo_clock_sidecar.cpp)
+target_link_libraries(gazebo_clock_sidecar PRIVATE gz-transport13::core)
+install(TARGETS gazebo_clock_sidecar DESTINATION lib/${PROJECT_NAME})
 ament_package()

@@ -119,6 +119,10 @@ def launch(args: argparse.Namespace) -> dict[str, object]:
         args.setpoint_kind,
         "--fault-mode",
         args.fault_mode,
+        "--successor-route",
+        args.successor_route,
+        "--repeat-count",
+        str(args.repeat_count),
         "--slot",
         str(args.slot),
         "--cpu-set",
@@ -132,6 +136,8 @@ def launch(args: argparse.Namespace) -> dict[str, object]:
     ]
     if args.health_loss:
         command.append("--health-loss")
+    if args.duplicate_registration:
+        command.append("--duplicate-registration")
     process = subprocess.Popen(command, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     timed_out = False
     try:
@@ -193,6 +199,13 @@ def main() -> int:
         default="normal",
     )
     parser.add_argument("--health-loss", action="store_true")
+    parser.add_argument("--duplicate-registration", action="store_true")
+    parser.add_argument(
+        "--successor-route",
+        choices=["internal_hold", "internal_rtl", "internal_land"],
+        default="internal_land",
+    )
+    parser.add_argument("--repeat-count", type=int, default=1)
     parser.add_argument("--slot", type=int, default=0)
     parser.add_argument("--cpu-set", default="0-11")
     parser.add_argument("--memory", default="24g")

@@ -23,6 +23,10 @@ class ExternalModeRequester(Node):
             "lifecycle_path": "",
             "component_name": "Family A External",
             "active_s": 8.0,
+            "successor_route": "internal_land",
+            "successor_dwell_s": 2.0,
+            "fault_mode": "normal",
+            "rejection_observation_s": 8.0,
         }
         for name, value in defaults.items():
             self.declare_parameter(name, value)
@@ -30,10 +34,23 @@ class ExternalModeRequester(Node):
         lifecycle_path = self.get_parameter("lifecycle_path").value
         self._component_name = self.get_parameter("component_name").value
         self._active_s = float(self.get_parameter("active_s").value)
+        self._successor_route = self.get_parameter("successor_route").value
+        self._successor_dwell_s = float(
+            self.get_parameter("successor_dwell_s").value
+        )
+        self._fault_mode = self.get_parameter("fault_mode").value
+        self._rejection_observation_s = float(
+            self.get_parameter("rejection_observation_s").value
+        )
         if not self._run_id or not lifecycle_path:
             raise RuntimeError("run_id and lifecycle_path are required")
+        if self._successor_route not in {"internal_hold", "internal_rtl", "internal_land"}:
+            raise RuntimeError("unsupported successor_route")
+        if self._fault_mode not in {"normal", "process_exit", "setpoint_stall", "health_loss"}:
+            raise RuntimeError("unsupported fault_mode")
         self._log = DurableJsonl(lifecycle_path)
         self._mode_id: int | None = None
+        self._registered_ns: int | None = None
         self._status: VehicleStatus | None = None
         self._arm_sent_ns: int | None = None
         self._takeoff_sent = False
@@ -41,6 +58,10 @@ class ExternalModeRequester(Node):
         self._mode_sent = False
         self._activated_ns: int | None = None
         self._land_sent = False
+        self._released = False
+        self._successor_observed_ns: int | None = None
+        self._fault_logged = False
+        self._land: VehicleLandDetected | None = None
         self._command_pub = self.create_publisher(
             VehicleCommand, "/fmu/in/vehicle_command", PX4_QOS
         )
@@ -86,6 +107,7 @@ class ExternalModeRequester(Node):
         )
         if message.success and message.mode_id >= 0:
             self._mode_id = int(message.mode_id)
+            self._registered_ns = time.monotonic_ns()
 
     def _status_callback(self, message: VehicleStatus) -> None:
         self._status = message
@@ -97,8 +119,48 @@ class ExternalModeRequester(Node):
                     run_id=self._run_id,
                     mode_id=self._mode_id,
                 )
+        elif self._activated_ns is not None and self._released:
+            expected = {
+                "internal_hold": VehicleStatus.NAVIGATION_STATE_AUTO_LOITER,
+                "internal_rtl": VehicleStatus.NAVIGATION_STATE_AUTO_RTL,
+                "internal_land": VehicleStatus.NAVIGATION_STATE_AUTO_LAND,
+            }[self._successor_route]
+            if int(message.nav_state) == expected and self._successor_observed_ns is None:
+                self._successor_observed_ns = time.monotonic_ns()
+                self._log.append(
+                    "successor_observed_active",
+                    run_id=self._run_id,
+                    route=self._successor_route,
+                )
+        elif (
+            self._activated_ns is not None
+            and self._fault_mode == "process_exit"
+            and not self._fault_logged
+        ):
+            observed_route = {
+                VehicleStatus.NAVIGATION_STATE_AUTO_LOITER: "internal_hold",
+                VehicleStatus.NAVIGATION_STATE_AUTO_RTL: "internal_rtl",
+                VehicleStatus.NAVIGATION_STATE_AUTO_LAND: "internal_land",
+            }.get(int(message.nav_state))
+            if observed_route is not None:
+                self._fault_logged = True
+                self._released = True
+                self._successor_route = observed_route
+                self._successor_observed_ns = time.monotonic_ns()
+                self._log.append(
+                    "fault_detected",
+                    run_id=self._run_id,
+                    reason="external_component_unresponsive",
+                    route="dynamic_external_mode",
+                )
+                self._log.append(
+                    "fallback_triggered",
+                    run_id=self._run_id,
+                    route=observed_route,
+                )
 
     def _land_callback(self, message: VehicleLandDetected) -> None:
+        self._land = message
         if not message.landed:
             self._airborne = True
 
@@ -126,10 +188,31 @@ class ExternalModeRequester(Node):
             return
         now = time.monotonic_ns()
         if self._land_sent:
-            if self._status.arming_state == VehicleStatus.ARMING_STATE_DISARMED:
+            if (
+                self._land is not None
+                and self._land.landed
+                and self._status.arming_state == VehicleStatus.ARMING_STATE_DISARMED
+            ):
                 self._log.append("requester_completed", run_id=self._run_id)
                 self._log.close()
                 rclpy.shutdown()
+            return
+        if (
+            self._fault_mode == "health_loss"
+            and self._registered_ns is not None
+            and now - self._registered_ns
+            >= int(self._rejection_observation_s * 1_000_000_000)
+            and self._status.arming_state == VehicleStatus.ARMING_STATE_DISARMED
+        ):
+            self._log.append(
+                "fault_detected",
+                run_id=self._run_id,
+                reason="activation_rejected_after_health_loss",
+                route="dynamic_external_mode",
+            )
+            self._log.append("requester_completed", run_id=self._run_id)
+            self._log.close()
+            rclpy.shutdown()
             return
         if self._status.arming_state != VehicleStatus.ARMING_STATE_ARMED:
             if not self._takeoff_sent:
@@ -154,7 +237,7 @@ class ExternalModeRequester(Node):
             return
         if (
             self._activated_ns is not None
-            and not self._land_sent
+            and not self._released
             and now - self._activated_ns >= int(self._active_s * 1_000_000_000)
         ):
             self._log.append(
@@ -166,10 +249,41 @@ class ExternalModeRequester(Node):
                 "transition_requested",
                 run_id=self._run_id,
                 source_route="dynamic_external_mode",
+                target_route=self._successor_route,
+            )
+            if self._successor_route == "internal_land":
+                self._command(VehicleCommand.VEHICLE_CMD_NAV_LAND)
+                self._land_sent = True
+            elif self._successor_route == "internal_rtl":
+                self._command(VehicleCommand.VEHICLE_CMD_NAV_RETURN_TO_LAUNCH)
+            else:
+                self._command(
+                    VehicleCommand.VEHICLE_CMD_SET_NAV_STATE,
+                    param1=float(VehicleStatus.NAVIGATION_STATE_AUTO_LOITER),
+                )
+            self._released = True
+            self._log.append(
+                "successor_requested",
+                run_id=self._run_id,
+                route=self._successor_route,
+            )
+        if (
+            self._released
+            and not self._land_sent
+            and self._successor_observed_ns is not None
+            and now - self._successor_observed_ns
+            >= int(self._successor_dwell_s * 1_000_000_000)
+        ):
+            self._log.append(
+                "transition_requested",
+                run_id=self._run_id,
+                source_route=self._successor_route,
                 target_route="internal_land",
+                cleanup_only=True,
             )
             self._command(VehicleCommand.VEHICLE_CMD_NAV_LAND)
             self._land_sent = True
+            self._log.append("cleanup_land_requested", run_id=self._run_id)
 
     def destroy_node(self) -> bool:
         self._log.close()

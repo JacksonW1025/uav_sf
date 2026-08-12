@@ -32,6 +32,8 @@ class OffboardController(Node):
             "active_s": 8.0,
             "stall_after_s": 3.0,
             "hover_altitude_m": 3.0,
+            "successor_dwell_s": 2.0,
+            "repeat_count": 1,
         }
         for name, value in defaults.items():
             self.declare_parameter(name, value)
@@ -45,6 +47,10 @@ class OffboardController(Node):
         self._active_s = float(self.get_parameter("active_s").value)
         self._stall_after_s = float(self.get_parameter("stall_after_s").value)
         self._altitude = float(self.get_parameter("hover_altitude_m").value)
+        self._successor_dwell_s = float(
+            self.get_parameter("successor_dwell_s").value
+        )
+        self._repeat_count = int(self.get_parameter("repeat_count").value)
         if not self._run_id or not lifecycle_path:
             raise RuntimeError("run_id and lifecycle_path are required")
         if self._setpoint_kind not in {"trajectory", "attitude", "body_rate"}:
@@ -55,10 +61,19 @@ class OffboardController(Node):
             raise RuntimeError("unsupported source_route")
         if self._successor_route not in {"internal_hold", "internal_rtl", "internal_land"}:
             raise RuntimeError("unsupported successor_route")
+        if self._repeat_count < 1:
+            raise RuntimeError("repeat_count must be positive")
+        if self._repeat_count > 1 and self._successor_route == "internal_land":
+            raise RuntimeError("re-entry requires Hold or RTL as the intermediate successor")
         self._log = DurableJsonl(lifecycle_path)
         self._started_ns = time.monotonic_ns()
         self._commanded = False
         self._landing_commanded = False
+        self._released = False
+        self._fault_logged = False
+        self._cycle = 0
+        self._activation_ns: int | None = None
+        self._successor_observed_ns: int | None = None
         self._first_command_logged = False
         self._status: VehicleStatus | None = None
         self._land: VehicleLandDetected | None = None
@@ -107,6 +122,27 @@ class OffboardController(Node):
             self._ever_armed = True
         if message.nav_state == VehicleStatus.NAVIGATION_STATE_OFFBOARD:
             self._ever_offboard = True
+            if self._activation_ns is None:
+                self._activation_ns = time.monotonic_ns()
+                self._log.append(
+                    "offboard_observed_active",
+                    run_id=self._run_id,
+                    cycle=self._cycle,
+                )
+        expected_successor = {
+            "internal_hold": VehicleStatus.NAVIGATION_STATE_AUTO_LOITER,
+            "internal_rtl": VehicleStatus.NAVIGATION_STATE_AUTO_RTL,
+            "internal_land": VehicleStatus.NAVIGATION_STATE_AUTO_LAND,
+        }[self._successor_route]
+        if self._released and message.nav_state == expected_successor:
+            if self._successor_observed_ns is None:
+                self._successor_observed_ns = time.monotonic_ns()
+                self._log.append(
+                    "successor_observed_active",
+                    run_id=self._run_id,
+                    route=self._successor_route,
+                    cycle=self._cycle,
+                )
 
     def _land_callback(self, message: VehicleLandDetected) -> None:
         self._land = message
@@ -179,8 +215,26 @@ class OffboardController(Node):
 
     def _tick(self) -> None:
         elapsed = (time.monotonic_ns() - self._started_ns) / 1_000_000_000
-        stalled = self._fault_mode == "setpoint_stall" and elapsed >= self._stall_after_s
-        if not self._landing_commanded:
+        active_elapsed = (
+            (time.monotonic_ns() - self._activation_ns) / 1_000_000_000
+            if self._activation_ns is not None
+            else 0.0
+        )
+        stalled = (
+            self._fault_mode == "setpoint_stall"
+            and self._activation_ns is not None
+            and active_elapsed >= self._stall_after_s
+        )
+        if stalled and not self._fault_logged:
+            self._log.append(
+                "fault_detected",
+                run_id=self._run_id,
+                reason="setpoint_stream_stalled_while_proof_of_life_continued",
+                route="legacy_offboard",
+                cycle=self._cycle,
+            )
+            self._fault_logged = True
+        if not self._released and not self._landing_commanded:
             if not stalled:
                 self._publish_setpoint()
             else:
@@ -201,12 +255,33 @@ class OffboardController(Node):
             )
             self._commanded = True
             self._log.append("offboard_requested", run_id=self._run_id)
-        if self._fault_mode == "process_exit" and elapsed >= self._stall_after_s:
+        if (
+            self._fault_mode == "process_exit"
+            and self._activation_ns is not None
+            and active_elapsed >= self._stall_after_s
+        ):
+            self._log.append(
+                "fault_detected",
+                run_id=self._run_id,
+                reason="source_process_exit",
+                route="legacy_offboard",
+                cycle=self._cycle,
+            )
             self._log.append("producer_process_exit", run_id=self._run_id)
             self._log.close()
             rclpy.shutdown()
             return
-        if not self._landing_commanded and elapsed >= self._active_s:
+        if (
+            not self._released
+            and self._activation_ns is not None
+            and active_elapsed >= self._active_s
+        ):
+            self._log.append(
+                "completion",
+                run_id=self._run_id,
+                route="legacy_offboard",
+                cycle=self._cycle,
+            )
             self._log.append(
                 "transition_requested",
                 run_id=self._run_id,
@@ -222,8 +297,55 @@ class OffboardController(Node):
                     VehicleCommand.VEHICLE_CMD_SET_NAV_STATE,
                     param1=float(VehicleStatus.NAVIGATION_STATE_AUTO_LOITER),
                 )
-            self._landing_commanded = True
-            self._log.append("land_requested", run_id=self._run_id)
+            self._released = True
+            self._landing_commanded = self._successor_route == "internal_land"
+            self._log.append(
+                "successor_requested",
+                run_id=self._run_id,
+                route=self._successor_route,
+                cycle=self._cycle,
+            )
+        if (
+            self._released
+            and not self._landing_commanded
+            and self._successor_observed_ns is not None
+            and time.monotonic_ns() - self._successor_observed_ns
+            >= int(self._successor_dwell_s * 1_000_000_000)
+        ):
+            if self._cycle + 1 < self._repeat_count:
+                self._cycle += 1
+                self._log.append(
+                    "transition_requested",
+                    run_id=self._run_id,
+                    source_route=self._successor_route,
+                    target_route="legacy_offboard",
+                    cycle=self._cycle,
+                )
+                self._vehicle_command(
+                    VehicleCommand.VEHICLE_CMD_SET_NAV_STATE,
+                    param1=float(VehicleStatus.NAVIGATION_STATE_OFFBOARD),
+                )
+                self._released = False
+                self._activation_ns = None
+                self._successor_observed_ns = None
+                self._fault_logged = False
+                self._log.append(
+                    "producer_session_started",
+                    run_id=self._run_id,
+                    producer_session=f"offboard-{self._run_id}-{self._cycle}",
+                    cycle=self._cycle,
+                )
+            else:
+                self._log.append(
+                    "transition_requested",
+                    run_id=self._run_id,
+                    source_route=self._successor_route,
+                    target_route="internal_land",
+                    cleanup_only=True,
+                )
+                self._vehicle_command(VehicleCommand.VEHICLE_CMD_NAV_LAND)
+                self._landing_commanded = True
+                self._log.append("cleanup_land_requested", run_id=self._run_id)
         if self._status is not None and self._land is not None and self._landing_commanded:
             if (
                 self._ever_armed

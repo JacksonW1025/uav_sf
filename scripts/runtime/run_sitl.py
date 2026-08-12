@@ -112,6 +112,22 @@ def _wait_for_telemetry(path: Path, processes: list[ManagedProcess], timeout_s: 
     raise RuntimeFailure("ROS/PX4 telemetry readiness timed out")
 
 
+def _wait_for_armed(path: Path, timeout_s: float) -> None:
+    deadline = time.monotonic() + timeout_s
+    while time.monotonic() < deadline:
+        if path.exists():
+            for line in reversed(path.read_text(encoding="utf-8").splitlines()):
+                if not line.strip():
+                    continue
+                record = json.loads(line)
+                if record.get("kind") == "vehicle_status":
+                    if int(record.get("arming_state", -1)) == 2:
+                        return
+                    break
+        time.sleep(0.1)
+    raise RuntimeFailure("duplicate-registration fixture did not observe armed state")
+
+
 def _latest_ulog(root: Path) -> Path:
     candidates = sorted(root.rglob("*.ulg"), key=lambda path: path.stat().st_mtime_ns)
     if not candidates:
@@ -119,7 +135,9 @@ def _latest_ulog(root: Path) -> Path:
     return candidates[-1]
 
 
-def _semantic_success(path: Path, mechanism: str) -> tuple[bool, list[str]]:
+def _semantic_success(
+    path: Path, mechanism: str, *, expected_rejection: bool = False
+) -> tuple[bool, list[str]]:
     reasons: list[str] = []
     records = [
         json.loads(line)
@@ -128,15 +146,22 @@ def _semantic_success(path: Path, mechanism: str) -> tuple[bool, list[str]]:
     ]
     statuses = [item for item in records if item.get("kind") == "vehicle_status"]
     land = [item for item in records if item.get("kind") == "vehicle_land_detected"]
-    if not any(int(item.get("arming_state", -1)) == 2 for item in statuses):
+    armed = any(int(item.get("arming_state", -1)) == 2 for item in statuses)
+    airborne = any(not bool(item.get("landed", True)) for item in land)
+    if expected_rejection:
+        if armed:
+            reasons.append("vehicle armed despite the expected activation rejection")
+        if airborne:
+            reasons.append("vehicle became airborne despite the expected activation rejection")
+    elif not armed:
         reasons.append("vehicle never reached ARMING_STATE_ARMED")
-    if not any(not bool(item.get("landed", True)) for item in land):
+    if not expected_rejection and not airborne:
         reasons.append("vehicle never became airborne")
-    if mechanism == "legacy_offboard" and not any(
+    if not expected_rejection and mechanism == "legacy_offboard" and not any(
         int(item.get("nav_state", -1)) == 14 for item in statuses
     ):
         reasons.append("vehicle never reached legacy Offboard nav state")
-    if mechanism in {"dynamic_external_mode", "mode_executor"} and not any(
+    if not expected_rejection and mechanism in {"dynamic_external_mode", "mode_executor"} and not any(
         23 <= int(item.get("nav_state", -1)) <= 30 for item in statuses
     ):
         reasons.append("vehicle never reached an allocated external nav state")
@@ -147,6 +172,22 @@ def _semantic_success(path: Path, mechanism: str) -> tuple[bool, list[str]]:
     if not bool(terminal_land.get("landed", False)):
         reasons.append("terminal vehicle state is not landed")
     return not reasons, reasons
+
+
+def _latest_safe_route(path: Path) -> str | None:
+    records = [
+        json.loads(line)
+        for line in path.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    statuses = [item for item in records if item.get("kind") == "vehicle_status"]
+    if not statuses:
+        return None
+    return {
+        4: "internal_hold",
+        5: "internal_rtl",
+        18: "internal_land",
+    }.get(int(statuses[-1].get("nav_state", -1)))
 
 
 def _terminal_safe(path: Path) -> bool:
@@ -237,6 +278,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             # all estimator, control and experiment safety checks stay active.
             "PX4_PARAM_CBRK_SUPPLY_CHK": "894281",
             "PX4_PARAM_NAV_DLL_ACT": "0",
+            # Formal fault cells require a deterministic, contract-level
+            # response to loss of the Legacy Offboard proof-of-life.
+            "PX4_PARAM_COM_OF_LOSS_T": "1.0",
+            "PX4_PARAM_COM_OBL_RC_ACT": "4",
             # One boot-to-shutdown ULog is required so registration, route,
             # fault and terminal evidence remain in one closed source window.
             "PX4_PARAM_SDLOG_MODE": "2",
@@ -289,6 +334,13 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         start(
             "gazebo_stats",
             ["gz", "topic", "-e", "-t", "/world/default/stats"],
+        )
+        start(
+            "gazebo_clock_sidecar",
+            [
+                "/opt/family_a_ws/install/lib/family_a_modes/gazebo_clock_sidecar",
+                str(raw / "gazebo.clock.jsonl"),
+            ],
         )
         start(
             "telemetry_sidecar",
@@ -345,7 +397,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     "-p",
                     "source_route:=internal_hold",
                     "-p",
-                    "successor_route:=internal_land",
+                    f"successor_route:={args.successor_route}",
+                    "-p",
+                    f"repeat_count:={args.repeat_count}",
                 ],
             )
         elif args.mechanism == "dynamic_external_mode":
@@ -363,6 +417,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     f"lifecycle_path:={raw / 'workload.lifecycle.jsonl'}",
                     "-p",
                     f"active_s:={args.active_s}",
+                    "-p",
+                    f"successor_route:={args.successor_route}",
+                    "-p",
+                    f"fault_mode:={'health_loss' if args.health_loss else args.fault_mode}",
                 ],
             )
             time.sleep(0.5)
@@ -377,11 +435,28 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     "-p",
                     f"active_duration_s:={args.active_s}",
                     "-p",
-                    f"fault_mode:={args.fault_mode}",
+                    f"fault_mode:={'normal' if args.health_loss else args.fault_mode}",
                     "-p",
                     f"health_reply_enabled:={'false' if args.health_loss else 'true'}",
                 ],
             )
+            if args.duplicate_registration:
+                # PX4's public contract rejects new component registrations
+                # while armed. Wait for that legal precondition instead of
+                # racing the duplicate request against takeoff.
+                _wait_for_armed(telemetry, 20.0)
+                start(
+                    "external_mode_duplicate",
+                    [
+                        "ros2",
+                        "run",
+                        "family_a_modes",
+                        "external_mode",
+                        "--ros-args",
+                        "-p",
+                        f"active_duration_s:={args.active_s}",
+                    ],
+                )
         elif args.mechanism == "mode_executor":
             lifecycle.append(
                 "transition_requested",
@@ -417,13 +492,20 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                         lifecycle.append("fault_detected", reason="source_process_exit")
                         expected_fault_observed = True
                     if _terminal_safe(telemetry):
+                        safe_route = _latest_safe_route(telemetry)
+                        if safe_route is not None:
+                            lifecycle.append("fallback_triggered", route=safe_route)
                         success, reasons = _semantic_success(telemetry, args.mechanism)
                         outcome = "ACCEPTED" if success else "INCONCLUSIVE"
                         if reasons:
                             lifecycle.append("semantic_rejection", reasons=reasons)
                         break
                 elif workload.process.returncode == 0:
-                    success, reasons = _semantic_success(telemetry, args.mechanism)
+                    success, reasons = _semantic_success(
+                        telemetry,
+                        args.mechanism,
+                        expected_rejection=args.health_loss,
+                    )
                     outcome = "ACCEPTED" if success else "INCONCLUSIVE"
                     if reasons:
                         lifecycle.append("semantic_rejection", reasons=reasons)
@@ -440,6 +522,11 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     and item.name == "external_mode"
                     and item.process.returncode == 74
                 )
+                expected_duplicate_rejection = (
+                    args.duplicate_registration
+                    and item.name == "external_mode_duplicate"
+                    and item.process.returncode != 0
+                )
                 if expected_external_exit:
                     if not expected_fault_observed:
                         lifecycle.append("fault_detected", reason="external_component_exit")
@@ -450,6 +537,12 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                         if reasons:
                             lifecycle.append("semantic_rejection", reasons=reasons)
                         break
+                elif expected_duplicate_rejection:
+                    if not expected_fault_observed:
+                        lifecycle.append(
+                            "fault_detected", reason="duplicate_registration_rejected"
+                        )
+                        expected_fault_observed = True
                 else:
                     unexpected_exits.append(item)
             if outcome in {"ACCEPTED", "INCONCLUSIVE"}:
@@ -520,6 +613,13 @@ def main() -> int:
     parser.add_argument("--setpoint-kind", choices=["trajectory", "attitude", "body_rate"], default="trajectory")
     parser.add_argument("--fault-mode", choices=["normal", "process_exit", "setpoint_stall"], default="normal")
     parser.add_argument("--health-loss", action="store_true")
+    parser.add_argument("--duplicate-registration", action="store_true")
+    parser.add_argument(
+        "--successor-route",
+        choices=["internal_hold", "internal_rtl", "internal_land"],
+        default="internal_land",
+    )
+    parser.add_argument("--repeat-count", type=int, default=1)
     parser.add_argument("--slot", type=int, default=0)
     parser.add_argument("--cpu-set", default="0-11")
     parser.add_argument("--active-s", type=float, default=8.0)

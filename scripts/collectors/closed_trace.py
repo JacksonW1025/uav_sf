@@ -79,6 +79,20 @@ def _read_jsonl(paths: Iterable[Path]) -> list[dict[str, Any]]:
 
 def _clock_bridge(sidecar: list[dict[str, Any]], maximum_uncertainty_ns: int) -> ClockBridge:
     by_source: dict[int, dict[str, int | str]] = {}
+    gazebo = [record for record in sidecar if record.get("kind") == "gazebo_clock_sample"]
+    if len(gazebo) >= 5:
+        for record in gazebo:
+            source_ns = int(record["source_ns"])
+            by_source[source_ns] = {
+                "source_domain": "px4_boot_ns",
+                "source_ns": source_ns,
+                "analysis_ns": int(record["analysis_projection_ns"]),
+                "round_trip_ns": 0,
+            }
+        return fit_clock_bridge(
+            [by_source[key] for key in sorted(by_source)],
+            maximum_uncertainty_ns=maximum_uncertainty_ns,
+        )
     for record in sidecar:
         if record.get("kind") != "timesync_sample":
             continue

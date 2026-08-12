@@ -19,6 +19,7 @@ EXPECTED_PATHS = (
     Path("/opt/family_a_ws/install/share/px4_ros2_cpp/package.xml"),
     Path("/opt/family_a_ws/install/share/family_a_runtime/package.xml"),
     Path("/opt/family_a_ws/install/share/family_a_modes/package.xml"),
+    Path("/opt/family_a_ws/install/lib/family_a_modes/gazebo_clock_sidecar"),
     Path("/opt/uav_sf/external/px4_autopilot/build/px4_sitl_default/bin/px4"),
     Path("/opt/family_a_candidate_manifest.json"),
 )

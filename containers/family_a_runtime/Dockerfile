@@ -7,8 +7,7 @@ ARG REPOSITORY_COMMIT=UNCOMMITTED
 
 LABEL org.opencontainers.image.title="PX4 Family A Thor experiment runtime" \
       org.opencontainers.image.base.digest="sha256:b82a5ba3869a81196414cf34e4fc25c7935aab78b1f5187570ca9362c478cdbd" \
-      org.opencontainers.image.platform="linux/arm64" \
-      org.opencontainers.image.revision="${REPOSITORY_COMMIT}"
+      org.opencontainers.image.platform="linux/arm64"
 
 ENV LANG=C.UTF-8 \
     LC_ALL=C.UTF-8 \
@@ -57,8 +56,13 @@ RUN ./scripts/setup/build_candidates.sh --jobs "${BUILD_JOBS}" --prefix /opt --p
 RUN ./scripts/setup/build_candidates.sh --jobs "${BUILD_JOBS}" --prefix /opt --phase upstream-workspace
 
 COPY . /opt/uav_sf
-RUN ./scripts/validation/validate_repo.sh \
+RUN printf '%s\n' "${REPOSITORY_COMMIT}" > /opt/family_a_repository_revision \
+    && ./scripts/validation/validate_repo.sh \
     && ./scripts/setup/build_candidates.sh --jobs "${BUILD_JOBS}" --prefix /opt --phase project-workspace
+
+# Keep the source revision in the project layer. Changing the repository
+# revision must not invalidate immutable apt, upstream-source, or PX4 layers.
+LABEL org.opencontainers.image.revision="${REPOSITORY_COMMIT}"
 
 ENTRYPOINT ["/opt/uav_sf/containers/family_a_runtime/entrypoint.sh"]
 CMD ["python3", "-m", "scripts.runtime.preflight", "--self-check"]

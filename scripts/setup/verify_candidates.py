@@ -64,6 +64,7 @@ def _git_identity(path: Path) -> dict[str, Any]:
         text=True,
         capture_output=True,
     ).stdout
+    submodules = git("submodule", "status", "--recursive").splitlines()
     return {
         "commit": git("rev-parse", "HEAD"),
         "changed_paths": sorted(
@@ -71,6 +72,7 @@ def _git_identity(path: Path) -> dict[str, Any]:
             for line in status.splitlines()
             if len(line) > 3 and not line[3:].startswith(("build-", "install-"))
         ),
+        "submodules": submodules,
     }
 
 
@@ -104,6 +106,22 @@ def build_manifest(
         "px4_ros2_interface_lib": ROOT / "external/px4_ros2_interface_lib",
         "Micro-XRCE-DDS-Agent": ROOT / "external/micro_xrce_dds_agent",
     }
+    project_binaries = {
+        "external_mode": workspace_prefix / "lib/family_a_modes/external_mode",
+        "mode_executor": workspace_prefix / "lib/family_a_modes/mode_executor",
+        "gazebo_clock_sidecar": workspace_prefix
+        / "lib/family_a_modes/gazebo_clock_sidecar",
+    }
+    missing_project_binaries = [
+        name for name, path in project_binaries.items() if not path.is_file()
+    ]
+    if missing_project_binaries:
+        raise CandidateError(
+            "project binaries are missing: " + ", ".join(missing_project_binaries)
+        )
+    revision_path = Path("/opt/family_a_repository_revision")
+    if not revision_path.is_file():
+        raise CandidateError("repository revision record is missing")
     return {
         "schema_version": "1.0",
         "architecture": platform.machine(),
@@ -111,6 +129,7 @@ def build_manifest(
         "python": platform.python_version(),
         "ros_distribution": os.environ.get("ROS_DISTRO"),
         "rmw_implementation": os.environ.get("RMW_IMPLEMENTATION"),
+        "repository_revision": revision_path.read_text(encoding="utf-8").strip(),
         "gazebo_sim_version": _command_identity("gz", "sim", "--versions"),
         "binaries": {
             "px4_sitl": {
@@ -124,6 +143,14 @@ def build_manifest(
                 "file_identity": _file_identity(agent_binary),
                 "logger_profile": False,
                 "p2p_profile": False,
+            },
+            **{
+                name: {
+                    "path": str(path),
+                    "sha256": _sha256(path),
+                    "file_identity": _file_identity(path),
+                }
+                for name, path in project_binaries.items()
             },
         },
         "source_trees": {name: _git_identity(path) for name, path in sources.items()},
