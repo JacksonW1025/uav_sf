@@ -309,6 +309,55 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     return closure
 
 
+def _emergency_close(args: argparse.Namespace, reason: str) -> None:
+    """Close an already-launched attempt when host orchestration itself fails."""
+    try:
+        matrix = _read_object(args.matrix)
+        study_id = str(matrix["study_id"])
+        cell = _cell(matrix, args.attempt_id)
+        cell_id = str(cell["cell_id"])
+        ledger_path = args.study_root / "attempt-ledger.jsonl"
+        state = verify_study_ledger(ledger_path)
+        attempt = state["attempts"].get(args.attempt_id)
+        if attempt is None or attempt["state"] != "LAUNCHED":
+            return
+        compact_root = args.study_root / "results" / args.attempt_id
+        closure_path = compact_root / "closure.json"
+        if not closure_path.exists():
+            _write_new(
+                closure_path,
+                {
+                    "schema_version": "1.0",
+                    "study_id": study_id,
+                    "cell_id": cell_id,
+                    "attempt_id": args.attempt_id,
+                    "outcome": "ENVIRONMENT_FAILURE",
+                    "host_orchestration_error": reason,
+                    "compact_evidence": {},
+                },
+            )
+        StudyLedger(ledger_path, study_id=study_id).append(
+            attempt_id=args.attempt_id,
+            cell_id=cell_id,
+            state="CLOSED",
+            payload={
+                "outcome": "ENVIRONMENT_FAILURE",
+                "closure_digest": _sha256(closure_path),
+            },
+        )
+    except Exception as close_error:  # noqa: BLE001 - preserve both failures verbatim
+        print(
+            json.dumps(
+                {
+                    "status": "EMERGENCY_CLOSURE_FAILED",
+                    "reason": str(close_error),
+                    "original_reason": reason,
+                }
+            ),
+            file=sys.stderr,
+        )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--matrix", type=Path, required=True)
@@ -326,6 +375,7 @@ def main() -> int:
     try:
         result = run(args)
     except (OSError, ValueError, KeyError, FormalAttemptError, subprocess.SubprocessError) as exc:
+        _emergency_close(args, str(exc))
         print(json.dumps({"status": "REFUSED", "reason": str(exc)}), file=sys.stderr)
         return 2
     print(json.dumps(result, indent=2, sort_keys=True))
