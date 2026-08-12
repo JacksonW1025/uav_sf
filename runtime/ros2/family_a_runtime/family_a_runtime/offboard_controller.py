@@ -90,7 +90,9 @@ class OffboardController(Node):
             TrajectorySetpoint, "/fmu/in/trajectory_setpoint", PX4_QOS
         )
         self._attitude_pub = self.create_publisher(
-            VehicleAttitudeSetpoint, "/fmu/in/vehicle_attitude_setpoint", PX4_QOS
+            VehicleAttitudeSetpoint,
+            versioned_topic("/fmu/in/vehicle_attitude_setpoint", VehicleAttitudeSetpoint),
+            PX4_QOS,
         )
         self._rates_pub = self.create_publisher(
             VehicleRatesSetpoint, "/fmu/in/vehicle_rates_setpoint", PX4_QOS
