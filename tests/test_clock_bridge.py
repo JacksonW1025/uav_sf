@@ -3,10 +3,20 @@ from __future__ import annotations
 import unittest
 
 from scripts.collectors.clock_bridge import ClockBridgeError, fit_clock_bridge
-from scripts.collectors.closed_trace import _clock_bridge, _route
+from scripts.collectors.closed_trace import _clock_bridge, _identity, _route
 
 
 class ClockBridgeTests(unittest.TestCase):
+    def test_offboard_reentry_identity_is_bound_to_route_epoch(self) -> None:
+        first = _identity(
+            route="legacy_offboard", epoch=2, nav_state=14, source_id=1, run_id="run-1"
+        )
+        second = _identity(
+            route="legacy_offboard", epoch=4, nav_state=14, source_id=1, run_id="run-1"
+        )
+        self.assertNotEqual(first["producer_session"], second["producer_session"])
+        self.assertEqual(first["producer_session"], "offboard-run-1-epoch-2")
+
     def test_internal_mode_completion_cannot_impersonate_external_target(self) -> None:
         plan = {
             "transition": {

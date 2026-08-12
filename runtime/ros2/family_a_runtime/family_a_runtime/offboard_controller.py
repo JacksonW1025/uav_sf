@@ -226,6 +226,16 @@ class OffboardController(Node):
         message.body_rate = self._setpoint_kind == "body_rate"
         self._control_pub.publish(message)
 
+    def _source_route_ready(self) -> bool:
+        """Require the preregistered public PX4 state before authority transfer."""
+        if self._status is None:
+            return False
+        if self._source_route == "internal_hold":
+            return self._status.nav_state == VehicleStatus.NAVIGATION_STATE_AUTO_LOITER
+        if self._source_route == "internal_rtl":
+            return self._status.nav_state == VehicleStatus.NAVIGATION_STATE_AUTO_RTL
+        return self._status.nav_state != VehicleStatus.NAVIGATION_STATE_OFFBOARD
+
     def _tick(self) -> None:
         now_ns = time.monotonic_ns()
         elapsed = (now_ns - self._started_ns) / 1_000_000_000
@@ -276,7 +286,7 @@ class OffboardController(Node):
                 self._airborne_ns is not None
                 and now_ns - self._airborne_ns >= int(self._prestream_s * 1_000_000_000)
             )
-        if not self._commanded and prestream_complete:
+        if not self._commanded and prestream_complete and self._source_route_ready():
             self._log.append(
                 "transition_requested",
                 run_id=self._run_id,

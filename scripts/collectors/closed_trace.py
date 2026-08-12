@@ -149,7 +149,7 @@ def _identity(
         else ("dds-offboard" if route == "legacy_offboard" else "px4-built-in")
     )
     producer = (
-        f"offboard-{run_id}"
+        f"offboard-{run_id}-epoch-{epoch}"
         if route == "legacy_offboard"
         else (lifecycle_owner if route in {"dynamic_external_mode", "mode_executor"} else "px4-internal")
     )
