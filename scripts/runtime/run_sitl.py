@@ -510,6 +510,12 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             if safety.process.poll() is not None:
                 outcome = "ENVIRONMENT_FAILURE"
                 break
+            if args.manual_land_offset_s is not None and _terminal_safe(telemetry):
+                success, reasons = _semantic_success(telemetry, args.mechanism)
+                outcome = "ACCEPTED" if success else "INCONCLUSIVE"
+                if reasons:
+                    lifecycle.append("semantic_rejection", reasons=reasons)
+                break
             if workload.process.poll() is not None:
                 if args.fault_mode == "process_exit":
                     if not expected_fault_observed:
