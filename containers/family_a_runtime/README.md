@@ -23,3 +23,9 @@ docker buildx build --platform linux/arm64 \
 
 Do not use host ROS, Conda, Gazebo resource paths, or Python site packages in
 the container.
+
+When a full image has already been built and attested, project-only changes
+may be rebuilt with `Dockerfile.project_layer`. `UPSTREAM_IMAGE` must name that
+previously attested full image, and the result is attested again before use.
+This path does not replace the from-scratch Dockerfile or alter the locked
+upstream candidates.

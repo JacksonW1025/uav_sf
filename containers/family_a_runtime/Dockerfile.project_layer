@@ -1,0 +1,23 @@
+ARG UPSTREAM_IMAGE
+FROM ${UPSTREAM_IMAGE}
+
+ARG BUILD_JOBS=12
+ARG REPOSITORY_COMMIT
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+WORKDIR /opt/uav_sf
+
+# Only use a previously attested full Family A image. The immutable apt,
+# Python, source, patch, PX4, Agent, and upstream ROS layers are retained;
+# current project code and its ROS packages are rebuilt below.
+COPY . /opt/uav_sf
+RUN test -n "${REPOSITORY_COMMIT}" \
+    && printf '%s\n' "${REPOSITORY_COMMIT}" > /opt/family_a_repository_revision \
+    && ./scripts/validation/validate_repo.sh \
+    && ./scripts/setup/build_candidates.sh --jobs "${BUILD_JOBS}" \
+       --prefix /opt --phase project-workspace
+
+LABEL org.opencontainers.image.revision="${REPOSITORY_COMMIT}"
+
+ENTRYPOINT ["/opt/uav_sf/containers/family_a_runtime/entrypoint.sh"]
+CMD ["python3", "-m", "scripts.runtime.preflight", "--self-check"]
