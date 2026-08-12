@@ -1,4 +1,4 @@
-ARG UPSTREAM_IMAGE
+ARG UPSTREAM_IMAGE=uav-sf-family-a-thor:upstream-required
 FROM ${UPSTREAM_IMAGE}
 
 ARG BUILD_JOBS=12
@@ -13,6 +13,7 @@ WORKDIR /opt/uav_sf
 COPY . /opt/uav_sf
 RUN test -n "${REPOSITORY_COMMIT}" \
     && printf '%s\n' "${REPOSITORY_COMMIT}" > /opt/family_a_repository_revision \
+    && rm -f /opt/family_a_candidate_manifest.json \
     && ./scripts/validation/validate_repo.sh \
     && ./scripts/setup/build_candidates.sh --jobs "${BUILD_JOBS}" \
        --prefix /opt --phase project-workspace
