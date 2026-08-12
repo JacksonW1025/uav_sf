@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run one isolated, non-formal Thor SITL qualification attempt."""
+"""Run one isolated Thor SITL attempt inside the attested container."""
 
 from __future__ import annotations
 
@@ -19,7 +19,7 @@ from scripts.runtime.preflight import self_check
 
 
 class RuntimeFailure(RuntimeError):
-    """A qualification attempt could not close its process and evidence set."""
+    """An attempt could not close its process and evidence set."""
 
 
 def _write_new(path: Path, value: Any) -> None:
@@ -227,7 +227,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     lifecycle = Lifecycle(raw / "runner.lifecycle.jsonl", args.run_id)
     _write_new(run_directory / "allocation.json", allocation.as_dict())
     _write_new(run_directory / "preflight.json", preflight)
-    lifecycle.append("qualification_started", mechanism=args.mechanism)
+    lifecycle.append("attempt_started", mechanism=args.mechanism)
 
     repository = Path("/opt/uav_sf")
     px4_source = repository / "external/px4_autopilot"
@@ -500,7 +500,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     ],
                 )
         else:
-            raise RuntimeFailure(f"qualification mechanism is not implemented: {args.mechanism}")
+            raise RuntimeFailure(f"attempt mechanism is not implemented: {args.mechanism}")
         deadline = time.monotonic() + args.attempt_timeout_s
         while time.monotonic() < deadline:
             if decision.exists():
