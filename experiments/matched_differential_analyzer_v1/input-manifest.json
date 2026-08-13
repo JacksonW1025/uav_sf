@@ -1,0 +1,2120 @@
+{
+  "frozen_motivation_inputs": [
+    {
+      "attempt_id": "det-dynamic-trajectory-hold-001",
+      "cell_id": "det-dynamic-trajectory-hold",
+      "digests": {
+        "frozen_evaluation": "sha256:a670af82a13cf276f6e18203ecba87d88ea982e8a7e58f4773d4572c05da9be3",
+        "plan": "sha256:002883c5370dcd3e61b4f796d0e6f7905894c89dc43917f4497a5dee9c600db6",
+        "trace": "sha256:3479429b5a94f1ab72c0a39ab2488cfe60a94cafcf26ed6e916b8df050483dc3"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-dynamic-trajectory-hold-001/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-dynamic-trajectory-hold-001.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-dynamic-trajectory-hold-001/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-dynamic-trajectory-hold-002",
+      "cell_id": "det-dynamic-trajectory-hold",
+      "digests": {
+        "frozen_evaluation": "sha256:0d79640f1ffca16c24c951c706bd0d897ef30fb944a56a9d3da77cbdd520b828",
+        "plan": "sha256:406e89b48bdcebed6afbd41484857bcc5395019465350e5aebcbd5da34547a4d",
+        "trace": "sha256:8e150798893b234935684cd5c9709c6cb2f3aba564964e8490cb179f15ae8fa8"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-dynamic-trajectory-hold-002/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-dynamic-trajectory-hold-002.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-dynamic-trajectory-hold-002/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-dynamic-trajectory-hold-006",
+      "cell_id": "det-dynamic-trajectory-hold",
+      "digests": {
+        "frozen_evaluation": "sha256:8a9a328caa959b2fd3bcbc8d194a6f4cca85fe58463b0ce4166cf464202f7344",
+        "plan": "sha256:69e471d6934d094916730129669679836f5712cc53f7a2dad52a4ff58c847b1c",
+        "trace": "sha256:0df9674d16c2bc3ccce6eb88038cd757602ad799909e48f85bd1031a3b294e82"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-dynamic-trajectory-hold-006/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-dynamic-trajectory-hold-006.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-dynamic-trajectory-hold-006/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-dynamic-trajectory-hold-007",
+      "cell_id": "det-dynamic-trajectory-hold",
+      "digests": {
+        "frozen_evaluation": "sha256:ad10e4687fc9f904501f1e19c3ebddf43e85261907700df8ded11b6752c6ce74",
+        "plan": "sha256:ef3b80dba2b4ff7a724befe48a56ba6f9eb03ab58bd0ac728f796bb809a52536",
+        "trace": "sha256:e7e92a669a0ffaf5bb8f2d5e94499017a1738b56e4262f0126ff38d5eb8ad109"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-dynamic-trajectory-hold-007/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-dynamic-trajectory-hold-007.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-dynamic-trajectory-hold-007/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-dynamic-trajectory-hold-008",
+      "cell_id": "det-dynamic-trajectory-hold",
+      "digests": {
+        "frozen_evaluation": "sha256:7185ad4af33bca081b93cf9910ade6d449e5ff8dde010e3a6578499e9264d23d",
+        "plan": "sha256:6fb70614715eb9899b62be0526797f85c1e9e38bec29a702353b9743bbb0f017",
+        "trace": "sha256:14622aeafbf75ebbacda46bf98c9fb392fc15ccdef29f3cd6a2fc38c817126bb"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-dynamic-trajectory-hold-008/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-dynamic-trajectory-hold-008.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-dynamic-trajectory-hold-008/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-dynamic-trajectory-land-002",
+      "cell_id": "det-dynamic-trajectory-land",
+      "digests": {
+        "frozen_evaluation": "sha256:1eb0da198d9bbf81adc8d28d484c057050682e6a344606cff6681925cc8abf44",
+        "plan": "sha256:d08dd30582b2f8398cfcefb565ea919e04c39f5921f4ad4a2ecdc96a8f6f8b95",
+        "trace": "sha256:eaac72b5c36b1357e81088af80a8a241da555bbd26b9dfeb92d03b3f44796ac7"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-dynamic-trajectory-land-002/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-dynamic-trajectory-land-002.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-dynamic-trajectory-land-002/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-dynamic-trajectory-land-003",
+      "cell_id": "det-dynamic-trajectory-land",
+      "digests": {
+        "frozen_evaluation": "sha256:6f9801c2f3323f06303d878c2c4427885dcce9a818c660da5bb53e9f2224ebaf",
+        "plan": "sha256:876adb789fb50e13c36878e8cf8f5e8a5d854b414f6e92162304bd0e1986586b",
+        "trace": "sha256:4c2db20f3422b7c5b0404ff3333c32da8ddd1a97b14657708a296aacfebc288b"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-dynamic-trajectory-land-003/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-dynamic-trajectory-land-003.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-dynamic-trajectory-land-003/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-dynamic-trajectory-land-004",
+      "cell_id": "det-dynamic-trajectory-land",
+      "digests": {
+        "frozen_evaluation": "sha256:b5f866e36fb7b90f79ff15669c3f120bcd033d966a715cf2108593c1d580c4ec",
+        "plan": "sha256:c2ab52dd040d6a51b473863df21d38496124db997a580c55bd4809e4c0e89b5f",
+        "trace": "sha256:92bb769ea4ed4b260939fa9bcfe8e937b68d90515e42695aabedbc23f689f26e"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-dynamic-trajectory-land-004/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-dynamic-trajectory-land-004.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-dynamic-trajectory-land-004/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-dynamic-trajectory-land-005",
+      "cell_id": "det-dynamic-trajectory-land",
+      "digests": {
+        "frozen_evaluation": "sha256:da34f9880b45d40384db60b02dfa909a2bb4bbbe99b2b49c1785fb765596310a",
+        "plan": "sha256:e7f584f50aa8221ec9ee4db9ab4962e5321f3bd2b94305fb16ab2039fb96d5a1",
+        "trace": "sha256:eb4b421e60d4fb6732c3dea2ab57c6dc7243d7d9e23f3ae620e11c6f5114cbf6"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-dynamic-trajectory-land-005/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-dynamic-trajectory-land-005.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-dynamic-trajectory-land-005/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-dynamic-trajectory-land-006",
+      "cell_id": "det-dynamic-trajectory-land",
+      "digests": {
+        "frozen_evaluation": "sha256:187594795e619fa8d355043769a72f3dbd70985dae2b18f3ae9b8955e21890a5",
+        "plan": "sha256:f5d23dd46e04a492280e50d5f51d69e7351956387560f9469d733aa1e31bc409",
+        "trace": "sha256:56ee7261f85c039e94ee76ad1a51e6827af78f6ddef5163217191cae80822a3e"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-dynamic-trajectory-land-006/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-dynamic-trajectory-land-006.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-dynamic-trajectory-land-006/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-dynamic-trajectory-rtl-001",
+      "cell_id": "det-dynamic-trajectory-rtl",
+      "digests": {
+        "frozen_evaluation": "sha256:a68442e0dff3e86d29b40b61f83727ca4e2317fffcb45c5ee2bcc51a2e4ff0e0",
+        "plan": "sha256:f15030160ad8d1518bd8ec8235a176c83a785e6ebf91f43789733615b112a7d7",
+        "trace": "sha256:02690f4f25efb10c4f7ecb77de4e3261e9aaa462211353c674d5cbe0569f8884"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-dynamic-trajectory-rtl-001/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-dynamic-trajectory-rtl-001.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-dynamic-trajectory-rtl-001/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-dynamic-trajectory-rtl-002",
+      "cell_id": "det-dynamic-trajectory-rtl",
+      "digests": {
+        "frozen_evaluation": "sha256:4cf76a03aec400e26284a3bacdf238e3238353e09c5ffbbf26ffc8fe1f3a14da",
+        "plan": "sha256:b59f48413b2399ac381686ac328550f5e18cec29f807ff95b90f7e58053a5666",
+        "trace": "sha256:2533ab521fe563a281a66e4dc53f9af3eb6d245c084ec886216f5d210c9cf273"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-dynamic-trajectory-rtl-002/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-dynamic-trajectory-rtl-002.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-dynamic-trajectory-rtl-002/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-dynamic-trajectory-rtl-003",
+      "cell_id": "det-dynamic-trajectory-rtl",
+      "digests": {
+        "frozen_evaluation": "sha256:5af62a13c301d3b633327c7d6be6fdb0bc26a6d95f15f6fb632a29dc6708bd09",
+        "plan": "sha256:aa2df97b6b247389106cedcf3a7db12b8b9be3773e53ef150d55aa9d1263f326",
+        "trace": "sha256:683a3782650450158e4ffc0f4fd4620691690b3d97811fc90f1455e9b378f171"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-dynamic-trajectory-rtl-003/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-dynamic-trajectory-rtl-003.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-dynamic-trajectory-rtl-003/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-dynamic-trajectory-rtl-004",
+      "cell_id": "det-dynamic-trajectory-rtl",
+      "digests": {
+        "frozen_evaluation": "sha256:924123edb3f086ec9e516257e985d831bce5936825b7540ea4b86aaaf046aba4",
+        "plan": "sha256:965ed5690890b87be44aa5f2092248c722fe2f4e99dbf8f4b1fe69ee7c2e92cf",
+        "trace": "sha256:63af1c120125113b9c8e6995042dd9cf65b033c0526007afcb84e44452f20286"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-dynamic-trajectory-rtl-004/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-dynamic-trajectory-rtl-004.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-dynamic-trajectory-rtl-004/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-dynamic-trajectory-rtl-005",
+      "cell_id": "det-dynamic-trajectory-rtl",
+      "digests": {
+        "frozen_evaluation": "sha256:43eb32ca9134cd75a0cf8faad2d74ad5ac39457403d9f0c2b7ec7db103174eb1",
+        "plan": "sha256:4616a8c1d157a93803a6358d298c06843fc5bb643359c6693c80b7c0747fcb18",
+        "trace": "sha256:aea4b783b2df52b2d7b2c19f339eadc6055ab39be191af7ea95b335f57c5751a"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-dynamic-trajectory-rtl-005/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-dynamic-trajectory-rtl-005.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-dynamic-trajectory-rtl-005/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-executor-completion-land-001",
+      "cell_id": "det-executor-completion-land",
+      "digests": {
+        "frozen_evaluation": "sha256:a7640de0bf4357033183b03d9b47f30d7be32706ace774119e038fe893f6a2a7",
+        "plan": "sha256:69b296ae1ad34e724a5dc4f5dd34515f8886dc0f94aa8c50844fb5deca6224e4",
+        "trace": "sha256:598ccc9a96070f9f5b4c9bcd6b788fecb60a7a03c914318de89ae3a73c418e8d"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-executor-completion-land-001/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-executor-completion-land-001.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-executor-completion-land-001/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-executor-completion-land-002",
+      "cell_id": "det-executor-completion-land",
+      "digests": {
+        "frozen_evaluation": "sha256:b6a96b32e0ae1737d35a1ae94ef0d15c7b33b7db28820b40d373e4043eeb9037",
+        "plan": "sha256:44834cf9e7fad9c003b30e34a0a374c254cf4ef335cfcad9d68108213f1dab80",
+        "trace": "sha256:f9baba658c0343f5b549d7e8de3f4503fff4ff6dac12a0e24ec0381ae0728a93"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-executor-completion-land-002/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-executor-completion-land-002.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-executor-completion-land-002/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-executor-completion-land-003",
+      "cell_id": "det-executor-completion-land",
+      "digests": {
+        "frozen_evaluation": "sha256:976daa80055f8add9475ab01ae1fe72cffc31c87bb5251ada5c84e9786aa63ee",
+        "plan": "sha256:0ced0f618d341d0db8769a187b441267b9af7fb527bf7300c7099796fd544033",
+        "trace": "sha256:55fa63e35f2f0515e5f635c14508a080601e4324d81be9b8213ac85b938d628e"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-executor-completion-land-003/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-executor-completion-land-003.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-executor-completion-land-003/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-executor-completion-land-004",
+      "cell_id": "det-executor-completion-land",
+      "digests": {
+        "frozen_evaluation": "sha256:6a8a5fb26db2d18a68ae7d2d9cfdd29f21393fe600aa6b09d8181b968db00f1a",
+        "plan": "sha256:9146d79a4d7687ad0df295947f5d23ff2aad6e3a7fe4389c8fc80516fa9be644",
+        "trace": "sha256:10aeeb42d7c01147c8c22fb0917afe624858275131bcc997f396937838dabe0e"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-executor-completion-land-004/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-executor-completion-land-004.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-executor-completion-land-004/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-executor-completion-land-005",
+      "cell_id": "det-executor-completion-land",
+      "digests": {
+        "frozen_evaluation": "sha256:04a215862972be02f203b9b833c750ec9a3a463368c754a89c9d6d038da68a7e",
+        "plan": "sha256:8a11bcab5eabb609772781e104d84922e531a56f9332d3da733d4d179439ce06",
+        "trace": "sha256:9dee5815c672720525d91bf1631ee2f6144f148f66ace01f84ab85318eb26e26"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-executor-completion-land-005/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-executor-completion-land-005.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-executor-completion-land-005/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-offboard-attitude-land-001",
+      "cell_id": "det-offboard-attitude-land",
+      "digests": {
+        "frozen_evaluation": "sha256:2fd31eecace7604c54ff3e0f0a0fae60e2bb87c90e22071498147e6512518ad1",
+        "plan": "sha256:cf9374ad737d219d8f1ba9d51750b2ccb8a24f72a8fdd63c12de3b395a199e85",
+        "trace": "sha256:1a067430a3b6aba1775b5919553f0a775ab2d085196e4e81a2d4caedd9707a67"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-offboard-attitude-land-001/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-offboard-attitude-land-001.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-offboard-attitude-land-001/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-offboard-attitude-land-002",
+      "cell_id": "det-offboard-attitude-land",
+      "digests": {
+        "frozen_evaluation": "sha256:f242c2ea8ccb2f208722b9d975a23eb48944bd34d5db36dda5e4d720d9bb4d2a",
+        "plan": "sha256:63dc77df298d637a9b8f0f921f1ec62aa86047d90e72ed29fe3929fa15600eb7",
+        "trace": "sha256:050fd90b37d431b92cd0f8b4977b8936dcec397425708910be9e8121b5d6ea94"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-offboard-attitude-land-002/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-offboard-attitude-land-002.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-offboard-attitude-land-002/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-offboard-attitude-land-003",
+      "cell_id": "det-offboard-attitude-land",
+      "digests": {
+        "frozen_evaluation": "sha256:bbf3540d460173043293df0f3247c8abde68eb8e3165c8d6c3a99e13eb004198",
+        "plan": "sha256:a07e693b1be98b412e4a01c11fbb79961cae41ac709d99b4aaece323f48e3991",
+        "trace": "sha256:795c409e42df8840de2e45dcf6095974d5b15d0c00200c1c5c28f479ceccb16f"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-offboard-attitude-land-003/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-offboard-attitude-land-003.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-offboard-attitude-land-003/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-offboard-attitude-land-004",
+      "cell_id": "det-offboard-attitude-land",
+      "digests": {
+        "frozen_evaluation": "sha256:f54e32c194810a6706582fcae0e757edffb697f1e8e0a9099151eaefced6f3db",
+        "plan": "sha256:bf2f0afd7915f7a691c4870c391274cd56175bb2ed1cdbf8ae41450ac558f0a8",
+        "trace": "sha256:04a68035f1dff97434c8aab45d2eedacc40f0bf0cd68b93ca81e3b825c268281"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-offboard-attitude-land-004/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-offboard-attitude-land-004.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-offboard-attitude-land-004/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-offboard-attitude-land-005",
+      "cell_id": "det-offboard-attitude-land",
+      "digests": {
+        "frozen_evaluation": "sha256:a57f9ec228011afcca2373f5f5437cf0b082d79d563c766e371639a2cb1bbb54",
+        "plan": "sha256:f072a7701fb87a6ae5c390cda8847bf4563ad9d2810c6705e9e768d61a33158c",
+        "trace": "sha256:7d627ae94a69de8b58e4e3ce7a374d05cce5556533b608f8504bfe5c864ff7ab"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-offboard-attitude-land-005/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-offboard-attitude-land-005.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-offboard-attitude-land-005/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-offboard-body-rate-land-001",
+      "cell_id": "det-offboard-body-rate-land",
+      "digests": {
+        "frozen_evaluation": "sha256:7843d1efbb0e262a5f9c97f52a4cd52498b19eb1348fded4c5cf766a675a4872",
+        "plan": "sha256:28293c57e419a4704fffc140bda366a548e158080dc8df9c077083268d7e30e7",
+        "trace": "sha256:69af2ed5eb315cf4af2539f978cba9141871855b30f1a3d4e46d14496f3752f9"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-offboard-body-rate-land-001/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-offboard-body-rate-land-001.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-offboard-body-rate-land-001/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-offboard-body-rate-land-002",
+      "cell_id": "det-offboard-body-rate-land",
+      "digests": {
+        "frozen_evaluation": "sha256:24ede5adbec11abe8f3fb28d4a3265b536f3fe0dcb7632832328d9c3b4d25268",
+        "plan": "sha256:b2fcb22cc544caee10c5cf8ea1d0f6c666e55ba9e70f43f4086e5540d196dde9",
+        "trace": "sha256:9e469b7e5fd742cceb95ebe6e417695490cdec3453ebb11c55e7304fa307e1bf"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-offboard-body-rate-land-002/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-offboard-body-rate-land-002.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-offboard-body-rate-land-002/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-offboard-body-rate-land-003",
+      "cell_id": "det-offboard-body-rate-land",
+      "digests": {
+        "frozen_evaluation": "sha256:545a5104c95ba2b9dc2115e16d94037e05597041c6a53d21b7206f80c122c3d1",
+        "plan": "sha256:0aa92b0e6b05a6bd7754d6c6bdafe68c29a856cd967eadbdea4b6e681bc7c615",
+        "trace": "sha256:869c5d6789b23e5ffc6270cdf97599074849ae5327f1a14301a31db640af55f3"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-offboard-body-rate-land-003/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-offboard-body-rate-land-003.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-offboard-body-rate-land-003/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-offboard-body-rate-land-004",
+      "cell_id": "det-offboard-body-rate-land",
+      "digests": {
+        "frozen_evaluation": "sha256:7c92660b9ede37163fe803e8d4d80cc8920fad6decd050d5f26c9473cfd9c9c8",
+        "plan": "sha256:16624c7a74a475182d0be4c14cc80b00fa19906a638318f478789ab53f095e12",
+        "trace": "sha256:af495bb3a281502a147c463863e78cacb20a1573bff0eade32df87e9a8301345"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-offboard-body-rate-land-004/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-offboard-body-rate-land-004.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-offboard-body-rate-land-004/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-offboard-body-rate-land-005",
+      "cell_id": "det-offboard-body-rate-land",
+      "digests": {
+        "frozen_evaluation": "sha256:75ae8d2bfd062a433b732a5fdb6a144b2842c728b60af70c0cf1721edde6a1f8",
+        "plan": "sha256:fd3a622456bbb55d7caadd2a1086c727780344e67dc706efe6f95e242fceca17",
+        "trace": "sha256:bed138ab87b87c69203a4f76abc332a37b3b4897bcf28547e396b9828f3efafb"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-offboard-body-rate-land-005/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-offboard-body-rate-land-005.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-offboard-body-rate-land-005/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-offboard-trajectory-hold-001",
+      "cell_id": "det-offboard-trajectory-hold",
+      "digests": {
+        "frozen_evaluation": "sha256:b777278e51e9def05fffd599c3e08ab2172d998b5d628e476b437ea6081350b1",
+        "plan": "sha256:3e4cd1990f6850a2c4555216d729accb7c9fdde0b0840ab47710cae6ea0c90e9",
+        "trace": "sha256:5c5faaca3321c4e558c03117d74cc96627e35adb9a50db2d8217878b8381c654"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-offboard-trajectory-hold-001/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-offboard-trajectory-hold-001.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-offboard-trajectory-hold-001/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-offboard-trajectory-hold-002",
+      "cell_id": "det-offboard-trajectory-hold",
+      "digests": {
+        "frozen_evaluation": "sha256:280ed4457894b84dd45911c3d85f4e993240184917324580e879385a3105ef20",
+        "plan": "sha256:ebe828bfa8a56378ae685d7552eeca6abe862f07d4652609a27079e00aa52047",
+        "trace": "sha256:1fe0975d1ce21622367ced22b0a535c9d528dc1c6c01c0dc295d6c695311ab2f"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-offboard-trajectory-hold-002/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-offboard-trajectory-hold-002.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-offboard-trajectory-hold-002/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-offboard-trajectory-hold-003",
+      "cell_id": "det-offboard-trajectory-hold",
+      "digests": {
+        "frozen_evaluation": "sha256:3a2c3539901a30e33078ea6ecbb0cbed0ae6fb3d3ef9dbb7a277ab1c6e0c69a2",
+        "plan": "sha256:a8fdf6390d0a9e2cb7cefeb661bdfc41b335baae650d590eee7f3ad35677ed03",
+        "trace": "sha256:7f06adbedd73003281714005421c0ac7783f1daffdc58352d70d9672f00adf45"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-offboard-trajectory-hold-003/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-offboard-trajectory-hold-003.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-offboard-trajectory-hold-003/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-offboard-trajectory-hold-004",
+      "cell_id": "det-offboard-trajectory-hold",
+      "digests": {
+        "frozen_evaluation": "sha256:52a4b5fb121e121b19e973892c1eb9e0a75784f216243f29db590640853eb60c",
+        "plan": "sha256:d6df250e9d4c4137125bcdf46b23e2025aa19c0ea4587ca83f91c2e3a3a7e104",
+        "trace": "sha256:a1cdeb18708f16619f9463a3ff767e1c3c04c419fa9c8db17f0293d0eb062f62"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-offboard-trajectory-hold-004/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-offboard-trajectory-hold-004.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-offboard-trajectory-hold-004/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-offboard-trajectory-hold-005",
+      "cell_id": "det-offboard-trajectory-hold",
+      "digests": {
+        "frozen_evaluation": "sha256:0e8d5b147f0e4f5739b9899122adaf3170354a4716367b274dfb0ad8d27927af",
+        "plan": "sha256:30172a6d3209b1c9140502c8f30548eb580bb3af57b910f7f28be4eb15cae4b9",
+        "trace": "sha256:ee401101474df741ace78ef6492b4cfb99c2df3c4908437cd131be310af31ed8"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-offboard-trajectory-hold-005/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-offboard-trajectory-hold-005.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-offboard-trajectory-hold-005/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-offboard-trajectory-land-001",
+      "cell_id": "det-offboard-trajectory-land",
+      "digests": {
+        "frozen_evaluation": "sha256:8de456c678418e0fe4289abfa34aaffef1920af5208d074640bf369532bd9c4a",
+        "plan": "sha256:38e5839cb7126cfa27b09135cb144d720036b08c1686cfd1b134ec3bf2233bce",
+        "trace": "sha256:f24f8861e69d010719fc996ab398f5a7a5d64c7145f06b894d4a11f64a35858d"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-offboard-trajectory-land-001/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-offboard-trajectory-land-001.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-offboard-trajectory-land-001/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-offboard-trajectory-land-002",
+      "cell_id": "det-offboard-trajectory-land",
+      "digests": {
+        "frozen_evaluation": "sha256:35e52ce3800f776b361c3b80f474eac08853d29d906f7446090098b2647a36f0",
+        "plan": "sha256:b067ff2a3a11427568561418666f433ae6862b3df4e4071e505f377ab761b804",
+        "trace": "sha256:3292021601ab2a80b4e0b07816ddd006091443e577ea39ebee5d829a527a45f9"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-offboard-trajectory-land-002/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-offboard-trajectory-land-002.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-offboard-trajectory-land-002/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-offboard-trajectory-land-003",
+      "cell_id": "det-offboard-trajectory-land",
+      "digests": {
+        "frozen_evaluation": "sha256:83937c2be358cf011e3a65a3820dd29ca3f759af8aae7204ea331dcff0837cf7",
+        "plan": "sha256:0a680b672bc5c40e05d50c24a267bc4458e9f4c3ab251e820e175af99266fef5",
+        "trace": "sha256:9f57be547b72d69ba8bc60ad4ba4be47cb55bc5bd7925975ef8fee024d0d9684"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-offboard-trajectory-land-003/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-offboard-trajectory-land-003.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-offboard-trajectory-land-003/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-offboard-trajectory-land-004",
+      "cell_id": "det-offboard-trajectory-land",
+      "digests": {
+        "frozen_evaluation": "sha256:f28ce00bb5c4b665eac41d6e561ee005727b99463753c0d2a955a0f6af08020c",
+        "plan": "sha256:ac49d9abcfc112d2e3dbc5195aea9b5733e17379e5ed0be55d389811a45a5373",
+        "trace": "sha256:8aef94101154388cb94106687a37dedeb15582fe3ab1b77f8845a58e16adf214"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-offboard-trajectory-land-004/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-offboard-trajectory-land-004.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-offboard-trajectory-land-004/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-offboard-trajectory-land-005",
+      "cell_id": "det-offboard-trajectory-land",
+      "digests": {
+        "frozen_evaluation": "sha256:f06b238a67e4a74b427556541d6d049c1c53438bbe9e7678fe2a7a1488c5b973",
+        "plan": "sha256:746e116abf9695570827841405a386e5b28a3151af108e55bbe7ed00de066a3d",
+        "trace": "sha256:8b05d67f7b084cb0288a8d0e61207392bf948fa3744801819da1391b23e1beb1"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-offboard-trajectory-land-005/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-offboard-trajectory-land-005.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-offboard-trajectory-land-005/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-offboard-trajectory-rtl-001",
+      "cell_id": "det-offboard-trajectory-rtl",
+      "digests": {
+        "frozen_evaluation": "sha256:cd379bbdfacc78986a875c0307ab7b7503a13990072dcdcff19b76f5e3ac7b7c",
+        "plan": "sha256:1d34949ba6c04202e51346223746b4716fd50ea359e482382c690a874f121896",
+        "trace": "sha256:15553f91848a7d1949189f23fd11ccb5dd7e1211a853d34a551bd667e2e4ae91"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-offboard-trajectory-rtl-001/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-offboard-trajectory-rtl-001.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-offboard-trajectory-rtl-001/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-offboard-trajectory-rtl-002",
+      "cell_id": "det-offboard-trajectory-rtl",
+      "digests": {
+        "frozen_evaluation": "sha256:1bf9460760439fe5c37a8122eaaeffa98f9e150d9dd379d33c2429f07ff13886",
+        "plan": "sha256:c8e8b3b7fcf1c51e222098efe82ef1ad7a43e15f36dc97bd3d4608d5ed584b4b",
+        "trace": "sha256:558756ed8fbdab2e7ffcf9de7e43c33f25e2e220f894a8555648b2a93b615fa2"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-offboard-trajectory-rtl-002/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-offboard-trajectory-rtl-002.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-offboard-trajectory-rtl-002/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-offboard-trajectory-rtl-003",
+      "cell_id": "det-offboard-trajectory-rtl",
+      "digests": {
+        "frozen_evaluation": "sha256:1ca00e147857372db428f65151286eb7b1e15fed31013bf752d0fe91747fdb8b",
+        "plan": "sha256:64418443805297ad2e9ede27c671906bd121f50638ee4b105e4eacf1bf3980ec",
+        "trace": "sha256:cd859adb4da74e9508d0cffe2aa9d2d0f7e88a71fb9abdc6ef8b12952122e43e"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-offboard-trajectory-rtl-003/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-offboard-trajectory-rtl-003.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-offboard-trajectory-rtl-003/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-offboard-trajectory-rtl-004",
+      "cell_id": "det-offboard-trajectory-rtl",
+      "digests": {
+        "frozen_evaluation": "sha256:2291db594d01cfbe9d5204974cd1d9384239f387bff2cecd072d5bf2341249b5",
+        "plan": "sha256:b79c166f6ebd1683c3b1bf46b3d8072f5602dd1dfefe0c3b59bf3771935b7760",
+        "trace": "sha256:2428eed61b5b6b36c355c03eb4b1e3df98117262d0626eef35770eed0ce9b0da"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-offboard-trajectory-rtl-004/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-offboard-trajectory-rtl-004.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-offboard-trajectory-rtl-004/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "det-offboard-trajectory-rtl-005",
+      "cell_id": "det-offboard-trajectory-rtl",
+      "digests": {
+        "frozen_evaluation": "sha256:34f8ea2d2f54dda349c8c636f02affaf2ccf6134a77f14f725bca83e24551522",
+        "plan": "sha256:63a78bd344d1e669716dd1be9cfca488b01e67054e8d4de1d1925a8c8df1e6e9",
+        "trace": "sha256:b5d3e4f7ae6bf089dc5cb560546c199ab820a8a2d4d940499bfe0913b83563cc"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/det-offboard-trajectory-rtl-005/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/det-offboard-trajectory-rtl-005.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/det-offboard-trajectory-rtl-005/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-dynamic-health-loss-001",
+      "cell_id": "fault-dynamic-health-loss",
+      "digests": {
+        "frozen_evaluation": "sha256:953d759650e6499637c4ca20a11b68bfc5ab7af9d4b30c84955cccba472f4e2c",
+        "plan": "sha256:f32003d3b1de40e672d2e8d32c88f9ea7ab6b66f60648731efd834bd419d40d7",
+        "trace": "sha256:77f1297081e27777ba1238aa7ffd563754b96150ac65542936a3b8efe9fa235f"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-dynamic-health-loss-001/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-dynamic-health-loss-001.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-dynamic-health-loss-001/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-dynamic-health-loss-002",
+      "cell_id": "fault-dynamic-health-loss",
+      "digests": {
+        "frozen_evaluation": "sha256:5e380e1221cc6bb430e81ec96a76ec7a72249b06ff5cda1e494e6edfbf6d8b72",
+        "plan": "sha256:58c99bbd0f7ea3599f27e20d6227a7eb49f3a5a64c832ca049193815094cf887",
+        "trace": "sha256:05b9ecc5c916df19245d77deac1498d88e9ba7995e96e9d205095d339202452e"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-dynamic-health-loss-002/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-dynamic-health-loss-002.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-dynamic-health-loss-002/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-dynamic-health-loss-003",
+      "cell_id": "fault-dynamic-health-loss",
+      "digests": {
+        "frozen_evaluation": "sha256:085a7c1efafebab5f0109a92b76061b2cd8deac5fda9c1fc303d9c1f87ba0117",
+        "plan": "sha256:b2da6da244defbb0c6c3ae4331668d3e83d56d67963d3068736cbec5874f4132",
+        "trace": "sha256:d493b434071bb34dfabdbe379a2fb9f09730dbcece8d60fffa8926e185c1e5ff"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-dynamic-health-loss-003/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-dynamic-health-loss-003.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-dynamic-health-loss-003/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-dynamic-health-loss-004",
+      "cell_id": "fault-dynamic-health-loss",
+      "digests": {
+        "frozen_evaluation": "sha256:7ccb35300ccb36a31f4b1730c7aeb5cfadcdb97f8aef0894d265476bceb0ea65",
+        "plan": "sha256:ab6e63a492bd188363ebc088977fe3741e8ff95761105ccbd31bd7ef06456fea",
+        "trace": "sha256:c43739a2829ba4098deca510fef8e426d75bb48e856ba20ac2e17dc769672d73"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-dynamic-health-loss-004/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-dynamic-health-loss-004.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-dynamic-health-loss-004/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-dynamic-health-loss-005",
+      "cell_id": "fault-dynamic-health-loss",
+      "digests": {
+        "frozen_evaluation": "sha256:7fc79a31846d5bfb9bde9b91c03d0c3427c1677e0d5ec9da8cfcc7e6dcb4747d",
+        "plan": "sha256:8ce89b33a4885f638958f8c8894be236319e7fe1fa178907939b9cba8aa584d7",
+        "trace": "sha256:a39b9e38a88881c740048ce690afbb41e4647e7417455cac5e3c489b9edf4708"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-dynamic-health-loss-005/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-dynamic-health-loss-005.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-dynamic-health-loss-005/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-dynamic-health-loss-007",
+      "cell_id": "fault-dynamic-health-loss",
+      "digests": {
+        "frozen_evaluation": "sha256:7921e12379a5db4a89e3e7796a871b3eed67e995b3ab1602e95f3849da394e25",
+        "plan": "sha256:1f1532736795c8ad737b21fd0a247b855d01044bbd863cc08140dd95c8c652c1",
+        "trace": "sha256:ff88a7ed612193c44833feeea20a5d6e283b19f3a5b9868d8445ba65782c0456"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-dynamic-health-loss-007/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-dynamic-health-loss-007.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-dynamic-health-loss-007/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-dynamic-health-loss-008",
+      "cell_id": "fault-dynamic-health-loss",
+      "digests": {
+        "frozen_evaluation": "sha256:d554a16fcaa19d3c2c77851eb69fb8940384bcd682b69f665fdcce35b91173bb",
+        "plan": "sha256:9b647f7d7075d95cb488cea13584078c59a7748b3c8c863e238a8aca5c2c2554",
+        "trace": "sha256:eada006aa5d32399d608d0e0f92b3583b4a5f0e3b4becbca087819cd4d190d3e"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-dynamic-health-loss-008/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-dynamic-health-loss-008.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-dynamic-health-loss-008/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-dynamic-health-loss-010",
+      "cell_id": "fault-dynamic-health-loss",
+      "digests": {
+        "frozen_evaluation": "sha256:e99f29fe473e80d81d85331f62ab2c08a4effc49c2cc5104afb0169e853091a2",
+        "plan": "sha256:576b3f588ee0890315c80b30621fdc0635edfce3e700d75adae1b785aafe9808",
+        "trace": "sha256:905f41746cad21cb9f1fe3adac41a1ad175e1580d83329bfdec3f00b0085709f"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-dynamic-health-loss-010/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-dynamic-health-loss-010.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-dynamic-health-loss-010/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-dynamic-process-exit-001",
+      "cell_id": "fault-dynamic-process-exit",
+      "digests": {
+        "frozen_evaluation": "sha256:2f65c3c3a8da15032c56a97ae1a75747fe39332dac3721af25b86f0587d6d979",
+        "plan": "sha256:b4aa70bd4da4d5447c2eb4cde7bf2429b1f87f47d36d912e0c7f073072042878",
+        "trace": "sha256:c294492916c593b62e8fcc7bb183cdd7b5a71f34d19c363cce359ef89c38abc1"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-dynamic-process-exit-001/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-dynamic-process-exit-001.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-dynamic-process-exit-001/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-dynamic-process-exit-002",
+      "cell_id": "fault-dynamic-process-exit",
+      "digests": {
+        "frozen_evaluation": "sha256:f722c58c9bc5e8e54f60a21480d50d8d992f7166d0fa3a19f1465713cff661de",
+        "plan": "sha256:4604c4cf5c5065c0795806ec883cf9444bba0848c9baa1f41f4afc3408b7f1bc",
+        "trace": "sha256:c9e65eca90e77e77896bb303c641cc70f5e02e877550431d6accbc8a67388f3e"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-dynamic-process-exit-002/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-dynamic-process-exit-002.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-dynamic-process-exit-002/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-dynamic-process-exit-004",
+      "cell_id": "fault-dynamic-process-exit",
+      "digests": {
+        "frozen_evaluation": "sha256:15c63af2c74fee7b75d7e847c3716ff124eeda7baf80eb2f69f428ddeac2add3",
+        "plan": "sha256:9ffe0c8873ee40eeada9694c350880de4f978d61d8bc67657e24e9093d2a7488",
+        "trace": "sha256:efff2a2f5c415f5a905854d043fe3ca0fb0192a9cdbfb2411e8bf98c6de925e3"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-dynamic-process-exit-004/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-dynamic-process-exit-004.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-dynamic-process-exit-004/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-dynamic-process-exit-005",
+      "cell_id": "fault-dynamic-process-exit",
+      "digests": {
+        "frozen_evaluation": "sha256:7d319abf2035b73add0e500239872253a41d6d60ee468b7bed328e1ddfe592d4",
+        "plan": "sha256:4d0d140d42b5febdff45f72c077e3cbc2306812444ed477609e7ef602e6e93b4",
+        "trace": "sha256:38d70cf0fac6fb520a8e114d241c3d1b1b80c6a19db558859369b76308545abd"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-dynamic-process-exit-005/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-dynamic-process-exit-005.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-dynamic-process-exit-005/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-dynamic-process-exit-006",
+      "cell_id": "fault-dynamic-process-exit",
+      "digests": {
+        "frozen_evaluation": "sha256:7c7735f64c05868729da531de30315482a642b8afbab05807c1a11f9faa875be",
+        "plan": "sha256:8608cbf3f03b5b54dc094c48de6005889e5e7c0f8e832176a7320fea19ae8f0d",
+        "trace": "sha256:42dec8a130c3dba0d89749b62ccb9149e794f32fb132626f9fcd09341d4cf8a6"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-dynamic-process-exit-006/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-dynamic-process-exit-006.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-dynamic-process-exit-006/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-dynamic-process-exit-007",
+      "cell_id": "fault-dynamic-process-exit",
+      "digests": {
+        "frozen_evaluation": "sha256:adb9e8d302ee64cd1e1476071434769e21128720b066b9015695b2ec3d13a963",
+        "plan": "sha256:4d02f67fbc2776932785e194e21697bd95ce7a44f4aa52eff354a0c34ccf85ab",
+        "trace": "sha256:cbdcb0e724fb9f377b6e4d1c7c9cbd7e2b41100d85bd12c9f47045d6831873dd"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-dynamic-process-exit-007/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-dynamic-process-exit-007.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-dynamic-process-exit-007/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-dynamic-process-exit-008",
+      "cell_id": "fault-dynamic-process-exit",
+      "digests": {
+        "frozen_evaluation": "sha256:b8d27905eb488117fa835f2d0f1581457ce2f6661ba46c341f21500c01d18133",
+        "plan": "sha256:eb6e321b6bb599ce9647dfb58572d737720570776c2d9aaf52dd90ed13630445",
+        "trace": "sha256:13a49a871de1442ff308a0b54ad9914f245045a9da7ee30e4c2f8c969c78196e"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-dynamic-process-exit-008/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-dynamic-process-exit-008.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-dynamic-process-exit-008/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-dynamic-process-exit-009",
+      "cell_id": "fault-dynamic-process-exit",
+      "digests": {
+        "frozen_evaluation": "sha256:1f9015a5b77ad29e979ef1d15eef02d90c4cd89450855ce544c0900b46f1d251",
+        "plan": "sha256:9cf019ff69e3ad3f7ac5734c327cbf4466a0eb05b038b4c96b0aa8f0b96b7202",
+        "trace": "sha256:7c92db82ccd14282c0ae85326dad061bf0ca5a4514008005160c1a949ac854a7"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-dynamic-process-exit-009/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-dynamic-process-exit-009.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-dynamic-process-exit-009/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-dynamic-registration-capacity-001",
+      "cell_id": "fault-dynamic-registration-capacity",
+      "digests": {
+        "frozen_evaluation": "sha256:68beedb26bfc3133b4c57c7827a9e034d23da8c88d33c501132f22432a070c42",
+        "plan": "sha256:9c084cd4cbf8ff406c13fcdd81e7cae3144d6291ae5b727822d0521df0e13306",
+        "trace": "sha256:678065ec875ed3e1784d5acfc482b41615fb3025b8316048531806421d093d40"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-dynamic-registration-capacity-001/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-dynamic-registration-capacity-001.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-dynamic-registration-capacity-001/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-dynamic-registration-capacity-002",
+      "cell_id": "fault-dynamic-registration-capacity",
+      "digests": {
+        "frozen_evaluation": "sha256:f0e2e049f49d73df72674f9148bf66f9282e6189b55c094a5f6c703fec3968f6",
+        "plan": "sha256:a04fbdd1d01be9d3de8ec3ac7848913af5f7e67f1d306189c742b82220b006c3",
+        "trace": "sha256:9ede9724176bb10cb3eb01a8ed4d43b23de7ffbaa302f940057344399b89dd1c"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-dynamic-registration-capacity-002/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-dynamic-registration-capacity-002.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-dynamic-registration-capacity-002/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-dynamic-registration-capacity-003",
+      "cell_id": "fault-dynamic-registration-capacity",
+      "digests": {
+        "frozen_evaluation": "sha256:e69420fb42d663f05e1975839a4e48e169f1091d09c94f6ed78fac719e1071e1",
+        "plan": "sha256:f3b7f585d8570389193f83d06c38dcd68b9e85795424e0090e7b2ebca7e8f210",
+        "trace": "sha256:49f7ca5e08129e58d8069cce7b4dbdd5eaabfa4882905ad34a97ddc463ee9397"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-dynamic-registration-capacity-003/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-dynamic-registration-capacity-003.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-dynamic-registration-capacity-003/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-dynamic-registration-capacity-004",
+      "cell_id": "fault-dynamic-registration-capacity",
+      "digests": {
+        "frozen_evaluation": "sha256:228cecf76d7f14fc0693748af8a8810fa31bc293687199cf668c0f4bec4f9714",
+        "plan": "sha256:8fa7b11fd26bf3b3726b6456eeeb23b5c1e73750651f70bd82bbb16addaad787",
+        "trace": "sha256:74735a81c1e05810e85ee438761fd2fe68133baba5ed2f8381793f59fc6bfeec"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-dynamic-registration-capacity-004/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-dynamic-registration-capacity-004.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-dynamic-registration-capacity-004/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-dynamic-registration-capacity-005",
+      "cell_id": "fault-dynamic-registration-capacity",
+      "digests": {
+        "frozen_evaluation": "sha256:3d45a1978a7de42600c5cc4df3f77497a2a64a6c7b050eeeb18c1f2b7c495c60",
+        "plan": "sha256:3c334e3f32175ee8c7b6d429b021321a53bb037d96d7b5eb2af01365d723989e",
+        "trace": "sha256:8492fbeaaf1d425cec06875a17710ac3810c251b90d102850bc6d3d4019f7ea9"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-dynamic-registration-capacity-005/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-dynamic-registration-capacity-005.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-dynamic-registration-capacity-005/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-dynamic-registration-capacity-007",
+      "cell_id": "fault-dynamic-registration-capacity",
+      "digests": {
+        "frozen_evaluation": "sha256:9bc4e97c353c5d0f929d4514ab3942b225fc66a66bb19eb2cf75a0c2c18387a4",
+        "plan": "sha256:7abb4453da375cec7b6be69f9353dd84739113ec44a1e611e6bbc039a4af3f38",
+        "trace": "sha256:330ea589a5b810d412331380d2ee2bfbb40fa4aa09fed578f14d8b15d582a388"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-dynamic-registration-capacity-007/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-dynamic-registration-capacity-007.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-dynamic-registration-capacity-007/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-dynamic-registration-capacity-008",
+      "cell_id": "fault-dynamic-registration-capacity",
+      "digests": {
+        "frozen_evaluation": "sha256:4a39a364b9c901b277690b00f79f05a680e542b8f29e6cf38cb9f240d8fa9246",
+        "plan": "sha256:3eae0feca9d849fc053cb7e85ff03ae92a6632920c759980018414691babf67a",
+        "trace": "sha256:d44b1871e1db30fdbe96e34d757bbb24c01452af0a2334b728373efff0b63c7e"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-dynamic-registration-capacity-008/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-dynamic-registration-capacity-008.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-dynamic-registration-capacity-008/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-dynamic-registration-capacity-009",
+      "cell_id": "fault-dynamic-registration-capacity",
+      "digests": {
+        "frozen_evaluation": "sha256:d55db215ddcde5b11596d4e9e87cfc5204bc9e3eb123290f778119da17a8aa38",
+        "plan": "sha256:c1800bfa1894f974026a0a136c81af781889d8098e40027f2982e78a00604aff",
+        "trace": "sha256:7b4b200a0e77ad208c8f3c1590471f7844525d2347c17defb8d4e0c9c6e09831"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-dynamic-registration-capacity-009/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-dynamic-registration-capacity-009.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-dynamic-registration-capacity-009/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-offboard-attitude-stall-001",
+      "cell_id": "fault-offboard-attitude-stall",
+      "digests": {
+        "frozen_evaluation": "sha256:88ee30eef89a7f5eb45caf8c0e5b378a5352acefbd58db3423a45b297133a5dc",
+        "plan": "sha256:00975db0f044d07c05a43f3ba40f43489ce027f80338fe5e9bc4883ec93a4f9c",
+        "trace": "sha256:93d7369db0da2302ad08e7c0cc79aaee39aaa7f8b0181ca7c60511217ec4d929"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-offboard-attitude-stall-001/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-offboard-attitude-stall-001.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-offboard-attitude-stall-001/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-offboard-attitude-stall-002",
+      "cell_id": "fault-offboard-attitude-stall",
+      "digests": {
+        "frozen_evaluation": "sha256:0c7984a4f7aaf1c7a9e7d9accdb2088322cef7f6d3623bdf26e53c9f22843621",
+        "plan": "sha256:37fe48b938279444a7e1b1687a579a4128085e037e8d953c31baaa8dd0aae5e5",
+        "trace": "sha256:654b7d19d0f2ea964ae6f4476582acd0ab6d81edf794bee5f111d10a37bb1d9a"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-offboard-attitude-stall-002/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-offboard-attitude-stall-002.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-offboard-attitude-stall-002/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-offboard-attitude-stall-003",
+      "cell_id": "fault-offboard-attitude-stall",
+      "digests": {
+        "frozen_evaluation": "sha256:21ca1795f38efb3c52b4f332faf705723e96d3a9c4af469d1f82e8f5178f427c",
+        "plan": "sha256:637ce8d629ef4d9797ff4db73226711e09ca8d06a3cf4a6bde48d86652ff1773",
+        "trace": "sha256:a2022db28c394b6faec793f2c28abed5b902c95d882f19ce5cd72f4c45ec96c4"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-offboard-attitude-stall-003/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-offboard-attitude-stall-003.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-offboard-attitude-stall-003/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-offboard-attitude-stall-004",
+      "cell_id": "fault-offboard-attitude-stall",
+      "digests": {
+        "frozen_evaluation": "sha256:c1e1236089eecdb488fed280302748ab93d56abd86e408b9778960873c6a06c2",
+        "plan": "sha256:8a588925b20b96ebc143b82cd6c11047123d3feb65791fa581eb28bc3e9aefae",
+        "trace": "sha256:709e0d05c3fa0df16524d5a7efde8b69233d8dd20a1f60a73d067c05d0590a7b"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-offboard-attitude-stall-004/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-offboard-attitude-stall-004.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-offboard-attitude-stall-004/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-offboard-attitude-stall-005",
+      "cell_id": "fault-offboard-attitude-stall",
+      "digests": {
+        "frozen_evaluation": "sha256:fedfe1fa230368a665e1995dbcaa6861cfd580602ac10ea2be551010211622da",
+        "plan": "sha256:2dcdf4164a15e84cee4e7cd9d91fa89c95ac631bc441f9241f0afa9c94d2a27d",
+        "trace": "sha256:23686a14b3ec62d1c1523ad5cf243d24e583f2da81582f3f41562093de292f3b"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-offboard-attitude-stall-005/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-offboard-attitude-stall-005.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-offboard-attitude-stall-005/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-offboard-attitude-stall-006",
+      "cell_id": "fault-offboard-attitude-stall",
+      "digests": {
+        "frozen_evaluation": "sha256:6c98b123f6b40207295b56e3f5c817640f4143dbd8a2464bc49426bb0f5108d0",
+        "plan": "sha256:1d394ab5982ca835c75c00c1bf32581ab5f536ed0ebadfd59ea1208dc973d153",
+        "trace": "sha256:add75230d6cf043741ba9c6bd89529b0e8dcdf14004ec42fa91b58c0a2cd4ca4"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-offboard-attitude-stall-006/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-offboard-attitude-stall-006.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-offboard-attitude-stall-006/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-offboard-attitude-stall-007",
+      "cell_id": "fault-offboard-attitude-stall",
+      "digests": {
+        "frozen_evaluation": "sha256:b800426f8b2cefed8b87fd27b584c9cabc626791aa0a7ccc6c996ab82111b6ac",
+        "plan": "sha256:bbe0beca83e171819a018cb28d0a8792fe87652bb1d392a7c6a3305f0ea3b8e8",
+        "trace": "sha256:5f385f54ed3db65247ec1b2d43af64dddc7a360366ac2b50b196811f8632140a"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-offboard-attitude-stall-007/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-offboard-attitude-stall-007.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-offboard-attitude-stall-007/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-offboard-attitude-stall-008",
+      "cell_id": "fault-offboard-attitude-stall",
+      "digests": {
+        "frozen_evaluation": "sha256:b4ae5fb372fc689d1fca77f260b93543dd13734d0ca95b93537b9a42ee4382da",
+        "plan": "sha256:1ddb23a8bb3723ab125726a9281de4c98d7e135ef12df22f1d82f3dc028549f4",
+        "trace": "sha256:f95acbec327de387c86103c37f5ec49db44b3c22ead275e79890ef17a85f554c"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-offboard-attitude-stall-008/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-offboard-attitude-stall-008.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-offboard-attitude-stall-008/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-offboard-body-rate-stall-001",
+      "cell_id": "fault-offboard-body-rate-stall",
+      "digests": {
+        "frozen_evaluation": "sha256:d715bb1c8448c59093ef5619ef7b5cdafb15196e14fd05de63f195a9e19af979",
+        "plan": "sha256:4ecb5b5bb803daf818b9234f340815ec70fe75a02a735dd7c6719e75b3e55986",
+        "trace": "sha256:3f8725c923eb6641db7159e3e6d1b1825c5d9fcf8488effca2555e6b59029817"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-offboard-body-rate-stall-001/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-offboard-body-rate-stall-001.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-offboard-body-rate-stall-001/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-offboard-body-rate-stall-002",
+      "cell_id": "fault-offboard-body-rate-stall",
+      "digests": {
+        "frozen_evaluation": "sha256:f046e8d785b57a9f51949e05f864d8fce922f107537fe3c4c3966b9d3935abe8",
+        "plan": "sha256:643635d9f71fee785ebea8b0c9bd6a5f2d8363654c429db4078e584dc83d4a90",
+        "trace": "sha256:2c7fafd5f5b5b4eb2fa8894cfaf7fee80356bb1d49d8c3f136c97f6ba8d09fdf"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-offboard-body-rate-stall-002/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-offboard-body-rate-stall-002.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-offboard-body-rate-stall-002/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-offboard-body-rate-stall-003",
+      "cell_id": "fault-offboard-body-rate-stall",
+      "digests": {
+        "frozen_evaluation": "sha256:792e33222bbc352902fabe2f6c38c903cc7bdb098e7ced4c243dd06a7f46a03e",
+        "plan": "sha256:9cca05102a62c97e37709c62a6f74d3751e338cb50cae4de974044ee8210a4a2",
+        "trace": "sha256:84d66d90f8c14dd8c17062a80eddffbc91f382af8128c3ca4c078fac743b3240"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-offboard-body-rate-stall-003/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-offboard-body-rate-stall-003.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-offboard-body-rate-stall-003/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-offboard-body-rate-stall-004",
+      "cell_id": "fault-offboard-body-rate-stall",
+      "digests": {
+        "frozen_evaluation": "sha256:b5bd1f491c1c69e7bc0b3154d8784cd051bf2cb7caf8a6ceebc12571de93336e",
+        "plan": "sha256:19adb0d7ba944fc910485bc2a45443555f9c552fb4a4ec5e6efe2342e342e936",
+        "trace": "sha256:d701a3bbd1f4e92bb0c68d2b8ccf33a48f39ae5a9819a9a76fed7317ddb9ee42"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-offboard-body-rate-stall-004/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-offboard-body-rate-stall-004.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-offboard-body-rate-stall-004/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-offboard-body-rate-stall-005",
+      "cell_id": "fault-offboard-body-rate-stall",
+      "digests": {
+        "frozen_evaluation": "sha256:82c6604b24482e959f8905be5a05749580322806f9a0a90cb49b26f194a7991a",
+        "plan": "sha256:a1116ae24fdbf80361cfe41ba9c6f9eedfa4f97a26b2d9bc73404a99ec33dfac",
+        "trace": "sha256:155f44df605eeaa5b5cb9ee42d08c6ed0e9fc231dc115012fdf0eeea26528219"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-offboard-body-rate-stall-005/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-offboard-body-rate-stall-005.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-offboard-body-rate-stall-005/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-offboard-body-rate-stall-006",
+      "cell_id": "fault-offboard-body-rate-stall",
+      "digests": {
+        "frozen_evaluation": "sha256:c81519b7d94297ae6a1bb6bfe42449e20ab6ae94f870463ccb2ecc276f8dd6dc",
+        "plan": "sha256:94c2542fff098733b0bd76346cd858bcd05d5d3ef989265df5e4ed7296f25de0",
+        "trace": "sha256:9fa67b85f151dff567f35c0559292eb4fb74971dd0759a2516976e4e5680359f"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-offboard-body-rate-stall-006/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-offboard-body-rate-stall-006.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-offboard-body-rate-stall-006/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-offboard-body-rate-stall-007",
+      "cell_id": "fault-offboard-body-rate-stall",
+      "digests": {
+        "frozen_evaluation": "sha256:3860205b58e2ca8afe86a031661f9fa67b2a4715e3ba80259d45ba32f18f2fc4",
+        "plan": "sha256:586b78d7d7635ecf713d972b35e999c16bcd3286c733f570f17dde3b27e1491a",
+        "trace": "sha256:bd11bb3861bc9dd564f342cfb4463582661338bcd43e1f3c9d009192dc5884d6"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-offboard-body-rate-stall-007/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-offboard-body-rate-stall-007.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-offboard-body-rate-stall-007/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-offboard-body-rate-stall-008",
+      "cell_id": "fault-offboard-body-rate-stall",
+      "digests": {
+        "frozen_evaluation": "sha256:0bca67bc3871a8d089d7bf66a951b1d2f2fa0c7daa97d5b8dda9cb640399dbd4",
+        "plan": "sha256:7c57302325cd91bbbdfdf12a98391685697f9024cdd1d651856e758f1af663f5",
+        "trace": "sha256:1927d962af1cc37ec77b38e08d6ffd398140633060b4336427fc6c86147a196d"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-offboard-body-rate-stall-008/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-offboard-body-rate-stall-008.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-offboard-body-rate-stall-008/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-offboard-process-exit-001",
+      "cell_id": "fault-offboard-process-exit",
+      "digests": {
+        "frozen_evaluation": "sha256:7da18c84fcf13b5196d6c410a2a40752db368e0d0ed3e62cc7587ed26b48efab",
+        "plan": "sha256:8fe1173c892433df6296ac823083ecc75719608a34cad8cef3bb974ebd23107b",
+        "trace": "sha256:7665ebf66051e8c78df6c91241ba4e05f30bd77386fcadb483a5f5cae5a7a3e8"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-offboard-process-exit-001/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-offboard-process-exit-001.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-offboard-process-exit-001/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-offboard-process-exit-002",
+      "cell_id": "fault-offboard-process-exit",
+      "digests": {
+        "frozen_evaluation": "sha256:6fd85b7db1242f39bba49af5b0844142e575b32e258be4e5fb5a6dc90442135c",
+        "plan": "sha256:05adc2690d721a24e8d8bec52bc9760d5975a387ab929b3e83a473f6c7fd65cd",
+        "trace": "sha256:c32e4ea4efa0cae2d50be6831faf86371bb4bd7ae99155906783f80d0c81fa5d"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-offboard-process-exit-002/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-offboard-process-exit-002.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-offboard-process-exit-002/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-offboard-process-exit-003",
+      "cell_id": "fault-offboard-process-exit",
+      "digests": {
+        "frozen_evaluation": "sha256:54c342d1346246c96b4b097b8c68eb6cfc130bd448ca4a2e5076b5e0ae62dc93",
+        "plan": "sha256:7c3e9313e17ab7f0b323e42bed14f9b920d10f0f6833dbf3a4cb2eeff19898b1",
+        "trace": "sha256:a1b020e033c09de72c24065210d414cf99fdb53a153aa536b55b105adb86db1a"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-offboard-process-exit-003/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-offboard-process-exit-003.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-offboard-process-exit-003/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-offboard-process-exit-004",
+      "cell_id": "fault-offboard-process-exit",
+      "digests": {
+        "frozen_evaluation": "sha256:95af8873f51be2d85d3151c5aefcc8add6d23a424c831b73cc14dd7cfad6e54d",
+        "plan": "sha256:67544fd453538f8c7c7f0ffa7a0dc1782956bae8f7c6f1a5c9709d6abe054ec4",
+        "trace": "sha256:9c4afa58ea5d8bad646202a00248bcc6620d61ef745f45fbb82729182f4a30e2"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-offboard-process-exit-004/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-offboard-process-exit-004.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-offboard-process-exit-004/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-offboard-process-exit-005",
+      "cell_id": "fault-offboard-process-exit",
+      "digests": {
+        "frozen_evaluation": "sha256:ab9f77fcb94cdbe65e640e691be319bddd7419092f9d67af1e338dadd27d4c72",
+        "plan": "sha256:02fa5c4c1c90afc7f71ea7b1d833b40b923656e22c4029135ff0f9b259f671cf",
+        "trace": "sha256:5cc416377d2626b60ec42a97293946ea97eb49f85ed8125c126b592a052486f8"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-offboard-process-exit-005/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-offboard-process-exit-005.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-offboard-process-exit-005/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-offboard-process-exit-006",
+      "cell_id": "fault-offboard-process-exit",
+      "digests": {
+        "frozen_evaluation": "sha256:f202d811eee31aff882517af16b8cfb046868ff4667d31dad303d1196b18bb51",
+        "plan": "sha256:0c9bbe2490d0e26577a3413779675c29787ab311abcdf8e220a932c038b3fa7f",
+        "trace": "sha256:bbbe354b61e83e08e58752e64dd156d6f1297868add512e44de047a78eba2bab"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-offboard-process-exit-006/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-offboard-process-exit-006.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-offboard-process-exit-006/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-offboard-process-exit-007",
+      "cell_id": "fault-offboard-process-exit",
+      "digests": {
+        "frozen_evaluation": "sha256:491b7328e57de6d5c9d92683fc1e4fed7a248751b9f5c9c535aa263876b17208",
+        "plan": "sha256:d77829343446377e2c7a38d2b50cea10298a895f7dee247ac6c9135423b41f6d",
+        "trace": "sha256:8e50056b23dfc311c85085a0170b6d7a08c1085f7348f6d2994c6a2469d31418"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-offboard-process-exit-007/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-offboard-process-exit-007.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-offboard-process-exit-007/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-offboard-process-exit-009",
+      "cell_id": "fault-offboard-process-exit",
+      "digests": {
+        "frozen_evaluation": "sha256:dd60e4e821092bff021444c1eeb6229303382509a8caa8f05b6b4cdb9185b7af",
+        "plan": "sha256:b85e97e3c4af0a2d56ffce0e92c75c102604e40f9fffec06818af72f9e6f5ef6",
+        "trace": "sha256:ee11dbae732a67e0b0669df4fbf62f4ef1f29a22502f15ee570ccce7daf1bbb7"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-offboard-process-exit-009/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-offboard-process-exit-009.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-offboard-process-exit-009/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-offboard-trajectory-stall-001",
+      "cell_id": "fault-offboard-trajectory-stall",
+      "digests": {
+        "frozen_evaluation": "sha256:817e04831c91d660eb6018f4502bbca2c8fe5a578041e3111e3b000d981f0ee7",
+        "plan": "sha256:3d68e7582d61ded2fded4e1d30812ef47505f582cb1bee074369e041408b0998",
+        "trace": "sha256:fa71c499988052f48f43e9a4cf6afeb283f6695ff174a71318ee351aa2422a66"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-offboard-trajectory-stall-001/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-offboard-trajectory-stall-001.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-offboard-trajectory-stall-001/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-offboard-trajectory-stall-002",
+      "cell_id": "fault-offboard-trajectory-stall",
+      "digests": {
+        "frozen_evaluation": "sha256:31320645330a4e72942d18c1851fba06b0b53f0e9719c3ad52c6abfd2ff713f9",
+        "plan": "sha256:ab3d6aebf8213b872ef1914519dbd4c3931435a2eedba89cb68962b0917f8507",
+        "trace": "sha256:965227b7992f0de91945aadcf53e7436586ed0e4c1280bf252ae574cfbf207ce"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-offboard-trajectory-stall-002/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-offboard-trajectory-stall-002.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-offboard-trajectory-stall-002/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-offboard-trajectory-stall-003",
+      "cell_id": "fault-offboard-trajectory-stall",
+      "digests": {
+        "frozen_evaluation": "sha256:b07669f1755cf553b043d34bde84fb71ddd657e957bdef801275d9db92260358",
+        "plan": "sha256:80b0b0bad3bd452425469800240cf9d7191289c8715c77a0ee5f85f5ff3fea36",
+        "trace": "sha256:50e8d090262cedcb836ee5fe72138e35448dcd14f184f86f8e3eab352fca79bf"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-offboard-trajectory-stall-003/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-offboard-trajectory-stall-003.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-offboard-trajectory-stall-003/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-offboard-trajectory-stall-004",
+      "cell_id": "fault-offboard-trajectory-stall",
+      "digests": {
+        "frozen_evaluation": "sha256:752c85a84d3829753c11b085a0212e8b732b99586a55cc91ce2593a63c57ef21",
+        "plan": "sha256:9ab72387c515dab00c525fa3627eaac118962f7901421c084efbe567b8bb95c3",
+        "trace": "sha256:4a39156ae41cb23d2fc071c7ed665b1c0c59194bdd8959ae81627191155c3360"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-offboard-trajectory-stall-004/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-offboard-trajectory-stall-004.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-offboard-trajectory-stall-004/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-offboard-trajectory-stall-005",
+      "cell_id": "fault-offboard-trajectory-stall",
+      "digests": {
+        "frozen_evaluation": "sha256:deff670c7ccc24444da6e8cf2be322e252dde2615d24ae291af3d57fd8a2eb53",
+        "plan": "sha256:13e6a9597275f2a8de6308754bfd02013de0202a16022128b637f859627d137f",
+        "trace": "sha256:389ecd49ccc37e03cf0ced8d0704eaff66bf3d4f4e3c3f60d95554219f30f79a"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-offboard-trajectory-stall-005/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-offboard-trajectory-stall-005.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-offboard-trajectory-stall-005/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-offboard-trajectory-stall-006",
+      "cell_id": "fault-offboard-trajectory-stall",
+      "digests": {
+        "frozen_evaluation": "sha256:8a5285789651678582885f18ec87462ea6f35f21325b194091da204a82e25b95",
+        "plan": "sha256:82141fddf9285259781c5987f1cf094022433998ed705f4a6869b1f9eabaa921",
+        "trace": "sha256:0ad737b3c4b604ec03eb8a686195f24e7eddd837b0e58e4f147029d3ce7fae60"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-offboard-trajectory-stall-006/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-offboard-trajectory-stall-006.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-offboard-trajectory-stall-006/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-offboard-trajectory-stall-007",
+      "cell_id": "fault-offboard-trajectory-stall",
+      "digests": {
+        "frozen_evaluation": "sha256:6b1d6aa09b6b068899718ee729caedf7a9837540c1fbc0f97c09e3cfb539c525",
+        "plan": "sha256:a6eeaac881ddcf629ea962ecaf121028b4f50b60f4b9a8e4ea2e2b7f9d22ee73",
+        "trace": "sha256:41c3645086f06042e0c54d84fec2c43235cdb15604169a5d05c5e621bd181a60"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-offboard-trajectory-stall-007/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-offboard-trajectory-stall-007.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-offboard-trajectory-stall-007/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "fault-offboard-trajectory-stall-008",
+      "cell_id": "fault-offboard-trajectory-stall",
+      "digests": {
+        "frozen_evaluation": "sha256:f5548e5149704d82563fb8e5ce08b7fc82048d9a800fbf571f013a87f260da7e",
+        "plan": "sha256:beafc2989976f120df47737c0de9deb637292fe8160f72cbb8ad938845da02c7",
+        "trace": "sha256:5fd71127ab54be853724538484de10e39d694bc530e100c504e1bca749875de4"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/fault-offboard-trajectory-stall-008/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/fault-offboard-trajectory-stall-008.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/fault-offboard-trajectory-stall-008/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-executor-after-001",
+      "cell_id": "timing-executor-after",
+      "digests": {
+        "frozen_evaluation": "sha256:f4ec034ed58f8a075b52bb35dd53b559ece7349f1a9e8490af639d67aa4cab05",
+        "plan": "sha256:50c0f0c0b43c3a977d216cdae471dfe77c8ba2988e62e40cf3a70f79ec1c5f00",
+        "trace": "sha256:44808c690f372b336fd9ca499ac38d68de290c01f12cd022653f1cfce8d898e2"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/timing-executor-after-001/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/timing-executor-after-001.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/timing-executor-after-001/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-executor-after-002",
+      "cell_id": "timing-executor-after",
+      "digests": {
+        "frozen_evaluation": "sha256:5331098afd79e08389d8f994a340cca75c25e621a8f111057f50dbbf3bb74dac",
+        "plan": "sha256:ccf41cd11528b4b484e5784ac49fee644f8973b88707a79e9742ceb9b1a1ef8a",
+        "trace": "sha256:5315d61e11e048f510e919cb1e83fb6ffa02182d234aaea366dfd534f693a269"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/timing-executor-after-002/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/timing-executor-after-002.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/timing-executor-after-002/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-executor-after-003",
+      "cell_id": "timing-executor-after",
+      "digests": {
+        "frozen_evaluation": "sha256:49d872eecc77a69efc076e76abab578def6a46984b43ae797d7f7243624e4040",
+        "plan": "sha256:4b672855b63067172aede3f250d8cb61f1d9aaef2f42714efad60e191c19ee77",
+        "trace": "sha256:1f2160862c30ccf70196805e8568c20514394c9bf93b33814695f1f81584f56c"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/timing-executor-after-003/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/timing-executor-after-003.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/timing-executor-after-003/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-executor-after-004",
+      "cell_id": "timing-executor-after",
+      "digests": {
+        "frozen_evaluation": "sha256:4f8c41f9b9a48a0e06d5bbb616ebf6bd1ecbcd2aa1135b6c6c1506043da78b72",
+        "plan": "sha256:f581dd003f06d321f1986595a9ee87e2cb49ac38a04e6eb8cef54afa3d4b1afe",
+        "trace": "sha256:f162811a9fa7c4b9515ca858ce5dd07740f9b1e957e68f852214e83f02e3a7b2"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/timing-executor-after-004/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/timing-executor-after-004.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/timing-executor-after-004/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-executor-after-005",
+      "cell_id": "timing-executor-after",
+      "digests": {
+        "frozen_evaluation": "sha256:137bbce3cd47ef05b115f361f58d401824b924afaf4c564bbe713cd76f636a19",
+        "plan": "sha256:f832df2f01b7bc592d3316c652e2a44f2716d1b73ada78321bf40ad563c8d3db",
+        "trace": "sha256:7d6aa2781e4a4d7310fe9b0ddaf8dd1e50b3b3b193b603874edd00bc72a2720b"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/timing-executor-after-005/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/timing-executor-after-005.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/timing-executor-after-005/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-executor-after-006",
+      "cell_id": "timing-executor-after",
+      "digests": {
+        "frozen_evaluation": "sha256:60e336a664210769944c7036399a356aff7bfeb8479ef5ee5ba655a34fed8363",
+        "plan": "sha256:2ccb9417e1a13776019e2b67325ded932bd2fd475942d4215aabf942c22cdd6a",
+        "trace": "sha256:71b2bf9b9c7d5783699636ecd5ef0474da0ee2c6a4f4cb0002fae5f0ac52f5ef"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/timing-executor-after-006/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/timing-executor-after-006.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/timing-executor-after-006/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-executor-after-007",
+      "cell_id": "timing-executor-after",
+      "digests": {
+        "frozen_evaluation": "sha256:2fa3b5b092ec1685667307d3a26d24ed46a5af8616947585b648caff8552cc47",
+        "plan": "sha256:5173a7a7329468314bb6b7a77f33458abbb5dd097d426ada26b6a3a60f98389a",
+        "trace": "sha256:c8aaac9c33b9af83d0126d1c69d92282150e94f81a8100c68ce464624602e529"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/timing-executor-after-007/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/timing-executor-after-007.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/timing-executor-after-007/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-executor-after-008",
+      "cell_id": "timing-executor-after",
+      "digests": {
+        "frozen_evaluation": "sha256:f3110dc710191a47fc073b841db775463c39343333d3c939af03d0438b21b28e",
+        "plan": "sha256:70ff8308326cc3c617f04012785cd2a4c699907ea2b7fea752b24817eee7751e",
+        "trace": "sha256:4d16aeb3b37678becd605dec9ebfe82747a38b9e34c989c5744aab22a1c12f25"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/timing-executor-after-008/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/timing-executor-after-008.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/timing-executor-after-008/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-executor-after-009",
+      "cell_id": "timing-executor-after",
+      "digests": {
+        "frozen_evaluation": "sha256:ba269f38388750e3ad9fdb406e60f5ece54f743f49801ebfffaed47cc574620e",
+        "plan": "sha256:7d874b41edebaec2515437ffedab08c8841e30511f935ac45063591da657c0c9",
+        "trace": "sha256:579d06764879e126249baa2decf3caf2a855455e4383c3bb87fe90def97421c0"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/timing-executor-after-009/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/timing-executor-after-009.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/timing-executor-after-009/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-executor-after-010",
+      "cell_id": "timing-executor-after",
+      "digests": {
+        "frozen_evaluation": "sha256:7b2b9a254a41ab0dc826bf85a3d8fce3011ad607af33199cf1fe7fbaacdd2b0d",
+        "plan": "sha256:9f65d9716ab605db39cb1920e64910edb541aeebbca02f685f0e0270c8fb6d1a",
+        "trace": "sha256:55418d556d9bf1c56dfec0de8fbc67385518401dc979d4485b46648dbfe991f5"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/timing-executor-after-010/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/timing-executor-after-010.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/timing-executor-after-010/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-executor-near-001",
+      "cell_id": "timing-executor-near",
+      "digests": {
+        "frozen_evaluation": "sha256:7a401bdda717417ab6cebb04bae53564735100d4cfc94a87ef96517bedf6766e",
+        "plan": "sha256:279ec1c6e23a86b25d9bc9c6062fc7d7145929cd77575148d9213d367a1dd395",
+        "trace": "sha256:c5566d7212662469da32f194379512344291e23d7498ead2a69a215ec6fff65d"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/timing-executor-near-001/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/timing-executor-near-001.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/timing-executor-near-001/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-executor-near-002",
+      "cell_id": "timing-executor-near",
+      "digests": {
+        "frozen_evaluation": "sha256:dbde8a8bcc18dca1282c524183c349ad78a22c407fc298cc528acc61bee778ed",
+        "plan": "sha256:87f01dfc3485b71c94df5b40a4d73afdd82de187b47ddcd119ee4628651c389e",
+        "trace": "sha256:c4f873700eafdfefafa2a86b7348129f766d7d168fde9aec4c2246dfdbed4753"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/timing-executor-near-002/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/timing-executor-near-002.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/timing-executor-near-002/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-executor-near-003",
+      "cell_id": "timing-executor-near",
+      "digests": {
+        "frozen_evaluation": "sha256:cc404ed253327ef9aa86936cfda58fabf0e4721dec28f46ab16a1186f9b47b18",
+        "plan": "sha256:c0cd19c0f4c87070eb3670bbb1b289f2153b38a2dfdcc05680dc3233c88b4cb9",
+        "trace": "sha256:1d8492456bd3d2eb65d068f6689a3efabfd7d6359b98454a0cea98597fb67d39"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/timing-executor-near-003/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/timing-executor-near-003.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/timing-executor-near-003/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-executor-near-004",
+      "cell_id": "timing-executor-near",
+      "digests": {
+        "frozen_evaluation": "sha256:f83a332dff9d77459a7073f5f0755df21f733d8f19752122fc5192b8837fb3a3",
+        "plan": "sha256:68d5d7a988f548577c7e1f7cfc51d070d6e33b7bbb188d9267700f65c6f15393",
+        "trace": "sha256:450495d162e8a3145be9db913331d0c94968a2cda3c18295244a5403861f3c02"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/timing-executor-near-004/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/timing-executor-near-004.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/timing-executor-near-004/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-executor-near-005",
+      "cell_id": "timing-executor-near",
+      "digests": {
+        "frozen_evaluation": "sha256:6ed2db941484d6591fa68e2284b0e662bf8e31d837b68f3530631952b04d6624",
+        "plan": "sha256:7492af2a566f4fc85ecf91148bc28bad36f743f753dd6578b0110aec92618964",
+        "trace": "sha256:c9e899db1792562851685369a46ebb5d0e4bce66ffb241fdd9fd739b7c743d8f"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/timing-executor-near-005/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/timing-executor-near-005.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/timing-executor-near-005/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-executor-near-006",
+      "cell_id": "timing-executor-near",
+      "digests": {
+        "frozen_evaluation": "sha256:a45220a7def959ad908431283dccd82b65394e1b773c314d579764681d11eb73",
+        "plan": "sha256:bc7039bcd5b7cf9110430f3021c98c98b5e6d4deed69eaec915da75cb466d253",
+        "trace": "sha256:3f050cd9cbfb6100c76b5d135c8c079e6fde167ad9eaca7e1704fdf836099122"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/timing-executor-near-006/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/timing-executor-near-006.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/timing-executor-near-006/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-executor-near-007",
+      "cell_id": "timing-executor-near",
+      "digests": {
+        "frozen_evaluation": "sha256:c68a47497bf9982dbcd544cd7123bd2e655a3d7de8b29132668aecd11b6b1eaa",
+        "plan": "sha256:7a1819d45cb44566e79841bb431efe4f50b37661fed04ebd0266a7272b4b6569",
+        "trace": "sha256:def90e31082009f98ec6f0c9cf6903cf242ecc296eaf02f4fd9fe2e6905fd412"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/timing-executor-near-007/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/timing-executor-near-007.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/timing-executor-near-007/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-executor-near-008",
+      "cell_id": "timing-executor-near",
+      "digests": {
+        "frozen_evaluation": "sha256:04f5754fde25393c709ba4ada928e2a63caae09c7dafb556e6fef42de8502d9f",
+        "plan": "sha256:410f0c557047bbacc21c57a226120e19670245821933f8bdac02125fa72ba82d",
+        "trace": "sha256:f613b66503afbb7d77129bc6e4b08b12ae56e00923fc6af709d9f111a8162743"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/timing-executor-near-008/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/timing-executor-near-008.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/timing-executor-near-008/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-executor-near-009",
+      "cell_id": "timing-executor-near",
+      "digests": {
+        "frozen_evaluation": "sha256:263143475748e25ffe9c065629591550f856246a85b31247dc953a1e68dc1139",
+        "plan": "sha256:8a23572fe1d04d592fd5195554b92b90dd80ec66336e17e6450dbcc6106b43fb",
+        "trace": "sha256:b40f3d03216d06b0f7c5a6cbc69be68727baa1ff21c45eabe27846cd6218d3b7"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/timing-executor-near-009/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/timing-executor-near-009.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/timing-executor-near-009/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-executor-near-010",
+      "cell_id": "timing-executor-near",
+      "digests": {
+        "frozen_evaluation": "sha256:5d1112c6022268c9b88ab90bec514ccf7a87bdc50e080949f31c3ca04ceb6c70",
+        "plan": "sha256:b2c3f4b8a99375cf0aa142ff4a6de9c4c69c3ea3efa04845bfdaa7d84802f5d3",
+        "trace": "sha256:f018a01e4c657fb361827cab637023f5630dc6073a7e0035233e745e9f320f8a"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/timing-executor-near-010/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/timing-executor-near-010.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/timing-executor-near-010/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-offboard-reentry-hold-001",
+      "cell_id": "timing-offboard-reentry-hold",
+      "digests": {
+        "frozen_evaluation": "sha256:5f168c1ffe98cc4435779356794dc6ed3d6f2e82092170f8d19d99797f31da53",
+        "plan": "sha256:2169a3e81c171c4bd93eccdc69757a028c4a81e42a02e3c25b2112ea9fd1d316",
+        "trace": "sha256:421480f68bd679debc199279ba6dd2647dedb4deb35f275262c78c58d72f30b3"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/timing-offboard-reentry-hold-001/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/timing-offboard-reentry-hold-001.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/timing-offboard-reentry-hold-001/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-offboard-reentry-hold-002",
+      "cell_id": "timing-offboard-reentry-hold",
+      "digests": {
+        "frozen_evaluation": "sha256:26730d159c32102b1ff41aa213a69d3551f10b19cb3a128331511a8a03e45174",
+        "plan": "sha256:99586e9cfa05c3e18c00f30f2f39ee53cd8a61b89e4e93e7c1b90e86f7a24705",
+        "trace": "sha256:d08709cf9a1679ef9bf09a03bcab3b297aed92e26be295f32ee4b44856a54860"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/timing-offboard-reentry-hold-002/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/timing-offboard-reentry-hold-002.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/timing-offboard-reentry-hold-002/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-offboard-reentry-hold-003",
+      "cell_id": "timing-offboard-reentry-hold",
+      "digests": {
+        "frozen_evaluation": "sha256:db4b1214ee12fd52914e734ff9383d2e74dae6da5be0c027a302cd704cb29563",
+        "plan": "sha256:676b61a6f1382266fb4c71d0ac251715f8ab89c6c8590fcdd1aecfac98b746fc",
+        "trace": "sha256:2b1235e2fadcd2d5d3b94abf6e6b310bdd7bb82eef4ab3a2c677a6991d73a677"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/timing-offboard-reentry-hold-003/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/timing-offboard-reentry-hold-003.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/timing-offboard-reentry-hold-003/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-offboard-reentry-hold-004",
+      "cell_id": "timing-offboard-reentry-hold",
+      "digests": {
+        "frozen_evaluation": "sha256:6b514b050593ac949e8bd3beca665fe05cc1728350b6e99c0a6819a72fc7c63f",
+        "plan": "sha256:d907b683f0e7dd3ff1646b087d7756c43493fb53d30fca7cd56ada0ecf5a6d2c",
+        "trace": "sha256:a35c548d3028abdb677064d47082bc7ee9c6129adbc053edacb6118dc3556171"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/timing-offboard-reentry-hold-004/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/timing-offboard-reentry-hold-004.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/timing-offboard-reentry-hold-004/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-offboard-reentry-hold-005",
+      "cell_id": "timing-offboard-reentry-hold",
+      "digests": {
+        "frozen_evaluation": "sha256:5b53b2f1d16482df57b1413c6a43cdfb8e6b47d1dbdea400a1bbe67c9007cd81",
+        "plan": "sha256:acaaf418755fb2454e9a36aa88d5c8f373a24676d7cd7df16c9bdf3a084e6898",
+        "trace": "sha256:32671990f4cbc2f0cf13bba2e5d953e4f91e820d76a4f62a313b8144e1307d97"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/timing-offboard-reentry-hold-005/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/timing-offboard-reentry-hold-005.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/timing-offboard-reentry-hold-005/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-offboard-reentry-hold-006",
+      "cell_id": "timing-offboard-reentry-hold",
+      "digests": {
+        "frozen_evaluation": "sha256:a97b4dbfda9f1eafcafb134aafe1747cd720ca51781fce58ee2b7c7b01160c03",
+        "plan": "sha256:95114165e5894f5bb180e2152ac466468cfef4b6f3e50bafe42f8a73e9236631",
+        "trace": "sha256:f0ac827553510f8f1e872cc102714c9496757df53337ab740058c51211e6873f"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/timing-offboard-reentry-hold-006/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/timing-offboard-reentry-hold-006.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/timing-offboard-reentry-hold-006/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-offboard-reentry-hold-007",
+      "cell_id": "timing-offboard-reentry-hold",
+      "digests": {
+        "frozen_evaluation": "sha256:58202f69fa811df8aa3710721257585be081b1943b94ef11531a6e45e35bdc5f",
+        "plan": "sha256:81cdbebd5abf45ccf9ef06891e164ba32ab499c0e87c87ca37b38c796c351e5d",
+        "trace": "sha256:cf551da550a200ad853ae6de2c26f728793bc51b5bcc55fb722c7fdcf71a052e"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/timing-offboard-reentry-hold-007/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/timing-offboard-reentry-hold-007.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/timing-offboard-reentry-hold-007/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-offboard-reentry-hold-008",
+      "cell_id": "timing-offboard-reentry-hold",
+      "digests": {
+        "frozen_evaluation": "sha256:f85aea255270ff46728d0763a60293c26e49ee6f0906fa75e72e6008e20d470e",
+        "plan": "sha256:c82327b7b6e4e5df6187f83563df640c3641c87d439b4e82d9832c7960146c4c",
+        "trace": "sha256:746b51561a8e6e11d9c61d395dc7dc3bae66c00c8c511d6685842eda08b3776a"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/timing-offboard-reentry-hold-008/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/timing-offboard-reentry-hold-008.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/timing-offboard-reentry-hold-008/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-offboard-reentry-hold-009",
+      "cell_id": "timing-offboard-reentry-hold",
+      "digests": {
+        "frozen_evaluation": "sha256:e5c8cf63d44cfe019d17c99ff02a362317fe4627d8c1fa37f5ad60d3a8b26a5d",
+        "plan": "sha256:f4471cb1210a910e08a99b779c3209cdb959ccf2fbce260ec4b24ae8f7515350",
+        "trace": "sha256:a74c88ef2ced51ca45d51e17ab2d855624bd3a4114cd1922167ec75fd59345da"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/timing-offboard-reentry-hold-009/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/timing-offboard-reentry-hold-009.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/timing-offboard-reentry-hold-009/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-offboard-reentry-hold-010",
+      "cell_id": "timing-offboard-reentry-hold",
+      "digests": {
+        "frozen_evaluation": "sha256:e6652d3c99d3ad9e36a00678ee3595daaba71c84eda6d4a5294c149b7152d0eb",
+        "plan": "sha256:f8e97210d3f3d5be929b18d467833ccc90898242c03273ce2ca86c318d305f4b",
+        "trace": "sha256:21b145beb0919647981f567199cf10366ede75dd0c058120dec27cdcd6feb488"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_v1/results/timing-offboard-reentry-hold-010/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-v1/plans/timing-offboard-reentry-hold-010.json",
+      "study_id": "motivation-thor-v1",
+      "trace": "runs/motivation-thor-v1/timing-offboard-reentry-hold-010/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-executor-before-remediation-001",
+      "cell_id": "timing-executor-before-remediation",
+      "digests": {
+        "frozen_evaluation": "sha256:3b2b0988acc2220d1a4ce4677675654a4bc2f202199b3008b6a0cb084b7e43e2",
+        "plan": "sha256:5d21995f97057aa082324b5ad42790e3e17ae673c90a19c599a1c156c19ce682",
+        "trace": "sha256:6bba1bb63f49e8c28f0abe8e54cd9cac8fe6c3c18def7ef9f7a711f5c481c205"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_remediation_v1/results/timing-executor-before-remediation-001/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-remediation-v1/plans/timing-executor-before-remediation-001.json",
+      "study_id": "motivation-thor-remediation-v1",
+      "trace": "runs/motivation-thor-remediation-v1/timing-executor-before-remediation-001/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-executor-before-remediation-002",
+      "cell_id": "timing-executor-before-remediation",
+      "digests": {
+        "frozen_evaluation": "sha256:0e45174592655b71e80f083ccb2a33bd98c1d30f602603ba5e4c7d2df1c96838",
+        "plan": "sha256:11f967eb2f2c2211a5b8c24f260ddf106d2f822f9b02f48d92055753c0f84836",
+        "trace": "sha256:a3cd371905ab99556ff1b92ca4e4018d364c80c69abe724c1f5dbafc27ca962d"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_remediation_v1/results/timing-executor-before-remediation-002/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-remediation-v1/plans/timing-executor-before-remediation-002.json",
+      "study_id": "motivation-thor-remediation-v1",
+      "trace": "runs/motivation-thor-remediation-v1/timing-executor-before-remediation-002/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-executor-before-remediation-003",
+      "cell_id": "timing-executor-before-remediation",
+      "digests": {
+        "frozen_evaluation": "sha256:3f0231d8a85a7f8e121b74e6a752a8e8b43d9e73970b9f2834aed81c432b5246",
+        "plan": "sha256:00a559a3d00622503215e7bdf20b9fd29415d6e1d3c470fcbb9d52c25c4dd74c",
+        "trace": "sha256:3a3056c11a98932b11febddb9c87da49324fbf7d0179b45fa6d6ab01383341bf"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_remediation_v1/results/timing-executor-before-remediation-003/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-remediation-v1/plans/timing-executor-before-remediation-003.json",
+      "study_id": "motivation-thor-remediation-v1",
+      "trace": "runs/motivation-thor-remediation-v1/timing-executor-before-remediation-003/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-executor-before-remediation-004",
+      "cell_id": "timing-executor-before-remediation",
+      "digests": {
+        "frozen_evaluation": "sha256:9370b797667d3fea19fd98e70ffbeb16c9ee477bdcca8e268be3311b37c07307",
+        "plan": "sha256:cf0302612c612654dd9b0116f0693334c7fa265efbe4b3a7a86f1aef53e9049e",
+        "trace": "sha256:2d987affe92706c485513956355ca2c327844ca23a2e929a0dd8b39b7b79f501"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_remediation_v1/results/timing-executor-before-remediation-004/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-remediation-v1/plans/timing-executor-before-remediation-004.json",
+      "study_id": "motivation-thor-remediation-v1",
+      "trace": "runs/motivation-thor-remediation-v1/timing-executor-before-remediation-004/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-executor-before-remediation-005",
+      "cell_id": "timing-executor-before-remediation",
+      "digests": {
+        "frozen_evaluation": "sha256:42a43ce0d8fc79f50ffe4edfe579628abffc39c8e1156c3afb819cf2b373ab59",
+        "plan": "sha256:d1ef265e53cc056c526135ea14635a100cb528b4b1c3ed90cfa437b5acaabd49",
+        "trace": "sha256:3b6be628dcf885ee7e391becfd64864367c5f82fc978191bb647d61b20d0a737"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_remediation_v1/results/timing-executor-before-remediation-005/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-remediation-v1/plans/timing-executor-before-remediation-005.json",
+      "study_id": "motivation-thor-remediation-v1",
+      "trace": "runs/motivation-thor-remediation-v1/timing-executor-before-remediation-005/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-executor-before-remediation-006",
+      "cell_id": "timing-executor-before-remediation",
+      "digests": {
+        "frozen_evaluation": "sha256:cb8af3a7399c250b313d142f5ce3d44cc2265953c5d97b62e3bc43bd4fb19a24",
+        "plan": "sha256:307875b1f132c01bb1505ee4f3583e65e8bef76d862eee3759b7522eb0cf14f1",
+        "trace": "sha256:e48f25a604aa1330f6672b6fe8ff1333297043c10c6979aadde6cb3b8a073943"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_remediation_v1/results/timing-executor-before-remediation-006/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-remediation-v1/plans/timing-executor-before-remediation-006.json",
+      "study_id": "motivation-thor-remediation-v1",
+      "trace": "runs/motivation-thor-remediation-v1/timing-executor-before-remediation-006/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-executor-before-remediation-007",
+      "cell_id": "timing-executor-before-remediation",
+      "digests": {
+        "frozen_evaluation": "sha256:1c9a23eeb8fadfc18dfe9cdb7e2cbb523575b71c8df4aa6ae73f486c91014b3e",
+        "plan": "sha256:186139b83764dfc5692e4cd983a99120425cd5191132dafcf1983c86cb582d45",
+        "trace": "sha256:5db903fc4d97e4033ec103ab86ae59ffd8744651437c68f93e5e722887d604c4"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_remediation_v1/results/timing-executor-before-remediation-007/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-remediation-v1/plans/timing-executor-before-remediation-007.json",
+      "study_id": "motivation-thor-remediation-v1",
+      "trace": "runs/motivation-thor-remediation-v1/timing-executor-before-remediation-007/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-executor-before-remediation-008",
+      "cell_id": "timing-executor-before-remediation",
+      "digests": {
+        "frozen_evaluation": "sha256:f08d690ea36fed914b49eaf1a025021c69229e5df3ff761ed3acaf55f9bb7feb",
+        "plan": "sha256:95d530ac2929b4a74474af55a35f33bab2c74b2dc3342f66f2079ef3d2e768d0",
+        "trace": "sha256:0e51642030132cc23547a29880ec7096755b46db168bb76500f59163c9783b20"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_remediation_v1/results/timing-executor-before-remediation-008/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-remediation-v1/plans/timing-executor-before-remediation-008.json",
+      "study_id": "motivation-thor-remediation-v1",
+      "trace": "runs/motivation-thor-remediation-v1/timing-executor-before-remediation-008/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-executor-before-remediation-009",
+      "cell_id": "timing-executor-before-remediation",
+      "digests": {
+        "frozen_evaluation": "sha256:1a2a161831fd37b42921fccadd4c385f35560793dba7ac8d410fb1505f67a759",
+        "plan": "sha256:8216aafdc985926e4207bc6bace8770bb9a53579fad0acc52899c30542869c51",
+        "trace": "sha256:7f72ae848779da10acce7afb5e9b7066ba2056ea7b6fc1d9e40470e3eca47d42"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_remediation_v1/results/timing-executor-before-remediation-009/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-remediation-v1/plans/timing-executor-before-remediation-009.json",
+      "study_id": "motivation-thor-remediation-v1",
+      "trace": "runs/motivation-thor-remediation-v1/timing-executor-before-remediation-009/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-executor-before-remediation-010",
+      "cell_id": "timing-executor-before-remediation",
+      "digests": {
+        "frozen_evaluation": "sha256:e211478305ac3c84a7203cb3b0465063bdf2a2b62466e7216b93225010576b89",
+        "plan": "sha256:4f72d1ee26470b61facf80c1b1e5146e7ff86aac489562cbf7f295382d74ad76",
+        "trace": "sha256:4f99b124b36830ad633f55034314093a10aa49cb38ca98215943f53345b557a5"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_remediation_v1/results/timing-executor-before-remediation-010/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-remediation-v1/plans/timing-executor-before-remediation-010.json",
+      "study_id": "motivation-thor-remediation-v1",
+      "trace": "runs/motivation-thor-remediation-v1/timing-executor-before-remediation-010/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-offboard-reentry-rtl-remediation-001",
+      "cell_id": "timing-offboard-reentry-rtl-remediation",
+      "digests": {
+        "frozen_evaluation": "sha256:66d5cf582c67a545d9740fd4ab2f9efe607ca714357c95fc1da22ca79d211661",
+        "plan": "sha256:1d3aa16a5ebdec9dcb88a0f0ea9c2a78845e846454b0ca20afe6c27588ac918f",
+        "trace": "sha256:7563e8ee301ce46efa61682d78d8fafbf3b00bd8474cd46136e75737e9dc0c59"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_remediation_v1/results/timing-offboard-reentry-rtl-remediation-001/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-remediation-v1/plans/timing-offboard-reentry-rtl-remediation-001.json",
+      "study_id": "motivation-thor-remediation-v1",
+      "trace": "runs/motivation-thor-remediation-v1/timing-offboard-reentry-rtl-remediation-001/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-offboard-reentry-rtl-remediation-002",
+      "cell_id": "timing-offboard-reentry-rtl-remediation",
+      "digests": {
+        "frozen_evaluation": "sha256:48ec3a625aa26ede6d73c6d75a53e2bf20454606554cc954ccca38bed2781b39",
+        "plan": "sha256:d07c163566b3762aaad2e58567e96dbde49cf55d3b348d57d1ad0d65a79bd9ca",
+        "trace": "sha256:5c582f0f5a8968505ce54610618ec98604cc0a3a089136b14ad5d5e5b7e24220"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_remediation_v1/results/timing-offboard-reentry-rtl-remediation-002/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-remediation-v1/plans/timing-offboard-reentry-rtl-remediation-002.json",
+      "study_id": "motivation-thor-remediation-v1",
+      "trace": "runs/motivation-thor-remediation-v1/timing-offboard-reentry-rtl-remediation-002/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-offboard-reentry-rtl-remediation-003",
+      "cell_id": "timing-offboard-reentry-rtl-remediation",
+      "digests": {
+        "frozen_evaluation": "sha256:236ec64f384dac16d1b27d251b2e4a78482b88c0ff3443f418293ab061e970b0",
+        "plan": "sha256:4b5f770cc1dd2127e4368d6438ad4091f810942a00461d510bb2c6cafc0bec73",
+        "trace": "sha256:0cb5e91e9ee4ed7fb5a1626d8bc4a3ecd963d5e9816561cba494416f4a9b61ca"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_remediation_v1/results/timing-offboard-reentry-rtl-remediation-003/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-remediation-v1/plans/timing-offboard-reentry-rtl-remediation-003.json",
+      "study_id": "motivation-thor-remediation-v1",
+      "trace": "runs/motivation-thor-remediation-v1/timing-offboard-reentry-rtl-remediation-003/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-offboard-reentry-rtl-remediation-004",
+      "cell_id": "timing-offboard-reentry-rtl-remediation",
+      "digests": {
+        "frozen_evaluation": "sha256:1e1047584f4b75f894ffcb59ba95dfcd82c967fc884e13aac9c6e716deb3b9df",
+        "plan": "sha256:a6544716c3467ecc27f80de53525bc9522e75c6aad67eba456b50d4cebe1cd72",
+        "trace": "sha256:05b43c33714b7ec44f88fa1136eea473a458ed288dc861cf617a675694169d33"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_remediation_v1/results/timing-offboard-reentry-rtl-remediation-004/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-remediation-v1/plans/timing-offboard-reentry-rtl-remediation-004.json",
+      "study_id": "motivation-thor-remediation-v1",
+      "trace": "runs/motivation-thor-remediation-v1/timing-offboard-reentry-rtl-remediation-004/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-offboard-reentry-rtl-remediation-005",
+      "cell_id": "timing-offboard-reentry-rtl-remediation",
+      "digests": {
+        "frozen_evaluation": "sha256:38d89bd3b7a9e1854a1b72f98618e79205591497c281ea44b0f3dfce9e980ae1",
+        "plan": "sha256:12f52823f78be6eee739a49ce3b8e8b11d378291a8cade38f9570fce365a6ca6",
+        "trace": "sha256:3cdedf6d9f08bb6d8a0dff5b07036aad5f2e1c56fe93f78f02ffe660631c6c40"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_remediation_v1/results/timing-offboard-reentry-rtl-remediation-005/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-remediation-v1/plans/timing-offboard-reentry-rtl-remediation-005.json",
+      "study_id": "motivation-thor-remediation-v1",
+      "trace": "runs/motivation-thor-remediation-v1/timing-offboard-reentry-rtl-remediation-005/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-offboard-reentry-rtl-remediation-006",
+      "cell_id": "timing-offboard-reentry-rtl-remediation",
+      "digests": {
+        "frozen_evaluation": "sha256:2eb690771aa62365c2cb902b9afe60efbd671116f137626229164fef2cbb85c5",
+        "plan": "sha256:d9828e432426411bbd68964901312ca9969f1a3c0bfe7c3f89716184fffcfcc9",
+        "trace": "sha256:b434322a56616e3e01e828c0c2f252f7859d5cc9d7e5ed13a9eb89adcd69b690"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_remediation_v1/results/timing-offboard-reentry-rtl-remediation-006/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-remediation-v1/plans/timing-offboard-reentry-rtl-remediation-006.json",
+      "study_id": "motivation-thor-remediation-v1",
+      "trace": "runs/motivation-thor-remediation-v1/timing-offboard-reentry-rtl-remediation-006/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-offboard-reentry-rtl-remediation-007",
+      "cell_id": "timing-offboard-reentry-rtl-remediation",
+      "digests": {
+        "frozen_evaluation": "sha256:aac1dc5718318fe9abd27d247ea850a64927a524597f6884ab7a3ea575d18800",
+        "plan": "sha256:9c1d54d6cdd07e8d1ee044503f6d5e3d304163c529982c5312b399ff9e5b4947",
+        "trace": "sha256:95909bd4572cdba9fb26c95921c547749ef1f9ac4dd6bb750fed7965067b48da"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_remediation_v1/results/timing-offboard-reentry-rtl-remediation-007/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-remediation-v1/plans/timing-offboard-reentry-rtl-remediation-007.json",
+      "study_id": "motivation-thor-remediation-v1",
+      "trace": "runs/motivation-thor-remediation-v1/timing-offboard-reentry-rtl-remediation-007/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-offboard-reentry-rtl-remediation-008",
+      "cell_id": "timing-offboard-reentry-rtl-remediation",
+      "digests": {
+        "frozen_evaluation": "sha256:3f80b4177894419552ad9a83886efee293401bbe2b4f79cb3035f28ba9580bac",
+        "plan": "sha256:44f57bdef4efb53385d859950a8a6f71cec1f79d891e3471fd51f89f57b883bd",
+        "trace": "sha256:a7e3dc79500b0065fc0ce8044f59a98be62970aabee41e162d53c7dd01bff61c"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_remediation_v1/results/timing-offboard-reentry-rtl-remediation-008/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-remediation-v1/plans/timing-offboard-reentry-rtl-remediation-008.json",
+      "study_id": "motivation-thor-remediation-v1",
+      "trace": "runs/motivation-thor-remediation-v1/timing-offboard-reentry-rtl-remediation-008/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-offboard-reentry-rtl-remediation-009",
+      "cell_id": "timing-offboard-reentry-rtl-remediation",
+      "digests": {
+        "frozen_evaluation": "sha256:cf3c1e35bce2f66730a3b9c8255f7a057c22461f9c1da32b4b551b51e63bae72",
+        "plan": "sha256:69b8fbb43366bf7b6a182669bf3ad6942ba9a409bcdb3ecfc5bd8955531a97f6",
+        "trace": "sha256:cabfef1b4912f03f2659f6b906332ba2f81906196d1844e1c38ac8ac7c46bb3a"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_remediation_v1/results/timing-offboard-reentry-rtl-remediation-009/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-remediation-v1/plans/timing-offboard-reentry-rtl-remediation-009.json",
+      "study_id": "motivation-thor-remediation-v1",
+      "trace": "runs/motivation-thor-remediation-v1/timing-offboard-reentry-rtl-remediation-009/derived/closed.trace.jsonl"
+    },
+    {
+      "attempt_id": "timing-offboard-reentry-rtl-remediation-010",
+      "cell_id": "timing-offboard-reentry-rtl-remediation",
+      "digests": {
+        "frozen_evaluation": "sha256:16ac14495a44a2b5123592fac4f3915258d22d85a9930a1e4dcee110af896699",
+        "plan": "sha256:c19907826be4e07727b8301be610e897d5613c2b01fe6c0c992cafb5572718fd",
+        "trace": "sha256:3700a5bd921e5d96d42dc04963348f607d9fa7e89ade5e07a633001d05d401e7"
+      },
+      "frozen_evaluation": "experiments/motivation_thor_remediation_v1/results/timing-offboard-reentry-rtl-remediation-010/evaluation.json",
+      "outcome": "ACCEPTED",
+      "plan": "runs/motivation-thor-remediation-v1/plans/timing-offboard-reentry-rtl-remediation-010.json",
+      "study_id": "motivation-thor-remediation-v1",
+      "trace": "runs/motivation-thor-remediation-v1/timing-offboard-reentry-rtl-remediation-010/derived/closed.trace.jsonl"
+    }
+  ],
+  "matched_block_input": null,
+  "schema_version": "1.0"
+}

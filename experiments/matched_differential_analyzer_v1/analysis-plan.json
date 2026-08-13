@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "analysis_id": "matched-differential-analyzer-v1",
+  "analysis_kind": "mechanism_as_primary_treatment",
+  "profiles": [
+    "ROUTE_HANDOFF",
+    "PROCESS_LOSS_FALLBACK",
+    "SETPOINT_STALL_HEALTHY"
+  ],
+  "supported_mechanisms": [
+    "legacy_offboard",
+    "dynamic_external_mode",
+    "mode_executor"
+  ],
+  "match_policy": {
+    "semantic_mismatch_status": "UNMATCHED",
+    "operational_mismatch_status": "PARTIALLY_MATCHED",
+    "action_timing_tolerance_ns": 20000000,
+    "unique_mechanism_required": true,
+    "minimum_arm_count": 2,
+    "maximum_arm_count": 3,
+    "mode_executor_requires_explicit_semantic_equivalence": true
+  },
+  "paired_estimate_gate": {
+    "required_match_status": "FULLY_MATCHED",
+    "all_arms_evidence_gate": "ADMISSIBLE",
+    "retain_excluded_attempts": true
+  },
+  "strict_fields": {
+    "semantic": [
+      "abstract_task",
+      "setpoint_level",
+      "fault_semantics",
+      "successor_semantics",
+      "fallback_semantics"
+    ],
+    "operational": [
+      "simulation_seed",
+      "fault_seed",
+      "schedule_seed",
+      "action_offset",
+      "cpu_set",
+      "load_profile",
+      "observer_config_digest",
+      "environment_digest",
+      "common_software_digest"
+    ]
+  },
+  "interpretation": {
+    "differential_signal_is_correctness_violation": false,
+    "correctness_oracle_is_independent": true,
+    "motivation_traces_are_retroactively_paired": false,
+    "partial_or_unmatched_enters_effect_estimate": false
+  }
+}

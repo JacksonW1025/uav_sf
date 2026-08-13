@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jacksonw1025.github.io/uav_sf/matched_differential_summary.schema.json",
+  "title": "Matched differential analysis summary",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "analysis_kind",
+    "block_count",
+    "match_status_counts",
+    "eligible_block_count",
+    "paired_effects",
+    "divergence_signature_counts",
+    "motivation_unpaired_descriptive_count",
+    "interpretation"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "analysis_kind": {"const": "matched_block_differential"},
+    "block_count": {"type": "integer", "minimum": 0},
+    "match_status_counts": {
+      "type": "object",
+      "propertyNames": {
+        "enum": ["FULLY_MATCHED", "PARTIALLY_MATCHED", "UNMATCHED"]
+      },
+      "additionalProperties": {"type": "integer", "minimum": 0}
+    },
+    "eligible_block_count": {"type": "integer", "minimum": 0},
+    "paired_effects": {"type": "array"},
+    "divergence_signature_counts": {
+      "type": "object",
+      "propertyNames": {"pattern": "^sha256:[0-9a-f]{64}$"},
+      "additionalProperties": {"type": "integer", "minimum": 1}
+    },
+    "motivation_unpaired_descriptive_count": {"type": "integer", "minimum": 0},
+    "interpretation": {
+      "type": "object",
+      "required": [
+        "differential_defines_correctness",
+        "unmatched_enters_paired_estimate",
+        "partial_enters_paired_estimate",
+        "inadmissible_enters_paired_estimate"
+      ],
+      "properties": {
+        "differential_defines_correctness": {"const": false},
+        "unmatched_enters_paired_estimate": {"const": false},
+        "partial_enters_paired_estimate": {"const": false},
+        "inadmissible_enters_paired_estimate": {"const": false}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
