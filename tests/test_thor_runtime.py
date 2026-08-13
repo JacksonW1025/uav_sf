@@ -14,11 +14,26 @@ from scripts.collectors.ulog_route import (
 )
 from scripts.runtime.artifacts import create_manifest, verify_manifest
 from scripts.runtime.isolation import allocate_isolation, verify_unique
+from scripts.runtime.run_sitl import _read_jsonl_snapshot
 from scripts.setup.prepare_sources import SourceError, _verify_patched_tree
 from scripts.setup.verify_candidates import _git_identity
 
 
 class ThorRuntimeTests(unittest.TestCase):
+    def test_jsonl_snapshot_defers_only_an_open_final_fragment(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "sidecar.jsonl"
+            path.write_text('{"kind":"closed"}\n{"kind":', encoding="utf-8")
+            self.assertEqual(_read_jsonl_snapshot(path), [{"kind": "closed"}])
+
+            path.write_text('{"kind":}\n', encoding="utf-8")
+            with self.assertRaises(json.JSONDecodeError):
+                _read_jsonl_snapshot(path)
+
+            path.write_text('{"kind":}\n{"kind":"valid"}', encoding="utf-8")
+            with self.assertRaises(json.JSONDecodeError):
+                _read_jsonl_snapshot(path)
+
     def test_parallel_allocations_are_isolated(self) -> None:
         root = Path("/tmp/family-a-tests")
         allocations = [

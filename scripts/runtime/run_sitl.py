@@ -112,14 +112,38 @@ def _wait_for_telemetry(path: Path, processes: list[ManagedProcess], timeout_s: 
     raise RuntimeFailure("ROS/PX4 telemetry readiness timed out")
 
 
+def _read_jsonl_snapshot(path: Path) -> list[dict[str, Any]]:
+    """Read one file snapshot without accepting a damaged closed record.
+
+    Sidecars append a complete JSON record followed by a newline, but a reader
+    may take its snapshot between those writes.  Only an invalid final fragment
+    from a snapshot that does not end in a newline is deferred to the next read.
+    A malformed closed or interior record remains a hard runtime failure.
+    """
+
+    text = path.read_text(encoding="utf-8")
+    lines = text.splitlines()
+    records: list[dict[str, Any]] = []
+    for index, line in enumerate(lines):
+        if not line.strip():
+            continue
+        try:
+            record = json.loads(line)
+        except json.JSONDecodeError:
+            if index == len(lines) - 1 and not text.endswith("\n"):
+                break
+            raise
+        if not isinstance(record, dict):
+            raise ValueError(f"JSONL record {index + 1} is not an object: {path}")
+        records.append(record)
+    return records
+
+
 def _wait_for_armed(path: Path, timeout_s: float) -> None:
     deadline = time.monotonic() + timeout_s
     while time.monotonic() < deadline:
         if path.exists():
-            for line in reversed(path.read_text(encoding="utf-8").splitlines()):
-                if not line.strip():
-                    continue
-                record = json.loads(line)
+            for record in reversed(_read_jsonl_snapshot(path)):
                 if record.get("kind") == "vehicle_status":
                     if int(record.get("arming_state", -1)) == 2:
                         return
@@ -132,11 +156,9 @@ def _wait_for_lifecycle_kind(path: Path, kind: str, timeout_s: float) -> int:
     deadline = time.monotonic() + timeout_s
     while time.monotonic() < deadline:
         if path.exists():
-            for line in path.read_text(encoding="utf-8").splitlines():
-                if line.strip():
-                    record = json.loads(line)
-                    if record.get("kind") == kind:
-                        return int(record["received_monotonic_ns"])
+            for record in _read_jsonl_snapshot(path):
+                if record.get("kind") == kind:
+                    return int(record["received_monotonic_ns"])
         time.sleep(0.05)
     raise RuntimeFailure(f"workload did not publish {kind} before its deadline")
 
@@ -152,11 +174,7 @@ def _semantic_success(
     path: Path, mechanism: str, *, expected_rejection: bool = False
 ) -> tuple[bool, list[str]]:
     reasons: list[str] = []
-    records = [
-        json.loads(line)
-        for line in path.read_text(encoding="utf-8").splitlines()
-        if line.strip()
-    ]
+    records = _read_jsonl_snapshot(path)
     statuses = [item for item in records if item.get("kind") == "vehicle_status"]
     land = [item for item in records if item.get("kind") == "vehicle_land_detected"]
     armed = any(int(item.get("arming_state", -1)) == 2 for item in statuses)
@@ -186,11 +204,7 @@ def _semantic_success(
 
 
 def _latest_safe_route(path: Path) -> str | None:
-    records = [
-        json.loads(line)
-        for line in path.read_text(encoding="utf-8").splitlines()
-        if line.strip()
-    ]
+    records = _read_jsonl_snapshot(path)
     statuses = [item for item in records if item.get("kind") == "vehicle_status"]
     if not statuses:
         return None
@@ -202,11 +216,7 @@ def _latest_safe_route(path: Path) -> str | None:
 
 
 def _terminal_safe(path: Path) -> bool:
-    records = [
-        json.loads(line)
-        for line in path.read_text(encoding="utf-8").splitlines()
-        if line.strip()
-    ]
+    records = _read_jsonl_snapshot(path)
     statuses = [item for item in records if item.get("kind") == "vehicle_status"]
     land = [item for item in records if item.get("kind") == "vehicle_land_detected"]
     return bool(
@@ -218,11 +228,7 @@ def _terminal_safe(path: Path) -> bool:
 
 
 def _mission_started(path: Path, mechanism: str) -> bool:
-    records = [
-        json.loads(line)
-        for line in path.read_text(encoding="utf-8").splitlines()
-        if line.strip()
-    ]
+    records = _read_jsonl_snapshot(path)
     statuses = [item for item in records if item.get("kind") == "vehicle_status"]
     land = [item for item in records if item.get("kind") == "vehicle_land_detected"]
     armed = any(int(item.get("arming_state", -1)) == 2 for item in statuses)
