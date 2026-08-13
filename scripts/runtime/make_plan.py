@@ -61,6 +61,7 @@ def create_plan(
     strategy: str = "official_sequence",
     seed: int | None = None,
     timing_bounds_ns: dict[str, list[int]] | None = None,
+    target_activation_count: list[int] | None = None,
 ) -> dict[str, Any]:
     try:
         candidate = attestation["attestation_payload"]["container"]["candidate"]
@@ -102,6 +103,8 @@ def create_plan(
             "expected_lifecycle_owner": lifecycle_owner,
             "expected_executor_owner": executor_owner,
             "target_activation_expected": target_activation_expected,
+            "target_activation_count": target_activation_count
+            or ([1, 1] if target_activation_expected else [0, 0]),
             "registration_rejection_expected": registration_rejection_expected,
             "activation_rejection_expected": activation_rejection_expected,
             "completion_expected": completion_expected,
@@ -155,6 +158,7 @@ def main() -> int:
         action=argparse.BooleanOptionalAction,
         default=True,
     )
+    parser.add_argument("--target-activation-count", type=int)
     parser.add_argument(
         "--strategy",
         choices=["official_sequence", "bounded_random_timing", "state_aware"],
@@ -193,6 +197,14 @@ def main() -> int:
             strategy=args.strategy,
             seed=args.seed,
             timing_bounds_ns=None,
+            target_activation_count=[
+                args.target_activation_count
+                if args.target_activation_count is not None
+                else (1 if args.target_activation_expected else 0),
+                args.target_activation_count
+                if args.target_activation_count is not None
+                else (1 if args.target_activation_expected else 0),
+            ],
         )
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(

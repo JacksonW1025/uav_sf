@@ -238,10 +238,8 @@ def evaluate_route_conformance(
             },
         )
 
-    activation_count_bounds = plan["strategy"]["timing_bounds_ns"].get(
-        "target_activation_count"
-    )
-    if activation_count_bounds is None:
+    activation_count_bounds = transition["target_activation_count"]
+    if activation_count_bounds[1] <= 1:
         reentry_identity = clause(
             "NOT_APPLICABLE", "no repeated-entry identity obligation was preregistered"
         )

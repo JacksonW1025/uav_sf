@@ -94,6 +94,7 @@ def validate_plan(plan: dict[str, Any], *, allow_template: bool = False) -> None
         "expected_lifecycle_owner",
         "expected_executor_owner",
         "target_activation_expected",
+        "target_activation_count",
         "registration_rejection_expected",
         "activation_rejection_expected",
         "completion_expected",
@@ -122,6 +123,18 @@ def validate_plan(plan: dict[str, Any], *, allow_template: bool = False) -> None
     ):
         if not isinstance(transition[field], bool):
             raise PlanError(f"{field} must be boolean")
+    activation_count = transition["target_activation_count"]
+    if (
+        not isinstance(activation_count, list)
+        or len(activation_count) != 2
+        or not all(isinstance(value, int) and value >= 0 for value in activation_count)
+        or activation_count[0] > activation_count[1]
+    ):
+        raise PlanError("target_activation_count must be an ordered non-negative pair")
+    if transition["target_activation_expected"] and activation_count[0] < 1:
+        raise PlanError("an expected target activation requires a positive count")
+    if not transition["target_activation_expected"] and activation_count != [0, 0]:
+        raise PlanError("a rejected activation must have target_activation_count [0, 0]")
     if transition["completion_expected"] and not transition["target_activation_expected"]:
         raise PlanError("completion requires target activation")
     if transition["activation_rejection_expected"]:

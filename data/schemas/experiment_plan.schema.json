@@ -39,6 +39,7 @@
         "expected_lifecycle_owner",
         "expected_executor_owner",
         "target_activation_expected",
+        "target_activation_count",
         "registration_rejection_expected",
         "activation_rejection_expected",
         "completion_expected",
@@ -53,6 +54,12 @@
         "expected_lifecycle_owner": {"type": "string", "minLength": 1},
         "expected_executor_owner": {"type": "string", "minLength": 1},
         "target_activation_expected": {"type": "boolean"},
+        "target_activation_count": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {"type": "integer", "minimum": 0}
+        },
         "registration_rejection_expected": {"type": "boolean"},
         "activation_rejection_expected": {"type": "boolean"},
         "completion_expected": {"type": "boolean"},

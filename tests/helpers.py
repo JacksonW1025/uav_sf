@@ -39,6 +39,7 @@ def plan() -> dict[str, Any]:
             "expected_lifecycle_owner": "lifecycle-target",
             "expected_executor_owner": "executor-target",
             "target_activation_expected": True,
+            "target_activation_count": [1, 1],
             "registration_rejection_expected": False,
             "activation_rejection_expected": False,
             "completion_expected": True,

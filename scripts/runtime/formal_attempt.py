@@ -176,6 +176,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         strategy=plan_spec.get("strategy", "official_sequence"),
         seed=plan_spec.get("seed"),
         timing_bounds_ns=plan_spec.get("timing_bounds_ns"),
+        target_activation_count=plan_spec.get("target_activation_count"),
     )
     validate_plan(plan)
     plan_path = args.run_root / study_id / "plans" / f"{args.attempt_id}.json"

@@ -15,6 +15,7 @@
     "expected_lifecycle_owner": "REPLACE-BEFORE-EXECUTION",
     "expected_executor_owner": "REPLACE-BEFORE-EXECUTION",
     "target_activation_expected": true,
+    "target_activation_count": [1, 1],
     "registration_rejection_expected": false,
     "activation_rejection_expected": false,
     "completion_expected": true,

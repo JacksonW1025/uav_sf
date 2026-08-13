@@ -166,9 +166,7 @@ class EvaluationTests(unittest.TestCase):
 
     def test_reentry_requires_distinct_complete_route_instances(self) -> None:
         experiment = plan()
-        experiment["strategy"]["timing_bounds_ns"] = {
-            "target_activation_count": [2, 2]
-        }
+        experiment["transition"]["target_activation_count"] = [2, 2]
         raw = passing_raw_events()
         source_two = identity("legacy_offboard", "source-two")
         target_two = identity("dynamic_external_mode", "target-two")
@@ -272,6 +270,7 @@ class EvaluationTests(unittest.TestCase):
         experiment = plan()
         transition = experiment["transition"]
         transition["target_activation_expected"] = False
+        transition["target_activation_count"] = [0, 0]
         transition["activation_rejection_expected"] = True
         transition["completion_expected"] = False
         transition["fault_expected"] = True

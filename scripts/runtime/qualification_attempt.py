@@ -72,6 +72,14 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         fallback_expected=args.fallback_expected,
         thresholds=thresholds,
         timing_bounds_ns=timing_bounds,
+        target_activation_count=[
+            args.target_activation_count
+            if args.target_activation_count is not None
+            else (args.repeat_count if args.target_activation_expected else 0),
+            args.target_activation_count
+            if args.target_activation_count is not None
+            else (args.repeat_count if args.target_activation_expected else 0),
+        ],
     )
     plan_path = args.run_root / args.study_id / "plans" / f"{args.run_id}.json"
     if plan_path.exists():
@@ -200,6 +208,7 @@ def main() -> int:
     parser.add_argument("--health-loss", action="store_true")
     parser.add_argument("--duplicate-registration", action="store_true")
     parser.add_argument("--repeat-count", type=int, default=1)
+    parser.add_argument("--target-activation-count", type=int)
     parser.add_argument("--manual-land-offset-s", type=float)
     parser.add_argument(
         "--target-activation-expected", action=argparse.BooleanOptionalAction, default=True
