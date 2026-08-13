@@ -1,0 +1,87 @@
+{
+  "schema_version": "1.0",
+  "study_id": "motivation-thor-remediation-v1",
+  "environment_id": "thor-r38.2.1-family-a-remediation-v1",
+  "repository_revision": "221b9893f534b520c9d8c9728ff1805bc34f4264",
+  "container_image_id": "sha256:d464efc84c02cc467571671d7f3aa8f7eb3c29d14c719dfe299741b3dae580c2",
+  "environment_attestation_digest": "sha256:6a7b5015922f0bab13d88c0341f4ac307edf38835ac547100ecf3c389bc987d2",
+  "method_defaults_digest": "sha256:0dd32fb43830c6a17c6bd88792fd678379063c573d7120530c2e83c98909d127",
+  "safety_limits_digest": "sha256:437f986ae02eedaa1b60403f3df79e9ff89df16df4e14b08736f137772dfa516",
+  "maximum_clock_uncertainty_ns": 20000000,
+  "formal_concurrency": 4,
+  "resources": {
+    "cpu_sets": ["0-2", "3-5", "6-8", "9-13"],
+    "memory_per_attempt": "24g"
+  },
+  "thresholds": {
+    "revocation_deadline_ns": 300000000,
+    "installation_deadline_ns": 300000000,
+    "maximum_effect_gap_ns": 250000000,
+    "maximum_command_age_ns": 200000000,
+    "successor_deadline_ns": 300000000,
+    "fallback_deadline_ns": 1500000000
+  },
+  "cells": [
+    {
+      "cell_id": "timing-executor-before-remediation",
+      "category": "timing",
+      "attempt_id_prefix": "timing-executor-before-remediation",
+      "accepted_target": 10,
+      "launch_cap": 20,
+      "plan": {
+        "source_route": "px4_internal",
+        "target_route": "mode_executor",
+        "expected_successor": "internal_land",
+        "expected_fallback": "internal_land",
+        "target_activation_expected": true,
+        "registration_rejection_expected": false,
+        "activation_rejection_expected": false,
+        "completion_expected": false,
+        "fault_expected": false,
+        "fallback_expected": false,
+        "timing_bounds_ns": {
+          "adjacent_after_activation_ns": [7650000000, 7850000000],
+          "adjacent_before_completion_ns": [100000000, 400000000]
+        }
+      },
+      "runtime": {
+        "mechanism": "mode_executor",
+        "setpoint_kind": "trajectory",
+        "fault_mode": "normal",
+        "successor_route": "internal_land",
+        "manual_land_offset_s": -0.25,
+        "active_s": 8.0,
+        "simulation_seed_base": 2301000
+      }
+    },
+    {
+      "cell_id": "timing-offboard-reentry-rtl-remediation",
+      "category": "timing",
+      "attempt_id_prefix": "timing-offboard-reentry-rtl-remediation",
+      "accepted_target": 10,
+      "launch_cap": 20,
+      "plan": {
+        "source_route": "internal_rtl",
+        "target_route": "legacy_offboard",
+        "expected_successor": "internal_rtl",
+        "expected_fallback": "internal_land",
+        "target_activation_expected": true,
+        "target_activation_count": [2, 2],
+        "registration_rejection_expected": false,
+        "activation_rejection_expected": false,
+        "completion_expected": true,
+        "fault_expected": false,
+        "fallback_expected": false
+      },
+      "runtime": {
+        "mechanism": "legacy_offboard",
+        "setpoint_kind": "trajectory",
+        "fault_mode": "normal",
+        "successor_route": "internal_rtl",
+        "repeat_count": 2,
+        "active_s": 8.0,
+        "simulation_seed_base": 2302000
+      }
+    }
+  ]
+}
