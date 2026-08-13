@@ -30,6 +30,14 @@ class EvaluationTests(unittest.TestCase):
         self.assertEqual(successor["adjacent_order"]["status"], "PASS")
         self.assertEqual(successor["adjacent_successor"]["status"], "PASS")
 
+    def test_unrequired_completion_does_not_duplicate_adjacent_successor_anchor(self) -> None:
+        experiment = plan()
+        experiment["transition"]["completion_expected"] = False
+        experiment["required_event_kinds"].remove("completion")
+        result = evaluate(passing_events(), experiment)
+        successor = result["oracles"][2]["clauses"]
+        self.assertEqual(successor["expected_successor"]["status"], "NOT_APPLICABLE")
+
     def test_complete_admissible_transition_passes(self) -> None:
         result = evaluate(passing_events(), plan())
         self.assertEqual(result["evidence_gate"]["status"], "ADMISSIBLE")

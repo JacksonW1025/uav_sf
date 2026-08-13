@@ -43,7 +43,7 @@ def evaluate_successor_progression(
     completion = _event_after(
         events, "completion", anchor, route=transition["target_route"]
     )
-    if not transition["completion_expected"] and completion is None:
+    if not transition["completion_expected"]:
         successor = clause("NOT_APPLICABLE", "completion is not part of this plan")
     elif completion is None:
         successor = clause("VIOLATION", "expected completion event is missing")
