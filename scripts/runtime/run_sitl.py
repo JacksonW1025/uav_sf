@@ -204,6 +204,25 @@ def _terminal_safe(path: Path) -> bool:
     )
 
 
+def _mission_started(path: Path, mechanism: str) -> bool:
+    records = [
+        json.loads(line)
+        for line in path.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    statuses = [item for item in records if item.get("kind") == "vehicle_status"]
+    land = [item for item in records if item.get("kind") == "vehicle_land_detected"]
+    armed = any(int(item.get("arming_state", -1)) == 2 for item in statuses)
+    airborne = any(not bool(item.get("landed", True)) for item in land)
+    if mechanism == "legacy_offboard":
+        target_active = any(int(item.get("nav_state", -1)) == 14 for item in statuses)
+    else:
+        target_active = any(
+            23 <= int(item.get("nav_state", -1)) <= 30 for item in statuses
+        )
+    return armed and airborne and target_active
+
+
 def run(args: argparse.Namespace) -> dict[str, Any]:
     preflight = self_check()
     if preflight["status"] != "PASS":
@@ -516,7 +535,11 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             if safety.process.poll() is not None:
                 outcome = "ENVIRONMENT_FAILURE"
                 break
-            if args.manual_land_offset_s is not None and _terminal_safe(telemetry):
+            if (
+                args.manual_land_offset_s is not None
+                and _mission_started(telemetry, args.mechanism)
+                and _terminal_safe(telemetry)
+            ):
                 success, reasons = _semantic_success(telemetry, args.mechanism)
                 outcome = "ACCEPTED" if success else "INCONCLUSIVE"
                 if reasons:
