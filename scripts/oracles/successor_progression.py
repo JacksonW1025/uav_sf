@@ -205,9 +205,46 @@ def evaluate_successor_progression(
                 anchor_ns=adjacent_ns,
                 deadline_ns=adjacent_ns + int(thresholds["successor_deadline_ns"]),
             )
-            adjacent_successor = installation_clause(
-                adjacent_installation, label="adjacent-request successor"
-            )
+            if adjacent_installation["complete"]:
+                adjacent_successor = installation_clause(
+                    adjacent_installation, label="adjacent-request successor"
+                )
+            elif completion_ns is not None and completion_ns <= adjacent_ns:
+                installed_before_adjacent = complete_installation(
+                    events,
+                    route=transition["expected_successor"],
+                    anchor_ns=completion_ns,
+                    deadline_ns=adjacent_ns,
+                )
+                revocations_before_adjacent = []
+                if installed_before_adjacent["complete"]:
+                    identity = installed_before_adjacent["identity"]
+                    revocations_before_adjacent = [
+                        event["sequence"]
+                        for event in events
+                        if event["kind"] == "revocation"
+                        and int(event["timestamp_ns"])
+                        >= int(installed_before_adjacent["completed_at_ns"])
+                        and int(event["timestamp_ns"]) <= adjacent_ns
+                        and all(event.get(key) == value for key, value in identity.items())
+                    ]
+                if installed_before_adjacent["complete"] and not revocations_before_adjacent:
+                    adjacent_successor = clause(
+                        "PASS",
+                        evidence={
+                            "already_installed_at_adjacent": True,
+                            "installation": installed_before_adjacent,
+                            "adjacent_sequence": adjacent["sequence"],
+                        },
+                    )
+                else:
+                    adjacent_successor = installation_clause(
+                        adjacent_installation, label="adjacent-request successor"
+                    )
+            else:
+                adjacent_successor = installation_clause(
+                    adjacent_installation, label="adjacent-request successor"
+                )
 
     return {
         "oracle": "successor_progression",

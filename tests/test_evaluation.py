@@ -38,6 +38,28 @@ class EvaluationTests(unittest.TestCase):
         successor = result["oracles"][2]["clauses"]
         self.assertEqual(successor["expected_successor"]["status"], "NOT_APPLICABLE")
 
+    def test_after_request_accepts_an_already_installed_successor(self) -> None:
+        experiment = plan()
+        experiment["strategy"]["timing_bounds_ns"] = {
+            "adjacent_after_activation_ns": [50_000_000, 70_000_000],
+            "completion_before_adjacent_ns": [20_000_000, 40_000_000],
+        }
+        experiment["required_event_kinds"].append("adjacent_request")
+        raw = passing_raw_events()
+        raw.insert(
+            -1,
+            raw_event(
+                "adjacent_request",
+                180_000_000,
+                route="internal_hold",
+                timing_bucket="after",
+            ),
+        )
+        result = evaluate(chain(raw), experiment)
+        adjacent = result["oracles"][2]["clauses"]["adjacent_successor"]
+        self.assertEqual(adjacent["status"], "PASS")
+        self.assertTrue(adjacent["evidence"]["already_installed_at_adjacent"])
+
     def test_complete_admissible_transition_passes(self) -> None:
         result = evaluate(passing_events(), plan())
         self.assertEqual(result["evidence_gate"]["status"], "ADMISSIBLE")
