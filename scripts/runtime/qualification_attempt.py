@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run and process one explicitly non-formal Thor qualification attempt."""
+"""Run or process one explicitly non-formal Thor qualification attempt."""
 
 from __future__ import annotations
 
@@ -32,6 +32,9 @@ def _digest(path: Path) -> str:
 
 
 def run(args: argparse.Namespace) -> dict[str, Any]:
+    phase = getattr(args, "phase", "all")
+    if phase not in {"live", "process", "all"}:
+        raise QualificationError("unsupported qualification phase")
     attestation = _read(args.attestation)
     environment_path = args.run_root / args.study_id / "environment.json"
     if environment_path.exists():
@@ -40,102 +43,135 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     else:
         environment_path.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(args.attestation, environment_path)
-    thresholds_document = _read(args.thresholds)
-    thresholds = thresholds_document.get("thresholds", thresholds_document)
-    timing_bounds: dict[str, list[int]] = {}
-    if args.manual_land_offset_s is not None:
-        expected_ns = int((args.active_s + args.manual_land_offset_s) * 1_000_000_000)
-        tolerance_ns = 100_000_000
-        timing_bounds["adjacent_after_activation_ns"] = [
-            max(0, expected_ns - tolerance_ns),
-            expected_ns + tolerance_ns,
-        ]
-        if args.manual_land_offset_s < 0:
-            timing_bounds["adjacent_before_completion_ns"] = [100_000_000, 400_000_000]
-        elif args.manual_land_offset_s > 0:
-            timing_bounds["completion_before_adjacent_ns"] = [100_000_000, 400_000_000]
-        else:
-            timing_bounds["adjacent_completion_distance_ns"] = [0, 100_000_000]
-    plan = create_plan(
-        attestation=attestation,
-        run_id=args.run_id,
-        plan_id=f"{args.run_id}-qualification-plan",
-        source_route=args.source_route,
-        target_route=args.mechanism,
-        expected_successor=args.successor_route,
-        expected_fallback=args.expected_fallback,
-        target_activation_expected=args.target_activation_expected,
-        registration_rejection_expected=args.registration_rejection_expected,
-        activation_rejection_expected=args.activation_rejection_expected,
-        completion_expected=args.completion_expected,
-        fault_expected=args.fault_expected,
-        fallback_expected=args.fallback_expected,
-        thresholds=thresholds,
-        simulation_seed=args.simulation_seed,
-        timing_bounds_ns=timing_bounds,
-        target_activation_count=[
-            args.target_activation_count
-            if args.target_activation_count is not None
-            else (args.repeat_count if args.target_activation_expected else 0),
-            args.target_activation_count
-            if args.target_activation_count is not None
-            else (args.repeat_count if args.target_activation_expected else 0),
-        ],
-    )
     plan_path = args.run_root / args.study_id / "plans" / f"{args.run_id}.json"
-    if plan_path.exists():
-        raise QualificationError(f"qualification plan already exists: {plan_path}")
-    plan_path.parent.mkdir(parents=True, exist_ok=True)
-    plan_path.write_text(json.dumps(plan, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     image_id = attestation["attestation_payload"]["container"]["image_id"]
-    launch = [
-        sys.executable,
-        "-m",
-        "scripts.runtime.run_container",
-        "--image",
-        args.image,
-        "--expected-image-id",
-        image_id,
-        "--run-root",
-        str(args.run_root),
-        "--study-id",
-        args.study_id,
-        "--run-id",
-        args.run_id,
-        "--mechanism",
-        args.mechanism,
-        "--source-route",
-        args.source_route,
-        "--setpoint-kind",
-        args.setpoint_kind,
-        "--fault-mode",
-        args.fault_mode,
-        "--successor-route",
-        args.successor_route,
-        "--repeat-count",
-        str(args.repeat_count),
-        "--slot",
-        str(args.slot),
-        "--cpu-set",
-        args.cpu_set,
-        "--memory",
-        args.memory,
-        "--active-s",
-        str(args.active_s),
-        "--simulation-seed",
-        str(args.simulation_seed),
-        "--attempt-timeout-s",
-        str(args.attempt_timeout_s),
-        "--outer-timeout-s",
-        str(args.outer_timeout_s),
-    ]
-    if args.health_loss:
-        launch.append("--health-loss")
-    if args.duplicate_registration:
-        launch.append("--duplicate-registration")
-    if args.manual_land_offset_s is not None:
-        launch.extend(["--manual-land-offset-s", str(args.manual_land_offset_s)])
-    launch_result = subprocess.run(launch, text=True, capture_output=True, check=False)
+    launch_returncode = -1
+    if phase == "process":
+        if not plan_path.is_file():
+            raise QualificationError(f"qualification plan is missing: {plan_path}")
+        driver_path = args.run_root / args.study_id / args.run_id / "container-driver.result.json"
+        if driver_path.is_file():
+            launch_returncode = int(_read(driver_path).get("returncode", -1))
+    else:
+        thresholds_document = _read(args.thresholds)
+        thresholds = thresholds_document.get("thresholds", thresholds_document)
+        timing_bounds: dict[str, list[int]] = {}
+        if args.manual_land_offset_s is not None:
+            expected_ns = int(
+                (args.active_s + args.manual_land_offset_s) * 1_000_000_000
+            )
+            tolerance_ns = 100_000_000
+            timing_bounds["adjacent_after_activation_ns"] = [
+                max(0, expected_ns - tolerance_ns),
+                expected_ns + tolerance_ns,
+            ]
+            if args.manual_land_offset_s < 0:
+                timing_bounds["adjacent_before_completion_ns"] = [
+                    100_000_000,
+                    400_000_000,
+                ]
+            elif args.manual_land_offset_s > 0:
+                timing_bounds["completion_before_adjacent_ns"] = [
+                    100_000_000,
+                    400_000_000,
+                ]
+            else:
+                timing_bounds["adjacent_completion_distance_ns"] = [0, 100_000_000]
+        plan = create_plan(
+            attestation=attestation,
+            run_id=args.run_id,
+            plan_id=f"{args.run_id}-qualification-plan",
+            source_route=args.source_route,
+            target_route=args.mechanism,
+            expected_successor=args.successor_route,
+            expected_fallback=args.expected_fallback,
+            target_activation_expected=args.target_activation_expected,
+            registration_rejection_expected=args.registration_rejection_expected,
+            activation_rejection_expected=args.activation_rejection_expected,
+            completion_expected=args.completion_expected,
+            fault_expected=args.fault_expected,
+            fallback_expected=args.fallback_expected,
+            thresholds=thresholds,
+            simulation_seed=args.simulation_seed,
+            timing_bounds_ns=timing_bounds,
+            target_activation_count=[
+                args.target_activation_count
+                if args.target_activation_count is not None
+                else (args.repeat_count if args.target_activation_expected else 0),
+                args.target_activation_count
+                if args.target_activation_count is not None
+                else (args.repeat_count if args.target_activation_expected else 0),
+            ],
+        )
+        if plan_path.exists():
+            raise QualificationError(f"qualification plan already exists: {plan_path}")
+        plan_path.parent.mkdir(parents=True, exist_ok=True)
+        plan_path.write_text(
+            json.dumps(plan, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
+        launch = [
+            sys.executable,
+            "-m",
+            "scripts.runtime.run_container",
+            "--image",
+            args.image,
+            "--expected-image-id",
+            image_id,
+            "--run-root",
+            str(args.run_root),
+            "--study-id",
+            args.study_id,
+            "--run-id",
+            args.run_id,
+            "--mechanism",
+            args.mechanism,
+            "--source-route",
+            args.source_route,
+            "--setpoint-kind",
+            args.setpoint_kind,
+            "--fault-mode",
+            args.fault_mode,
+            "--successor-route",
+            args.successor_route,
+            "--repeat-count",
+            str(args.repeat_count),
+            "--slot",
+            str(args.slot),
+            "--cpu-set",
+            args.cpu_set,
+            "--memory",
+            args.memory,
+            "--active-s",
+            str(args.active_s),
+            "--simulation-seed",
+            str(args.simulation_seed),
+            "--attempt-timeout-s",
+            str(args.attempt_timeout_s),
+            "--outer-timeout-s",
+            str(args.outer_timeout_s),
+        ]
+        if args.health_loss:
+            launch.append("--health-loss")
+        if args.duplicate_registration:
+            launch.append("--duplicate-registration")
+        if args.manual_land_offset_s is not None:
+            launch.extend(["--manual-land-offset-s", str(args.manual_land_offset_s)])
+        launch_result = subprocess.run(
+            launch, text=True, capture_output=True, check=False
+        )
+        launch_returncode = launch_result.returncode
+        if phase == "live":
+            return {
+                "schema_version": "1.0",
+                "study_id": args.study_id,
+                "attempt_id": args.run_id,
+                "phase": "LIVE_COMPLETE",
+                "runtime_driver_returncode": launch_returncode,
+                "runtime_result_present": (
+                    args.run_root / args.study_id / args.run_id / "runtime_result.json"
+                ).is_file(),
+            }
+
     process = [
         "docker",
         "run",
@@ -170,7 +206,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             + (process_result.stderr.strip() or process_result.stdout.strip())
         )
     result = _read(result_path)
-    result["launch_driver_returncode"] = launch_result.returncode
+    result["execution_model"] = (
+        "two_phase_barrier" if phase == "process" else "single_attempt"
+    )
+    result["launch_driver_returncode"] = launch_returncode
     result["processing_driver_returncode"] = process_result.returncode
     return result
 
@@ -182,6 +221,7 @@ def main() -> int:
     parser.add_argument("--run-root", type=Path, default=Path("runs"))
     parser.add_argument("--study-id", default="thor-qualification-current")
     parser.add_argument("--run-id", required=True)
+    parser.add_argument("--phase", choices=["live", "process", "all"], default="all")
     parser.add_argument(
         "--mechanism",
         choices=["legacy_offboard", "dynamic_external_mode", "mode_executor"],

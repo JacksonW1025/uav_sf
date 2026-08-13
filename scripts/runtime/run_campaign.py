@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.accounting.study import verify_study_ledger
+from scripts.runtime.isolation import verify_disjoint_cpu_sets
 
 
 class CampaignError(RuntimeError):
@@ -72,6 +73,10 @@ def validate_matrix(matrix: dict[str, Any]) -> None:
     cpu_sets = resources.get("cpu_sets")
     if not isinstance(cpu_sets, list) or len(cpu_sets) != 4 or len(set(cpu_sets)) != 4:
         raise CampaignError("four distinct CPU sets are required")
+    try:
+        verify_disjoint_cpu_sets(cpu_sets)
+    except ValueError as exc:
+        raise CampaignError(str(exc)) from exc
     if not str(resources.get("memory_per_attempt", "")):
         raise CampaignError("per-attempt memory allocation is required")
     thresholds = matrix.get("thresholds", {})
@@ -189,6 +194,32 @@ def _launch(command: list[str]) -> tuple[int, str, str]:
     return result.returncode, result.stdout, result.stderr
 
 
+def _run_phase(
+    commands: list[tuple[str, list[str]]], *, phase: str, concurrency: int
+) -> list[str]:
+    failures: list[str] = []
+    with ThreadPoolExecutor(max_workers=concurrency) as pool:
+        futures = {pool.submit(_launch, command): attempt_id for attempt_id, command in commands}
+        for future in as_completed(futures):
+            attempt_id = futures[future]
+            returncode, stdout, stderr = future.result()
+            print(
+                json.dumps(
+                    {
+                        "attempt_id": attempt_id,
+                        "phase": phase,
+                        "returncode": returncode,
+                        "stdout": stdout.strip(),
+                        "stderr": stderr.strip(),
+                    }
+                ),
+                flush=True,
+            )
+            if returncode != 0:
+                failures.append(attempt_id)
+    return failures
+
+
 def run(args: argparse.Namespace) -> dict[str, Any]:
     matrix = read_matrix(args.matrix)
     validate_matrix(matrix)
@@ -237,7 +268,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             concurrency=concurrency,
             launched_count=ledger["launched_count"],
         )
-        commands = []
+        commands: list[tuple[str, list[str]]] = []
         for slot, state in batch:
             attempt_id = _next_attempt(state)
             if attempt_id in ledger["attempts"]:
@@ -256,18 +287,38 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 "--cpu-set", cpu_sets[slot],
                 "--memory", memory,
             ]))
-        with ThreadPoolExecutor(max_workers=concurrency) as pool:
-            futures = {pool.submit(_launch, command): attempt_id for attempt_id, command in commands}
-            failures = []
-            for future in as_completed(futures):
-                attempt_id = futures[future]
-                returncode, stdout, stderr = future.result()
-                completed_this_run += 1
-                print(json.dumps({"attempt_id": attempt_id, "returncode": returncode, "stdout": stdout.strip(), "stderr": stderr.strip()}), flush=True)
-                if returncode != 0:
-                    failures.append(attempt_id)
+        live_commands = [
+            (attempt_id, [*command, "--phase", "live"])
+            for attempt_id, command in commands
+        ]
+        live_failures = _run_phase(
+            live_commands, phase="live", concurrency=concurrency
+        )
+
+        # This is the batch barrier: every run_container process has returned,
+        # so no live PX4/Gazebo/ROS workload remains before any ULog, clock, Gate,
+        # or Oracle processing starts.
+        ledger = verify_study_ledger(args.study_root / "attempt-ledger.jsonl")
+        finalize_commands = []
+        invalid_states = []
+        for attempt_id, command in commands:
+            attempt = ledger["attempts"].get(attempt_id)
+            if attempt is not None and attempt["state"] == "LAUNCHED":
+                finalize_commands.append(
+                    (attempt_id, [*command, "--phase", "finalize"])
+                )
+            elif attempt is None or attempt["state"] != "CLOSED":
+                invalid_states.append(attempt_id)
+        finalize_failures = _run_phase(
+            finalize_commands, phase="finalize", concurrency=concurrency
+        )
+        completed_this_run += len(commands)
+        failures = sorted(set(live_failures + finalize_failures + invalid_states))
         if failures:
-            raise CampaignError("attempt drivers failed after fail-closed accounting: " + ", ".join(failures))
+            raise CampaignError(
+                "attempt drivers failed after fail-closed accounting: "
+                + ", ".join(failures)
+            )
 
 
 def main() -> int:

@@ -13,13 +13,48 @@ from scripts.collectors.ulog_route import (
     sequence_gaps,
 )
 from scripts.runtime.artifacts import create_manifest, verify_manifest
-from scripts.runtime.isolation import allocate_isolation, verify_unique
+from scripts.runtime.isolation import (
+    allocate_isolation,
+    cpu_set_members,
+    verify_disjoint_cpu_sets,
+    verify_unique,
+)
+from scripts.runtime.run_qualification_batch import (
+    QualificationBatchError,
+    validate_spec,
+)
 from scripts.runtime.run_sitl import _read_jsonl_snapshot
 from scripts.setup.prepare_sources import SourceError, _verify_patched_tree
 from scripts.setup.verify_candidates import _git_identity
 
 
 class ThorRuntimeTests(unittest.TestCase):
+    def test_cpu_sets_are_parsed_and_must_not_overlap(self) -> None:
+        self.assertEqual(cpu_set_members("0-2,5"), frozenset({0, 1, 2, 5}))
+        verify_disjoint_cpu_sets(["0-2", "3-5", "6-8", "9-13"])
+        with self.assertRaisesRegex(ValueError, "overlap"):
+            verify_disjoint_cpu_sets(["0-2", "2-4"])
+
+    def test_qualification_batch_requires_one_isolated_slot_per_attempt(self) -> None:
+        spec = {
+            "schema_version": "1.0",
+            "study_id": "qualification-five",
+            "concurrency": 2,
+            "resources": {
+                "cpu_sets": ["0-1", "2-3"],
+                "memory_per_attempt": "16g",
+            },
+            "attempts": [
+                {"run_id": "qual-a", "slot": 0},
+                {"run_id": "qual-b", "slot": 1},
+            ],
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            validate_spec(spec, run_root=Path(directory))
+            spec["attempts"][1]["slot"] = 0
+            with self.assertRaises(QualificationBatchError):
+                validate_spec(spec, run_root=Path(directory))
+
     def test_jsonl_snapshot_defers_only_an_open_final_fragment(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "sidecar.jsonl"

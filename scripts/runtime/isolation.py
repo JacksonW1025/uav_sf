@@ -10,6 +10,7 @@ from typing import Any, Iterable
 
 
 IDENTIFIER = re.compile(r"^[a-z0-9][a-z0-9_-]{0,63}$")
+CPU_TOKEN = re.compile(r"^(\d+)(?:-(\d+))?$")
 
 
 @dataclass(frozen=True)
@@ -32,6 +33,34 @@ class IsolationAllocation:
 
     def as_dict(self) -> dict[str, Any]:
         return asdict(self)
+
+
+def cpu_set_members(value: str) -> frozenset[int]:
+    members: set[int] = set()
+    for token in value.split(","):
+        match = CPU_TOKEN.fullmatch(token.strip())
+        if match is None:
+            raise ValueError(f"invalid CPU set token: {token}")
+        first = int(match.group(1))
+        last = int(match.group(2) or first)
+        if last < first:
+            raise ValueError("CPU set range is reversed")
+        expanded = set(range(first, last + 1))
+        if members & expanded:
+            raise ValueError("CPU set repeats a CPU")
+        members.update(expanded)
+    if not members:
+        raise ValueError("CPU set is empty")
+    return frozenset(members)
+
+
+def verify_disjoint_cpu_sets(cpu_sets: Iterable[str]) -> None:
+    occupied: set[int] = set()
+    for value in cpu_sets:
+        members = set(cpu_set_members(value))
+        if occupied & members:
+            raise ValueError("parallel CPU sets overlap")
+        occupied.update(members)
 
 
 def allocate_isolation(

@@ -2,13 +2,16 @@ from __future__ import annotations
 
 import copy
 import json
+import threading
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from scripts.runtime.formal_attempt import FormalAttemptError, _cell
 from scripts.runtime.run_campaign import (
     CampaignError,
     _exact_digest,
+    _run_phase,
     balanced_batch,
     validate_matrix,
 )
@@ -73,3 +76,19 @@ class FormalAttemptTests(unittest.TestCase):
         batch = balanced_batch(states, concurrency=4, launched_count=4)
         self.assertEqual([state["cell"]["cell_id"] for _, state in batch], ["b", "c", "d", "e"])
         self.assertEqual([slot for slot, _ in batch], [1, 2, 3, 0])
+
+    def test_phase_runner_waits_for_every_attempt(self) -> None:
+        both_started = threading.Barrier(2)
+        completed: list[str] = []
+
+        def fake_launch(command: list[str]) -> tuple[int, str, str]:
+            both_started.wait(timeout=1)
+            completed.append(command[0])
+            return 0, command[0], ""
+
+        with patch("scripts.runtime.run_campaign._launch", side_effect=fake_launch):
+            failures = _run_phase(
+                [("a", ["a"]), ("b", ["b"])], phase="live", concurrency=2
+            )
+        self.assertEqual(failures, [])
+        self.assertCountEqual(completed, ["a", "b"])
