@@ -442,22 +442,28 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 ],
             )
             if args.duplicate_registration:
-                # PX4's public contract rejects new component registrations
-                # while armed. Wait for that legal precondition instead of
-                # racing the duplicate request against takeoff.
+                # Exercise the public registration-capacity boundary. PX4
+                # exposes eight external nav-state slots (23..30); the
+                # primary component holds one, seven further registrations
+                # remain legal, and the eighth additional request must be
+                # rejected without modifying commander internals.
                 _wait_for_armed(telemetry, 20.0)
-                start(
-                    "external_mode_duplicate",
-                    [
-                        "ros2",
-                        "run",
-                        "family_a_modes",
-                        "external_mode",
-                        "--ros-args",
-                        "-p",
-                        f"active_duration_s:={args.active_s}",
-                    ],
-                )
+                for duplicate_index in range(8):
+                    start(
+                        f"external_mode_capacity_{duplicate_index + 1}",
+                        [
+                            "ros2",
+                            "run",
+                            "family_a_modes",
+                            "external_mode",
+                            "--ros-args",
+                            "-r",
+                            f"__node:=family_a_capacity_{duplicate_index + 1}",
+                            "-p",
+                            f"active_duration_s:={args.active_s}",
+                        ],
+                    )
+                    time.sleep(0.2)
         elif args.mechanism == "mode_executor":
             workload = start(
                 "mode_executor",
@@ -569,7 +575,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 )
                 expected_duplicate_rejection = (
                     args.duplicate_registration
-                    and item.name == "external_mode_duplicate"
+                    and item.name.startswith("external_mode_capacity_")
                     and item.process.returncode != 0
                 )
                 if expected_external_exit:
