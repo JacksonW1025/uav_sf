@@ -162,6 +162,22 @@ def _next_attempt(state: dict[str, Any]) -> str:
     return f"{cell['attempt_id_prefix']}-{state['launches'] + 1:03d}"
 
 
+def balanced_batch(
+    states: list[dict[str, Any]], *, concurrency: int, launched_count: int
+) -> list[tuple[int, dict[str, Any]]]:
+    """Select least-run cells and rotate their physical resource slots."""
+    pending = [
+        (index, state)
+        for index, state in enumerate(states)
+        if not state["complete"] and not state["insufficient"]
+    ]
+    pending.sort(key=lambda item: (item[1]["launches"], item[0]))
+    selected = [state for _, state in pending[:concurrency]]
+    batch_number = launched_count // concurrency
+    slot_offset = batch_number % concurrency
+    return [((slot_offset + index) % concurrency, state) for index, state in enumerate(selected)]
+
+
 def _launch(command: list[str]) -> tuple[int, str, str]:
     result = subprocess.run(command, text=True, capture_output=True, check=False)
     return result.returncode, result.stdout, result.stderr
@@ -210,9 +226,13 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     for state in states
                 ],
             }
-        batch = pending[:concurrency]
+        batch = balanced_batch(
+            states,
+            concurrency=concurrency,
+            launched_count=ledger["launched_count"],
+        )
         commands = []
-        for slot, state in enumerate(batch):
+        for slot, state in batch:
             attempt_id = _next_attempt(state)
             if attempt_id in ledger["attempts"]:
                 raise CampaignError(f"attempt allocation is not append-only: {attempt_id}")

@@ -3,7 +3,12 @@ from __future__ import annotations
 import unittest
 
 from scripts.runtime.formal_attempt import FormalAttemptError, _cell
-from scripts.runtime.run_campaign import CampaignError, _exact_digest, validate_matrix
+from scripts.runtime.run_campaign import (
+    CampaignError,
+    _exact_digest,
+    balanced_batch,
+    validate_matrix,
+)
 
 
 class FormalAttemptTests(unittest.TestCase):
@@ -44,3 +49,17 @@ class FormalAttemptTests(unittest.TestCase):
         self.assertTrue(_exact_digest("sha256:" + "a" * 64))
         self.assertFalse(_exact_digest("sha256:" + "A" * 64))
         self.assertFalse(_exact_digest("a" * 64))
+
+    def test_campaign_balances_cells_and_rotates_slots(self) -> None:
+        states = [
+            {
+                "cell": {"cell_id": name},
+                "launches": launches,
+                "complete": False,
+                "insufficient": False,
+            }
+            for name, launches in (("a", 1), ("b", 0), ("c", 0), ("d", 0), ("e", 0))
+        ]
+        batch = balanced_batch(states, concurrency=4, launched_count=4)
+        self.assertEqual([state["cell"]["cell_id"] for _, state in batch], ["b", "c", "d", "e"])
+        self.assertEqual([slot for slot, _ in batch], [1, 2, 3, 0])
