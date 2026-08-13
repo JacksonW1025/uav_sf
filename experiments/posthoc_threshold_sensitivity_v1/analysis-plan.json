@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "analysis_id": "posthoc-threshold-sensitivity-v1",
+  "analysis_kind": "read_only_one_factor_at_a_time",
+  "input_trace_count": 151,
+  "frozen_input_digests": {
+    "primary_matrix": "sha256:f22af8ea7e211223d9a8cb9059e34d035078555de23626324b8b6b6fb05781a1",
+    "primary_ledger": "sha256:3558dba3180c1bfc9bbdfdab0e7b80c7a18da593dbb283ea36c34b65b39beb2a",
+    "supplemental_matrix": "sha256:e53c4aaacf22e651145e49ce4be0659f4d36493a77d3b5fb59a1fb5540f08e1a",
+    "supplemental_ledger": "sha256:99ef1259f47ff0443c9a21908719ee91dca2d8d05acacee85d2485f254f3f9ad"
+  },
+  "rules": {
+    "default": "one_factor_at_a_time",
+    "other_thresholds": "keep each trace's frozen values",
+    "missing_continuous_observation": "UNKNOWN",
+    "interpolate_missing": false,
+    "change_frozen_verdict": false,
+    "include_regular_grid": true,
+    "include_every_observed_crossing": true
+  },
+  "regular_grids_ms": {
+    "freshness": {"start": 100, "stop": 500, "step": 25, "frozen": 200},
+    "installation": {"start": 100, "stop": 1000, "step": 50, "frozen": 300},
+    "revocation": {"start": 100, "stop": 1000, "step": 50, "frozen": 300},
+    "continuity": {"start": 100, "stop": 500, "step": 25, "frozen": 250},
+    "successor": {"start": 100, "stop": 1000, "step": 50, "frozen": 300},
+    "fallback_trigger_or_installation": {"start": 500, "stop": 2000, "step": 50, "frozen": 1500},
+    "dynamic_health_loss": {"start": 300, "stop": 1500, "step": 50, "frozen": null}
+  },
+  "fallback_semantics": {
+    "legacy_offboard": "process exit, separately observed proof-of-life loss, configured COM_OF_LOSS_T action, fallback trigger, complete route installation",
+    "dynamic_external_mode": "process exit, external-component health loss, generic fallback trigger, complete route installation",
+    "shared_com_of_loss_t_assumption": false,
+    "old_1500ms_bound_status": "retained as the frozen plan value but reported by mechanism"
+  }
+}

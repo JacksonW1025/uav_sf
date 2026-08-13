@@ -1,0 +1,221 @@
+{
+  "analysis_kind": "read_only_one_factor_at_a_time_sensitivity",
+  "input_trace_count": 151,
+  "interpretation": {
+    "changes_frozen_verdict": false,
+    "default_analysis": "one_factor_at_a_time",
+    "dynamic_fallback_uses_com_of_loss_t": false,
+    "missing_values_are_interpolated": false
+  },
+  "metric_summaries": {
+    "continuity_gap_ns": {
+      "applicable_observation_count": 163,
+      "calculable_count": 163,
+      "distribution": {
+        "maximum_ns": 800277428,
+        "median_ns": 199951085,
+        "minimum_ns": 99665813,
+        "p90_nearest_rank_ns": 200185004
+      },
+      "frozen_local_crossing_count": 0,
+      "frozen_threshold_ns": 250000000,
+      "missing_or_unknown_count": 0,
+      "verdict_stability": {
+        "stable_pass_across_grid": 28,
+        "stable_violation_across_grid": 9,
+        "threshold_dependent_within_grid": 126,
+        "unknown_across_grid": 0
+      }
+    },
+    "dynamic_exit_to_fallback_installation_ns": {
+      "applicable_observation_count": 8,
+      "calculable_count": 8,
+      "distribution": {
+        "maximum_ns": 1345855325,
+        "median_ns": 1153391227,
+        "minimum_ns": 1033973501,
+        "p90_nearest_rank_ns": 1345855325
+      },
+      "frozen_local_crossing_count": 0,
+      "frozen_threshold_ns": 1500000000,
+      "missing_or_unknown_count": 0,
+      "verdict_stability": {
+        "stable_pass_across_grid": 0,
+        "stable_violation_across_grid": 0,
+        "threshold_dependent_within_grid": 8,
+        "unknown_across_grid": 0
+      }
+    },
+    "dynamic_exit_to_fallback_trigger_ns": {
+      "applicable_observation_count": 8,
+      "calculable_count": 8,
+      "distribution": {
+        "maximum_ns": 1235445467,
+        "median_ns": 1112179051,
+        "minimum_ns": 1010566691,
+        "p90_nearest_rank_ns": 1235445467
+      },
+      "frozen_local_crossing_count": 0,
+      "frozen_threshold_ns": 1500000000,
+      "missing_or_unknown_count": 0,
+      "verdict_stability": {
+        "stable_pass_across_grid": 0,
+        "stable_violation_across_grid": 0,
+        "threshold_dependent_within_grid": 8,
+        "unknown_across_grid": 0
+      }
+    },
+    "dynamic_exit_to_health_loss_ns": {
+      "applicable_observation_count": 8,
+      "calculable_count": 8,
+      "distribution": {
+        "maximum_ns": 1234642363,
+        "median_ns": 1111504835,
+        "minimum_ns": 1009933033,
+        "p90_nearest_rank_ns": 1234642363
+      },
+      "frozen_local_crossing_count": 0,
+      "frozen_threshold_ns": null,
+      "missing_or_unknown_count": 0,
+      "verdict_stability": {
+        "stable_pass_across_grid": 0,
+        "stable_violation_across_grid": 0,
+        "threshold_dependent_within_grid": 8,
+        "unknown_across_grid": 0
+      }
+    },
+    "installation_latency_ns": {
+      "applicable_observation_count": 163,
+      "calculable_count": 163,
+      "distribution": {
+        "maximum_ns": 785003773,
+        "median_ns": 136110277,
+        "minimum_ns": 25051867,
+        "p90_nearest_rank_ns": 206965717
+      },
+      "frozen_local_crossing_count": 0,
+      "frozen_threshold_ns": 300000000,
+      "missing_or_unknown_count": 0,
+      "verdict_stability": {
+        "stable_pass_across_grid": 43,
+        "stable_violation_across_grid": 0,
+        "threshold_dependent_within_grid": 120,
+        "unknown_across_grid": 0
+      }
+    },
+    "maximum_command_age_ns": {
+      "applicable_observation_count": 163,
+      "calculable_count": 163,
+      "distribution": {
+        "maximum_ns": 5064351066,
+        "median_ns": 133051779,
+        "minimum_ns": 13715666,
+        "p90_nearest_rank_ns": 5009979213
+      },
+      "frozen_local_crossing_count": 4,
+      "frozen_threshold_ns": 200000000,
+      "missing_or_unknown_count": 0,
+      "verdict_stability": {
+        "stable_pass_across_grid": 5,
+        "stable_violation_across_grid": 40,
+        "threshold_dependent_within_grid": 118,
+        "unknown_across_grid": 0
+      }
+    },
+    "offboard_exit_to_fallback_installation_ns": {
+      "applicable_observation_count": 8,
+      "calculable_count": 8,
+      "distribution": {
+        "maximum_ns": 1286780419,
+        "median_ns": 1130203960,
+        "minimum_ns": 1108198471,
+        "p90_nearest_rank_ns": 1286780419
+      },
+      "frozen_local_crossing_count": 0,
+      "frozen_threshold_ns": 1500000000,
+      "missing_or_unknown_count": 0,
+      "verdict_stability": {
+        "stable_pass_across_grid": 0,
+        "stable_violation_across_grid": 0,
+        "threshold_dependent_within_grid": 8,
+        "unknown_across_grid": 0
+      }
+    },
+    "offboard_exit_to_fallback_trigger_ns": {
+      "applicable_observation_count": 8,
+      "calculable_count": 8,
+      "distribution": {
+        "maximum_ns": 1444857012,
+        "median_ns": 1278941117,
+        "minimum_ns": 1199724704,
+        "p90_nearest_rank_ns": 1444857012
+      },
+      "frozen_local_crossing_count": 0,
+      "frozen_threshold_ns": 1500000000,
+      "missing_or_unknown_count": 0,
+      "verdict_stability": {
+        "stable_pass_across_grid": 0,
+        "stable_violation_across_grid": 0,
+        "threshold_dependent_within_grid": 8,
+        "unknown_across_grid": 0
+      }
+    },
+    "offboard_exit_to_proof_of_life_loss_ns": {
+      "applicable_observation_count": 8,
+      "calculable_count": 0,
+      "distribution": null,
+      "frozen_local_crossing_count": 0,
+      "frozen_threshold_ns": null,
+      "missing_or_unknown_count": 8,
+      "verdict_stability": {
+        "stable_pass_across_grid": 0,
+        "stable_violation_across_grid": 0,
+        "threshold_dependent_within_grid": 0,
+        "unknown_across_grid": 8
+      }
+    },
+    "revocation_latency_ns": {
+      "applicable_observation_count": 163,
+      "calculable_count": 163,
+      "distribution": {
+        "maximum_ns": 31145670,
+        "median_ns": 19750068,
+        "minimum_ns": 12827299,
+        "p90_nearest_rank_ns": 26836018
+      },
+      "frozen_local_crossing_count": 0,
+      "frozen_threshold_ns": 300000000,
+      "missing_or_unknown_count": 0,
+      "verdict_stability": {
+        "stable_pass_across_grid": 163,
+        "stable_violation_across_grid": 0,
+        "threshold_dependent_within_grid": 0,
+        "unknown_across_grid": 0
+      }
+    },
+    "successor_latency_ns": {
+      "applicable_observation_count": 127,
+      "calculable_count": 127,
+      "distribution": {
+        "maximum_ns": 274948326,
+        "median_ns": 130958201,
+        "minimum_ns": 33130271,
+        "p90_nearest_rank_ns": 215399759
+      },
+      "frozen_local_crossing_count": 0,
+      "frozen_threshold_ns": 300000000,
+      "missing_or_unknown_count": 0,
+      "verdict_stability": {
+        "stable_pass_across_grid": 36,
+        "stable_violation_across_grid": 0,
+        "threshold_dependent_within_grid": 91,
+        "unknown_across_grid": 0
+      }
+    }
+  },
+  "not_applicable_instance_count": 8,
+  "oracle_instance_count": 171,
+  "schema_version": "1.0",
+  "trace_with_continuous_observation_count": 143,
+  "transition_instance_count": 163
+}
