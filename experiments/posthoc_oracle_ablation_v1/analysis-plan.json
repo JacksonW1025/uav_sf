@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "analysis_id": "posthoc-oracle-ablation-v1",
+  "analysis_kind": "read_only_posthoc",
+  "frozen_inputs": {
+    "primary_accepted": 131,
+    "supplemental_accepted": 20,
+    "combined_accepted": 151,
+    "primary_matrix_sha256": "sha256:f22af8ea7e211223d9a8cb9059e34d035078555de23626324b8b6b6fb05781a1",
+    "primary_ledger_sha256": "sha256:3558dba3180c1bfc9bbdfdab0e7b80c7a18da593dbb283ea36c34b65b39beb2a",
+    "supplemental_matrix_sha256": "sha256:e53c4aaacf22e651145e49ce4be0659f4d36493a77d3b5fb59a1fb5540f08e1a",
+    "supplemental_ledger_sha256": "sha256:99ef1259f47ff0443c9a21908719ee91dca2d8d05acacee85d2485f254f3f9ad"
+  },
+  "layers": [
+    "mode_only",
+    "terminal_only",
+    "SAFUZZ_PUBLISHED_MODEL_ADAPTATION",
+    "frozen_formal",
+    "full_oracle_posthoc"
+  ],
+  "safuzz_source": {
+    "title": "Uncovering Failures in Cyber-Physical System State Transitions: A Fuzzing-Based Approach Applied to sUAS",
+    "method_name": "SaFUZZ",
+    "version": "arXiv v1 author-accepted manuscript, 2026-01-09",
+    "pdf_url": "https://arxiv.org/pdf/2601.05449",
+    "pdf_sha256": "sha256:0c14b142e8382e65a3dbdef77298ecd63fa72fa5d9ee2e70e35f022c616dd702",
+    "supplement_url": "https://github.com/SAREC-Lab/saFUZZ_ICSE26",
+    "supplement_commit": "4e0d08b4a6ec5cde245311e52d249fdf8fc7a780",
+    "accessed_on": "2026-08-14"
+  },
+  "decision_rules": {
+    "evidence_gate_precedes_full_oracle": true,
+    "weak_layers_may_not_use_route_identity_or_lineage": true,
+    "safuzz_missing_observation": "UNKNOWN",
+    "relative_miss_term": "relative_missed_finding",
+    "independent_defect_claim_from_trace_count": false,
+    "repeated_transition_policy": "evaluate every matching request independently"
+  },
+  "immutability": {
+    "rewrite_frozen_trace": false,
+    "rewrite_frozen_evaluation": false,
+    "rewrite_frozen_threshold": false,
+    "rewrite_frozen_ledger": false,
+    "rewrite_frozen_matrix": false,
+    "rewrite_frozen_report": false
+  }
+}

@@ -7,6 +7,10 @@ from typing import Any
 
 from scripts.model.runtime_route import EFFECT_EVENT_KINDS, RuntimeRouteInstance
 from scripts.oracles.common import clause, complete_installation
+from scripts.oracles.transition_scope import (
+    selected_transition_request,
+    transition_window_end_ns,
+)
 
 
 def evaluate_freshness_lineage(
@@ -22,16 +26,7 @@ def evaluate_freshness_lineage(
             "clauses": {"freshness": not_applicable, "lineage": not_applicable},
         }
     target = transition["target_route"]
-    request = next(
-        (
-            event
-            for event in events
-            if event["kind"] == "transition_requested"
-            and event.get("source_route") == transition["source_route"]
-            and event.get("target_route") == target
-        ),
-        None,
-    )
+    request = selected_transition_request(events, plan)
     if request is None:
         unknown = clause("UNKNOWN", "matching transition request is missing")
         return {
@@ -39,9 +34,13 @@ def evaluate_freshness_lineage(
             "clauses": {"freshness": unknown, "lineage": unknown},
         }
     anchor = int(request["timestamp_ns"])
+    window_end_ns = transition_window_end_ns(events, plan, request)
     deadline = anchor + int(plan["thresholds"]["installation_deadline_ns"])
     installation = complete_installation(
-        events, route=target, anchor_ns=anchor, deadline_ns=deadline
+        events,
+        route=target,
+        anchor_ns=anchor,
+        deadline_ns=min(deadline, window_end_ns),
     )
     if not installation["complete"]:
         unknown = clause("UNKNOWN", "target route installation is incomplete")
@@ -63,8 +62,9 @@ def evaluate_freshness_lineage(
             and event.get("route") == target
             and int(event["timestamp_ns"]) >= anchor
         ),
-        default=max(int(event["timestamp_ns"]) for event in events),
+        default=window_end_ns,
     )
+    revocation_ns = min(revocation_ns, window_end_ns)
     target_effects = [
         event
         for event in events

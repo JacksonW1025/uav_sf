@@ -6,10 +6,19 @@ from __future__ import annotations
 from typing import Any
 
 from scripts.oracles.common import clause, complete_installation, installation_clause
+from scripts.oracles.transition_scope import (
+    selected_transition_request,
+    transition_window_end_ns,
+)
 
 
 def _event_after(
-    events: list[dict[str, Any]], kind: str, anchor_ns: int, *, route: str | None = None
+    events: list[dict[str, Any]],
+    kind: str,
+    anchor_ns: int,
+    *,
+    route: str | None = None,
+    end_ns: int | None = None,
 ) -> dict[str, Any] | None:
     return next(
         (
@@ -17,6 +26,7 @@ def _event_after(
             for event in sorted(events, key=lambda value: (value["timestamp_ns"], value["sequence"]))
             if event["kind"] == kind
             and int(event["timestamp_ns"]) >= anchor_ns
+            and (end_ns is None or int(event["timestamp_ns"]) <= end_ns)
             and (route is None or event.get("route") == route)
         ),
         None,
@@ -28,20 +38,20 @@ def evaluate_successor_progression(
 ) -> dict[str, Any]:
     transition = plan["transition"]
     thresholds = plan["thresholds"]
-    request = next(
-        (
-            event
-            for event in events
-            if event["kind"] == "transition_requested"
-            and event.get("source_route") == transition["source_route"]
-            and event.get("target_route") == transition["target_route"]
-        ),
-        None,
-    )
+    request = selected_transition_request(events, plan)
     anchor = int(request["timestamp_ns"]) if request is not None else 0
+    window_end_ns = (
+        transition_window_end_ns(events, plan, request)
+        if request is not None
+        else max(int(event["timestamp_ns"]) for event in events)
+    )
 
     completion = _event_after(
-        events, "completion", anchor, route=transition["target_route"]
+        events,
+        "completion",
+        anchor,
+        route=transition["target_route"],
+        end_ns=window_end_ns,
     )
     if not transition["completion_expected"]:
         successor = clause("NOT_APPLICABLE", "completion is not part of this plan")
@@ -55,11 +65,11 @@ def evaluate_successor_progression(
             events,
             route=transition["expected_successor"],
             anchor_ns=int(completion["timestamp_ns"]),
-            deadline_ns=successor_deadline,
+            deadline_ns=min(successor_deadline, window_end_ns),
         )
         successor = installation_clause(installation, label="expected successor")
 
-    fault = _event_after(events, "fault_detected", anchor)
+    fault = _event_after(events, "fault_detected", anchor, end_ns=window_end_ns)
     if transition["fault_expected"] and fault is not None:
         fault_observation = clause(
             "PASS", evidence={"fault_sequence": fault["sequence"]}
@@ -85,6 +95,7 @@ def evaluate_successor_progression(
             "fallback_triggered",
             int(fault["timestamp_ns"]),
             route=transition["expected_fallback"],
+            end_ns=window_end_ns,
         )
         fallback_deadline = int(fault["timestamp_ns"]) + int(
             thresholds["fallback_deadline_ns"]
@@ -93,7 +104,7 @@ def evaluate_successor_progression(
             events,
             route=transition["expected_fallback"],
             anchor_ns=int(fault["timestamp_ns"]),
-            deadline_ns=fallback_deadline,
+            deadline_ns=min(fallback_deadline, window_end_ns),
         )
         if fallback_trigger is None:
             fallback = clause("VIOLATION", "safe fallback trigger is missing")
@@ -108,9 +119,15 @@ def evaluate_successor_progression(
         adjacent_successor = clause("NOT_APPLICABLE", "no adjacent request is planned")
     else:
         activation = _event_after(
-            events, "activation", anchor, route=transition["target_route"]
+            events,
+            "activation",
+            anchor,
+            route=transition["target_route"],
+            end_ns=window_end_ns,
         )
-        adjacent = _event_after(events, "adjacent_request", anchor)
+        adjacent = _event_after(
+            events, "adjacent_request", anchor, end_ns=window_end_ns
+        )
         if activation is None or adjacent is None:
             adjacent_timing = clause(
                 "VIOLATION", "target activation or adjacent request evidence is missing"
@@ -138,7 +155,11 @@ def evaluate_successor_progression(
                 },
             )
             completion_after_activation = _event_after(
-                events, "completion", activation_ns, route=transition["target_route"]
+                events,
+                "completion",
+                activation_ns,
+                route=transition["target_route"],
+                end_ns=window_end_ns,
             )
             order_key = next(
                 (
@@ -203,7 +224,10 @@ def evaluate_successor_progression(
                 events,
                 route=transition["expected_successor"],
                 anchor_ns=adjacent_ns,
-                deadline_ns=adjacent_ns + int(thresholds["successor_deadline_ns"]),
+                deadline_ns=min(
+                    adjacent_ns + int(thresholds["successor_deadline_ns"]),
+                    window_end_ns,
+                ),
             )
             if adjacent_installation["complete"]:
                 adjacent_successor = installation_clause(

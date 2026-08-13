@@ -1,0 +1,215 @@
+{
+  "analysis_kind": "read_only_posthoc_oracle_ablation",
+  "compatibility_delta_count": 0,
+  "detection_overlap_relative_to_posthoc_full": {
+    "mode_only": {
+      "INCONCLUSIVE->PASS": 8,
+      "PASS->PASS": 86,
+      "PASS->VIOLATION": 57
+    },
+    "safuzz_adaptation": {
+      "INCONCLUSIVE->PASS": 8,
+      "PASS->PASS": 86,
+      "PASS->VIOLATION": 57
+    },
+    "terminal_only": {
+      "PASS->PASS": 94,
+      "PASS->VIOLATION": 57
+    }
+  },
+  "finding_classification_counts": {
+    "POSSIBLE_EXPERIMENT_OR_ORACLE_ARTIFACT": 0,
+    "PUBLIC_SPEC_GROUNDED": 0,
+    "RESEARCH_SAFETY_CONTRACT": 63,
+    "SAFETY_RELEVANT_EXPOSURE": 63,
+    "SOFTWARE_OR_DIAGNOSTIC_ANOMALY": 0,
+    "THRESHOLD_SENSITIVE_ANOMALY": 63
+  },
+  "finding_semantic_disposition_counts": {
+    "SAFETY_CONTRACT_VIOLATION": 63
+  },
+  "finding_signature_cluster_count": 5,
+  "finding_signature_clusters": [
+    {
+      "claim_boundary": "signature cluster, not an independent software defect",
+      "clause": "freshness",
+      "cluster_id": "sha256:49a6136ad782a87a9c532769e20bc57914cf21d819e38587d46ef877e7985a3d",
+      "oracle": "freshness_lineage",
+      "reasons": [
+        "a consumed command is future-dated or exceeds the freshness bound"
+      ],
+      "representative_smallest_observed_trace": {
+        "attempt_id": "fault-offboard-process-exit-001",
+        "event_count": 568,
+        "study_id": "motivation-thor-v1"
+      },
+      "trace_count": 41
+    },
+    {
+      "claim_boundary": "signature cluster, not an independent software defect",
+      "clause": "adjacent_timing",
+      "cluster_id": "sha256:8c0a3e6510892b755c95b9d64c43921aa36d85db20b41d1c0e18f132da73b3b1",
+      "oracle": "successor_progression",
+      "reasons": [
+        "adjacent request left its preregistered timing bucket"
+      ],
+      "representative_smallest_observed_trace": {
+        "attempt_id": "timing-executor-after-005",
+        "event_count": 928,
+        "study_id": "motivation-thor-v1"
+      },
+      "trace_count": 4
+    },
+    {
+      "claim_boundary": "signature cluster, not an independent software defect",
+      "clause": "continuity",
+      "cluster_id": "sha256:8e66e52bd4678a13f1eba2704936cf7f522a71006cc12e7d5cde4a94ac151f2d",
+      "oracle": "route_conformance",
+      "reasons": [
+        "actuator-effect continuity bound was exceeded"
+      ],
+      "representative_smallest_observed_trace": {
+        "attempt_id": "fault-offboard-attitude-stall-003",
+        "event_count": 650,
+        "study_id": "motivation-thor-v1"
+      },
+      "trace_count": 3
+    },
+    {
+      "claim_boundary": "signature cluster, not an independent software defect",
+      "clause": "installation",
+      "cluster_id": "sha256:c4d89b6268df5cdda8eb4dfccb94554239c00fce422abd7642f9a9b729b7b879",
+      "oracle": "route_conformance",
+      "reasons": [
+        "target route was not completely installed within its deadline"
+      ],
+      "representative_smallest_observed_trace": {
+        "attempt_id": "det-offboard-attitude-land-002",
+        "event_count": 637,
+        "study_id": "motivation-thor-v1"
+      },
+      "trace_count": 11
+    },
+    {
+      "claim_boundary": "signature cluster, not an independent software defect",
+      "clause": "adjacent_order",
+      "cluster_id": "sha256:e4f4922428d6c32fb291ea6123e3a4a9d5b2b0baf7a3f363a323e16272562da6",
+      "oracle": "successor_progression",
+      "reasons": [
+        "completion was not before the adjacent request as planned"
+      ],
+      "representative_smallest_observed_trace": {
+        "attempt_id": "timing-executor-after-005",
+        "event_count": 928,
+        "study_id": "motivation-thor-v1"
+      },
+      "trace_count": 4
+    }
+  ],
+  "ground_truth_boundary": "baseline-undetected post-hoc findings are relative missed findings; they are not labelled false negatives without independent ground truth",
+  "input_trace_count": 151,
+  "issue_localization": {
+    "reason": "the frozen Motivation corpus has no issue-specific ground-truth labels; capability is not inferred from shared symptoms",
+    "status": "NOT_EVALUATED_ON_ISSUE_LABELLED_TRACES"
+  },
+  "layer_status_counts": {
+    "frozen_formal": {
+      "PASS": 94,
+      "VIOLATION": 57
+    },
+    "full_oracle_posthoc": {
+      "PASS": 94,
+      "VIOLATION": 57
+    },
+    "mode_only": {
+      "INCONCLUSIVE": 8,
+      "PASS": 143
+    },
+    "safuzz_adaptation": {
+      "INCONCLUSIVE": 8,
+      "PASS": 143
+    },
+    "terminal_only": {
+      "PASS": 151
+    }
+  },
+  "observation_cost": {
+    "full_oracle_posthoc": {
+      "field_count": 12,
+      "mean_observed_events_per_trace": 935.338,
+      "observation_fields": [
+        "route_epoch",
+        "producer_session",
+        "registration_id",
+        "activation_id",
+        "command_subject_ns",
+        "controller_id",
+        "allocator_id",
+        "writer_id",
+        "lifecycle_owner",
+        "executor_owner",
+        "successor",
+        "fallback"
+      ],
+      "observation_stage_count": 6,
+      "total_observed_events": 141236
+    },
+    "mode_only": {
+      "field_count": 3,
+      "mean_observed_events_per_trace": 6.272,
+      "observation_fields": [
+        "application_state",
+        "declared_mode",
+        "request_time"
+      ],
+      "observation_stage_count": 1,
+      "total_observed_events": 947
+    },
+    "safuzz_adaptation": {
+      "field_count": 7,
+      "mean_observed_events_per_trace": 9.172,
+      "observation_fields": [
+        "application_state",
+        "declared_mode",
+        "failsafe_state",
+        "human_mode_request",
+        "mission_completion",
+        "landed",
+        "disarmed"
+      ],
+      "observation_stage_count": 3,
+      "total_observed_events": 1385
+    },
+    "terminal_only": {
+      "field_count": 3,
+      "mean_observed_events_per_trace": 1.0,
+      "observation_fields": [
+        "landed",
+        "disarmed",
+        "mission_completion"
+      ],
+      "observation_stage_count": 1,
+      "total_observed_events": 151
+    }
+  },
+  "relative_missed_finding_trace_counts": {
+    "mode_only": 57,
+    "safuzz_adaptation": 57,
+    "terminal_only": 57
+  },
+  "safuzz_source": {
+    "accessed_on": "2026-08-14",
+    "method_name": "SaFUZZ",
+    "pdf_sha256": "sha256:0c14b142e8382e65a3dbdef77298ecd63fa72fa5d9ee2e70e35f022c616dd702",
+    "pdf_url": "https://arxiv.org/pdf/2601.05449",
+    "supplement_commit": "4e0d08b4a6ec5cde245311e52d249fdf8fc7a780",
+    "supplement_url": "https://github.com/SAREC-Lab/saFUZZ_ICSE26",
+    "title": "Uncovering Failures in Cyber-Physical System State Transitions: A Fuzzing-Based Approach Applied to sUAS",
+    "version": "arXiv v1 author-accepted manuscript, 2026-01-09"
+  },
+  "schema_version": "1.0",
+  "study_counts": {
+    "motivation-thor-remediation-v1": 20,
+    "motivation-thor-v1": 131
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jacksonw1025.github.io/uav_sf/oracle_ablation_result.schema.json",
+  "title": "Same-trace Oracle ablation result",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "study_id",
+    "attempt_id",
+    "cell_id",
+    "input_digests",
+    "event_count",
+    "layers",
+    "relative_missed_findings",
+    "compatibility_delta"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "study_id": {"type": "string", "minLength": 1},
+    "attempt_id": {"type": "string", "minLength": 1},
+    "cell_id": {"type": "string", "minLength": 1},
+    "input_digests": {
+      "type": "object",
+      "required": ["plan", "trace", "frozen_evaluation"],
+      "additionalProperties": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+    },
+    "event_count": {"type": "integer", "minimum": 1},
+    "layers": {
+      "type": "object",
+      "required": [
+        "frozen_formal",
+        "mode_only",
+        "terminal_only",
+        "safuzz_adaptation",
+        "full_oracle_posthoc"
+      ]
+    },
+    "relative_missed_findings": {"type": "object"},
+    "compatibility_delta": {
+      "type": "object",
+      "required": ["changed", "frozen_status", "posthoc_status"],
+      "properties": {
+        "changed": {"type": "boolean"},
+        "frozen_status": {"enum": ["PASS", "VIOLATION", "INCONCLUSIVE"]},
+        "posthoc_status": {"enum": ["PASS", "VIOLATION", "INCONCLUSIVE"]}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

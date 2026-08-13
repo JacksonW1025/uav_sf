@@ -12,19 +12,10 @@ from scripts.oracles.common import (
     installation_clause,
 )
 from scripts.model.runtime_route import RouteModelError, RuntimeRouteInstance
-
-
-def _transition(events: list[dict[str, Any]], source: str, target: str) -> dict[str, Any] | None:
-    return next(
-        (
-            event
-            for event in events
-            if event["kind"] == "transition_requested"
-            and event.get("source_route") == source
-            and event.get("target_route") == target
-        ),
-        None,
-    )
+from scripts.oracles.transition_scope import (
+    selected_transition_request,
+    transition_window_end_ns,
+)
 
 
 def evaluate_route_conformance(
@@ -49,7 +40,7 @@ def evaluate_route_conformance(
     thresholds = plan["thresholds"]
     source = transition["source_route"]
     target = transition["target_route"]
-    request = _transition(events, source, target)
+    request = selected_transition_request(events, plan)
     if request is None:
         unknown = clause("UNKNOWN", "matching transition request is missing")
         return {
@@ -65,10 +56,14 @@ def evaluate_route_conformance(
         }
 
     anchor = int(request["timestamp_ns"])
+    window_end_ns = transition_window_end_ns(events, plan, request)
     revoke_deadline = anchor + int(thresholds["revocation_deadline_ns"])
     install_deadline = anchor + int(thresholds["installation_deadline_ns"])
     installation = complete_installation(
-        events, route=target, anchor_ns=anchor, deadline_ns=install_deadline
+        events,
+        route=target,
+        anchor_ns=anchor,
+        deadline_ns=min(install_deadline, window_end_ns),
     )
     install_result = installation_clause(installation, label="target")
 
@@ -124,6 +119,7 @@ def evaluate_route_conformance(
         event
         for event in all_source_writes
         if int(event["timestamp_ns"]) >= anchor
+        and int(event["timestamp_ns"]) <= window_end_ns
         and (target_end_ns is None or int(event["timestamp_ns"]) < target_end_ns)
     ]
     revocations = [
