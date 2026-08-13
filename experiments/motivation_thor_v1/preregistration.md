@@ -61,8 +61,8 @@ complete this preregistration before execution.
 
 ## Frozen identities
 
-- runtime repository revision: `93180c7f4997fce347399723affddd47d02272e4`;
-- ARM64 image ID: `sha256:6cd15d346ec7343283376798a0422bad6d2140c924dcff2435307bb6e23d003a`;
+- runtime repository revision: `35971b4b4e9d03a738d0b28a1335ed8e4f2960b0`;
+- ARM64 image ID: `sha256:8c17f8f82d0e31d6ecac260ac84ec3b1ea3eedb67d887f27b9158c9331b24ef8`;
 - environment ID: `thor-r38.2.1-family-a-formal-v1`;
 - formal cells: 21;
 - combined accepted target: 151;

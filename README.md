@@ -120,7 +120,7 @@ python3 -m scripts.runtime.run_campaign \
   --attestation experiments/motivation_thor_v1/environment-attestation.json \
   --study-root experiments/motivation_thor_v1 \
   --run-root runs \
-  --image uav-sf-family-a-thor:formal-93180c7
+  --image uav-sf-family-a-thor:formal-35971b4
 ```
 
 The command is resumable and refuses identity drift, open attempts, duplicate
