@@ -135,6 +135,8 @@ def launch(args: argparse.Namespace) -> dict[str, object]:
         str(args.readiness_timeout_s),
         "--attempt-timeout-s",
         str(args.attempt_timeout_s),
+        "--safety-limits",
+        args.safety_limits,
     ]
     if args.health_loss:
         command.append("--health-loss")
@@ -225,6 +227,10 @@ def main() -> int:
     parser.add_argument("--readiness-timeout-s", type=float, default=45.0)
     parser.add_argument("--attempt-timeout-s", type=float, default=60.0)
     parser.add_argument("--outer-timeout-s", type=float, default=130.0)
+    parser.add_argument(
+        "--safety-limits",
+        default="/opt/uav_sf/config/safety_limits.qualification.json",
+    )
     args = parser.parse_args()
     try:
         result = launch(args)

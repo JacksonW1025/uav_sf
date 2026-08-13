@@ -16,6 +16,7 @@ from typing import Any
 from scripts.accounting.study import StudyLedger, verify_study_ledger
 from scripts.evaluator.plan import validate_plan
 from scripts.runtime.make_plan import create_plan
+from scripts.runtime.run_campaign import CampaignError, attempt_cell, validate_matrix
 
 
 class FormalAttemptError(RuntimeError):
@@ -45,14 +46,10 @@ def _write_new(path: Path, value: Any) -> None:
 
 
 def _cell(matrix: dict[str, Any], attempt_id: str) -> dict[str, Any]:
-    matches = [
-        cell
-        for cell in matrix.get("cells", [])
-        if attempt_id in cell.get("attempt_ids", [])
-    ]
-    if len(matches) != 1:
-        raise FormalAttemptError("attempt ID is not assigned to exactly one frozen cell")
-    return matches[0]
+    try:
+        return attempt_cell(matrix, attempt_id)
+    except CampaignError as exc:
+        raise FormalAttemptError(str(exc)) from exc
 
 
 def _preflight(image: str) -> dict[str, Any]:
@@ -111,6 +108,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     attestation = _read_object(args.attestation)
     if matrix.get("schema_version") != "1.0":
         raise FormalAttemptError("unsupported matrix schema")
+    try:
+        validate_matrix(matrix)
+    except CampaignError as exc:
+        raise FormalAttemptError(str(exc)) from exc
     study_id = str(matrix.get("study_id", ""))
     cell = _cell(matrix, args.attempt_id)
     cell_id = str(cell["cell_id"])
@@ -234,6 +235,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         str(runtime.get("attempt_timeout_s", 90.0)),
         "--outer-timeout-s",
         str(runtime.get("outer_timeout_s", 160.0)),
+        "--safety-limits",
+        "/opt/uav_sf/config/safety_limits.formal.json",
     ]
     if runtime.get("health_loss"):
         command.append("--health-loss")

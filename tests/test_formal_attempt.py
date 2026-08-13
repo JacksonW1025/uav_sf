@@ -3,6 +3,7 @@ from __future__ import annotations
 import unittest
 
 from scripts.runtime.formal_attempt import FormalAttemptError, _cell
+from scripts.runtime.run_campaign import CampaignError, validate_matrix
 
 
 class FormalAttemptTests(unittest.TestCase):
@@ -24,3 +25,17 @@ class FormalAttemptTests(unittest.TestCase):
         }
         with self.assertRaises(FormalAttemptError):
             _cell(matrix, "same-01")
+
+    def test_derived_attempt_namespace_is_capped(self) -> None:
+        matrix = {
+            "cells": [
+                {"cell_id": "normal", "attempt_id_prefix": "normal", "launch_cap": 10}
+            ]
+        }
+        self.assertEqual(_cell(matrix, "normal-010")["cell_id"], "normal")
+        with self.assertRaises(FormalAttemptError):
+            _cell(matrix, "normal-011")
+
+    def test_matrix_rejects_unqualified_concurrency(self) -> None:
+        with self.assertRaises(CampaignError):
+            validate_matrix({"schema_version": "1.0", "formal_concurrency": 6})
