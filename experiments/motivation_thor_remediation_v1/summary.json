@@ -1,0 +1,92 @@
+{
+  "cell_status_counts": {
+    "COMPLETE": 2
+  },
+  "cells": {
+    "timing-executor-before-remediation": {
+      "accepted": 10,
+      "accepted_target": 10,
+      "category": "timing",
+      "launch_cap": 20,
+      "launches": 10,
+      "outcomes": {
+        "ACCEPTED": 10
+      },
+      "status": "COMPLETE"
+    },
+    "timing-offboard-reentry-rtl-remediation": {
+      "accepted": 10,
+      "accepted_target": 10,
+      "category": "timing",
+      "launch_cap": 20,
+      "launches": 10,
+      "outcomes": {
+        "ACCEPTED": 10
+      },
+      "status": "COMPLETE"
+    }
+  },
+  "environment_id": "thor-r38.2.1-family-a-remediation-v1",
+  "evaluation_counts": {
+    "PASS": 19,
+    "VIOLATION": 1
+  },
+  "evidence_gate_counts": {
+    "ADMISSIBLE": 20
+  },
+  "formal_concurrency": 4,
+  "ledger": {
+    "accepted_count": 20,
+    "chain_head": "8d2ef402c62a7fb750850374783d57fc563d1f3a31cf16ec66a270bf42b3d2c7",
+    "closed_count": 20,
+    "digest": "sha256:99ef1259f47ff0443c9a21908719ee91dca2d8d05acacee85d2485f254f3f9ad",
+    "event_count": 60,
+    "launched_count": 20
+  },
+  "oracle_clause_counts": {
+    "freshness_lineage": {
+      "PASS": 39,
+      "VIOLATION": 1
+    },
+    "registration_contract": {
+      "NOT_APPLICABLE": 40
+    },
+    "route_conformance": {
+      "NOT_APPLICABLE": 10,
+      "PASS": 110
+    },
+    "successor_progression": {
+      "NOT_APPLICABLE": 80,
+      "PASS": 40
+    }
+  },
+  "outcome_counts": {
+    "ACCEPTED": 20
+  },
+  "raw_evidence_manifests": {
+    "timing-executor-before-remediation-001": "sha256:83e97e30a0f7544f3c8533a057088459fa0757658de77c7df909c55944018c57",
+    "timing-executor-before-remediation-002": "sha256:e9cb3194b4ffa9889d706089355f53c9ee351c8b42d596424ee88f50c4c3d88c",
+    "timing-executor-before-remediation-003": "sha256:547145421055cad44a23f148801598d3e78e10a11119d16b5b2f27363e34e5c7",
+    "timing-executor-before-remediation-004": "sha256:ec903833d4aab725014212873af1cbcb51a683b670cbba5d17c6f48f4aee3659",
+    "timing-executor-before-remediation-005": "sha256:3c39ba7091dee91b21e660fa620df260ed41aeaa92a12c8a2951b2128f2ac320",
+    "timing-executor-before-remediation-006": "sha256:6cf3e807d6dd9ed321745cddd35e34faaaecf6096d81e63b708f10b0e3948737",
+    "timing-executor-before-remediation-007": "sha256:150a2067c5d42d0f9f81b646231993387138583c1b9dc50fef996ab90764eb9f",
+    "timing-executor-before-remediation-008": "sha256:e76741a2e866babb452b9e8366368a9e41e1424d9d94b8ae987b78b3c1d4a412",
+    "timing-executor-before-remediation-009": "sha256:8341988e055a17c2074d5d4fa8eae59f8352ea8589b92981ac05af4767e0d32c",
+    "timing-executor-before-remediation-010": "sha256:0494a9b740e641b9566e87f661aaac75b343c7ad2694d04708b52b5cc36a21f7",
+    "timing-offboard-reentry-rtl-remediation-001": "sha256:6c86ce1f1a5ce8c5439185349daa4a49f9f2359014d1b9b908a25ee4bbd2f323",
+    "timing-offboard-reentry-rtl-remediation-002": "sha256:d80ea3294a8efceb8ac3c2d95b7d203f468a03dce73b81d4740430a1e396c810",
+    "timing-offboard-reentry-rtl-remediation-003": "sha256:0549a2a1c95eb77cce5b4769e3eac08972a43a877511c14827313810ac1254af",
+    "timing-offboard-reentry-rtl-remediation-004": "sha256:e7f8b61a44572068647a9589f2f5a8db372523a5328cda7ac2175d17e2964af7",
+    "timing-offboard-reentry-rtl-remediation-005": "sha256:79391a0d546471f5b879aa49f3190e2bb8ed5ddc43293d779aaba8d7275573f6",
+    "timing-offboard-reentry-rtl-remediation-006": "sha256:5fc2b99bbc0f3f8f3e3f051acd7f23795508bd4d4e268b513d2e58ed419f0ef9",
+    "timing-offboard-reentry-rtl-remediation-007": "sha256:098de12db47ca543ee830f806590d2beac94c09c9724f45eb58f37d413ff3637",
+    "timing-offboard-reentry-rtl-remediation-008": "sha256:23120ff7c49dd0c72f95ad5db44f3b1f653337f5098caf3ecf75c7f0dc36b0b0",
+    "timing-offboard-reentry-rtl-remediation-009": "sha256:365820617ed10e5369cdbaa6f3530962b52eecd65322a6d5c1d4a2afd37150da",
+    "timing-offboard-reentry-rtl-remediation-010": "sha256:73bb55b96b3e6ef9c473c6d6ac9929c7b6fcfbe4b5585d4b8c5c9f35f315402c"
+  },
+  "repository_revision": "221b9893f534b520c9d8c9728ff1805bc34f4264",
+  "schema_version": "1.0",
+  "study_id": "motivation-thor-remediation-v1",
+  "study_status": "COMPLETE"
+}

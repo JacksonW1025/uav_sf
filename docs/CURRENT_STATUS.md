@@ -1,11 +1,11 @@
 # Current status
 
 ```text
-Formal experiment attempts: 180
+Formal experiment attempts: 200
 Retained historical results: 0
-Current empirical claims: bounded Thor SITL findings in the final report
-Formal execution environment: thor-r38.2.1-family-a-formal-v1
-Study state: MEASUREMENT_INSUFFICIENT; 19/21 cells complete
+Current empirical claims: bounded Thor SITL findings in the final reports
+Formal execution environments: primary and supplemental Thor v1 identities
+Study state: current motivation scope complete through a separate supplemental study
 ```
 
 Available today: the Family A route model, normalized event contracts,
@@ -15,9 +15,14 @@ generation strategies, safety supervision, cleanup checking, attempt
 accounting, locked sources, a validation/reference container definition, and
 non-flight tests.
 
-The frozen Thor matrix contains 21 Family A cells. All 180 launches are
-closed: 131 accepted evidence sets, 20 observability rejections, 28 timeouts,
-and one environment failure. Nineteen cells reached their targets; two reached
-their caps without accepted evidence. See the study final report before
-planning any later experiment. Qualification checks are not formal runtime
-evidence and never enter the formal ledger.
+The primary Thor matrix remains closed at 180 launches: 131 accepted evidence
+sets, 20 observability rejections, 28 timeouts, and one environment failure.
+Nineteen cells reached target and two invalid-plan cells reached cap. The
+separate supplemental study corrected only those plan/fixture contracts and
+closed 20/20 new launches as accepted, reaching both 10/10 targets. It does not
+change the primary ledger or status.
+
+Across both studies, 200 formal launches are closed and 151 evidence sets are
+accepted. Qualification checks remain outside every formal ledger and result.
+The locked environment and campaign entry are ready for a separately
+preregistered later experiment; no later study or empirical claim is implied.

@@ -1,0 +1,19 @@
+{
+  "attempt_id": "timing-executor-before-remediation-002",
+  "cell_id": "timing-executor-before-remediation",
+  "compact_evidence": {
+    "container_driver_result": "sha256:3bb4f1e7bcf12aa25f7a0fbe2112d3fb572152fed9c355f5013e8542f41fb863",
+    "evaluation": "sha256:0e45174592655b71e80f083ccb2a33bd98c1d30f602603ba5e4c7d2df1c96838",
+    "processing_result": "sha256:7e5ab96083e3302bd377179796e94d70cd133b1c4f49b6e285ea3000a37d932a",
+    "raw_manifest": "sha256:e9cb3194b4ffa9889d706089355f53c9ee351c8b42d596424ee88f50c4c3d88c",
+    "runtime_result": "sha256:356a8df59b2a89eb47fcfd1d76985650bc85de552621abf1044425d1119c2380",
+    "ulog_summary": "sha256:081566606f71ca57b1332f986b1b5175ae56cc6bb6a623377348d5aa64744b34"
+  },
+  "image_id": "sha256:d464efc84c02cc467571671d7f3aa8f7eb3c29d14c719dfe299741b3dae580c2",
+  "outcome": "ACCEPTED",
+  "plan_digest": "sha256:11f967eb2f2c2211a5b8c24f260ddf106d2f822f9b02f48d92055753c0f84836",
+  "processing_returncode": 0,
+  "runtime_driver_returncode": 0,
+  "schema_version": "1.0",
+  "study_id": "motivation-thor-remediation-v1"
+}

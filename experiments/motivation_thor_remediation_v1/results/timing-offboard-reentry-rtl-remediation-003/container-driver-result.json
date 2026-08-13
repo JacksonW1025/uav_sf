@@ -1,0 +1,16 @@
+{
+  "architecture": "arm64",
+  "container_name": "family-a-motivation-thor-remediation-v1-timing-offboard-reentry-rtl-remediation-003",
+  "container_runtime": "runc",
+  "cpu_set": "6-8",
+  "image": "uav-sf-family-a-thor:remediation-221b989",
+  "image_id": "sha256:d464efc84c02cc467571671d7f3aa8f7eb3c29d14c719dfe299741b3dae580c2",
+  "memory": "24g",
+  "network_mode": "none",
+  "operating_system": "linux",
+  "outer_timeout": false,
+  "returncode": 0,
+  "run_id": "timing-offboard-reentry-rtl-remediation-003",
+  "schema_version": "1.0",
+  "study_id": "motivation-thor-remediation-v1"
+}

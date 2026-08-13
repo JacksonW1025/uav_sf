@@ -57,8 +57,8 @@ of evidence is never converted into `PASS`.
 ## Repository layout
 
 - `config/` contains immutable source identities and current method defaults.
-- `docs/` defines scope, route semantics, method, future experiment design,
-  and the zero-attempt status.
+- `docs/` defines scope, route semantics, method, experiment design, migration
+  evidence, and current formal status.
 - `scripts/` contains Family A adapters, collectors, oracles, evaluation,
   safety, cleanup, accounting, setup, and repository validation.
 - `data/schemas/` defines the tracked input and output contracts.
@@ -108,11 +108,11 @@ docker buildx build --platform linux/arm64 \
   --tag uav-sf-family-a:locked .
 ```
 
-## Run the preregistered Thor study
+## Run a preregistered Thor study
 
-The frozen matrix contains 21 cells with a combined target of 151 accepted
-evidence sets and a total cap of 302 launches. It uses qualified concurrency
-four:
+The primary and supplemental matrices are already closed. The same resumable
+entry point runs any frozen matrix and refuses identity drift, open attempts,
+duplicate attempt IDs, silent replacement, or execution beyond a cell cap:
 
 ```bash
 python3 -m scripts.runtime.run_campaign \
@@ -123,8 +123,8 @@ python3 -m scripts.runtime.run_campaign \
   --image uav-sf-family-a-thor:formal-35971b4
 ```
 
-The command is resumable and refuses identity drift, open attempts, duplicate
-attempt IDs, silent replacement, or execution beyond a cell cap.
+Use the exact image reference recorded by the selected matrix and attestation.
+The supplemental invocation is retained in its study README.
 
 ## Evaluate one closed trace
 
@@ -147,12 +147,13 @@ retained only after each launch has closed through the Evidence Gate.
 
 ## Current status
 
-- Formal experiment attempts: 180
+- Formal experiment attempts: 200
 - Retained historical results: 0
-- Current empirical claims: bounded Thor SITL findings in the final report
-- Formal execution environment: thor-r38.2.1-family-a-formal-v1
-- Study state: MEASUREMENT_INSUFFICIENT; 19/21 cells complete
+- Current empirical claims: bounded Thor SITL findings in the final reports
+- Formal execution environments: primary and supplemental Thor v1 identities
+- Study state: current motivation scope complete through a separate supplemental study
 
 See [research scope](docs/RESEARCH_SCOPE.md), [route model](docs/ROUTE_MODEL.md),
-[method](docs/METHOD.md), [experiment plan](docs/EXPERIMENT_PLAN.md), and
+[method](docs/METHOD.md), [experiment plan](docs/EXPERIMENT_PLAN.md),
+[Thor migration report](docs/THOR_MIGRATION_REPORT.md), and
 [current status](docs/CURRENT_STATUS.md).
