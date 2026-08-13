@@ -181,7 +181,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         fallback_expected=plan_spec["fallback_expected"],
         thresholds=matrix["thresholds"],
         strategy=plan_spec.get("strategy", "official_sequence"),
-        seed=simulation_seed,
+        simulation_seed=simulation_seed,
+        seed=plan_spec.get("seed"),
         timing_bounds_ns=plan_spec.get("timing_bounds_ns"),
         target_activation_count=plan_spec.get("target_activation_count"),
     )

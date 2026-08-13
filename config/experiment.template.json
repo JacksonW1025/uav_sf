@@ -1,10 +1,11 @@
 {
-  "schema_version": "1.1",
+  "schema_version": "1.2",
   "plan_id": "REPLACE-BEFORE-EXECUTION",
   "run_id": "REPLACE-BEFORE-EXECUTION",
   "strategy": {
     "name": "official_sequence",
     "seed": null,
+    "simulation_seed": 1,
     "timing_bounds_ns": {}
   },
   "transition": {

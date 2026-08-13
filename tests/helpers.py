@@ -23,12 +23,13 @@ def identity(route: str, label: str) -> dict[str, str]:
 
 def plan() -> dict[str, Any]:
     return {
-        "schema_version": "1.1",
+        "schema_version": "1.2",
         "plan_id": "plan-family-a-001",
         "run_id": "run-family-a-001",
         "strategy": {
             "name": "official_sequence",
             "seed": None,
+            "simulation_seed": 1,
             "timing_bounds_ns": {},
         },
         "transition": {

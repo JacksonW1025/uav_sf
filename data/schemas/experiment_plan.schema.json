@@ -16,15 +16,16 @@
     "cleanup"
   ],
   "properties": {
-    "schema_version": {"const": "1.1"},
+    "schema_version": {"const": "1.2"},
     "plan_id": {"type": "string", "minLength": 1},
     "run_id": {"type": "string", "minLength": 1},
     "strategy": {
       "type": "object",
-      "required": ["name", "seed", "timing_bounds_ns"],
+      "required": ["name", "seed", "simulation_seed", "timing_bounds_ns"],
       "properties": {
         "name": {"enum": ["official_sequence", "bounded_random_timing", "state_aware"]},
         "seed": {"type": ["integer", "null"]},
+        "simulation_seed": {"type": "integer", "minimum": 1},
         "timing_bounds_ns": {"type": "object"}
       },
       "additionalProperties": false

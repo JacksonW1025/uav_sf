@@ -56,8 +56,8 @@ def validate_plan(plan: dict[str, Any], *, allow_template: bool = False) -> None
     }
     if set(plan) != required:
         raise PlanError("plan fields differ from the current schema")
-    if plan["schema_version"] != "1.1":
-        raise PlanError("plan schema_version must be 1.1")
+    if plan["schema_version"] != "1.2":
+        raise PlanError("plan schema_version must be 1.2")
     for field in ("plan_id", "run_id"):
         value = plan[field]
         if not isinstance(value, str) or not value.strip():
@@ -66,7 +66,7 @@ def validate_plan(plan: dict[str, Any], *, allow_template: bool = False) -> None
             raise PlanError(f"{field} still contains a template placeholder")
 
     strategy = _mapping(plan["strategy"], "strategy")
-    if set(strategy) != {"name", "seed", "timing_bounds_ns"}:
+    if set(strategy) != {"name", "seed", "simulation_seed", "timing_bounds_ns"}:
         raise PlanError("strategy fields differ from the current schema")
     if strategy["name"] not in STRATEGIES:
         raise PlanError("unsupported strategy")
@@ -74,6 +74,8 @@ def validate_plan(plan: dict[str, Any], *, allow_template: bool = False) -> None
         raise PlanError("official_sequence must not declare a random seed")
     if strategy["name"] != "official_sequence" and not isinstance(strategy["seed"], int):
         raise PlanError("timing and state-aware strategies require an integer seed")
+    if not isinstance(strategy["simulation_seed"], int) or strategy["simulation_seed"] <= 0:
+        raise PlanError("simulation_seed must be a positive integer")
     bounds = _mapping(strategy["timing_bounds_ns"], "timing_bounds_ns")
     for name, interval in bounds.items():
         if (

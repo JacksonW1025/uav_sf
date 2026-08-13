@@ -58,6 +58,7 @@ def create_plan(
     fault_expected: bool,
     fallback_expected: bool,
     thresholds: dict[str, Any],
+    simulation_seed: int = 1,
     strategy: str = "official_sequence",
     seed: int | None = None,
     timing_bounds_ns: dict[str, list[int]] | None = None,
@@ -87,12 +88,13 @@ def create_plan(
     if timing_bounds_ns and "adjacent_after_activation_ns" in timing_bounds_ns:
         required.append("adjacent_request")
     plan = {
-        "schema_version": "1.1",
+        "schema_version": "1.2",
         "plan_id": plan_id,
         "run_id": run_id,
         "strategy": {
             "name": strategy,
             "seed": seed,
+            "simulation_seed": simulation_seed,
             "timing_bounds_ns": timing_bounds_ns or {},
         },
         "transition": {
@@ -194,6 +196,7 @@ def main() -> int:
             fault_expected=args.fault_expected,
             fallback_expected=args.fallback_expected,
             thresholds=thresholds,
+            simulation_seed=1,
             strategy=args.strategy,
             seed=args.seed,
             timing_bounds_ns=None,

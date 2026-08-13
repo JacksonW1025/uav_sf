@@ -71,7 +71,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         fault_expected=args.fault_expected,
         fallback_expected=args.fallback_expected,
         thresholds=thresholds,
-        seed=args.simulation_seed,
+        simulation_seed=args.simulation_seed,
         timing_bounds_ns=timing_bounds,
         target_activation_count=[
             args.target_activation_count
