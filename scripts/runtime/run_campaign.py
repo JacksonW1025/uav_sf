@@ -100,6 +100,8 @@ def validate_matrix(matrix: dict[str, Any]) -> None:
                 raise CampaignError(f"cell {cell_id} plan lacks {field}")
         if "mechanism" not in runtime:
             raise CampaignError(f"cell {cell_id} runtime lacks mechanism")
+        if not isinstance(runtime.get("simulation_seed_base"), int):
+            raise CampaignError(f"cell {cell_id} lacks a formal seed base")
 
 
 def attempt_cell(matrix: dict[str, Any], attempt_id: str) -> dict[str, Any]:

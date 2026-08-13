@@ -287,6 +287,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "PX4_SYS_AUTOSTART": "4001",
             "PX4_SIM_MODEL": "gz_x500",
             "PX4_GZ_WORLD": "default",
+            "PX4_GZ_STANDALONE": "1",
             # Calling the built PX4 binary directly bypasses the Make target
             # that normally sources build/.../rootfs/gz_env.sh.  Bind every
             # Gazebo search path to an immutable path inside this image.
@@ -345,6 +346,19 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "xrce_agent",
             ["/opt/microxrce/bin/MicroXRCEAgent", "udp4", "-p", str(allocation.xrce_agent_port)],
         )
+        start(
+            "gazebo",
+            [
+                "gz",
+                "sim",
+                "-r",
+                "-s",
+                "--seed",
+                str(args.simulation_seed),
+                str(gz_worlds / "default.sdf"),
+            ],
+        )
+        time.sleep(1.0)
         start(
             "px4",
             [
@@ -727,6 +741,7 @@ def main() -> int:
     parser.add_argument("--slot", type=int, default=0)
     parser.add_argument("--cpu-set", default="0-11")
     parser.add_argument("--active-s", type=float, default=8.0)
+    parser.add_argument("--simulation-seed", type=int, required=True)
     parser.add_argument("--readiness-timeout-s", type=float, default=45.0)
     parser.add_argument("--attempt-timeout-s", type=float, default=60.0)
     parser.add_argument(

@@ -65,6 +65,7 @@ def _git_identity(path: Path) -> dict[str, Any]:
         capture_output=True,
     ).stdout
     submodules = git("submodule", "status", "--recursive").splitlines()
+    submodule_bytes = ("\n".join(submodules) + ("\n" if submodules else "")).encode()
     return {
         "commit": git("rev-parse", "HEAD"),
         "changed_paths": sorted(
@@ -72,7 +73,9 @@ def _git_identity(path: Path) -> dict[str, Any]:
             for line in status.splitlines()
             if len(line) > 3 and not line[3:].startswith(("build-", "install-"))
         ),
-        "submodules": submodules,
+        "submodule_count": len(submodules),
+        "submodule_status_sha256": "sha256:"
+        + hashlib.sha256(submodule_bytes).hexdigest(),
     }
 
 

@@ -71,6 +71,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         fault_expected=args.fault_expected,
         fallback_expected=args.fallback_expected,
         thresholds=thresholds,
+        seed=args.simulation_seed,
         timing_bounds_ns=timing_bounds,
         target_activation_count=[
             args.target_activation_count
@@ -121,6 +122,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         args.memory,
         "--active-s",
         str(args.active_s),
+        "--simulation-seed",
+        str(args.simulation_seed),
         "--attempt-timeout-s",
         str(args.attempt_timeout_s),
         "--outer-timeout-s",
@@ -222,6 +225,7 @@ def main() -> int:
     parser.add_argument("--cpu-set", default="0-13")
     parser.add_argument("--memory", default="24g")
     parser.add_argument("--active-s", type=float, default=8.0)
+    parser.add_argument("--simulation-seed", type=int, required=True)
     parser.add_argument("--attempt-timeout-s", type=float, default=90.0)
     parser.add_argument("--outer-timeout-s", type=float, default=160.0)
     parser.add_argument(

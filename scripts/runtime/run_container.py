@@ -131,6 +131,8 @@ def launch(args: argparse.Namespace) -> dict[str, object]:
         args.cpu_set,
         "--active-s",
         str(args.active_s),
+        "--simulation-seed",
+        str(args.simulation_seed),
         "--readiness-timeout-s",
         str(args.readiness_timeout_s),
         "--attempt-timeout-s",
@@ -224,6 +226,7 @@ def main() -> int:
     parser.add_argument("--shm-size", default="1g")
     parser.add_argument("--pids-limit", type=int, default=4096)
     parser.add_argument("--active-s", type=float, default=8.0)
+    parser.add_argument("--simulation-seed", type=int, required=True)
     parser.add_argument("--readiness-timeout-s", type=float, default=45.0)
     parser.add_argument("--attempt-timeout-s", type=float, default=60.0)
     parser.add_argument("--outer-timeout-s", type=float, default=130.0)

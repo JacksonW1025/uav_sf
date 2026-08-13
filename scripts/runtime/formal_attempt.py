@@ -115,6 +115,12 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     study_id = str(matrix.get("study_id", ""))
     cell = _cell(matrix, args.attempt_id)
     cell_id = str(cell["cell_id"])
+    runtime = cell["runtime"]
+    try:
+        attempt_ordinal = int(args.attempt_id.rsplit("-", 1)[1])
+        simulation_seed = int(runtime["simulation_seed_base"]) + attempt_ordinal
+    except (IndexError, TypeError, ValueError) as exc:
+        raise FormalAttemptError("formal simulation seed cannot be derived") from exc
     image_id = str(
         attestation["attestation_payload"]["container"]["image_id"]
     )
@@ -175,7 +181,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         fallback_expected=plan_spec["fallback_expected"],
         thresholds=matrix["thresholds"],
         strategy=plan_spec.get("strategy", "official_sequence"),
-        seed=plan_spec.get("seed"),
+        seed=simulation_seed,
         timing_bounds_ns=plan_spec.get("timing_bounds_ns"),
         target_activation_count=plan_spec.get("target_activation_count"),
     )
@@ -196,7 +202,6 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         payload={"image_id": image_id, "preflight_status": preflight["status"]},
     )
 
-    runtime = cell["runtime"]
     command = [
         sys.executable,
         "-m",
@@ -231,6 +236,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         args.memory,
         "--active-s",
         str(runtime.get("active_s", 8.0)),
+        "--simulation-seed",
+        str(simulation_seed),
         "--attempt-timeout-s",
         str(runtime.get("attempt_timeout_s", 90.0)),
         "--outer-timeout-s",
