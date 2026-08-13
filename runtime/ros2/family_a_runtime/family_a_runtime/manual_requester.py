@@ -18,17 +18,19 @@ class ManualRequester(Node):
         self.declare_parameter("run_id", "")
         self.declare_parameter("output_path", "")
         self.declare_parameter("request_delay_s", 8.0)
+        self.declare_parameter("anchor_monotonic_ns", 0)
         self.declare_parameter("timing_bucket", "near")
         self._run_id = str(self.get_parameter("run_id").value)
         output_path = str(self.get_parameter("output_path").value)
         self._delay_ns = int(float(self.get_parameter("request_delay_s").value) * 1e9)
+        configured_anchor = int(self.get_parameter("anchor_monotonic_ns").value)
         self._bucket = str(self.get_parameter("timing_bucket").value)
         if not self._run_id or not output_path or self._delay_ns < 0:
             raise RuntimeError("run_id, output_path, and a non-negative request delay are required")
         if self._bucket not in {"before", "near", "after"}:
             raise RuntimeError("unsupported timing_bucket")
         self._log = DurableJsonl(output_path)
-        self._activation_ns: int | None = None
+        self._activation_ns: int | None = configured_anchor or None
         self._sent = False
         self._publisher = self.create_publisher(
             VehicleCommand, "/fmu/in/vehicle_command", PX4_QOS
@@ -45,6 +47,7 @@ class ManualRequester(Node):
             run_id=self._run_id,
             timing_bucket=self._bucket,
             request_delay_ns=self._delay_ns,
+            anchor_monotonic_ns=configured_anchor,
         )
 
     def _status(self, message: VehicleStatus) -> None:

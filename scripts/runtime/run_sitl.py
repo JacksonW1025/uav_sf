@@ -128,13 +128,15 @@ def _wait_for_armed(path: Path, timeout_s: float) -> None:
     raise RuntimeFailure("duplicate-registration fixture did not observe armed state")
 
 
-def _wait_for_lifecycle_kind(path: Path, kind: str, timeout_s: float) -> None:
+def _wait_for_lifecycle_kind(path: Path, kind: str, timeout_s: float) -> int:
     deadline = time.monotonic() + timeout_s
     while time.monotonic() < deadline:
         if path.exists():
             for line in path.read_text(encoding="utf-8").splitlines():
-                if line.strip() and json.loads(line).get("kind") == kind:
-                    return
+                if line.strip():
+                    record = json.loads(line)
+                    if record.get("kind") == kind:
+                        return int(record["received_monotonic_ns"])
         time.sleep(0.05)
     raise RuntimeFailure(f"workload did not publish {kind} before its deadline")
 
@@ -512,7 +514,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 ],
             )
             if args.manual_land_offset_s is not None:
-                _wait_for_lifecycle_kind(
+                transition_anchor_ns = _wait_for_lifecycle_kind(
                     raw / "workload.lifecycle.jsonl", "transition_requested", 30.0
                 )
                 bucket = (
@@ -534,6 +536,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                         f"output_path:={raw / 'adjacent.lifecycle.jsonl'}",
                         "-p",
                         f"request_delay_s:={max(0.0, args.active_s + args.manual_land_offset_s)}",
+                        "-p",
+                        f"anchor_monotonic_ns:={transition_anchor_ns}",
                         "-p",
                         f"timing_bucket:={bucket}",
                     ],
