@@ -1,0 +1,19 @@
+{
+  "attempt_id": "fault-dynamic-health-loss-005",
+  "cell_id": "fault-dynamic-health-loss",
+  "compact_evidence": {
+    "container_driver_result": "sha256:10ffa0585ad30a2996b93d745063bef9860b7e713204ec6d5caec11916b67a0a",
+    "evaluation": "sha256:7fc79a31846d5bfb9bde9b91c03d0c3427c1677e0d5ec9da8cfcc7e6dcb4747d",
+    "processing_result": "sha256:eb7f69abb5d9dd10242e982e605d4e6bea4dbb439bb9d8f754b3c9b537afa515",
+    "raw_manifest": "sha256:775e784a41e8b0c8c92ce2b8697770590ad0d56bde25d62b6f4cc1d04847698e",
+    "runtime_result": "sha256:c89b77a6e5acee013ba0cf8bd2b656cdb349f6dbe2fcba52b6e87b82ca46f6d3",
+    "ulog_summary": "sha256:52c997e129168c8cdf1afcf2c094bede08823da206e2703e84dac766b6ef0cee"
+  },
+  "image_id": "sha256:8c17f8f82d0e31d6ecac260ac84ec3b1ea3eedb67d887f27b9158c9331b24ef8",
+  "outcome": "ACCEPTED",
+  "plan_digest": "sha256:8ce89b33a4885f638958f8c8894be236319e7fe1fa178907939b9cba8aa584d7",
+  "processing_returncode": 0,
+  "runtime_driver_returncode": 0,
+  "schema_version": "1.0",
+  "study_id": "motivation-thor-v1"
+}

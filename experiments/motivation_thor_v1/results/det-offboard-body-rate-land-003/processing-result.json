@@ -1,0 +1,144 @@
+{
+  "attempt_id": "det-offboard-body-rate-land-003",
+  "clock_bridge": {
+    "bridge_id": "clock-45f92718cbda6ade",
+    "knots": [
+      [
+        10672000000,
+        1316372574433691
+      ],
+      [
+        11676000000,
+        1316373576741738
+      ],
+      [
+        12680000000,
+        1316374579802802
+      ],
+      [
+        13684000000,
+        1316375583882794
+      ],
+      [
+        14688000000,
+        1316376587749867
+      ],
+      [
+        15692000000,
+        1316377592564404
+      ],
+      [
+        16696000000,
+        1316378595657054
+      ],
+      [
+        17700000000,
+        1316379600344922
+      ],
+      [
+        18704000000,
+        1316380604211108
+      ],
+      [
+        19708000000,
+        1316381607596145
+      ],
+      [
+        20712000000,
+        1316382611666182
+      ],
+      [
+        21716000000,
+        1316383615662960
+      ],
+      [
+        22720000000,
+        1316384619734867
+      ],
+      [
+        23724000000,
+        1316385623774635
+      ],
+      [
+        24728000000,
+        1316386628299154
+      ],
+      [
+        25732000000,
+        1316387631709886
+      ],
+      [
+        26736000000,
+        1316388635555830
+      ],
+      [
+        27740000000,
+        1316389639805830
+      ],
+      [
+        28744000000,
+        1316390643880552
+      ],
+      [
+        29748000000,
+        1316391647607784
+      ],
+      [
+        30752000000,
+        1316392651600793
+      ],
+      [
+        31756000000,
+        1316393656216960
+      ]
+    ],
+    "rate_ratio": 0.9998948619332195,
+    "reference_analysis_ns": 1316383615662960,
+    "reference_source_ns": 21716000000,
+    "sample_count": 22,
+    "source_domain": "px4_boot_ns",
+    "uncertainty_ns": 860944,
+    "valid_from_ns": 10672000000,
+    "valid_until_ns": 31756000000
+  },
+  "environment_attestation_digest": "sha256:f0d6f25cc0c933bab6c1a0d3a8478c4035989b9ddda4daba99c7949aa1a0a8e2",
+  "evaluation_status": "PASS",
+  "evidence_gate_status": "ADMISSIBLE",
+  "gazebo": {
+    "central_minimum": 0.9985122167969726,
+    "median": 0.9999437531638845,
+    "minimum": 0.01476263867418425,
+    "sample_count": 315,
+    "status": "PASS"
+  },
+  "outcome": "ACCEPTED",
+  "plan_digest": "sha256:0aa92b0e6b05a6bd7754d6c6bdafe68c29a856cd967eadbdea4b6e681bc7c615",
+  "plan_id": "det-offboard-body-rate-land-003-plan",
+  "processing_error": null,
+  "raw_manifest_digest": "sha256:5c56e04c3246abd5075e0073f946b7e6302b21a12075f94a4bf00d59107c99a1",
+  "runtime_outcome": "ACCEPTED",
+  "schema_version": "1.0",
+  "study_id": "motivation-thor-v1",
+  "ulog": {
+    "dropouts": [],
+    "file_corruption": false,
+    "first_sequence_by_instance": {
+      "0": 0,
+      "1": 5,
+      "2": 5,
+      "3": 4
+    },
+    "route_observation_count": 808,
+    "route_observation_instances": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "schema_version": "1.0",
+    "sequence_gaps": [],
+    "status": "PASS",
+    "ulog_end_us": 31828000,
+    "ulog_start_us": 5096000
+  }
+}

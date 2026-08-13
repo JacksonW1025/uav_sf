@@ -147,11 +147,11 @@ retained only after each launch has closed through the Evidence Gate.
 
 ## Current status
 
-- Formal experiment attempts: 0
+- Formal experiment attempts: 180
 - Retained historical results: 0
-- Current empirical claims: none
+- Current empirical claims: bounded Thor SITL findings in the final report
 - Formal execution environment: thor-r38.2.1-family-a-formal-v1
-- Study state: preregistered; empty append-only ledger
+- Study state: MEASUREMENT_INSUFFICIENT; 19/21 cells complete
 
 See [research scope](docs/RESEARCH_SCOPE.md), [route model](docs/ROUTE_MODEL.md),
 [method](docs/METHOD.md), [experiment plan](docs/EXPERIMENT_PLAN.md), and

@@ -1,0 +1,130 @@
+{
+  "attempt_id": "fault-dynamic-health-loss-007",
+  "clock_bridge": {
+    "bridge_id": "clock-59e95e7755e0d584",
+    "knots": [
+      [
+        10624000000,
+        1317828068523052
+      ],
+      [
+        11628000000,
+        1317829070283830
+      ],
+      [
+        12632000000,
+        1317830074355802
+      ],
+      [
+        13636000000,
+        1317831080313542
+      ],
+      [
+        14640000000,
+        1317832082518710
+      ],
+      [
+        15644000000,
+        1317833086308256
+      ],
+      [
+        16648000000,
+        1317834090320673
+      ],
+      [
+        17652000000,
+        1317835094620682
+      ],
+      [
+        18656000000,
+        1317836098470793
+      ],
+      [
+        19660000000,
+        1317837102481941
+      ],
+      [
+        20664000000,
+        1317838106320126
+      ],
+      [
+        21668000000,
+        1317839110599765
+      ],
+      [
+        22672000000,
+        1317840114854756
+      ],
+      [
+        23676000000,
+        1317841118273571
+      ],
+      [
+        24680000000,
+        1317842123002228
+      ],
+      [
+        25684000000,
+        1317843126691126
+      ],
+      [
+        26688000000,
+        1317844130852700
+      ],
+      [
+        27692000000,
+        1317845134224155
+      ]
+    ],
+    "rate_ratio": 0.9998653095265995,
+    "reference_analysis_ns": 1317837102481941,
+    "reference_source_ns": 19660000000,
+    "sample_count": 18,
+    "source_domain": "px4_boot_ns",
+    "uncertainty_ns": 1876286,
+    "valid_from_ns": 10624000000,
+    "valid_until_ns": 27692000000
+  },
+  "environment_attestation_digest": "sha256:f0d6f25cc0c933bab6c1a0d3a8478c4035989b9ddda4daba99c7949aa1a0a8e2",
+  "evaluation_status": "PASS",
+  "evidence_gate_status": "ADMISSIBLE",
+  "gazebo": {
+    "central_minimum": 0.9958470687614973,
+    "median": 0.9998537713859348,
+    "minimum": 0.013759587891536511,
+    "sample_count": 275,
+    "status": "PASS"
+  },
+  "outcome": "ACCEPTED",
+  "plan_digest": "sha256:1f1532736795c8ad737b21fd0a247b855d01044bbd863cc08140dd95c8c652c1",
+  "plan_id": "fault-dynamic-health-loss-007-plan",
+  "processing_error": null,
+  "raw_manifest_digest": "sha256:25e93692ae19bb7057ab0a1f9386f6ea0c3735d35efcf156f94f61f00c6647fd",
+  "runtime_outcome": "ACCEPTED",
+  "schema_version": "1.0",
+  "study_id": "motivation-thor-v1",
+  "ulog": {
+    "dropouts": [],
+    "file_corruption": false,
+    "first_sequence_by_instance": {
+      "0": 0,
+      "1": 5,
+      "2": 5,
+      "3": 4,
+      "4": 0
+    },
+    "route_observation_count": 693,
+    "route_observation_instances": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "schema_version": "1.0",
+    "sequence_gaps": [],
+    "status": "PASS",
+    "ulog_end_us": 27944000,
+    "ulog_start_us": 5028000
+  }
+}

@@ -1,0 +1,150 @@
+{
+  "attempt_id": "fault-dynamic-process-exit-007",
+  "clock_bridge": {
+    "bridge_id": "clock-aa8afc82c44a7454",
+    "knots": [
+      [
+        10576000000,
+        1317828044358256
+      ],
+      [
+        11580000000,
+        1317829049660191
+      ],
+      [
+        12584000000,
+        1317830053594201
+      ],
+      [
+        13588000000,
+        1317831057517802
+      ],
+      [
+        14592000000,
+        1317832061737756
+      ],
+      [
+        15596000000,
+        1317833065653774
+      ],
+      [
+        16600000000,
+        1317834070797015
+      ],
+      [
+        17604000000,
+        1317835073615885
+      ],
+      [
+        18608000000,
+        1317836078170802
+      ],
+      [
+        19612000000,
+        1317837081698784
+      ],
+      [
+        20616000000,
+        1317838085660200
+      ],
+      [
+        21620000000,
+        1317839090133801
+      ],
+      [
+        22624000000,
+        1317840093664867
+      ],
+      [
+        23628000000,
+        1317841097553108
+      ],
+      [
+        24632000000,
+        1317842101793042
+      ],
+      [
+        25636000000,
+        1317843105581043
+      ],
+      [
+        26640000000,
+        1317844109758061
+      ],
+      [
+        27644000000,
+        1317845113723136
+      ],
+      [
+        28648000000,
+        1317846117609969
+      ],
+      [
+        29652000000,
+        1317847121645015
+      ],
+      [
+        30656000000,
+        1317848125746173
+      ],
+      [
+        31660000000,
+        1317849129608062
+      ],
+      [
+        32664000000,
+        1317850133647062
+      ]
+    ],
+    "rate_ratio": 1.0000583486961245,
+    "reference_analysis_ns": 1317839090133801,
+    "reference_source_ns": 21620000000,
+    "sample_count": 23,
+    "source_domain": "px4_boot_ns",
+    "uncertainty_ns": 1162185,
+    "valid_from_ns": 10576000000,
+    "valid_until_ns": 32664000000
+  },
+  "environment_attestation_digest": "sha256:f0d6f25cc0c933bab6c1a0d3a8478c4035989b9ddda4daba99c7949aa1a0a8e2",
+  "evaluation_status": "VIOLATION",
+  "evidence_gate_status": "ADMISSIBLE",
+  "gazebo": {
+    "central_minimum": 0.9973013026749615,
+    "median": 0.9998990101999699,
+    "minimum": 0.014522478242178031,
+    "sample_count": 324,
+    "status": "PASS"
+  },
+  "outcome": "ACCEPTED",
+  "plan_digest": "sha256:4d02f67fbc2776932785e194e21697bd95ce7a44f4aa52eff354a0c34ccf85ab",
+  "plan_id": "fault-dynamic-process-exit-007-plan",
+  "processing_error": null,
+  "raw_manifest_digest": "sha256:205f6a9ea480ebf75228b28eff39553edd45f0a74b4cb50733b823f31330ae95",
+  "runtime_outcome": "ACCEPTED",
+  "schema_version": "1.0",
+  "study_id": "motivation-thor-v1",
+  "ulog": {
+    "dropouts": [],
+    "file_corruption": false,
+    "first_sequence_by_instance": {
+      "0": 0,
+      "1": 6,
+      "2": 6,
+      "3": 4,
+      "4": 0
+    },
+    "route_observation_count": 838,
+    "route_observation_instances": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "schema_version": "1.0",
+    "sequence_gaps": [],
+    "status": "PASS",
+    "ulog_end_us": 32888000,
+    "ulog_start_us": 4992000
+  }
+}

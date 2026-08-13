@@ -1,0 +1,23 @@
+{
+  "allocation": {
+    "attempt_id": "det-dynamic-trajectory-rtl-004",
+    "cpu_set": "9-13",
+    "gazebo_partition": "family_a_motivation-thor-v1_3",
+    "mavlink_tcp_port": 4563,
+    "mavlink_udp_local_port": 14583,
+    "mavlink_udp_port": 14543,
+    "process_group_identity": "family-a-det-dynamic-trajectory-rtl-004",
+    "px4_instance": 3,
+    "ros_domain_id": 43,
+    "run_directory": "/runs/motivation-thor-v1/det-dynamic-trajectory-rtl-004",
+    "slot": 3,
+    "study_id": "motivation-thor-v1",
+    "temporary_directory": "/runs/motivation-thor-v1/det-dynamic-trajectory-rtl-004/tmp",
+    "vehicle_identity": "x500_3",
+    "xrce_agent_port": 8891
+  },
+  "outcome": "ACCEPTED",
+  "run_id": "det-dynamic-trajectory-rtl-004",
+  "schema_version": "1.0",
+  "ulog": "/runs/motivation-thor-v1/det-dynamic-trajectory-rtl-004/raw/px4.ulg"
+}

@@ -1,0 +1,19 @@
+{
+  "attempt_id": "fault-dynamic-registration-capacity-006",
+  "cell_id": "fault-dynamic-registration-capacity",
+  "compact_evidence": {
+    "container_driver_result": "sha256:1a30078fa050bb3048d29da56c713b662cd9698a5f381a99e83de27fbd69ec85",
+    "evaluation": "sha256:b494ea26b5b3fd462317896e0d1c674b25d439f9cfd7c6e7624add0b9af34e1a",
+    "processing_result": "sha256:bdc85d0f1e10483b756e74b2feed470f1dd975fb28435bb7eb9e8faca55ceecc",
+    "raw_manifest": "sha256:aa01d025c24439eada224cab8de5a9dd02b28813b7d2830199403138d4c7e96f",
+    "runtime_result": "sha256:dfc009c4b97d7967c9d35e4214fcd49f1f2489d1feddb2c31796796fb6b1fe4a",
+    "ulog_summary": "sha256:dea625544a1af2c1c13419ec1c70440e4600113fa4f09ced2429a2a905e38533"
+  },
+  "image_id": "sha256:8c17f8f82d0e31d6ecac260ac84ec3b1ea3eedb67d887f27b9158c9331b24ef8",
+  "outcome": "TIMEOUT",
+  "plan_digest": "sha256:3f301350a6a8939bb2fdb10849d18e9a996d66bbca47d3980d5dcf603c753de8",
+  "processing_returncode": 2,
+  "runtime_driver_returncode": 2,
+  "schema_version": "1.0",
+  "study_id": "motivation-thor-v1"
+}

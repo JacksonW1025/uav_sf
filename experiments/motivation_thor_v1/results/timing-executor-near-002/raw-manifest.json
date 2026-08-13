@@ -1,0 +1,127 @@
+{
+  "file_count": 24,
+  "files": [
+    {
+      "path": "adjacent.lifecycle.jsonl",
+      "sha256": "9f36ea77d645113cffdba5987fd0f4f3bad03ff1f303ebfec0c830dc5f9c71c8",
+      "size_bytes": 492
+    },
+    {
+      "path": "gazebo.clock.jsonl",
+      "sha256": "028e6b5d7de599ebf4f43cdc38222e5c8cfda39c5249c9e77ef95f6b13f8aa5a",
+      "size_bytes": 1831022
+    },
+    {
+      "path": "gazebo.stderr.log",
+      "sha256": "72bc4c7252923c3e45539c67f7ef9b0b21fcb56c7d88a4dddc5d88c992ed5d1c",
+      "size_bytes": 1361
+    },
+    {
+      "path": "gazebo.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "gazebo_clock_sidecar.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "gazebo_clock_sidecar.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "gazebo_stats.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "gazebo_stats.stdout.log",
+      "sha256": "d5be5abbcb677eeba76fc23dca954cef7cb70a3668769ca57666b6f4e0d393de",
+      "size_bytes": 57974
+    },
+    {
+      "path": "manual_requester.stderr.log",
+      "sha256": "7ea961b1f58b1571b858f9fd94cf437112aee41a7af83a0a8406ab2254df5f48",
+      "size_bytes": 1600
+    },
+    {
+      "path": "manual_requester.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "mode_executor.stderr.log",
+      "sha256": "7cc74136189d62333e9f2bb9ca0695ee6216395712db9b62b2452f1db4a5fe33",
+      "size_bytes": 2680
+    },
+    {
+      "path": "mode_executor.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "px4.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "px4.stdout.log",
+      "sha256": "32325f440266e6e1925d044080e2988fa72cbd8c9efa1cc1a11b0680afe799c1",
+      "size_bytes": 6478
+    },
+    {
+      "path": "px4.ulg",
+      "sha256": "dd293b76a467a5fd3228157cc5d46efd7522374deb28b4f5a663279f26045b14",
+      "size_bytes": 7142265
+    },
+    {
+      "path": "runner.lifecycle.jsonl",
+      "sha256": "781e2c077996ecc9ae11119c3a9680061ed9703c26721707e7d3b69017e2be51",
+      "size_bytes": 3555
+    },
+    {
+      "path": "safety_supervisor.stderr.log",
+      "sha256": "79b9dcf01155c9aaeb4cb1347c2e36b6ab1a738559e61f3152de79e0189eb067",
+      "size_bytes": 1604
+    },
+    {
+      "path": "safety_supervisor.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "telemetry.sidecar.jsonl",
+      "sha256": "0d146908f8a5ecfcbb5f262f27f59a7844c8b04f0f99ddd850b200c4bd08563c",
+      "size_bytes": 1743690
+    },
+    {
+      "path": "telemetry_sidecar.stderr.log",
+      "sha256": "557a371b86a9cd27c3be91737da63c2141c76f3684ef7ace847b7314b8b440f7",
+      "size_bytes": 2427
+    },
+    {
+      "path": "telemetry_sidecar.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "workload.lifecycle.jsonl",
+      "sha256": "9e648a8616f4780c0e68faf727dd781a95298c743bba0db0cb2a3a6b0796a7a7",
+      "size_bytes": 407
+    },
+    {
+      "path": "xrce_agent.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "xrce_agent.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    }
+  ],
+  "root_name": "raw",
+  "schema_version": "1.0"
+}

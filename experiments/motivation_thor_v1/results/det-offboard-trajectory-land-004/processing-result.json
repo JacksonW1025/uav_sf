@@ -1,0 +1,136 @@
+{
+  "attempt_id": "det-offboard-trajectory-land-004",
+  "clock_bridge": {
+    "bridge_id": "clock-6a616bdd2548a4d2",
+    "knots": [
+      [
+        10762000000,
+        1316680031295737
+      ],
+      [
+        11768000000,
+        1316681035913422
+      ],
+      [
+        12772000000,
+        1316682044340034
+      ],
+      [
+        13776000000,
+        1316683048959867
+      ],
+      [
+        14780000000,
+        1316684052275617
+      ],
+      [
+        15784000000,
+        1316685056389839
+      ],
+      [
+        16788000000,
+        1316686060435108
+      ],
+      [
+        17792000000,
+        1316687064430701
+      ],
+      [
+        18796000000,
+        1316688068347488
+      ],
+      [
+        19800000000,
+        1316689072419108
+      ],
+      [
+        20804000000,
+        1316690076489664
+      ],
+      [
+        21808000000,
+        1316691080514053
+      ],
+      [
+        22812000000,
+        1316692084860071
+      ],
+      [
+        23816000000,
+        1316693088310932
+      ],
+      [
+        24820000000,
+        1316694092373728
+      ],
+      [
+        25824000000,
+        1316695096348024
+      ],
+      [
+        26828000000,
+        1316696100853951
+      ],
+      [
+        27832000000,
+        1316697104387719
+      ],
+      [
+        28836000000,
+        1316698108425895
+      ],
+      [
+        29840000000,
+        1316699112633108
+      ]
+    ],
+    "rate_ratio": 1.0001749329594296,
+    "reference_analysis_ns": 1316690076489664,
+    "reference_source_ns": 20804000000,
+    "sample_count": 20,
+    "source_domain": "px4_boot_ns",
+    "uncertainty_ns": 4905978,
+    "valid_from_ns": 10762000000,
+    "valid_until_ns": 29840000000
+  },
+  "environment_attestation_digest": "sha256:f0d6f25cc0c933bab6c1a0d3a8478c4035989b9ddda4daba99c7949aa1a0a8e2",
+  "evaluation_status": "PASS",
+  "evidence_gate_status": "ADMISSIBLE",
+  "gazebo": {
+    "central_minimum": 0.9987161503886753,
+    "median": 0.9999715008122269,
+    "minimum": 0.015502259347721897,
+    "sample_count": 296,
+    "status": "PASS"
+  },
+  "outcome": "ACCEPTED",
+  "plan_digest": "sha256:ac49d9abcfc112d2e3dbc5195aea9b5733e17379e5ed0be55d389811a45a5373",
+  "plan_id": "det-offboard-trajectory-land-004-plan",
+  "processing_error": null,
+  "raw_manifest_digest": "sha256:be5c00c5ac5d6348835f3573b6522a3c5d2b23e17786abd432f84418264fa38f",
+  "runtime_outcome": "ACCEPTED",
+  "schema_version": "1.0",
+  "study_id": "motivation-thor-v1",
+  "ulog": {
+    "dropouts": [],
+    "file_corruption": false,
+    "first_sequence_by_instance": {
+      "0": 0,
+      "1": 6,
+      "2": 6,
+      "3": 5
+    },
+    "route_observation_count": 745,
+    "route_observation_instances": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "schema_version": "1.0",
+    "sequence_gaps": [],
+    "status": "PASS",
+    "ulog_end_us": 30124000,
+    "ulog_start_us": 5164000
+  }
+}

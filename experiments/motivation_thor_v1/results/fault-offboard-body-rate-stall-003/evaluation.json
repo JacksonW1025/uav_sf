@@ -1,0 +1,596 @@
+{
+  "evidence_gate": {
+    "checks": {
+      "clock_mapping": {
+        "domains": [
+          "analysis_monotonic"
+        ],
+        "status": "PASS",
+        "unmapped_sequences": []
+      },
+      "collection_bounds": {
+        "status": "PASS"
+      },
+      "critical_window_coverage": {
+        "gap_sequences": [],
+        "status": "PASS"
+      },
+      "execution_environment": {
+        "attestation_count": 1,
+        "attestation_sequence": 1,
+        "status": "PASS"
+      },
+      "hash_chain": {
+        "errors": [],
+        "status": "PASS"
+      },
+      "required_events": {
+        "missing": [],
+        "status": "PASS"
+      },
+      "route_identity": {
+        "errors": [],
+        "status": "PASS"
+      },
+      "run_identity": {
+        "status": "PASS"
+      }
+    },
+    "reasons": [],
+    "status": "ADMISSIBLE"
+  },
+  "oracles": [
+    {
+      "clauses": {
+        "continuity": {
+          "evidence": {
+            "effect_gap_ns": 100043452,
+            "maximum_effect_gap_ns": 250000000
+          },
+          "reasons": [],
+          "status": "PASS"
+        },
+        "exclusivity": {
+          "evidence": {
+            "target_write_ns": 1316529892064468
+          },
+          "reasons": [],
+          "status": "PASS"
+        },
+        "installation": {
+          "evidence": {
+            "complete": true,
+            "completed_at_ns": 1316529892064468,
+            "events": {
+              "activation": {
+                "sequence": 159,
+                "timestamp_ns": 1316529828036658
+              },
+              "actuator_write": {
+                "sequence": 164,
+                "timestamp_ns": 1316529892064468
+              },
+              "allocator_output": {
+                "sequence": 163,
+                "timestamp_ns": 1316529892064468
+              },
+              "command_consumed": {
+                "sequence": 161,
+                "timestamp_ns": 1316529828036658
+              },
+              "controller_output": {
+                "sequence": 162,
+                "timestamp_ns": 1316529892064468
+              }
+            },
+            "identity": {
+              "activation_id": "nav-14-epoch-2",
+              "allocator_id": "px4-control-allocator",
+              "controller_id": "mc_rate_control",
+              "executor_owner": "none",
+              "lifecycle_owner": "family_a_offboard_controller",
+              "producer_session": "offboard-fault-offboard-body-rate-stall-003-epoch-2",
+              "registration_id": "dds-offboard",
+              "route": "legacy_offboard",
+              "route_epoch": "px4-epoch-2",
+              "writer_id": "px4-control-allocator-actuator-motors"
+            }
+          },
+          "reasons": [],
+          "status": "PASS"
+        },
+        "ownership": {
+          "evidence": {
+            "expected_executor_owner": "none",
+            "expected_lifecycle_owner": "family_a_offboard_controller",
+            "observed_executor_owner": "none",
+            "observed_lifecycle_owner": "family_a_offboard_controller"
+          },
+          "reasons": [],
+          "status": "PASS"
+        },
+        "reentry_identity": {
+          "evidence": {},
+          "reasons": [
+            "no repeated-entry identity obligation was preregistered"
+          ],
+          "status": "NOT_APPLICABLE"
+        },
+        "revocation": {
+          "evidence": {
+            "last_source_effect_ns": 1316529792021016,
+            "revocation_sequence": 158
+          },
+          "reasons": [],
+          "status": "PASS"
+        }
+      },
+      "oracle": "route_conformance",
+      "transition_sequence": 157
+    },
+    {
+      "clauses": {
+        "freshness": {
+          "evidence": {
+            "maximum_command_age_ns": 200000000,
+            "observed_ages_ns": [
+              4001738,
+              68029548,
+              68029548,
+              68029548,
+              20008691,
+              84036501,
+              84036501,
+              84036501,
+              20005057,
+              84021241,
+              84021241,
+              84021241,
+              19264871,
+              83281055,
+              83281055,
+              83281055,
+              19308881,
+              83325066,
+              83325066,
+              83325066,
+              20005057,
+              84021241,
+              84021241,
+              84021241,
+              20005058,
+              84021242,
+              84021242,
+              84021242,
+              20005058,
+              84021242,
+              84021242,
+              84021242,
+              19495929,
+              83512113,
+              83512113,
+              83512113,
+              19514933,
+              83531118,
+              83531118,
+              83531118,
+              19443916,
+              83460100,
+              83460100,
+              83460100,
+              20005058,
+              84021242,
+              84021242,
+              84021242,
+              19989973,
+              83957887,
+              83957887,
+              83957887,
+              19515211,
+              83483125,
+              83483125,
+              83483125,
+              19989972,
+              83957886,
+              83957886,
+              83957886,
+              18070936,
+              82038850,
+              82038850,
+              82038850,
+              19989973,
+              83957887,
+              83957887,
+              83957887,
+              19515211,
+              83483125,
+              83483125,
+              83483125,
+              19989974,
+              83957887,
+              83957887,
+              83957887,
+              19021459,
+              82989372,
+              82989372,
+              82989372,
+              19076431,
+              83044345,
+              83044345,
+              83044345,
+              19989973,
+              83957887,
+              83957887,
+              83957887,
+              19995364,
+              83984844,
+              83984844,
+              83984844,
+              19243836,
+              83233316,
+              83233316,
+              83233316,
+              19279830,
+              83269310,
+              83269310,
+              83269310,
+              19452802,
+              83442282,
+              83442282,
+              83442282,
+              19493796,
+              83483276,
+              83483276,
+              83483276,
+              19996713,
+              83986193,
+              83986193,
+              83986193,
+              19461801,
+              83451281,
+              83451281,
+              83451281,
+              19516792,
+              83506272,
+              83506272,
+              83506272,
+              19996713,
+              83986193,
+              83986193,
+              83986193,
+              19996712,
+              83986193,
+              83986193,
+              83986193,
+              119987568,
+              184015944,
+              184015944,
+              184015944,
+              220031905,
+              284060280,
+              284060280,
+              284060280,
+              320076242,
+              384104617,
+              384104617,
+              384104617,
+              420120578,
+              484148954,
+              484148954,
+              484148954,
+              520164915,
+              584193290,
+              584193290,
+              584193290,
+              620209252,
+              684237627,
+              684237627,
+              684237627,
+              720253588,
+              784281964,
+              784281964,
+              784281964,
+              820297925,
+              884326300,
+              884326300,
+              884326300,
+              920342262,
+              984370637,
+              984370637,
+              984370637,
+              1020386598,
+              1084414974,
+              1084414974,
+              1084414974,
+              1120428041,
+              1184433264,
+              1184433264,
+              1184433264,
+              1220436203,
+              1284441426,
+              1284441426,
+              1284441426,
+              1320444364,
+              1384449588,
+              1384449588,
+              1384449588,
+              1420452526,
+              1484457750,
+              1484457750,
+              1484457750,
+              1520460688,
+              1584465912,
+              1584465912,
+              1584465912,
+              1620468850,
+              1684474073,
+              1684474073,
+              1684474073,
+              1720477012,
+              1784482235,
+              1784482235,
+              1784482235,
+              1820485173,
+              1884490397,
+              1884490397,
+              1884490397,
+              1920493335,
+              1984498558,
+              1984498558,
+              1984498558,
+              2020501497,
+              2084506720,
+              2084506720,
+              2084506720,
+              2120508309,
+              2184491944,
+              2184491944,
+              2184491944,
+              2220482739,
+              2284466374,
+              2284466374,
+              2284466374,
+              2320457169,
+              2384440804,
+              2384440804,
+              2384440804,
+              2420431600,
+              2484415235,
+              2484415235,
+              2484415235,
+              2520406030,
+              2584389665,
+              2584389665,
+              2584389665,
+              2620380460,
+              2684364095,
+              2684364095,
+              2684364095,
+              2720354890,
+              2784338525,
+              2784338525,
+              2784338525,
+              2820329320,
+              2884312955,
+              2884312955,
+              2884312955,
+              2920303750,
+              2984287385,
+              2984287385,
+              2984287385,
+              3020278180,
+              3084261815,
+              3084261815,
+              3084261815,
+              3120252610,
+              3184250874,
+              3184250874,
+              3184250874,
+              3220249898,
+              3284248162,
+              3284248162,
+              3284248162,
+              3320247186,
+              3384245450,
+              3384245450,
+              3384245450,
+              3420244473,
+              3484242738,
+              3484242738,
+              3484242738,
+              3520241761,
+              3584240025,
+              3584240025,
+              3584240025,
+              3620239049,
+              3684237313,
+              3684237313,
+              3684237313,
+              3720236336,
+              3784234601,
+              3784234601,
+              3784234601,
+              3820233624,
+              3884231888,
+              3884231888,
+              3884231888,
+              3920230912,
+              3984229176,
+              3984229176,
+              3984229176,
+              4020228200,
+              4084226464,
+              4084226464,
+              4084226464,
+              4120225488,
+              4184208038,
+              4184208038,
+              4184208038,
+              4220197634,
+              4284179137,
+              4284179137,
+              4284179137,
+              4320168733,
+              4384150236,
+              4384150236,
+              4384150236,
+              4420139832,
+              4484121335,
+              4484121335,
+              4484121335,
+              4520110930,
+              4584092434,
+              4584092434,
+              4584092434,
+              4620082029,
+              4684063532,
+              4684063532,
+              4684063532,
+              4720053128,
+              4784034631,
+              4784034631,
+              4784034631,
+              4820024227,
+              4884005730,
+              4884005730,
+              4884005730,
+              4919995326,
+              4983976829,
+              4983976829,
+              4983976829,
+              5019966424
+            ]
+          },
+          "reasons": [
+            "a consumed command is future-dated or exceeds the freshness bound"
+          ],
+          "status": "VIOLATION"
+        },
+        "lineage": {
+          "evidence": {
+            "installed_identity": {
+              "activation_id": "nav-14-epoch-2",
+              "allocator_id": "px4-control-allocator",
+              "controller_id": "mc_rate_control",
+              "executor_owner": "none",
+              "lifecycle_owner": "family_a_offboard_controller",
+              "producer_session": "offboard-fault-offboard-body-rate-stall-003-epoch-2",
+              "registration_id": "dds-offboard",
+              "route": "legacy_offboard",
+              "route_epoch": "px4-epoch-2",
+              "writer_id": "px4-control-allocator-actuator-motors"
+            }
+          },
+          "reasons": [],
+          "status": "PASS"
+        }
+      },
+      "oracle": "freshness_lineage"
+    },
+    {
+      "clauses": {
+        "adjacent_order": {
+          "evidence": {},
+          "reasons": [
+            "no adjacent request is planned"
+          ],
+          "status": "NOT_APPLICABLE"
+        },
+        "adjacent_successor": {
+          "evidence": {},
+          "reasons": [
+            "no adjacent request is planned"
+          ],
+          "status": "NOT_APPLICABLE"
+        },
+        "adjacent_timing": {
+          "evidence": {},
+          "reasons": [
+            "no adjacent request is planned"
+          ],
+          "status": "NOT_APPLICABLE"
+        },
+        "expected_successor": {
+          "evidence": {
+            "complete": true,
+            "completed_at_ns": 1316537991664324,
+            "events": {
+              "activation": {
+                "sequence": 490,
+                "timestamp_ns": 1316537975668948
+              },
+              "actuator_write": {
+                "sequence": 495,
+                "timestamp_ns": 1316537991664324
+              },
+              "allocator_output": {
+                "sequence": 494,
+                "timestamp_ns": 1316537991664324
+              },
+              "command_consumed": {
+                "sequence": 492,
+                "timestamp_ns": 1316537975668948
+              },
+              "controller_output": {
+                "sequence": 493,
+                "timestamp_ns": 1316537991664324
+              }
+            },
+            "identity": {
+              "activation_id": "nav-18-epoch-3",
+              "allocator_id": "px4-control-allocator",
+              "controller_id": "mc_position_control",
+              "executor_owner": "none",
+              "lifecycle_owner": "px4_commander",
+              "producer_session": "px4-internal",
+              "registration_id": "px4-built-in",
+              "route": "internal_land",
+              "route_epoch": "px4-epoch-3",
+              "writer_id": "px4-control-allocator-actuator-motors"
+            }
+          },
+          "reasons": [],
+          "status": "PASS"
+        },
+        "fault_observation": {
+          "evidence": {
+            "fault_sequence": 286
+          },
+          "reasons": [],
+          "status": "PASS"
+        },
+        "safe_fallback": {
+          "evidence": {},
+          "reasons": [
+            "fault is not part of this plan"
+          ],
+          "status": "NOT_APPLICABLE"
+        }
+      },
+      "oracle": "successor_progression"
+    },
+    {
+      "clauses": {
+        "activation_rejection": {
+          "evidence": {},
+          "reasons": [
+            "activation rejection is not expected"
+          ],
+          "status": "NOT_APPLICABLE"
+        },
+        "registration_rejection": {
+          "evidence": {},
+          "reasons": [
+            "registration rejection is not expected"
+          ],
+          "status": "NOT_APPLICABLE"
+        }
+      },
+      "oracle": "registration_contract"
+    }
+  ],
+  "plan_id": "fault-offboard-body-rate-stall-003-plan",
+  "run_id": "fault-offboard-body-rate-stall-003",
+  "schema_version": "1.0",
+  "status": "VIOLATION"
+}

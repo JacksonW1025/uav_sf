@@ -1,0 +1,19 @@
+{
+  "attempt_id": "timing-offboard-reentry-rtl-010",
+  "cell_id": "timing-offboard-reentry-rtl",
+  "compact_evidence": {
+    "container_driver_result": "sha256:6e604bf42d31a7a04336d8caa3e3536a4a78483233daeca154ce0348a7dff8e0",
+    "evaluation": "sha256:655693f82bb23128cc3f112d409abd2b4b79e5ec6cf32a66d189ae9ea1cb0ec8",
+    "processing_result": "sha256:a7dacddcb127983ef9d612d9ab034e68d92332a03a07e694f3abcc225ab6636a",
+    "raw_manifest": "sha256:a18d80fee01544484bb04cc9125bba998b53dc915c094a489beb24c3255b793d",
+    "runtime_result": "sha256:d70e75538989b8b14bf639be64a5523f8d07834079c6952175a2664be2ac7c3d",
+    "ulog_summary": "sha256:cdfc11c637fd429d615557fa3bbd7a5ed8e22e8dbc2b214c67488a814b9703f5"
+  },
+  "image_id": "sha256:8c17f8f82d0e31d6ecac260ac84ec3b1ea3eedb67d887f27b9158c9331b24ef8",
+  "outcome": "TIMEOUT",
+  "plan_digest": "sha256:679871fedb753c80dcda1844397d5d0a666aab2b4b1d1da5d9ee369376480e8a",
+  "processing_returncode": 2,
+  "runtime_driver_returncode": 2,
+  "schema_version": "1.0",
+  "study_id": "motivation-thor-v1"
+}

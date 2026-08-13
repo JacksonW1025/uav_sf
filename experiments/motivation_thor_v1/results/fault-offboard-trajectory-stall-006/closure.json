@@ -1,0 +1,19 @@
+{
+  "attempt_id": "fault-offboard-trajectory-stall-006",
+  "cell_id": "fault-offboard-trajectory-stall",
+  "compact_evidence": {
+    "container_driver_result": "sha256:3f9804f7ed3d976feb29eb2619f7e4be4719741d7bae7a8fc9ac8aded0e8a7f0",
+    "evaluation": "sha256:8a5285789651678582885f18ec87462ea6f35f21325b194091da204a82e25b95",
+    "processing_result": "sha256:6ca28c8d86a7df27194dd5ae57e091bf4907afdf8aa02e4af4deeca0aa69a4c7",
+    "raw_manifest": "sha256:cec127d5ab395aa89896c4705585b6a8f6daa4a3e2d36e899d2a063ee0b3fc8b",
+    "runtime_result": "sha256:a9d44239666a6e0e66f5695687a505f95d7d7146c39187dff71b641783082b78",
+    "ulog_summary": "sha256:5bfaedeb321b110078e641c403eb34de485cb45b5f3f991bf6bfe314ee425e88"
+  },
+  "image_id": "sha256:8c17f8f82d0e31d6ecac260ac84ec3b1ea3eedb67d887f27b9158c9331b24ef8",
+  "outcome": "ACCEPTED",
+  "plan_digest": "sha256:82141fddf9285259781c5987f1cf094022433998ed705f4a6869b1f9eabaa921",
+  "processing_returncode": 0,
+  "runtime_driver_returncode": 0,
+  "schema_version": "1.0",
+  "study_id": "motivation-thor-v1"
+}

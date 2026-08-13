@@ -1,0 +1,146 @@
+{
+  "attempt_id": "fault-offboard-attitude-stall-006",
+  "clock_bridge": {
+    "bridge_id": "clock-f5175b8b9f029151",
+    "knots": [
+      [
+        10680000000,
+        1317525751592524
+      ],
+      [
+        11684000000,
+        1317526753220766
+      ],
+      [
+        12688000000,
+        1317527757602608
+      ],
+      [
+        13692000000,
+        1317528761197099
+      ],
+      [
+        14696000000,
+        1317529765250821
+      ],
+      [
+        15700000000,
+        1317530769693766
+      ],
+      [
+        16704000000,
+        1317531773304006
+      ],
+      [
+        17708000000,
+        1317532777503876
+      ],
+      [
+        18712000000,
+        1317533781620747
+      ],
+      [
+        19716000000,
+        1317534785784802
+      ],
+      [
+        20720000000,
+        1317535789180765
+      ],
+      [
+        21724000000,
+        1317536793272747
+      ],
+      [
+        22728000000,
+        1317537797217626
+      ],
+      [
+        23732000000,
+        1317538801266635
+      ],
+      [
+        24736000000,
+        1317539805261988
+      ],
+      [
+        25740000000,
+        1317540809412923
+      ],
+      [
+        26744000000,
+        1317541813398969
+      ],
+      [
+        27748000000,
+        1317542817214868
+      ],
+      [
+        28752000000,
+        1317543821234923
+      ],
+      [
+        29756000000,
+        1317544825184774
+      ],
+      [
+        30760000000,
+        1317545829261673
+      ],
+      [
+        31764000000,
+        1317546833742015
+      ]
+    ],
+    "rate_ratio": 0.9999122315974198,
+    "reference_analysis_ns": 1317536793272747,
+    "reference_source_ns": 21724000000,
+    "sample_count": 22,
+    "source_domain": "px4_boot_ns",
+    "uncertainty_ns": 1376800,
+    "valid_from_ns": 10680000000,
+    "valid_until_ns": 31764000000
+  },
+  "environment_attestation_digest": "sha256:f0d6f25cc0c933bab6c1a0d3a8478c4035989b9ddda4daba99c7949aa1a0a8e2",
+  "evaluation_status": "VIOLATION",
+  "evidence_gate_status": "ADMISSIBLE",
+  "gazebo": {
+    "central_minimum": 0.996663420035576,
+    "median": 0.9999225060057846,
+    "minimum": 0.01642850583482822,
+    "sample_count": 315,
+    "status": "PASS"
+  },
+  "outcome": "ACCEPTED",
+  "plan_digest": "sha256:1d394ab5982ca835c75c00c1bf32581ab5f536ed0ebadfd59ea1208dc973d153",
+  "plan_id": "fault-offboard-attitude-stall-006-plan",
+  "processing_error": null,
+  "raw_manifest_digest": "sha256:1cb0070b4bdc4c1c5241032294f6a090c176356271fadef568856fa8224ab256",
+  "runtime_outcome": "ACCEPTED",
+  "schema_version": "1.0",
+  "study_id": "motivation-thor-v1",
+  "ulog": {
+    "dropouts": [],
+    "file_corruption": false,
+    "first_sequence_by_instance": {
+      "0": 0,
+      "1": 6,
+      "2": 6,
+      "3": 5,
+      "4": 5
+    },
+    "route_observation_count": 802,
+    "route_observation_instances": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "schema_version": "1.0",
+    "sequence_gaps": [],
+    "status": "PASS",
+    "ulog_end_us": 31880000,
+    "ulog_start_us": 5088000
+  }
+}

@@ -1,0 +1,319 @@
+{
+  "evidence_gate": {
+    "checks": {
+      "clock_mapping": {
+        "domains": [
+          "analysis_monotonic"
+        ],
+        "status": "PASS",
+        "unmapped_sequences": []
+      },
+      "collection_bounds": {
+        "status": "PASS"
+      },
+      "critical_window_coverage": {
+        "gap_sequences": [],
+        "status": "PASS"
+      },
+      "execution_environment": {
+        "attestation_count": 1,
+        "attestation_sequence": 1,
+        "status": "PASS"
+      },
+      "hash_chain": {
+        "errors": [],
+        "status": "PASS"
+      },
+      "required_events": {
+        "missing": [],
+        "status": "PASS"
+      },
+      "route_identity": {
+        "errors": [],
+        "status": "PASS"
+      },
+      "run_identity": {
+        "status": "PASS"
+      }
+    },
+    "reasons": [],
+    "status": "ADMISSIBLE"
+  },
+  "oracles": [
+    {
+      "clauses": {
+        "continuity": {
+          "evidence": {
+            "effect_gap_ns": 200028571,
+            "maximum_effect_gap_ns": 250000000
+          },
+          "reasons": [],
+          "status": "PASS"
+        },
+        "exclusivity": {
+          "evidence": {
+            "target_write_ns": 1318241835518215
+          },
+          "reasons": [],
+          "status": "PASS"
+        },
+        "installation": {
+          "evidence": {
+            "complete": true,
+            "completed_at_ns": 1318241835518215,
+            "events": {
+              "activation": {
+                "sequence": 318,
+                "timestamp_ns": 1318241655492501
+              },
+              "actuator_write": {
+                "sequence": 323,
+                "timestamp_ns": 1318241835518215
+              },
+              "allocator_output": {
+                "sequence": 322,
+                "timestamp_ns": 1318241835518215
+              },
+              "command_consumed": {
+                "sequence": 320,
+                "timestamp_ns": 1318241747505644
+              },
+              "controller_output": {
+                "sequence": 321,
+                "timestamp_ns": 1318241835518215
+              }
+            },
+            "identity": {
+              "activation_id": "nav-23-epoch-4",
+              "allocator_id": "px4-control-allocator",
+              "controller_id": "mc_position_control",
+              "executor_owner": "family_a_mode_executor",
+              "lifecycle_owner": "family_a_mode_executor",
+              "producer_session": "family_a_mode_executor",
+              "registration_id": "external-nav-23",
+              "route": "mode_executor",
+              "route_epoch": "px4-epoch-4",
+              "writer_id": "px4-control-allocator-actuator-motors"
+            }
+          },
+          "reasons": [],
+          "status": "PASS"
+        },
+        "ownership": {
+          "evidence": {
+            "expected_executor_owner": "family_a_mode_executor",
+            "expected_lifecycle_owner": "family_a_mode_executor",
+            "observed_executor_owner": "family_a_mode_executor",
+            "observed_lifecycle_owner": "family_a_mode_executor"
+          },
+          "reasons": [],
+          "status": "PASS"
+        },
+        "reentry_identity": {
+          "evidence": {},
+          "reasons": [
+            "no repeated-entry identity obligation was preregistered"
+          ],
+          "status": "NOT_APPLICABLE"
+        },
+        "revocation": {
+          "evidence": {
+            "last_source_effect_ns": 1318241635489644,
+            "revocation_sequence": 317
+          },
+          "reasons": [],
+          "status": "PASS"
+        }
+      },
+      "oracle": "route_conformance",
+      "transition_sequence": 312
+    },
+    {
+      "clauses": {
+        "freshness": {
+          "evidence": {
+            "authority_window_end_ns": 1318249680643360,
+            "checked_events": 314,
+            "maximum_observed_age_ns": 116555715
+          },
+          "reasons": [],
+          "status": "PASS"
+        },
+        "lineage": {
+          "evidence": {
+            "installed_identity": {
+              "activation_id": "nav-23-epoch-4",
+              "allocator_id": "px4-control-allocator",
+              "controller_id": "mc_position_control",
+              "executor_owner": "family_a_mode_executor",
+              "lifecycle_owner": "family_a_mode_executor",
+              "producer_session": "family_a_mode_executor",
+              "registration_id": "external-nav-23",
+              "route": "mode_executor",
+              "route_epoch": "px4-epoch-4",
+              "writer_id": "px4-control-allocator-actuator-motors"
+            }
+          },
+          "reasons": [],
+          "status": "PASS"
+        }
+      },
+      "oracle": "freshness_lineage"
+    },
+    {
+      "clauses": {
+        "adjacent_order": {
+          "evidence": {
+            "allowed_distance_ns": [
+              100000000,
+              400000000
+            ],
+            "distance_ns": 225359126,
+            "observed_order": "completion_before_adjacent"
+          },
+          "reasons": [],
+          "status": "PASS"
+        },
+        "adjacent_successor": {
+          "evidence": {
+            "adjacent_sequence": 644,
+            "already_installed_at_adjacent": true,
+            "installation": {
+              "complete": true,
+              "completed_at_ns": 1318249852741953,
+              "events": {
+                "activation": {
+                  "sequence": 637,
+                  "timestamp_ns": 1318249680643360
+                },
+                "actuator_write": {
+                  "sequence": 642,
+                  "timestamp_ns": 1318249852741953
+                },
+                "allocator_output": {
+                  "sequence": 641,
+                  "timestamp_ns": 1318249852741953
+                },
+                "command_consumed": {
+                  "sequence": 639,
+                  "timestamp_ns": 1318249752684632
+                },
+                "controller_output": {
+                  "sequence": 640,
+                  "timestamp_ns": 1318249852741953
+                }
+              },
+              "identity": {
+                "activation_id": "nav-18-epoch-5",
+                "allocator_id": "px4-control-allocator",
+                "controller_id": "mc_position_control",
+                "executor_owner": "none",
+                "lifecycle_owner": "px4_commander",
+                "producer_session": "px4-internal",
+                "registration_id": "px4-built-in",
+                "route": "internal_land",
+                "route_epoch": "px4-epoch-5",
+                "writer_id": "px4-control-allocator-actuator-motors"
+              }
+            }
+          },
+          "reasons": [],
+          "status": "PASS"
+        },
+        "adjacent_timing": {
+          "evidence": {
+            "activation_sequence": 318,
+            "adjacent_sequence": 644,
+            "allowed_delay_ns": [
+              8150000000,
+              8350000000
+            ],
+            "observed_delay_ns": 8230718976
+          },
+          "reasons": [],
+          "status": "PASS"
+        },
+        "expected_successor": {
+          "evidence": {
+            "complete": true,
+            "completed_at_ns": 1318249852741953,
+            "events": {
+              "activation": {
+                "sequence": 637,
+                "timestamp_ns": 1318249680643360
+              },
+              "actuator_write": {
+                "sequence": 642,
+                "timestamp_ns": 1318249852741953
+              },
+              "allocator_output": {
+                "sequence": 641,
+                "timestamp_ns": 1318249852741953
+              },
+              "command_consumed": {
+                "sequence": 639,
+                "timestamp_ns": 1318249752684632
+              },
+              "controller_output": {
+                "sequence": 640,
+                "timestamp_ns": 1318249852741953
+              }
+            },
+            "identity": {
+              "activation_id": "nav-18-epoch-5",
+              "allocator_id": "px4-control-allocator",
+              "controller_id": "mc_position_control",
+              "executor_owner": "none",
+              "lifecycle_owner": "px4_commander",
+              "producer_session": "px4-internal",
+              "registration_id": "px4-built-in",
+              "route": "internal_land",
+              "route_epoch": "px4-epoch-5",
+              "writer_id": "px4-control-allocator-actuator-motors"
+            }
+          },
+          "reasons": [],
+          "status": "PASS"
+        },
+        "fault_observation": {
+          "evidence": {},
+          "reasons": [
+            "fault is not part of this plan"
+          ],
+          "status": "NOT_APPLICABLE"
+        },
+        "safe_fallback": {
+          "evidence": {},
+          "reasons": [
+            "fault is not part of this plan"
+          ],
+          "status": "NOT_APPLICABLE"
+        }
+      },
+      "oracle": "successor_progression"
+    },
+    {
+      "clauses": {
+        "activation_rejection": {
+          "evidence": {},
+          "reasons": [
+            "activation rejection is not expected"
+          ],
+          "status": "NOT_APPLICABLE"
+        },
+        "registration_rejection": {
+          "evidence": {},
+          "reasons": [
+            "registration rejection is not expected"
+          ],
+          "status": "NOT_APPLICABLE"
+        }
+      },
+      "oracle": "registration_contract"
+    }
+  ],
+  "plan_id": "timing-executor-after-009-plan",
+  "run_id": "timing-executor-after-009",
+  "schema_version": "1.0",
+  "status": "PASS"
+}

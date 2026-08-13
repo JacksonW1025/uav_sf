@@ -1,0 +1,16 @@
+{
+  "architecture": "arm64",
+  "container_name": "family-a-motivation-thor-v1-fault-offboard-body-rate-stall-003",
+  "container_runtime": "runc",
+  "cpu_set": "9-13",
+  "image": "uav-sf-family-a-thor:formal-35971b4",
+  "image_id": "sha256:8c17f8f82d0e31d6ecac260ac84ec3b1ea3eedb67d887f27b9158c9331b24ef8",
+  "memory": "24g",
+  "network_mode": "none",
+  "operating_system": "linux",
+  "outer_timeout": false,
+  "returncode": 0,
+  "run_id": "fault-offboard-body-rate-stall-003",
+  "schema_version": "1.0",
+  "study_id": "motivation-thor-v1"
+}

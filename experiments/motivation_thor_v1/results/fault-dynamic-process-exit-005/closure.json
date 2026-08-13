@@ -1,0 +1,19 @@
+{
+  "attempt_id": "fault-dynamic-process-exit-005",
+  "cell_id": "fault-dynamic-process-exit",
+  "compact_evidence": {
+    "container_driver_result": "sha256:b99ccf2665cf4d83474933fbc8609de237796521fddce3721991f255854d165a",
+    "evaluation": "sha256:7d319abf2035b73add0e500239872253a41d6d60ee468b7bed328e1ddfe592d4",
+    "processing_result": "sha256:601f87b77be9fdd583e1d383d5ee5b4c03c56d19e15aab2b7500aac6b7dca8aa",
+    "raw_manifest": "sha256:dd381750ff980e36ee6a2776fbdcf9837e5d2f01c53ca7c661a2a9e2d9f5b09e",
+    "runtime_result": "sha256:474c9908dbdbdb102f25e642ee4b8f18b0872121e07abeafa8d3355f32bb9af1",
+    "ulog_summary": "sha256:6edea6462296485a2df46a5650d61f1427e77b19817fbb3789da21f4a84b54f4"
+  },
+  "image_id": "sha256:8c17f8f82d0e31d6ecac260ac84ec3b1ea3eedb67d887f27b9158c9331b24ef8",
+  "outcome": "ACCEPTED",
+  "plan_digest": "sha256:4d0d140d42b5febdff45f72c077e3cbc2306812444ed477609e7ef602e6e93b4",
+  "processing_returncode": 0,
+  "runtime_driver_returncode": 0,
+  "schema_version": "1.0",
+  "study_id": "motivation-thor-v1"
+}

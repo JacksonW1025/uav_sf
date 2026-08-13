@@ -1,0 +1,19 @@
+{
+  "attempt_id": "fault-offboard-process-exit-002",
+  "cell_id": "fault-offboard-process-exit",
+  "compact_evidence": {
+    "container_driver_result": "sha256:e3697d1b2d3f09b4cc6b7f961a855a5de822373aa435bbb874f841a5edd39fee",
+    "evaluation": "sha256:6fd85b7db1242f39bba49af5b0844142e575b32e258be4e5fb5a6dc90442135c",
+    "processing_result": "sha256:1750c749a031ed96820c9822032e9d0031d05739c721c19834ec55796145365c",
+    "raw_manifest": "sha256:31e3fa3e3dd3c391690215149d01f31f1df06e22cdc05e3ea39899843c39cd1d",
+    "runtime_result": "sha256:5544c24dea6aae7a623a45b7d8f9dc6da07c190912c9680b8e546c6dfbe33649",
+    "ulog_summary": "sha256:ec9f22f8ed7cc62ab573a49700f1d3d8268d34d2f98277eb112228f0b7d81df1"
+  },
+  "image_id": "sha256:8c17f8f82d0e31d6ecac260ac84ec3b1ea3eedb67d887f27b9158c9331b24ef8",
+  "outcome": "ACCEPTED",
+  "plan_digest": "sha256:05adc2690d721a24e8d8bec52bc9760d5975a387ab929b3e83a473f6c7fd65cd",
+  "processing_returncode": 0,
+  "runtime_driver_returncode": 0,
+  "schema_version": "1.0",
+  "study_id": "motivation-thor-v1"
+}

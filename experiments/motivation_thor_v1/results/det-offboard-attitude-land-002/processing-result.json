@@ -1,0 +1,126 @@
+{
+  "attempt_id": "det-offboard-attitude-land-002",
+  "clock_bridge": {
+    "bridge_id": "clock-c9d92592a7d8b4f7",
+    "knots": [
+      [
+        10596000000,
+        1316083699334913
+      ],
+      [
+        11600000000,
+        1316084704362756
+      ],
+      [
+        12604000000,
+        1316085708307784
+      ],
+      [
+        13608000000,
+        1316086712374978
+      ],
+      [
+        14612000000,
+        1316087716301783
+      ],
+      [
+        15616000000,
+        1316088720164255
+      ],
+      [
+        16620000000,
+        1316089724745191
+      ],
+      [
+        17624000000,
+        1316090728183154
+      ],
+      [
+        18628000000,
+        1316091732345099
+      ],
+      [
+        19632000000,
+        1316092736458636
+      ],
+      [
+        20636000000,
+        1316093740240034
+      ],
+      [
+        21640000000,
+        1316094744605913
+      ],
+      [
+        22644000000,
+        1316095748221145
+      ],
+      [
+        23648000000,
+        1316096752235710
+      ],
+      [
+        24652000000,
+        1316097756295080
+      ],
+      [
+        25656000000,
+        1316098760140209
+      ],
+      [
+        26660000000,
+        1316099764511803
+      ]
+    ],
+    "rate_ratio": 1.0000732625747013,
+    "reference_analysis_ns": 1316091732345099,
+    "reference_source_ns": 18628000000,
+    "sample_count": 17,
+    "source_domain": "px4_boot_ns",
+    "uncertainty_ns": 571487,
+    "valid_from_ns": 10596000000,
+    "valid_until_ns": 26660000000
+  },
+  "environment_attestation_digest": "sha256:f0d6f25cc0c933bab6c1a0d3a8478c4035989b9ddda4daba99c7949aa1a0a8e2",
+  "evaluation_status": "VIOLATION",
+  "evidence_gate_status": "ADMISSIBLE",
+  "gazebo": {
+    "central_minimum": 0.9981932701809725,
+    "median": 0.999888512430864,
+    "minimum": 0.013867216740326548,
+    "sample_count": 266,
+    "status": "PASS"
+  },
+  "outcome": "ACCEPTED",
+  "plan_digest": "sha256:63dc77df298d637a9b8f0f921f1ec62aa86047d90e72ed29fe3929fa15600eb7",
+  "plan_id": "det-offboard-attitude-land-002-plan",
+  "processing_error": null,
+  "raw_manifest_digest": "sha256:1df19574e359c99aca6f957fd248322008af0789f1b7f7fdd1404463e3b55c1f",
+  "runtime_outcome": "ACCEPTED",
+  "schema_version": "1.0",
+  "study_id": "motivation-thor-v1",
+  "ulog": {
+    "dropouts": [],
+    "file_corruption": false,
+    "first_sequence_by_instance": {
+      "0": 0,
+      "1": 5,
+      "2": 5,
+      "3": 4,
+      "4": 5
+    },
+    "route_observation_count": 661,
+    "route_observation_instances": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "schema_version": "1.0",
+    "sequence_gaps": [],
+    "status": "PASS",
+    "ulog_end_us": 27056000,
+    "ulog_start_us": 4988000
+  }
+}

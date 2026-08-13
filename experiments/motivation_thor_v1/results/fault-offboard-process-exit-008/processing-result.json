@@ -1,0 +1,44 @@
+{
+  "attempt_id": "fault-offboard-process-exit-008",
+  "clock_bridge": null,
+  "environment_attestation_digest": "sha256:f0d6f25cc0c933bab6c1a0d3a8478c4035989b9ddda4daba99c7949aa1a0a8e2",
+  "evaluation_status": null,
+  "evidence_gate_status": null,
+  "gazebo": {
+    "central_minimum": 0.998946361325392,
+    "median": 0.9998900120986691,
+    "minimum": 0.014318807248224617,
+    "sample_count": 169,
+    "status": "PASS"
+  },
+  "outcome": "ENVIRONMENT_FAILURE",
+  "plan_digest": "sha256:f18fafdc465d4d7989f91f5bd2e96fa80a7d88f61513d2d47cee54f5159a2a3f",
+  "plan_id": "fault-offboard-process-exit-008-plan",
+  "processing_error": "clock uncertainty exceeds the configured bound",
+  "raw_manifest_digest": "sha256:1d095bf097b5dd666a0da91404c14a8551151ee2ae9c23b33f8b43721c3b8612",
+  "runtime_outcome": "ENVIRONMENT_FAILURE",
+  "schema_version": "1.0",
+  "study_id": "motivation-thor-v1",
+  "ulog": {
+    "dropouts": [],
+    "file_corruption": false,
+    "first_sequence_by_instance": {
+      "0": 0,
+      "1": 6,
+      "2": 6,
+      "3": 5
+    },
+    "route_observation_count": 394,
+    "route_observation_instances": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "schema_version": "1.0",
+    "sequence_gaps": [],
+    "status": "PASS",
+    "ulog_end_us": 18172000,
+    "ulog_start_us": 5096000
+  }
+}

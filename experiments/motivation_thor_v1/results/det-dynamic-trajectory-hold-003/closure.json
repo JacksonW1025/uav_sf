@@ -1,0 +1,19 @@
+{
+  "attempt_id": "det-dynamic-trajectory-hold-003",
+  "cell_id": "det-dynamic-trajectory-hold",
+  "compact_evidence": {
+    "container_driver_result": "sha256:11ca6b386af46345a7e6d0092dfcd8f67e7d6f712cb4f8dab223fc1c03ccc16f",
+    "evaluation": "sha256:99b07e83db2ba811bc1e6e6e9c9726c661f391ccba5ce659aa1cbfdd681d6698",
+    "processing_result": "sha256:2c4da50871091372a746dc514949181ddb15ecb8b1808e9d2fc40519ed5b1604",
+    "raw_manifest": "sha256:57dcb94907c4ee82e122667b4cfb6e20f81a25f8747b514ed82ecb49c09d378e",
+    "runtime_result": "sha256:d97af48e47788181a9c17c497783500a12d0f7131605feb556c3747848c9bf21",
+    "ulog_summary": "sha256:68802062573a93990f47a623611d0f83c9c76142d49f08ea1b0d5fff6c5e2540"
+  },
+  "image_id": "sha256:8c17f8f82d0e31d6ecac260ac84ec3b1ea3eedb67d887f27b9158c9331b24ef8",
+  "outcome": "TIMEOUT",
+  "plan_digest": "sha256:5b13709c51758efcc7e4bf973c919ae42d83c2445c4ffc74601cfbd824316293",
+  "processing_returncode": 2,
+  "runtime_driver_returncode": 2,
+  "schema_version": "1.0",
+  "study_id": "motivation-thor-v1"
+}

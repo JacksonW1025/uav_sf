@@ -1,0 +1,19 @@
+{
+  "attempt_id": "fault-offboard-body-rate-stall-002",
+  "cell_id": "fault-offboard-body-rate-stall",
+  "compact_evidence": {
+    "container_driver_result": "sha256:ffc24e952acc78260f0bbe6f22b01c549a18e56a56520ced5224a1949736a1d0",
+    "evaluation": "sha256:f046e8d785b57a9f51949e05f864d8fce922f107537fe3c4c3966b9d3935abe8",
+    "processing_result": "sha256:cef85d9bc8320e2ca28ded48e4aaf8e5fd605b8084e6dde40be1ae328caa48de",
+    "raw_manifest": "sha256:f70a05517d8673aa0fff7686089acf4509ccc95a69240eb2ecae10fbff6e4309",
+    "runtime_result": "sha256:10c8e58eb7ebdf847c4c7cc2ecd277abcc3bf12d2ce0ab8c69d907ca4f8cf69b",
+    "ulog_summary": "sha256:8d412cab90059a6c40fd2f2032af73a8042f3e0e0f7867835a5af243740392f9"
+  },
+  "image_id": "sha256:8c17f8f82d0e31d6ecac260ac84ec3b1ea3eedb67d887f27b9158c9331b24ef8",
+  "outcome": "ACCEPTED",
+  "plan_digest": "sha256:643635d9f71fee785ebea8b0c9bd6a5f2d8363654c429db4078e584dc83d4a90",
+  "processing_returncode": 0,
+  "runtime_driver_returncode": 0,
+  "schema_version": "1.0",
+  "study_id": "motivation-thor-v1"
+}

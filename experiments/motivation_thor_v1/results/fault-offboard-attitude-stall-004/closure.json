@@ -1,0 +1,19 @@
+{
+  "attempt_id": "fault-offboard-attitude-stall-004",
+  "cell_id": "fault-offboard-attitude-stall",
+  "compact_evidence": {
+    "container_driver_result": "sha256:23e6067d20b91959417292ec0f76e9608dd32b20ccd15d723aee496605e9272c",
+    "evaluation": "sha256:c1e1236089eecdb488fed280302748ab93d56abd86e408b9778960873c6a06c2",
+    "processing_result": "sha256:d0a15aa69a50adb277a0b1fb11149b27cb386414cd4f81a770cfd79c857b3553",
+    "raw_manifest": "sha256:a7c733f24d29121a89793dd8e1a343eb7b834cbd9a5c2ac590e249046e1b2932",
+    "runtime_result": "sha256:483924966647a8336886ac6c298091e4daacd9468a78819d5b09e874c09b2c7e",
+    "ulog_summary": "sha256:9f0409715697878960a8cc8dbba48f87668704d1c8620d7cc6991cb5f0b81183"
+  },
+  "image_id": "sha256:8c17f8f82d0e31d6ecac260ac84ec3b1ea3eedb67d887f27b9158c9331b24ef8",
+  "outcome": "ACCEPTED",
+  "plan_digest": "sha256:8a588925b20b96ebc143b82cd6c11047123d3feb65791fa581eb28bc3e9aefae",
+  "processing_returncode": 0,
+  "runtime_driver_returncode": 0,
+  "schema_version": "1.0",
+  "study_id": "motivation-thor-v1"
+}

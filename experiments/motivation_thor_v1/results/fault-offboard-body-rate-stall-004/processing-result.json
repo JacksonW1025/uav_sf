@@ -1,0 +1,120 @@
+{
+  "attempt_id": "fault-offboard-body-rate-stall-004",
+  "clock_bridge": {
+    "bridge_id": "clock-8369e734aca5f242",
+    "knots": [
+      [
+        10644000000,
+        1316938906861997
+      ],
+      [
+        11648000000,
+        1316939908103543
+      ],
+      [
+        12652000000,
+        1316940911685145
+      ],
+      [
+        13656000000,
+        1316941915847043
+      ],
+      [
+        14660000000,
+        1316942919709034
+      ],
+      [
+        15664000000,
+        1316943923729145
+      ],
+      [
+        16668000000,
+        1316944927624108
+      ],
+      [
+        17672000000,
+        1316945931666923
+      ],
+      [
+        18676000000,
+        1316946935613904
+      ],
+      [
+        19680000000,
+        1316947940537515
+      ],
+      [
+        20684000000,
+        1316948944358765
+      ],
+      [
+        21688000000,
+        1316949948139866
+      ],
+      [
+        22692000000,
+        1316950951632802
+      ],
+      [
+        23696000000,
+        1316951955847783
+      ],
+      [
+        24700000000,
+        1316952959666636
+      ],
+      [
+        25704000000,
+        1316953963684746
+      ]
+    ],
+    "rate_ratio": 0.9997890271580345,
+    "reference_analysis_ns": 1316946935613904,
+    "reference_source_ns": 18676000000,
+    "sample_count": 16,
+    "source_domain": "px4_boot_ns",
+    "uncertainty_ns": 1170028,
+    "valid_from_ns": 10644000000,
+    "valid_until_ns": 25704000000
+  },
+  "environment_attestation_digest": "sha256:f0d6f25cc0c933bab6c1a0d3a8478c4035989b9ddda4daba99c7949aa1a0a8e2",
+  "evaluation_status": "VIOLATION",
+  "evidence_gate_status": "ADMISSIBLE",
+  "gazebo": {
+    "central_minimum": 0.9988236354633331,
+    "median": 0.9999802503900548,
+    "minimum": 0.014501770414199313,
+    "sample_count": 260,
+    "status": "PASS"
+  },
+  "outcome": "ACCEPTED",
+  "plan_digest": "sha256:19adb0d7ba944fc910485bc2a45443555f9c552fb4a4ec5e6efe2342e342e936",
+  "plan_id": "fault-offboard-body-rate-stall-004-plan",
+  "processing_error": null,
+  "raw_manifest_digest": "sha256:6a11c93c1c6308991933bccd26711e6f2837e761a458501363d7a8ff7dd10aba",
+  "runtime_outcome": "ACCEPTED",
+  "schema_version": "1.0",
+  "study_id": "motivation-thor-v1",
+  "ulog": {
+    "dropouts": [],
+    "file_corruption": false,
+    "first_sequence_by_instance": {
+      "0": 0,
+      "1": 5,
+      "2": 5,
+      "3": 4
+    },
+    "route_observation_count": 647,
+    "route_observation_instances": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "schema_version": "1.0",
+    "sequence_gaps": [],
+    "status": "PASS",
+    "ulog_end_us": 26472000,
+    "ulog_start_us": 5028000
+  }
+}

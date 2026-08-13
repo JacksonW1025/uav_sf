@@ -1,0 +1,481 @@
+{
+  "cell_status_counts": {
+    "COMPLETE": 19,
+    "MEASUREMENT_INSUFFICIENT": 2
+  },
+  "cells": {
+    "det-dynamic-trajectory-hold": {
+      "accepted": 5,
+      "accepted_target": 5,
+      "category": "deterministic",
+      "launch_cap": 10,
+      "launches": 8,
+      "outcomes": {
+        "ACCEPTED": 5,
+        "TIMEOUT": 3
+      },
+      "status": "COMPLETE"
+    },
+    "det-dynamic-trajectory-land": {
+      "accepted": 5,
+      "accepted_target": 5,
+      "category": "deterministic",
+      "launch_cap": 10,
+      "launches": 6,
+      "outcomes": {
+        "ACCEPTED": 5,
+        "TIMEOUT": 1
+      },
+      "status": "COMPLETE"
+    },
+    "det-dynamic-trajectory-rtl": {
+      "accepted": 5,
+      "accepted_target": 5,
+      "category": "deterministic",
+      "launch_cap": 10,
+      "launches": 5,
+      "outcomes": {
+        "ACCEPTED": 5
+      },
+      "status": "COMPLETE"
+    },
+    "det-executor-completion-land": {
+      "accepted": 5,
+      "accepted_target": 5,
+      "category": "deterministic",
+      "launch_cap": 10,
+      "launches": 5,
+      "outcomes": {
+        "ACCEPTED": 5
+      },
+      "status": "COMPLETE"
+    },
+    "det-offboard-attitude-land": {
+      "accepted": 5,
+      "accepted_target": 5,
+      "category": "deterministic",
+      "launch_cap": 10,
+      "launches": 5,
+      "outcomes": {
+        "ACCEPTED": 5
+      },
+      "status": "COMPLETE"
+    },
+    "det-offboard-body-rate-land": {
+      "accepted": 5,
+      "accepted_target": 5,
+      "category": "deterministic",
+      "launch_cap": 10,
+      "launches": 5,
+      "outcomes": {
+        "ACCEPTED": 5
+      },
+      "status": "COMPLETE"
+    },
+    "det-offboard-trajectory-hold": {
+      "accepted": 5,
+      "accepted_target": 5,
+      "category": "deterministic",
+      "launch_cap": 10,
+      "launches": 5,
+      "outcomes": {
+        "ACCEPTED": 5
+      },
+      "status": "COMPLETE"
+    },
+    "det-offboard-trajectory-land": {
+      "accepted": 5,
+      "accepted_target": 5,
+      "category": "deterministic",
+      "launch_cap": 10,
+      "launches": 5,
+      "outcomes": {
+        "ACCEPTED": 5
+      },
+      "status": "COMPLETE"
+    },
+    "det-offboard-trajectory-rtl": {
+      "accepted": 5,
+      "accepted_target": 5,
+      "category": "deterministic",
+      "launch_cap": 10,
+      "launches": 5,
+      "outcomes": {
+        "ACCEPTED": 5
+      },
+      "status": "COMPLETE"
+    },
+    "fault-dynamic-health-loss": {
+      "accepted": 8,
+      "accepted_target": 8,
+      "category": "fault",
+      "launch_cap": 16,
+      "launches": 10,
+      "outcomes": {
+        "ACCEPTED": 8,
+        "TIMEOUT": 2
+      },
+      "status": "COMPLETE"
+    },
+    "fault-dynamic-process-exit": {
+      "accepted": 8,
+      "accepted_target": 8,
+      "category": "fault",
+      "launch_cap": 16,
+      "launches": 9,
+      "outcomes": {
+        "ACCEPTED": 8,
+        "TIMEOUT": 1
+      },
+      "status": "COMPLETE"
+    },
+    "fault-dynamic-registration-capacity": {
+      "accepted": 8,
+      "accepted_target": 8,
+      "category": "fault",
+      "launch_cap": 16,
+      "launches": 9,
+      "outcomes": {
+        "ACCEPTED": 8,
+        "TIMEOUT": 1
+      },
+      "status": "COMPLETE"
+    },
+    "fault-offboard-attitude-stall": {
+      "accepted": 8,
+      "accepted_target": 8,
+      "category": "fault",
+      "launch_cap": 16,
+      "launches": 8,
+      "outcomes": {
+        "ACCEPTED": 8
+      },
+      "status": "COMPLETE"
+    },
+    "fault-offboard-body-rate-stall": {
+      "accepted": 8,
+      "accepted_target": 8,
+      "category": "fault",
+      "launch_cap": 16,
+      "launches": 8,
+      "outcomes": {
+        "ACCEPTED": 8
+      },
+      "status": "COMPLETE"
+    },
+    "fault-offboard-process-exit": {
+      "accepted": 8,
+      "accepted_target": 8,
+      "category": "fault",
+      "launch_cap": 16,
+      "launches": 9,
+      "outcomes": {
+        "ACCEPTED": 8,
+        "ENVIRONMENT_FAILURE": 1
+      },
+      "status": "COMPLETE"
+    },
+    "fault-offboard-trajectory-stall": {
+      "accepted": 8,
+      "accepted_target": 8,
+      "category": "fault",
+      "launch_cap": 16,
+      "launches": 8,
+      "outcomes": {
+        "ACCEPTED": 8
+      },
+      "status": "COMPLETE"
+    },
+    "timing-executor-after": {
+      "accepted": 10,
+      "accepted_target": 10,
+      "category": "timing",
+      "launch_cap": 20,
+      "launches": 10,
+      "outcomes": {
+        "ACCEPTED": 10
+      },
+      "status": "COMPLETE"
+    },
+    "timing-executor-before": {
+      "accepted": 0,
+      "accepted_target": 10,
+      "category": "timing",
+      "launch_cap": 20,
+      "launches": 20,
+      "outcomes": {
+        "OBSERVABILITY_REJECTED": 20
+      },
+      "status": "MEASUREMENT_INSUFFICIENT"
+    },
+    "timing-executor-near": {
+      "accepted": 10,
+      "accepted_target": 10,
+      "category": "timing",
+      "launch_cap": 20,
+      "launches": 10,
+      "outcomes": {
+        "ACCEPTED": 10
+      },
+      "status": "COMPLETE"
+    },
+    "timing-offboard-reentry-hold": {
+      "accepted": 10,
+      "accepted_target": 10,
+      "category": "timing",
+      "launch_cap": 20,
+      "launches": 10,
+      "outcomes": {
+        "ACCEPTED": 10
+      },
+      "status": "COMPLETE"
+    },
+    "timing-offboard-reentry-rtl": {
+      "accepted": 0,
+      "accepted_target": 10,
+      "category": "timing",
+      "launch_cap": 20,
+      "launches": 20,
+      "outcomes": {
+        "TIMEOUT": 20
+      },
+      "status": "MEASUREMENT_INSUFFICIENT"
+    }
+  },
+  "environment_id": "thor-r38.2.1-family-a-formal-v1",
+  "evaluation_counts": {
+    "INCONCLUSIVE": 48,
+    "PASS": 75,
+    "VIOLATION": 56
+  },
+  "evidence_gate_counts": {
+    "ADMISSIBLE": 131,
+    "INADMISSIBLE": 48
+  },
+  "formal_concurrency": 4,
+  "ledger": {
+    "accepted_count": 131,
+    "chain_head": "c255d443319bc37a7f14b064394e548b1354e28a05f9434bfb48d38c9e2b8b5a",
+    "closed_count": 180,
+    "digest": "sha256:3558dba3180c1bfc9bbdfdab0e7b80c7a18da593dbb283ea36c34b65b39beb2a",
+    "event_count": 540,
+    "launched_count": 180
+  },
+  "oracle_clause_counts": {
+    "freshness_lineage": {
+      "NOT_APPLICABLE": 20,
+      "PASS": 222,
+      "UNKNOWN": 74,
+      "VIOLATION": 42
+    },
+    "registration_contract": {
+      "NOT_APPLICABLE": 339,
+      "PASS": 17,
+      "VIOLATION": 2
+    },
+    "route_conformance": {
+      "NOT_APPLICABLE": 194,
+      "PASS": 678,
+      "UNKNOWN": 186,
+      "VIOLATION": 16
+    },
+    "successor_progression": {
+      "NOT_APPLICABLE": 744,
+      "PASS": 273,
+      "UNKNOWN": 1,
+      "VIOLATION": 56
+    }
+  },
+  "outcome_counts": {
+    "ACCEPTED": 131,
+    "ENVIRONMENT_FAILURE": 1,
+    "OBSERVABILITY_REJECTED": 20,
+    "TIMEOUT": 28
+  },
+  "raw_evidence_manifests": {
+    "det-dynamic-trajectory-hold-001": "sha256:5374202dcf436cc5ede80dc6e52e033e0e809da605613b84a42804a3c7f6ab01",
+    "det-dynamic-trajectory-hold-002": "sha256:0a78105b2dcdb7605cd180077be246b20b6b8bfe40958c577bbbc495c0d6cf48",
+    "det-dynamic-trajectory-hold-003": "sha256:57dcb94907c4ee82e122667b4cfb6e20f81a25f8747b514ed82ecb49c09d378e",
+    "det-dynamic-trajectory-hold-004": "sha256:1b801b397c1e01d5edc81f4eb3d7a3ce5df24b2299bb37d30e136a89ac6e8d5b",
+    "det-dynamic-trajectory-hold-005": "sha256:f480f9cdb6bb3ce0c717fdd274370dc353d133ac0f41435de37958c1aacc43c2",
+    "det-dynamic-trajectory-hold-006": "sha256:19136a230d15782ad65dd65c8d81f61c1bd08868e5355ca6938e92028888ac0e",
+    "det-dynamic-trajectory-hold-007": "sha256:a21f90a2e7dc25a70632085d3cb64df4e7276573c5ffd689559584fb9d495cf1",
+    "det-dynamic-trajectory-hold-008": "sha256:73d8e1e428ae223677b71c550d06cb2d2ca0b21d1bef291ae1f9b98bda83b279",
+    "det-dynamic-trajectory-land-001": "sha256:1573bab6b82805de6966edca64b1f1ae689baa59f161f1e20edca355469ba447",
+    "det-dynamic-trajectory-land-002": "sha256:50f4798a27e57650bcc036be4b6152a910d4e6194d2640f8a180cd803fc6da2d",
+    "det-dynamic-trajectory-land-003": "sha256:ee196a6f1cb097c96f64943ba4b12ae9619ce4c506ce272797fff7216f5ecc5e",
+    "det-dynamic-trajectory-land-004": "sha256:cf069a1833aad9fbdd7dd59a1f9d62b616273dba0dd48b60d9f6b17809b40fcb",
+    "det-dynamic-trajectory-land-005": "sha256:6e83d4e7ba1b1a0901f4f4548dc31a88233800b80be0c68e570b72a01cc73816",
+    "det-dynamic-trajectory-land-006": "sha256:3841e949828084905da896c4fd237fba20d77a9ab8e7c709a05a95ba35300c76",
+    "det-dynamic-trajectory-rtl-001": "sha256:a8492fe4762d31563b2eb261c7de4c6f6c0993bba49a40491467127e69f438fe",
+    "det-dynamic-trajectory-rtl-002": "sha256:4a200e9604a213c0846b629a756820aff8ede9fde46f0de96f7d93a56d3457f3",
+    "det-dynamic-trajectory-rtl-003": "sha256:f9d1d1cc7fc5caf45197fc41e682f0acb6548fde011965a8943a2e7db9b89054",
+    "det-dynamic-trajectory-rtl-004": "sha256:25ae2a47ca0290804ee65e23e758bee268a123bebb97523cbaac68f6fa474c20",
+    "det-dynamic-trajectory-rtl-005": "sha256:b8c6f67f7861971e72a016c0700bdc6ce4398feb37ec2ed61bfe4871c6f59d24",
+    "det-executor-completion-land-001": "sha256:fd28b5179cdec1a01f46c8793b319d09f8cba2c663de856767551d291796e4e4",
+    "det-executor-completion-land-002": "sha256:a29168da08cf26f3f3dd6aedb162786430125b849f75b55cd95967e0da00f5c2",
+    "det-executor-completion-land-003": "sha256:9e913a1c43bde8372f1f3419c6a397d82a62b5606a0c6264e806bed7b5425bc1",
+    "det-executor-completion-land-004": "sha256:9faed7308bbeeee689a44c934cbdd65aefff7dee17a958d20c9a22615f19d902",
+    "det-executor-completion-land-005": "sha256:95276a5e7b6c10e83170791883de11ef08dad71f427dcbc7490f7bb7df63e428",
+    "det-offboard-attitude-land-001": "sha256:89d8e26319fcecf119efa99f3fe6b7d8ab0a26db8ba647907cb870a4039d5f74",
+    "det-offboard-attitude-land-002": "sha256:1df19574e359c99aca6f957fd248322008af0789f1b7f7fdd1404463e3b55c1f",
+    "det-offboard-attitude-land-003": "sha256:6c2e36a80ee7fa6cab98ae6f8c4ca2be81fb35835326e6d5540025b902c219f7",
+    "det-offboard-attitude-land-004": "sha256:3b90c721aafa995e3508f53159b1edf5821e0c8477c6d6b5097e7e22c50d866b",
+    "det-offboard-attitude-land-005": "sha256:33cc6bc3e4666f435535a9ce12e9eef0cd7148fc4fd9eacae7c89305611ad32e",
+    "det-offboard-body-rate-land-001": "sha256:f8432e026d5b03dc0e86f0ce0ceafeecc9c74b879ace322ee2c58b6009068ca2",
+    "det-offboard-body-rate-land-002": "sha256:2c3ccba79f29f91dfd6db8c3bd16c94198f1140d2b88517381b1d79874c3f95f",
+    "det-offboard-body-rate-land-003": "sha256:5c56e04c3246abd5075e0073f946b7e6302b21a12075f94a4bf00d59107c99a1",
+    "det-offboard-body-rate-land-004": "sha256:29fde3b11f3b4ba5e30827d06f1d5dc529f931cae4a9bb9e9a3951eb8d351a81",
+    "det-offboard-body-rate-land-005": "sha256:cc3ca82106f776855a5d942d78ffc4a93559143d7f811f98dad97b4c0b8b0a2c",
+    "det-offboard-trajectory-hold-001": "sha256:7b2f288433236956cf15882a4f59481d51c8541b9159828b55a12daf2ba12ef1",
+    "det-offboard-trajectory-hold-002": "sha256:67766ddf58a67bc1973d669b8d6584543a1fb0ef9fef829f6e77861377f1c766",
+    "det-offboard-trajectory-hold-003": "sha256:dd20d74296a86881aec3ff15cb9cd44e09f40b37170371bc336fdf777364a7b8",
+    "det-offboard-trajectory-hold-004": "sha256:e5bbb66ade81eab09fa68a9d81c5a091abec3ab29cd0bcfe71b6d5fdf1bc0947",
+    "det-offboard-trajectory-hold-005": "sha256:103070c8899aecbcf361c33f972b927a2fe2313b5316e9b1ead846f2129760f4",
+    "det-offboard-trajectory-land-001": "sha256:0a5cb0cc263a1b1c2fe87c0939ade0a7a0f292b3cbf6d020a40b792765b8d3fa",
+    "det-offboard-trajectory-land-002": "sha256:6142f984836d2a0977ff2422479dd6c84b580a51b06333745905f3ea350e9550",
+    "det-offboard-trajectory-land-003": "sha256:93d2c0663059b1ee6454308f562d38bbe9d9d25a80a014cbfe761d0b50978298",
+    "det-offboard-trajectory-land-004": "sha256:be5c00c5ac5d6348835f3573b6522a3c5d2b23e17786abd432f84418264fa38f",
+    "det-offboard-trajectory-land-005": "sha256:f8aebf2183e38a1518382129fa33e32f6078c108c1b390a16c716b2e29e3b2a1",
+    "det-offboard-trajectory-rtl-001": "sha256:6535283e5be2fc86aa47a482e130bf68426c044f1b4ccf57a535cef9aa8a36b0",
+    "det-offboard-trajectory-rtl-002": "sha256:14938dec6fa94fe8497ae2518b07b33d8b9d5a9e028a521df7ca97247aba3446",
+    "det-offboard-trajectory-rtl-003": "sha256:5cef55c1d9671e9641d26f254a671ca473b6afed469529358e7d4d1979eaf3a7",
+    "det-offboard-trajectory-rtl-004": "sha256:ebb071bc3eead103d0f6f0fc4bb1ef590662d5e97d84471f82b189d452b7bc0a",
+    "det-offboard-trajectory-rtl-005": "sha256:feeeb7986c29087b7b72678e0bd8d4c8a3349e59acac7011784c0adad2227436",
+    "fault-dynamic-health-loss-001": "sha256:b3c21ce9e80e3292336c48c6f61570258df99562c6c89823b5067eabac92b349",
+    "fault-dynamic-health-loss-002": "sha256:bc5e1599fb29f1439090d83606d3ead34524be3243d93cedc9d28c7d2726fd70",
+    "fault-dynamic-health-loss-003": "sha256:4e6400c4a8a996d3c6ddff13a3f9186dff0bdb7d3a7c0d61749b97ed72e21085",
+    "fault-dynamic-health-loss-004": "sha256:f26b471786b50ecbdaaa4f56109adcccd709a9061463f5bf744e8443d073a8ab",
+    "fault-dynamic-health-loss-005": "sha256:775e784a41e8b0c8c92ce2b8697770590ad0d56bde25d62b6f4cc1d04847698e",
+    "fault-dynamic-health-loss-006": "sha256:195f9414d82333b5a5960043274401f1b5f33ffc07ea92069ec44152c009a19e",
+    "fault-dynamic-health-loss-007": "sha256:25e93692ae19bb7057ab0a1f9386f6ea0c3735d35efcf156f94f61f00c6647fd",
+    "fault-dynamic-health-loss-008": "sha256:05dbd90377f29542a7330b0ceca457b2f529fb54164725afc243470e92e278f3",
+    "fault-dynamic-health-loss-009": "sha256:126e792ac5d5fd63495ae63585ab60cbc4e8282c443e4f90d8eccf9cac29537f",
+    "fault-dynamic-health-loss-010": "sha256:113f9fab70e79a8a6402d8f56c6bbd10ed5945f3a16a12186039969537c8e01c",
+    "fault-dynamic-process-exit-001": "sha256:0ea7a2df2859416a980be7acaf702b0d4e0b5509a34c7b0942ac80520e8047e1",
+    "fault-dynamic-process-exit-002": "sha256:242f04c8a29845e5988bace84fdb91d1d0570cfb6f95eae1ee88b7d8902ce551",
+    "fault-dynamic-process-exit-003": "sha256:36801b727b996518455b2f6640a2ea0bceef5ccf6089a521fd081d7161a455fc",
+    "fault-dynamic-process-exit-004": "sha256:b754547e026e0f61ff21844483a79ed5b7931543db64905aa5b66b6ccfb6358a",
+    "fault-dynamic-process-exit-005": "sha256:dd381750ff980e36ee6a2776fbdcf9837e5d2f01c53ca7c661a2a9e2d9f5b09e",
+    "fault-dynamic-process-exit-006": "sha256:48e5341e0e228b9696346cf25b8485741e380035e1425f3d3821285b5d81e9c6",
+    "fault-dynamic-process-exit-007": "sha256:205f6a9ea480ebf75228b28eff39553edd45f0a74b4cb50733b823f31330ae95",
+    "fault-dynamic-process-exit-008": "sha256:000d72d613bbcf3d0eea7027ae2cf8b9771cd6d3612f8156443cad79ca2fb957",
+    "fault-dynamic-process-exit-009": "sha256:540119a8687b342211ffec75587c8137db51506e42ea12a0d21cb7c4d84c1d0d",
+    "fault-dynamic-registration-capacity-001": "sha256:0bfb526f06745c81c851d188a77076e282558cb08eaa7279a767ac3ce711033b",
+    "fault-dynamic-registration-capacity-002": "sha256:bc1204c157c3587bcf6cd9f8807d69180d39f33b500fab03376d2bc1239af25b",
+    "fault-dynamic-registration-capacity-003": "sha256:d545c319fe094a1e6d2276e85c5efaaffdbec9ea060393835e7a6dc607952e5f",
+    "fault-dynamic-registration-capacity-004": "sha256:caef394e8c59f1f3807000aede79d5a6f60945ed614be77f69df6d55ddd7a039",
+    "fault-dynamic-registration-capacity-005": "sha256:6a5232ca0223dc83c3dedcb6f2a29742632e25885598cbff5c40fa31afa8a3a0",
+    "fault-dynamic-registration-capacity-006": "sha256:aa01d025c24439eada224cab8de5a9dd02b28813b7d2830199403138d4c7e96f",
+    "fault-dynamic-registration-capacity-007": "sha256:662c18541fb2851b7ca5eb0e19f07c6975c0e94cecbdc57da50d897365080747",
+    "fault-dynamic-registration-capacity-008": "sha256:28ae2f0a56317ff4babbe567aadacd6952c2d5958a685c8d3a5e4ee427eab71d",
+    "fault-dynamic-registration-capacity-009": "sha256:0339a9069516ec2de5d7d9c325c9bc24f5d3d82c74bafb6f92ef9e3ce97cbedc",
+    "fault-offboard-attitude-stall-001": "sha256:a05915667a97d99befeed797b5be24f0ccc4f1c9f5c236503405b53a3e9d25c4",
+    "fault-offboard-attitude-stall-002": "sha256:acf00b9c6a413d9fa153ef6a48534bef7b11aa637a31d87c55372c88047dcc3e",
+    "fault-offboard-attitude-stall-003": "sha256:ed2e218f7014737cfccfd82de395130e13b19f429c2e687ff2ea6e1812dd439d",
+    "fault-offboard-attitude-stall-004": "sha256:a7c733f24d29121a89793dd8e1a343eb7b834cbd9a5c2ac590e249046e1b2932",
+    "fault-offboard-attitude-stall-005": "sha256:d770be8dd6948b63d8b94522bdbb7c22125754af2bb3bd196f2ee7b20144daf7",
+    "fault-offboard-attitude-stall-006": "sha256:1cb0070b4bdc4c1c5241032294f6a090c176356271fadef568856fa8224ab256",
+    "fault-offboard-attitude-stall-007": "sha256:728ca96c8d230b31b0071a65177bea204cc98953d1ff49deb9f27831d03a42ba",
+    "fault-offboard-attitude-stall-008": "sha256:23e2cc06e4a51aaad91568c99c45f54faae000562390b300a3e3862e56409419",
+    "fault-offboard-body-rate-stall-001": "sha256:3b7a78481f9db29ed092a7ad39681a517b9a19390bdd9d8301ce55b29e867fab",
+    "fault-offboard-body-rate-stall-002": "sha256:f70a05517d8673aa0fff7686089acf4509ccc95a69240eb2ecae10fbff6e4309",
+    "fault-offboard-body-rate-stall-003": "sha256:6bab54734f0e86ae53f07bd59d73c7a5ce51d5a71fa33ea1246702ab39c1cf07",
+    "fault-offboard-body-rate-stall-004": "sha256:6a11c93c1c6308991933bccd26711e6f2837e761a458501363d7a8ff7dd10aba",
+    "fault-offboard-body-rate-stall-005": "sha256:bfb5133de81331100b42aa39988cc556b7d2a5482485b44bc8840f184091a57c",
+    "fault-offboard-body-rate-stall-006": "sha256:864f9a731fb3a1ac2f54440572ff3a90e885bb2ac5e063b750cf685bee8923fe",
+    "fault-offboard-body-rate-stall-007": "sha256:44973ac47654afbb532e665e7014ac7af3a6d68dd9034bfcbfc010e085879bbc",
+    "fault-offboard-body-rate-stall-008": "sha256:802c10f6619bda7ec9c0c26b930eda6b7c2ad087befe1b09596f5352701e5815",
+    "fault-offboard-process-exit-001": "sha256:9fdeb1f11a97b55c8fa4a11149bbb7daeef8d774734333e521317bebe5efb216",
+    "fault-offboard-process-exit-002": "sha256:31e3fa3e3dd3c391690215149d01f31f1df06e22cdc05e3ea39899843c39cd1d",
+    "fault-offboard-process-exit-003": "sha256:c3f4bd9edaedf3a6134049236ea693b3e11c02da30d7076d783fa745a0c26a30",
+    "fault-offboard-process-exit-004": "sha256:1cb3d2c980766e0220d0ee59bb15414856d2bff714b28175fd6ba8614ed32940",
+    "fault-offboard-process-exit-005": "sha256:c8a8f1969ce34daba451c6887145affb1109c859ecc06463a964e0253508ed9b",
+    "fault-offboard-process-exit-006": "sha256:7cb2a4bcdd4aea0a0d9398ec8650123dc4807c5c981017d5aaf8d7341775545d",
+    "fault-offboard-process-exit-007": "sha256:9265f032e6c8e804ee6c8960c2574ae03efed075de90822d055698e7d29baadc",
+    "fault-offboard-process-exit-008": "sha256:1d095bf097b5dd666a0da91404c14a8551151ee2ae9c23b33f8b43721c3b8612",
+    "fault-offboard-process-exit-009": "sha256:a5e8d59a17383db8552f42676e1c23ee60bbce06e594c5f43f14fc03776fb130",
+    "fault-offboard-trajectory-stall-001": "sha256:9a52870bfaf6a1804fa587bcca7b4fa05e73c6d8232985865a587321e38d3fd9",
+    "fault-offboard-trajectory-stall-002": "sha256:74fcc9b151ceee0d63197ea3e50976ff4948e0824c84089f6faa70d055a718fa",
+    "fault-offboard-trajectory-stall-003": "sha256:a9cd4d37ad19f7a0e54ff6711646262b2f81c9f61e663630d69b2823be54b65e",
+    "fault-offboard-trajectory-stall-004": "sha256:c9ddf1dd3c9dac91081bb9d40cc5ef89e3a24c50e9e4abeaff679a6603d7d1f6",
+    "fault-offboard-trajectory-stall-005": "sha256:e195d9d006b0a71d194bfbf97b3795f5de580b9e38ea75b1cf3460af47883475",
+    "fault-offboard-trajectory-stall-006": "sha256:cec127d5ab395aa89896c4705585b6a8f6daa4a3e2d36e899d2a063ee0b3fc8b",
+    "fault-offboard-trajectory-stall-007": "sha256:eefb76c00e98f06a644bf04e4d894f0a123622f4ddd05f1b74dfd4b3cc65b65c",
+    "fault-offboard-trajectory-stall-008": "sha256:1963be650baba253af068cde4525a159e1e812a3dd54f1f616199690bf22464e",
+    "timing-executor-after-001": "sha256:4af0796105d6194bf4433cd15ee74cead85423eb78c805233e73903b44585c74",
+    "timing-executor-after-002": "sha256:5c794b7407530cf5a714a3969e4c499fe703048bd50873afb74e05c09e8cb1d4",
+    "timing-executor-after-003": "sha256:cd187438269e4cb2af833855124930b971d9ede6eafedc548048a4562b869163",
+    "timing-executor-after-004": "sha256:bf9d26fd2f5aee073b454c44ca2ce35c9426ae2e857973a7807cfd27c95e5f44",
+    "timing-executor-after-005": "sha256:6523c23afc1bc71beb3f5bd585fac1619fea1d23590a5fcd1fe31271b43f7c56",
+    "timing-executor-after-006": "sha256:d6ce86e9acd0e23cd497d70515b4e4889698308726531c4a3cfb63d3b7e55ca1",
+    "timing-executor-after-007": "sha256:dd0942aaca378d365d7de7a2e68cc72689839139cf297d1e7d51ba41ce96e75b",
+    "timing-executor-after-008": "sha256:53cd6a5da1392a6517744c69d6ecdecd0d6486a6d4905369d4947c3fbc1ceafd",
+    "timing-executor-after-009": "sha256:8f153aac9389e53d80ccb1d9e53cc7584fad93ee24daec62100629183b55c280",
+    "timing-executor-after-010": "sha256:25a15200574dadbbb056871e71a481cf11335cf4c06c6db0b799f887ce7d2cd3",
+    "timing-executor-before-001": "sha256:5ad67038f2d767000c35c8f42c4ad6d57555d28407e17f9392170bd3433490ce",
+    "timing-executor-before-002": "sha256:4ea922b1c4455348f919a5332aad891a3cbf3db93245d56bff2c8c860743cdaf",
+    "timing-executor-before-003": "sha256:52d77d4ed6a0e097205396c39424dc79169fa44743a77c10387a9d105d4a44d3",
+    "timing-executor-before-004": "sha256:dfc2517022f9308549dfe8e53345b7cc7ac2bdf8ca5999e578b76d600857d216",
+    "timing-executor-before-005": "sha256:6b623d2990b97a5d48d6c7a5a3649797fcbd43e2a50cfcf1ee2ca34343ff51a6",
+    "timing-executor-before-006": "sha256:36b99f38439a1e53c74bb04e7b7ae07a07af5775f8df00ccab5e13439dc32d3a",
+    "timing-executor-before-007": "sha256:6c074490f9166439b46f2af1f4173d2afb32d6e8f7b0716b685b439460843d37",
+    "timing-executor-before-008": "sha256:a73877082a9632208418d34e4cf79f2a143eafa6963ea651cf4abd041e8d1856",
+    "timing-executor-before-009": "sha256:2226947ba90c51ed21e2b887b373f76733b17c01cf7cc7af37511a592c893651",
+    "timing-executor-before-010": "sha256:fcfb488fbd0ca9718fb65cdd01efdae000079db476e99b443fedf5f85070d5af",
+    "timing-executor-before-011": "sha256:3ba39c9e74ade1868e6da4ca489c9f8fea8ac9057d08eedf19096d60b1a23e8e",
+    "timing-executor-before-012": "sha256:48edd430fa152e127fd746e4b403bda73c64a5e80f04ba237a5fc0675098367c",
+    "timing-executor-before-013": "sha256:cab61635d8573457f13277fdb21419815135131f762ca31c62c50854bdc8a6fe",
+    "timing-executor-before-014": "sha256:310ddc0f66d04568d2064ef5bf7f51d997de722aea70e326e6328cb2e7b10d4a",
+    "timing-executor-before-015": "sha256:2f00a43b03afc7f3999e33b3a8a628ea0976b2d1dd413b87f73c4ed00d644425",
+    "timing-executor-before-016": "sha256:7c66b99a8ed02097c000d09beb79c7076692365f25b5697750d1c49ea58b4a45",
+    "timing-executor-before-017": "sha256:bdd10a074469042d1fab89219c703f16560b2b4acec4f6c9cc2e09c43289307b",
+    "timing-executor-before-018": "sha256:d6562476cd28eee42e1483d43e12b10402a5865cada9c93d651525860ecb380f",
+    "timing-executor-before-019": "sha256:b22141a6bdc227f0824471e4c6c93f6a71af5b98b810b91105d0707b21e1eac4",
+    "timing-executor-before-020": "sha256:df7002e2efdb27a6f84b7e86272fdd7709002ca212af337eac237784cd9a3e42",
+    "timing-executor-near-001": "sha256:a610a7bfd0cdab710d34dec0b556fe92d30f6a70a3e9245fe401f6567a96cbc2",
+    "timing-executor-near-002": "sha256:4bea3f24f01791d13f3665548fcab7887c7044db5f34ac4ac28ad034a7273f3d",
+    "timing-executor-near-003": "sha256:bab535ec19da56eec1a352135f00bf0d8b822a3f26d16b56f305a9834cabe5a9",
+    "timing-executor-near-004": "sha256:0e14284a73db8cf0b62bc92ab7c217d0bf9e117db3e72135f39d884eff168ef4",
+    "timing-executor-near-005": "sha256:45b82e1921dd56d9638601790b38a5f350656b9cecf9c956d503a7390242b5f9",
+    "timing-executor-near-006": "sha256:1685bd5b75049be2ddf871a7fe3268f3e3ac588f10b3ba6259ce09c281c046a0",
+    "timing-executor-near-007": "sha256:6fc111507b2122dd2cab5c74900f0fae1bc733e2ead2e049036ca0a8d8cdbf12",
+    "timing-executor-near-008": "sha256:f15b5c98d9138a380ebadfa33438a411bfed2013bc48a5199eac5fb84c81df90",
+    "timing-executor-near-009": "sha256:271b9b71ab933868259d3297289adaf5d9dfa1315a6edb30cedb6fe20181a02c",
+    "timing-executor-near-010": "sha256:038cdec2bb315ed6e10064084cf24cc6051c9af11c93f0bd5e88dc0ef3af8931",
+    "timing-offboard-reentry-hold-001": "sha256:b82a08f482b9df35525dc96aaba9a989990aeec0c70abf3d5ce30631ccea8c5c",
+    "timing-offboard-reentry-hold-002": "sha256:146468c908fc77ff7ee086d77941c004e5912382b95ae51d11f70914a65bf31a",
+    "timing-offboard-reentry-hold-003": "sha256:a2b65bc87f313680783b9d5ff72280ddc8d7019c2d0e0f3663dd178d009ff10f",
+    "timing-offboard-reentry-hold-004": "sha256:1ea061c3ec0925890da71b7de19f6e181cf2d5fe91a6f053ce9c2d825c79bc14",
+    "timing-offboard-reentry-hold-005": "sha256:63bfbbc0d9b14903f73b3f1d25a8b8b7e60ba2a6ac7f3939a97fb11ea2840f83",
+    "timing-offboard-reentry-hold-006": "sha256:90cb93a2771ee4fc3e2a8f4279a3ba09b29012c7bf3d42b3536ad15f6b6785a3",
+    "timing-offboard-reentry-hold-007": "sha256:500cdf0d430cf469e1113e4c418d24d52f9aac7c9f14d2fa5ea81afb334fac5c",
+    "timing-offboard-reentry-hold-008": "sha256:79f3cc78a64c5d9d7d2ed9d88ae44e6cc3c48ff94d16f736a2386083b3fd5850",
+    "timing-offboard-reentry-hold-009": "sha256:31959824fc30761b1882eba52ed20940f6f3f712469ee1bf37869ba49bd9787d",
+    "timing-offboard-reentry-hold-010": "sha256:c1e06408651fbce392667b78a8e5055146235efea31f124cb0ef4428a2bd6a5b",
+    "timing-offboard-reentry-rtl-001": "sha256:c940a9a2be4cd98fa64fb99ccdf85e70154316b0ff629fc82cdc4662f92f7dfe",
+    "timing-offboard-reentry-rtl-002": "sha256:91446ca181fd556194b7427188b5690754764294ded39cd1464e6256319b54a4",
+    "timing-offboard-reentry-rtl-003": "sha256:b3ca5ac9c5b821f78a04419b077e4ee83de432f2b5cdca437b1597ce60de7d35",
+    "timing-offboard-reentry-rtl-004": "sha256:1b64bcc5e3838534aed41d7f948c440968317c91abbffb32de865e9b17ba6c99",
+    "timing-offboard-reentry-rtl-005": "sha256:26a960415b2b20227d22a868b7f2afe2873aa6146e381a68f2dd511dc8606171",
+    "timing-offboard-reentry-rtl-006": "sha256:3775d0973b286f52bad78703f0a819d750f82ade286e648dd2225688ec8a3eaa",
+    "timing-offboard-reentry-rtl-007": "sha256:94fadda395a29054ae482af8922f7cb5d5e2beb327604b8938c2c21f9e523cef",
+    "timing-offboard-reentry-rtl-008": "sha256:b94f3d8e507265bc7d95c99863f52f1bd12498d69d50e829d932a6e08725905f",
+    "timing-offboard-reentry-rtl-009": "sha256:0f6f83652280adb2ac15c008bb41502971e3556d7ec8837f36c5134d0d7e857b",
+    "timing-offboard-reentry-rtl-010": "sha256:a18d80fee01544484bb04cc9125bba998b53dc915c094a489beb24c3255b793d",
+    "timing-offboard-reentry-rtl-011": "sha256:e4df5daa071396c6c151bd2ffc7223305464329d09ad36dcf6f97fa8f143d17a",
+    "timing-offboard-reentry-rtl-012": "sha256:53e040637cbe768be86c5c4d5b8f7369fd31fbfb8d163ba057cc392f68946419",
+    "timing-offboard-reentry-rtl-013": "sha256:2c397caa29ba74f54bbbc03210180a41ee4cd275d6e26fa8f93cab8bb3d9efee",
+    "timing-offboard-reentry-rtl-014": "sha256:6c1646eb1fdb767afb716660cae0e4294c1271fc80dd6892b8133bf49e49d98a",
+    "timing-offboard-reentry-rtl-015": "sha256:516f378497ed555f808b8102d43fe98b86936934a2087bb5c814a0d32767a49b",
+    "timing-offboard-reentry-rtl-016": "sha256:7828b1b30d0bd9481ad9d80df6f1989e05cbf9b879b7275e040f80cb8a06a5ac",
+    "timing-offboard-reentry-rtl-017": "sha256:83eddd6aa55497b59766ad564cf010ed5feca8c33ae3cd0db2e7816b7533e212",
+    "timing-offboard-reentry-rtl-018": "sha256:09c74e7587632b2a1bfe890f2e87d56d84492ffcb7649c4f0edf8e0eafcffd1b",
+    "timing-offboard-reentry-rtl-019": "sha256:73abc64cc055f200b4cff5ed230e7ecdbe7d54606add6b58acc82e7c74db9f26",
+    "timing-offboard-reentry-rtl-020": "sha256:d478aa8c6b97ae176eef2e863d8ceba9c92358a368f4bcc465f06b9a60ff636f"
+  },
+  "repository_revision": "35971b4b4e9d03a738d0b28a1335ed8e4f2960b0",
+  "schema_version": "1.0",
+  "study_id": "motivation-thor-v1",
+  "study_status": "MEASUREMENT_INSUFFICIENT"
+}

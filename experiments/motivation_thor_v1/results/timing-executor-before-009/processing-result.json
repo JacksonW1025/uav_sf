@@ -1,0 +1,158 @@
+{
+  "attempt_id": "timing-executor-before-009",
+  "clock_bridge": {
+    "bridge_id": "clock-927d1bd25cfd676b",
+    "knots": [
+      [
+        10636000000,
+        1318233816259302
+      ],
+      [
+        11640000000,
+        1318234816925960
+      ],
+      [
+        12644000000,
+        1318235820328108
+      ],
+      [
+        13648000000,
+        1318236824206607
+      ],
+      [
+        14652000000,
+        1318237828477941
+      ],
+      [
+        15656000000,
+        1318238832895932
+      ],
+      [
+        16660000000,
+        1318239836427228
+      ],
+      [
+        17664000000,
+        1318240840440043
+      ],
+      [
+        18668000000,
+        1318241844347987
+      ],
+      [
+        19672000000,
+        1318242848435931
+      ],
+      [
+        20676000000,
+        1318243852932978
+      ],
+      [
+        21680000000,
+        1318244856179080
+      ],
+      [
+        22684000000,
+        1318245860213894
+      ],
+      [
+        23688000000,
+        1318246864765173
+      ],
+      [
+        24692000000,
+        1318247868707932
+      ],
+      [
+        25696000000,
+        1318248878812164
+      ],
+      [
+        26700000000,
+        1318249880227089
+      ],
+      [
+        27704000000,
+        1318250884519136
+      ],
+      [
+        28708000000,
+        1318251888254052
+      ],
+      [
+        29712000000,
+        1318252892302080
+      ],
+      [
+        30716000000,
+        1318253896679969
+      ],
+      [
+        31720000000,
+        1318254900329988
+      ],
+      [
+        32724000000,
+        1318255904220840
+      ],
+      [
+        33728000000,
+        1318256908633182
+      ],
+      [
+        34732000000,
+        1318257912612070
+      ]
+    ],
+    "rate_ratio": 1.0000146401062417,
+    "reference_analysis_ns": 1318245860213894,
+    "reference_source_ns": 22684000000,
+    "sample_count": 25,
+    "source_domain": "px4_boot_ns",
+    "uncertainty_ns": 4344654,
+    "valid_from_ns": 10636000000,
+    "valid_until_ns": 34732000000
+  },
+  "environment_attestation_digest": "sha256:f0d6f25cc0c933bab6c1a0d3a8478c4035989b9ddda4daba99c7949aa1a0a8e2",
+  "evaluation_status": "INCONCLUSIVE",
+  "evidence_gate_status": "INADMISSIBLE",
+  "gazebo": {
+    "central_minimum": 0.9882577682619536,
+    "median": 0.9999220060835254,
+    "minimum": 0.01376124720495308,
+    "sample_count": 344,
+    "status": "PASS"
+  },
+  "outcome": "OBSERVABILITY_REJECTED",
+  "plan_digest": "sha256:b9120760327ebe839406dbc9ffdd6ed03fea58ddc4439122598f0be49e6b6036",
+  "plan_id": "timing-executor-before-009-plan",
+  "processing_error": null,
+  "raw_manifest_digest": "sha256:2226947ba90c51ed21e2b887b373f76733b17c01cf7cc7af37511a592c893651",
+  "runtime_outcome": "ACCEPTED",
+  "schema_version": "1.0",
+  "study_id": "motivation-thor-v1",
+  "ulog": {
+    "dropouts": [],
+    "file_corruption": false,
+    "first_sequence_by_instance": {
+      "0": 0,
+      "1": 5,
+      "2": 5,
+      "3": 4,
+      "4": 0
+    },
+    "route_observation_count": 896,
+    "route_observation_instances": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "schema_version": "1.0",
+    "sequence_gaps": [],
+    "status": "PASS",
+    "ulog_end_us": 34872000,
+    "ulog_start_us": 5040000
+  }
+}

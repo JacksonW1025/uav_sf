@@ -1,0 +1,186 @@
+{
+  "evidence_gate": {
+    "checks": {
+      "clock_mapping": {
+        "domains": [
+          "analysis_monotonic"
+        ],
+        "status": "PASS",
+        "unmapped_sequences": []
+      },
+      "collection_bounds": {
+        "status": "PASS"
+      },
+      "critical_window_coverage": {
+        "gap_sequences": [],
+        "status": "PASS"
+      },
+      "execution_environment": {
+        "attestation_count": 1,
+        "attestation_sequence": 1,
+        "status": "PASS"
+      },
+      "hash_chain": {
+        "errors": [],
+        "status": "PASS"
+      },
+      "required_events": {
+        "missing": [
+          "completion",
+          "revocation",
+          "transition_requested"
+        ],
+        "status": "FAIL"
+      },
+      "route_identity": {
+        "errors": [],
+        "status": "PASS"
+      },
+      "run_identity": {
+        "status": "PASS"
+      }
+    },
+    "reasons": [
+      "required event kinds are missing: completion, revocation, transition_requested"
+    ],
+    "status": "INADMISSIBLE"
+  },
+  "oracles": [
+    {
+      "clauses": {
+        "continuity": {
+          "evidence": {},
+          "reasons": [
+            "matching transition request is missing"
+          ],
+          "status": "UNKNOWN"
+        },
+        "exclusivity": {
+          "evidence": {},
+          "reasons": [
+            "matching transition request is missing"
+          ],
+          "status": "UNKNOWN"
+        },
+        "installation": {
+          "evidence": {},
+          "reasons": [
+            "matching transition request is missing"
+          ],
+          "status": "UNKNOWN"
+        },
+        "ownership": {
+          "evidence": {},
+          "reasons": [
+            "matching transition request is missing"
+          ],
+          "status": "UNKNOWN"
+        },
+        "reentry_identity": {
+          "evidence": {},
+          "reasons": [
+            "matching transition request is missing"
+          ],
+          "status": "UNKNOWN"
+        },
+        "revocation": {
+          "evidence": {},
+          "reasons": [
+            "matching transition request is missing"
+          ],
+          "status": "UNKNOWN"
+        }
+      },
+      "oracle": "route_conformance"
+    },
+    {
+      "clauses": {
+        "freshness": {
+          "evidence": {},
+          "reasons": [
+            "matching transition request is missing"
+          ],
+          "status": "UNKNOWN"
+        },
+        "lineage": {
+          "evidence": {},
+          "reasons": [
+            "matching transition request is missing"
+          ],
+          "status": "UNKNOWN"
+        }
+      },
+      "oracle": "freshness_lineage"
+    },
+    {
+      "clauses": {
+        "adjacent_order": {
+          "evidence": {},
+          "reasons": [
+            "no adjacent request is planned"
+          ],
+          "status": "NOT_APPLICABLE"
+        },
+        "adjacent_successor": {
+          "evidence": {},
+          "reasons": [
+            "no adjacent request is planned"
+          ],
+          "status": "NOT_APPLICABLE"
+        },
+        "adjacent_timing": {
+          "evidence": {},
+          "reasons": [
+            "no adjacent request is planned"
+          ],
+          "status": "NOT_APPLICABLE"
+        },
+        "expected_successor": {
+          "evidence": {},
+          "reasons": [
+            "expected completion event is missing"
+          ],
+          "status": "VIOLATION"
+        },
+        "fault_observation": {
+          "evidence": {},
+          "reasons": [
+            "fault is not part of this plan"
+          ],
+          "status": "NOT_APPLICABLE"
+        },
+        "safe_fallback": {
+          "evidence": {},
+          "reasons": [
+            "fault is not part of this plan"
+          ],
+          "status": "NOT_APPLICABLE"
+        }
+      },
+      "oracle": "successor_progression"
+    },
+    {
+      "clauses": {
+        "activation_rejection": {
+          "evidence": {},
+          "reasons": [
+            "activation rejection is not expected"
+          ],
+          "status": "NOT_APPLICABLE"
+        },
+        "registration_rejection": {
+          "evidence": {},
+          "reasons": [
+            "registration rejection is not expected"
+          ],
+          "status": "NOT_APPLICABLE"
+        }
+      },
+      "oracle": "registration_contract"
+    }
+  ],
+  "plan_id": "det-dynamic-trajectory-hold-004-plan",
+  "run_id": "det-dynamic-trajectory-hold-004",
+  "schema_version": "1.0",
+  "status": "INCONCLUSIVE"
+}

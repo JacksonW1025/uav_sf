@@ -1,0 +1,19 @@
+{
+  "attempt_id": "timing-executor-before-012",
+  "cell_id": "timing-executor-before",
+  "compact_evidence": {
+    "container_driver_result": "sha256:feadfd2b49b4b07e6422620646be5320983cc8d5f19e11b65cfed4b8d2953a0c",
+    "evaluation": "sha256:21cd46b3658a4f2b4c283dc2158b9955d36f208d714ada9df4fa61f54c8d4e46",
+    "processing_result": "sha256:0dc8ac0f6457cdc6e31abf62ed13297d4d6ee547a3f1fd2cf4b4c6432fac85cc",
+    "raw_manifest": "sha256:48edd430fa152e127fd746e4b403bda73c64a5e80f04ba237a5fc0675098367c",
+    "runtime_result": "sha256:7448699cc4fbddb4e1a39c4b448acd55594b6de2f3f8bcd4abedfb3792bae8bf",
+    "ulog_summary": "sha256:5ae55dfdce2c226648b2dbc262d7f05c830de66cd4286289e47f369094ca27be"
+  },
+  "image_id": "sha256:8c17f8f82d0e31d6ecac260ac84ec3b1ea3eedb67d887f27b9158c9331b24ef8",
+  "outcome": "OBSERVABILITY_REJECTED",
+  "plan_digest": "sha256:5e93f1107f2e14c90f4327aeb77cfc621782630d10340c2a38e19b9e814d5dea",
+  "processing_returncode": 2,
+  "runtime_driver_returncode": 0,
+  "schema_version": "1.0",
+  "study_id": "motivation-thor-v1"
+}

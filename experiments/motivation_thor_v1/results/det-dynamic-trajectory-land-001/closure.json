@@ -1,0 +1,19 @@
+{
+  "attempt_id": "det-dynamic-trajectory-land-001",
+  "cell_id": "det-dynamic-trajectory-land",
+  "compact_evidence": {
+    "container_driver_result": "sha256:f2d21edcdea4529e5dedee928147b2937a7cac9d5f5572f5cdafde2c3c9c1f67",
+    "evaluation": "sha256:fa196c8c29cb3e96fba947fa7ce9abad7a0b3e7e46d3f1c62dfe52702020244d",
+    "processing_result": "sha256:57df62fdb278da11b458f728d09d89a3c8a99b7a1e922b65af8c9f4be66147ed",
+    "raw_manifest": "sha256:1573bab6b82805de6966edca64b1f1ae689baa59f161f1e20edca355469ba447",
+    "runtime_result": "sha256:4b2aed9eb977ea4f06f4146a14b96e154eba96c9387329a3d23bf02be1389023",
+    "ulog_summary": "sha256:49326c6455c3c208ffd0edd66fedd9f83065c87adc3a1f38d7ffa1e2f9557031"
+  },
+  "image_id": "sha256:8c17f8f82d0e31d6ecac260ac84ec3b1ea3eedb67d887f27b9158c9331b24ef8",
+  "outcome": "TIMEOUT",
+  "plan_digest": "sha256:3fc6b816ee7e711ac6cd9ec5d357f28b154b578d4d41b0daafcbf1d0206333bf",
+  "processing_returncode": 2,
+  "runtime_driver_returncode": 2,
+  "schema_version": "1.0",
+  "study_id": "motivation-thor-v1"
+}

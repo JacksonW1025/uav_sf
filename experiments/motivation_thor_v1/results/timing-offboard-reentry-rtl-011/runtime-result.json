@@ -1,0 +1,23 @@
+{
+  "allocation": {
+    "attempt_id": "timing-offboard-reentry-rtl-011",
+    "cpu_set": "3-5",
+    "gazebo_partition": "family_a_motivation-thor-v1_1",
+    "mavlink_tcp_port": 4561,
+    "mavlink_udp_local_port": 14581,
+    "mavlink_udp_port": 14541,
+    "process_group_identity": "family-a-timing-offboard-reentry-rtl-011",
+    "px4_instance": 1,
+    "ros_domain_id": 41,
+    "run_directory": "/runs/motivation-thor-v1/timing-offboard-reentry-rtl-011",
+    "slot": 1,
+    "study_id": "motivation-thor-v1",
+    "temporary_directory": "/runs/motivation-thor-v1/timing-offboard-reentry-rtl-011/tmp",
+    "vehicle_identity": "x500_1",
+    "xrce_agent_port": 8889
+  },
+  "outcome": "TIMEOUT",
+  "run_id": "timing-offboard-reentry-rtl-011",
+  "schema_version": "1.0",
+  "ulog": "/runs/motivation-thor-v1/timing-offboard-reentry-rtl-011/raw/px4.ulg"
+}

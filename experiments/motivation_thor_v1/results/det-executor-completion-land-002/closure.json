@@ -1,0 +1,19 @@
+{
+  "attempt_id": "det-executor-completion-land-002",
+  "cell_id": "det-executor-completion-land",
+  "compact_evidence": {
+    "container_driver_result": "sha256:bc50b05792c6f67cf7b15da8f1cc39c73b703d2fc26e7b83878a4cf964ecc094",
+    "evaluation": "sha256:b6a96b32e0ae1737d35a1ae94ef0d15c7b33b7db28820b40d373e4043eeb9037",
+    "processing_result": "sha256:053a610858f828c0147e384ec510721aed961a964e2b579769b64af996c0d450",
+    "raw_manifest": "sha256:a29168da08cf26f3f3dd6aedb162786430125b849f75b55cd95967e0da00f5c2",
+    "runtime_result": "sha256:85d550b8ca700f7f48bf0f144e6f3008191bceeaed004c67681d00cf4d8a53a8",
+    "ulog_summary": "sha256:fc7795a7072159c08d505a7055df983269df9ca7b7789c874d71a9288fc829af"
+  },
+  "image_id": "sha256:8c17f8f82d0e31d6ecac260ac84ec3b1ea3eedb67d887f27b9158c9331b24ef8",
+  "outcome": "ACCEPTED",
+  "plan_digest": "sha256:44834cf9e7fad9c003b30e34a0a374c254cf4ef335cfcad9d68108213f1dab80",
+  "processing_returncode": 0,
+  "runtime_driver_returncode": 0,
+  "schema_version": "1.0",
+  "study_id": "motivation-thor-v1"
+}

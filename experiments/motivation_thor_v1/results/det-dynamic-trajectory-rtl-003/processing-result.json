@@ -1,0 +1,166 @@
+{
+  "attempt_id": "det-dynamic-trajectory-rtl-003",
+  "clock_bridge": {
+    "bridge_id": "clock-92d9762bb3d950db",
+    "knots": [
+      [
+        10636000000,
+        1316416535774922
+      ],
+      [
+        11640000000,
+        1316417541899617
+      ],
+      [
+        12644000000,
+        1316418545881997
+      ],
+      [
+        13648000000,
+        1316419549650154
+      ],
+      [
+        14652000000,
+        1316420554238978
+      ],
+      [
+        15656000000,
+        1316421557761932
+      ],
+      [
+        16660000000,
+        1316422561890182
+      ],
+      [
+        17664000000,
+        1316423566061015
+      ],
+      [
+        18668000000,
+        1316424570148895
+      ],
+      [
+        19672000000,
+        1316425574256904
+      ],
+      [
+        20676000000,
+        1316426578100988
+      ],
+      [
+        21680000000,
+        1316427582103857
+      ],
+      [
+        22684000000,
+        1316428586100811
+      ],
+      [
+        23688000000,
+        1316429590277830
+      ],
+      [
+        24692000000,
+        1316430593781025
+      ],
+      [
+        25696000000,
+        1316431597733571
+      ],
+      [
+        26700000000,
+        1316432601681848
+      ],
+      [
+        27704000000,
+        1316433606944117
+      ],
+      [
+        28708000000,
+        1316434609850950
+      ],
+      [
+        29712000000,
+        1316435613801635
+      ],
+      [
+        30716000000,
+        1316436617608904
+      ],
+      [
+        31720000000,
+        1316437622474090
+      ],
+      [
+        32724000000,
+        1316438625885839
+      ],
+      [
+        33728000000,
+        1316439629631043
+      ],
+      [
+        34732000000,
+        1316440635371774
+      ],
+      [
+        35736000000,
+        1316441638163210
+      ],
+      [
+        36740000000,
+        1316442641738997
+      ]
+    ],
+    "rate_ratio": 1.0000752403846154,
+    "reference_analysis_ns": 1316429590277830,
+    "reference_source_ns": 23688000000,
+    "sample_count": 27,
+    "source_domain": "px4_boot_ns",
+    "uncertainty_ns": 1474648,
+    "valid_from_ns": 10636000000,
+    "valid_until_ns": 36740000000
+  },
+  "environment_attestation_digest": "sha256:f0d6f25cc0c933bab6c1a0d3a8478c4035989b9ddda4daba99c7949aa1a0a8e2",
+  "evaluation_status": "PASS",
+  "evidence_gate_status": "ADMISSIBLE",
+  "gazebo": {
+    "central_minimum": 0.9988208919370682,
+    "median": 0.9998762653121677,
+    "minimum": 0.014169977050801117,
+    "sample_count": 366,
+    "status": "PASS"
+  },
+  "outcome": "ACCEPTED",
+  "plan_digest": "sha256:aa2df97b6b247389106cedcf3a7db12b8b9be3773e53ef150d55aa9d1263f326",
+  "plan_id": "det-dynamic-trajectory-rtl-003-plan",
+  "processing_error": null,
+  "raw_manifest_digest": "sha256:f9d1d1cc7fc5caf45197fc41e682f0acb6548fde011965a8943a2e7db9b89054",
+  "runtime_outcome": "ACCEPTED",
+  "schema_version": "1.0",
+  "study_id": "motivation-thor-v1",
+  "ulog": {
+    "dropouts": [],
+    "file_corruption": false,
+    "first_sequence_by_instance": {
+      "0": 0,
+      "1": 5,
+      "2": 5,
+      "3": 4,
+      "4": 0
+    },
+    "route_observation_count": 965,
+    "route_observation_instances": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "schema_version": "1.0",
+    "sequence_gaps": [],
+    "status": "PASS",
+    "ulog_end_us": 37180000,
+    "ulog_start_us": 5012000
+  }
+}

@@ -1,0 +1,442 @@
+{
+  "evidence_gate": {
+    "checks": {
+      "clock_mapping": {
+        "domains": [
+          "analysis_monotonic"
+        ],
+        "status": "PASS",
+        "unmapped_sequences": []
+      },
+      "collection_bounds": {
+        "status": "PASS"
+      },
+      "critical_window_coverage": {
+        "gap_sequences": [],
+        "status": "PASS"
+      },
+      "execution_environment": {
+        "attestation_count": 1,
+        "attestation_sequence": 1,
+        "status": "PASS"
+      },
+      "hash_chain": {
+        "errors": [],
+        "status": "PASS"
+      },
+      "required_events": {
+        "missing": [],
+        "status": "PASS"
+      },
+      "route_identity": {
+        "errors": [],
+        "status": "PASS"
+      },
+      "run_identity": {
+        "status": "PASS"
+      }
+    },
+    "reasons": [],
+    "status": "ADMISSIBLE"
+  },
+  "oracles": [
+    {
+      "clauses": {
+        "continuity": {
+          "evidence": {
+            "effect_gap_ns": 199992314,
+            "maximum_effect_gap_ns": 250000000
+          },
+          "reasons": [],
+          "status": "PASS"
+        },
+        "exclusivity": {
+          "evidence": {
+            "target_write_ns": 1317838057661276
+          },
+          "reasons": [],
+          "status": "PASS"
+        },
+        "installation": {
+          "evidence": {
+            "complete": true,
+            "completed_at_ns": 1317838057661276,
+            "events": {
+              "activation": {
+                "sequence": 397,
+                "timestamp_ns": 1317837897667425
+              },
+              "actuator_write": {
+                "sequence": 402,
+                "timestamp_ns": 1317838057661276
+              },
+              "allocator_output": {
+                "sequence": 401,
+                "timestamp_ns": 1317838057661276
+              },
+              "command_consumed": {
+                "sequence": 399,
+                "timestamp_ns": 1317837969664658
+              },
+              "controller_output": {
+                "sequence": 400,
+                "timestamp_ns": 1317838057661276
+              }
+            },
+            "identity": {
+              "activation_id": "nav-23-epoch-4",
+              "allocator_id": "px4-control-allocator",
+              "controller_id": "mc_position_control",
+              "executor_owner": "none",
+              "lifecycle_owner": "family_a_external_mode",
+              "producer_session": "family_a_external_mode",
+              "registration_id": "external-nav-23",
+              "route": "dynamic_external_mode",
+              "route_epoch": "px4-epoch-4",
+              "writer_id": "px4-control-allocator-actuator-motors"
+            }
+          },
+          "reasons": [],
+          "status": "PASS"
+        },
+        "ownership": {
+          "evidence": {
+            "expected_executor_owner": "none",
+            "expected_lifecycle_owner": "family_a_external_mode",
+            "observed_executor_owner": "none",
+            "observed_lifecycle_owner": "family_a_external_mode"
+          },
+          "reasons": [],
+          "status": "PASS"
+        },
+        "reentry_identity": {
+          "evidence": {},
+          "reasons": [
+            "no repeated-entry identity obligation was preregistered"
+          ],
+          "status": "NOT_APPLICABLE"
+        },
+        "revocation": {
+          "evidence": {
+            "last_source_effect_ns": 1317837857668962,
+            "revocation_sequence": 396
+          },
+          "reasons": [],
+          "status": "PASS"
+        }
+      },
+      "oracle": "route_conformance",
+      "transition_sequence": 395
+    },
+    {
+      "clauses": {
+        "freshness": {
+          "evidence": {
+            "maximum_command_age_ns": 200000000,
+            "observed_ages_ns": [
+              79996926,
+              167993544,
+              167993544,
+              167993544,
+              0,
+              84033503,
+              84033503,
+              84033503,
+              4001887,
+              84039624,
+              84039624,
+              84039624,
+              8003774,
+              84039624,
+              84039624,
+              84039624,
+              12005660,
+              84039624,
+              84039624,
+              84039624,
+              16007547,
+              84039624,
+              84039624,
+              84039624,
+              0,
+              64030189,
+              64030189,
+              64030189,
+              4001887,
+              64030190,
+              64030190,
+              64030190,
+              8003773,
+              64030189,
+              64030189,
+              64030189,
+              12005661,
+              64030190,
+              64030190,
+              64030190,
+              16007548,
+              64030190,
+              64030190,
+              64030190,
+              0,
+              43979448,
+              43979448,
+              43979448,
+              3998131,
+              43979449,
+              43979449,
+              43979449,
+              7996264,
+              43979450,
+              43979450,
+              43979450,
+              11994395,
+              43979449,
+              43979449,
+              43979449,
+              15992527,
+              43979449,
+              43979449,
+              43979449,
+              0,
+              23988791,
+              23988791,
+              23988791,
+              3998131,
+              23988790,
+              23988790,
+              23988790,
+              7996264,
+              23988790,
+              23988790,
+              23988790,
+              11994395,
+              23988790,
+              23988790,
+              23988790,
+              15992527,
+              23988790,
+              23988790,
+              23988790,
+              0,
+              3999555,
+              3999555,
+              3999555,
+              3999555,
+              103988424,
+              103988424,
+              103988424,
+              103988423,
+              103988423,
+              103988423,
+              7999109,
+              103988423,
+              103988423,
+              103988423,
+              11998664,
+              103988424,
+              103988424,
+              103988424,
+              15998219,
+              103988423,
+              103988423,
+              103988423,
+              0,
+              83990650,
+              83990650,
+              83990650,
+              3999554,
+              83990649,
+              83990649,
+              83990649,
+              7999110,
+              83990650,
+              83990650,
+              83990650,
+              11998664,
+              83990649,
+              83990649,
+              83990649,
+              55993766,
+              124007215,
+              124007215,
+              124007215,
+              160015818,
+              224031112,
+              224031112,
+              224031112,
+              264040672,
+              324055010,
+              324055010,
+              324055010,
+              368065525,
+              424078908,
+              424078908,
+              424078908,
+              472090379,
+              524102806,
+              524102806,
+              524102806,
+              576115233,
+              624126704,
+              624126704,
+              624126704,
+              680140086,
+              724150602,
+              724150602,
+              724150602,
+              784164940,
+              824174499,
+              824174499,
+              824174499,
+              888189794,
+              924198397,
+              924198397,
+              924198397,
+              992214648,
+              1024222295,
+              1024222295,
+              1024222295,
+              1096226898,
+              1124220985,
+              1124220985,
+              1124220985,
+              1200204938,
+              1224199870,
+              1224199870,
+              1224199870
+            ]
+          },
+          "reasons": [
+            "a consumed command is future-dated or exceeds the freshness bound"
+          ],
+          "status": "VIOLATION"
+        },
+        "lineage": {
+          "evidence": {
+            "installed_identity": {
+              "activation_id": "nav-23-epoch-4",
+              "allocator_id": "px4-control-allocator",
+              "controller_id": "mc_position_control",
+              "executor_owner": "none",
+              "lifecycle_owner": "family_a_external_mode",
+              "producer_session": "family_a_external_mode",
+              "registration_id": "external-nav-23",
+              "route": "dynamic_external_mode",
+              "route_epoch": "px4-epoch-4",
+              "writer_id": "px4-control-allocator-actuator-motors"
+            }
+          },
+          "reasons": [],
+          "status": "PASS"
+        }
+      },
+      "oracle": "freshness_lineage"
+    },
+    {
+      "clauses": {
+        "adjacent_order": {
+          "evidence": {},
+          "reasons": [
+            "no adjacent request is planned"
+          ],
+          "status": "NOT_APPLICABLE"
+        },
+        "adjacent_successor": {
+          "evidence": {},
+          "reasons": [
+            "no adjacent request is planned"
+          ],
+          "status": "NOT_APPLICABLE"
+        },
+        "adjacent_timing": {
+          "evidence": {},
+          "reasons": [
+            "no adjacent request is planned"
+          ],
+          "status": "NOT_APPLICABLE"
+        },
+        "expected_successor": {
+          "evidence": {},
+          "reasons": [
+            "completion is not part of this plan"
+          ],
+          "status": "NOT_APPLICABLE"
+        },
+        "fault_observation": {
+          "evidence": {
+            "fault_sequence": 527
+          },
+          "reasons": [],
+          "status": "PASS"
+        },
+        "safe_fallback": {
+          "evidence": {
+            "complete": true,
+            "completed_at_ns": 1317842357738986,
+            "events": {
+              "activation": {
+                "sequence": 572,
+                "timestamp_ns": 1317842277755879
+              },
+              "actuator_write": {
+                "sequence": 579,
+                "timestamp_ns": 1317842357738986
+              },
+              "allocator_output": {
+                "sequence": 578,
+                "timestamp_ns": 1317842357738986
+              },
+              "command_consumed": {
+                "sequence": 576,
+                "timestamp_ns": 1317842337743210
+              },
+              "controller_output": {
+                "sequence": 577,
+                "timestamp_ns": 1317842357738986
+              }
+            },
+            "identity": {
+              "activation_id": "nav-5-epoch-5",
+              "allocator_id": "px4-control-allocator",
+              "controller_id": "mc_position_control",
+              "executor_owner": "none",
+              "lifecycle_owner": "px4_commander",
+              "producer_session": "px4-internal",
+              "registration_id": "px4-built-in",
+              "route": "internal_rtl",
+              "route_epoch": "px4-epoch-5",
+              "writer_id": "px4-control-allocator-actuator-motors"
+            }
+          },
+          "reasons": [],
+          "status": "PASS"
+        }
+      },
+      "oracle": "successor_progression"
+    },
+    {
+      "clauses": {
+        "activation_rejection": {
+          "evidence": {},
+          "reasons": [
+            "activation rejection is not expected"
+          ],
+          "status": "NOT_APPLICABLE"
+        },
+        "registration_rejection": {
+          "evidence": {},
+          "reasons": [
+            "registration rejection is not expected"
+          ],
+          "status": "NOT_APPLICABLE"
+        }
+      },
+      "oracle": "registration_contract"
+    }
+  ],
+  "plan_id": "fault-dynamic-process-exit-007-plan",
+  "run_id": "fault-dynamic-process-exit-007",
+  "schema_version": "1.0",
+  "status": "VIOLATION"
+}

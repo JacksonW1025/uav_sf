@@ -1,0 +1,136 @@
+{
+  "attempt_id": "fault-offboard-trajectory-stall-005",
+  "clock_bridge": {
+    "bridge_id": "clock-f55e1b05fe8460a5",
+    "knots": [
+      [
+        10608000000,
+        1317281123322090
+      ],
+      [
+        11612000000,
+        1317282124774811
+      ],
+      [
+        12616000000,
+        1317283128875877
+      ],
+      [
+        13620000000,
+        1317284132867960
+      ],
+      [
+        14624000000,
+        1317285137202960
+      ],
+      [
+        15628000000,
+        1317286141205321
+      ],
+      [
+        16632000000,
+        1317287145393876
+      ],
+      [
+        17636000000,
+        1317288149438163
+      ],
+      [
+        18640000000,
+        1317289152938849
+      ],
+      [
+        19644000000,
+        1317290156657071
+      ],
+      [
+        20648000000,
+        1317291160762506
+      ],
+      [
+        21652000000,
+        1317292164883923
+      ],
+      [
+        22656000000,
+        1317293168793052
+      ],
+      [
+        23660000000,
+        1317294172814737
+      ],
+      [
+        24664000000,
+        1317295176743802
+      ],
+      [
+        25668000000,
+        1317296180987154
+      ],
+      [
+        26672000000,
+        1317297186017960
+      ],
+      [
+        27676000000,
+        1317298188792979
+      ],
+      [
+        28680000000,
+        1317299192847015
+      ],
+      [
+        29684000000,
+        1317300196691969
+      ]
+    ],
+    "rate_ratio": 0.9998621240826169,
+    "reference_analysis_ns": 1317291160762506,
+    "reference_source_ns": 20648000000,
+    "sample_count": 20,
+    "source_domain": "px4_boot_ns",
+    "uncertainty_ns": 1324173,
+    "valid_from_ns": 10608000000,
+    "valid_until_ns": 29684000000
+  },
+  "environment_attestation_digest": "sha256:f0d6f25cc0c933bab6c1a0d3a8478c4035989b9ddda4daba99c7949aa1a0a8e2",
+  "evaluation_status": "VIOLATION",
+  "evidence_gate_status": "ADMISSIBLE",
+  "gazebo": {
+    "central_minimum": 0.9987690171863178,
+    "median": 0.9998725162541776,
+    "minimum": 0.013690624919150442,
+    "sample_count": 292,
+    "status": "PASS"
+  },
+  "outcome": "ACCEPTED",
+  "plan_digest": "sha256:13e6a9597275f2a8de6308754bfd02013de0202a16022128b637f859627d137f",
+  "plan_id": "fault-offboard-trajectory-stall-005-plan",
+  "processing_error": null,
+  "raw_manifest_digest": "sha256:e195d9d006b0a71d194bfbf97b3795f5de580b9e38ea75b1cf3460af47883475",
+  "runtime_outcome": "ACCEPTED",
+  "schema_version": "1.0",
+  "study_id": "motivation-thor-v1",
+  "ulog": {
+    "dropouts": [],
+    "file_corruption": false,
+    "first_sequence_by_instance": {
+      "0": 0,
+      "1": 6,
+      "2": 6,
+      "3": 4
+    },
+    "route_observation_count": 742,
+    "route_observation_instances": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "schema_version": "1.0",
+    "sequence_gaps": [],
+    "status": "PASS",
+    "ulog_end_us": 29808000,
+    "ulog_start_us": 5008000
+  }
+}

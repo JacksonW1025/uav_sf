@@ -1,0 +1,152 @@
+{
+  "attempt_id": "det-offboard-trajectory-hold-003",
+  "clock_bridge": {
+    "bridge_id": "clock-bbec42df8b934591",
+    "knots": [
+      [
+        10570000000,
+        1316263514999237
+      ],
+      [
+        11576000000,
+        1316264519309839
+      ],
+      [
+        12580000000,
+        1316265523831108
+      ],
+      [
+        13584000000,
+        1316266527971737
+      ],
+      [
+        14600000000,
+        1316267546387644
+      ],
+      [
+        15604000000,
+        1316268547409876
+      ],
+      [
+        16608000000,
+        1316269551158117
+      ],
+      [
+        17612000000,
+        1316270555305136
+      ],
+      [
+        18616000000,
+        1316271559397923
+      ],
+      [
+        19620000000,
+        1316272563731997
+      ],
+      [
+        20624000000,
+        1316273567188108
+      ],
+      [
+        21628000000,
+        1316274571308016
+      ],
+      [
+        22632000000,
+        1316275575161997
+      ],
+      [
+        23636000000,
+        1316276579190738
+      ],
+      [
+        24640000000,
+        1316277583445793
+      ],
+      [
+        25644000000,
+        1316278587282598
+      ],
+      [
+        26648000000,
+        1316279591190997
+      ],
+      [
+        27652000000,
+        1316280595512904
+      ],
+      [
+        28656000000,
+        1316281599269062
+      ],
+      [
+        29660000000,
+        1316282604415071
+      ],
+      [
+        30664000000,
+        1316283607694913
+      ],
+      [
+        31668000000,
+        1316284611276052
+      ],
+      [
+        32672000000,
+        1316285615252737
+      ],
+      [
+        33676000000,
+        1316286619168182
+      ]
+    ],
+    "rate_ratio": 0.9999207541331256,
+    "reference_analysis_ns": 1316275575161997,
+    "reference_source_ns": 22632000000,
+    "sample_count": 24,
+    "source_domain": "px4_boot_ns",
+    "uncertainty_ns": 4698506,
+    "valid_from_ns": 10570000000,
+    "valid_until_ns": 33676000000
+  },
+  "environment_attestation_digest": "sha256:f0d6f25cc0c933bab6c1a0d3a8478c4035989b9ddda4daba99c7949aa1a0a8e2",
+  "evaluation_status": "PASS",
+  "evidence_gate_status": "ADMISSIBLE",
+  "gazebo": {
+    "central_minimum": 0.9989907695750369,
+    "median": 0.9999102580543396,
+    "minimum": 0.015022961394654819,
+    "sample_count": 336,
+    "status": "PASS"
+  },
+  "outcome": "ACCEPTED",
+  "plan_digest": "sha256:a8fdf6390d0a9e2cb7cefeb661bdfc41b335baae650d590eee7f3ad35677ed03",
+  "plan_id": "det-offboard-trajectory-hold-003-plan",
+  "processing_error": null,
+  "raw_manifest_digest": "sha256:dd20d74296a86881aec3ff15cb9cd44e09f40b37170371bc336fdf777364a7b8",
+  "runtime_outcome": "ACCEPTED",
+  "schema_version": "1.0",
+  "study_id": "motivation-thor-v1",
+  "ulog": {
+    "dropouts": [],
+    "file_corruption": false,
+    "first_sequence_by_instance": {
+      "0": 0,
+      "1": 5,
+      "2": 5,
+      "3": 4
+    },
+    "route_observation_count": 876,
+    "route_observation_instances": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "schema_version": "1.0",
+    "sequence_gaps": [],
+    "status": "PASS",
+    "ulog_end_us": 34240000,
+    "ulog_start_us": 4976000
+  }
+}
