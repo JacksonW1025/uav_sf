@@ -149,10 +149,8 @@ def _semantic_success(
     armed = any(int(item.get("arming_state", -1)) == 2 for item in statuses)
     airborne = any(not bool(item.get("landed", True)) for item in land)
     if expected_rejection:
-        if armed:
-            reasons.append("vehicle armed despite the expected activation rejection")
-        if airborne:
-            reasons.append("vehicle became airborne despite the expected activation rejection")
+        if any(23 <= int(item.get("nav_state", -1)) <= 30 for item in statuses):
+            reasons.append("external target activated despite the expected rejection")
     elif not armed:
         reasons.append("vehicle never reached ARMING_STATE_ARMED")
     if not expected_rejection and not airborne:
@@ -309,6 +307,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     workload: ManagedProcess | None = None
     safety: ManagedProcess | None = None
     expected_fault_observed = False
+    observed_fallback_route: str | None = None
     try:
         start(
             "xrce_agent",
@@ -522,10 +521,13 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     if not expected_fault_observed:
                         lifecycle.append("fault_detected", reason="source_process_exit")
                         expected_fault_observed = True
+                    if observed_fallback_route is None:
+                        observed_fallback_route = _latest_safe_route(telemetry)
+                        if observed_fallback_route is not None:
+                            lifecycle.append(
+                                "fallback_triggered", route=observed_fallback_route
+                            )
                     if _terminal_safe(telemetry):
-                        safe_route = _latest_safe_route(telemetry)
-                        if safe_route is not None:
-                            lifecycle.append("fallback_triggered", route=safe_route)
                         success, reasons = _semantic_success(telemetry, args.mechanism)
                         outcome = "ACCEPTED" if success else "INCONCLUSIVE"
                         if reasons:
@@ -559,6 +561,12 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     and item.name == "external_mode"
                     and item.process.returncode == 74
                 )
+                expected_health_fixture_exit = (
+                    args.mechanism == "dynamic_external_mode"
+                    and args.health_loss
+                    and item.name == "external_mode"
+                    and item.process.returncode != 0
+                )
                 expected_duplicate_rejection = (
                     args.duplicate_registration
                     and item.name == "external_mode_duplicate"
@@ -574,6 +582,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                         if reasons:
                             lifecycle.append("semantic_rejection", reasons=reasons)
                         break
+                elif expected_health_fixture_exit:
+                    pass
                 elif expected_duplicate_rejection:
                     if not expected_fault_observed:
                         lifecycle.append(

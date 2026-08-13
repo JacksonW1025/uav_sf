@@ -7,6 +7,7 @@ import rclpy
 from px4_msgs.msg import (
     RegisterExtComponentReply,
     VehicleCommand,
+    VehicleCommandAck,
     VehicleLandDetected,
     VehicleStatus,
 )
@@ -26,7 +27,7 @@ class ExternalModeRequester(Node):
             "successor_route": "internal_land",
             "successor_dwell_s": 2.0,
             "fault_mode": "normal",
-            "rejection_observation_s": 8.0,
+            "rejection_observation_s": 6.0,
             "source_route": "px4_internal",
             "source_dwell_s": 1.0,
         }
@@ -63,7 +64,6 @@ class ExternalModeRequester(Node):
         self._registered_ns: int | None = None
         self._status: VehicleStatus | None = None
         self._arm_sent_ns: int | None = None
-        self._activation_request_logged = False
         self._takeoff_sent = False
         self._airborne = False
         self._mode_sent = False
@@ -86,6 +86,12 @@ class ExternalModeRequester(Node):
             PX4_QOS,
         )
         self.create_subscription(
+            VehicleCommandAck,
+            versioned_topic("/fmu/out/vehicle_command_ack", VehicleCommandAck),
+            self._command_ack_callback,
+            PX4_QOS,
+        )
+        self.create_subscription(
             VehicleStatus,
             versioned_topic("/fmu/out/vehicle_status", VehicleStatus),
             self._status_callback,
@@ -99,6 +105,30 @@ class ExternalModeRequester(Node):
         )
         self.create_timer(0.1, self._tick)
         self._log.append("requester_started", run_id=self._run_id)
+
+    def _command_ack_callback(self, message: VehicleCommandAck) -> None:
+        if (
+            self._fault_mode != "health_loss"
+            or not self._mode_sent
+            or int(message.command) != VehicleCommand.VEHICLE_CMD_SET_NAV_STATE
+        ):
+            return
+        if int(message.result) == VehicleCommandAck.VEHICLE_CMD_RESULT_ACCEPTED:
+            return
+        if not self._fault_logged:
+            self._fault_logged = True
+            self._log.append(
+                "fault_detected",
+                run_id=self._run_id,
+                reason="activation_rejected_after_health_loss",
+                route="dynamic_external_mode",
+                result_code=2,
+                px4_result_code=int(message.result),
+                command=int(message.command),
+            )
+            self._command(VehicleCommand.VEHICLE_CMD_NAV_LAND)
+            self._land_sent = True
+            self._log.append("cleanup_land_requested", run_id=self._run_id)
 
     @staticmethod
     def _name(value: object) -> str:
@@ -226,32 +256,7 @@ class ExternalModeRequester(Node):
                 self._log.close()
                 rclpy.shutdown()
             return
-        if (
-            self._fault_mode == "health_loss"
-            and self._registered_ns is not None
-            and now - self._registered_ns
-            >= int(self._rejection_observation_s * 1_000_000_000)
-            and self._status.arming_state == VehicleStatus.ARMING_STATE_DISARMED
-        ):
-            self._log.append(
-                "fault_detected",
-                run_id=self._run_id,
-                reason="activation_rejected_after_health_loss",
-                route="dynamic_external_mode",
-            )
-            self._log.append("requester_completed", run_id=self._run_id)
-            self._log.close()
-            rclpy.shutdown()
-            return
         if self._status.arming_state != VehicleStatus.ARMING_STATE_ARMED:
-            if self._fault_mode == "health_loss" and not self._activation_request_logged:
-                self._log.append(
-                    "activation_requested",
-                    run_id=self._run_id,
-                    source_route=self._source_route,
-                    target_route="dynamic_external_mode",
-                )
-                self._activation_request_logged = True
             if not self._takeoff_sent:
                 self._command(VehicleCommand.VEHICLE_CMD_NAV_TAKEOFF, param1=math.nan)
                 self._takeoff_sent = True
@@ -260,9 +265,27 @@ class ExternalModeRequester(Node):
                 self._command(VehicleCommand.VEHICLE_CMD_COMPONENT_ARM_DISARM, param1=1.0)
                 self._arm_sent_ns = now
             return
-        if self._airborne and not self._mode_sent and self._source_route_ready(now):
+        health_loss_ready = (
+            self._fault_mode != "health_loss"
+            or (
+                self._registered_ns is not None
+                and now - self._registered_ns
+                >= int(self._rejection_observation_s * 1_000_000_000)
+            )
+        )
+        if (
+            self._airborne
+            and not self._mode_sent
+            and self._source_route_ready(now)
+            and health_loss_ready
+        ):
+            request_kind = (
+                "activation_requested"
+                if self._fault_mode == "health_loss"
+                else "transition_requested"
+            )
             self._log.append(
-                "transition_requested",
+                request_kind,
                 run_id=self._run_id,
                 source_route=self._source_route,
                 target_route="dynamic_external_mode",
