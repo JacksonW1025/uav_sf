@@ -128,6 +128,17 @@ def _wait_for_armed(path: Path, timeout_s: float) -> None:
     raise RuntimeFailure("duplicate-registration fixture did not observe armed state")
 
 
+def _wait_for_lifecycle_kind(path: Path, kind: str, timeout_s: float) -> None:
+    deadline = time.monotonic() + timeout_s
+    while time.monotonic() < deadline:
+        if path.exists():
+            for line in path.read_text(encoding="utf-8").splitlines():
+                if line.strip() and json.loads(line).get("kind") == kind:
+                    return
+        time.sleep(0.05)
+    raise RuntimeFailure(f"workload did not publish {kind} before its deadline")
+
+
 def _latest_ulog(root: Path) -> Path:
     candidates = sorted(root.rglob("*.ulg"), key=lambda path: path.stat().st_mtime_ns)
     if not candidates:
@@ -501,6 +512,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 ],
             )
             if args.manual_land_offset_s is not None:
+                _wait_for_lifecycle_kind(
+                    raw / "workload.lifecycle.jsonl", "transition_requested", 30.0
+                )
                 bucket = (
                     "before"
                     if args.manual_land_offset_s < 0
