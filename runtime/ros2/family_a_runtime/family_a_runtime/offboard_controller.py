@@ -35,6 +35,7 @@ class OffboardController(Node):
             "successor_dwell_s": 2.0,
             "repeat_count": 1,
             "source_dwell_s": 1.0,
+            "target_system": 1,
         }
         for name, value in defaults.items():
             self.declare_parameter(name, value)
@@ -55,6 +56,7 @@ class OffboardController(Node):
         self._source_dwell_ns = int(
             float(self.get_parameter("source_dwell_s").value) * 1_000_000_000
         )
+        self._target_system = int(self.get_parameter("target_system").value)
         if not self._run_id or not lifecycle_path:
             raise RuntimeError("run_id and lifecycle_path are required")
         if self._setpoint_kind not in {"trajectory", "attitude", "body_rate"}:
@@ -69,6 +71,8 @@ class OffboardController(Node):
             raise RuntimeError("repeat_count must be positive")
         if self._source_dwell_ns < 0:
             raise RuntimeError("source_dwell_s must be non-negative")
+        if not 1 <= self._target_system <= 255:
+            raise RuntimeError("target_system must be in [1, 255]")
         if self._repeat_count > 1 and self._successor_route == "internal_land":
             raise RuntimeError("re-entry requires Hold or RTL as the intermediate successor")
         self._log = DurableJsonl(lifecycle_path)
@@ -177,7 +181,7 @@ class OffboardController(Node):
         message.param5 = math.nan
         message.param6 = math.nan
         message.param7 = math.nan
-        message.target_system = 1
+        message.target_system = self._target_system
         message.target_component = 1
         message.source_system = 1
         message.source_component = 191

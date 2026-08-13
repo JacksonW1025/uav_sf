@@ -26,12 +26,16 @@ class ActiveSafetySupervisor(Node):
         super().__init__("family_a_active_safety_supervisor")
         for name in ("run_id", "sidecar_path", "decision_path", "limits_path"):
             self.declare_parameter(name, "")
+        self.declare_parameter("target_system", 1)
         self._run_id = self.get_parameter("run_id").value
         self._sidecar_path = Path(self.get_parameter("sidecar_path").value)
         self._decision_path = Path(self.get_parameter("decision_path").value)
         limits_path = Path(self.get_parameter("limits_path").value)
+        self._target_system = int(self.get_parameter("target_system").value)
         if not self._run_id or not limits_path.is_file():
             raise RuntimeError("run_id and a valid limits_path are required")
+        if not 1 <= self._target_system <= 255:
+            raise RuntimeError("target_system must be in [1, 255]")
         limits = json.loads(limits_path.read_text(encoding="utf-8"))["safety"]
         started = time.monotonic_ns()
         self._supervisor = SafetySupervisor(
@@ -84,7 +88,7 @@ class ActiveSafetySupervisor(Node):
         message = VehicleCommand()
         message.timestamp = self.get_clock().now().nanoseconds // 1000
         message.command = VehicleCommand.VEHICLE_CMD_NAV_LAND
-        message.target_system = 1
+        message.target_system = self._target_system
         message.target_component = 1
         message.source_system = 1
         message.source_component = 192

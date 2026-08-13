@@ -30,6 +30,7 @@ class ExternalModeRequester(Node):
             "rejection_observation_s": 6.0,
             "source_route": "px4_internal",
             "source_dwell_s": 1.0,
+            "target_system": 1,
         }
         for name, value in defaults.items():
             self.declare_parameter(name, value)
@@ -46,6 +47,7 @@ class ExternalModeRequester(Node):
         self._source_dwell_ns = int(
             float(self.get_parameter("source_dwell_s").value) * 1_000_000_000
         )
+        self._target_system = int(self.get_parameter("target_system").value)
         self._rejection_observation_s = float(
             self.get_parameter("rejection_observation_s").value
         )
@@ -59,6 +61,8 @@ class ExternalModeRequester(Node):
             raise RuntimeError("unsupported source_route")
         if self._source_dwell_ns < 0:
             raise RuntimeError("source_dwell_s must be non-negative")
+        if not 1 <= self._target_system <= 255:
+            raise RuntimeError("target_system must be in [1, 255]")
         self._log = DurableJsonl(lifecycle_path)
         self._mode_id: int | None = None
         self._registered_ns: int | None = None
@@ -218,7 +222,7 @@ class ExternalModeRequester(Node):
         message.param6 = math.nan
         message.param7 = math.nan
         message.param1 = param1
-        message.target_system = 1
+        message.target_system = self._target_system
         message.target_component = 1
         message.source_system = 1
         message.source_component = 190

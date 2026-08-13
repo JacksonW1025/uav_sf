@@ -404,6 +404,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 f"decision_path:={decision}",
                 "-p",
                 f"limits_path:={args.safety_limits}",
+                "-p",
+                f"target_system:={allocation.px4_instance + 1}",
             ],
         )
         if args.mechanism == "legacy_offboard":
@@ -431,6 +433,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     f"successor_route:={args.successor_route}",
                     "-p",
                     f"repeat_count:={args.repeat_count}",
+                    "-p",
+                    f"target_system:={allocation.px4_instance + 1}",
                 ],
             )
         elif args.mechanism == "dynamic_external_mode":
@@ -454,6 +458,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     f"successor_route:={args.successor_route}",
                     "-p",
                     f"fault_mode:={'health_loss' if args.health_loss else args.fault_mode}",
+                    "-p",
+                    f"target_system:={allocation.px4_instance + 1}",
                 ],
             )
             time.sleep(0.5)
@@ -540,6 +546,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                         f"anchor_monotonic_ns:={transition_anchor_ns}",
                         "-p",
                         f"timing_bucket:={bucket}",
+                        "-p",
+                        f"target_system:={allocation.px4_instance + 1}",
                     ],
                 )
         else:

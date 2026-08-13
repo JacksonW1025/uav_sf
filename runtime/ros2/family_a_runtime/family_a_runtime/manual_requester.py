@@ -20,15 +20,19 @@ class ManualRequester(Node):
         self.declare_parameter("request_delay_s", 8.0)
         self.declare_parameter("anchor_monotonic_ns", 0)
         self.declare_parameter("timing_bucket", "near")
+        self.declare_parameter("target_system", 1)
         self._run_id = str(self.get_parameter("run_id").value)
         output_path = str(self.get_parameter("output_path").value)
         self._delay_ns = int(float(self.get_parameter("request_delay_s").value) * 1e9)
         configured_anchor = int(self.get_parameter("anchor_monotonic_ns").value)
         self._bucket = str(self.get_parameter("timing_bucket").value)
+        self._target_system = int(self.get_parameter("target_system").value)
         if not self._run_id or not output_path or self._delay_ns < 0:
             raise RuntimeError("run_id, output_path, and a non-negative request delay are required")
         if self._bucket not in {"before", "near", "after"}:
             raise RuntimeError("unsupported timing_bucket")
+        if not 1 <= self._target_system <= 255:
+            raise RuntimeError("target_system must be in [1, 255]")
         self._log = DurableJsonl(output_path)
         self._activation_ns: int | None = configured_anchor or None
         self._sent = False
@@ -75,7 +79,7 @@ class ManualRequester(Node):
         message.param5 = math.nan
         message.param6 = math.nan
         message.param7 = math.nan
-        message.target_system = 1
+        message.target_system = self._target_system
         message.target_component = 1
         message.source_system = 1
         message.source_component = 192
