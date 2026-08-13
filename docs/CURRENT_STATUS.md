@@ -24,7 +24,10 @@ change the primary ledger or status.
 
 Across both studies, 200 formal launches are closed and 151 evidence sets are
 accepted. Qualification checks remain outside every formal ledger and result.
-The locked environment and campaign entry are ready for a separately
-preregistered official-sequence experiment. State-aware policy selection is
-not yet connected to the live PX4 action backend and therefore fails closed;
-no later study or empirical claim is implied.
+The campaign now separates live batches from offline evidence processing.
+Four-way remains the qualified formal concurrency after a non-formal 4/5-way
+comparison; five-way was not promoted and no new six-way trial was run. The
+locked environment and campaign entry are ready for a separately preregistered
+official-sequence experiment. State-aware policy selection is not yet
+connected to the live PX4 action backend and therefore fails closed; no later
+study or empirical claim is implied.

@@ -21,6 +21,7 @@ from scripts.runtime.isolation import (
 )
 from scripts.runtime.run_qualification_batch import (
     QualificationBatchError,
+    qualification_gate,
     validate_spec,
 )
 from scripts.runtime.run_sitl import _read_jsonl_snapshot
@@ -54,6 +55,35 @@ class ThorRuntimeTests(unittest.TestCase):
             spec["attempts"][1]["slot"] = 0
             with self.assertRaises(QualificationBatchError):
                 validate_spec(spec, run_root=Path(directory))
+
+    def test_qualification_gate_fails_on_clock_quality(self) -> None:
+        spec = {
+            "concurrency": 1,
+            "qualification_gate": {
+                "required_admissible_fraction": 1.0,
+                "required_ulog_integrity_fraction": 1.0,
+                "maximum_clock_uncertainty_ns": 20_000_000,
+                "minimum_central_real_time_factor": 0.97,
+                "require_zero_isolation_or_cleanup_failures": True,
+            },
+        }
+        result = qualification_gate(
+            spec,
+            barrier_passed=True,
+            live_errors={},
+            process_errors={},
+            process_results={
+                "attempt": {
+                    "outcome": "ACCEPTED",
+                    "runtime_outcome": "ACCEPTED",
+                    "ulog": {"status": "PASS"},
+                    "clock_bridge": {"uncertainty_ns": 20_000_001},
+                    "gazebo": {"central_minimum": 0.999},
+                }
+            },
+        )
+        self.assertEqual(result["status"], "FAIL")
+        self.assertEqual(result["failures"], ["clock_uncertainty"])
 
     def test_jsonl_snapshot_defers_only_an_open_final_fragment(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

@@ -59,6 +59,15 @@ formal accounting, campaign scheduling, concurrency qualification, and the two
 Thor evidence studies. Raw evidence remains in ignored `runs/`; only digests and
 compact results are tracked.
 
+The campaign scheduler now separates each parallel batch into a live phase
+and an offline evidence-processing phase. A barrier proves that every live
+container has stopped before ULog parsing, clock fitting, Gate evaluation, and
+Oracle execution begin. Four-way regression passed with 4/4 admissible traces.
+A five-way trial also produced 5/5 admissible traces, but it was not promoted:
+maximum clock uncertainty increased from 5.505 ms to 15.068 ms and one matched
+Dynamic baseline changed its timing-sensitive Freshness interpretation. Formal
+concurrency therefore remains four, and no additional six-way trial was run.
+
 ## Formal study closure
 
 The primary study registered and closed 180 launches: 131 accepted, 20

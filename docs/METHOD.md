@@ -41,6 +41,21 @@ from the plan also makes the trace inadmissible. An inadmissible trace produces
 an overall `INCONCLUSIVE` result even if an individual clause appears
 favorable.
 
+## Batch execution barrier
+
+Parallel formal execution has two phases. Every attempt in a batch first runs
+only the live PX4, Gazebo, ROS, DDS, safety, and raw-collection workload. The
+campaign waits for every live container in that batch to stop before starting
+any ULog extraction, clock fitting, Evidence Gate, Oracle, compact-evidence, or
+ledger-closure work. Offline analysis may run in parallel after that barrier.
+This prevents a fast-finishing attempt's analysis workload from perturbing the
+timing evidence of a still-running attempt.
+
+The qualified formal concurrency remains four. A non-formal five-way batch
+met the basic evidence bounds but was not promoted because it reduced clock
+margin and changed one matched timing-sensitive Oracle result. Existing formal
+matrices, attempt ledgers, thresholds, and results are unchanged.
+
 ## Contracts
 
 The Route Conformance Oracle checks source revocation, target installation,

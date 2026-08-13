@@ -128,6 +128,63 @@ def _parallel(
     return results, errors
 
 
+def qualification_gate(
+    spec: dict[str, Any],
+    *,
+    barrier_passed: bool,
+    live_errors: dict[str, str],
+    process_errors: dict[str, str],
+    process_results: dict[str, dict[str, Any]],
+) -> dict[str, Any]:
+    gate = spec.get("qualification_gate", {})
+    concurrency = int(spec["concurrency"])
+    values = list(process_results.values())
+    accepted = sum(value.get("outcome") == "ACCEPTED" for value in values)
+    ulog_pass = sum(value.get("ulog", {}).get("status") == "PASS" for value in values)
+    maximum_clock = int(gate["maximum_clock_uncertainty_ns"])
+    minimum_rtf = float(gate["minimum_central_real_time_factor"])
+    clock_values = [
+        value.get("clock_bridge", {}).get("uncertainty_ns")
+        for value in values
+        if isinstance(value.get("clock_bridge"), dict)
+    ]
+    rtf_values = [
+        value.get("gazebo", {}).get("central_minimum")
+        for value in values
+        if value.get("gazebo", {}).get("central_minimum") is not None
+    ]
+    checks = {
+        "barrier": barrier_passed,
+        "no_driver_errors": not live_errors and not process_errors,
+        "all_results_present": len(values) == concurrency,
+        "admissible_fraction": (
+            accepted / concurrency >= float(gate["required_admissible_fraction"])
+        ),
+        "ulog_integrity_fraction": (
+            ulog_pass / concurrency
+            >= float(gate["required_ulog_integrity_fraction"])
+        ),
+        "clock_uncertainty": (
+            len(clock_values) == concurrency
+            and all(int(value) <= maximum_clock for value in clock_values)
+        ),
+        "central_real_time_factor": (
+            len(rtf_values) == concurrency
+            and all(float(value) >= minimum_rtf for value in rtf_values)
+        ),
+        "isolation_and_cleanup": (
+            not gate.get("require_zero_isolation_or_cleanup_failures", False)
+            or all(value.get("runtime_outcome") == "ACCEPTED" for value in values)
+        ),
+    }
+    failures = sorted(key for key, passed in checks.items() if not passed)
+    return {
+        "status": "PASS" if not failures else "FAIL",
+        "checks": checks,
+        "failures": failures,
+    }
+
+
 def validate_spec(spec: dict[str, Any], *, run_root: Path) -> None:
     if spec.get("schema_version") != "1.0":
         raise QualificationBatchError("unsupported qualification spec")
@@ -240,6 +297,13 @@ def run(spec_path: Path, *, run_root: Path, output: Path) -> dict[str, Any]:
         },
         "outcomes": dict(sorted(outcomes.items())),
     }
+    result["qualification_gate"] = qualification_gate(
+        spec,
+        barrier_passed=result["barrier"]["passed"],
+        live_errors=live_errors,
+        process_errors=process_errors,
+        process_results=process_results,
+    )
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return result
@@ -257,8 +321,7 @@ def main() -> int:
         print(json.dumps({"status": "REFUSED", "reason": str(exc)}), file=sys.stderr)
         return 2
     print(json.dumps(result, indent=2, sort_keys=True))
-    errors = result["live_phase"]["errors"] or result["processing_phase"]["errors"]
-    return 0 if result["barrier"]["passed"] and not errors else 2
+    return 0 if result["qualification_gate"]["status"] == "PASS" else 2
 
 
 if __name__ == "__main__":

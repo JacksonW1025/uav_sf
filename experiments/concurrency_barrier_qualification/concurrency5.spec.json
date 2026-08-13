@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0",
+  "study_id": "thor-barrier-concurrency5-q1",
+  "image": "uav-sf-family-a-thor:barrier-a5c6584",
+  "attestation": "runs/thor-barrier-a5c6584-attestation.json",
+  "concurrency": 5,
+  "maximum_clock_uncertainty_ns": 20000000,
+  "thresholds": "config/method.defaults.json",
+  "resources": {
+    "cpu_sets": ["0-1", "2-3", "4-5", "6-7", "8-9"],
+    "memory_per_attempt": "16g"
+  },
+  "qualification_gate": {
+    "all_live_attempts_complete_before_processing": true,
+    "required_admissible_fraction": 1.0,
+    "required_ulog_integrity_fraction": 1.0,
+    "maximum_clock_uncertainty_ns": 20000000,
+    "minimum_central_real_time_factor": 0.97,
+    "require_zero_isolation_or_cleanup_failures": true
+  },
+  "attempts": [
+    {
+      "run_id": "barrier-c5-offboard-trajectory",
+      "slot": 0,
+      "mechanism": "legacy_offboard",
+      "source_route": "internal_hold",
+      "setpoint_kind": "trajectory",
+      "simulation_seed": 840101
+    },
+    {
+      "run_id": "barrier-c5-offboard-rate",
+      "slot": 1,
+      "mechanism": "legacy_offboard",
+      "source_route": "internal_hold",
+      "setpoint_kind": "body_rate",
+      "simulation_seed": 840102
+    },
+    {
+      "run_id": "barrier-c5-dynamic",
+      "slot": 2,
+      "mechanism": "dynamic_external_mode",
+      "source_route": "internal_hold",
+      "setpoint_kind": "trajectory",
+      "simulation_seed": 840103
+    },
+    {
+      "run_id": "barrier-c5-executor",
+      "slot": 3,
+      "mechanism": "mode_executor",
+      "source_route": "px4_internal",
+      "setpoint_kind": "trajectory",
+      "simulation_seed": 840104
+    },
+    {
+      "run_id": "barrier-c5-offboard-attitude",
+      "slot": 4,
+      "mechanism": "legacy_offboard",
+      "source_route": "internal_hold",
+      "setpoint_kind": "attitude",
+      "simulation_seed": 840105
+    }
+  ]
+}

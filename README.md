@@ -126,6 +126,10 @@ python3 -m scripts.runtime.run_campaign \
 Use the exact image reference recorded by the selected matrix and attestation.
 The supplemental invocation is retained in its study README.
 
+Each campaign batch completes all live PX4/Gazebo/ROS attempts before starting
+offline ULog, clock, Evidence Gate, and Oracle processing. Formal concurrency
+remains four; the five-way non-formal qualification did not replace it.
+
 ## Evaluate one closed trace
 
 Create a new preregistered plan from `config/experiment.template.json`, fill in

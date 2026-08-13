@@ -11,6 +11,8 @@ motivation studies covered:
 - empty/pending dry-run scheduling and completed-ledger no-op resume checks;
 - 200 closed formal launches with no open attempt;
 - four-slot isolation and two-active-attempt supplemental execution;
+- a live-runtime/processing barrier that keeps ULog and Oracle work out of the
+  timing-sensitive SITL phase;
 - compact-result digest verification and reproducible study summaries;
 - host validation of all tracked files and unit tests.
 
@@ -24,6 +26,11 @@ python3 -m scripts.runtime.run_campaign \
   --run-root runs \
   --image EXACT_ATTESTED_IMAGE
 ```
+
+The formal default remains concurrency four. Five-way is retained only as a
+non-formal qualification result; it must not be selected by a formal matrix.
+See `experiments/concurrency_barrier_qualification/` for the frozen specs and
+decision record.
 
 ## Explicit limitation
 

@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "study_kind": "non_formal_execution_qualification",
+  "decision": "KEEP_FORMAL_CONCURRENCY_FOUR",
+  "execution_model": "two_phase_barrier",
+  "six_way_test_performed": false,
+  "image_id": "sha256:bc0fd71cd4fe87bf746c2700a6a81cfc70e12efd021cc2d64f4e9d06cd81d092",
+  "repository_revision": "a5c6584651c702ea778a7e17cd82006c56caf4d5",
+  "attestation_sha256": "sha256:929b0edca55352611afd6c2d57a29f7de08e3bfab935555a430c4d1bfebb4574",
+  "four_way": {
+    "spec_sha256": "sha256:c8ef0e0f91067a336efb5c2206c9fa189570657427b1f027647a12c4b67c2410",
+    "raw_summary_sha256": "sha256:b9e21fe3c3e4a237bb5accc405a8bf8ca265c39bf19a193fcc42a2bbe87052b3",
+    "attempts": 4,
+    "accepted": 4,
+    "evidence_admissible": 4,
+    "ulog_integrity_pass": 4,
+    "clock_uncertainty_ms": {
+      "minimum": 0.945861,
+      "median": 2.808144,
+      "maximum": 5.504727
+    },
+    "central_real_time_factor": {
+      "minimum": 0.998030387031194,
+      "median": 0.9988038088018413
+    },
+    "evaluation_statuses": {
+      "PASS": 3,
+      "VIOLATION": 1
+    }
+  },
+  "five_way": {
+    "spec_sha256": "sha256:e8e7a4a59ca8ec98d5285419ee8af6a598d9c6444a14839169a6510983858061",
+    "raw_summary_sha256": "sha256:b59bd015407233bf2d9257c1af5a27fbd57523c8bf12f7dcbc9092871d001076",
+    "attempts": 5,
+    "accepted": 5,
+    "evidence_admissible": 5,
+    "ulog_integrity_pass": 5,
+    "clock_uncertainty_ms": {
+      "minimum": 1.378871,
+      "median": 2.853712,
+      "maximum": 15.068333
+    },
+    "central_real_time_factor": {
+      "minimum": 0.9963248068686632,
+      "median": 0.9989121846309369
+    },
+    "evaluation_statuses": {
+      "PASS": 4,
+      "VIOLATION": 1
+    }
+  },
+  "comparison": {
+    "barrier_passed": true,
+    "raw_manifests_verified": 9,
+    "matched_dynamic_four_way": "FRESHNESS_VIOLATION",
+    "matched_dynamic_five_way": "PASS",
+    "reason": "Five-way met the basic bounds but did not preserve enough clock margin or matched correctness interpretation to replace the sufficient four-way setting."
+  }
+}
