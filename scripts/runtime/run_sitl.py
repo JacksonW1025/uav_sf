@@ -585,11 +585,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 elif expected_health_fixture_exit:
                     pass
                 elif expected_duplicate_rejection:
-                    if not expected_fault_observed:
-                        lifecycle.append(
-                            "fault_detected", reason="duplicate_registration_rejected"
-                        )
-                        expected_fault_observed = True
+                    pass
                 else:
                     unexpected_exits.append(item)
             if outcome in {"ACCEPTED", "INCONCLUSIVE"}:

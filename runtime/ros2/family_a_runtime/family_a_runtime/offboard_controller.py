@@ -273,7 +273,10 @@ class OffboardController(Node):
                 cycle=self._cycle,
             )
             self._fault_logged = True
-        if not self._released and not self._landing_commanded:
+        # Keep the public Offboard proof-of-life prestream active during a
+        # non-terminal Hold/RTL dwell.  PX4 requires this before every later
+        # re-entry just as it does before the first Offboard activation.
+        if not self._landing_commanded:
             if not stalled:
                 self._publish_setpoint()
             else:
