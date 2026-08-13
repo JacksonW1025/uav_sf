@@ -33,3 +33,9 @@ The execution order is preflight, accounting registration, safety-supervisor
 readiness, collector readiness, environment attestation, launch, collection
 close, evaluation, cleanup, and accounting close. Any preflight or evidence
 failure is recorded honestly and cannot be promoted to an empirical result.
+
+The current Thor runtime can directly execute new official-sequence matrices.
+Bounded-random and state-aware policy selection can be preregistered and tested
+offline, but their live PX4 action backend is not yet implemented. The formal
+campaign validator rejects those strategy names rather than silently running
+the official sequence under a different label.

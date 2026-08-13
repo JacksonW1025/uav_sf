@@ -77,11 +77,14 @@ No earlier-device result is imported, compared, or counted.
 
 ## Readiness and remaining risks
 
-The locked container, build path, runtime entry, evidence pipeline, formal
-accounting, and stable parallel execution are ready for a new experiment matrix.
-Any later state-aware study still needs its own preregistered cells, seeds,
-targets, caps, and hypotheses; the environment is ready, but no later empirical
-claim is implied by this readiness.
+The locked container, build path, evidence pipeline, formal accounting, stable
+parallel execution, and official-sequence runtime are ready for a new
+experiment matrix. A later state-aware study still needs its own preregistered
+cells, seeds, targets, caps, hypotheses, and live action backend. Strategy
+selection is implemented, but it is not yet wired to PX4 execution; formal
+validation fails closed instead of treating the label as behavior. The
+environment is ready, but state-aware formal attempts are not yet directly
+runnable and no later empirical claim is implied.
 
 Known bounded risks are the observed route/freshness/successor violations, the
 20 primary observability rejections, the one diagnosed live-JSONL race in the

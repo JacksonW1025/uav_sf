@@ -155,5 +155,6 @@ retained only after each launch has closed through the Evidence Gate.
 
 See [research scope](docs/RESEARCH_SCOPE.md), [route model](docs/ROUTE_MODEL.md),
 [method](docs/METHOD.md), [experiment plan](docs/EXPERIMENT_PLAN.md),
-[Thor migration report](docs/THOR_MIGRATION_REPORT.md), and
+[Thor migration report](docs/THOR_MIGRATION_REPORT.md),
+[follow-up readiness](docs/FOLLOWUP_READINESS.md), and
 [current status](docs/CURRENT_STATUS.md).

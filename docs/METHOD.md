@@ -13,6 +13,13 @@ safety limits, evidence rules, and Oracle configuration:
   boundaries, route state, lifecycle state, and distance to a configured
   deadline. It cannot bypass action preconditions or safety rules.
 
+The strategy policies and plan validation are implemented for all three
+choices. The current live Thor campaign backend implements only the official
+sequence. A formal matrix that labels an attempt as bounded-random or
+state-aware is rejected until a study-specific live action backend applies the
+selected actions and records that schedule. A strategy label alone is never
+treated as execution evidence.
+
 ## Collection
 
 Adapters normalize source observations into the event schema. The collector

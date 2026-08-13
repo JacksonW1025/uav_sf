@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+import copy
+import json
 import unittest
+from pathlib import Path
 
 from scripts.runtime.formal_attempt import FormalAttemptError, _cell
 from scripts.runtime.run_campaign import (
@@ -44,6 +47,13 @@ class FormalAttemptTests(unittest.TestCase):
     def test_matrix_rejects_unqualified_concurrency(self) -> None:
         with self.assertRaises(CampaignError):
             validate_matrix({"schema_version": "1.0", "formal_concurrency": 6})
+
+    def test_matrix_rejects_an_unwired_live_strategy(self) -> None:
+        path = Path("experiments/motivation_thor_remediation_v1/matrix.json")
+        matrix = copy.deepcopy(json.loads(path.read_text(encoding="utf-8")))
+        matrix["cells"][0]["plan"]["strategy"] = "state_aware"
+        with self.assertRaisesRegex(CampaignError, "live formal runtime"):
+            validate_matrix(matrix)
 
     def test_matrix_digest_contract_is_exact(self) -> None:
         self.assertTrue(_exact_digest("sha256:" + "a" * 64))

@@ -25,4 +25,6 @@ change the primary ledger or status.
 Across both studies, 200 formal launches are closed and 151 evidence sets are
 accepted. Qualification checks remain outside every formal ledger and result.
 The locked environment and campaign entry are ready for a separately
-preregistered later experiment; no later study or empirical claim is implied.
+preregistered official-sequence experiment. State-aware policy selection is
+not yet connected to the live PX4 action backend and therefore fails closed;
+no later study or empirical claim is implied.
