@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.evaluator.plan import PlanError, load_plan
+from scripts.evaluator.result_model import enrich_evaluation, write_evaluation
 from scripts.model.runtime_route import RouteModelError, read_trace
 from scripts.oracles.evidence_gate import evaluate_evidence
 from scripts.oracles.freshness_lineage import evaluate_freshness_lineage
@@ -41,7 +42,7 @@ def evaluate(events: list[dict[str, Any]], plan: dict[str, Any]) -> dict[str, An
         overall = "PASS"
     else:
         overall = "INCONCLUSIVE"
-    return {
+    compatible = {
         "schema_version": "1.0",
         "plan_id": plan["plan_id"],
         "run_id": plan["run_id"],
@@ -49,6 +50,7 @@ def evaluate(events: list[dict[str, Any]], plan: dict[str, Any]) -> dict[str, An
         "evidence_gate": gate,
         "oracles": oracle_results,
     }
+    return enrich_evaluation(compatible)
 
 
 def main() -> int:
@@ -63,10 +65,7 @@ def main() -> int:
         result = evaluate(events, plan)
         if args.output.exists():
             raise ValueError(f"refusing to overwrite output: {args.output}")
-        args.output.parent.mkdir(parents=True, exist_ok=True)
-        args.output.write_text(
-            json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8"
-        )
+        write_evaluation(args.output, result)
     except (OSError, ValueError, PlanError, RouteModelError, json.JSONDecodeError) as exc:
         print(json.dumps({"status": "REFUSED", "reason": str(exc)}), file=sys.stderr)
         return 3
