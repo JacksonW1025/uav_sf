@@ -72,16 +72,18 @@ Runtime artifacts belong under ignored `runs/` and must never be committed.
 
 ## Execution-environment boundary
 
-This checkout host and the ARM64 image in this repository are maintenance,
-static-validation, and reference-build tools. They are not the registered
-environment for a formal experiment, and successful checks here are not
-runtime evidence. The formal execution environment is currently unregistered.
+The registered Family A study environment is an ARM64 Ubuntu Noble container
+running on AGX Thor L4T R38.2.1. The host supplies only the kernel, Docker, and
+bounded compute and storage resources. The image supplies Python 3.12, ROS 2
+Jazzy, Gazebo Harmonic, the exact PX4 and ROS sources, Micro XRCE-DDS Agent,
+and every project runtime component. Host Conda, ROS, Gazebo paths, and Python
+site packages are not inherited.
 
-Before a future run, the plan must identify the actual execution and collector
-hosts, target kind, architecture, operating system, PX4 binary digest, and a
-digest of the complete environment manifest. The collector must record the
-same identity in an `environment_attested` event. A missing or mismatched
-attestation makes the trace inadmissible.
+Each formal plan binds the execution and collector host, target kind,
+architecture, operating system, PX4 binary digest, complete environment
+manifest, container image ID, method digest, and safety-limits digest. The
+collector records the same identity in an `environment_attested` event. A
+missing or mismatched attestation makes the trace inadmissible.
 
 ## Build and validate
 
@@ -106,7 +108,25 @@ docker buildx build --platform linux/arm64 \
   --tag uav-sf-family-a:locked .
 ```
 
-## Run a future experiment
+## Run the preregistered Thor study
+
+The frozen matrix contains 21 cells with a combined target of 151 accepted
+evidence sets and a total cap of 302 launches. It uses qualified concurrency
+four:
+
+```bash
+python3 -m scripts.runtime.run_campaign \
+  --matrix experiments/motivation_thor_v1/matrix.json \
+  --attestation experiments/motivation_thor_v1/environment-attestation.json \
+  --study-root experiments/motivation_thor_v1 \
+  --run-root runs \
+  --image uav-sf-family-a-thor:formal-93180c7
+```
+
+The command is resumable and refuses identity drift, open attempts, duplicate
+attempt IDs, silent replacement, or execution beyond a cell cap.
+
+## Evaluate one closed trace
 
 Create a new preregistered plan from `config/experiment.template.json`, fill in
 the identity of the actual target environment, collect normalized events on
@@ -122,14 +142,16 @@ python3 -m scripts.evaluator.evaluate_trace \
 
 Official sequences, bounded random timing, and the state-aware strategy are
 implemented in `scripts/evaluator/strategies.py`. Safety supervision and
-cleanup completion are mandatory for flight execution. No formal experiment
-or empirical claim is included in this repository.
+cleanup completion are mandatory for execution. Compact formal results are
+retained only after each launch has closed through the Evidence Gate.
 
 ## Current status
 
 - Formal experiment attempts: 0
 - Retained historical results: 0
 - Current empirical claims: none
+- Formal execution environment: thor-r38.2.1-family-a-formal-v1
+- Study state: preregistered; empty append-only ledger
 
 See [research scope](docs/RESEARCH_SCOPE.md), [route model](docs/ROUTE_MODEL.md),
 [method](docs/METHOD.md), [experiment plan](docs/EXPERIMENT_PLAN.md), and

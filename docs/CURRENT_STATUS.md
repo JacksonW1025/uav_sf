@@ -4,7 +4,8 @@
 Formal experiment attempts: 0
 Retained historical results: 0
 Current empirical claims: none
-Formal execution environment: unregistered
+Formal execution environment: thor-r38.2.1-family-a-formal-v1
+Study state: preregistered; empty append-only ledger
 ```
 
 Available today: the Family A route model, normalized event contracts,
@@ -14,6 +15,8 @@ generation strategies, safety supervision, cleanup checking, attempt
 accounting, locked sources, a validation/reference container definition, and
 non-flight tests.
 
-The next formal experiment must begin with a new preregistered plan, a newly
-registered target-environment identity, and a new empty run directory. Checks
-on the repository maintenance host are not formal runtime evidence.
+The frozen Thor matrix contains 21 Family A cells, a combined accepted target
+of 151, a combined launch cap of 302, and qualified concurrency four. The
+registered image and all identity digests are checked before each launch.
+Qualification checks are not formal runtime evidence and never enter the
+formal ledger.

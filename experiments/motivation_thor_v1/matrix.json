@@ -1,0 +1,131 @@
+{
+  "schema_version": "1.0",
+  "study_id": "motivation-thor-v1",
+  "environment_id": "thor-r38.2.1-family-a-formal-v1",
+  "repository_revision": "93180c7f4997fce347399723affddd47d02272e4",
+  "container_image_id": "sha256:6cd15d346ec7343283376798a0422bad6d2140c924dcff2435307bb6e23d003a",
+  "environment_attestation_digest": "sha256:4370a4d06857c16032fd9f44ec86e5d47acc40537ce9fb58e65d45d3a8b4e90f",
+  "method_defaults_digest": "sha256:0dd32fb43830c6a17c6bd88792fd678379063c573d7120530c2e83c98909d127",
+  "safety_limits_digest": "sha256:437f986ae02eedaa1b60403f3df79e9ff89df16df4e14b08736f137772dfa516",
+  "maximum_clock_uncertainty_ns": 20000000,
+  "formal_concurrency": 4,
+  "resources": {
+    "cpu_sets": ["0-2", "3-5", "6-8", "9-13"],
+    "memory_per_attempt": "24g"
+  },
+  "thresholds": {
+    "revocation_deadline_ns": 300000000,
+    "installation_deadline_ns": 300000000,
+    "maximum_effect_gap_ns": 250000000,
+    "maximum_command_age_ns": 200000000,
+    "successor_deadline_ns": 300000000,
+    "fallback_deadline_ns": 1500000000
+  },
+  "cells": [
+    {
+      "cell_id": "det-offboard-trajectory-land", "category": "deterministic", "attempt_id_prefix": "det-offboard-trajectory-land", "accepted_target": 5, "launch_cap": 10,
+      "plan": {"source_route": "internal_hold", "target_route": "legacy_offboard", "expected_successor": "internal_land", "expected_fallback": "internal_land", "target_activation_expected": true, "registration_rejection_expected": false, "activation_rejection_expected": false, "completion_expected": true, "fault_expected": false, "fallback_expected": false},
+      "runtime": {"mechanism": "legacy_offboard", "setpoint_kind": "trajectory", "fault_mode": "normal", "successor_route": "internal_land", "active_s": 8.0, "simulation_seed_base": 1101000}
+    },
+    {
+      "cell_id": "det-offboard-trajectory-hold", "category": "deterministic", "attempt_id_prefix": "det-offboard-trajectory-hold", "accepted_target": 5, "launch_cap": 10,
+      "plan": {"source_route": "internal_hold", "target_route": "legacy_offboard", "expected_successor": "internal_hold", "expected_fallback": "internal_land", "target_activation_expected": true, "registration_rejection_expected": false, "activation_rejection_expected": false, "completion_expected": true, "fault_expected": false, "fallback_expected": false},
+      "runtime": {"mechanism": "legacy_offboard", "setpoint_kind": "trajectory", "fault_mode": "normal", "successor_route": "internal_hold", "active_s": 8.0, "simulation_seed_base": 1102000}
+    },
+    {
+      "cell_id": "det-offboard-trajectory-rtl", "category": "deterministic", "attempt_id_prefix": "det-offboard-trajectory-rtl", "accepted_target": 5, "launch_cap": 10,
+      "plan": {"source_route": "internal_hold", "target_route": "legacy_offboard", "expected_successor": "internal_rtl", "expected_fallback": "internal_land", "target_activation_expected": true, "registration_rejection_expected": false, "activation_rejection_expected": false, "completion_expected": true, "fault_expected": false, "fallback_expected": false},
+      "runtime": {"mechanism": "legacy_offboard", "setpoint_kind": "trajectory", "fault_mode": "normal", "successor_route": "internal_rtl", "active_s": 8.0, "simulation_seed_base": 1103000}
+    },
+    {
+      "cell_id": "det-offboard-attitude-land", "category": "deterministic", "attempt_id_prefix": "det-offboard-attitude-land", "accepted_target": 5, "launch_cap": 10,
+      "plan": {"source_route": "internal_hold", "target_route": "legacy_offboard", "expected_successor": "internal_land", "expected_fallback": "internal_land", "target_activation_expected": true, "registration_rejection_expected": false, "activation_rejection_expected": false, "completion_expected": true, "fault_expected": false, "fallback_expected": false},
+      "runtime": {"mechanism": "legacy_offboard", "setpoint_kind": "attitude", "fault_mode": "normal", "successor_route": "internal_land", "active_s": 8.0, "simulation_seed_base": 1104000}
+    },
+    {
+      "cell_id": "det-offboard-body-rate-land", "category": "deterministic", "attempt_id_prefix": "det-offboard-body-rate-land", "accepted_target": 5, "launch_cap": 10,
+      "plan": {"source_route": "internal_hold", "target_route": "legacy_offboard", "expected_successor": "internal_land", "expected_fallback": "internal_land", "target_activation_expected": true, "registration_rejection_expected": false, "activation_rejection_expected": false, "completion_expected": true, "fault_expected": false, "fallback_expected": false},
+      "runtime": {"mechanism": "legacy_offboard", "setpoint_kind": "body_rate", "fault_mode": "normal", "successor_route": "internal_land", "active_s": 8.0, "simulation_seed_base": 1105000}
+    },
+    {
+      "cell_id": "det-dynamic-trajectory-land", "category": "deterministic", "attempt_id_prefix": "det-dynamic-trajectory-land", "accepted_target": 5, "launch_cap": 10,
+      "plan": {"source_route": "internal_hold", "target_route": "dynamic_external_mode", "expected_successor": "internal_land", "expected_fallback": "internal_land", "target_activation_expected": true, "registration_rejection_expected": false, "activation_rejection_expected": false, "completion_expected": true, "fault_expected": false, "fallback_expected": false},
+      "runtime": {"mechanism": "dynamic_external_mode", "setpoint_kind": "trajectory", "fault_mode": "normal", "successor_route": "internal_land", "active_s": 8.0, "simulation_seed_base": 1106000}
+    },
+    {
+      "cell_id": "det-dynamic-trajectory-hold", "category": "deterministic", "attempt_id_prefix": "det-dynamic-trajectory-hold", "accepted_target": 5, "launch_cap": 10,
+      "plan": {"source_route": "internal_hold", "target_route": "dynamic_external_mode", "expected_successor": "internal_hold", "expected_fallback": "internal_land", "target_activation_expected": true, "registration_rejection_expected": false, "activation_rejection_expected": false, "completion_expected": true, "fault_expected": false, "fallback_expected": false},
+      "runtime": {"mechanism": "dynamic_external_mode", "setpoint_kind": "trajectory", "fault_mode": "normal", "successor_route": "internal_hold", "active_s": 8.0, "simulation_seed_base": 1107000}
+    },
+    {
+      "cell_id": "det-dynamic-trajectory-rtl", "category": "deterministic", "attempt_id_prefix": "det-dynamic-trajectory-rtl", "accepted_target": 5, "launch_cap": 10,
+      "plan": {"source_route": "internal_hold", "target_route": "dynamic_external_mode", "expected_successor": "internal_rtl", "expected_fallback": "internal_land", "target_activation_expected": true, "registration_rejection_expected": false, "activation_rejection_expected": false, "completion_expected": true, "fault_expected": false, "fallback_expected": false},
+      "runtime": {"mechanism": "dynamic_external_mode", "setpoint_kind": "trajectory", "fault_mode": "normal", "successor_route": "internal_rtl", "active_s": 8.0, "simulation_seed_base": 1108000}
+    },
+    {
+      "cell_id": "det-executor-completion-land", "category": "deterministic", "attempt_id_prefix": "det-executor-completion-land", "accepted_target": 5, "launch_cap": 10,
+      "plan": {"source_route": "px4_internal", "target_route": "mode_executor", "expected_successor": "internal_land", "expected_fallback": "internal_land", "target_activation_expected": true, "registration_rejection_expected": false, "activation_rejection_expected": false, "completion_expected": true, "fault_expected": false, "fallback_expected": false},
+      "runtime": {"mechanism": "mode_executor", "setpoint_kind": "trajectory", "fault_mode": "normal", "successor_route": "internal_land", "active_s": 8.0, "simulation_seed_base": 1109000}
+    },
+    {
+      "cell_id": "fault-offboard-process-exit", "category": "fault", "attempt_id_prefix": "fault-offboard-process-exit", "accepted_target": 8, "launch_cap": 16,
+      "plan": {"source_route": "internal_hold", "target_route": "legacy_offboard", "expected_successor": "internal_land", "expected_fallback": "internal_land", "target_activation_expected": true, "registration_rejection_expected": false, "activation_rejection_expected": false, "completion_expected": false, "fault_expected": true, "fallback_expected": true},
+      "runtime": {"mechanism": "legacy_offboard", "setpoint_kind": "trajectory", "fault_mode": "process_exit", "successor_route": "internal_land", "active_s": 8.0, "simulation_seed_base": 1201000}
+    },
+    {
+      "cell_id": "fault-offboard-trajectory-stall", "category": "fault", "attempt_id_prefix": "fault-offboard-trajectory-stall", "accepted_target": 8, "launch_cap": 16,
+      "plan": {"source_route": "internal_hold", "target_route": "legacy_offboard", "expected_successor": "internal_land", "expected_fallback": "internal_land", "target_activation_expected": true, "registration_rejection_expected": false, "activation_rejection_expected": false, "completion_expected": true, "fault_expected": true, "fallback_expected": false},
+      "runtime": {"mechanism": "legacy_offboard", "setpoint_kind": "trajectory", "fault_mode": "setpoint_stall", "successor_route": "internal_land", "active_s": 8.0, "simulation_seed_base": 1202000}
+    },
+    {
+      "cell_id": "fault-offboard-attitude-stall", "category": "fault", "attempt_id_prefix": "fault-offboard-attitude-stall", "accepted_target": 8, "launch_cap": 16,
+      "plan": {"source_route": "internal_hold", "target_route": "legacy_offboard", "expected_successor": "internal_land", "expected_fallback": "internal_land", "target_activation_expected": true, "registration_rejection_expected": false, "activation_rejection_expected": false, "completion_expected": true, "fault_expected": true, "fallback_expected": false},
+      "runtime": {"mechanism": "legacy_offboard", "setpoint_kind": "attitude", "fault_mode": "setpoint_stall", "successor_route": "internal_land", "active_s": 8.0, "simulation_seed_base": 1203000}
+    },
+    {
+      "cell_id": "fault-offboard-body-rate-stall", "category": "fault", "attempt_id_prefix": "fault-offboard-body-rate-stall", "accepted_target": 8, "launch_cap": 16,
+      "plan": {"source_route": "internal_hold", "target_route": "legacy_offboard", "expected_successor": "internal_land", "expected_fallback": "internal_land", "target_activation_expected": true, "registration_rejection_expected": false, "activation_rejection_expected": false, "completion_expected": true, "fault_expected": true, "fallback_expected": false},
+      "runtime": {"mechanism": "legacy_offboard", "setpoint_kind": "body_rate", "fault_mode": "setpoint_stall", "successor_route": "internal_land", "active_s": 8.0, "simulation_seed_base": 1204000}
+    },
+    {
+      "cell_id": "fault-dynamic-process-exit", "category": "fault", "attempt_id_prefix": "fault-dynamic-process-exit", "accepted_target": 8, "launch_cap": 16,
+      "plan": {"source_route": "internal_hold", "target_route": "dynamic_external_mode", "expected_successor": "internal_land", "expected_fallback": "internal_rtl", "target_activation_expected": true, "registration_rejection_expected": false, "activation_rejection_expected": false, "completion_expected": false, "fault_expected": true, "fallback_expected": true},
+      "runtime": {"mechanism": "dynamic_external_mode", "setpoint_kind": "trajectory", "fault_mode": "process_exit", "successor_route": "internal_land", "active_s": 8.0, "simulation_seed_base": 1205000}
+    },
+    {
+      "cell_id": "fault-dynamic-health-loss", "category": "fault", "attempt_id_prefix": "fault-dynamic-health-loss", "accepted_target": 8, "launch_cap": 16,
+      "plan": {"source_route": "internal_hold", "target_route": "dynamic_external_mode", "expected_successor": "internal_land", "expected_fallback": "internal_land", "target_activation_expected": false, "registration_rejection_expected": false, "activation_rejection_expected": true, "completion_expected": false, "fault_expected": true, "fallback_expected": false},
+      "runtime": {"mechanism": "dynamic_external_mode", "setpoint_kind": "trajectory", "fault_mode": "normal", "health_loss": true, "successor_route": "internal_land", "active_s": 8.0, "simulation_seed_base": 1206000}
+    },
+    {
+      "cell_id": "fault-dynamic-registration-capacity", "category": "fault", "attempt_id_prefix": "fault-dynamic-registration-capacity", "accepted_target": 8, "launch_cap": 16,
+      "plan": {"source_route": "internal_hold", "target_route": "dynamic_external_mode", "expected_successor": "internal_land", "expected_fallback": "internal_land", "target_activation_expected": true, "registration_rejection_expected": true, "activation_rejection_expected": false, "completion_expected": true, "fault_expected": false, "fallback_expected": false},
+      "runtime": {"mechanism": "dynamic_external_mode", "setpoint_kind": "trajectory", "fault_mode": "normal", "duplicate_registration": true, "successor_route": "internal_land", "active_s": 8.0, "simulation_seed_base": 1207000}
+    },
+    {
+      "cell_id": "timing-executor-before", "category": "timing", "attempt_id_prefix": "timing-executor-before", "accepted_target": 10, "launch_cap": 20,
+      "plan": {"source_route": "px4_internal", "target_route": "mode_executor", "expected_successor": "internal_land", "expected_fallback": "internal_land", "target_activation_expected": true, "registration_rejection_expected": false, "activation_rejection_expected": false, "completion_expected": true, "fault_expected": false, "fallback_expected": false, "timing_bounds_ns": {"adjacent_after_activation_ns": [7650000000, 7850000000], "adjacent_before_completion_ns": [100000000, 400000000]}},
+      "runtime": {"mechanism": "mode_executor", "setpoint_kind": "trajectory", "fault_mode": "normal", "successor_route": "internal_land", "manual_land_offset_s": -0.25, "active_s": 8.0, "simulation_seed_base": 1301000}
+    },
+    {
+      "cell_id": "timing-executor-near", "category": "timing", "attempt_id_prefix": "timing-executor-near", "accepted_target": 10, "launch_cap": 20,
+      "plan": {"source_route": "px4_internal", "target_route": "mode_executor", "expected_successor": "internal_land", "expected_fallback": "internal_land", "target_activation_expected": true, "registration_rejection_expected": false, "activation_rejection_expected": false, "completion_expected": false, "fault_expected": false, "fallback_expected": false, "timing_bounds_ns": {"adjacent_after_activation_ns": [7900000000, 8100000000], "adjacent_completion_distance_ns": [0, 100000000]}},
+      "runtime": {"mechanism": "mode_executor", "setpoint_kind": "trajectory", "fault_mode": "normal", "successor_route": "internal_land", "manual_land_offset_s": 0.0, "active_s": 8.0, "simulation_seed_base": 1302000}
+    },
+    {
+      "cell_id": "timing-executor-after", "category": "timing", "attempt_id_prefix": "timing-executor-after", "accepted_target": 10, "launch_cap": 20,
+      "plan": {"source_route": "px4_internal", "target_route": "mode_executor", "expected_successor": "internal_land", "expected_fallback": "internal_land", "target_activation_expected": true, "registration_rejection_expected": false, "activation_rejection_expected": false, "completion_expected": true, "fault_expected": false, "fallback_expected": false, "timing_bounds_ns": {"adjacent_after_activation_ns": [8150000000, 8350000000], "completion_before_adjacent_ns": [100000000, 400000000]}},
+      "runtime": {"mechanism": "mode_executor", "setpoint_kind": "trajectory", "fault_mode": "normal", "successor_route": "internal_land", "manual_land_offset_s": 0.25, "active_s": 8.0, "simulation_seed_base": 1303000}
+    },
+    {
+      "cell_id": "timing-offboard-reentry-hold", "category": "timing", "attempt_id_prefix": "timing-offboard-reentry-hold", "accepted_target": 10, "launch_cap": 20,
+      "plan": {"source_route": "internal_hold", "target_route": "legacy_offboard", "expected_successor": "internal_hold", "expected_fallback": "internal_land", "target_activation_expected": true, "target_activation_count": [2, 2], "registration_rejection_expected": false, "activation_rejection_expected": false, "completion_expected": true, "fault_expected": false, "fallback_expected": false},
+      "runtime": {"mechanism": "legacy_offboard", "setpoint_kind": "trajectory", "fault_mode": "normal", "successor_route": "internal_hold", "repeat_count": 2, "active_s": 8.0, "simulation_seed_base": 1304000}
+    },
+    {
+      "cell_id": "timing-offboard-reentry-rtl", "category": "timing", "attempt_id_prefix": "timing-offboard-reentry-rtl", "accepted_target": 10, "launch_cap": 20,
+      "plan": {"source_route": "internal_rtl", "target_route": "legacy_offboard", "expected_successor": "internal_rtl", "expected_fallback": "internal_land", "target_activation_expected": true, "target_activation_count": [2, 2], "registration_rejection_expected": false, "activation_rejection_expected": false, "completion_expected": true, "fault_expected": false, "fallback_expected": false},
+      "runtime": {"mechanism": "legacy_offboard", "setpoint_kind": "trajectory", "fault_mode": "normal", "successor_route": "internal_rtl", "repeat_count": 2, "active_s": 8.0, "simulation_seed_base": 1305000}
+    }
+  ]
+}

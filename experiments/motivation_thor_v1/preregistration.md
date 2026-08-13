@@ -58,3 +58,13 @@ Qualification seeds and directories are disjoint from the formal namespace.
 Formal thresholds and concurrency cannot change after the first formal
 registration. The exact machine-readable matrix and environment attestation
 complete this preregistration before execution.
+
+## Frozen identities
+
+- runtime repository revision: `93180c7f4997fce347399723affddd47d02272e4`;
+- ARM64 image ID: `sha256:6cd15d346ec7343283376798a0422bad6d2140c924dcff2435307bb6e23d003a`;
+- environment ID: `thor-r38.2.1-family-a-formal-v1`;
+- formal cells: 21;
+- combined accepted target: 151;
+- combined launch cap: 302;
+- formal concurrency: 4.
