@@ -176,6 +176,8 @@ def validate_plan(plan: dict[str, Any], *, allow_template: bool = False) -> None
         mandatory.add("fault_detected")
     if transition["fallback_expected"]:
         mandatory.add("fallback_triggered")
+    if "adjacent_after_activation_ns" in bounds:
+        mandatory.add("adjacent_request")
     if not mandatory <= set(kinds):
         raise PlanError("required_event_kinds omits a mandatory route contract event")
 

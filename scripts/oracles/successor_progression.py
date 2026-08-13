@@ -100,11 +100,123 @@ def evaluate_successor_progression(
         else:
             fallback = installation_clause(installation, label="safe fallback")
 
+    timing_bounds = plan["strategy"]["timing_bounds_ns"]
+    adjacent_delay_bound = timing_bounds.get("adjacent_after_activation_ns")
+    if adjacent_delay_bound is None:
+        adjacent_timing = clause("NOT_APPLICABLE", "no adjacent request is planned")
+        adjacent_order = clause("NOT_APPLICABLE", "no adjacent request is planned")
+        adjacent_successor = clause("NOT_APPLICABLE", "no adjacent request is planned")
+    else:
+        activation = _event_after(
+            events, "activation", anchor, route=transition["target_route"]
+        )
+        adjacent = _event_after(events, "adjacent_request", anchor)
+        if activation is None or adjacent is None:
+            adjacent_timing = clause(
+                "VIOLATION", "target activation or adjacent request evidence is missing"
+            )
+            adjacent_order = clause(
+                "UNKNOWN", "adjacent ordering cannot be established without both anchors"
+            )
+            adjacent_successor = clause(
+                "UNKNOWN", "adjacent successor cannot be anchored"
+            )
+        else:
+            activation_ns = int(activation["timestamp_ns"])
+            adjacent_ns = int(adjacent["timestamp_ns"])
+            observed_delay = adjacent_ns - activation_ns
+            minimum_delay, maximum_delay = map(int, adjacent_delay_bound)
+            delay_ok = minimum_delay <= observed_delay <= maximum_delay
+            adjacent_timing = clause(
+                "PASS" if delay_ok else "VIOLATION",
+                *(() if delay_ok else ("adjacent request left its preregistered timing bucket",)),
+                evidence={
+                    "activation_sequence": activation["sequence"],
+                    "adjacent_sequence": adjacent["sequence"],
+                    "observed_delay_ns": observed_delay,
+                    "allowed_delay_ns": [minimum_delay, maximum_delay],
+                },
+            )
+            completion_after_activation = _event_after(
+                events, "completion", activation_ns, route=transition["target_route"]
+            )
+            order_key = next(
+                (
+                    key
+                    for key in (
+                        "adjacent_before_completion_ns",
+                        "completion_before_adjacent_ns",
+                        "adjacent_completion_distance_ns",
+                    )
+                    if key in timing_bounds
+                ),
+                None,
+            )
+            completion_ns = (
+                int(completion_after_activation["timestamp_ns"])
+                if completion_after_activation is not None
+                else None
+            )
+            if order_key == "adjacent_before_completion_ns":
+                if completion_ns is None:
+                    adjacent_order = clause(
+                        "PASS",
+                        evidence={"observed_order": "completion_preempted"},
+                    )
+                else:
+                    distance = completion_ns - adjacent_ns
+                    low, high = map(int, timing_bounds[order_key])
+                    ok = low <= distance <= high
+                    adjacent_order = clause(
+                        "PASS" if ok else "VIOLATION",
+                        *(() if ok else ("adjacent request was not before completion as planned",)),
+                        evidence={"observed_order": "adjacent_before_completion", "distance_ns": distance, "allowed_distance_ns": [low, high]},
+                    )
+            elif order_key == "completion_before_adjacent_ns":
+                distance = adjacent_ns - completion_ns if completion_ns is not None else -1
+                low, high = map(int, timing_bounds[order_key])
+                ok = completion_ns is not None and low <= distance <= high
+                adjacent_order = clause(
+                    "PASS" if ok else "VIOLATION",
+                    *(() if ok else ("completion was not before the adjacent request as planned",)),
+                    evidence={"observed_order": "completion_before_adjacent" if completion_ns is not None else "completion_missing", "distance_ns": distance, "allowed_distance_ns": [low, high]},
+                )
+            elif order_key == "adjacent_completion_distance_ns":
+                if completion_ns is None:
+                    adjacent_order = clause(
+                        "PASS", evidence={"observed_order": "completion_preempted_near_boundary"}
+                    )
+                else:
+                    distance = abs(adjacent_ns - completion_ns)
+                    low, high = map(int, timing_bounds[order_key])
+                    ok = low <= distance <= high
+                    adjacent_order = clause(
+                        "PASS" if ok else "VIOLATION",
+                        *(() if ok else ("completion and adjacent request were outside the near bucket",)),
+                        evidence={"observed_order": "near_completion", "distance_ns": distance, "allowed_distance_ns": [low, high]},
+                    )
+            else:
+                adjacent_order = clause(
+                    "UNKNOWN", "the adjacent request has no preregistered order contract"
+                )
+            adjacent_installation = complete_installation(
+                events,
+                route=transition["expected_successor"],
+                anchor_ns=adjacent_ns,
+                deadline_ns=adjacent_ns + int(thresholds["successor_deadline_ns"]),
+            )
+            adjacent_successor = installation_clause(
+                adjacent_installation, label="adjacent-request successor"
+            )
+
     return {
         "oracle": "successor_progression",
         "clauses": {
             "expected_successor": successor,
             "fault_observation": fault_observation,
             "safe_fallback": fallback,
+            "adjacent_timing": adjacent_timing,
+            "adjacent_order": adjacent_order,
+            "adjacent_successor": adjacent_successor,
         },
     }

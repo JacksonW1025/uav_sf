@@ -42,6 +42,20 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         shutil.copyfile(args.attestation, environment_path)
     thresholds_document = _read(args.thresholds)
     thresholds = thresholds_document.get("thresholds", thresholds_document)
+    timing_bounds: dict[str, list[int]] = {}
+    if args.manual_land_offset_s is not None:
+        expected_ns = int((args.active_s + args.manual_land_offset_s) * 1_000_000_000)
+        tolerance_ns = 100_000_000
+        timing_bounds["adjacent_after_activation_ns"] = [
+            max(0, expected_ns - tolerance_ns),
+            expected_ns + tolerance_ns,
+        ]
+        if args.manual_land_offset_s < 0:
+            timing_bounds["adjacent_before_completion_ns"] = [100_000_000, 400_000_000]
+        elif args.manual_land_offset_s > 0:
+            timing_bounds["completion_before_adjacent_ns"] = [100_000_000, 400_000_000]
+        else:
+            timing_bounds["adjacent_completion_distance_ns"] = [0, 100_000_000]
     plan = create_plan(
         attestation=attestation,
         run_id=args.run_id,
@@ -57,6 +71,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         fault_expected=args.fault_expected,
         fallback_expected=args.fallback_expected,
         thresholds=thresholds,
+        timing_bounds_ns=timing_bounds,
     )
     plan_path = args.run_root / args.study_id / "plans" / f"{args.run_id}.json"
     if plan_path.exists():

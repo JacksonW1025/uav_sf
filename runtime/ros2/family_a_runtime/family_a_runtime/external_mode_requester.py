@@ -27,6 +27,7 @@ class ExternalModeRequester(Node):
             "successor_dwell_s": 2.0,
             "fault_mode": "normal",
             "rejection_observation_s": 8.0,
+            "source_route": "px4_internal",
         }
         for name, value in defaults.items():
             self.declare_parameter(name, value)
@@ -39,6 +40,7 @@ class ExternalModeRequester(Node):
             self.get_parameter("successor_dwell_s").value
         )
         self._fault_mode = self.get_parameter("fault_mode").value
+        self._source_route = self.get_parameter("source_route").value
         self._rejection_observation_s = float(
             self.get_parameter("rejection_observation_s").value
         )
@@ -48,6 +50,8 @@ class ExternalModeRequester(Node):
             raise RuntimeError("unsupported successor_route")
         if self._fault_mode not in {"normal", "process_exit", "setpoint_stall", "health_loss"}:
             raise RuntimeError("unsupported fault_mode")
+        if self._source_route not in {"px4_internal", "internal_hold", "internal_rtl"}:
+            raise RuntimeError("unsupported source_route")
         self._log = DurableJsonl(lifecycle_path)
         self._mode_id: int | None = None
         self._registered_ns: int | None = None
@@ -184,6 +188,15 @@ class ExternalModeRequester(Node):
         message.from_external = True
         self._command_pub.publish(message)
 
+    def _source_route_ready(self) -> bool:
+        if self._status is None:
+            return False
+        if self._source_route == "internal_hold":
+            return self._status.nav_state == VehicleStatus.NAVIGATION_STATE_AUTO_LOITER
+        if self._source_route == "internal_rtl":
+            return self._status.nav_state == VehicleStatus.NAVIGATION_STATE_AUTO_RTL
+        return True
+
     def _tick(self) -> None:
         if self._mode_id is None or self._status is None:
             return
@@ -220,7 +233,7 @@ class ExternalModeRequester(Node):
                 self._log.append(
                     "activation_requested",
                     run_id=self._run_id,
-                    source_route="px4_internal",
+                    source_route=self._source_route,
                     target_route="dynamic_external_mode",
                 )
                 self._activation_request_logged = True
@@ -232,11 +245,11 @@ class ExternalModeRequester(Node):
                 self._command(VehicleCommand.VEHICLE_CMD_COMPONENT_ARM_DISARM, param1=1.0)
                 self._arm_sent_ns = now
             return
-        if self._airborne and not self._mode_sent:
+        if self._airborne and not self._mode_sent and self._source_route_ready():
             self._log.append(
                 "transition_requested",
                 run_id=self._run_id,
-                source_route="px4_internal",
+                source_route=self._source_route,
                 target_route="dynamic_external_mode",
             )
             self._command(

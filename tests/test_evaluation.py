@@ -7,6 +7,29 @@ from tests.helpers import chain, identity, passing_events, passing_raw_events, p
 
 
 class EvaluationTests(unittest.TestCase):
+    def test_adjacent_request_timing_and_successor_are_checked(self) -> None:
+        experiment = plan()
+        experiment["strategy"]["timing_bounds_ns"] = {
+            "adjacent_after_activation_ns": [15_000_000, 25_000_000],
+            "adjacent_before_completion_ns": [5_000_000, 15_000_000],
+        }
+        experiment["required_event_kinds"].append("adjacent_request")
+        raw = passing_raw_events()
+        raw.insert(
+            11,
+            raw_event(
+                "adjacent_request",
+                140_000_000,
+                route="internal_hold",
+                timing_bucket="before",
+            ),
+        )
+        result = evaluate(chain(raw), experiment)
+        successor = result["oracles"][2]["clauses"]
+        self.assertEqual(successor["adjacent_timing"]["status"], "PASS")
+        self.assertEqual(successor["adjacent_order"]["status"], "PASS")
+        self.assertEqual(successor["adjacent_successor"]["status"], "PASS")
+
     def test_complete_admissible_transition_passes(self) -> None:
         result = evaluate(passing_events(), plan())
         self.assertEqual(result["evidence_gate"]["status"], "ADMISSIBLE")

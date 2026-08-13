@@ -60,6 +60,7 @@ def create_plan(
     thresholds: dict[str, Any],
     strategy: str = "official_sequence",
     seed: int | None = None,
+    timing_bounds_ns: dict[str, list[int]] | None = None,
 ) -> dict[str, Any]:
     try:
         candidate = attestation["attestation_payload"]["container"]["candidate"]
@@ -82,6 +83,8 @@ def create_plan(
         required.append("fault_detected")
     if fallback_expected:
         required.append("fallback_triggered")
+    if timing_bounds_ns and "adjacent_after_activation_ns" in timing_bounds_ns:
+        required.append("adjacent_request")
     plan = {
         "schema_version": "1.1",
         "plan_id": plan_id,
@@ -89,7 +92,7 @@ def create_plan(
         "strategy": {
             "name": strategy,
             "seed": seed,
-            "timing_bounds_ns": {},
+            "timing_bounds_ns": timing_bounds_ns or {},
         },
         "transition": {
             "source_route": source_route,
@@ -189,6 +192,7 @@ def main() -> int:
             thresholds=thresholds,
             strategy=args.strategy,
             seed=args.seed,
+            timing_bounds_ns=None,
         )
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(

@@ -418,6 +418,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     "-p",
                     f"active_s:={args.active_s}",
                     "-p",
+                    f"source_route:={args.source_route}",
+                    "-p",
                     f"successor_route:={args.successor_route}",
                     "-p",
                     f"fault_mode:={'health_loss' if args.health_loss else args.fault_mode}",
