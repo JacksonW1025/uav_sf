@@ -34,6 +34,7 @@ class OffboardController(Node):
             "hover_altitude_m": 3.0,
             "successor_dwell_s": 2.0,
             "repeat_count": 1,
+            "source_dwell_s": 1.0,
         }
         for name, value in defaults.items():
             self.declare_parameter(name, value)
@@ -51,6 +52,9 @@ class OffboardController(Node):
             self.get_parameter("successor_dwell_s").value
         )
         self._repeat_count = int(self.get_parameter("repeat_count").value)
+        self._source_dwell_ns = int(
+            float(self.get_parameter("source_dwell_s").value) * 1_000_000_000
+        )
         if not self._run_id or not lifecycle_path:
             raise RuntimeError("run_id and lifecycle_path are required")
         if self._setpoint_kind not in {"trajectory", "attitude", "body_rate"}:
@@ -63,6 +67,8 @@ class OffboardController(Node):
             raise RuntimeError("unsupported successor_route")
         if self._repeat_count < 1:
             raise RuntimeError("repeat_count must be positive")
+        if self._source_dwell_ns < 0:
+            raise RuntimeError("source_dwell_s must be non-negative")
         if self._repeat_count > 1 and self._successor_route == "internal_land":
             raise RuntimeError("re-entry requires Hold or RTL as the intermediate successor")
         self._log = DurableJsonl(lifecycle_path)
@@ -78,6 +84,7 @@ class OffboardController(Node):
         self._activation_ns: int | None = None
         self._successor_observed_ns: int | None = None
         self._first_command_logged = False
+        self._source_ready_ns: int | None = None
         self._status: VehicleStatus | None = None
         self._land: VehicleLandDetected | None = None
         self._ever_armed = False
@@ -226,15 +233,23 @@ class OffboardController(Node):
         message.body_rate = self._setpoint_kind == "body_rate"
         self._control_pub.publish(message)
 
-    def _source_route_ready(self) -> bool:
+    def _source_route_ready(self, now_ns: int) -> bool:
         """Require the preregistered public PX4 state before authority transfer."""
         if self._status is None:
+            self._source_ready_ns = None
             return False
         if self._source_route == "internal_hold":
-            return self._status.nav_state == VehicleStatus.NAVIGATION_STATE_AUTO_LOITER
-        if self._source_route == "internal_rtl":
-            return self._status.nav_state == VehicleStatus.NAVIGATION_STATE_AUTO_RTL
-        return self._status.nav_state != VehicleStatus.NAVIGATION_STATE_OFFBOARD
+            ready = self._status.nav_state == VehicleStatus.NAVIGATION_STATE_AUTO_LOITER
+        elif self._source_route == "internal_rtl":
+            ready = self._status.nav_state == VehicleStatus.NAVIGATION_STATE_AUTO_RTL
+        else:
+            ready = self._status.nav_state != VehicleStatus.NAVIGATION_STATE_OFFBOARD
+        if not ready:
+            self._source_ready_ns = None
+            return False
+        if self._source_ready_ns is None:
+            self._source_ready_ns = now_ns
+        return now_ns - self._source_ready_ns >= self._source_dwell_ns
 
     def _tick(self) -> None:
         now_ns = time.monotonic_ns()
@@ -286,7 +301,7 @@ class OffboardController(Node):
                 self._airborne_ns is not None
                 and now_ns - self._airborne_ns >= int(self._prestream_s * 1_000_000_000)
             )
-        if not self._commanded and prestream_complete and self._source_route_ready():
+        if not self._commanded and prestream_complete and self._source_route_ready(now_ns):
             self._log.append(
                 "transition_requested",
                 run_id=self._run_id,

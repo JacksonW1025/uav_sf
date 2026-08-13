@@ -28,6 +28,7 @@ class ExternalModeRequester(Node):
             "fault_mode": "normal",
             "rejection_observation_s": 8.0,
             "source_route": "px4_internal",
+            "source_dwell_s": 1.0,
         }
         for name, value in defaults.items():
             self.declare_parameter(name, value)
@@ -41,6 +42,9 @@ class ExternalModeRequester(Node):
         )
         self._fault_mode = self.get_parameter("fault_mode").value
         self._source_route = self.get_parameter("source_route").value
+        self._source_dwell_ns = int(
+            float(self.get_parameter("source_dwell_s").value) * 1_000_000_000
+        )
         self._rejection_observation_s = float(
             self.get_parameter("rejection_observation_s").value
         )
@@ -52,6 +56,8 @@ class ExternalModeRequester(Node):
             raise RuntimeError("unsupported fault_mode")
         if self._source_route not in {"px4_internal", "internal_hold", "internal_rtl"}:
             raise RuntimeError("unsupported source_route")
+        if self._source_dwell_ns < 0:
+            raise RuntimeError("source_dwell_s must be non-negative")
         self._log = DurableJsonl(lifecycle_path)
         self._mode_id: int | None = None
         self._registered_ns: int | None = None
@@ -67,6 +73,7 @@ class ExternalModeRequester(Node):
         self._successor_observed_ns: int | None = None
         self._fault_logged = False
         self._land: VehicleLandDetected | None = None
+        self._source_ready_ns: int | None = None
         self._command_pub = self.create_publisher(
             VehicleCommand, "/fmu/in/vehicle_command", PX4_QOS
         )
@@ -188,14 +195,22 @@ class ExternalModeRequester(Node):
         message.from_external = True
         self._command_pub.publish(message)
 
-    def _source_route_ready(self) -> bool:
+    def _source_route_ready(self, now_ns: int) -> bool:
         if self._status is None:
+            self._source_ready_ns = None
             return False
         if self._source_route == "internal_hold":
-            return self._status.nav_state == VehicleStatus.NAVIGATION_STATE_AUTO_LOITER
-        if self._source_route == "internal_rtl":
-            return self._status.nav_state == VehicleStatus.NAVIGATION_STATE_AUTO_RTL
-        return True
+            ready = self._status.nav_state == VehicleStatus.NAVIGATION_STATE_AUTO_LOITER
+        elif self._source_route == "internal_rtl":
+            ready = self._status.nav_state == VehicleStatus.NAVIGATION_STATE_AUTO_RTL
+        else:
+            ready = True
+        if not ready:
+            self._source_ready_ns = None
+            return False
+        if self._source_ready_ns is None:
+            self._source_ready_ns = now_ns
+        return now_ns - self._source_ready_ns >= self._source_dwell_ns
 
     def _tick(self) -> None:
         if self._mode_id is None or self._status is None:
@@ -245,7 +260,7 @@ class ExternalModeRequester(Node):
                 self._command(VehicleCommand.VEHICLE_CMD_COMPONENT_ARM_DISARM, param1=1.0)
                 self._arm_sent_ns = now
             return
-        if self._airborne and not self._mode_sent and self._source_route_ready():
+        if self._airborne and not self._mode_sent and self._source_route_ready(now):
             self._log.append(
                 "transition_requested",
                 run_id=self._run_id,

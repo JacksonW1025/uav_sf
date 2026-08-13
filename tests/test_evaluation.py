@@ -146,6 +146,89 @@ class EvaluationTests(unittest.TestCase):
         self.assertEqual(route["revocation"]["status"], "VIOLATION")
         self.assertEqual(route["exclusivity"]["status"], "VIOLATION")
 
+    def test_return_to_same_named_source_does_not_create_false_overlap(self) -> None:
+        raw = passing_raw_events()
+        returned = identity("legacy_offboard", "returned")
+        raw.insert(-1, raw_event("activation", 180_000_000, **returned))
+        raw.insert(
+            -1,
+            raw_event(
+                "actuator_write",
+                190_000_000,
+                command_subject_ns=180_000_000,
+                **returned,
+            ),
+        )
+        result = evaluate(chain(raw), plan())
+        route = result["oracles"][0]["clauses"]
+        self.assertEqual(route["revocation"]["status"], "PASS")
+        self.assertEqual(route["exclusivity"]["status"], "PASS")
+
+    def test_reentry_requires_distinct_complete_route_instances(self) -> None:
+        experiment = plan()
+        experiment["strategy"]["timing_bounds_ns"] = {
+            "target_activation_count": [2, 2]
+        }
+        raw = passing_raw_events()
+        source_two = identity("legacy_offboard", "source-two")
+        target_two = identity("dynamic_external_mode", "target-two")
+        second_cycle = [
+            raw_event("activation", 200_000_000, **source_two),
+            raw_event(
+                "actuator_write",
+                205_000_000,
+                command_subject_ns=195_000_000,
+                **source_two,
+            ),
+            raw_event(
+                "transition_requested",
+                210_000_000,
+                source_route="legacy_offboard",
+                target_route="dynamic_external_mode",
+            ),
+            raw_event("revocation", 212_000_000, **source_two),
+            raw_event("activation", 215_000_000, **target_two),
+            raw_event(
+                "command_consumed",
+                217_000_000,
+                command_subject_ns=210_000_000,
+                **target_two,
+            ),
+            raw_event(
+                "controller_output",
+                219_000_000,
+                command_subject_ns=210_000_000,
+                **target_two,
+            ),
+            raw_event(
+                "allocator_output",
+                221_000_000,
+                command_subject_ns=210_000_000,
+                **target_two,
+            ),
+            raw_event(
+                "actuator_write",
+                223_000_000,
+                command_subject_ns=210_000_000,
+                **target_two,
+            ),
+            raw_event("revocation", 230_000_000, **target_two),
+        ]
+        raw[-1:-1] = second_cycle
+        result = evaluate(chain(raw), experiment)
+        clause_result = result["oracles"][0]["clauses"]["reentry_identity"]
+        self.assertEqual(clause_result["status"], "PASS")
+        self.assertEqual(clause_result["evidence"]["distinct_identity_count"], 2)
+
+        for event in second_cycle:
+            if event.get("route") == "dynamic_external_mode":
+                event.update(identity("dynamic_external_mode", "target"))
+        raw = passing_raw_events()
+        raw[-1:-1] = second_cycle
+        result = evaluate(chain(raw), experiment)
+        clause_result = result["oracles"][0]["clauses"]["reentry_identity"]
+        self.assertEqual(clause_result["status"], "VIOLATION")
+
     def test_continuity_gap_is_violation(self) -> None:
         raw = passing_raw_events()
         for event in raw:

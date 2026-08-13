@@ -11,6 +11,7 @@ from scripts.oracles.common import (
     complete_installation,
     installation_clause,
 )
+from scripts.model.runtime_route import RouteModelError, RuntimeRouteInstance
 
 
 def _transition(events: list[dict[str, Any]], source: str, target: str) -> dict[str, Any] | None:
@@ -42,6 +43,7 @@ def evaluate_route_conformance(
                 "exclusivity": not_applicable,
                 "continuity": not_applicable,
                 "ownership": not_applicable,
+                "reentry_identity": not_applicable,
             },
         }
     thresholds = plan["thresholds"]
@@ -58,6 +60,7 @@ def evaluate_route_conformance(
                 "exclusivity": unknown,
                 "continuity": unknown,
                 "ownership": unknown,
+                "reentry_identity": unknown,
             },
         }
 
@@ -69,7 +72,26 @@ def evaluate_route_conformance(
     )
     install_result = installation_clause(installation, label="target")
 
-    source_writes = sorted(
+    target_identity: RuntimeRouteInstance | None = None
+    target_write_ns: int | None = None
+    target_end_ns: int | None = None
+    if installation["complete"]:
+        target_identity = RuntimeRouteInstance(**installation["identity"])
+        target_write_ns = int(installation["events"]["actuator_write"]["timestamp_ns"])
+        target_revocations = sorted(
+            (
+                event
+                for event in events
+                if event["kind"] == "revocation"
+                and target_identity.matches(event)
+                and int(event["timestamp_ns"]) >= target_write_ns
+            ),
+            key=lambda event: (int(event["timestamp_ns"]), int(event["sequence"])),
+        )
+        if target_revocations:
+            target_end_ns = int(target_revocations[0]["timestamp_ns"])
+
+    all_source_writes = sorted(
         (
             event
             for event in events
@@ -77,11 +99,40 @@ def evaluate_route_conformance(
         ),
         key=lambda event: int(event["timestamp_ns"]),
     )
+    source_activations = sorted(
+        (
+            event
+            for event in events
+            if event["kind"] == "activation"
+            and event.get("route") == source
+            and int(event["timestamp_ns"]) <= anchor
+        ),
+        key=lambda event: (int(event["timestamp_ns"]), int(event["sequence"])),
+    )
+    source_identity: RuntimeRouteInstance | None = None
+    if source_activations:
+        try:
+            source_identity = RuntimeRouteInstance.from_event(source_activations[-1])
+        except RouteModelError:
+            source_identity = None
+    source_writes = [
+        event
+        for event in all_source_writes
+        if source_identity is not None and source_identity.matches(event)
+    ]
+    source_writes_during_target = [
+        event
+        for event in all_source_writes
+        if int(event["timestamp_ns"]) >= anchor
+        and (target_end_ns is None or int(event["timestamp_ns"]) < target_end_ns)
+    ]
     revocations = [
         event
         for event in events
         if event["kind"] == "revocation"
         and event.get("route") == source
+        and source_identity is not None
+        and source_identity.matches(event)
         and anchor <= int(event["timestamp_ns"]) <= revoke_deadline
     ]
     last_source = max(
@@ -89,7 +140,7 @@ def evaluate_route_conformance(
     )
     late_source = [
         event["sequence"]
-        for event in source_writes
+        for event in source_writes_during_target
         if int(event["timestamp_ns"]) > revoke_deadline
     ]
     first_revocation_ns = (
@@ -97,11 +148,15 @@ def evaluate_route_conformance(
     )
     post_revocation_source = [
         event["sequence"]
-        for event in source_writes
+        for event in source_writes_during_target
         if first_revocation_ns is not None
         and int(event["timestamp_ns"]) > first_revocation_ns
     ]
-    if revocations and not late_source and not post_revocation_source:
+    if source_identity is None:
+        revocation_result = clause(
+            "UNKNOWN", "the source route instance active at the request is missing"
+        )
+    elif revocations and not late_source and not post_revocation_source:
         revocation_result = clause(
             "PASS",
             evidence={
@@ -123,14 +178,9 @@ def evaluate_route_conformance(
             "UNKNOWN", "collection does not cover the source revocation deadline"
         )
 
-    target_write_ns = (
-        int(installation["events"]["actuator_write"]["timestamp_ns"])
-        if installation["complete"]
-        else None
-    )
     overlap = [
         event["sequence"]
-        for event in source_writes
+        for event in source_writes_during_target
         if target_write_ns is not None and int(event["timestamp_ns"]) >= target_write_ns
     ]
     if target_write_ns is None or not source_writes:
@@ -188,6 +238,67 @@ def evaluate_route_conformance(
             },
         )
 
+    activation_count_bounds = plan["strategy"]["timing_bounds_ns"].get(
+        "target_activation_count"
+    )
+    if activation_count_bounds is None:
+        reentry_identity = clause(
+            "NOT_APPLICABLE", "no repeated-entry identity obligation was preregistered"
+        )
+    else:
+        low, high = map(int, activation_count_bounds)
+        requests = sorted(
+            (
+                event
+                for event in events
+                if event["kind"] == "transition_requested"
+                and event.get("source_route") == source
+                and event.get("target_route") == target
+            ),
+            key=lambda event: (int(event["timestamp_ns"]), int(event["sequence"])),
+        )
+        installations = [
+            complete_installation(
+                events,
+                route=target,
+                anchor_ns=int(candidate["timestamp_ns"]),
+                deadline_ns=int(candidate["timestamp_ns"])
+                + int(thresholds["installation_deadline_ns"]),
+            )
+            for candidate in requests
+        ]
+        complete_identities = [
+            RuntimeRouteInstance(**candidate["identity"])
+            for candidate in installations
+            if candidate["complete"]
+        ]
+        distinct_identities = set(complete_identities)
+        counts_match = (
+            low <= len(requests) <= high
+            and len(complete_identities) == len(requests)
+            and len(distinct_identities) == len(complete_identities)
+        )
+        reentry_identity = clause(
+            "PASS" if counts_match else "VIOLATION",
+            *(
+                ()
+                if counts_match
+                else (
+                    "each repeated public request must produce one distinct complete route instance",
+                )
+            ),
+            evidence={
+                "expected_activation_count": [low, high],
+                "request_sequences": [event["sequence"] for event in requests],
+                "complete_installation_count": len(complete_identities),
+                "distinct_identity_count": len(distinct_identities),
+                "route_epochs": [identity.route_epoch for identity in complete_identities],
+                "activation_ids": [
+                    identity.activation_id for identity in complete_identities
+                ],
+            },
+        )
+
     return {
         "oracle": "route_conformance",
         "transition_sequence": request["sequence"],
@@ -197,5 +308,6 @@ def evaluate_route_conformance(
             "exclusivity": exclusivity,
             "continuity": continuity,
             "ownership": ownership,
+            "reentry_identity": reentry_identity,
         },
     }
