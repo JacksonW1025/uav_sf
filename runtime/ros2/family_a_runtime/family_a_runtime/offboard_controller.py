@@ -79,6 +79,8 @@ class OffboardController(Node):
         self._started_ns = time.monotonic_ns()
         self._commanded = False
         self._takeoff_sent = False
+        self._source_setup_commanded = False
+        self._source_setup_sent_ns: int | None = None
         self._arm_sent_ns: int | None = None
         self._airborne_ns: int | None = None
         self._landing_commanded = False
@@ -287,11 +289,13 @@ class OffboardController(Node):
                 # Preserve the Offboard proof-of-life while withholding only
                 # the selected stream; this is the freshness/health split.
                 self._publish_proof_of_life()
-        if self._setpoint_kind != "trajectory" and not self._ever_airborne:
-            # Attitude and body-rate setpoints cannot establish a repeatable
-            # takeoff precondition from rest. Reach an airborne PX4-internal
-            # state using public vehicle commands, then prestream the selected
-            # Offboard interface before requesting the authority transition.
+        if (
+            self._setpoint_kind != "trajectory"
+            or self._source_route == "internal_rtl"
+        ) and not self._ever_airborne:
+            # Attitude/body-rate entry and an initial RTL source both require
+            # an airborne public precondition. Establish it with ordinary PX4
+            # vehicle commands before requesting the tested authority change.
             if not self._takeoff_sent:
                 self._vehicle_command(VehicleCommand.VEHICLE_CMD_NAV_TAKEOFF)
                 self._takeoff_sent = True
@@ -301,6 +305,33 @@ class OffboardController(Node):
                     VehicleCommand.VEHICLE_CMD_COMPONENT_ARM_DISARM, param1=1.0
                 )
                 self._arm_sent_ns = now_ns
+            return
+        if (
+            self._source_route == "internal_rtl"
+            and not self._commanded
+            and self._status is not None
+            and self._status.nav_state != VehicleStatus.NAVIGATION_STATE_AUTO_RTL
+        ):
+            if not self._source_setup_commanded:
+                self._log.append(
+                    "transition_requested",
+                    run_id=self._run_id,
+                    source_route="px4_internal",
+                    target_route="internal_rtl",
+                    setup_only=True,
+                )
+                self._source_setup_commanded = True
+                self._log.append(
+                    "source_route_requested",
+                    run_id=self._run_id,
+                    route="internal_rtl",
+                )
+            if (
+                self._source_setup_sent_ns is None
+                or now_ns - self._source_setup_sent_ns >= 1_000_000_000
+            ):
+                self._vehicle_command(VehicleCommand.VEHICLE_CMD_NAV_RETURN_TO_LAUNCH)
+                self._source_setup_sent_ns = now_ns
             return
         prestream_complete = elapsed >= self._prestream_s
         if self._setpoint_kind != "trajectory":
