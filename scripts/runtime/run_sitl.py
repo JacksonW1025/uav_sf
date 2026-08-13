@@ -531,6 +531,12 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                         if reasons:
                             lifecycle.append("semantic_rejection", reasons=reasons)
                         break
+                    # The producer exit is the planned fault stimulus.  Keep
+                    # PX4, telemetry, and the independent safety supervisor
+                    # alive until the public failsafe reaches a terminal
+                    # state or the preregistered attempt timeout expires.
+                    time.sleep(0.2)
+                    continue
                 elif workload.process.returncode == 0:
                     success, reasons = _semantic_success(
                         telemetry,
