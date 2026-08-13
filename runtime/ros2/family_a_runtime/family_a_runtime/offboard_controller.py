@@ -79,6 +79,7 @@ class OffboardController(Node):
         self._started_ns = time.monotonic_ns()
         self._commanded = False
         self._takeoff_sent = False
+        self._takeoff_sent_ns: int | None = None
         self._source_setup_commanded = False
         self._source_setup_sent_ns: int | None = None
         self._arm_sent_ns: int | None = None
@@ -296,15 +297,27 @@ class OffboardController(Node):
             # Attitude/body-rate entry and an initial RTL source both require
             # an airborne public precondition. Establish it with ordinary PX4
             # vehicle commands before requesting the tested authority change.
-            if not self._takeoff_sent:
-                self._vehicle_command(VehicleCommand.VEHICLE_CMD_NAV_TAKEOFF)
-                self._takeoff_sent = True
-                self._log.append("takeoff_requested", run_id=self._run_id)
-            if self._arm_sent_ns is None or now_ns - self._arm_sent_ns >= 1_000_000_000:
+            armed = (
+                self._status is not None
+                and self._status.arming_state == VehicleStatus.ARMING_STATE_ARMED
+            )
+            if not armed and (
+                self._arm_sent_ns is None
+                or now_ns - self._arm_sent_ns >= 1_000_000_000
+            ):
                 self._vehicle_command(
                     VehicleCommand.VEHICLE_CMD_COMPONENT_ARM_DISARM, param1=1.0
                 )
                 self._arm_sent_ns = now_ns
+            if armed and (
+                self._takeoff_sent_ns is None
+                or now_ns - self._takeoff_sent_ns >= 1_000_000_000
+            ):
+                self._vehicle_command(VehicleCommand.VEHICLE_CMD_NAV_TAKEOFF)
+                self._takeoff_sent_ns = now_ns
+                if not self._takeoff_sent:
+                    self._takeoff_sent = True
+                    self._log.append("takeoff_requested", run_id=self._run_id)
             return
         if (
             self._source_route == "internal_rtl"
