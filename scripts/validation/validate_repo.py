@@ -18,6 +18,8 @@ from scripts.model.runtime_route import EVENT_KINDS, ROUTES
 ROOT = Path(__file__).resolve().parents[2]
 IGNORED_ROOTS = {
     ".git",
+    ".agents",
+    ".codex",
     ".ccache",
     ".venv",
     "__pycache__",

@@ -3,7 +3,7 @@ from __future__ import annotations
 import unittest
 
 from scripts.runtime.formal_attempt import FormalAttemptError, _cell
-from scripts.runtime.run_campaign import CampaignError, validate_matrix
+from scripts.runtime.run_campaign import CampaignError, _exact_digest, validate_matrix
 
 
 class FormalAttemptTests(unittest.TestCase):
@@ -39,3 +39,8 @@ class FormalAttemptTests(unittest.TestCase):
     def test_matrix_rejects_unqualified_concurrency(self) -> None:
         with self.assertRaises(CampaignError):
             validate_matrix({"schema_version": "1.0", "formal_concurrency": 6})
+
+    def test_matrix_digest_contract_is_exact(self) -> None:
+        self.assertTrue(_exact_digest("sha256:" + "a" * 64))
+        self.assertFalse(_exact_digest("sha256:" + "A" * 64))
+        self.assertFalse(_exact_digest("a" * 64))

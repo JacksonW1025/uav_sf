@@ -19,6 +19,9 @@ from scripts.runtime.make_plan import create_plan
 from scripts.runtime.run_campaign import CampaignError, attempt_cell, validate_matrix
 
 
+ROOT = Path(__file__).resolve().parents[2]
+
+
 class FormalAttemptError(RuntimeError):
     """A formal attempt cannot be started or unambiguously closed."""
 
@@ -124,6 +127,18 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     image_id = str(
         attestation["attestation_payload"]["container"]["image_id"]
     )
+    if matrix["container_image_id"] != image_id:
+        raise FormalAttemptError("matrix and attestation image identities differ")
+    if matrix["environment_attestation_digest"] != _sha256(args.attestation):
+        raise FormalAttemptError("environment attestation digest differs from the matrix")
+    method_path = ROOT / "config/method.defaults.json"
+    safety_path = ROOT / "config/safety_limits.formal.json"
+    if matrix["method_defaults_digest"] != _sha256(method_path):
+        raise FormalAttemptError("method defaults digest differs from the matrix")
+    if matrix["safety_limits_digest"] != _sha256(safety_path):
+        raise FormalAttemptError("formal safety limits digest differs from the matrix")
+    if _read_object(method_path).get("thresholds") != matrix["thresholds"]:
+        raise FormalAttemptError("matrix thresholds differ from the frozen method defaults")
     candidate = attestation["attestation_payload"]["container"]["candidate"]
     if candidate["repository_revision"] != matrix.get("repository_revision"):
         raise FormalAttemptError("matrix and formal image repository revisions differ")

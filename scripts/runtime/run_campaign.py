@@ -31,6 +31,16 @@ REQUIRED_THRESHOLDS = {
     "successor_deadline_ns",
     "fallback_deadline_ns",
 }
+SHA256_PREFIX = "sha256:"
+
+
+def _exact_digest(value: object) -> bool:
+    text = str(value)
+    return (
+        text.startswith(SHA256_PREFIX)
+        and len(text) == len(SHA256_PREFIX) + 64
+        and all(character in "0123456789abcdef" for character in text[len(SHA256_PREFIX) :])
+    )
 
 
 def read_matrix(path: Path) -> dict[str, Any]:
@@ -48,6 +58,14 @@ def validate_matrix(matrix: dict[str, Any]) -> None:
             raise CampaignError(f"matrix lacks {field}")
     if len(str(matrix["repository_revision"])) != 40:
         raise CampaignError("repository revision is not an exact commit")
+    for field in (
+        "container_image_id",
+        "environment_attestation_digest",
+        "method_defaults_digest",
+        "safety_limits_digest",
+    ):
+        if not _exact_digest(matrix.get(field)):
+            raise CampaignError(f"matrix {field} is not an exact SHA-256 digest")
     if int(matrix.get("formal_concurrency", 0)) != 4:
         raise CampaignError("formal concurrency must equal the qualified value four")
     resources = matrix.get("resources", {})
