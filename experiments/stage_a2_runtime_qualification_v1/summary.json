@@ -1,0 +1,45 @@
+{
+  "analysis_id": "stage-a2-runtime-qualification-v1",
+  "baseline_observation_count": 623,
+  "checks": {
+    "all_attempts_physically_valid": true,
+    "all_profiles_meet_rtf_floor": true,
+    "all_runtime_attempts_accepted": true,
+    "off_has_no_route_observation": true,
+    "selected_route_evidence_complete": true,
+    "selected_ulog_growth_within_bound": true
+  },
+  "observer_attempt_count": 3,
+  "runtime_readiness": [
+    {
+      "attempt_id": "dynamic-normal-001",
+      "outcome": "ACCEPTED",
+      "physical_takeoff_ready": true,
+      "registration_handoff_loaded": true
+    },
+    {
+      "attempt_id": "dynamic-normal-002",
+      "outcome": "ACCEPTED",
+      "physical_takeoff_ready": true,
+      "registration_handoff_loaded": true
+    },
+    {
+      "attempt_id": "offboard-attitude-001",
+      "outcome": "ACCEPTED",
+      "physical_takeoff_ready": true,
+      "registration_handoff_loaded": false
+    }
+  ],
+  "schema_version": "1.0",
+  "selected_observation_count": 7751,
+  "selected_observer_profile": "transition",
+  "selected_ulog_growth_bytes_over_baseline": 443055,
+  "selected_ulog_growth_fraction_over_baseline": 0.09011272862249387,
+  "selection_reason": "approximately 8 ms Route resolution is needed to resolve command-consumption and controller stages; the matched qualification shows complete evidence and bounded runtime/log overhead",
+  "stable_rtf_median_distribution": {
+    "maximum": 0.999939003720773,
+    "median": 0.9998907619342586,
+    "minimum": 0.9998880125425952
+  },
+  "status": "PASS"
+}

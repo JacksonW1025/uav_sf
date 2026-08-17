@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0",
+  "analysis_id": "stage-a2-runtime-qualification-v1",
+  "analysis_kind": "non_formal_runtime_observer_qualification",
+  "paper_role": {
+    "primary_sections": ["5 Implementation", "8 Threats to Validity"],
+    "changes_formal_denominator": false
+  },
+  "inputs": {
+    "runtime_run_root": "runs/phase3-runtime-qualification-v2",
+    "observer_run_root": "runs/phase3-observer-qualification"
+  },
+  "runtime_attempt_ids": [
+    "dynamic-normal-001",
+    "dynamic-normal-002",
+    "offboard-attitude-001"
+  ],
+  "observer_profiles": {
+    "off": {
+      "attempt_id": "observer-off-001",
+      "identity": {
+        "image_digest": "sha256:67e33d1ba7b1c43f2bd03c78b8cfe86f78f2cbc2a19db40fc23209a47f9f636e",
+        "px4_binary_digest": "sha256:c768f4a1dee7d40fb24bc23fc8210b1568859680f306fa9bdac7cdcdf344eee4"
+      }
+    },
+    "baseline": {
+      "attempt_id": "observer-baseline-001",
+      "identity": {
+        "image_digest": "sha256:34fce6e8e169017b4d2bd99db9bdd8647e35126c895f662d75aaa99fcc8d7a8b",
+        "px4_binary_digest": "sha256:168c9a3d2e05d07a54d01f420d7a47dc58977eec0ece544c8c454e4f0c6bf619"
+      }
+    },
+    "transition": {
+      "attempt_id": "observer-transition-001",
+      "identity": {
+        "image_digest": "sha256:68cedea1bc3dd7b278b30567267edb5502ca850242c1118c6035e3dc6064aa98",
+        "px4_binary_digest": "sha256:a01553180c7fa3cdd784fcfa28edd0fb7f45c226033211fd112ad91cac4f1c2b"
+      }
+    }
+  },
+  "bounds": {
+    "minimum_central_rtf": 0.97,
+    "maximum_selected_ulog_growth_fraction_over_baseline": 0.15,
+    "require_zero_sequence_gaps": true,
+    "require_zero_dropouts": true,
+    "require_physical_takeoff": true
+  },
+  "selection": {
+    "selected_profile": "transition",
+    "reason": "approximately 8 ms Route resolution is needed to resolve command-consumption and controller stages; the matched qualification shows complete evidence and bounded runtime/log overhead"
+  },
+  "repository_revision": "909662b5d8666b072dcb2e9c8f051a378eeffe71"
+}

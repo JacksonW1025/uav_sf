@@ -5,9 +5,9 @@ Formal experiment attempts: 200
 Retained historical results: 0
 Current empirical claims: bounded Thor SITL findings in the final reports
 Formal execution environments: primary and supplemental Thor v1 identities
-Study state: Stage A1 minimal-mechanism motivation complete and frozen; Stage A2 blocked on physical-validity and runtime qualification
+Study state: Stage A1 minimal-mechanism motivation complete and frozen; Stage A2 runtime prerequisites qualified, preregistration pending
 Current work package: Stage A2 readiness and moving-workload Motivation evidence (Phases I--V below)
-Active phase: Phase III runtime and observation qualification; Phases I--II complete
+Active phase: Phase IV A2 preregistration and identity freeze; Phases I--III complete
 Paper state after this package: Section 6 Motivation Study complete; Section 7 Main Evaluation still pending
 ```
 
@@ -161,7 +161,7 @@ lag and recovery. It also confirms seven
 post-registration timeout. The generated results and manifests reproduce
 byte-for-byte from an empty output directory.
 
-## Phase III: qualify physical validity, Dynamic readiness, and observer sensitivity
+## Phase III: qualify physical validity, Dynamic readiness, and observer sensitivity — COMPLETE
 
 All Phase III changes and flights use a new qualification identity. They are not
 executed "under A1" and do not alter the A1 image, configuration, matrices, or
@@ -212,6 +212,22 @@ formal execution.
 Phase III exits only when no physically unexecuted attempt can be admitted as a valid
 flight, Dynamic readiness meets its preregistered reliability rule, and the
 selected observation profile meets both sensitivity and probe-effect bounds.
+
+The qualification is frozen in
+[`experiments/stage_a2_runtime_qualification_v1/`](../experiments/stage_a2_runtime_qualification_v1/).
+All three matched observer tasks were runtime-accepted and satisfied the
+sustained physical-takeoff predicate. Their stable real-time-factor medians
+were 0.999888--0.999939. The selected `transition` profile retained 7,751
+Route observations without a sequence gap or dropout; compared with the
+10 Hz baseline, its ULog grew by 443,055 bytes (9.01%), below the frozen 15%
+bound. The observer-off image correctly yields no Route evidence and therefore
+cannot run the Route Oracles.
+
+Both repaired Dynamic qualification attempts loaded the explicit registration
+handoff and were accepted under the three-attempt batch, alongside the
+Legacy Offboard control. This qualifies the handshake for A2 execution but is not a
+population-level failure-rate estimate. These attempts remain non-formal and
+change no paper denominator.
 
 ## Phase IV: freeze an A2-specific plan and environment
 

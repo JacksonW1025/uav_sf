@@ -1,0 +1,52 @@
+{
+  "analysis_plan_digest": "sha256:6d71774b64123e867fc35fdf3940b79257002e31eb0dd3248fc41e0b1a8353cf",
+  "observer_attempts": [
+    {
+      "attempt_id": "observer-off-001",
+      "input_digests": {
+        "runtime_result": "sha256:0dfb2aa1cd4cb3d63400824700654f0c45e15d105f9992f076bb7cc949c4d18d",
+        "telemetry": "sha256:71b652936f9c9009f75bf9aa2caa878e01d8523eeb987e762756171c25906385",
+        "workload_lifecycle": "sha256:1ecd6799f07d2bcd86bd7b491503353354581d2bc1553e7e1612b9faa5c6f4ec"
+      },
+      "ulog_digest": "sha256:7cb0ac1ea7dc43f81ec594ee40f6dd893f0cffd79d81e8ffc6a70d654056f0dd"
+    },
+    {
+      "attempt_id": "observer-baseline-001",
+      "input_digests": {
+        "route_summary": "sha256:d5ab81e0d1b4e1c9e0ab9ac9ed663158c5bd99a4dad5cba44d874b8c2a71fd79",
+        "runtime_result": "sha256:14539fd5d95f0e96d21dc1480304bd642573afaeb4eac40f544bcf14d77594ec",
+        "telemetry": "sha256:00b2314363abefc648aedcc51734055c7bbc5d8cff51f225e7c0ddaddab1c0d3",
+        "workload_lifecycle": "sha256:58e6ba660a101c9a25a3405a3b84995f885a4eb29aa758d976c02b9679374533"
+      },
+      "ulog_digest": "sha256:cb95f8868499c6710d0a70b5d03ae4de70f98650a86e74e16bc87b1118d5b1f5"
+    },
+    {
+      "attempt_id": "observer-transition-001",
+      "input_digests": {
+        "route_summary": "sha256:a85233adcf8efb89d7eecc6dbdb2db1e379d7c2345997ddd39450aad27c0d9eb",
+        "runtime_result": "sha256:693c04106118dbc49a24ecfee6630eff973874ab61be3da8a315a1d73888a8a0",
+        "telemetry": "sha256:200c48fb8a1fefc08fcb1081540adecc9817324a15fcbb9ea4b281922c259da4",
+        "workload_lifecycle": "sha256:5deb40a23a90970019b76b1e9e19d88bcc3a4cb244b587b68d15a6fc09fe5076"
+      },
+      "ulog_digest": "sha256:0a5c112f94c462119605bbb2e568be2a5860411587e637bd067eb94c50351eb2"
+    }
+  ],
+  "runtime_attempts": [
+    {
+      "attempt_id": "dynamic-normal-001",
+      "runtime_result_digest": "sha256:b3fd92561e0661f47b0aa6b931cd62ef04c611ef3490b318ec217290a10d51d2",
+      "workload_lifecycle_digest": "sha256:b9db7bc2ef084875e1725e4e8601eb1c5c14531015a327702f5c1dd7aaf6ca26"
+    },
+    {
+      "attempt_id": "dynamic-normal-002",
+      "runtime_result_digest": "sha256:5c60d121d78c95aa3d4c9940351b231b2e71429747f4830fa8ea2561d0666fc9",
+      "workload_lifecycle_digest": "sha256:a9de946e64dd087d9c43445e132d1dffc76e3a0507c634272ad4a4713f7a63f5"
+    },
+    {
+      "attempt_id": "offboard-attitude-001",
+      "runtime_result_digest": "sha256:1fbcbf15b363f5401eff6911c7463f79c21c999efd7ab3a6b76bf9d7aa21c315",
+      "workload_lifecycle_digest": "sha256:a413536998e770d250b34a3b9904af4efdea6fb0da38bb1192ded36f7df0a925"
+    }
+  ],
+  "schema_version": "1.0"
+}
