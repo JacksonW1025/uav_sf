@@ -15,6 +15,7 @@ from typing import Any
 
 from scripts.accounting.study import StudyLedger, verify_study_ledger
 from scripts.evaluator.plan import validate_plan
+from scripts.runtime.live_strategy_backend import create_live_decision, decision_digest
 from scripts.runtime.make_plan import create_plan
 from scripts.runtime.run_campaign import CampaignError, attempt_cell, validate_matrix
 
@@ -171,6 +172,12 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     ledger = StudyLedger(args.study_root / "attempt-ledger.jsonl", study_id=study_id)
     state = verify_study_ledger(ledger.path)
     plan_spec = cell["plan"]
+    strategy_name = plan_spec.get("strategy", "official_sequence")
+    strategy_seed = (
+        None
+        if strategy_name == "official_sequence"
+        else int(plan_spec["seed_base"]) + attempt_ordinal
+    )
     plan = create_plan(
         attestation=attestation,
         run_id=args.attempt_id,
@@ -188,9 +195,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         fault_expected=plan_spec["fault_expected"],
         fallback_expected=plan_spec["fallback_expected"],
         thresholds=matrix["thresholds"],
-        strategy=plan_spec.get("strategy", "official_sequence"),
+        strategy=strategy_name,
         simulation_seed=simulation_seed,
-        seed=plan_spec.get("seed"),
+        seed=strategy_seed,
         timing_bounds_ns=plan_spec.get("timing_bounds_ns"),
         target_activation_count=plan_spec.get("target_activation_count"),
         workload=plan_spec.get("workload"),
@@ -198,6 +205,19 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     validate_plan(plan)
     plan_path = args.run_root / study_id / "plans" / f"{args.attempt_id}.json"
     attempt_root = args.run_root / study_id / args.attempt_id
+    strategy_decision = None
+    strategy_decision_path = None
+    if matrix.get("live_strategy_backend") == "owned_setpoint_stall_v1":
+        strategy_decision = create_live_decision(
+            strategy=strategy_name,
+            seed=strategy_seed,
+            timing_bounds_ns=plan_spec["timing_bounds_ns"],
+            official_offset_ns=int(float(runtime.get("stall_after_s", 5.0)) * 1_000_000_000),
+            covered_boundaries=set(args.covered_boundary),
+        )
+        strategy_decision_path = (
+            args.run_root / study_id / "strategy-decisions" / f"{args.attempt_id}.json"
+        )
     existing = state["attempts"].get(args.attempt_id)
     launch_returncode = -1
     if phase == "finalize":
@@ -205,6 +225,14 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             raise FormalAttemptError("finalization requires one launched attempt")
         if not plan_path.is_file() or _read_object(plan_path) != plan:
             raise FormalAttemptError("retained plan differs from the frozen matrix")
+        if (
+            strategy_decision_path is not None
+            and (
+                not strategy_decision_path.is_file()
+                or _read_object(strategy_decision_path) != strategy_decision
+            )
+        ):
+            raise FormalAttemptError("retained strategy decision differs from live feedback")
         driver_path = attempt_root / "container-driver.result.json"
         if driver_path.is_file():
             launch_returncode = int(_read_object(driver_path).get("returncode", -1))
@@ -222,12 +250,17 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 "cell launch cap is exhausted: MEASUREMENT_INSUFFICIENT"
             )
         _write_new(plan_path, plan)
+        if strategy_decision_path is not None and strategy_decision is not None:
+            _write_new(strategy_decision_path, strategy_decision)
         plan_digest = _sha256(plan_path)
+        registration_payload = {"plan_digest": plan_digest}
+        if strategy_decision is not None:
+            registration_payload["strategy_decision_digest"] = decision_digest(strategy_decision)
         ledger.append(
             attempt_id=args.attempt_id,
             cell_id=cell_id,
             state="REGISTERED",
-            payload={"plan_digest": plan_digest},
+            payload=registration_payload,
         )
         ledger.append(
             attempt_id=args.attempt_id,
@@ -293,6 +326,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "--safety-limits",
             f"/opt/uav_sf/{safety_path.relative_to(ROOT)}",
         ]
+        if strategy_decision_path is not None:
+            command.extend(["--strategy-decision", str(strategy_decision_path)])
         if runtime.get("health_loss"):
             command.append("--health-loss")
         if runtime.get("duplicate_registration"):
@@ -360,6 +395,12 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         outcome = runtime_outcome
     compact_root = args.study_root / "results" / args.attempt_id
     retained = _compact_evidence(attempt_root, compact_root)
+    if strategy_decision_path is not None:
+        compact_decision = compact_root / "strategy-decision.json"
+        if compact_decision.exists():
+            raise FormalAttemptError(f"compact strategy decision already exists: {compact_decision}")
+        shutil.copyfile(strategy_decision_path, compact_decision)
+        retained["strategy_decision"] = _sha256(compact_decision)
     closure = {
         "schema_version": "1.0",
         "study_id": study_id,
@@ -373,6 +414,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "processing_returncode": processing.returncode,
         "compact_evidence": retained,
     }
+    if strategy_decision is not None:
+        closure["strategy_decision_digest"] = decision_digest(strategy_decision)
     _write_new(compact_root / "closure.json", closure)
     ledger.append(
         attempt_id=args.attempt_id,
@@ -448,6 +491,7 @@ def main() -> int:
     )
     parser.add_argument("--uid", type=int, default=os.getuid())
     parser.add_argument("--gid", type=int, default=os.getgid())
+    parser.add_argument("--covered-boundary", action="append", default=[])
     args = parser.parse_args()
     try:
         result = run(args)

@@ -282,6 +282,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     px4_work.mkdir()
     telemetry = raw / "telemetry.sidecar.jsonl"
     decision = raw / "safety.decision.json"
+    stall_request = raw / "setpoint-stall.request.json"
     environment = dict(os.environ)
     environment.update(
         {
@@ -469,6 +470,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     f"motion_entry_progress_m:={args.motion_entry_progress_m}",
                     "-p",
                     f"motion_completion_progress_m:={args.motion_completion_progress_m}",
+                    "-p",
+                    f"stall_request_path:={stall_request if args.strategy_decision_path else ''}",
                 ],
             )
         elif args.mechanism == "dynamic_external_mode":
@@ -505,6 +508,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     f"motion_entry_progress_m:={args.motion_entry_progress_m}",
                     "-p",
                     f"motion_completion_progress_m:={args.motion_completion_progress_m}",
+                    "-p",
+                    f"stall_request_path:={stall_request if args.strategy_decision_path else ''}",
                 ],
             )
             time.sleep(0.5)
@@ -536,6 +541,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     f"motion_speed_m_s:={args.motion_speed_m_s}",
                     "-p",
                     f"motion_distance_m:={args.motion_distance_m}",
+                    "-p",
+                    f"stall_request_path:={stall_request if args.strategy_decision_path else ''}",
                 ],
             )
             if args.duplicate_registration:
@@ -611,6 +618,29 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 )
         else:
             raise RuntimeFailure(f"attempt mechanism is not implemented: {args.mechanism}")
+        if args.strategy_decision_path is not None:
+            if args.fault_mode != "setpoint_stall" or args.workload_profile != "straight_line":
+                raise RuntimeFailure("the live strategy backend requires the moving setpoint-stall workload")
+            if args.mechanism not in {"legacy_offboard", "dynamic_external_mode"}:
+                raise RuntimeFailure("the live strategy backend does not support this mechanism")
+            start(
+                "strategy_action_executor",
+                [
+                    "python3",
+                    "-m",
+                    "scripts.runtime.strategy_action_executor",
+                    "--run-id",
+                    args.run_id,
+                    "--decision",
+                    str(args.strategy_decision_path),
+                    "--lifecycle",
+                    str(raw / "workload.lifecycle.jsonl"),
+                    "--request",
+                    str(stall_request),
+                    "--output",
+                    str(raw / "strategy.lifecycle.jsonl"),
+                ],
+            )
         deadline = time.monotonic() + args.attempt_timeout_s
         while time.monotonic() < deadline:
             if decision.exists():
@@ -793,6 +823,7 @@ def main() -> int:
     parser.add_argument("--motion-distance-m", type=float, default=3.5)
     parser.add_argument("--motion-entry-progress-m", type=float, default=0.75)
     parser.add_argument("--motion-completion-progress-m", type=float, default=2.5)
+    parser.add_argument("--strategy-decision-path", type=Path)
     parser.add_argument("--simulation-seed", type=int, required=True)
     parser.add_argument("--readiness-timeout-s", type=float, default=45.0)
     parser.add_argument("--attempt-timeout-s", type=float, default=60.0)

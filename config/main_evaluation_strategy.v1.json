@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "backend": "owned_setpoint_stall_v1",
+  "strategies": [
+    "official_sequence",
+    "bounded_random_timing",
+    "state_aware"
+  ],
+  "action": "setpoint_stall",
+  "required_live_state": {
+    "route_active": true,
+    "motion_entered": true
+  },
+  "timing_bounds_ns": [3500000000, 6500000000],
+  "official_offset_ns": 5000000000,
+  "state_aware_candidates_ns": {
+    "early": 3500000000,
+    "pre_boundary": 4250000000,
+    "boundary": 5000000000,
+    "post_boundary": 5750000000,
+    "late": 6500000000
+  },
+  "mechanisms": [
+    "legacy_offboard",
+    "dynamic_external_mode"
+  ],
+  "launch_budget_per_strategy_mechanism": 3,
+  "formal_launch_budget": 18,
+  "feedback_source": "previous live action_requested records within the same strategy-mechanism cell",
+  "comparison_metrics": [
+    "admissible_evidence_yield",
+    "executed_timing_boundary_coverage",
+    "applicable_contract_boundary_coverage",
+    "violation_signature_coverage",
+    "launches_to_first_violation",
+    "request_timing_error_ns"
+  ],
+  "claim_boundary": "fixed-budget live-backend comparison for one moving healthy-stall action; not a complete route-corpus evaluation"
+}

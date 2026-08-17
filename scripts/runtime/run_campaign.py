@@ -23,6 +23,7 @@ OUTCOME_TARGETS = {
     "deterministic": (5, 10),
     "fault": (8, 16),
     "timing": (10, 20),
+    "fixed_budget": (3, 3),
 }
 REQUIRED_THRESHOLDS = {
     "revocation_deadline_ns",
@@ -129,11 +130,24 @@ def validate_matrix(matrix: dict[str, Any]) -> None:
         if not isinstance(runtime.get("simulation_seed_base"), int):
             raise CampaignError(f"cell {cell_id} lacks a formal seed base")
         strategy = plan.get("strategy", "official_sequence")
-        if strategy != "official_sequence":
+        live_backend = matrix.get("live_strategy_backend")
+        if strategy != "official_sequence" and live_backend != "owned_setpoint_stall_v1":
             raise CampaignError(
                 f"cell {cell_id} requests {strategy}, but the live formal runtime "
                 "currently implements only official_sequence"
             )
+        if category == "fixed_budget":
+            if live_backend != "owned_setpoint_stall_v1":
+                raise CampaignError(f"cell {cell_id} lacks the qualified live strategy backend")
+            if strategy not in {"official_sequence", "bounded_random_timing", "state_aware"}:
+                raise CampaignError(f"cell {cell_id} has an unsupported fixed-budget strategy")
+            if runtime.get("fault_mode") != "setpoint_stall":
+                raise CampaignError(f"cell {cell_id} changes the fixed-budget action")
+            bounds = plan.get("timing_bounds_ns", {}).get("setpoint_stall")
+            if bounds != [3_500_000_000, 6_500_000_000]:
+                raise CampaignError(f"cell {cell_id} changes the fixed-budget timing interval")
+            if strategy != "official_sequence" and not isinstance(plan.get("seed_base"), int):
+                raise CampaignError(f"cell {cell_id} lacks a strategy seed base")
         workload = plan.get("workload")
         if workload is not None:
             if runtime.get("workload_profile") != "straight_line":
