@@ -13,6 +13,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from scripts.runtime.live_strategy_backend import create_live_decision
 from scripts.runtime.make_plan import create_plan
 
 
@@ -31,6 +32,13 @@ def _digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _write_new(path: Path, value: dict[str, Any]) -> None:
+    if path.exists():
+        raise QualificationError(f"qualification artifact already exists: {path}")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
 def run(args: argparse.Namespace) -> dict[str, Any]:
     phase = getattr(args, "phase", "all")
     if phase not in {"live", "process", "all"}:
@@ -44,6 +52,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         environment_path.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(args.attestation, environment_path)
     plan_path = args.run_root / args.study_id / "plans" / f"{args.run_id}.json"
+    decision_path = (
+        args.run_root / args.study_id / "strategy-decisions" / f"{args.run_id}.json"
+    )
     image_id = attestation["attestation_payload"]["container"]["image_id"]
     launch_returncode = -1
     if phase == "process":
@@ -77,6 +88,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 ]
             else:
                 timing_bounds["adjacent_completion_distance_ns"] = [0, 100_000_000]
+        timing_bounds.update(args.timing_bounds_ns)
         plan = create_plan(
             attestation=attestation,
             run_id=args.run_id,
@@ -93,6 +105,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             fallback_expected=args.fallback_expected,
             thresholds=thresholds,
             simulation_seed=args.simulation_seed,
+            strategy=args.strategy,
+            seed=args.strategy_seed,
             timing_bounds_ns=timing_bounds,
             target_activation_count=[
                 args.target_activation_count
@@ -102,6 +116,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 if args.target_activation_count is not None
                 else (args.repeat_count if args.target_activation_expected else 0),
             ],
+            workload=args.workload,
         )
         if plan_path.exists():
             raise QualificationError(f"qualification plan already exists: {plan_path}")
@@ -109,6 +124,17 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         plan_path.write_text(
             json.dumps(plan, indent=2, sort_keys=True) + "\n", encoding="utf-8"
         )
+        if args.live_strategy_backend is not None:
+            if args.live_strategy_backend != "owned_setpoint_stall_v1":
+                raise QualificationError("unsupported qualification live strategy backend")
+            decision = create_live_decision(
+                strategy=args.strategy,
+                seed=args.strategy_seed,
+                timing_bounds_ns=timing_bounds,
+                official_offset_ns=int(args.stall_after_s * 1_000_000_000),
+                covered_boundaries=set(args.covered_boundary),
+            )
+            _write_new(decision_path, decision)
         launch = [
             sys.executable,
             "-m",
@@ -143,13 +169,31 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             args.memory,
             "--active-s",
             str(args.active_s),
+            "--stall-after-s",
+            str(args.stall_after_s),
+            "--workload-profile",
+            args.workload_profile,
+            "--motion-settle-s",
+            str(args.motion_settle_s),
+            "--motion-speed-m-s",
+            str(args.motion_speed_m_s),
+            "--motion-distance-m",
+            str(args.motion_distance_m),
+            "--motion-entry-progress-m",
+            str(args.motion_entry_progress_m),
+            "--motion-completion-progress-m",
+            str(args.motion_completion_progress_m),
             "--simulation-seed",
             str(args.simulation_seed),
             "--attempt-timeout-s",
             str(args.attempt_timeout_s),
             "--outer-timeout-s",
             str(args.outer_timeout_s),
+            "--safety-limits",
+            args.safety_limits,
         ]
+        if args.live_strategy_backend is not None:
+            launch.extend(["--strategy-decision", str(decision_path)])
         if args.health_loss:
             launch.append("--health-loss")
         if args.duplicate_registration:
@@ -265,12 +309,29 @@ def main() -> int:
     parser.add_argument("--cpu-set", default="0-13")
     parser.add_argument("--memory", default="24g")
     parser.add_argument("--active-s", type=float, default=8.0)
+    parser.add_argument("--stall-after-s", type=float, default=5.0)
+    parser.add_argument("--workload-profile", choices=["hover", "straight_line"], default="hover")
+    parser.add_argument("--motion-settle-s", type=float, default=1.0)
+    parser.add_argument("--motion-speed-m-s", type=float, default=0.75)
+    parser.add_argument("--motion-distance-m", type=float, default=3.5)
+    parser.add_argument("--motion-entry-progress-m", type=float, default=0.75)
+    parser.add_argument("--motion-completion-progress-m", type=float, default=2.5)
     parser.add_argument("--simulation-seed", type=int, required=True)
     parser.add_argument("--attempt-timeout-s", type=float, default=90.0)
     parser.add_argument("--outer-timeout-s", type=float, default=160.0)
     parser.add_argument(
         "--thresholds", type=Path, default=Path("config/method.defaults.json")
     )
+    parser.add_argument("--safety-limits", default="/opt/uav_sf/config/safety_limits.qualification.json")
+    parser.add_argument(
+        "--strategy",
+        choices=["official_sequence", "bounded_random_timing", "state_aware"],
+        default="official_sequence",
+    )
+    parser.add_argument("--strategy-seed", type=int)
+    parser.add_argument("--live-strategy-backend", choices=["owned_setpoint_stall_v1"])
+    parser.add_argument("--covered-boundary", action="append", default=[])
+    parser.set_defaults(timing_bounds_ns={}, workload=None)
     parser.add_argument("--maximum-clock-uncertainty-ns", type=int, default=20_000_000)
     args = parser.parse_args()
     try:

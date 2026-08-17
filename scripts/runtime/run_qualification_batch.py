@@ -108,6 +108,27 @@ def _namespace(
         attempt_timeout_s=float(attempt.get("attempt_timeout_s", 90.0)),
         outer_timeout_s=float(attempt.get("outer_timeout_s", 160.0)),
         thresholds=Path(spec.get("thresholds", "config/method.defaults.json")),
+        safety_limits=str(
+            spec.get(
+                "safety_limits",
+                "/opt/uav_sf/config/safety_limits.qualification.json",
+            )
+        ),
+        strategy=str(attempt.get("strategy", "official_sequence")),
+        strategy_seed=attempt.get("strategy_seed"),
+        live_strategy_backend=spec.get("live_strategy_backend"),
+        covered_boundary=list(attempt.get("covered_boundary", [])),
+        timing_bounds_ns=dict(attempt.get("timing_bounds_ns", {})),
+        workload=attempt.get("workload"),
+        stall_after_s=float(attempt.get("stall_after_s", 5.0)),
+        workload_profile=str(attempt.get("workload_profile", "hover")),
+        motion_settle_s=float(attempt.get("motion_settle_s", 1.0)),
+        motion_speed_m_s=float(attempt.get("motion_speed_m_s", 0.75)),
+        motion_distance_m=float(attempt.get("motion_distance_m", 3.5)),
+        motion_entry_progress_m=float(attempt.get("motion_entry_progress_m", 0.75)),
+        motion_completion_progress_m=float(
+            attempt.get("motion_completion_progress_m", 2.5)
+        ),
         maximum_clock_uncertainty_ns=int(spec["maximum_clock_uncertainty_ns"]),
     )
 
