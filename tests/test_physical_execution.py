@@ -138,6 +138,18 @@ class PhysicalExecutionTests(unittest.TestCase):
             summary["classification_separation"]["smallest_airborne_height_m"],
             1.8,
         )
+        trajectory_stall = summary["freshness_exposure_by_cell"][
+            "fault-offboard-trajectory-stall"
+        ]
+        self.assertEqual(trajectory_stall["observed_window_count"], 8)
+        self.assertGreater(
+            trajectory_stall["maximum_distance_from_window_start_m"]["minimum"],
+            2.7,
+        )
+        self.assertEqual(
+            summary["interpretation"]["constant_trajectory_freshness_consequence"],
+            "NUMERIC_REFERENCE_DIFFERENCE_MASKED_BUT_UPDATE_STARVATION_EFFECT_OBSERVABLE",
+        )
 
 
 if __name__ == "__main__":

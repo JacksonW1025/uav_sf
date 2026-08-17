@@ -31,7 +31,7 @@
     "physical_metrics_form_oracle": false,
     "missing_physical_observation": "UNKNOWN",
     "interpolate_missing": false,
-    "constant_trajectory_target": "report freshness consequence as structurally masked, not harmless"
+    "constant_trajectory_target": "report the numeric stale-versus-fresh reference difference as masked, while measuring update-starvation motion separately"
   },
   "expected_outputs": [
     "input-manifest.json",

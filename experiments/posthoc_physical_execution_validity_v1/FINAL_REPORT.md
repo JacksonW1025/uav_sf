@@ -83,11 +83,15 @@ or evidence of a public PX4 requirement violation.
 
 Trajectory freshness has a different interpretation. The Stage A1 fixtures
 publish a constant position and leave velocity and acceleration unset. A stale
-trajectory target is therefore numerically identical to a fresh target. Motion
-seen later in a process-exit/fallback window can include recovery and landing;
-it does not identify the consequence of numerical setpoint staleness. The
-proper conclusion is `STRUCTURALLY_MASKED`, not "no physical consequence."
-Stage A2 must use a time-varying position target to remove this ambiguity.
+trajectory target is therefore numerically identical to a fresh target, so a
+reference-value comparison alone is structurally masked. Update starvation is
+not physically masked, however. All eight airborne
+`fault-offboard-trajectory-stall` traces show 2.704851--2.845607 m maximum
+displacement from the freshness-window start, dominated by vertical motion
+before target-authority revocation. This is the strongest physical signature
+in the frozen stall cells. Stage A2 still needs a time-varying position target
+to measure motion-relative lag and distinguish reference divergence from the
+already observable update-starvation response.
 
 ## Validity finding and next gate
 

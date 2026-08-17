@@ -13,6 +13,305 @@
       "inclusive_upper_bound_m": 1.801775932
     }
   },
+  "freshness_exposure_by_cell": {
+    "det-dynamic-trajectory-hold": {
+      "horizontal_displacement_m": {
+        "maximum": 0.073259643,
+        "median": 0.073259643,
+        "minimum": 0.073259643,
+        "p90_nearest_rank": 0.073259643
+      },
+      "maximum_distance_from_window_start_m": {
+        "maximum": 0.93259582,
+        "median": 0.93259582,
+        "minimum": 0.93259582,
+        "p90_nearest_rank": 0.93259582
+      },
+      "observed_window_count": 1,
+      "peak_absolute_vertical_speed_m_s": {
+        "maximum": 0.799057007,
+        "median": 0.799057007,
+        "minimum": 0.799057007,
+        "p90_nearest_rank": 0.799057007
+      },
+      "vertical_displacement_m": {
+        "maximum": 0.922534227,
+        "median": 0.922534227,
+        "minimum": 0.922534227,
+        "p90_nearest_rank": 0.922534227
+      }
+    },
+    "det-dynamic-trajectory-land": {
+      "horizontal_displacement_m": {
+        "maximum": 0.017894619,
+        "median": 0.017894619,
+        "minimum": 0.017894619,
+        "p90_nearest_rank": 0.017894619
+      },
+      "maximum_distance_from_window_start_m": {
+        "maximum": 0.932232365,
+        "median": 0.932232365,
+        "minimum": 0.932232365,
+        "p90_nearest_rank": 0.932232365
+      },
+      "observed_window_count": 1,
+      "peak_absolute_vertical_speed_m_s": {
+        "maximum": 0.797175646,
+        "median": 0.797175646,
+        "minimum": 0.797175646,
+        "p90_nearest_rank": 0.797175646
+      },
+      "vertical_displacement_m": {
+        "maximum": 0.916343451,
+        "median": 0.916343451,
+        "minimum": 0.916343451,
+        "p90_nearest_rank": 0.916343451
+      }
+    },
+    "fault-dynamic-process-exit": {
+      "horizontal_displacement_m": {
+        "maximum": 0.040755168,
+        "median": 0.034028002,
+        "minimum": 0.009934936,
+        "p90_nearest_rank": 0.040755168
+      },
+      "maximum_distance_from_window_start_m": {
+        "maximum": 0.9444463,
+        "median": 0.051061574,
+        "minimum": 0.030135925,
+        "p90_nearest_rank": 0.9444463
+      },
+      "observed_window_count": 8,
+      "peak_absolute_vertical_speed_m_s": {
+        "maximum": 0.828745544,
+        "median": 0.049731819,
+        "minimum": 0.024525212,
+        "p90_nearest_rank": 0.828745544
+      },
+      "vertical_displacement_m": {
+        "maximum": 0.943891287,
+        "median": 0.037235975,
+        "minimum": 0.028451204,
+        "p90_nearest_rank": 0.943891287
+      }
+    },
+    "fault-dynamic-registration-capacity": {
+      "horizontal_displacement_m": {
+        "maximum": 0.035663864,
+        "median": 0.035663864,
+        "minimum": 0.035663864,
+        "p90_nearest_rank": 0.035663864
+      },
+      "maximum_distance_from_window_start_m": {
+        "maximum": 0.940227505,
+        "median": 0.940227505,
+        "minimum": 0.940227505,
+        "p90_nearest_rank": 0.940227505
+      },
+      "observed_window_count": 1,
+      "peak_absolute_vertical_speed_m_s": {
+        "maximum": 0.799495757,
+        "median": 0.799495757,
+        "minimum": 0.799495757,
+        "p90_nearest_rank": 0.799495757
+      },
+      "vertical_displacement_m": {
+        "maximum": 0.939550877,
+        "median": 0.939550877,
+        "minimum": 0.939550877,
+        "p90_nearest_rank": 0.939550877
+      }
+    },
+    "fault-offboard-attitude-stall": {
+      "horizontal_displacement_m": {
+        "maximum": 0.046887872,
+        "median": 0.021377568,
+        "minimum": 0.008102382,
+        "p90_nearest_rank": 0.046887872
+      },
+      "maximum_distance_from_window_start_m": {
+        "maximum": 0.15208416,
+        "median": 0.049972282,
+        "minimum": 0.037104258,
+        "p90_nearest_rank": 0.15208416
+      },
+      "observed_window_count": 6,
+      "peak_absolute_vertical_speed_m_s": {
+        "maximum": 0.05815693,
+        "median": 0.010130365,
+        "minimum": 0.003281966,
+        "p90_nearest_rank": 0.05815693
+      },
+      "vertical_displacement_m": {
+        "maximum": 0.14467591,
+        "median": 0.031591192,
+        "minimum": -0.012058094,
+        "p90_nearest_rank": 0.14467591
+      }
+    },
+    "fault-offboard-body-rate-stall": {
+      "horizontal_displacement_m": {
+        "maximum": 0.077867536,
+        "median": 0.041263108,
+        "minimum": 0.031127783,
+        "p90_nearest_rank": 0.077867536
+      },
+      "maximum_distance_from_window_start_m": {
+        "maximum": 0.115380757,
+        "median": 0.107414607,
+        "minimum": 0.07785919,
+        "p90_nearest_rank": 0.115380757
+      },
+      "observed_window_count": 3,
+      "peak_absolute_vertical_speed_m_s": {
+        "maximum": 0.036802337,
+        "median": 0.033927992,
+        "minimum": 0.03088998,
+        "p90_nearest_rank": 0.036802337
+      },
+      "vertical_displacement_m": {
+        "maximum": 0.102727205,
+        "median": 0.082428202,
+        "minimum": 0.066025823,
+        "p90_nearest_rank": 0.102727205
+      }
+    },
+    "fault-offboard-process-exit": {
+      "horizontal_displacement_m": {
+        "maximum": 0.107449001,
+        "median": 0.070463395,
+        "minimum": 0.044576509,
+        "p90_nearest_rank": 0.107449001
+      },
+      "maximum_distance_from_window_start_m": {
+        "maximum": 1.167779551,
+        "median": 0.890674582,
+        "minimum": 0.759698104,
+        "p90_nearest_rank": 1.167779551
+      },
+      "observed_window_count": 8,
+      "peak_absolute_vertical_speed_m_s": {
+        "maximum": 1.928192616,
+        "median": 1.883734286,
+        "minimum": 1.835601568,
+        "p90_nearest_rank": 1.928192616
+      },
+      "vertical_displacement_m": {
+        "maximum": 1.165662304,
+        "median": 0.886901468,
+        "minimum": 0.755041629,
+        "p90_nearest_rank": 1.165662304
+      }
+    },
+    "fault-offboard-trajectory-stall": {
+      "horizontal_displacement_m": {
+        "maximum": 0.071185386,
+        "median": 0.049534873,
+        "minimum": 0.01162522,
+        "p90_nearest_rank": 0.071185386
+      },
+      "maximum_distance_from_window_start_m": {
+        "maximum": 2.845606911,
+        "median": 2.800399651,
+        "minimum": 2.704851024,
+        "p90_nearest_rank": 2.845606911
+      },
+      "observed_window_count": 8,
+      "peak_absolute_vertical_speed_m_s": {
+        "maximum": 1.926938891,
+        "median": 1.898534477,
+        "minimum": 1.814379454,
+        "p90_nearest_rank": 1.926938891
+      },
+      "vertical_displacement_m": {
+        "maximum": 2.845388517,
+        "median": 2.800109923,
+        "minimum": 2.704323933,
+        "p90_nearest_rank": 2.845388517
+      }
+    },
+    "timing-executor-after": {
+      "horizontal_displacement_m": {
+        "maximum": 0.046528378,
+        "median": 0.046528378,
+        "minimum": 0.046528378,
+        "p90_nearest_rank": 0.046528378
+      },
+      "maximum_distance_from_window_start_m": {
+        "maximum": 0.293838054,
+        "median": 0.293838054,
+        "minimum": 0.293838054,
+        "p90_nearest_rank": 0.293838054
+      },
+      "observed_window_count": 1,
+      "peak_absolute_vertical_speed_m_s": {
+        "maximum": 0.220741257,
+        "median": 0.220741257,
+        "minimum": 0.220741257,
+        "p90_nearest_rank": 0.220741257
+      },
+      "vertical_displacement_m": {
+        "maximum": 0.290130854,
+        "median": 0.290130854,
+        "minimum": 0.290130854,
+        "p90_nearest_rank": 0.290130854
+      }
+    },
+    "timing-executor-before-remediation": {
+      "horizontal_displacement_m": {
+        "maximum": 0.07614179,
+        "median": 0.07614179,
+        "minimum": 0.07614179,
+        "p90_nearest_rank": 0.07614179
+      },
+      "maximum_distance_from_window_start_m": {
+        "maximum": 0.284450267,
+        "median": 0.284450267,
+        "minimum": 0.284450267,
+        "p90_nearest_rank": 0.284450267
+      },
+      "observed_window_count": 1,
+      "peak_absolute_vertical_speed_m_s": {
+        "maximum": 0.220529303,
+        "median": 0.220529303,
+        "minimum": 0.220529303,
+        "p90_nearest_rank": 0.220529303
+      },
+      "vertical_displacement_m": {
+        "maximum": 0.271711111,
+        "median": 0.271711111,
+        "minimum": 0.271711111,
+        "p90_nearest_rank": 0.271711111
+      }
+    },
+    "timing-executor-near": {
+      "horizontal_displacement_m": {
+        "maximum": 0.072575619,
+        "median": 0.034103215,
+        "minimum": 0.010818419,
+        "p90_nearest_rank": 0.072575619
+      },
+      "maximum_distance_from_window_start_m": {
+        "maximum": 1.159139747,
+        "median": 1.139453271,
+        "minimum": 1.07802405,
+        "p90_nearest_rank": 1.159139747
+      },
+      "observed_window_count": 3,
+      "peak_absolute_vertical_speed_m_s": {
+        "maximum": 0.869226038,
+        "median": 0.860793173,
+        "minimum": 0.823335409,
+        "p90_nearest_rank": 0.869226038
+      },
+      "vertical_displacement_m": {
+        "maximum": 1.156865478,
+        "median": 1.139401913,
+        "minimum": 1.077484488,
+        "p90_nearest_rank": 1.156865478
+      }
+    }
+  },
   "freshness_exposure_by_setpoint_kind": {
     "attitude": {
       "horizontal_displacement_m": {
@@ -104,7 +403,7 @@
   "interpretation": {
     "changes_frozen_denominator": false,
     "changes_frozen_verdict": false,
-    "constant_trajectory_freshness_consequence": "STRUCTURALLY_MASKED",
+    "constant_trajectory_freshness_consequence": "NUMERIC_REFERENCE_DIFFERENCE_MASKED_BUT_UPDATE_STARVATION_EFFECT_OBSERVABLE",
     "non_airborne_traces_enter_future_physical_effect_estimates": false,
     "physical_metrics_are_a_fifth_oracle": false
   },

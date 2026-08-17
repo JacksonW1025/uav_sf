@@ -1,0 +1,142 @@
+{
+  "analysis_kind": "read_only_finding_consequence_triage",
+  "claim_boundary": {
+    "changes_stage_a1_result": false,
+    "freshness_windows_are_independent_defects": false,
+    "installation_is_px4_bug": false,
+    "physical_exposure_is_real_flight_risk_estimate": false
+  },
+  "dynamic_timeouts": {
+    "blocks_matched_a2_until_qualified": true,
+    "classification_counts": {
+      "CPP_REGISTERED_REQUESTER_MISSED_READINESS": 7,
+      "DISTINCT_POST_REGISTRATION_TIMEOUT": 1
+    },
+    "exact_dds_root_cause_proven": false,
+    "timeout_count": 8
+  },
+  "freshness": {
+    "airborne_observed_window_count": 41,
+    "primary_a2_hypothesis": {
+      "effect": "MOTION_RELATIVE_TRACKING_LAG_AND_RECOVERY",
+      "fault": "SETPOINT_STALL_HEALTHY",
+      "motion_context": "CONSTANT_ALTITUDE_STRAIGHT_TRANSLATION",
+      "reason": "Stage A1 already shows a repeatable update-starvation response; moving position references separate path-relative lag from the constant-reference response",
+      "setpoint_semantics": "TIME_VARYING_POSITION_ONLY"
+    },
+    "role_summaries": {
+      "INCIDENTAL_THRESHOLD_CROSSING": {
+        "maximum_command_age_ns": {
+          "maximum": 352057621,
+          "median": 226090665.5,
+          "minimum": 203974018,
+          "p90_nearest_rank": 352057621
+        },
+        "maximum_distance_from_window_start_m": {
+          "maximum": 1.159139747,
+          "median": 0.9364116625,
+          "minimum": 0.284450267,
+          "p90_nearest_rank": 1.159139747
+        },
+        "vertical_displacement_m": {
+          "maximum": 1.156865478,
+          "median": 0.931042552,
+          "minimum": 0.271711111,
+          "p90_nearest_rank": 1.156865478
+        },
+        "window_count": 8
+      },
+      "INJECTED_PROCESS_EXIT": {
+        "maximum_command_age_ns": {
+          "maximum": 1343238232,
+          "median": 1104610281.0,
+          "minimum": 1008107040,
+          "p90_nearest_rank": 1252126664
+        },
+        "maximum_distance_from_window_start_m": {
+          "maximum": 1.167779551,
+          "median": 0.7648188165,
+          "minimum": 0.030135925,
+          "p90_nearest_rank": 1.113813422
+        },
+        "vertical_displacement_m": {
+          "maximum": 1.165662304,
+          "median": 0.7616060005,
+          "minimum": 0.028451204,
+          "p90_nearest_rank": 1.112141877
+        },
+        "window_count": 16
+      },
+      "INJECTED_RETAINED_COMMAND": {
+        "maximum_command_age_ns": {
+          "maximum": 5064351066,
+          "median": 5032354053,
+          "minimum": 4974683349,
+          "p90_nearest_rank": 5064351066
+        },
+        "maximum_distance_from_window_start_m": {
+          "maximum": 0.15208416,
+          "median": 0.06609436,
+          "minimum": 0.037104258,
+          "p90_nearest_rank": 0.15208416
+        },
+        "vertical_displacement_m": {
+          "maximum": 0.14467591,
+          "median": 0.04826358,
+          "minimum": -0.012058094,
+          "p90_nearest_rank": 0.14467591
+        },
+        "window_count": 9
+      },
+      "INJECTED_UPDATE_STARVATION": {
+        "maximum_command_age_ns": {
+          "maximum": 5064078212,
+          "median": 5034673937.5,
+          "minimum": 5008175900,
+          "p90_nearest_rank": 5064078212
+        },
+        "maximum_distance_from_window_start_m": {
+          "maximum": 2.845606911,
+          "median": 2.800399651,
+          "minimum": 2.704851024,
+          "p90_nearest_rank": 2.845606911
+        },
+        "vertical_displacement_m": {
+          "maximum": 2.845388517,
+          "median": 2.800109923,
+          "minimum": 2.704323933,
+          "p90_nearest_rank": 2.845388517
+        },
+        "window_count": 8
+      }
+    }
+  },
+  "installation": {
+    "airborne_trace_count": 9,
+    "cell_counts": {
+      "det-offboard-attitude-land": 4,
+      "fault-offboard-attitude-stall": 7
+    },
+    "conservative_lower_bound_ns": {
+      "maximum": 683506093,
+      "median": 481771503,
+      "minimum": 300577854,
+      "p90_nearest_rank": 659343787
+    },
+    "observed_latency_ns": {
+      "maximum": 785003773,
+      "median": 583148303,
+      "minimum": 401748826,
+      "p90_nearest_rank": 760362384
+    },
+    "observer_profile_counts": {
+      "1": 11
+    },
+    "primary_root_cause_triage_target": true,
+    "robust_to_one_period_and_clock_count": 11,
+    "root_cause_status": "UNRESOLVED_PENDING_HIGH_RATE_REPRODUCTION",
+    "setpoint_path": "attitude",
+    "violation_trace_count": 11
+  },
+  "schema_version": "1.0"
+}

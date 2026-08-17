@@ -7,7 +7,7 @@ Current empirical claims: bounded Thor SITL findings in the final reports
 Formal execution environments: primary and supplemental Thor v1 identities
 Study state: Stage A1 minimal-mechanism motivation complete and frozen; Stage A2 blocked on physical-validity and runtime qualification
 Current work package: Stage A2 readiness and moving-workload Motivation evidence (Phases I--V below)
-Active phase: Phase II finding/consequence triage; Phase I physical audit complete
+Active phase: Phase III runtime and observation qualification; Phases I--II complete
 Paper state after this package: Section 6 Motivation Study complete; Section 7 Main Evaluation still pending
 ```
 
@@ -107,21 +107,21 @@ traces. It:
    windows without modifying a closed trace or evaluation;
 4. report continuous position, velocity, attitude, body-rate, exposure, and
    recovery measurements where the existing workload makes them identifiable;
-5. state that stale constant trajectory targets are physically masked by
-   design, while retained attitude/body-rate commands may still have an
-   observable signature.
+5. distinguish the masked numeric stale-versus-fresh reference difference from
+   the physically observable update-starvation response; retained
+   attitude/body-rate commands are reported separately.
 
 The repository artifact is a post-hoc study directory containing
 an analysis plan, input manifest, machine-readable summary, tests, and final
 report. It must not edit either Stage A1 formal study directory.
 
-## Phase II: run two distinct offline triage tracks
+## Phase II: run two distinct offline triage tracks — COMPLETE
 
 The root-cause and physical-consequence priorities are intentionally
 different.
 
 **Route/root-cause track.** All 11 observed installation violations are in the
-attitude setpoint path. Eight of them occur in traces that did become airborne,
+attitude setpoint path. Nine of them occur in traces that did become airborne,
 so the concentration cannot be dismissed as only the physical-precondition
 problem. Reconstruct request, activation, command-consumption, controller,
 allocator, and actuator-write timing. Classify the signature as an observer
@@ -130,17 +130,36 @@ SUT cause. Do not call it a PX4 bug without a qualified reproduction and
 public-spec or source-level grounding.
 
 **Physical-consequence track.** Freshness is the primary A2 exposure
-hypothesis. Constant position targets make stale and fresh numerical commands
-identical, so absence of trajectory deviation in Stage A1 is not evidence of
-harmlessness. Existing airborne attitude/body-rate traces can still be used to
-estimate retained-command drift. The output must select one A2 primary
-hypothesis before the A2 matrix is frozen.
+hypothesis. Constant position targets make stale and fresh numerical references
+identical, but Phase I shows that update starvation itself remains physically
+observable: all eight airborne trajectory-stall traces move approximately
+2.70--2.85 m during the freshness window. Existing airborne attitude/body-rate
+traces provide smaller retained-command drift signatures. Phase II must
+separate reference-value masking, update-starvation response, recovery/landing
+motion, and causal attribution before selecting the A2 primary hypothesis.
 
 The eight Dynamic External Mode timeouts outside the invalid RTL fixture also
 receive a separate infrastructure diagnosis. Seven share the signature that
 the C++ mode received its registration reply while the Python requester never
 recorded readiness. This is consistent with a one-shot discovery/reply race,
 but the exact DDS cause remains unproven until reproduced.
+
+The frozen triage is recorded in
+[`experiments/posthoc_finding_consequence_triage_v1/`](../experiments/posthoc_finding_consequence_triage_v1/).
+It localizes all 11 attitude installation signatures to the
+activation-to-command-consumption segment: observed complete installation is
+401.749--785.004 ms, while activation itself appears in 13.459--28.866 ms.
+Nine of these traces are airborne. All 11 remain beyond 300 ms after subtracting
+one 100 ms observation period and the registered clock uncertainty, but the
+source-level cause remains unresolved pending the high-rate qualification.
+
+The same triage separates 41 airborne freshness-exposure windows and selects
+the Stage A2 primary hypothesis: time-varying position-only straight
+translation with `SETPOINT_STALL_HEALTHY`, measuring motion-relative tracking
+lag and recovery. It also confirms seven
+`CPP_REGISTERED_REQUESTER_MISSED_READINESS` timeouts and one distinct
+post-registration timeout. The generated results and manifests reproduce
+byte-for-byte from an empty output directory.
 
 ## Phase III: qualify physical validity, Dynamic readiness, and observer sensitivity
 

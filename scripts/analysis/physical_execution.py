@@ -548,7 +548,7 @@ def analyze_record(
         ),
         "aligned_window_count": len(windows),
         "motion_identifiability": (
-            "CONSTANT_POSITION_TARGET_MASKS_NUMERIC_STALENESS"
+            "CONSTANT_POSITION_MASKS_REFERENCE_DIFFERENCE_NOT_UPDATE_STARVATION_EFFECT"
             if setpoint_kind == "trajectory"
             else "RETAINED_ATTITUDE_OR_RATE_COMMAND_CAN_CHANGE_PHYSICAL_STATE"
         ),
@@ -685,6 +685,33 @@ def summarize(
                 selected, "peak_horizontal_speed_m_s"
             ),
         }
+    freshness_by_cell: dict[str, Any] = {}
+    observed_airborne_freshness = [
+        item
+        for item in windows
+        if item["window_kind"] == "freshness_exposure"
+        and item["window_status"] == "OBSERVED"
+        and item["physical_execution_status"] == "AIRBORNE"
+    ]
+    for cell_id in sorted({item["cell_id"] for item in observed_airborne_freshness}):
+        selected = [
+            item for item in observed_airborne_freshness if item["cell_id"] == cell_id
+        ]
+        freshness_by_cell[cell_id] = {
+            "observed_window_count": len(selected),
+            "maximum_distance_from_window_start_m": _metric_distribution(
+                selected, "maximum_distance_from_window_start_m"
+            ),
+            "horizontal_displacement_m": _metric_distribution(
+                selected, "horizontal_displacement_m"
+            ),
+            "vertical_displacement_m": _metric_distribution(
+                selected, "vertical_displacement_m"
+            ),
+            "peak_absolute_vertical_speed_m_s": _metric_distribution(
+                selected, "peak_absolute_vertical_speed_m_s"
+            ),
+        }
     return {
         "schema_version": "1.0",
         "analysis_kind": "read_only_physical_execution_validity",
@@ -730,11 +757,14 @@ def summarize(
         },
         "window_summaries": window_summary,
         "freshness_exposure_by_setpoint_kind": freshness_by_setpoint,
+        "freshness_exposure_by_cell": freshness_by_cell,
         "interpretation": {
             "changes_frozen_verdict": False,
             "changes_frozen_denominator": False,
             "physical_metrics_are_a_fifth_oracle": False,
-            "constant_trajectory_freshness_consequence": "STRUCTURALLY_MASKED",
+            "constant_trajectory_freshness_consequence": (
+                "NUMERIC_REFERENCE_DIFFERENCE_MASKED_BUT_UPDATE_STARVATION_EFFECT_OBSERVABLE"
+            ),
             "non_airborne_traces_enter_future_physical_effect_estimates": False,
         },
     }

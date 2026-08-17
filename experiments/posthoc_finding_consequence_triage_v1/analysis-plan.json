@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "analysis_id": "posthoc-finding-consequence-triage-v1",
+  "analysis_kind": "read_only_finding_consequence_triage",
+  "paper_role": {
+    "primary_section": "6 Motivation Study",
+    "research_questions": ["RQ4", "RQ5"],
+    "changes_formal_claim": false
+  },
+  "tracks": {
+    "installation": {
+      "selection": "every frozen route_conformance/installation VIOLATION",
+      "purpose": "identify concentration, late stage, observer sensitivity, and source-level follow-up",
+      "root_cause_required_for_report": false
+    },
+    "freshness": {
+      "selection": "airborne freshness-exposure windows from the frozen physical audit",
+      "purpose": "separate injected update starvation, retained command, process exit, and incidental crossings"
+    },
+    "dynamic_timeouts": {
+      "selection": "all Dynamic External Mode TIMEOUT outcomes in the primary frozen ledger",
+      "purpose": "separate requester-readiness loss from other timeout behavior"
+    }
+  },
+  "rules": {
+    "read_only": true,
+    "change_stage_a1_result": false,
+    "promote_signature_to_bug": false,
+    "promote_simulation_effect_to_real_flight_risk": false,
+    "unresolved_cause": "retain explicitly",
+    "non_airborne_physical_effect": "exclude"
+  },
+  "expected_outputs": [
+    "input-manifest.json",
+    "installation-triage.jsonl",
+    "freshness-triage.jsonl",
+    "dynamic-timeout-triage.jsonl",
+    "summary.json",
+    "FINAL_REPORT.md"
+  ]
+}
