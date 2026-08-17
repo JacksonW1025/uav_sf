@@ -90,14 +90,26 @@ def _physical_execution_contract(raw: Path, plan: dict[str, Any]) -> dict[str, A
     entries = [item for item in lifecycle if item.get("kind") == "motion_phase_entered"]
     completions = [item for item in lifecycle if item.get("kind") == "motion_phase_completed"]
     faults = [item for item in lifecycle if item.get("kind") == "fault_detected"]
+    takeoff_events = [item for item in lifecycle if item.get("kind") == "physical_takeoff_ready"]
+    target_requests = [
+        item for item in lifecycle
+        if item.get("kind") == "transition_requested"
+        and item.get("target_route") == plan["transition"]["target_route"]
+    ]
     entry_progress = max((float(item.get("along_track_progress_m", 0.0)) for item in entries), default=0.0)
     completion_progress = max((float(item.get("along_track_progress_m", 0.0)) for item in completions), default=0.0)
     entry_ok = entry_progress >= float(physical["minimum_motion_entry_progress_m"])
     nominal = not bool(plan["transition"]["fault_expected"])
     completion_ok = (not nominal) or completion_progress >= float(physical["minimum_nominal_completion_progress_m"])
     fault_after_entry = (not faults) or bool(entries and min(int(item["received_monotonic_ns"]) for item in faults) >= min(int(item["received_monotonic_ns"]) for item in entries))
+    takeoff_before_transition = bool(
+        takeoff_events and target_requests
+        and min(int(item["received_monotonic_ns"]) for item in takeoff_events)
+        <= min(int(item["received_monotonic_ns"]) for item in target_requests)
+    )
     checks = {
         "sustained_takeoff": takeoff,
+        "takeoff_before_tested_transition": takeoff_before_transition,
         "motion_phase_entered": entry_ok,
         "nominal_profile_coverage": completion_ok,
         "fault_after_motion_entry": fault_after_entry,

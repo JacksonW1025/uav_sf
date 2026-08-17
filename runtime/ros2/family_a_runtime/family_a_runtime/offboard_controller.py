@@ -377,6 +377,7 @@ class OffboardController(Node):
         if (
             self._setpoint_kind != "trajectory"
             or self._source_route == "internal_rtl"
+            or self._workload_profile == "straight_line"
         ) and not self._ever_airborne:
             # Attitude/body-rate entry and an initial RTL source both require
             # an airborne public precondition. Establish it with ordinary PX4
@@ -431,7 +432,7 @@ class OffboardController(Node):
                 self._source_setup_sent_ns = now_ns
             return
         prestream_complete = elapsed >= self._prestream_s
-        if self._setpoint_kind != "trajectory":
+        if self._setpoint_kind != "trajectory" or self._workload_profile == "straight_line":
             prestream_complete = (
                 self._airborne_ns is not None
                 and now_ns - self._airborne_ns >= int(self._prestream_s * 1_000_000_000)
