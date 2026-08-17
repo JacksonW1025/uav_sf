@@ -4,12 +4,17 @@
     {
       "source": "PX4-Autopilot",
       "path": "patches/px4/route_observability/route_observability_topics.patch",
-      "sha256": "188fdb3c728170316d22f085d078d3facb9f31a375ff95e5d6105e5bde720d9d"
+      "sha256": "e82693ac117def925593425de87d23edae88789286814ddc5ac1555c87a164a1"
     },
     {
       "source": "PX4-Autopilot",
       "path": "patches/px4/route_observability/freshness_observability.patch",
       "sha256": "7cc9aa3a99ba34ebd75094e291a357e679ce7176d112687ed75d1bf4b2339141"
+    },
+    {
+      "source": "PX4-Autopilot",
+      "path": "patches/px4/route_observability/observer_profiles.patch",
+      "sha256": "13163e7a6b1e77c7cf301cb58d0fec93fd7f5b3d5f2c5b23e4a98131e406211b"
     },
     {
       "source": "px4_ros2_interface_lib",

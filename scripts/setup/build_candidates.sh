@@ -32,10 +32,10 @@ while (($#)); do
   esac
 done
 
-if [[ "${phase}" != "all" && "${phase}" != "source" && \
+if [[ "${phase}" != "all" && "${phase}" != "source" && "${phase}" != "px4" && \
       "${phase}" != "workspace" && "${phase}" != "upstream-workspace" && \
       "${phase}" != "project-workspace" ]]; then
-  echo "--phase must be one of: all, source, workspace, upstream-workspace, project-workspace" >&2
+  echo "--phase must be one of: all, source, px4, workspace, upstream-workspace, project-workspace" >&2
   exit 2
 fi
 if [[ "${observer_profile}" != "off" && "${observer_profile}" != "baseline" && \
@@ -87,6 +87,9 @@ if [[ "${phase}" == "all" || "${phase}" == "source" ]]; then
   cmake --build "${agent_source}/build-family-a" --parallel "${jobs}"
   cmake --install "${agent_source}/build-family-a"
 
+fi
+
+if [[ "${phase}" == "all" || "${phase}" == "source" || "${phase}" == "px4" ]]; then
   cd "${px4_source}"
   observer_define=""
   if [[ "${observer_profile}" == "off" ]]; then

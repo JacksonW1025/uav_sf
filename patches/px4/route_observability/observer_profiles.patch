@@ -1,0 +1,38 @@
+diff --git a/src/lib/route_observability/RouteObservability.hpp b/src/lib/route_observability/RouteObservability.hpp
+index 51ae465bff..52c4567890 100644
+--- a/src/lib/route_observability/RouteObservability.hpp
++++ b/src/lib/route_observability/RouteObservability.hpp
+@@ -27,5 +27,10 @@ inline void publish(uORB::PublicationMulti<route_observability_s> &publisher,
+ 		    uint8_t writer_id, uint64_t subject_timestamp, uint8_t instance = 0)
+ {
++#if defined(ROUTE_OBSERVABILITY_OFF)
++	(void)publisher; (void)sequence; (void)last_publication; (void)event_type; (void)source_id;
++	(void)topic_id; (void)writer_id; (void)subject_timestamp; (void)instance;
++	return;
++#endif
+ 	if (expected_period_us != 0 && hrt_elapsed_time(&last_publication) < expected_period_us) {
+ 		return;
+ 	}
+@@ -64,5 +69,10 @@ inline void publishRouteEpoch(uORB::PublicationMulti<route_observability_s> &publ
+ 			       int8_t executor_in_charge, bool armed)
+ {
++#if defined(ROUTE_OBSERVABILITY_OFF)
++	(void)publisher; (void)sequence; (void)route_epoch_id; (void)previous_nav_state; (void)new_nav_state;
++	(void)change_source; (void)registration_mode_id; (void)executor_in_charge; (void)armed;
++	return;
++#endif
+ 	route_observability_s observation{};
+ 	observation.timestamp = hrt_absolute_time();
+ 	observation.subject_timestamp = observation.timestamp;
+@@ -90,5 +100,11 @@ inline void publishLifecycle(uORB::PublicationMulti<route_observability_s> &publis
+ 			      uint64_t failed_check_mask = 0)
+ {
++#if defined(ROUTE_OBSERVABILITY_OFF)
++	(void)publisher; (void)sequence; (void)event_type; (void)component_name; (void)mode_id;
++	(void)executor_id; (void)arming_check_id; (void)result; (void)active_at_event;
++	(void)fallback_nav_state; (void)reason_code; (void)failed_check_mask;
++	return;
++#endif
+ 	route_observability_s observation{};
+ 	observation.timestamp = hrt_absolute_time();
+ 	observation.subject_timestamp = observation.timestamp;
