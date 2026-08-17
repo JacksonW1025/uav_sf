@@ -280,6 +280,12 @@ def _map_ulog(
             continue
         if event_type == EVENT_SETPOINT_CONSUMED:
             subject = int(raw["subject_timestamp"]) * 1000
+            if not bridge.valid_from_ns <= subject <= bridge.valid_until_ns:
+                # The first controller samples after collection begins can
+                # legitimately refer to a command published before the clock
+                # bridge has evidence.  They cannot be time-bound, so omit
+                # them just like downstream stages without a bound subject.
+                continue
             latest_subject_by_epoch[index] = subject
             result.append(
                 {
