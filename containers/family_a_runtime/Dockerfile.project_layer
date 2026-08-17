@@ -10,6 +10,7 @@ WORKDIR /opt/uav_sf
 # Only use a previously attested full Family A image. The immutable apt,
 # Python, source, patch, PX4, Agent, and upstream ROS layers are retained;
 # current project code and its ROS packages are rebuilt below.
+RUN rm -rf /opt/uav_sf/.github
 COPY . /opt/uav_sf
 RUN test -n "${REPOSITORY_COMMIT}" \
     && printf '%s\n' "${REPOSITORY_COMMIT}" > /opt/family_a_repository_revision \
