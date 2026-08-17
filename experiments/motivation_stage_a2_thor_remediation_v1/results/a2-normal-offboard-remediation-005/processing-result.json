@@ -1,0 +1,180 @@
+{
+  "attempt_id": "a2-normal-offboard-remediation-005",
+  "clock_bridge": {
+    "bridge_id": "clock-64d1cd63c814ac89",
+    "knots": [
+      [
+        10704000000,
+        1685863234878506
+      ],
+      [
+        11708000000,
+        1685864236603626
+      ],
+      [
+        12712000000,
+        1685865240654886
+      ],
+      [
+        13716000000,
+        1685866244204756
+      ],
+      [
+        14720000000,
+        1685867248870053
+      ],
+      [
+        15724000000,
+        1685868252983061
+      ],
+      [
+        16728000000,
+        1685869256356117
+      ],
+      [
+        17732000000,
+        1685870260111006
+      ],
+      [
+        18736000000,
+        1685871264345840
+      ],
+      [
+        19740000000,
+        1685872268128876
+      ],
+      [
+        20744000000,
+        1685873272268709
+      ],
+      [
+        21748000000,
+        1685874276084839
+      ],
+      [
+        22752000000,
+        1685875280382968
+      ],
+      [
+        23756000000,
+        1685876284424885
+      ],
+      [
+        24760000000,
+        1685877288325756
+      ],
+      [
+        25764000000,
+        1685878292147238
+      ],
+      [
+        26768000000,
+        1685879296224978
+      ],
+      [
+        27772000000,
+        1685880300127997
+      ],
+      [
+        28776000000,
+        1685881304432719
+      ],
+      [
+        29780000000,
+        1685882308224932
+      ],
+      [
+        30784000000,
+        1685883312379617
+      ],
+      [
+        31788000000,
+        1685884316172145
+      ],
+      [
+        32792000000,
+        1685885320178969
+      ],
+      [
+        33796000000,
+        1685886324078774
+      ],
+      [
+        34800000000,
+        1685887328574080
+      ],
+      [
+        35804000000,
+        1685888332039117
+      ],
+      [
+        36808000000,
+        1685889336206432
+      ],
+      [
+        37812000000,
+        1685890340134052
+      ]
+    ],
+    "rate_ratio": 0.9998987585214697,
+    "reference_analysis_ns": 1685877288325756,
+    "reference_source_ns": 24760000000,
+    "sample_count": 28,
+    "source_domain": "px4_boot_ns",
+    "uncertainty_ns": 1163070,
+    "valid_from_ns": 10704000000,
+    "valid_until_ns": 37812000000
+  },
+  "environment_attestation_digest": "sha256:6f75c8b5d29d78fa43d2e97e5a784b3210d5a7e3f1d903e3b8bd96c017f9910e",
+  "evaluation_status": "PASS",
+  "evidence_gate_status": "ADMISSIBLE",
+  "gazebo": {
+    "central_minimum": 0.998572789840121,
+    "median": 0.9999135074816028,
+    "minimum": 0.013958319411363712,
+    "sample_count": 375,
+    "status": "PASS"
+  },
+  "outcome": "ACCEPTED",
+  "physical_execution": {
+    "checks": {
+      "fault_after_motion_entry": true,
+      "motion_phase_entered": true,
+      "nominal_profile_coverage": true,
+      "sustained_takeoff": true,
+      "takeoff_before_tested_transition": true
+    },
+    "maximum_logged_completion_progress_m": 2.5116853304207325,
+    "maximum_logged_entry_progress_m": 0.7672246880829334,
+    "status": "PASS"
+  },
+  "plan_digest": "sha256:4ee73e1277f0abdbda3eec6077567da5fb70dbc6290c851c980964e1b4ae3fc9",
+  "plan_id": "a2-normal-offboard-remediation-005-plan",
+  "processing_error": null,
+  "raw_manifest_digest": "sha256:30f1b1eacd1949a59af9ff9342efa18fa58e885cf6d42a19d731bb8b87da915a",
+  "runtime_outcome": "ACCEPTED",
+  "schema_version": "1.0",
+  "study_id": "motivation-stage-a2-thor-remediation-v1",
+  "ulog": {
+    "dropouts": [],
+    "file_corruption": false,
+    "first_sequence_by_instance": {
+      "0": 0,
+      "1": 71,
+      "2": 71,
+      "3": 59
+    },
+    "route_observation_count": 12376,
+    "route_observation_instances": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "schema_version": "1.0",
+    "sequence_gaps": [],
+    "status": "PASS",
+    "ulog_end_us": 38112000,
+    "ulog_start_us": 5092000
+  }
+}

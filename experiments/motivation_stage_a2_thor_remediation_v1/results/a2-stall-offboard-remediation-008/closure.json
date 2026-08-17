@@ -1,0 +1,20 @@
+{
+  "attempt_id": "a2-stall-offboard-remediation-008",
+  "cell_id": "a2-stall-offboard-remediation",
+  "compact_evidence": {
+    "container_driver_result": "sha256:d15b096873b8a320dd54ddd77c0137ad701a3e0f4c351ea2733551ccea7fc9e8",
+    "evaluation": "sha256:f187d7a834605ce35a774e1f31fcc8d937c0d2420961ae82e5473ac3e0cf1ac0",
+    "processing_result": "sha256:1a5f47d6dd3e3856b44e7c2e664aa5fe6570afe8cc23d76e83586c1c091f41b8",
+    "raw_manifest": "sha256:e8cd1aeaf6f62ae1d1251602ffa50d7efbecc0e5713262b5060afc9681377e65",
+    "runtime_result": "sha256:cf323a88bc0df20a1ea862cb3fed25ed93652104c240e6c77bea17aa97a095fa",
+    "ulog_summary": "sha256:43944203838642e9add7fabfdefe3b34a0f77d3752050aa8e0c9435a237dcd3d"
+  },
+  "execution_model": "two_phase_barrier",
+  "image_id": "sha256:87d4a8f9f43031cc97b6b0c156fd7a9e099a8858b2c596305ae4efe55d8f449a",
+  "outcome": "ACCEPTED",
+  "plan_digest": "sha256:0a4dbcfea8bc0f74318d396466888d1e99b0bf0a7080f2c6f702de3856afabd3",
+  "processing_returncode": 0,
+  "runtime_driver_returncode": 0,
+  "schema_version": "1.0",
+  "study_id": "motivation-stage-a2-thor-remediation-v1"
+}

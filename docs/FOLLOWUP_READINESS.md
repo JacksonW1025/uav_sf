@@ -33,15 +33,16 @@ non-formal qualification result; it must not be selected by a formal matrix.
 See `experiments/concurrency_barrier_qualification/` for the frozen specs and
 decision record.
 
-## Planned Stage A2 boundary
+## Completed Stage A2 boundary
 
-The moving-workload realism bridge described by the V7 narrative is planned,
-not executable today. The current fixtures provide constant position,
-attitude, or body-rate targets and the already qualified fault, rejection,
-timing, and re-entry actions. Stage A2 still needs a shared moving mission for
-Legacy Offboard and Dynamic External Mode, motion-phase observations, safety
-qualification, a new frozen environment identity, and a separate formal
-matrix. Existing readiness does not authorize that study without those steps.
+The V7 moving-workload realism bridge is implemented and complete. Its shared
+position-only straight-line workload, motion-phase observations, physical
+validity contract, observer and safety qualification, frozen identities, and
+separate formal matrices are retained with the Stage A2 studies. The primary
+ledger remains insufficient; the independent remediation reached all four
+targets with 26/26 accepted and admissible launches. This closes Motivation
+Study execution but does not authorize a strategy comparison under the Stage
+A2 identity.
 
 ## Explicit limitation
 

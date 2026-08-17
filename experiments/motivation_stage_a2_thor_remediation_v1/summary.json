@@ -1,0 +1,120 @@
+{
+  "cell_status_counts": {
+    "COMPLETE": 4
+  },
+  "cells": {
+    "a2-normal-dynamic-remediation": {
+      "accepted": 5,
+      "accepted_target": 5,
+      "category": "deterministic",
+      "launch_cap": 10,
+      "launches": 5,
+      "outcomes": {
+        "ACCEPTED": 5
+      },
+      "status": "COMPLETE"
+    },
+    "a2-normal-offboard-remediation": {
+      "accepted": 5,
+      "accepted_target": 5,
+      "category": "deterministic",
+      "launch_cap": 10,
+      "launches": 5,
+      "outcomes": {
+        "ACCEPTED": 5
+      },
+      "status": "COMPLETE"
+    },
+    "a2-stall-dynamic-remediation": {
+      "accepted": 8,
+      "accepted_target": 8,
+      "category": "fault",
+      "launch_cap": 16,
+      "launches": 8,
+      "outcomes": {
+        "ACCEPTED": 8
+      },
+      "status": "COMPLETE"
+    },
+    "a2-stall-offboard-remediation": {
+      "accepted": 8,
+      "accepted_target": 8,
+      "category": "fault",
+      "launch_cap": 16,
+      "launches": 8,
+      "outcomes": {
+        "ACCEPTED": 8
+      },
+      "status": "COMPLETE"
+    }
+  },
+  "environment_id": "thor-r38.2.1-stage-a2-remediation-v1",
+  "evaluation_counts": {
+    "PASS": 10,
+    "VIOLATION": 16
+  },
+  "evidence_gate_counts": {
+    "ADMISSIBLE": 26
+  },
+  "formal_concurrency": 4,
+  "ledger": {
+    "accepted_count": 26,
+    "chain_head": "b748cb11289188b8692920951df7edd7c5acd3d569a1b3eddf2dc4a1a6e15515",
+    "closed_count": 26,
+    "digest": "sha256:d468519cb72d431b53919d3fbd10d8e8759db9dd9f12d0b0e24a6f1b326c640e",
+    "event_count": 78,
+    "launched_count": 26
+  },
+  "oracle_clause_counts": {
+    "freshness_lineage": {
+      "PASS": 36,
+      "VIOLATION": 16
+    },
+    "registration_contract": {
+      "NOT_APPLICABLE": 52
+    },
+    "route_conformance": {
+      "NOT_APPLICABLE": 26,
+      "PASS": 130
+    },
+    "successor_progression": {
+      "NOT_APPLICABLE": 114,
+      "PASS": 42
+    }
+  },
+  "outcome_counts": {
+    "ACCEPTED": 26
+  },
+  "raw_evidence_manifests": {
+    "a2-normal-dynamic-remediation-001": "sha256:8b3a6fb4f95a05c39c7a12c1e4c88889c36262fac578010c5df22a9c21c5fb17",
+    "a2-normal-dynamic-remediation-002": "sha256:07737e663dbefbefe02639531a60931e6b23601b9f3a8f398db8f2598866adbd",
+    "a2-normal-dynamic-remediation-003": "sha256:cf8044d076d24a8f7741f6ff0ece7a7df023a8f58cd9cf553c833361d306c089",
+    "a2-normal-dynamic-remediation-004": "sha256:7d268831734f678d0117dfb0ece2a5b29acba3cfba2d49f65dd4f8ef3ee16347",
+    "a2-normal-dynamic-remediation-005": "sha256:e220959da40ad41510de59657718115d61c4b05bc3fa1253b4e641464eebc313",
+    "a2-normal-offboard-remediation-001": "sha256:f05db8cc934c657562d35f07bb10ac38f4660c1f5ab4a715d6cd2e830cd1abe4",
+    "a2-normal-offboard-remediation-002": "sha256:ac6e924838a9a677b1a91e28686dd74d44beecb262505cd2933a7649ba935f3c",
+    "a2-normal-offboard-remediation-003": "sha256:ccc3f5cd68a9f2574d42ff9bfb3b43ef1c76bd0bdac3f92434e37faa826c59da",
+    "a2-normal-offboard-remediation-004": "sha256:978cc748aa75fe7a28ee76ecde3aa3157fe077e5353ffb4fb99c6027d57069dc",
+    "a2-normal-offboard-remediation-005": "sha256:30f1b1eacd1949a59af9ff9342efa18fa58e885cf6d42a19d731bb8b87da915a",
+    "a2-stall-dynamic-remediation-001": "sha256:02edda84eecfcb2998ebda53511ceb00961e21f4491a04350519545bea186703",
+    "a2-stall-dynamic-remediation-002": "sha256:2a61e71ab46fd33da953814db06d1ca4335c685e4045cf3e71615e3e992dce62",
+    "a2-stall-dynamic-remediation-003": "sha256:1a2a61163c89e634b5e898313d94543977f0a138d88e6944a52b53ae423d7b19",
+    "a2-stall-dynamic-remediation-004": "sha256:67b4e11ff126f377b620e043aa684f4638bbfad92c556ec2360dbfe0d8946d77",
+    "a2-stall-dynamic-remediation-005": "sha256:969eecd6c28f300a489a8eeb6cc5f48a42b68746027728792f6eba3aea99ef5f",
+    "a2-stall-dynamic-remediation-006": "sha256:5acebce40c5f64f2b295f97098e2143c3e1c3dceca0eb166c75c7e04d0ae020a",
+    "a2-stall-dynamic-remediation-007": "sha256:073ffda8271623484dcbdac75607121bd0fe5c7aab50184962d9e17b61a9c0e9",
+    "a2-stall-dynamic-remediation-008": "sha256:9bfd4a61c8d95bcae57bba740df4467629c773d3a238b4bef49775219bee8800",
+    "a2-stall-offboard-remediation-001": "sha256:1229d8ddb01f802dafd0256ac663ad18f295d9fad2196b9559cb72c44104856a",
+    "a2-stall-offboard-remediation-002": "sha256:fd0b374b3863a18a0113e8256380f64af6dd75d7823d5d3172618ec4fca5bb4d",
+    "a2-stall-offboard-remediation-003": "sha256:febc9f50395cff4bb24d16c6335480c055429317f8d6a7248b658443ca100bd4",
+    "a2-stall-offboard-remediation-004": "sha256:095a13feb7fd36c09ac37aa2eda5e296961e84fc492a581c0535a5661b81c8b5",
+    "a2-stall-offboard-remediation-005": "sha256:22ace4fcc1378f15b8083b4b28ac57ea8d6332a9d2d3ac417a1e825eeb32f7ea",
+    "a2-stall-offboard-remediation-006": "sha256:5ee9b84cbab5c464c6d489308fe5ef016bdd1ca8843f57bbdcc0156df7fa174c",
+    "a2-stall-offboard-remediation-007": "sha256:779d11aba808f8ab781d79a2c0ed1cf06b482f1761a643dbf291019be54b385e",
+    "a2-stall-offboard-remediation-008": "sha256:e8cd1aeaf6f62ae1d1251602ffa50d7efbecc0e5713262b5060afc9681377e65"
+  },
+  "repository_revision": "aee070050e1dd43842df605e3b5d3b073a48904e",
+  "schema_version": "1.0",
+  "study_id": "motivation-stage-a2-thor-remediation-v1",
+  "study_status": "COMPLETE"
+}

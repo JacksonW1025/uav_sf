@@ -20,10 +20,11 @@ state-aware is rejected until a study-specific live action backend applies the
 selected actions and records that schedule. A strategy label alone is never
 treated as execution evidence.
 
-The existing official-sequence fixtures use constant position, attitude, or
-body-rate targets. The V7 Stage A2 moving workload is planned but not
-implemented or qualified. It requires a separate public-action fixture and
-preregistration; it is not implied by general official-sequence support.
+The official-sequence fixtures include constant position, attitude, and
+body-rate targets plus the qualified Stage A2 position-only straight-line
+workload. Stage A2 uses a separate public-action fixture, physical-validity
+contract, preregistration, identities, ledger, and denominator. Its completion
+does not imply that bounded-random or state-aware schedules are live.
 
 ## Collection
 

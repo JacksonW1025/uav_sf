@@ -1,0 +1,127 @@
+{
+  "file_count": 24,
+  "files": [
+    {
+      "path": "external-mode.registration.json",
+      "sha256": "0f6bbb813f071fd606a028d4e1035112e532631ebfdd20c53903b50d711ec938",
+      "size_bytes": 136
+    },
+    {
+      "path": "external_mode.stderr.log",
+      "sha256": "de685d1f49437f431f7adec2169ca2eb96ecd67c188277ba4d1199e49e79efc5",
+      "size_bytes": 1855
+    },
+    {
+      "path": "external_mode.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "external_mode_requester.stderr.log",
+      "sha256": "aab38ac2e31cde5530b20b770b14694c6cfdf9dbb5669b1c44e28000b3980e4d",
+      "size_bytes": 300
+    },
+    {
+      "path": "external_mode_requester.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "gazebo.clock.jsonl",
+      "sha256": "0523dc508998389d032962d86ed139df71eb2143f3ffead5fa9a9291261a0fa3",
+      "size_bytes": 1936178
+    },
+    {
+      "path": "gazebo.stderr.log",
+      "sha256": "72bc4c7252923c3e45539c67f7ef9b0b21fcb56c7d88a4dddc5d88c992ed5d1c",
+      "size_bytes": 1361
+    },
+    {
+      "path": "gazebo.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "gazebo_clock_sidecar.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "gazebo_clock_sidecar.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "gazebo_stats.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "gazebo_stats.stdout.log",
+      "sha256": "0dea3675007068198e4619cfca10a7f756e6e5cbfd0127e799ed3a0b423bdd8c",
+      "size_bytes": 61321
+    },
+    {
+      "path": "px4.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "px4.stdout.log",
+      "sha256": "6502e2d1b3819321d6925aff05e080f7ef69e07692ba29ee7f934779685ccc9d",
+      "size_bytes": 6372
+    },
+    {
+      "path": "px4.ulg",
+      "sha256": "0f8300143b6da5093eceb9eb24ab0f3c2210b45fe6557421c01d587d968eb96b",
+      "size_bytes": 8344563
+    },
+    {
+      "path": "runner.lifecycle.jsonl",
+      "sha256": "90d79d45cc5ae67205bbc2c2fb6572731ee49b359ca7f8fb044cda85f21ea4bc",
+      "size_bytes": 3735
+    },
+    {
+      "path": "safety_supervisor.stderr.log",
+      "sha256": "4ed07d4af33458cc5c224c59409e57287405645c135f5db06cd6f5e7dcc94679",
+      "size_bytes": 1604
+    },
+    {
+      "path": "safety_supervisor.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "telemetry.sidecar.jsonl",
+      "sha256": "7a38038a4135e50297eda33af15669052cfc4d9dc4353a48e32c31f743f90a55",
+      "size_bytes": 1921514
+    },
+    {
+      "path": "telemetry_sidecar.stderr.log",
+      "sha256": "8c9973d41d81bd37e22b6abbbc41b62702bca5b72e6dd494f6022340f767938c",
+      "size_bytes": 2427
+    },
+    {
+      "path": "telemetry_sidecar.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "workload.lifecycle.jsonl",
+      "sha256": "9a0da517647eedb1d1e2cff4efd4db50e0ba0063de3310a6e7f6125b5ac9bcd8",
+      "size_bytes": 2881
+    },
+    {
+      "path": "xrce_agent.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "xrce_agent.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    }
+  ],
+  "root_name": "raw",
+  "schema_version": "1.0"
+}

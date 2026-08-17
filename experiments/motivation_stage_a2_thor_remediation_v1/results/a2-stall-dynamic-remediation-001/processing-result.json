@@ -1,0 +1,178 @@
+{
+  "attempt_id": "a2-stall-dynamic-remediation-001",
+  "clock_bridge": {
+    "bridge_id": "clock-1375e41c3c07f478",
+    "knots": [
+      [
+        10600000000,
+        1685641759841840
+      ],
+      [
+        11604000000,
+        1685642760297432
+      ],
+      [
+        12608000000,
+        1685643764152913
+      ],
+      [
+        13612000000,
+        1685644768182904
+      ],
+      [
+        14616000000,
+        1685645772271849
+      ],
+      [
+        15620000000,
+        1685646776684136
+      ],
+      [
+        16624000000,
+        1685647780939682
+      ],
+      [
+        17628000000,
+        1685648784191932
+      ],
+      [
+        18632000000,
+        1685649788328848
+      ],
+      [
+        19636000000,
+        1685650792226784
+      ],
+      [
+        20640000000,
+        1685651796312089
+      ],
+      [
+        21644000000,
+        1685652800294071
+      ],
+      [
+        22648000000,
+        1685653804742423
+      ],
+      [
+        23652000000,
+        1685654808298765
+      ],
+      [
+        24656000000,
+        1685655812670062
+      ],
+      [
+        25660000000,
+        1685656816270812
+      ],
+      [
+        26664000000,
+        1685657820792126
+      ],
+      [
+        27668000000,
+        1685658824222997
+      ],
+      [
+        28672000000,
+        1685659828271996
+      ],
+      [
+        29676000000,
+        1685660832201709
+      ],
+      [
+        30680000000,
+        1685661836280505
+      ],
+      [
+        31684000000,
+        1685662840851098
+      ],
+      [
+        32688000000,
+        1685663844671839
+      ],
+      [
+        33692000000,
+        1685664848182126
+      ],
+      [
+        34696000000,
+        1685665852507089
+      ],
+      [
+        35700000000,
+        1685666856776951
+      ],
+      [
+        36704000000,
+        1685667860584950
+      ]
+    ],
+    "rate_ratio": 0.999875234063745,
+    "reference_analysis_ns": 1685654808298765,
+    "reference_source_ns": 23652000000,
+    "sample_count": 27,
+    "source_domain": "px4_boot_ns",
+    "uncertainty_ns": 1699944,
+    "valid_from_ns": 10600000000,
+    "valid_until_ns": 36704000000
+  },
+  "environment_attestation_digest": "sha256:6f75c8b5d29d78fa43d2e97e5a784b3210d5a7e3f1d903e3b8bd96c017f9910e",
+  "evaluation_status": "VIOLATION",
+  "evidence_gate_status": "ADMISSIBLE",
+  "gazebo": {
+    "central_minimum": 0.9986061954027666,
+    "median": 0.9998890123196326,
+    "minimum": 0.01360296884250869,
+    "sample_count": 366,
+    "status": "PASS"
+  },
+  "outcome": "ACCEPTED",
+  "physical_execution": {
+    "checks": {
+      "fault_after_motion_entry": true,
+      "motion_phase_entered": true,
+      "nominal_profile_coverage": true,
+      "sustained_takeoff": true,
+      "takeoff_before_tested_transition": true
+    },
+    "maximum_logged_completion_progress_m": 2.5107401376590133,
+    "maximum_logged_entry_progress_m": 0.7663074498996139,
+    "status": "PASS"
+  },
+  "plan_digest": "sha256:5a73b064595df9d3403efed30e4a471e64f7d530919ad140574f7134c0949e72",
+  "plan_id": "a2-stall-dynamic-remediation-001-plan",
+  "processing_error": null,
+  "raw_manifest_digest": "sha256:02edda84eecfcb2998ebda53511ceb00961e21f4491a04350519545bea186703",
+  "runtime_outcome": "ACCEPTED",
+  "schema_version": "1.0",
+  "study_id": "motivation-stage-a2-thor-remediation-v1",
+  "ulog": {
+    "dropouts": [],
+    "file_corruption": false,
+    "first_sequence_by_instance": {
+      "0": 0,
+      "1": 80,
+      "2": 80,
+      "3": 67,
+      "4": 0
+    },
+    "route_observation_count": 12066,
+    "route_observation_instances": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "schema_version": "1.0",
+    "sequence_gaps": [],
+    "status": "PASS",
+    "ulog_end_us": 37212000,
+    "ulog_start_us": 5052000
+  }
+}

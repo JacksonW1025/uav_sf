@@ -40,10 +40,10 @@ is recorded honestly and cannot be promoted to an empirical result.
 The current Thor runtime can directly execute new official-sequence matrices
 composed from the existing live fixture semantics: the retained constant
 trajectory, attitude, body-rate, fault, rejection, adjacent-request, and
-re-entry actions. The planned Stage A2 moving workload is not one of those
-implemented fixtures; it needs a new public-action workload, motion-context
-observations, qualification, and its own preregistered plan before formal
-execution.
+re-entry actions, plus the qualified Stage A2 position-only straight-line
+workload. Stage A2 has its own completed preregistration, identities, ledgers,
+physical analysis, and denominator; those artifacts do not authorize a new
+study or a different generation strategy.
 
 Bounded-random and state-aware policy selection can be preregistered and tested
 offline, but their live PX4 action backend is not yet implemented. The formal

@@ -55,9 +55,9 @@ Repository additions include the complete ARM64 runtime image, exact direct and
 resolved package manifests, source/build verification, ROS runtime packages,
 public transition fixtures, ULog extraction and integrity checks, clock-domain
 closure, Evidence Gate integration, safety/cleanup supervision, isolation,
-formal accounting, campaign scheduling, concurrency qualification, and the two
-Thor evidence studies. Raw evidence remains in ignored `runs/`; only digests and
-compact results are tracked.
+formal accounting, campaign scheduling, concurrency qualification, the two
+Stage A1 studies, and the two separate Stage A2 studies. Raw evidence remains
+in ignored `runs/`; only digests and compact results are tracked.
 
 The campaign scheduler now separates each parallel batch into a live phase
 and an offline evidence-processing phase. A barrier proves that every live
@@ -82,6 +82,16 @@ evidence sets. Accepted traces contain 94 overall Oracle passes and 57 overall
 Oracle violations. All 200 retained ULogs passed the registered integrity and
 RouteObservability gap checks.
 
+Stage A2 then used a separately qualified position-only straight-line
+workload. Its primary study closed 51 launches but remains
+`MEASUREMENT_INSUFFICIENT` because a trace-closure defect prevented three cells
+from reaching target. An independent remediation changed only that evidence
+rule and the public takeoff-before-transition obligation, then used a new
+image, environment, seeds, ledger, and denominator. It closed 26/26 launches
+as accepted and admissible: 10 normal PASS and 16 deliberate freshness
+VIOLATION. These Stage A2 counts remain separate from the Stage A1
+`200 / 151 / 94 / 57` accounting.
+
 The V7 narrative documents a separate prior Orin evidence lineage, but no
 earlier-device evidence artifact is imported into, numerically compared inside,
 or counted in the Thor formal corpus. Those source artifacts are not retained
@@ -91,19 +101,17 @@ evidence.
 ## Readiness and remaining risks
 
 The locked container, build path, evidence pipeline, formal accounting, stable
-parallel execution, and existing official-sequence fixtures are ready for a
-new matrix using their current semantics. The planned Stage A2 moving workload
-still needs a new live fixture, motion-context observations, qualification,
-and separate preregistration. A later state-aware study also needs its own
+parallel execution, and existing official-sequence fixtures include the
+completed Stage A2 moving workload. A later state-aware study still needs its own
 cells, seeds, targets, caps, hypotheses, and live action backend. Strategy
 selection is implemented, but it is not yet wired to PX4 execution; formal
-validation fails closed instead of treating the label as behavior. No Stage A2
-or state-aware formal attempt is yet directly runnable, and no later empirical
-claim is implied.
+validation fails closed instead of treating the label as behavior. No
+state-aware formal attempt is yet directly runnable, and no Section 7
+empirical claim is implied.
 
 Known bounded risks are the observed route/freshness/successor violations, the
-20 primary observability rejections, the one diagnosed live-JSONL race in the
-primary environment, and the fact that claims cover only ARM64 Thor PX4 SITL,
-`gz_x500`, headless Gazebo Harmonic, and the Stage A1 constant-target motion
-context. Hardware-in-the-loop, real flight, and the planned Stage A2 moving
-workload remain outside the completed evidence.
+Stage A1 primary observability rejections, the diagnosed live-JSONL race, the
+closed insufficient Stage A2 primary study, and the fact that claims cover only
+ARM64 Thor PX4 SITL, `gz_x500`, and headless Gazebo Harmonic. Stage A2 adds one
+bounded straight-line context; hardware-in-the-loop and real flight remain
+outside the completed evidence.

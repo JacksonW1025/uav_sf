@@ -1,0 +1,20 @@
+{
+  "attempt_id": "a2-stall-dynamic-remediation-004",
+  "cell_id": "a2-stall-dynamic-remediation",
+  "compact_evidence": {
+    "container_driver_result": "sha256:cd0a6e98aef9a00865b5f62a46e5bb4cae385fae70ba45446dcef18741e820e1",
+    "evaluation": "sha256:2e7b5045dab4f525ca3c597910774e3873e179a945ebe439fb77307963e9ba6a",
+    "processing_result": "sha256:63d88f61ca443f76045b54d640acb164ee7a8d10c09b89559478ff53a63d3ea7",
+    "raw_manifest": "sha256:67b4e11ff126f377b620e043aa684f4638bbfad92c556ec2360dbfe0d8946d77",
+    "runtime_result": "sha256:27bfa494b13715fed8f8fb30c4b951fea0bbaebebc32b3a08ca09eb0b188f361",
+    "ulog_summary": "sha256:86b558e77b37ce2589f9c42c03b355b22f2e818f6da30242a222a122a7ca2bbf"
+  },
+  "execution_model": "two_phase_barrier",
+  "image_id": "sha256:87d4a8f9f43031cc97b6b0c156fd7a9e099a8858b2c596305ae4efe55d8f449a",
+  "outcome": "ACCEPTED",
+  "plan_digest": "sha256:1a7137f86c5207d118448486724bf4d2296dfd5b499e3b6d9b5997302bd51baf",
+  "processing_returncode": 0,
+  "runtime_driver_returncode": 0,
+  "schema_version": "1.0",
+  "study_id": "motivation-stage-a2-thor-remediation-v1"
+}

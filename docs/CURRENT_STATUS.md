@@ -1,14 +1,14 @@
 # Current status
 
 ```text
-Formal experiment attempts: 200
+Formal Thor launches retained across completed and closed studies: 277
 Retained historical results: 0
 Current empirical claims: bounded Thor SITL findings in the final reports
-Formal execution environments: primary and supplemental Thor v1 identities
-Study state: Stage A1 minimal-mechanism motivation complete and frozen; Stage A2 preregistered and ready for formal execution
-Current work package: Stage A2 readiness and moving-workload Motivation evidence (Phases I--V below)
-Active phase: Phase V formal matched Stage A2; Phases I--IV complete
-Paper state after this package: Section 6 Motivation Study complete; Section 7 Main Evaluation still pending
+Formal execution environments: Stage A1 primary/supplemental and Stage A2 primary/remediation Thor identities
+Study state: Stage A1 frozen; Stage A2 complete through an independent remediation, with its insufficient primary ledger retained
+Completed work package: Stage A2 readiness and moving-workload Motivation evidence (Phases I--V below)
+Active phase: Phase VI live strategy backends and fixed-budget comparison
+Paper state: Section 6 Motivation Study complete; Section 7 Main Evaluation pending
 ```
 
 Available today: the Family A route model, normalized event contracts,
@@ -32,20 +32,30 @@ source artifacts are not retained on `origin/main`, it is not included in the
 Thor counts above, and exact reuse requires separately supplied provenance and
 evidence.
 
+Stage A2 adds 77 closed formal launches under two separate studies. Its primary
+study remains `MEASUREMENT_INSUFFICIENT` at 51 launches: 18 accepted, 31
+observability-rejected, and two inconclusive. The independent remediation
+closed 26/26 launches as accepted and admissible, reaching all four frozen
+targets without modifying the primary ledger. Its 10 normal traces are overall
+PASS and its 16 deliberate healthy-stall traces are overall VIOLATION only on
+freshness. Counts are reported per study and are not pooled into the Stage A1
+`200 / 151 / 94 / 57` result.
+
 The campaign now separates live batches from offline evidence processing.
 Four-way remains the qualified formal concurrency after a non-formal 4/5-way
 comparison; five-way was not promoted and no new six-way trial was run. The
 locked environment and campaign entry are ready for a separately preregistered
 official-sequence experiment using the existing live fixture semantics. The
-planned Stage A2 moving workload still needs its live fixture, observation
-contract, qualification, and separate preregistration. State-aware policy
-selection is not yet connected to the live PX4 action backend and therefore
-fails closed; no later study or empirical claim is implied.
+Stage A2 now has its own implemented fixture, observation contract,
+qualification, preregistration, formal evidence, physical analysis, and final
+report. State-aware policy selection is not yet connected to the live PX4
+action backend and therefore fails closed; no Section 7 result or empirical
+search-effectiveness claim is implied.
 
-## Immediate evidence-quality finding
+## Resolved Stage A2 evidence-quality prerequisite
 
 A completed read-only, digest-bound audit of the frozen telemetry found a
-physical execution-validity issue that must be addressed before any new formal study.
+physical execution-validity issue that was addressed before Stage A2 formal execution.
 Twelve of the 151 admissible Stage A1 evidence sets reached no more than
 0.08 m above their local-position origin. All 12 belong to the attitude or
 body-rate Offboard cells; three have an overall `PASS` and nine have an
@@ -62,8 +72,8 @@ ground." Consequently:
 
 - the 12 attempts remain part of the Stage A1 result under its frozen plan;
 - they must be reported separately in any post-hoc physical analysis;
-- Stage A2 may not start until its plan and Gate require sustained takeoff and
-  motion-phase completion;
+- Stage A2 was not allowed to start until its plan and Gate required sustained
+  takeoff and motion-phase completion;
 - failed physical preconditions must yield invalid/inconclusive execution,
   never an Oracle `PASS` or `VIOLATION`.
 
@@ -73,9 +83,9 @@ It records the analysis plan, input manifest, exact attempts, aligned physical
 windows, telemetry digests, generated summary, tests, and interpretation
 limits. Reproduction from an empty output directory is byte-identical.
 
-## Current work package and paper placement
+## Completed evidence package and current paper placement
 
-The current work package is **Phases I--V: Stage A2 readiness and the
+The completed evidence package is **Phases I--V: Stage A2 readiness and the
 moving-workload Motivation study**. It belongs primarily to paper Section 6,
 `Motivation Study`. Infrastructure qualification also updates Section 5,
 `Implementation`, and the corresponding threats-to-validity discussion. It
@@ -90,9 +100,10 @@ does not implement or evaluate the paper's core state-aware generation claim.
 | Phase V: formal matched Stage A2 | Section 6; chiefly RQ5, with bounded support for RQ1/RQ4 | Test whether moving context changes applicable contract states, signatures, or interpretable physical consequences | Does not compare generation strategies or establish a general mechanism safety ranking |
 | Phase VI: live backends and fixed-budget comparison | Sections 4 and 7; RQ2/RQ3 | Establish the prospective C6 method contribution and later C7 benchmark | This is the next work package, not part of Stage A2 completion |
 
-Thus, completing Phases I--V closes the paper's Motivation Study. Only
-completing Phase VI and its confirmation/ablation work can support the state-aware method
-claims in the Main Evaluation.
+Phases I--V close the paper's Motivation Study. The current Phase VI package
+belongs to Sections 4 and 7. Only completing its live strategies, fair
+fixed-budget comparison, and confirmation/ablation work can support the
+state-aware method claims in the Main Evaluation.
 
 ## Phase I: freeze a physical-execution audit before changing runtime behavior — COMPLETE
 
@@ -270,7 +281,7 @@ runtime-accepted, entered motion at 0.752--0.768 m, recorded at least 2.501 m
 coverage, and completed terminal cleanup. Formal execution is therefore
 authorized only under the frozen matrix.
 
-## Phase V: execute the minimal matched Stage A2
+## Phase V: execute the minimal matched Stage A2 — COMPLETE
 
 The first A2 workload is deliberately simple and interpretable:
 
@@ -302,16 +313,44 @@ recovery after successor installation. It is hash-bound to the formal inputs
 and trace but remains separate from the four correctness Oracles; it does not
 become a fifth Oracle or change the Stage A1 thresholds.
 
-The official A2 workload should pass through the same generic
-decision/schedule/action/request/effect executor that later strategies will
-use. This makes A2 the first live backend vertical slice without turning A2
-itself into a strategy comparison.
+The official A2 workload uses the same workload and public-action contract in
+both mechanisms. Its mechanism-specific runtime remains the executable
+baseline; Phase VI must add the generic
+decision/schedule/action/request/effect layer before either later strategy is
+allowed into a formal matrix.
 
-## Required end state of this work package
+The frozen primary execution closed at 51 launches but could not reach three
+cell targets because 31 traces hit a command-subject clock-closure defect; it
+remains permanently `MEASUREMENT_INSUFFICIENT`. A separately preregistered
+remediation changed only that evidence closure rule and the public
+takeoff-before-transition fixture obligation, then used a new image,
+environment, seeds, ledger, and denominator.
+
+The remediation closed 26/26 formal launches as `ACCEPTED` and
+`ADMISSIBLE`: normal Legacy Offboard and Dynamic External Mode both reached
+5/5 overall PASS, while both healthy-stall cells reached 8/8 overall VIOLATION.
+All 16 violations are the deliberately exercised freshness clause; all
+applicable route and successor clauses pass. Thirteen same-seed mechanism
+pairs are complete and agree on Oracle status.
+
+The moving task makes the physical effect identifiable without manufacturing
+a flyaway. Normal traces end at median x=3.575 m for Legacy Offboard and
+3.581 m for Dynamic External Mode. Healthy-stall traces freeze the position
+reference at 3.0 m and end at median x=3.041 m and 3.028 m, leaving median
+shortfalls of 0.459 m and 0.472 m relative to the complete 3.5 m profile. They
+travel a median 1.033 m and 1.012 m after the scheduled stall boundary before
+stabilizing at that retained target. The paired differences are small and no
+mechanism-superiority threshold was registered.
+
+The result therefore adds bounded physical interpretability, but no new
+violation class and no general PX4 defect claim. The complete record is in
+[`experiments/motivation_stage_a2_thor_remediation_v1/`](../experiments/motivation_stage_a2_thor_remediation_v1/).
+
+## Achieved end state of this work package
 
 ### Repository state
 
-When Phases I--V are complete, the repository must contain:
+With Phases I--V complete, the repository contains:
 
 - untouched Stage A1 primary and supplemental plans, ledgers, compact results,
   thresholds, statuses, and `200 / 151 / 94 / 57` accounting;
@@ -330,13 +369,13 @@ When Phases I--V are complete, the repository must contain:
   environment identity, preregistration, matrix, hash-chained ledger, compact
   evidence, matched-differential result, physical-consequence result, and final
   report;
-- a generic official-sequence action-executor vertical slice ready to accept a
-  later bounded-random schedule;
+- a common official-sequence workload and public-action vertical slice for both
+  mechanisms, with the generic strategy executor explicitly left to Phase VI;
 - a clean worktree and a complete repository-validation pass.
 
 ### Narrative and paper state
 
-At the same milestone, the narrative must say:
+The narrative and paper state at this milestone is:
 
 ```text
 Stage A1: COMPLETE WITH BOUNDED CLAIMS; frozen and unchanged
@@ -347,7 +386,7 @@ Gate 4b moving-workload realism bridge: PASS WITH BOUNDED CLAIMS, retaining a nu
 Gates 5--8 and contributions C6/C7: still PENDING
 ```
 
-Stage A2 completion depends on admissible execution and honest reporting, not
+Stage A2 completion depended on admissible execution and honest reporting, not
 on obtaining a positive result. A null result must be retained if movement
 adds no new signature or measurable consequence. If it does add evidence, the
 allowable claim is bounded to the locked Thor SITL mission and may state that
@@ -355,7 +394,7 @@ motion context changed contract applicability, violation signatures, or
 physical exposure. It may not claim real-flight danger, a general PX4 defect
 rate, universal mechanism superiority, or state-aware search effectiveness.
 
-After this milestone, the next work package is Phase VI: connect bounded-random and
+The active work package is Phase VI: connect bounded-random and
 state-aware to the shared live executor, qualify decision/schedule/request/
 effect replay, run the fixed-budget three-strategy campaign, and then cluster,
 reproduce, and minimize findings. Only that work can move paper Section 7,

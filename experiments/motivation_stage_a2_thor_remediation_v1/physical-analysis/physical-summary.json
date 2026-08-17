@@ -1,0 +1,372 @@
+{
+  "analysis_id": "stage-a2-physical-consequence-v1",
+  "attempt_count": 26,
+  "claim_boundary": "bounded Thor SITL consequence; descriptive paired differences, not a real-flight risk estimate",
+  "evidence_gate_counts": {
+    "ADMISSIBLE": 26
+  },
+  "matched_pairs": {
+    "normal": {
+      "dynamic_minus_offboard": {
+        "along_track_lag_m": {
+          "count": 5,
+          "maximum": 0.013600588,
+          "median": -0.005535364,
+          "minimum": -0.048564911
+        },
+        "cross_track_error_m": {
+          "count": 5,
+          "maximum": 0.00410768,
+          "median": -0.001808487,
+          "minimum": -0.013099406
+        },
+        "exposure_distance_m": {
+          "count": 5,
+          "maximum": 0.0,
+          "median": 0.0,
+          "minimum": 0.0
+        },
+        "exposure_duration_s": {
+          "count": 5,
+          "maximum": 0.0,
+          "median": 0.0,
+          "minimum": 0.0
+        },
+        "integrated_absolute_along_track_error_m_s": {
+          "count": 5,
+          "maximum": -0.06432456,
+          "median": -0.300570219,
+          "minimum": -0.679254079
+        },
+        "peak_horizontal_speed_m_s": {
+          "count": 5,
+          "maximum": 0.010566481,
+          "median": -0.008154009,
+          "minimum": -0.024874056
+        },
+        "recovery_distance_m": {
+          "count": 5,
+          "maximum": 0.043660941,
+          "median": -0.04669726,
+          "minimum": -0.076759076
+        }
+      },
+      "oracle_status_equal_count": 5,
+      "pair_count": 5
+    },
+    "setpoint_stall": {
+      "dynamic_minus_offboard": {
+        "along_track_lag_m": {
+          "count": 8,
+          "maximum": 0.038661718,
+          "median": 0.005496501,
+          "minimum": -0.035823345
+        },
+        "cross_track_error_m": {
+          "count": 8,
+          "maximum": 0.002621703,
+          "median": -0.020948453,
+          "minimum": -0.044525564
+        },
+        "exposure_distance_m": {
+          "count": 8,
+          "maximum": 0.038785789,
+          "median": -0.027771276,
+          "minimum": -0.138269571
+        },
+        "exposure_duration_s": {
+          "count": 8,
+          "maximum": -0.024136131,
+          "median": -0.102799656,
+          "minimum": -0.213952256
+        },
+        "integrated_absolute_along_track_error_m_s": {
+          "count": 8,
+          "maximum": 0.052631525,
+          "median": -0.247572724,
+          "minimum": -0.402665006
+        },
+        "peak_horizontal_speed_m_s": {
+          "count": 8,
+          "maximum": 0.020247756,
+          "median": 0.000854853,
+          "minimum": -0.040307045
+        },
+        "recovery_distance_m": {
+          "count": 8,
+          "maximum": 0.104114356,
+          "median": 0.042072031,
+          "minimum": -0.112818563
+        }
+      },
+      "oracle_status_equal_count": 8,
+      "pair_count": 8
+    }
+  },
+  "operationalization": {
+    "along_track_lag_m": "scheduled reference x minus observed x at route completion",
+    "cross_track_error_m": "maximum absolute local-NED y while the tested route is active",
+    "exposure_distance_m": "sampled horizontal path length from scheduled stall to completion",
+    "exposure_duration_s": "scheduled stall to route completion; zero for nominal arms",
+    "integrated_absolute_along_track_error_m_s": "trapezoidal integral over the active route",
+    "peak_horizontal_speed_m_s": "maximum local horizontal speed while the tested route is active",
+    "recovery_distance_m": "sampled three-dimensional path from Land activation to landed observation",
+    "stall_reference": "position reference freezes at the registered stall offset"
+  },
+  "oracle_status_counts": {
+    "PASS": 10,
+    "VIOLATION": 16
+  },
+  "pair_count": 13,
+  "schema_version": "1.0",
+  "strata": {
+    "normal/dynamic_external_mode": {
+      "completion_actual_x_m": {
+        "count": 5,
+        "maximum": 3.590065002,
+        "median": 3.580745697,
+        "minimum": 3.573476791
+      },
+      "metrics": {
+        "along_track_lag_m": {
+          "count": 5,
+          "maximum": -0.073476791,
+          "median": -0.080745697,
+          "minimum": -0.090065002
+        },
+        "cross_track_error_m": {
+          "count": 5,
+          "maximum": 0.07572189,
+          "median": 0.052024413,
+          "minimum": 0.045253869
+        },
+        "exposure_distance_m": {
+          "count": 5,
+          "maximum": 0.0,
+          "median": 0.0,
+          "minimum": 0.0
+        },
+        "exposure_duration_s": {
+          "count": 5,
+          "maximum": 0.0,
+          "median": 0.0,
+          "minimum": 0.0
+        },
+        "integrated_absolute_along_track_error_m_s": {
+          "count": 5,
+          "maximum": 4.282468417,
+          "median": 4.214904091,
+          "minimum": 3.884345225
+        },
+        "peak_horizontal_speed_m_s": {
+          "count": 5,
+          "maximum": 0.838074051,
+          "median": 0.807847707,
+          "minimum": 0.799038176
+        },
+        "recovery_distance_m": {
+          "count": 5,
+          "maximum": 3.182395471,
+          "median": 3.148384121,
+          "minimum": 3.124747814
+        }
+      },
+      "oracle_statuses": {
+        "PASS": 5
+      },
+      "planned_profile_shortfall_m": {
+        "count": 5,
+        "maximum": -0.073476791,
+        "median": -0.080745697,
+        "minimum": -0.090065002
+      }
+    },
+    "normal/legacy_offboard": {
+      "completion_actual_x_m": {
+        "count": 5,
+        "maximum": 3.590095043,
+        "median": 3.575210333,
+        "minimum": 3.538528681
+      },
+      "metrics": {
+        "along_track_lag_m": {
+          "count": 5,
+          "maximum": -0.038528681,
+          "median": -0.075210333,
+          "minimum": -0.090095043
+        },
+        "cross_track_error_m": {
+          "count": 5,
+          "maximum": 0.076149561,
+          "median": 0.055520825,
+          "minimum": 0.047051698
+        },
+        "exposure_distance_m": {
+          "count": 5,
+          "maximum": 0.0,
+          "median": 0.0,
+          "minimum": 0.0
+        },
+        "exposure_duration_s": {
+          "count": 5,
+          "maximum": 0.0,
+          "median": 0.0,
+          "minimum": 0.0
+        },
+        "integrated_absolute_along_track_error_m_s": {
+          "count": 5,
+          "maximum": 4.563599304,
+          "median": 4.528751044,
+          "minimum": 4.346792977
+        },
+        "peak_horizontal_speed_m_s": {
+          "count": 5,
+          "maximum": 0.84622806,
+          "median": 0.822791867,
+          "minimum": 0.797004379
+        },
+        "recovery_distance_m": {
+          "count": 5,
+          "maximum": 3.207778915,
+          "median": 3.195081381,
+          "minimum": 3.13873453
+        }
+      },
+      "oracle_statuses": {
+        "PASS": 5
+      },
+      "planned_profile_shortfall_m": {
+        "count": 5,
+        "maximum": -0.038528681,
+        "median": -0.075210333,
+        "minimum": -0.090095043
+      }
+    },
+    "setpoint_stall/dynamic_external_mode": {
+      "completion_actual_x_m": {
+        "count": 8,
+        "maximum": 3.064254761,
+        "median": 3.02842629,
+        "minimum": 3.009073973
+      },
+      "metrics": {
+        "along_track_lag_m": {
+          "count": 8,
+          "maximum": -0.009073973,
+          "median": -0.02842629,
+          "minimum": -0.064254761
+        },
+        "cross_track_error_m": {
+          "count": 8,
+          "maximum": 0.069109939,
+          "median": 0.064200636,
+          "minimum": 0.039105721
+        },
+        "exposure_distance_m": {
+          "count": 8,
+          "maximum": 1.094169405,
+          "median": 1.011574325,
+          "minimum": 0.928934604
+        },
+        "exposure_duration_s": {
+          "count": 8,
+          "maximum": 3.180457945,
+          "median": 3.114460349,
+          "minimum": 3.012486262
+        },
+        "integrated_absolute_along_track_error_m_s": {
+          "count": 8,
+          "maximum": 3.972683343,
+          "median": 3.706640216,
+          "minimum": 3.49613081
+        },
+        "peak_horizontal_speed_m_s": {
+          "count": 8,
+          "maximum": 0.838527892,
+          "median": 0.823326812,
+          "minimum": 0.808767069
+        },
+        "recovery_distance_m": {
+          "count": 8,
+          "maximum": 3.280040036,
+          "median": 3.165243043,
+          "minimum": 3.122393654
+        }
+      },
+      "oracle_statuses": {
+        "VIOLATION": 8
+      },
+      "planned_profile_shortfall_m": {
+        "count": 8,
+        "maximum": 0.490926027,
+        "median": 0.47157371,
+        "minimum": 0.435745239
+      }
+    },
+    "setpoint_stall/legacy_offboard": {
+      "completion_actual_x_m": {
+        "count": 8,
+        "maximum": 3.063150167,
+        "median": 3.040769457,
+        "minimum": 3.006602764
+      },
+      "metrics": {
+        "along_track_lag_m": {
+          "count": 8,
+          "maximum": -0.006602764,
+          "median": -0.040769458,
+          "minimum": -0.063150167
+        },
+        "cross_track_error_m": {
+          "count": 8,
+          "maximum": 0.108611122,
+          "median": 0.072024435,
+          "minimum": 0.064682305
+        },
+        "exposure_distance_m": {
+          "count": 8,
+          "maximum": 1.134560934,
+          "median": 1.032631023,
+          "minimum": 0.972759136
+        },
+        "exposure_duration_s": {
+          "count": 8,
+          "maximum": 3.229454465,
+          "median": 3.223084231,
+          "minimum": 3.175145214
+        },
+        "integrated_absolute_along_track_error_m_s": {
+          "count": 8,
+          "maximum": 4.038426879,
+          "median": 3.904366275,
+          "minimum": 3.73009229
+        },
+        "peak_horizontal_speed_m_s": {
+          "count": 8,
+          "maximum": 0.852547957,
+          "median": 0.820818553,
+          "minimum": 0.815236859
+        },
+        "recovery_distance_m": {
+          "count": 8,
+          "maximum": 3.235212217,
+          "median": 3.172872571,
+          "minimum": 3.078846678
+        }
+      },
+      "oracle_statuses": {
+        "VIOLATION": 8
+      },
+      "planned_profile_shortfall_m": {
+        "count": 8,
+        "maximum": 0.493397236,
+        "median": 0.459230543,
+        "minimum": 0.436849833
+      }
+    }
+  },
+  "study_id": "motivation-stage-a2-thor-remediation-v1",
+  "violation_clause_counts": {
+    "freshness": 16
+  }
+}

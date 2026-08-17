@@ -1,0 +1,23 @@
+{
+  "allocation": {
+    "attempt_id": "a2-stall-dynamic-remediation-001",
+    "cpu_set": "9-13",
+    "gazebo_partition": "family_a_motivation-stage-a2-thor-remediation-v1_3",
+    "mavlink_tcp_port": 4563,
+    "mavlink_udp_local_port": 14583,
+    "mavlink_udp_port": 14543,
+    "process_group_identity": "family-a-a2-stall-dynamic-remediation-001",
+    "px4_instance": 3,
+    "ros_domain_id": 43,
+    "run_directory": "/runs/motivation-stage-a2-thor-remediation-v1/a2-stall-dynamic-remediation-001",
+    "slot": 3,
+    "study_id": "motivation-stage-a2-thor-remediation-v1",
+    "temporary_directory": "/runs/motivation-stage-a2-thor-remediation-v1/a2-stall-dynamic-remediation-001/tmp",
+    "vehicle_identity": "x500_3",
+    "xrce_agent_port": 8891
+  },
+  "outcome": "ACCEPTED",
+  "run_id": "a2-stall-dynamic-remediation-001",
+  "schema_version": "1.0",
+  "ulog": "/runs/motivation-stage-a2-thor-remediation-v1/a2-stall-dynamic-remediation-001/raw/px4.ulg"
+}

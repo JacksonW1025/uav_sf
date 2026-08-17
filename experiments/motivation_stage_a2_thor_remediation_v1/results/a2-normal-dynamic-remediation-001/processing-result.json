@@ -1,0 +1,190 @@
+{
+  "attempt_id": "a2-normal-dynamic-remediation-001",
+  "clock_bridge": {
+    "bridge_id": "clock-e34521760e68fbdf",
+    "knots": [
+      [
+        10656000000,
+        1685641836984598
+      ],
+      [
+        11660000000,
+        1685642838957459
+      ],
+      [
+        12664000000,
+        1685643843000913
+      ],
+      [
+        13668000000,
+        1685644846820932
+      ],
+      [
+        14906000000,
+        1685646090013867
+      ],
+      [
+        15912000000,
+        1685647090907098
+      ],
+      [
+        16916000000,
+        1685648095379117
+      ],
+      [
+        17920000000,
+        1685649098870163
+      ],
+      [
+        18924000000,
+        1685650103466923
+      ],
+      [
+        19928000000,
+        1685651106840006
+      ],
+      [
+        20932000000,
+        1685652110941978
+      ],
+      [
+        21936000000,
+        1685653115831589
+      ],
+      [
+        22940000000,
+        1685654119096080
+      ],
+      [
+        23944000000,
+        1685655122796182
+      ],
+      [
+        24948000000,
+        1685656127769969
+      ],
+      [
+        25952000000,
+        1685657130813746
+      ],
+      [
+        26956000000,
+        1685658136148025
+      ],
+      [
+        27960000000,
+        1685659138801580
+      ],
+      [
+        28964000000,
+        1685660142931923
+      ],
+      [
+        29968000000,
+        1685661147259979
+      ],
+      [
+        30972000000,
+        1685662151333821
+      ],
+      [
+        31976000000,
+        1685663155320191
+      ],
+      [
+        32980000000,
+        1685664159637997
+      ],
+      [
+        33984000000,
+        1685665162883136
+      ],
+      [
+        34988000000,
+        1685666166965061
+      ],
+      [
+        35992000000,
+        1685667170987895
+      ],
+      [
+        36996000000,
+        1685668175345033
+      ],
+      [
+        38000000000,
+        1685669179870904
+      ],
+      [
+        39004000000,
+        1685670182866016
+      ],
+      [
+        40008000000,
+        1685671186922201
+      ]
+    ],
+    "rate_ratio": 0.9999297357249932,
+    "reference_analysis_ns": 1685657130813746,
+    "reference_source_ns": 25952000000,
+    "sample_count": 30,
+    "source_domain": "px4_boot_ns",
+    "uncertainty_ns": 7145398,
+    "valid_from_ns": 10656000000,
+    "valid_until_ns": 40008000000
+  },
+  "environment_attestation_digest": "sha256:6f75c8b5d29d78fa43d2e97e5a784b3210d5a7e3f1d903e3b8bd96c017f9910e",
+  "evaluation_status": "PASS",
+  "evidence_gate_status": "ADMISSIBLE",
+  "gazebo": {
+    "central_minimum": 0.9986221510870377,
+    "median": 0.9998567705176233,
+    "minimum": 0.014799097077489108,
+    "sample_count": 398,
+    "status": "PASS"
+  },
+  "outcome": "ACCEPTED",
+  "physical_execution": {
+    "checks": {
+      "fault_after_motion_entry": true,
+      "motion_phase_entered": true,
+      "nominal_profile_coverage": true,
+      "sustained_takeoff": true,
+      "takeoff_before_tested_transition": true
+    },
+    "maximum_logged_completion_progress_m": 2.509706711396575,
+    "maximum_logged_entry_progress_m": 0.765968119725585,
+    "status": "PASS"
+  },
+  "plan_digest": "sha256:65d1acb5136609ef38905a00661ff9689e79c67c40e95e08ea9ea5b3e1bb6080",
+  "plan_id": "a2-normal-dynamic-remediation-001-plan",
+  "processing_error": null,
+  "raw_manifest_digest": "sha256:8b3a6fb4f95a05c39c7a12c1e4c88889c36262fac578010c5df22a9c21c5fb17",
+  "runtime_outcome": "ACCEPTED",
+  "schema_version": "1.0",
+  "study_id": "motivation-stage-a2-thor-remediation-v1",
+  "ulog": {
+    "dropouts": [],
+    "file_corruption": false,
+    "first_sequence_by_instance": {
+      "0": 0,
+      "1": 74,
+      "2": 74,
+      "3": 61,
+      "4": 0
+    },
+    "route_observation_count": 13263,
+    "route_observation_instances": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "schema_version": "1.0",
+    "sequence_gaps": [],
+    "status": "PASS",
+    "ulog_end_us": 40432000,
+    "ulog_start_us": 5056000
+  }
+}

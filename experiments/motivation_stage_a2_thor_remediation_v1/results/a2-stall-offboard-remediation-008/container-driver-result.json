@@ -1,0 +1,16 @@
+{
+  "architecture": "arm64",
+  "container_name": "family-a-motivation-stage-a2-thor-remediation-v1-a2-stall-offboard-remediation-008",
+  "container_runtime": "runc",
+  "cpu_set": "6-8",
+  "image": "uav-sf-family-a-thor:a2-remediation-aee0700",
+  "image_id": "sha256:87d4a8f9f43031cc97b6b0c156fd7a9e099a8858b2c596305ae4efe55d8f449a",
+  "memory": "24g",
+  "network_mode": "none",
+  "operating_system": "linux",
+  "outer_timeout": false,
+  "returncode": 0,
+  "run_id": "a2-stall-offboard-remediation-008",
+  "schema_version": "1.0",
+  "study_id": "motivation-stage-a2-thor-remediation-v1"
+}

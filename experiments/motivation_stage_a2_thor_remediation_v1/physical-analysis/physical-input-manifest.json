@@ -1,0 +1,768 @@
+{
+  "analysis_id": "stage-a2-physical-consequence-v1",
+  "attempts": [
+    {
+      "attempt_id": "a2-normal-dynamic-remediation-001",
+      "inputs": {
+        "closed_trace": {
+          "digest": "sha256:691c419892a7969dd0d22345fc335fe0f3ab8e6dc741ef98390c449e4a1ea96b",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-normal-dynamic-remediation-001/derived/closed.trace.jsonl"
+        },
+        "evaluation": {
+          "digest": "sha256:0101b7778f6d2a841e3892d257acc30aa2e95e2078d8803c271b0d2d6f67382f",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-normal-dynamic-remediation-001/evaluation.json"
+        },
+        "plan": {
+          "digest": "sha256:65d1acb5136609ef38905a00661ff9689e79c67c40e95e08ea9ea5b3e1bb6080",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/plans/a2-normal-dynamic-remediation-001.json"
+        },
+        "raw_manifest": {
+          "digest": "sha256:8b3a6fb4f95a05c39c7a12c1e4c88889c36262fac578010c5df22a9c21c5fb17",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-normal-dynamic-remediation-001/raw-manifest.json"
+        },
+        "telemetry": {
+          "digest": "sha256:c42337d914ec1234bd2ab051eec725a13e1b58a05e700e859727597d2617c534",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-normal-dynamic-remediation-001/raw/telemetry.sidecar.jsonl"
+        },
+        "workload_lifecycle": {
+          "digest": "sha256:1fdcc20a435c70801106c06461fc52c570694c75ddb644a20467fabdb23cd900",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-normal-dynamic-remediation-001/raw/workload.lifecycle.jsonl"
+        }
+      }
+    },
+    {
+      "attempt_id": "a2-normal-dynamic-remediation-002",
+      "inputs": {
+        "closed_trace": {
+          "digest": "sha256:d7c4204c089c29f4ba7aca7ccff29ea29137b428917ad2ff329fc95d1d4d17fd",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-normal-dynamic-remediation-002/derived/closed.trace.jsonl"
+        },
+        "evaluation": {
+          "digest": "sha256:ba752425d01c40b247511e612c95834566b8f5c6fe665ef9fe3dcee8af06e652",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-normal-dynamic-remediation-002/evaluation.json"
+        },
+        "plan": {
+          "digest": "sha256:48c0d8b46208fc64aa46e8515949af30c7fee1881e25490d5f741d7b2ad50ce1",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/plans/a2-normal-dynamic-remediation-002.json"
+        },
+        "raw_manifest": {
+          "digest": "sha256:07737e663dbefbefe02639531a60931e6b23601b9f3a8f398db8f2598866adbd",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-normal-dynamic-remediation-002/raw-manifest.json"
+        },
+        "telemetry": {
+          "digest": "sha256:d536701d3bf45fa4e5b170be299863a8e97db5130e40a5adb87d3bdcf10eab78",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-normal-dynamic-remediation-002/raw/telemetry.sidecar.jsonl"
+        },
+        "workload_lifecycle": {
+          "digest": "sha256:aa9e311682970850f6bbf705ed217228e8b96529456d8aef58bd8fa32d896353",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-normal-dynamic-remediation-002/raw/workload.lifecycle.jsonl"
+        }
+      }
+    },
+    {
+      "attempt_id": "a2-normal-dynamic-remediation-003",
+      "inputs": {
+        "closed_trace": {
+          "digest": "sha256:7b7bc009e5771683c35d0edea852441e2c9826328bce1b504f09f3f79a8412b4",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-normal-dynamic-remediation-003/derived/closed.trace.jsonl"
+        },
+        "evaluation": {
+          "digest": "sha256:89db557330ee8f62db643c42c542c81a75c2ede1e3cae87277c14325ecfede2a",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-normal-dynamic-remediation-003/evaluation.json"
+        },
+        "plan": {
+          "digest": "sha256:ec9af9a7c6c6ea513ed83d6ad379b725fadd45550b5d7ea8fce53a895038d306",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/plans/a2-normal-dynamic-remediation-003.json"
+        },
+        "raw_manifest": {
+          "digest": "sha256:cf8044d076d24a8f7741f6ff0ece7a7df023a8f58cd9cf553c833361d306c089",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-normal-dynamic-remediation-003/raw-manifest.json"
+        },
+        "telemetry": {
+          "digest": "sha256:9dfdd132f7261f3899fd4c335ae8ff8d9d5ebd7bc01c63630a555e9c29b6a55f",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-normal-dynamic-remediation-003/raw/telemetry.sidecar.jsonl"
+        },
+        "workload_lifecycle": {
+          "digest": "sha256:946f4ed4c9d523c152199f66fbba3282606bd299384bd49583e17458763adfc2",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-normal-dynamic-remediation-003/raw/workload.lifecycle.jsonl"
+        }
+      }
+    },
+    {
+      "attempt_id": "a2-normal-dynamic-remediation-004",
+      "inputs": {
+        "closed_trace": {
+          "digest": "sha256:2be55d30c1de6e8598a0a361a262a5174fe455691e47688fd68e1059ced0983a",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-normal-dynamic-remediation-004/derived/closed.trace.jsonl"
+        },
+        "evaluation": {
+          "digest": "sha256:88b9b06c992baca88ccb70c85535d6212fa4e4173c33970102eb68335824d153",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-normal-dynamic-remediation-004/evaluation.json"
+        },
+        "plan": {
+          "digest": "sha256:08ecfcff2d479b9dd31fce8222613c0ecaa0a984b5e23e11eb648036a41b7f9d",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/plans/a2-normal-dynamic-remediation-004.json"
+        },
+        "raw_manifest": {
+          "digest": "sha256:7d268831734f678d0117dfb0ece2a5b29acba3cfba2d49f65dd4f8ef3ee16347",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-normal-dynamic-remediation-004/raw-manifest.json"
+        },
+        "telemetry": {
+          "digest": "sha256:42a72a020c1c07497b3d87026b50f0c14970dd28a80b00858ba7b0efbefcf535",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-normal-dynamic-remediation-004/raw/telemetry.sidecar.jsonl"
+        },
+        "workload_lifecycle": {
+          "digest": "sha256:a125feb236c89a1dda80250dad3d8fa199d0575ea675f9e951bff6295825d91c",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-normal-dynamic-remediation-004/raw/workload.lifecycle.jsonl"
+        }
+      }
+    },
+    {
+      "attempt_id": "a2-normal-dynamic-remediation-005",
+      "inputs": {
+        "closed_trace": {
+          "digest": "sha256:14dbdfb84eddf5838fba6a2fb28bb9344ac743217841cbf416d0a11bd50b69f8",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-normal-dynamic-remediation-005/derived/closed.trace.jsonl"
+        },
+        "evaluation": {
+          "digest": "sha256:b1ab593763178da93868d5b4cfaeae5c3395d65b6a6cf88645f0a97ab660a980",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-normal-dynamic-remediation-005/evaluation.json"
+        },
+        "plan": {
+          "digest": "sha256:8f7b2cd10a9ec5dc17ca59682c8a8e331c8dfe44723cfdc521f213fb41c0a252",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/plans/a2-normal-dynamic-remediation-005.json"
+        },
+        "raw_manifest": {
+          "digest": "sha256:e220959da40ad41510de59657718115d61c4b05bc3fa1253b4e641464eebc313",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-normal-dynamic-remediation-005/raw-manifest.json"
+        },
+        "telemetry": {
+          "digest": "sha256:11bd5591db0cb2338e8e47d999482bbadf13d60675442c16db10bd4906fc06e7",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-normal-dynamic-remediation-005/raw/telemetry.sidecar.jsonl"
+        },
+        "workload_lifecycle": {
+          "digest": "sha256:21cfc1004706cb436984ec2e5252958ca467f80b85ff4309f11d71ab0f9a00d4",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-normal-dynamic-remediation-005/raw/workload.lifecycle.jsonl"
+        }
+      }
+    },
+    {
+      "attempt_id": "a2-normal-offboard-remediation-001",
+      "inputs": {
+        "closed_trace": {
+          "digest": "sha256:73cff04ba33b7f2246ab8009d3f480696fef545e51f05ec74babb6d36c5d9936",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-normal-offboard-remediation-001/derived/closed.trace.jsonl"
+        },
+        "evaluation": {
+          "digest": "sha256:addda886269eb2efa9fd8ae9d258570328dfdc757e3c7c907c04884e94bc3aad",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-normal-offboard-remediation-001/evaluation.json"
+        },
+        "plan": {
+          "digest": "sha256:436f5240830de851f2f767522587af226debbd7106a7f8f5d054d4f8303ed309",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/plans/a2-normal-offboard-remediation-001.json"
+        },
+        "raw_manifest": {
+          "digest": "sha256:f05db8cc934c657562d35f07bb10ac38f4660c1f5ab4a715d6cd2e830cd1abe4",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-normal-offboard-remediation-001/raw-manifest.json"
+        },
+        "telemetry": {
+          "digest": "sha256:63ba71d204928e304efdb177b374be57bf76fe44a5c453b21f5248a73b2bc382",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-normal-offboard-remediation-001/raw/telemetry.sidecar.jsonl"
+        },
+        "workload_lifecycle": {
+          "digest": "sha256:6d5ffa842c4f9b04b89d7a028391886bc58acbef30ffa9b351cd5ed35c677c34",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-normal-offboard-remediation-001/raw/workload.lifecycle.jsonl"
+        }
+      }
+    },
+    {
+      "attempt_id": "a2-normal-offboard-remediation-002",
+      "inputs": {
+        "closed_trace": {
+          "digest": "sha256:17ff2b15011d22da8a5a9ae54c5af6539c519869cec59b47c0641898e32f1194",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-normal-offboard-remediation-002/derived/closed.trace.jsonl"
+        },
+        "evaluation": {
+          "digest": "sha256:57faf4697d6f30f5614de074bcf1b30f57f01e1d106c111d5ac495641b31bd1c",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-normal-offboard-remediation-002/evaluation.json"
+        },
+        "plan": {
+          "digest": "sha256:104ecca70194709e58a8e17c187dd63921d37aeb061010c4d5c830953c75dd41",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/plans/a2-normal-offboard-remediation-002.json"
+        },
+        "raw_manifest": {
+          "digest": "sha256:ac6e924838a9a677b1a91e28686dd74d44beecb262505cd2933a7649ba935f3c",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-normal-offboard-remediation-002/raw-manifest.json"
+        },
+        "telemetry": {
+          "digest": "sha256:4b64e9dba7e6210dce18189acee32cd750e50566cc1f5ff58635418b1ede29b8",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-normal-offboard-remediation-002/raw/telemetry.sidecar.jsonl"
+        },
+        "workload_lifecycle": {
+          "digest": "sha256:013d1968fa25b76b9b48c27e409bf65244cba44a8e21a4563cdf320005382153",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-normal-offboard-remediation-002/raw/workload.lifecycle.jsonl"
+        }
+      }
+    },
+    {
+      "attempt_id": "a2-normal-offboard-remediation-003",
+      "inputs": {
+        "closed_trace": {
+          "digest": "sha256:318ed9d3241b1b914a4abade26a3866ce61e5113474d613a1076df8aee194282",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-normal-offboard-remediation-003/derived/closed.trace.jsonl"
+        },
+        "evaluation": {
+          "digest": "sha256:1274f31d7ecbd2241f4bc7e7db814a556ee81c29f64bcbd67d8d25b607f6219d",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-normal-offboard-remediation-003/evaluation.json"
+        },
+        "plan": {
+          "digest": "sha256:e691ada1294d30705206f736c1616e54f67bbfba2f96f6076c8155b521fce4d8",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/plans/a2-normal-offboard-remediation-003.json"
+        },
+        "raw_manifest": {
+          "digest": "sha256:ccc3f5cd68a9f2574d42ff9bfb3b43ef1c76bd0bdac3f92434e37faa826c59da",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-normal-offboard-remediation-003/raw-manifest.json"
+        },
+        "telemetry": {
+          "digest": "sha256:0ff69f5e57cf6f51d8f07b17e80a70ee11d1474094fd264315bd20edf6d8eefa",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-normal-offboard-remediation-003/raw/telemetry.sidecar.jsonl"
+        },
+        "workload_lifecycle": {
+          "digest": "sha256:69004172cf4465ff6549df5982bb57c34a028843b4bda08b29b9de4f33dc264a",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-normal-offboard-remediation-003/raw/workload.lifecycle.jsonl"
+        }
+      }
+    },
+    {
+      "attempt_id": "a2-normal-offboard-remediation-004",
+      "inputs": {
+        "closed_trace": {
+          "digest": "sha256:1a0dd9c86a8997a17524a3d60584955da471c9a2067462a344846cb9cc883d4e",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-normal-offboard-remediation-004/derived/closed.trace.jsonl"
+        },
+        "evaluation": {
+          "digest": "sha256:ad6bf0dcdf7b78c724b20b5ee5620c5e9c3c467504bf4be2107eed499d6ae919",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-normal-offboard-remediation-004/evaluation.json"
+        },
+        "plan": {
+          "digest": "sha256:51f7b26026b423a00e2b1c85805e9c8e172d3930cc2726593a459452eb19eb64",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/plans/a2-normal-offboard-remediation-004.json"
+        },
+        "raw_manifest": {
+          "digest": "sha256:978cc748aa75fe7a28ee76ecde3aa3157fe077e5353ffb4fb99c6027d57069dc",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-normal-offboard-remediation-004/raw-manifest.json"
+        },
+        "telemetry": {
+          "digest": "sha256:4612d4d8c030eb50dc859fa2b52d04eda40d520deb7325f07b260deb6e1a7a31",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-normal-offboard-remediation-004/raw/telemetry.sidecar.jsonl"
+        },
+        "workload_lifecycle": {
+          "digest": "sha256:fa7a1e838bb60ce7009a245ab8635c5934318342676e69b032759f1279b0c169",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-normal-offboard-remediation-004/raw/workload.lifecycle.jsonl"
+        }
+      }
+    },
+    {
+      "attempt_id": "a2-normal-offboard-remediation-005",
+      "inputs": {
+        "closed_trace": {
+          "digest": "sha256:b69a2c71ec272f5005dc9ad3be83d8ca3c2ffb5b6b938e9cc3e52f6e79aacaa1",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-normal-offboard-remediation-005/derived/closed.trace.jsonl"
+        },
+        "evaluation": {
+          "digest": "sha256:4097ddbb63a3c8989b558f86cc138ba8f5f4d89d41ebf07378b85fd75bfa056e",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-normal-offboard-remediation-005/evaluation.json"
+        },
+        "plan": {
+          "digest": "sha256:4ee73e1277f0abdbda3eec6077567da5fb70dbc6290c851c980964e1b4ae3fc9",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/plans/a2-normal-offboard-remediation-005.json"
+        },
+        "raw_manifest": {
+          "digest": "sha256:30f1b1eacd1949a59af9ff9342efa18fa58e885cf6d42a19d731bb8b87da915a",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-normal-offboard-remediation-005/raw-manifest.json"
+        },
+        "telemetry": {
+          "digest": "sha256:db4195a64aeffbea1664dd429db8a4eb3952b77acdeaa1efb9742d28cf4e578e",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-normal-offboard-remediation-005/raw/telemetry.sidecar.jsonl"
+        },
+        "workload_lifecycle": {
+          "digest": "sha256:bdf19e4c14887e8238930dc89fbac15a8449499fd2fa2f610ace3d152f8c763d",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-normal-offboard-remediation-005/raw/workload.lifecycle.jsonl"
+        }
+      }
+    },
+    {
+      "attempt_id": "a2-stall-dynamic-remediation-001",
+      "inputs": {
+        "closed_trace": {
+          "digest": "sha256:cb2180b9b3ca42f3ca44dcfa20e63ec09620a9dee59411ea0eb9e8f69b17f76a",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-dynamic-remediation-001/derived/closed.trace.jsonl"
+        },
+        "evaluation": {
+          "digest": "sha256:9065b56cfab001fec1dfde4e7a97f480f63500ba8a90737cd9202086ebdf9c30",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-stall-dynamic-remediation-001/evaluation.json"
+        },
+        "plan": {
+          "digest": "sha256:5a73b064595df9d3403efed30e4a471e64f7d530919ad140574f7134c0949e72",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/plans/a2-stall-dynamic-remediation-001.json"
+        },
+        "raw_manifest": {
+          "digest": "sha256:02edda84eecfcb2998ebda53511ceb00961e21f4491a04350519545bea186703",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-stall-dynamic-remediation-001/raw-manifest.json"
+        },
+        "telemetry": {
+          "digest": "sha256:b839dc56da11ead62a14fc14568302655a71a2e99acd0daf9116e8a30274718f",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-dynamic-remediation-001/raw/telemetry.sidecar.jsonl"
+        },
+        "workload_lifecycle": {
+          "digest": "sha256:3177fc14498684811d8188656fa120870b71a0ccee826ce2a56d06f9824b0544",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-dynamic-remediation-001/raw/workload.lifecycle.jsonl"
+        }
+      }
+    },
+    {
+      "attempt_id": "a2-stall-dynamic-remediation-002",
+      "inputs": {
+        "closed_trace": {
+          "digest": "sha256:a1f33a08af9ceed794982607febff31907b09f647e293511c9dbf2775c6b64d3",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-dynamic-remediation-002/derived/closed.trace.jsonl"
+        },
+        "evaluation": {
+          "digest": "sha256:488107086f15442cc4fbce3841883a07a016b7fe6878c100fd3f053729061838",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-stall-dynamic-remediation-002/evaluation.json"
+        },
+        "plan": {
+          "digest": "sha256:f8f52edd659fd33cfee5fc0cd16a4cbdf8949ce0004a82970b1e7b8385aa5e8b",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/plans/a2-stall-dynamic-remediation-002.json"
+        },
+        "raw_manifest": {
+          "digest": "sha256:2a61e71ab46fd33da953814db06d1ca4335c685e4045cf3e71615e3e992dce62",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-stall-dynamic-remediation-002/raw-manifest.json"
+        },
+        "telemetry": {
+          "digest": "sha256:8479d178bcfdb9dfa1ab5d269a742d387a0c91cd151b848fa1be23c0b5b7f1a2",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-dynamic-remediation-002/raw/telemetry.sidecar.jsonl"
+        },
+        "workload_lifecycle": {
+          "digest": "sha256:32202039e45a3061034f325d15ee8b4209030d374989b2627b32e257cb2e8d3e",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-dynamic-remediation-002/raw/workload.lifecycle.jsonl"
+        }
+      }
+    },
+    {
+      "attempt_id": "a2-stall-dynamic-remediation-003",
+      "inputs": {
+        "closed_trace": {
+          "digest": "sha256:a0d824f50166c98f59fda7ff4cfe0fe212a1f617836649fc39f26cb88c47dceb",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-dynamic-remediation-003/derived/closed.trace.jsonl"
+        },
+        "evaluation": {
+          "digest": "sha256:d1d385853a585337ae09dd91be5d4e5bdb377ec4b38325bbb962f9de7deaf07e",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-stall-dynamic-remediation-003/evaluation.json"
+        },
+        "plan": {
+          "digest": "sha256:92c989907b357accf3f6432884f4fe04d89bca3ddec2c2254b2ab55cb2eb1862",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/plans/a2-stall-dynamic-remediation-003.json"
+        },
+        "raw_manifest": {
+          "digest": "sha256:1a2a61163c89e634b5e898313d94543977f0a138d88e6944a52b53ae423d7b19",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-stall-dynamic-remediation-003/raw-manifest.json"
+        },
+        "telemetry": {
+          "digest": "sha256:7a38038a4135e50297eda33af15669052cfc4d9dc4353a48e32c31f743f90a55",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-dynamic-remediation-003/raw/telemetry.sidecar.jsonl"
+        },
+        "workload_lifecycle": {
+          "digest": "sha256:9a0da517647eedb1d1e2cff4efd4db50e0ba0063de3310a6e7f6125b5ac9bcd8",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-dynamic-remediation-003/raw/workload.lifecycle.jsonl"
+        }
+      }
+    },
+    {
+      "attempt_id": "a2-stall-dynamic-remediation-004",
+      "inputs": {
+        "closed_trace": {
+          "digest": "sha256:8bbccb3c443b30ca46228ea6f025a4518fcda4c0af2d1b90339f4af22717a743",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-dynamic-remediation-004/derived/closed.trace.jsonl"
+        },
+        "evaluation": {
+          "digest": "sha256:2e7b5045dab4f525ca3c597910774e3873e179a945ebe439fb77307963e9ba6a",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-stall-dynamic-remediation-004/evaluation.json"
+        },
+        "plan": {
+          "digest": "sha256:1a7137f86c5207d118448486724bf4d2296dfd5b499e3b6d9b5997302bd51baf",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/plans/a2-stall-dynamic-remediation-004.json"
+        },
+        "raw_manifest": {
+          "digest": "sha256:67b4e11ff126f377b620e043aa684f4638bbfad92c556ec2360dbfe0d8946d77",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-stall-dynamic-remediation-004/raw-manifest.json"
+        },
+        "telemetry": {
+          "digest": "sha256:24ef781feb1541a7cc7193848c06f21d9baf992e0dc5856a058494a4072e6643",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-dynamic-remediation-004/raw/telemetry.sidecar.jsonl"
+        },
+        "workload_lifecycle": {
+          "digest": "sha256:9bec6dea81973a6a007e2c56cca089e01fbafc454b460797ea8473072b0e84e9",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-dynamic-remediation-004/raw/workload.lifecycle.jsonl"
+        }
+      }
+    },
+    {
+      "attempt_id": "a2-stall-dynamic-remediation-005",
+      "inputs": {
+        "closed_trace": {
+          "digest": "sha256:2d83ae08d7d81fe753e510dc724be45dce2fa45a549d82993d892eaad5a62460",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-dynamic-remediation-005/derived/closed.trace.jsonl"
+        },
+        "evaluation": {
+          "digest": "sha256:4d059eb831e845606991a2117205651ffd17d497784e1c17d699755a727e94b1",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-stall-dynamic-remediation-005/evaluation.json"
+        },
+        "plan": {
+          "digest": "sha256:9db51e2b6a032d870471a6638a18fe126c6e0d006d410cf65d55ffedad55c2d4",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/plans/a2-stall-dynamic-remediation-005.json"
+        },
+        "raw_manifest": {
+          "digest": "sha256:969eecd6c28f300a489a8eeb6cc5f48a42b68746027728792f6eba3aea99ef5f",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-stall-dynamic-remediation-005/raw-manifest.json"
+        },
+        "telemetry": {
+          "digest": "sha256:ff91413b23780633bff45fb511dc9ba63c1ea3d34b94c68c6267e6365cbec3fb",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-dynamic-remediation-005/raw/telemetry.sidecar.jsonl"
+        },
+        "workload_lifecycle": {
+          "digest": "sha256:34896d2b3827f0958223e88c35e45d06e25700734a661ea25aa3027900dd23be",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-dynamic-remediation-005/raw/workload.lifecycle.jsonl"
+        }
+      }
+    },
+    {
+      "attempt_id": "a2-stall-dynamic-remediation-006",
+      "inputs": {
+        "closed_trace": {
+          "digest": "sha256:628798a50ec3db3d1132c5a4534ad8e86ea98e5c8e72733a3e9ac1fd55808a20",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-dynamic-remediation-006/derived/closed.trace.jsonl"
+        },
+        "evaluation": {
+          "digest": "sha256:68cd269413ce6e1b0a45ff085de5289819ff8258b1ce3a9decb2be493f52937d",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-stall-dynamic-remediation-006/evaluation.json"
+        },
+        "plan": {
+          "digest": "sha256:f68af11835736a8f78b3d039d414df7cb6e623037e076cbdfb6ac226f39f48de",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/plans/a2-stall-dynamic-remediation-006.json"
+        },
+        "raw_manifest": {
+          "digest": "sha256:5acebce40c5f64f2b295f97098e2143c3e1c3dceca0eb166c75c7e04d0ae020a",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-stall-dynamic-remediation-006/raw-manifest.json"
+        },
+        "telemetry": {
+          "digest": "sha256:73e46b7b6d4618e4cc8b4233a709349256d57b665f4fc2b3674d1cbcabb6246e",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-dynamic-remediation-006/raw/telemetry.sidecar.jsonl"
+        },
+        "workload_lifecycle": {
+          "digest": "sha256:a4a5feb636d7fec52c74a1fa311669f06b35ca46f950e953b74a174153d16b5c",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-dynamic-remediation-006/raw/workload.lifecycle.jsonl"
+        }
+      }
+    },
+    {
+      "attempt_id": "a2-stall-dynamic-remediation-007",
+      "inputs": {
+        "closed_trace": {
+          "digest": "sha256:b6ba631999e02f3640e55cc2b13e31d69da58fee3c3470f0a14616c61f83e706",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-dynamic-remediation-007/derived/closed.trace.jsonl"
+        },
+        "evaluation": {
+          "digest": "sha256:44768d4f8d229d727a921785d75aea83d54a6af9eb94fccb79201a05183d1909",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-stall-dynamic-remediation-007/evaluation.json"
+        },
+        "plan": {
+          "digest": "sha256:d34fe043dc0734e07c17894777e0ac1c5131e0e28ff937673795b6febf505ecb",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/plans/a2-stall-dynamic-remediation-007.json"
+        },
+        "raw_manifest": {
+          "digest": "sha256:073ffda8271623484dcbdac75607121bd0fe5c7aab50184962d9e17b61a9c0e9",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-stall-dynamic-remediation-007/raw-manifest.json"
+        },
+        "telemetry": {
+          "digest": "sha256:8b3225f069d263a2271ad9d7a70961622b63f00b5929a2e16e427db5594730c8",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-dynamic-remediation-007/raw/telemetry.sidecar.jsonl"
+        },
+        "workload_lifecycle": {
+          "digest": "sha256:2e67f68a0efbc67d0eb09cf8278aab84231f2e860924b7b348182b0e0326dd65",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-dynamic-remediation-007/raw/workload.lifecycle.jsonl"
+        }
+      }
+    },
+    {
+      "attempt_id": "a2-stall-dynamic-remediation-008",
+      "inputs": {
+        "closed_trace": {
+          "digest": "sha256:0b552bfee97039d5236b4aa5b136f168a4eca955dddaced55b52edf87f010cc8",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-dynamic-remediation-008/derived/closed.trace.jsonl"
+        },
+        "evaluation": {
+          "digest": "sha256:e8757ae274d5d5e96b153489bdf98e280de8f647754f2316a00ee830473ad4c7",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-stall-dynamic-remediation-008/evaluation.json"
+        },
+        "plan": {
+          "digest": "sha256:d7575841591b6d143af1387098f12ac6a84a532566f460a4fe1dded555df5928",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/plans/a2-stall-dynamic-remediation-008.json"
+        },
+        "raw_manifest": {
+          "digest": "sha256:9bfd4a61c8d95bcae57bba740df4467629c773d3a238b4bef49775219bee8800",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-stall-dynamic-remediation-008/raw-manifest.json"
+        },
+        "telemetry": {
+          "digest": "sha256:c8f3b40578850ec703ae0ca2d305994902a44355a80ea372ec715884da1e8d57",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-dynamic-remediation-008/raw/telemetry.sidecar.jsonl"
+        },
+        "workload_lifecycle": {
+          "digest": "sha256:0bd47efbe0bda03918c5ef20581dc900366e9584dde87d7aa9582c22fecd592e",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-dynamic-remediation-008/raw/workload.lifecycle.jsonl"
+        }
+      }
+    },
+    {
+      "attempt_id": "a2-stall-offboard-remediation-001",
+      "inputs": {
+        "closed_trace": {
+          "digest": "sha256:ef4709a7d0e83b586172fe534b01c1009a38f7ac6303515272462a75964e8708",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-offboard-remediation-001/derived/closed.trace.jsonl"
+        },
+        "evaluation": {
+          "digest": "sha256:4af2da67bd0c57342839c5ff591b78ae93c89179d54a47ad53ae1d5bc0035e53",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-stall-offboard-remediation-001/evaluation.json"
+        },
+        "plan": {
+          "digest": "sha256:6169714cddaef2d86bde626fb1887764947e5de6f1691f954099b23ceea4f80a",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/plans/a2-stall-offboard-remediation-001.json"
+        },
+        "raw_manifest": {
+          "digest": "sha256:1229d8ddb01f802dafd0256ac663ad18f295d9fad2196b9559cb72c44104856a",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-stall-offboard-remediation-001/raw-manifest.json"
+        },
+        "telemetry": {
+          "digest": "sha256:ed2a9f7b683b38d8eff86631479737d9c1d58545c9a1dc07f5c205382e886159",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-offboard-remediation-001/raw/telemetry.sidecar.jsonl"
+        },
+        "workload_lifecycle": {
+          "digest": "sha256:6922aeca2e92cb108b905beb4cfa48dc5ed09fd63b9fe3e3bbfdea2416fb9067",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-offboard-remediation-001/raw/workload.lifecycle.jsonl"
+        }
+      }
+    },
+    {
+      "attempt_id": "a2-stall-offboard-remediation-002",
+      "inputs": {
+        "closed_trace": {
+          "digest": "sha256:16e7d18cab5a2aa10b03a52cb5be646b4ca79f8265f96205f4c2edb0b9be271a",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-offboard-remediation-002/derived/closed.trace.jsonl"
+        },
+        "evaluation": {
+          "digest": "sha256:2532ba91d3a22cae3fd9cb912c96aed8374fbd51c19941e0687c62eb6d37c129",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-stall-offboard-remediation-002/evaluation.json"
+        },
+        "plan": {
+          "digest": "sha256:71b058ad894d3aa59aafd5b81f65840e44a8cf5ac2a3dec257d9e2a748baa49c",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/plans/a2-stall-offboard-remediation-002.json"
+        },
+        "raw_manifest": {
+          "digest": "sha256:fd0b374b3863a18a0113e8256380f64af6dd75d7823d5d3172618ec4fca5bb4d",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-stall-offboard-remediation-002/raw-manifest.json"
+        },
+        "telemetry": {
+          "digest": "sha256:e099a0941e358aeed8ff90dac1ccf05e0a89fc78d1982343084cfcb2303874c9",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-offboard-remediation-002/raw/telemetry.sidecar.jsonl"
+        },
+        "workload_lifecycle": {
+          "digest": "sha256:43dc3ba38ebe80972f3cd99f1364380b716586f01a3828fc9357fd23e620f7f1",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-offboard-remediation-002/raw/workload.lifecycle.jsonl"
+        }
+      }
+    },
+    {
+      "attempt_id": "a2-stall-offboard-remediation-003",
+      "inputs": {
+        "closed_trace": {
+          "digest": "sha256:b80889647bac152f33a6f7f676289d44371c70b5145658b2e0f0b39e3fecf41a",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-offboard-remediation-003/derived/closed.trace.jsonl"
+        },
+        "evaluation": {
+          "digest": "sha256:90d56e22226a690cfae98f04168cf78fcd6a75294286bac1b982971a3f1e23b4",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-stall-offboard-remediation-003/evaluation.json"
+        },
+        "plan": {
+          "digest": "sha256:d1cb6cd1f776da4bceea32152402b18674e9fd901b38db2458f03b1a68d87a10",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/plans/a2-stall-offboard-remediation-003.json"
+        },
+        "raw_manifest": {
+          "digest": "sha256:febc9f50395cff4bb24d16c6335480c055429317f8d6a7248b658443ca100bd4",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-stall-offboard-remediation-003/raw-manifest.json"
+        },
+        "telemetry": {
+          "digest": "sha256:3bcceda3180c19a6be259f541b1a0119027b268d9eaf2fb4436a83861c53f94b",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-offboard-remediation-003/raw/telemetry.sidecar.jsonl"
+        },
+        "workload_lifecycle": {
+          "digest": "sha256:5dd70eba1e287f16245f56e6670b57bb8e9f896250e62baf9735cca1ed72a4d7",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-offboard-remediation-003/raw/workload.lifecycle.jsonl"
+        }
+      }
+    },
+    {
+      "attempt_id": "a2-stall-offboard-remediation-004",
+      "inputs": {
+        "closed_trace": {
+          "digest": "sha256:061bd2eb70d98a7cb0bcc958212ddca64ac8a31cce93a8fb2c8407d754366af1",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-offboard-remediation-004/derived/closed.trace.jsonl"
+        },
+        "evaluation": {
+          "digest": "sha256:256b15fad13babc62f1dc45bf7375baa98caf7dbe15075051a694fa9c3eda7dd",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-stall-offboard-remediation-004/evaluation.json"
+        },
+        "plan": {
+          "digest": "sha256:53ec79fde2d04cce5dc53134f71610dd89ea325db21175ab752679af7912f473",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/plans/a2-stall-offboard-remediation-004.json"
+        },
+        "raw_manifest": {
+          "digest": "sha256:095a13feb7fd36c09ac37aa2eda5e296961e84fc492a581c0535a5661b81c8b5",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-stall-offboard-remediation-004/raw-manifest.json"
+        },
+        "telemetry": {
+          "digest": "sha256:470d684e0eefa5ccbfab05a61774214e146233ef1ff8baaa31b88379c9593448",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-offboard-remediation-004/raw/telemetry.sidecar.jsonl"
+        },
+        "workload_lifecycle": {
+          "digest": "sha256:66849e8ac9b66486b4e36a30692e6b444a4903f84c3bd18271cf5b4d6fd25a9a",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-offboard-remediation-004/raw/workload.lifecycle.jsonl"
+        }
+      }
+    },
+    {
+      "attempt_id": "a2-stall-offboard-remediation-005",
+      "inputs": {
+        "closed_trace": {
+          "digest": "sha256:7f2f45580f34f7ed965001b864dd24cecd2dd635d0b4301c55c58d5ac1c07a66",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-offboard-remediation-005/derived/closed.trace.jsonl"
+        },
+        "evaluation": {
+          "digest": "sha256:1cff72dd72385f539e2d86f178d2975b04ed373d1abb4bd6085054d9e985e67a",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-stall-offboard-remediation-005/evaluation.json"
+        },
+        "plan": {
+          "digest": "sha256:1e3bd209454f4cb34db5cf50ca78863cf423749fef81923ec1a422256769af7a",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/plans/a2-stall-offboard-remediation-005.json"
+        },
+        "raw_manifest": {
+          "digest": "sha256:22ace4fcc1378f15b8083b4b28ac57ea8d6332a9d2d3ac417a1e825eeb32f7ea",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-stall-offboard-remediation-005/raw-manifest.json"
+        },
+        "telemetry": {
+          "digest": "sha256:58816e55467e3efef588d254399b608b41e046a54dceed0cca95c9101c02146b",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-offboard-remediation-005/raw/telemetry.sidecar.jsonl"
+        },
+        "workload_lifecycle": {
+          "digest": "sha256:cb1da8b03fe02e0e8ca0bb379213548343968b57b0ffa1a32c7c647dc950025e",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-offboard-remediation-005/raw/workload.lifecycle.jsonl"
+        }
+      }
+    },
+    {
+      "attempt_id": "a2-stall-offboard-remediation-006",
+      "inputs": {
+        "closed_trace": {
+          "digest": "sha256:8c3aa3e47a57722ec74a355b7fb93ee3ef6b82cb89a2ca24accf3ee41bf8dd70",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-offboard-remediation-006/derived/closed.trace.jsonl"
+        },
+        "evaluation": {
+          "digest": "sha256:cbcac2e1fb1ff9f2f7517e8b097728b42454330dab59dfe9ae406cf057c5b604",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-stall-offboard-remediation-006/evaluation.json"
+        },
+        "plan": {
+          "digest": "sha256:e15f20dd66b3ea3360ea85e4df6c6577f11b537787d952a0a138d59b09da8a52",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/plans/a2-stall-offboard-remediation-006.json"
+        },
+        "raw_manifest": {
+          "digest": "sha256:5ee9b84cbab5c464c6d489308fe5ef016bdd1ca8843f57bbdcc0156df7fa174c",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-stall-offboard-remediation-006/raw-manifest.json"
+        },
+        "telemetry": {
+          "digest": "sha256:d6aeba27abdceea50b99a04e252d8cec17593997a62d233f0d2404cf92636267",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-offboard-remediation-006/raw/telemetry.sidecar.jsonl"
+        },
+        "workload_lifecycle": {
+          "digest": "sha256:81b2b1cca67c5a12e9b2f78a197e83cc9adf1964a7aec3d84379cda062033d5e",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-offboard-remediation-006/raw/workload.lifecycle.jsonl"
+        }
+      }
+    },
+    {
+      "attempt_id": "a2-stall-offboard-remediation-007",
+      "inputs": {
+        "closed_trace": {
+          "digest": "sha256:f1b537561601d3784ae9caa7a0f9f7c12180d54f9caf39e3c78b5bdf0d8db636",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-offboard-remediation-007/derived/closed.trace.jsonl"
+        },
+        "evaluation": {
+          "digest": "sha256:b084847b18c45d3394b7f68d0411b79a8ad0997758ec09a0cdb4403ece6f6010",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-stall-offboard-remediation-007/evaluation.json"
+        },
+        "plan": {
+          "digest": "sha256:0cae5bde4c9725921b958161ac0a3feedd67e7631c5715640686af029c9cd97d",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/plans/a2-stall-offboard-remediation-007.json"
+        },
+        "raw_manifest": {
+          "digest": "sha256:779d11aba808f8ab781d79a2c0ed1cf06b482f1761a643dbf291019be54b385e",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-stall-offboard-remediation-007/raw-manifest.json"
+        },
+        "telemetry": {
+          "digest": "sha256:8d5e739139f537cfd2cbcc9a9c0d61064b988e0d648a91513cdf183283f9e2da",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-offboard-remediation-007/raw/telemetry.sidecar.jsonl"
+        },
+        "workload_lifecycle": {
+          "digest": "sha256:67adaf17a4f29cf93c71cdf9fc50209425d39ed97111e234c5b01a609986d689",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-offboard-remediation-007/raw/workload.lifecycle.jsonl"
+        }
+      }
+    },
+    {
+      "attempt_id": "a2-stall-offboard-remediation-008",
+      "inputs": {
+        "closed_trace": {
+          "digest": "sha256:e538827e688eeb27e276332bd55ed3bd9ad81045e8316635e266b452d1445fda",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-offboard-remediation-008/derived/closed.trace.jsonl"
+        },
+        "evaluation": {
+          "digest": "sha256:f187d7a834605ce35a774e1f31fcc8d937c0d2420961ae82e5473ac3e0cf1ac0",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-stall-offboard-remediation-008/evaluation.json"
+        },
+        "plan": {
+          "digest": "sha256:0a4dbcfea8bc0f74318d396466888d1e99b0bf0a7080f2c6f702de3856afabd3",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/plans/a2-stall-offboard-remediation-008.json"
+        },
+        "raw_manifest": {
+          "digest": "sha256:e8cd1aeaf6f62ae1d1251602ffa50d7efbecc0e5713262b5060afc9681377e65",
+          "path": "experiments/motivation_stage_a2_thor_remediation_v1/results/a2-stall-offboard-remediation-008/raw-manifest.json"
+        },
+        "telemetry": {
+          "digest": "sha256:77c43b71d7a837a7ec8ba5021730293c4827527826bd73aa5f6e7540ff4706e1",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-offboard-remediation-008/raw/telemetry.sidecar.jsonl"
+        },
+        "workload_lifecycle": {
+          "digest": "sha256:0d8eebc933693c79b3ae4f71e0d3c05b2ea4ecc8eed86681bdf381e72c084fd2",
+          "path": "runs/motivation-stage-a2-thor-remediation-v1/a2-stall-offboard-remediation-008/raw/workload.lifecycle.jsonl"
+        }
+      }
+    }
+  ],
+  "ledger": {
+    "digest": "sha256:d468519cb72d431b53919d3fbd10d8e8759db9dd9f12d0b0e24a6f1b326c640e",
+    "path": "experiments/motivation_stage_a2_thor_remediation_v1/attempt-ledger.jsonl"
+  },
+  "matrix": {
+    "digest": "sha256:afb06c6b11000d08768297dbb0ca93a152889a75891d12bdc4ff88e606bee349",
+    "path": "experiments/motivation_stage_a2_thor_remediation_v1/matrix.json"
+  },
+  "schema_version": "1.0"
+}

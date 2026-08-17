@@ -1,0 +1,23 @@
+{
+  "allocation": {
+    "attempt_id": "a2-stall-offboard-remediation-005",
+    "cpu_set": "6-8",
+    "gazebo_partition": "family_a_motivation-stage-a2-thor-remediation-v1_2",
+    "mavlink_tcp_port": 4562,
+    "mavlink_udp_local_port": 14582,
+    "mavlink_udp_port": 14542,
+    "process_group_identity": "family-a-a2-stall-offboard-remediation-005",
+    "px4_instance": 2,
+    "ros_domain_id": 42,
+    "run_directory": "/runs/motivation-stage-a2-thor-remediation-v1/a2-stall-offboard-remediation-005",
+    "slot": 2,
+    "study_id": "motivation-stage-a2-thor-remediation-v1",
+    "temporary_directory": "/runs/motivation-stage-a2-thor-remediation-v1/a2-stall-offboard-remediation-005/tmp",
+    "vehicle_identity": "x500_2",
+    "xrce_agent_port": 8890
+  },
+  "outcome": "ACCEPTED",
+  "run_id": "a2-stall-offboard-remediation-005",
+  "schema_version": "1.0",
+  "ulog": "/runs/motivation-stage-a2-thor-remediation-v1/a2-stall-offboard-remediation-005/raw/px4.ulg"
+}

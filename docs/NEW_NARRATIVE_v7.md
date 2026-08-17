@@ -15,11 +15,14 @@ V7 的研究范围收敛为 **Family A：PX4 内部控制路径、Legacy Offboar
 ```text
 repository: uav_sf
 current narrative source: uav_sf/docs/NEW_NARRATIVE_v7.md on origin/main
-formal launches retained by the two Thor studies: 200
-admissible evidence sets: 151
-overall Oracle results among admissible evidence: 94 PASS, 57 VIOLATION
+Stage A1 formal launches retained by its two Thor studies: 200
+Stage A1 admissible evidence sets: 151
+Stage A1 overall Oracle results: 94 PASS, 57 VIOLATION
 Stage A1 minimal-mechanism motivation: complete through a separate supplemental study
-Stage A2 moving-workload realism bridge: planned
+Stage A2 primary: closed MEASUREMENT_INSUFFICIENT at 51 launches
+Stage A2 independent remediation: complete, 26/26 accepted and admissible
+Stage A2 Oracle results in the remediation: 10 PASS, 16 deliberate freshness VIOLATION
+Stage A2 moving-workload realism bridge: complete with bounded claims
 prior Orin evidence: documented as a separate historical evidence layer
 live formal strategy support: official sequence only
 ```
@@ -96,17 +99,18 @@ PX4 内部控制
 
 ## 1.5 下一步要做什么
 
-现有 Thor Motivation 使用预先写好的 official sequence，并以约 3 m 定点悬停、水平姿态或零角速度为主要运动上下文。它已经完成最小机制与测量基础，下一步增加一个单独预注册的移动工作负载 Stage A2：
+Thor Motivation 使用预先写好的 official sequence。Stage A1 以约 3 m 定点悬停、水平姿态或零角速度为主要运动上下文；Stage A2 已在独立预注册下完成如下移动工作负载：
 
 ```text
-Internal Takeoff
+Public Takeoff
+    → stable Internal Hold
     → Legacy Offboard or Dynamic External Mode
-    → Acceleration / Turn or Ascent–Translation–Descent
-    → Completion / Cancel / Process Exit during a selected motion phase
-    → Hold / RTL / Land
+    → position-only straight translation
+    → normal completion or healthy setpoint stall
+    → Internal Land
 ```
 
-Stage A2 在两种外部机制上复用同一任务形状、运动目标和 transition phase，至少包含正常完成与一种故障或中断。它用于检验移动状态是否增加新的 route/freshness/successor observation，并解释同类 violation 的物理后果。该研究使用新的 preregistration、ledger、environment identity 和 denominator，不修改 Stage A1 的任何结果。
+Stage A2 在两种外部机制上复用同一任务形状、运动目标和 transition phase，并覆盖正常完成与 healthy setpoint stall。其 primary study 因测量基础设施问题在 51 次 launch 后保持 `MEASUREMENT_INSUFFICIENT`；独立 remediation 在新 identity、seed、ledger 与 denominator 下完成 26/26 accepted evidence，不修改 primary 或 Stage A1。10 条 normal trace 全部 PASS，16 条 stall trace 全部仅违反 freshness。移动上下文没有增加新的 violation class，但把 retained-target exposure 解释为约 0.46--0.47 m 的完整任务进度 shortfall，而不是把它宣称为 flyaway、PX4 bug 或真实飞行风险。
 
 方法主线随后让测试器根据无人机当前的 route、health、completion、owner 和覆盖状态，主动选择下一个合法动作，逼近尚未覆盖的交接边界。
 
@@ -815,23 +819,24 @@ initial observation
 
 Stage A1 的运动上下文以约 3 m 悬停、水平姿态和零 body-rate 为主。它完成问题存在性、证据准入和 Oracle 增益验证，不承担移动任务真实性或高动态物理后果的证明。
 
-## 10.2 Stage A2：Moving-workload realism bridge — PLANNED
+## 10.2 Stage A2：Moving-workload realism bridge — COMPLETE WITH BOUNDED CLAIMS
 
-Stage A2 增加一个 bounded、mission-shaped moving workload：
+Stage A2 已完成一个 bounded、mission-shaped moving workload：
 
 ```text
-Internal Takeoff
+Public Takeoff
+    → stable Internal Hold
     → External Route Active
-    → Acceleration / Turn or Ascent–Translation–Descent
-    → Completion / Cancel / Process Exit during a selected motion phase
-    → Hold / RTL / Land
+    → position-only straight translation
+    → normal completion or healthy setpoint stall
+    → Internal Land
 ```
 
-设计要求：
+完成情况：
 
 - Legacy Offboard 与 Dynamic External Mode 使用相同任务形状、运动目标、setpoint level 和 transition phase；
 - 至少覆盖正常完成与一种故障或中断；
-- transition 分别发生在移动段和任务阶段边界附近；
+- fault 在冻结的移动段时间点发生，normal completion 使用同一任务终点；
 - 继续使用 public actions、Evidence Gate、Route/Freshness/Successor contracts、安全与 cleanup；
 - 记录 transition 时的速度、加速度、姿态、角速度、位置误差和恢复时间，用于解释物理后果；
 - 单独预注册 matrix、accepted target、launch cap、simulation seeds、environment identity 和 denominator；
@@ -839,7 +844,9 @@ Internal Takeoff
 
 Stage A2 的判定重点是：移动任务是否增加新的 applicable contract state、violation signature 或更明显的物理后果。它不用于声称某种机制具有通用安全优势，也不承担三种生成策略的效率比较。
 
-完成后，移动任务 trace 可作为主比较 campaign 的共同 seed；三种策略必须使用相同 motion profile，避免把 workload 差异混入 generation effect。
+Primary study 关闭 51 次 launch，但因 command-subject clock closure 问题未达到三个 cell target，保持 `MEASUREMENT_INSUFFICIENT`。独立 remediation 改正该测量规则和 public takeoff-before-transition obligation，随后 26/26 launch 全部 accepted、admissible，并形成 13 个 same-seed mechanism pair。Normal 的 10 条 trace 全部 PASS；healthy-stall 的 16 条 trace 全部仅产生 freshness VIOLATION。
+
+Stall 后两种机制均继续约 1.0 m 到达冻结在 3.0 m 的 position target，相对完整 3.5 m profile 的 median shortfall 分别为 0.459 m 与 0.472 m。该结果增加 physical interpretability，但不增加新的 violation class，也不形成 mechanism safety ranking。通过 Gate 的 moving trace 可作为主比较 campaign 的共同 workload；三种策略必须使用相同 motion profile，避免把 workload 差异混入 generation effect。
 
 ## 10.3 Stage B：Live strategy backend — PENDING
 
@@ -1092,9 +1099,9 @@ Locked Thor runtime、four-slot isolation、safety、cleanup、accounting 和 re
 
 Primary 保持 `MEASUREMENT_INSUFFICIENT`，独立 supplemental study 完成两个修正 obligation；合起来完成 Stage A1。Prior Orin evidence 只作为单独的历史证据层，不进入 Thor 分母。
 
-## Gate 4b：Stage A2 moving-workload realism bridge — PENDING
+## Gate 4b：Stage A2 moving-workload realism bridge — PASS WITH BOUNDED CLAIMS
 
-需要在 Legacy Offboard 与 Dynamic External Mode 上执行同一 mission-shaped moving workload，证明 moving phase 的 evidence admissibility，并评价其是否增加 contract-state coverage、violation signature 或物理后果解释。Stage A2 使用独立 preregistration 和 denominator。
+Legacy Offboard 与 Dynamic External Mode 已执行同一 position-only moving workload。独立 remediation 的 26 条 trace 全部 admissible，并达到全部 accepted target。Movement 没有增加新的 violation class，但把 freshness stall 转换为可量化 retained-target travel 与任务进度 shortfall；结果使用独立 preregistration 和 denominator，不能外推为真机风险或机制优劣。
 
 ## Gate 5：Live bounded-random backend — PENDING
 
@@ -1116,27 +1123,26 @@ Primary 保持 `MEASUREMENT_INSUFFICIENT`，独立 supplemental study 完成两�
 
 只有核心方法成立后，才选择一个成本受控的扩展环境。
 
-论文目前已经跨过“方向调查”和“实验平台搭建”阶段，进入“bounded realism bridge、核心方法实现与比较评价”阶段。Stage A2 是范围受控的说服力增强；live strategy backend 和公平主实验仍是主要方法瓶颈。
+论文目前已经跨过“方向调查、实验平台搭建和 bounded realism bridge”阶段，进入“核心方法实现与比较评价”阶段。Live strategy backend 和公平主实验是当前主要方法瓶颈。
 
 ---
 
 # 15. Recommended Execution Order
 
 1. 冻结 V7 的 Family A scope、RQ、action grammar、baselines 与固定预算原则；
-2. 定义并 qualification Stage A2 的共同移动任务形状；
-3. 单独预注册并执行 Stage A2，不修改 Stage A1；
-4. 将通过 Gate 的 moving trace 加入主实验共同 seed corpus；
-5. 接通 bounded-random live backend；
-6. 增加 decision/schedule/request/effect trace contract；
-7. 接通 state-aware closed-loop backend；
-8. 完成非正式 qualification 和 fail-closed test；
-9. 冻结新的 repository revision、container image 与 environment attestation；
-10. 预注册三策略主比较矩阵；
-11. 执行固定预算 formal campaign；
-12. 聚类、复现和最小化 violation；
-13. 完成 Oracle/feedback ablation；
-14. 根据核心结果决定是否增加一个 Stage A2 之外的 external-validity subject；
-15. 撰写完整论文并同步 artifact documentation。
+2. 保留已完成的 Stage A2 qualification、primary insufficient result 与独立 remediation；
+3. 将通过 Gate 的 moving trace 加入主实验共同 seed corpus；
+4. 接通 bounded-random live backend；
+5. 增加 decision/schedule/request/effect trace contract；
+6. 接通 state-aware closed-loop backend；
+7. 完成非正式 qualification 和 fail-closed test；
+8. 冻结新的 repository revision、container image 与 environment attestation；
+9. 预注册三策略主比较矩阵；
+10. 执行固定预算 formal campaign；
+11. 聚类、复现和最小化 violation；
+12. 完成 Oracle/feedback ablation；
+13. 根据核心结果决定是否增加一个 Stage A2 之外的 external-validity subject；
+14. 撰写完整论文并同步 artifact documentation。
 
 ---
 
@@ -1154,6 +1160,10 @@ Primary 保持 `MEASUREMENT_INSUFFICIENT`，独立 supplemental study 完成两�
 - Primary study 仍为 `MEASUREMENT_INSUFFICIENT`；
 - 独立 supplemental study 完成两个修正 obligation；
 - Stage A1 minimal-mechanism motivation 已完成；
+- Stage A2 primary 已在 51 次 launch 后以 `MEASUREMENT_INSUFFICIENT` 关闭；
+- Stage A2 独立 remediation 已完成 26/26 accepted、admissible launch 与 13 个 matched pair；
+- Stage A2 normal 为 10 PASS，healthy stall 为 16 条仅 freshness VIOLATION；
+- Stage A2 moving workload 增加了 bounded physical interpretability，但没有增加新的 violation class；
 - V7 记录了归属于 V6 的 prior Orin evidence lineage 摘要，包括 P5 v6、Issue #162 和 freshness pilot；当前分支不独立支持其原始制品重放；
 - prior Orin evidence 与当前 Thor corpus 保持独立，不进入 Thor denominator；
 - Official Sequence live runtime 已可执行；
@@ -1167,8 +1177,8 @@ Primary 保持 `MEASUREMENT_INSUFFICIENT`，独立 supplemental study 完成两�
 - 所有 violation 都已定位 root cause；
 - 结果适用于 HIL、真机或所有 PX4 revision；
 - Family B 已获得实现或实证支持；
-- Stage A2 moving workload 已完成；
-- Stage A2 moving workload 已经增加发现能力；
+- Stage A2 结果证明真机危险、flyaway 或通用 PX4 bug；
+- Stage A2 证明任一外部控制机制普遍更安全；
 - 真实 autonomy workload 已增加发现能力；
 - 一次安全 Land/Disarm 证明之前所有 authority transition 正确。
 
@@ -1301,7 +1311,7 @@ Primary 保持 `MEASUREMENT_INSUFFICIENT`，独立 supplemental study 完成两�
 
 ## 18.3 Additional versions and workloads
 
-Stage A2 已计划一个当前环境内的 mission-shaped moving workload。其后仍可选择不同 PX4 revision、airframe 或真实任务 trace，验证 finding 与方法的迁移性。扩展应由明确 hypothesis 驱动，而不是以增加 subject 数量为目的。
+Stage A2 已完成一个当前环境内的 mission-shaped moving workload。其后仍可选择不同 PX4 revision、airframe 或真实任务 trace，验证 finding 与方法的迁移性。扩展应由明确 hypothesis 驱动，而不是以增加 subject 数量为目的。
 
 ---
 
@@ -1317,7 +1327,7 @@ Stage A2 已计划一个当前环境内的 mission-shaped moving workload。其�
 
 两个独立的预注册 Thor Motivation study 共关闭 200 次正式 launch，产生 151 份 admissible evidence，其中包括 77 条 Legacy Offboard、39 条 Dynamic External Mode 和 35 条 Mode Executor trace。94 份为 overall PASS，57 份为 overall VIOLATION。结果表明，mode state 和 terminal outcome 看似正常时，route installation、continuity、command freshness 或 successor timing 仍可能违反独立契约。Primary study 对两个 invalid-plan cell 保持 `MEASUREMENT_INSUFFICIENT`；独立 supplemental study 在不修改 primary ledger、threshold 或 denominator 的前提下完成两个修正 obligation。
 
-Thor Stage A1 使用约 3 m 悬停、水平姿态和零 body-rate 作为受控最小运动上下文。Stage A2 将在 Legacy Offboard 与 Dynamic External Mode 激活后执行共同的 mission-shaped moving workload，覆盖 acceleration/turn 或 ascent–translation–descent，并在选定移动阶段触发 completion、cancel 或 process exit。它使用独立 preregistration 和 denominator，用于评价 motion context 是否增加新的 contract state、violation signature 或物理后果。
+Thor Stage A1 使用约 3 m 悬停、水平姿态和零 body-rate 作为受控最小运动上下文。Stage A2 已在 Legacy Offboard 与 Dynamic External Mode 激活后执行共同的 position-only straight-translation workload，并在冻结移动时点执行 normal completion 或 healthy setpoint stall。Primary 保持 `MEASUREMENT_INSUFFICIENT`；独立 remediation 的 26/26 trace 全部 accepted、admissible，形成 10 PASS 和 16 条仅 freshness VIOLATION。Movement 没有增加 violation class，但把 retained-target behavior 解释为约 1.0 m post-stall travel 和约 0.46--0.47 m complete-profile shortfall。
 
 Motivation evidence 证明了问题和 Oracle suite 的必要性，但不证明测试生成方法的搜索增益。Stage A2 之后，论文接通 bounded-random 与 state-aware live action backend，并在相同 route corpus、共同 hover/moving seeds、安全约束和固定预算下与 Official Sequence 比较。State-aware strategy 观察当前 route、identity、health、completion、successor 和 coverage state，只选择满足前置条件的 public action，并优先逼近未覆盖的 contract boundary。
 
