@@ -177,6 +177,7 @@ def _semantic_success(
     reasons: list[str] = []
     records = _read_jsonl_snapshot(path)
     statuses = [item for item in records if item.get("kind") == "vehicle_status"]
+    land = [item for item in records if item.get("kind") == "vehicle_land_detected"]
     armed = any(int(item.get("arming_state", -1)) == 2 for item in statuses)
     airborne = physical_takeoff_observed(records)
     if expected_rejection:

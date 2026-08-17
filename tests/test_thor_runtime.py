@@ -24,7 +24,7 @@ from scripts.runtime.run_qualification_batch import (
     qualification_gate,
     validate_spec,
 )
-from scripts.runtime.run_sitl import _read_jsonl_snapshot
+from scripts.runtime.run_sitl import _read_jsonl_snapshot, _semantic_success
 from scripts.runtime.physical_readiness import (
     PhysicalTakeoffGate,
     physical_takeoff_observed,
@@ -67,6 +67,57 @@ class ThorRuntimeTests(unittest.TestCase):
             },
         ]
         self.assertTrue(physical_takeoff_observed(records))
+
+    def test_semantic_success_keeps_terminal_land_evidence(self) -> None:
+        records = [
+            {
+                "kind": "vehicle_status",
+                "received_monotonic_ns": 0,
+                "arming_state": 2,
+                "nav_state": 14,
+            },
+            {
+                "kind": "vehicle_local_position",
+                "received_monotonic_ns": 0,
+                "z": -0.6,
+                "z_valid": True,
+            },
+            {
+                "kind": "vehicle_land_detected",
+                "received_monotonic_ns": 10_000_000,
+                "landed": False,
+            },
+            {
+                "kind": "vehicle_local_position",
+                "received_monotonic_ns": 300_000_000,
+                "z": -0.7,
+                "z_valid": True,
+            },
+            {
+                "kind": "vehicle_land_detected",
+                "received_monotonic_ns": 520_000_000,
+                "landed": False,
+            },
+            {
+                "kind": "vehicle_status",
+                "received_monotonic_ns": 1_000_000_000,
+                "arming_state": 1,
+                "nav_state": 18,
+            },
+            {
+                "kind": "vehicle_land_detected",
+                "received_monotonic_ns": 1_010_000_000,
+                "landed": True,
+            },
+        ]
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "telemetry.jsonl"
+            path.write_text(
+                "".join(json.dumps(item) + "\n" for item in records),
+                encoding="utf-8",
+            )
+            success, reasons = _semantic_success(path, "legacy_offboard")
+        self.assertTrue(success, reasons)
 
     def test_cpu_sets_are_parsed_and_must_not_overlap(self) -> None:
         self.assertEqual(cpu_set_members("0-2,5"), frozenset({0, 1, 2, 5}))
