@@ -1,12 +1,15 @@
 #include <Eigen/Core>
 #include <chrono>
+#include <cstdio>
 #include <cstdlib>
+#include <fstream>
 #include <memory>
 #include <px4_ros2/components/mode.hpp>
 #include <px4_ros2/components/node_with_mode.hpp>
 #include <px4_ros2/control/setpoint_types/experimental/trajectory.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <string>
+#include <system_error>
 
 using namespace std::chrono_literals;
 
@@ -20,16 +23,28 @@ class FamilyAExternalMode : public px4_ros2::ModeBase {
     node.declare_parameter("fault_mode", std::string{"normal"});
     node.declare_parameter("health_reply_enabled", true);
     node.declare_parameter("hover_altitude_m", 3.0);
+    node.declare_parameter("run_id", std::string{});
+    node.declare_parameter("registration_handoff_path", std::string{});
     _active_duration_s = node.get_parameter("active_duration_s").as_double();
     _stall_after_s = node.get_parameter("stall_after_s").as_double();
     _fault_mode = node.get_parameter("fault_mode").as_string();
     _hover_altitude_m = node.get_parameter("hover_altitude_m").as_double();
+    _run_id = node.get_parameter("run_id").as_string();
+    _registration_handoff_path =
+        node.get_parameter("registration_handoff_path").as_string();
     setArmingCheckReplyEnabled(node.get_parameter("health_reply_enabled").as_bool());
     if (_fault_mode != "normal" && _fault_mode != "setpoint_stall" &&
         _fault_mode != "process_exit") {
       throw std::runtime_error("unsupported fault_mode");
     }
     _trajectory = std::make_shared<px4_ros2::TrajectorySetpointType>(*this);
+  }
+
+  const std::string& runId() const { return _run_id; }
+
+  const std::string& registrationHandoffPath() const
+  {
+    return _registration_handoff_path;
   }
 
   void onActivate() override
@@ -70,16 +85,49 @@ class FamilyAExternalMode : public px4_ros2::ModeBase {
   double _stall_after_s{3.0};
   double _hover_altitude_m{3.0};
   std::string _fault_mode{"normal"};
+  std::string _run_id;
+  std::string _registration_handoff_path;
   bool _completion_sent{false};
   std::shared_ptr<px4_ros2::TrajectorySetpointType> _trajectory;
 };
 
 using FamilyAModeNode = px4_ros2::NodeWithMode<FamilyAExternalMode>;
 
+void writeRegistrationHandoff(const FamilyAModeNode& node)
+{
+  const auto& mode = node.getMode();
+  if (mode.registrationHandoffPath().empty()) {
+    return;
+  }
+  if (mode.runId().empty()) {
+    throw std::runtime_error("run_id is required with registration_handoff_path");
+  }
+  const std::string temporary_path = mode.registrationHandoffPath() + ".tmp";
+  std::ofstream stream(temporary_path, std::ios::out | std::ios::trunc);
+  if (!stream) {
+    throw std::runtime_error("failed to create registration handoff");
+  }
+  stream << "{\n"
+         << "  \"component_name\": \"Family A External\",\n"
+         << "  \"mode_id\": " << static_cast<unsigned int>(mode.id()) << ",\n"
+         << "  \"run_id\": \"" << mode.runId() << "\",\n"
+         << "  \"schema_version\": \"1.0\"\n"
+         << "}\n";
+  stream.close();
+  if (!stream) {
+    throw std::runtime_error("failed to flush registration handoff");
+  }
+  if (std::rename(temporary_path.c_str(), mode.registrationHandoffPath().c_str()) != 0) {
+    throw std::runtime_error("failed to publish registration handoff");
+  }
+}
+
 int main(int argc, char* argv[])
 {
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<FamilyAModeNode>("family_a_external_mode", true));
+  auto node = std::make_shared<FamilyAModeNode>("family_a_external_mode", true);
+  writeRegistrationHandoff(*node);
+  rclcpp::spin(node);
   rclcpp::shutdown();
   return 0;
 }

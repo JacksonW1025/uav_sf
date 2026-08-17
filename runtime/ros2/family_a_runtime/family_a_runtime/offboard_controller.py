@@ -10,12 +10,14 @@ from px4_msgs.msg import (
     VehicleAttitudeSetpoint,
     VehicleCommand,
     VehicleLandDetected,
+    VehicleLocalPosition,
     VehicleRatesSetpoint,
     VehicleStatus,
 )
 from rclpy.node import Node
 
 from family_a_runtime.common import DurableJsonl, PX4_QOS, versioned_topic
+from scripts.runtime.physical_readiness import PhysicalTakeoffGate
 
 
 class OffboardController(Node):
@@ -36,6 +38,8 @@ class OffboardController(Node):
             "repeat_count": 1,
             "source_dwell_s": 1.0,
             "target_system": 1,
+            "airborne_minimum_height_m": 0.5,
+            "airborne_dwell_s": 0.5,
         }
         for name, value in defaults.items():
             self.declare_parameter(name, value)
@@ -57,6 +61,12 @@ class OffboardController(Node):
             float(self.get_parameter("source_dwell_s").value) * 1_000_000_000
         )
         self._target_system = int(self.get_parameter("target_system").value)
+        self._takeoff_gate = PhysicalTakeoffGate(
+            minimum_height_m=float(
+                self.get_parameter("airborne_minimum_height_m").value
+            ),
+            dwell_s=float(self.get_parameter("airborne_dwell_s").value),
+        )
         if not self._run_id or not lifecycle_path:
             raise RuntimeError("run_id and lifecycle_path are required")
         if self._setpoint_kind not in {"trajectory", "attitude", "body_rate"}:
@@ -126,6 +136,12 @@ class OffboardController(Node):
             self._land_callback,
             PX4_QOS,
         )
+        self.create_subscription(
+            VehicleLocalPosition,
+            versioned_topic("/fmu/out/vehicle_local_position", VehicleLocalPosition),
+            self._local_position_callback,
+            PX4_QOS,
+        )
         self.create_timer(0.05, self._tick)
         self._log.append(
             "producer_started",
@@ -165,10 +181,31 @@ class OffboardController(Node):
 
     def _land_callback(self, message: VehicleLandDetected) -> None:
         self._land = message
-        if not message.landed:
-            self._ever_airborne = True
-            if self._airborne_ns is None:
-                self._airborne_ns = time.monotonic_ns()
+        self._takeoff_gate.observe_land(
+            landed=bool(message.landed), now_ns=time.monotonic_ns()
+        )
+        self._update_physical_takeoff_state()
+
+    def _local_position_callback(self, message: VehicleLocalPosition) -> None:
+        self._takeoff_gate.observe_local_position(
+            z_m=float(message.z),
+            z_valid=bool(message.z_valid),
+            now_ns=time.monotonic_ns(),
+        )
+        self._update_physical_takeoff_state()
+
+    def _update_physical_takeoff_state(self) -> None:
+        if self._ever_airborne or not self._takeoff_gate.evaluate(time.monotonic_ns()):
+            return
+        self._ever_airborne = True
+        self._airborne_ns = self._takeoff_gate.ready_ns
+        self._log.append(
+            "physical_takeoff_ready",
+            run_id=self._run_id,
+            minimum_height_m=self._takeoff_gate.minimum_height_m,
+            dwell_s=self._takeoff_gate.dwell_s,
+            observed_height_m=self._takeoff_gate.height_m,
+        )
 
     def _timestamp_us(self) -> int:
         return self.get_clock().now().nanoseconds // 1000
@@ -260,6 +297,7 @@ class OffboardController(Node):
 
     def _tick(self) -> None:
         now_ns = time.monotonic_ns()
+        self._update_physical_takeoff_state()
         elapsed = (now_ns - self._started_ns) / 1_000_000_000
         active_elapsed = (
             (time.monotonic_ns() - self._activation_ns) / 1_000_000_000

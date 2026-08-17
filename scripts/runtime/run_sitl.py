@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.runtime.isolation import allocate_isolation
+from scripts.runtime.physical_readiness import physical_takeoff_observed
 from scripts.runtime.preflight import self_check
 
 
@@ -176,9 +177,8 @@ def _semantic_success(
     reasons: list[str] = []
     records = _read_jsonl_snapshot(path)
     statuses = [item for item in records if item.get("kind") == "vehicle_status"]
-    land = [item for item in records if item.get("kind") == "vehicle_land_detected"]
     armed = any(int(item.get("arming_state", -1)) == 2 for item in statuses)
-    airborne = any(not bool(item.get("landed", True)) for item in land)
+    airborne = physical_takeoff_observed(records)
     if expected_rejection:
         if any(23 <= int(item.get("nav_state", -1)) <= 30 for item in statuses):
             reasons.append("external target activated despite the expected rejection")
@@ -230,9 +230,8 @@ def _terminal_safe(path: Path) -> bool:
 def _mission_started(path: Path, mechanism: str) -> bool:
     records = _read_jsonl_snapshot(path)
     statuses = [item for item in records if item.get("kind") == "vehicle_status"]
-    land = [item for item in records if item.get("kind") == "vehicle_land_detected"]
     armed = any(int(item.get("arming_state", -1)) == 2 for item in statuses)
-    airborne = any(not bool(item.get("landed", True)) for item in land)
+    airborne = physical_takeoff_observed(records)
     if mechanism == "legacy_offboard":
         target_active = any(int(item.get("nav_state", -1)) == 14 for item in statuses)
     else:
@@ -458,6 +457,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 ],
             )
         elif args.mechanism == "dynamic_external_mode":
+            registration_handoff = raw / "external-mode.registration.json"
             workload = start(
                 "external_mode_requester",
                 [
@@ -480,6 +480,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     f"fault_mode:={'health_loss' if args.health_loss else args.fault_mode}",
                     "-p",
                     f"target_system:={allocation.px4_instance + 1}",
+                    "-p",
+                    f"registration_handoff_path:={registration_handoff}",
                 ],
             )
             time.sleep(0.5)
@@ -497,6 +499,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     f"fault_mode:={'normal' if args.health_loss else args.fault_mode}",
                     "-p",
                     f"health_reply_enabled:={'false' if args.health_loss else 'true'}",
+                    "-p",
+                    f"run_id:={args.run_id}",
+                    "-p",
+                    f"registration_handoff_path:={registration_handoff}",
                 ],
             )
             if args.duplicate_registration:

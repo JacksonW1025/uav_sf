@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import json
 import math
 import time
+from pathlib import Path
 
 import rclpy
 from px4_msgs.msg import (
@@ -9,11 +11,13 @@ from px4_msgs.msg import (
     VehicleCommand,
     VehicleCommandAck,
     VehicleLandDetected,
+    VehicleLocalPosition,
     VehicleStatus,
 )
 from rclpy.node import Node
 
 from family_a_runtime.common import DurableJsonl, PX4_QOS, versioned_topic
+from scripts.runtime.physical_readiness import PhysicalTakeoffGate
 
 
 class ExternalModeRequester(Node):
@@ -31,6 +35,9 @@ class ExternalModeRequester(Node):
             "source_route": "px4_internal",
             "source_dwell_s": 1.0,
             "target_system": 1,
+            "registration_handoff_path": "",
+            "airborne_minimum_height_m": 0.5,
+            "airborne_dwell_s": 0.5,
         }
         for name, value in defaults.items():
             self.declare_parameter(name, value)
@@ -48,6 +55,19 @@ class ExternalModeRequester(Node):
             float(self.get_parameter("source_dwell_s").value) * 1_000_000_000
         )
         self._target_system = int(self.get_parameter("target_system").value)
+        registration_handoff_path = self.get_parameter(
+            "registration_handoff_path"
+        ).value
+        self._registration_handoff_path = (
+            Path(registration_handoff_path) if registration_handoff_path else None
+        )
+        self._registration_handoff_loaded = False
+        self._takeoff_gate = PhysicalTakeoffGate(
+            minimum_height_m=float(
+                self.get_parameter("airborne_minimum_height_m").value
+            ),
+            dwell_s=float(self.get_parameter("airborne_dwell_s").value),
+        )
         self._rejection_observation_s = float(
             self.get_parameter("rejection_observation_s").value
         )
@@ -105,6 +125,12 @@ class ExternalModeRequester(Node):
             VehicleLandDetected,
             "/fmu/out/vehicle_land_detected",
             self._land_callback,
+            PX4_QOS,
+        )
+        self.create_subscription(
+            VehicleLocalPosition,
+            versioned_topic("/fmu/out/vehicle_local_position", VehicleLocalPosition),
+            self._local_position_callback,
             PX4_QOS,
         )
         self.create_timer(0.1, self._tick)
@@ -207,8 +233,64 @@ class ExternalModeRequester(Node):
 
     def _land_callback(self, message: VehicleLandDetected) -> None:
         self._land = message
-        if not message.landed:
-            self._airborne = True
+        self._takeoff_gate.observe_land(
+            landed=bool(message.landed), now_ns=time.monotonic_ns()
+        )
+        self._update_physical_takeoff_state()
+
+    def _local_position_callback(self, message: VehicleLocalPosition) -> None:
+        self._takeoff_gate.observe_local_position(
+            z_m=float(message.z),
+            z_valid=bool(message.z_valid),
+            now_ns=time.monotonic_ns(),
+        )
+        self._update_physical_takeoff_state()
+
+    def _update_physical_takeoff_state(self) -> None:
+        if self._airborne or not self._takeoff_gate.evaluate(time.monotonic_ns()):
+            return
+        self._airborne = True
+        self._log.append(
+            "physical_takeoff_ready",
+            run_id=self._run_id,
+            minimum_height_m=self._takeoff_gate.minimum_height_m,
+            dwell_s=self._takeoff_gate.dwell_s,
+            observed_height_m=self._takeoff_gate.height_m,
+        )
+
+    def _load_registration_handoff(self) -> None:
+        if (
+            self._registration_handoff_loaded
+            or self._registration_handoff_path is None
+            or not self._registration_handoff_path.is_file()
+        ):
+            return
+        payload = json.loads(
+            self._registration_handoff_path.read_text(encoding="utf-8")
+        )
+        expected = {
+            "schema_version": "1.0",
+            "run_id": self._run_id,
+            "component_name": self._component_name,
+        }
+        for field, value in expected.items():
+            if payload.get(field) != value:
+                raise RuntimeError(f"registration handoff {field} mismatch")
+        mode_id = int(payload.get("mode_id", -1))
+        if not 23 <= mode_id <= 30:
+            raise RuntimeError("registration handoff mode_id is outside external slots")
+        if self._mode_id is not None and self._mode_id != mode_id:
+            raise RuntimeError("registration reply and handoff mode_id disagree")
+        self._mode_id = mode_id
+        if self._registered_ns is None:
+            self._registered_ns = time.monotonic_ns()
+        self._registration_handoff_loaded = True
+        self._log.append(
+            "registration_handoff_loaded",
+            run_id=self._run_id,
+            component_name=self._component_name,
+            mode_id=mode_id,
+        )
 
     def _command(self, command: int, *, param1: float = math.nan) -> None:
         message = VehicleCommand()
@@ -247,6 +329,8 @@ class ExternalModeRequester(Node):
         return now_ns - self._source_ready_ns >= self._source_dwell_ns
 
     def _tick(self) -> None:
+        self._load_registration_handoff()
+        self._update_physical_takeoff_state()
         if self._mode_id is None or self._status is None:
             return
         now = time.monotonic_ns()

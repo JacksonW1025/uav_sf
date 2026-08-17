@@ -25,11 +25,49 @@ from scripts.runtime.run_qualification_batch import (
     validate_spec,
 )
 from scripts.runtime.run_sitl import _read_jsonl_snapshot
+from scripts.runtime.physical_readiness import (
+    PhysicalTakeoffGate,
+    physical_takeoff_observed,
+)
 from scripts.setup.prepare_sources import SourceError, _verify_patched_tree
 from scripts.setup.verify_candidates import _git_identity
 
 
 class ThorRuntimeTests(unittest.TestCase):
+    def test_physical_takeoff_gate_rejects_land_detector_pulse(self) -> None:
+        gate = PhysicalTakeoffGate(dwell_s=0.5)
+        gate.observe_local_position(z_m=-0.08, z_valid=True, now_ns=0)
+        gate.observe_land(landed=False, now_ns=0)
+        self.assertFalse(gate.evaluate(800_000_000))
+        self.assertFalse(gate.ready)
+
+    def test_physical_takeoff_gate_requires_sustained_height_and_land_agreement(self) -> None:
+        records = [
+            {
+                "kind": "vehicle_local_position",
+                "received_monotonic_ns": 0,
+                "z": -0.6,
+                "z_valid": True,
+            },
+            {
+                "kind": "vehicle_land_detected",
+                "received_monotonic_ns": 10_000_000,
+                "landed": False,
+            },
+            {
+                "kind": "vehicle_local_position",
+                "received_monotonic_ns": 300_000_000,
+                "z": -0.7,
+                "z_valid": True,
+            },
+            {
+                "kind": "vehicle_land_detected",
+                "received_monotonic_ns": 520_000_000,
+                "landed": False,
+            },
+        ]
+        self.assertTrue(physical_takeoff_observed(records))
+
     def test_cpu_sets_are_parsed_and_must_not_overlap(self) -> None:
         self.assertEqual(cpu_set_members("0-2,5"), frozenset({0, 1, 2, 5}))
         verify_disjoint_cpu_sets(["0-2", "3-5", "6-8", "9-13"])
