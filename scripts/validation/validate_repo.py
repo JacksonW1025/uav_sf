@@ -33,9 +33,9 @@ IGNORED_ROOTS = {
 ALLOWED_TOP = {
     ".dockerignore",
     ".gitattributes",
-    ".github",
     ".gitignore",
     "AGENT.md",
+    "CLAUDE.md",
     "README.md",
     "config",
     "containers",

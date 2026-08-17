@@ -23,8 +23,8 @@
   expected successor, and expected fallback identity.
 - Run the Evidence Admissibility Gate before interpreting Oracle output.
 - Missing or incomplete evidence must remain `INCONCLUSIVE` or `UNKNOWN`.
-- Keep dependencies, source commits, images, packages, and CI actions pinned to
-  immutable identities.
+- Keep dependencies, source commits, images, and packages pinned to immutable
+  identities.
 - Keep runtime output in ignored `runs/`; never track flight artifacts.
 - Do not treat the current checkout host or the repository's validation image
   as the formal experiment environment. Register the actual target environment
