@@ -1,0 +1,180 @@
+{
+  "attempt_id": "main-offboard-official-003",
+  "clock_bridge": {
+    "bridge_id": "clock-66310dda57520bfd",
+    "knots": [
+      [
+        10588000000,
+        1687541175558830
+      ],
+      [
+        11592000000,
+        1687542176815339
+      ],
+      [
+        12596000000,
+        1687543180923043
+      ],
+      [
+        13600000000,
+        1687544184588886
+      ],
+      [
+        14604000000,
+        1687545189513627
+      ],
+      [
+        15608000000,
+        1687546192780145
+      ],
+      [
+        16612000000,
+        1687547196744080
+      ],
+      [
+        17616000000,
+        1687548200719728
+      ],
+      [
+        18620000000,
+        1687549204664700
+      ],
+      [
+        19624000000,
+        1687550208620672
+      ],
+      [
+        20628000000,
+        1687551212676145
+      ],
+      [
+        21632000000,
+        1687552217091996
+      ],
+      [
+        22636000000,
+        1687553220588172
+      ],
+      [
+        23640000000,
+        1687554224627922
+      ],
+      [
+        24644000000,
+        1687555228611756
+      ],
+      [
+        25648000000,
+        1687556232506959
+      ],
+      [
+        26652000000,
+        1687557238492821
+      ],
+      [
+        27656000000,
+        1687558240617515
+      ],
+      [
+        28660000000,
+        1687559244543793
+      ],
+      [
+        29664000000,
+        1687560248645812
+      ],
+      [
+        30668000000,
+        1687561252565857
+      ],
+      [
+        31672000000,
+        1687562256591506
+      ],
+      [
+        32676000000,
+        1687563260820728
+      ],
+      [
+        33680000000,
+        1687564264583784
+      ],
+      [
+        34684000000,
+        1687565268712848
+      ],
+      [
+        35688000000,
+        1687566272641988
+      ],
+      [
+        36692000000,
+        1687567277065775
+      ],
+      [
+        37696000000,
+        1687568280511015
+      ]
+    ],
+    "rate_ratio": 0.9998875676921942,
+    "reference_analysis_ns": 1687555228611756,
+    "reference_source_ns": 24644000000,
+    "sample_count": 28,
+    "source_domain": "px4_boot_ns",
+    "uncertainty_ns": 1930584,
+    "valid_from_ns": 10588000000,
+    "valid_until_ns": 37696000000
+  },
+  "environment_attestation_digest": "sha256:b9741184e07dbfe56eb939560bf5457f8ce16de0d8ebff2fd549792d6011bd3c",
+  "evaluation_status": "VIOLATION",
+  "evidence_gate_status": "ADMISSIBLE",
+  "gazebo": {
+    "central_minimum": 0.9987428324596415,
+    "median": 0.9998917617167942,
+    "minimum": 0.01387446464857861,
+    "sample_count": 375,
+    "status": "PASS"
+  },
+  "outcome": "ACCEPTED",
+  "physical_execution": {
+    "checks": {
+      "fault_after_motion_entry": true,
+      "motion_phase_entered": true,
+      "nominal_profile_coverage": true,
+      "sustained_takeoff": true,
+      "takeoff_before_tested_transition": true
+    },
+    "maximum_logged_completion_progress_m": 2.506746663711965,
+    "maximum_logged_entry_progress_m": 0.7598990341648459,
+    "status": "PASS"
+  },
+  "plan_digest": "sha256:16389171fec9bab46498c4ecbf694e238b68424f78eb076c3d28422ec16d4244",
+  "plan_id": "main-offboard-official-003-plan",
+  "processing_error": null,
+  "raw_manifest_digest": "sha256:c9142447f9ba2283a177c15cab37bac4271190b662dbc7dc9eb68d94f8cdb522",
+  "runtime_outcome": "ACCEPTED",
+  "schema_version": "1.0",
+  "study_id": "main-strategy-comparison-thor-v1",
+  "ulog": {
+    "dropouts": [],
+    "file_corruption": false,
+    "first_sequence_by_instance": {
+      "0": 0,
+      "1": 79,
+      "2": 79,
+      "3": 67
+    },
+    "route_observation_count": 12413,
+    "route_observation_instances": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "schema_version": "1.0",
+    "sequence_gaps": [],
+    "status": "PASS",
+    "ulog_end_us": 38116000,
+    "ulog_start_us": 5036000
+  }
+}

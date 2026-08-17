@@ -1,0 +1,147 @@
+{
+  "file_count": 28,
+  "files": [
+    {
+      "path": "external-mode.registration.json",
+      "sha256": "f0e8d2ff0d8c3e1ddb3ef0a783f34fc35929aafe227cc28acd6be3c528db958d",
+      "size_bytes": 126
+    },
+    {
+      "path": "external_mode.stderr.log",
+      "sha256": "796ebc946dbf0b2d77d374ea5705ab51760cb445bfa81d1c39c1fa4d10106e5b",
+      "size_bytes": 1855
+    },
+    {
+      "path": "external_mode.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "external_mode_requester.stderr.log",
+      "sha256": "17c3cc9018b5eb954db50440fbbf7f423ef8631fe69d2429de589b961c9e4ca9",
+      "size_bytes": 300
+    },
+    {
+      "path": "external_mode_requester.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "gazebo.clock.jsonl",
+      "sha256": "388fd822f12c1576cfcccdc09a08da62b8cc1b3b84c8b1b8a47e90cf76241464",
+      "size_bytes": 2060784
+    },
+    {
+      "path": "gazebo.stderr.log",
+      "sha256": "72bc4c7252923c3e45539c67f7ef9b0b21fcb56c7d88a4dddc5d88c992ed5d1c",
+      "size_bytes": 1361
+    },
+    {
+      "path": "gazebo.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "gazebo_clock_sidecar.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "gazebo_clock_sidecar.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "gazebo_stats.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "gazebo_stats.stdout.log",
+      "sha256": "95987ee085f265c71330ce4312adc222041c2be1a4df9b65f546f64305760d30",
+      "size_bytes": 65333
+    },
+    {
+      "path": "px4.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "px4.stdout.log",
+      "sha256": "985039709c4a831a68cfebfc7978e25f943db9eed0db6a3d146399a6a3a0dd81",
+      "size_bytes": 6372
+    },
+    {
+      "path": "px4.ulg",
+      "sha256": "135c7563a4ab0f729a6c19e251166e9199319d0850b25bb97594e885f96799ec",
+      "size_bytes": 8953562
+    },
+    {
+      "path": "runner.lifecycle.jsonl",
+      "sha256": "a7aa61a73455374db8c1ea9194ff7bf962c41dbe5d2fda8f27ac29f6ac1bd480",
+      "size_bytes": 3914
+    },
+    {
+      "path": "safety_supervisor.stderr.log",
+      "sha256": "6e4bfc92a5ce0219d6741fe4f78351d59130dd6a317cf3ea75b3a9a16793d092",
+      "size_bytes": 1604
+    },
+    {
+      "path": "safety_supervisor.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "setpoint-stall.request.json",
+      "sha256": "d72a6473d6b7e33e5348e213578e2c15050c6cb9c5c2554afa5b527186fbeb41",
+      "size_bytes": 326
+    },
+    {
+      "path": "strategy.lifecycle.jsonl",
+      "sha256": "f31ced6aaf83cb3841f2909284fd822d1ef601c8c01aa7a6bcc19b2e8ac7eb00",
+      "size_bytes": 1500
+    },
+    {
+      "path": "strategy_action_executor.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "strategy_action_executor.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "telemetry.sidecar.jsonl",
+      "sha256": "2a59d5f005a6719939c233940d2ada1cca853bf467baa1a64549d53eb8d7f8fa",
+      "size_bytes": 2034236
+    },
+    {
+      "path": "telemetry_sidecar.stderr.log",
+      "sha256": "0f317373f696752f6a134ae78e84dc0b984432a13198c066d1d89044aac740e5",
+      "size_bytes": 2427
+    },
+    {
+      "path": "telemetry_sidecar.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "workload.lifecycle.jsonl",
+      "sha256": "d509ff0696f60ba0231df4d53f911ac53f02064fd3fd27f010aacb0d71e3db46",
+      "size_bytes": 2732
+    },
+    {
+      "path": "xrce_agent.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "xrce_agent.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    }
+  ],
+  "root_name": "raw",
+  "schema_version": "1.0"
+}

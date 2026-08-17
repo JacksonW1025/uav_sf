@@ -1,0 +1,132 @@
+{
+  "file_count": 25,
+  "files": [
+    {
+      "path": "gazebo.clock.jsonl",
+      "sha256": "ed39dcb72d68012c5f42744e319c0635eacea697298f0321d656bce4cf0bcccb",
+      "size_bytes": 1945288
+    },
+    {
+      "path": "gazebo.stderr.log",
+      "sha256": "72bc4c7252923c3e45539c67f7ef9b0b21fcb56c7d88a4dddc5d88c992ed5d1c",
+      "size_bytes": 1361
+    },
+    {
+      "path": "gazebo.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "gazebo_clock_sidecar.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "gazebo_clock_sidecar.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "gazebo_stats.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "gazebo_stats.stdout.log",
+      "sha256": "6ff1ad1e6dcb2b1251fb04ca6ef2dc0625281092c8de9e3582c3410b5204ccc9",
+      "size_bytes": 61662
+    },
+    {
+      "path": "px4.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "px4.stdout.log",
+      "sha256": "b11a8249daf1b1f59edbae432fde6a9e33b1766fe798f459463ed3ce5d7821a3",
+      "size_bytes": 6657
+    },
+    {
+      "path": "px4.ulg",
+      "sha256": "f666082491307a47c1bd080138eb3189a5b960467384404aa7a1239aca29f9d0",
+      "size_bytes": 8427330
+    },
+    {
+      "path": "runner.lifecycle.jsonl",
+      "sha256": "75b0cccaaa6cb662046c90a4489d01a65ca686d43a8e5282a42014170a2c0514",
+      "size_bytes": 3561
+    },
+    {
+      "path": "safety_supervisor.stderr.log",
+      "sha256": "203008243a91b91bc5f4ab4e9a3638807290d7bc8bd764afe4ee0697e01b1017",
+      "size_bytes": 1604
+    },
+    {
+      "path": "safety_supervisor.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "setpoint-stall.request.json",
+      "sha256": "7c3297e532d22f50a65e36c790da53dada1a850ea7800a73e09073b55fc1effa",
+      "size_bytes": 327
+    },
+    {
+      "path": "strategy.lifecycle.jsonl",
+      "sha256": "eee6be6757d08739659e6ec9029e40a3ded1744c4ab69bdb44b0b96575e93d31",
+      "size_bytes": 1491
+    },
+    {
+      "path": "strategy_action_executor.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "strategy_action_executor.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "telemetry.sidecar.jsonl",
+      "sha256": "a3481fa6c7e1b3590c5b9efbb1d7533ae24ac21412c8239f6ffa9bb1b5bf7157",
+      "size_bytes": 1896816
+    },
+    {
+      "path": "telemetry_sidecar.stderr.log",
+      "sha256": "4862bb71e827712500af80a299c8c2b68d12f73cb2f5af92a588cb9c0880b36e",
+      "size_bytes": 2427
+    },
+    {
+      "path": "telemetry_sidecar.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "workload.lifecycle.jsonl",
+      "sha256": "7ed17297658da364a11bcffbaa2920e085cae362d886afd9aca3d1d86e50df2a",
+      "size_bytes": 2646
+    },
+    {
+      "path": "workload.stderr.log",
+      "sha256": "16cd849d10b7295dafb6a2eb730b546ad61684fa5a92db693326e97eb17bd3b1",
+      "size_bytes": 300
+    },
+    {
+      "path": "workload.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "xrce_agent.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "xrce_agent.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    }
+  ],
+  "root_name": "raw",
+  "schema_version": "1.0"
+}

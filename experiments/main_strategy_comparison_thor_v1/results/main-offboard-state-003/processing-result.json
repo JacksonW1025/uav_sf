@@ -1,0 +1,176 @@
+{
+  "attempt_id": "main-offboard-state-003",
+  "clock_bridge": {
+    "bridge_id": "clock-86ed43d3dffb1a21",
+    "knots": [
+      [
+        10718000000,
+        1687541300325793
+      ],
+      [
+        11724000000,
+        1687542304392608
+      ],
+      [
+        12728000000,
+        1687543308862802
+      ],
+      [
+        13732000000,
+        1687544312485626
+      ],
+      [
+        14736000000,
+        1687545316854006
+      ],
+      [
+        15740000000,
+        1687546320542070
+      ],
+      [
+        16744000000,
+        1687547324502997
+      ],
+      [
+        17748000000,
+        1687548328878867
+      ],
+      [
+        18752000000,
+        1687549332769182
+      ],
+      [
+        19756000000,
+        1687550336752803
+      ],
+      [
+        20760000000,
+        1687551340783738
+      ],
+      [
+        21764000000,
+        1687552344860867
+      ],
+      [
+        22768000000,
+        1687553348493090
+      ],
+      [
+        23772000000,
+        1687554352947015
+      ],
+      [
+        24776000000,
+        1687555356544534
+      ],
+      [
+        25780000000,
+        1687556360479191
+      ],
+      [
+        26784000000,
+        1687557364438164
+      ],
+      [
+        27788000000,
+        1687558368528034
+      ],
+      [
+        28792000000,
+        1687559372670839
+      ],
+      [
+        29796000000,
+        1687560376647719
+      ],
+      [
+        30800000000,
+        1687561381279978
+      ],
+      [
+        31804000000,
+        1687562384439089
+      ],
+      [
+        32808000000,
+        1687563388516709
+      ],
+      [
+        33812000000,
+        1687564392581024
+      ],
+      [
+        34816000000,
+        1687565396474904
+      ],
+      [
+        35820000000,
+        1687566400497099
+      ],
+      [
+        36824000000,
+        1687567404415062
+      ]
+    ],
+    "rate_ratio": 0.9999268087412855,
+    "reference_analysis_ns": 1687554352947015,
+    "reference_source_ns": 23772000000,
+    "sample_count": 27,
+    "source_domain": "px4_boot_ns",
+    "uncertainty_ns": 3200962,
+    "valid_from_ns": 10718000000,
+    "valid_until_ns": 36824000000
+  },
+  "environment_attestation_digest": "sha256:b9741184e07dbfe56eb939560bf5457f8ce16de0d8ebff2fd549792d6011bd3c",
+  "evaluation_status": "VIOLATION",
+  "evidence_gate_status": "ADMISSIBLE",
+  "gazebo": {
+    "central_minimum": 0.9989762990375612,
+    "median": 0.9999077585092775,
+    "minimum": 0.01393657928250281,
+    "sample_count": 369,
+    "status": "PASS"
+  },
+  "outcome": "ACCEPTED",
+  "physical_execution": {
+    "checks": {
+      "fault_after_motion_entry": true,
+      "motion_phase_entered": true,
+      "nominal_profile_coverage": true,
+      "sustained_takeoff": true,
+      "takeoff_before_tested_transition": true
+    },
+    "maximum_logged_completion_progress_m": 0.0,
+    "maximum_logged_entry_progress_m": 0.7605941817164421,
+    "status": "PASS"
+  },
+  "plan_digest": "sha256:5295c243fd32ef9fe72034025cc2adddb55ce78ba47bdcb1e0e3c98769d75a8c",
+  "plan_id": "main-offboard-state-003-plan",
+  "processing_error": null,
+  "raw_manifest_digest": "sha256:1deec25220453b09f6880020d41cd33d083865dc50a64e67ecaa8b69d3efed30",
+  "runtime_outcome": "ACCEPTED",
+  "schema_version": "1.0",
+  "study_id": "main-strategy-comparison-thor-v1",
+  "ulog": {
+    "dropouts": [],
+    "file_corruption": false,
+    "first_sequence_by_instance": {
+      "0": 0,
+      "1": 75,
+      "2": 75,
+      "3": 64
+    },
+    "route_observation_count": 12137,
+    "route_observation_instances": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "schema_version": "1.0",
+    "sequence_gaps": [],
+    "status": "PASS",
+    "ulog_end_us": 37504000,
+    "ulog_start_us": 5144000
+  }
+}

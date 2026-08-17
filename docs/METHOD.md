@@ -14,17 +14,34 @@ safety limits, evidence rules, and Oracle configuration:
   deadline. It cannot bypass action preconditions or safety rules.
 
 The strategy policies and plan validation are implemented for all three
-choices. The current live Thor campaign backend implements only the official
-sequence. A formal matrix that labels an attempt as bounded-random or
-state-aware is rejected until a study-specific live action backend applies the
-selected actions and records that schedule. A strategy label alone is never
-treated as execution evidence.
+choices. The qualified `owned_setpoint_stall_v1` backend now executes all three
+against the same moving position-only workload. It records the candidate set,
+prior coverage, selected boundary, planned offset, observed live preconditions,
+actual request time, owned-process action marker, and observed fault. Other
+action grammars remain unsupported and fail closed; a strategy label alone is
+never treated as execution evidence.
 
 The official-sequence fixtures include constant position, attitude, and
 body-rate targets plus the qualified Stage A2 position-only straight-line
 workload. Stage A2 uses a separate public-action fixture, physical-validity
-contract, preregistration, identities, ledger, and denominator. Its completion
-does not imply that bounded-random or state-aware schedules are live.
+contract, preregistration, identities, ledger, and denominator. The later
+18-launch strategy study uses another identity and denominator, and supports
+only a one-action fixed-budget comparison.
+
+## Live strategy feedback
+
+An action becomes eligible only after the target route is observed active and
+the moving workload is observed past its entry threshold. Official sequence
+uses the frozen 5 s offset; bounded random timing uses a retained seed inside
+the frozen 3.5--6.5 s interval; state-aware chooses among five eligible timing
+bins using only earlier executed coverage from the same mechanism-strategy
+cell. Feedback is therefore prospective across launches rather than inferred
+from the final result.
+
+The completed vertical slice exercised one, three, and three timing bins for
+official, random, and state-aware respectively. Random and state-aware exposed
+the same freshness signature on the first launch and tie on boundary count, so
+these results do not establish a strategy ranking or general search gain.
 
 ## Collection
 

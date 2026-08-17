@@ -1,14 +1,14 @@
 # Current status
 
 ```text
-Formal Thor launches retained across completed and closed studies: 277
+Formal Thor launches retained across completed and closed studies: 295
 Retained historical results: 0
 Current empirical claims: bounded Thor SITL findings in the final reports
-Formal execution environments: Stage A1 primary/supplemental and Stage A2 primary/remediation Thor identities
-Study state: Stage A1 frozen; Stage A2 complete through an independent remediation, with its insufficient primary ledger retained
-Completed work package: Stage A2 readiness and moving-workload Motivation evidence (Phases I--V below)
-Active phase: Phase VI live strategy backends and fixed-budget comparison
-Paper state: Section 6 Motivation Study complete; Section 7 Main Evaluation pending
+Formal execution environments: Stage A1 primary/supplemental, Stage A2 primary/remediation, and Main strategy-comparison Thor identities
+Study state: Stage A1 frozen; Stage A2 complete; the 18-launch live-strategy vertical slice complete with bounded claims
+Completed work package: Stage A2 Motivation evidence plus the first Main Evaluation vertical slice (Phases I--VI below)
+Active phase: expand Section 7 beyond one action, then confirm/cluster/minimize findings
+Paper state: Section 6 Motivation Study complete; Section 7 Main Evaluation partially complete, not paper-complete
 ```
 
 Available today: the Family A route model, normalized event contracts,
@@ -41,16 +41,23 @@ PASS and its 16 deliberate healthy-stall traces are overall VIOLATION only on
 freshness. Counts are reported per study and are not pooled into the Stage A1
 `200 / 151 / 94 / 57` result.
 
+The first Section 7 strategy study adds a separate fixed denominator of 18
+formal launches: two mechanisms by three strategies by three launches. All
+18 are closed, accepted, Evidence Gate admissible, physically valid, and
+overall `VIOLATION` only on freshness. These counts are not pooled into either
+Stage A1 or Stage A2. The complete formal Thor total is therefore 295 launches.
+
 The campaign now separates live batches from offline evidence processing.
 Four-way remains the qualified formal concurrency after a non-formal 4/5-way
 comparison; five-way was not promoted and no new six-way trial was run. The
-locked environment and campaign entry are ready for a separately preregistered
-official-sequence experiment using the existing live fixture semantics. The
-Stage A2 now has its own implemented fixture, observation contract,
+locked environment and campaign entry are ready for separately preregistered
+experiments using qualified live fixture semantics. Stage A2 has its own
+implemented fixture, observation contract,
 qualification, preregistration, formal evidence, physical analysis, and final
-report. State-aware policy selection is not yet connected to the live PX4
-action backend and therefore fails closed; no Section 7 result or empirical
-search-effectiveness claim is implied.
+report. Phase VI adds a shared state-conditioned setpoint-stall executor for
+official sequence, bounded random timing, and state-aware selection. Its
+18-launch result is a Section 7 vertical slice, not a general
+search-effectiveness result.
 
 ## Resolved Stage A2 evidence-quality prerequisite
 
@@ -85,11 +92,12 @@ limits. Reproduction from an empty output directory is byte-identical.
 
 ## Completed evidence package and current paper placement
 
-The completed evidence package is **Phases I--V: Stage A2 readiness and the
-moving-workload Motivation study**. It belongs primarily to paper Section 6,
-`Motivation Study`. Infrastructure qualification also updates Section 5,
-`Implementation`, and the corresponding threats-to-validity discussion. It
-does not implement or evaluate the paper's core state-aware generation claim.
+The completed evidence package is **Phases I--VI: Stage A2 readiness and
+moving-workload Motivation evidence, followed by one fixed-budget live-strategy
+vertical slice**. Phases I--V belong primarily to paper Section 6,
+`Motivation Study`; Phase VI belongs to Sections 4 and 7. Infrastructure
+qualification also updates Section 5, `Implementation`, and the corresponding
+threats-to-validity discussion.
 
 | Work | Paper location | Research role | Claim boundary |
 | --- | --- | --- | --- |
@@ -98,12 +106,12 @@ does not implement or evaluate the paper's core state-aware generation claim.
 | Phase III: runtime and observation qualification | Section 5 and Section 8 | Protect Evidence Gate validity, probe sensitivity, and reproducibility; strengthen C3/C4 | Qualification attempts remain outside every formal study denominator |
 | Phase IV: A2 preregistration and identity freeze | Section 5 evaluation setup | Bind workload, physical validity, safety, timing, observer, and environment before execution | A plan is authorization for only its exact frozen study |
 | Phase V: formal matched Stage A2 | Section 6; chiefly RQ5, with bounded support for RQ1/RQ4 | Test whether moving context changes applicable contract states, signatures, or interpretable physical consequences | Does not compare generation strategies or establish a general mechanism safety ranking |
-| Phase VI: live backends and fixed-budget comparison | Sections 4 and 7; RQ2/RQ3 | Establish the prospective C6 method contribution and later C7 benchmark | This is the next work package, not part of Stage A2 completion |
+| Phase VI: live backends and fixed-budget comparison | Sections 4 and 7; bounded RQ2/RQ3 evidence | Demonstrate online strategy execution, feedback, and timing-boundary coverage under an equal denominator | Complete only for one moving healthy-setpoint-stall action; it does not establish general strategy superiority |
 
-Phases I--V close the paper's Motivation Study. The current Phase VI package
-belongs to Sections 4 and 7. Only completing its live strategies, fair
-fixed-budget comparison, and confirmation/ablation work can support the
-state-aware method claims in the Main Evaluation.
+Phases I--V close the paper's Motivation Study. Phase VI establishes the first
+executable Section 7 slice. A broader route/action corpus plus
+confirmation/clustering and ablation remains necessary before the Main
+Evaluation or the full state-aware method claim can be called complete.
 
 ## Phase I: freeze a physical-execution audit before changing runtime behavior — COMPLETE
 
@@ -315,9 +323,9 @@ become a fifth Oracle or change the Stage A1 thresholds.
 
 The official A2 workload uses the same workload and public-action contract in
 both mechanisms. Its mechanism-specific runtime remains the executable
-baseline; Phase VI must add the generic
-decision/schedule/action/request/effect layer before either later strategy is
-allowed into a formal matrix.
+baseline. Phase VI subsequently added the generic
+decision/schedule/action/request/effect layer under a separate qualification,
+identity, preregistration, ledger, and denominator.
 
 The frozen primary execution closed at 51 launches but could not reach three
 cell targets because 31 traces hit a command-subject clock-closure defect; it
@@ -346,11 +354,45 @@ The result therefore adds bounded physical interpretability, but no new
 violation class and no general PX4 defect claim. The complete record is in
 [`experiments/motivation_stage_a2_thor_remediation_v1/`](../experiments/motivation_stage_a2_thor_remediation_v1/).
 
+## Phase VI: qualify live strategies and run a fixed-budget comparison — COMPLETE WITH BOUNDED CLAIMS
+
+Phase VI implements one shared live backend for `setpoint_stall`. Every
+strategy decision contains the candidate set, seed, planned offset, required
+live state, and prior boundary coverage. A separate executor waits for both
+observed route activation and motion entry, then writes one owned-process stall
+request. The workload records the resulting fault; the raw manifest and formal
+closure bind the execution evidence and compact decision.
+
+Six non-formal qualification flights crossed both mechanisms and all three
+strategies. All 6/6 were accepted, admissible, and physically valid; absolute
+request error was 2.924--14.650 ms. These flights do not enter a formal
+denominator.
+
+The separately preregistered formal study
+[`experiments/main_strategy_comparison_thor_v1/`](../experiments/main_strategy_comparison_thor_v1/)
+closed exactly 18/18 launches as accepted, admissible, and physically valid.
+Its append-only ledger has 54 events and chain head
+`82edada94d9ae99b0b13af2e90487c2a7eb1e8aeb7a06f871f04dd2c4cc36499`.
+All attempts produced one state-conditioned action request and one admissible
+freshness violation.
+
+Under three launches per mechanism-strategy cell, official sequence covered
+only the fixed `boundary` timing bin. Bounded random timing covered
+`pre_boundary`, `post_boundary`, and `late`; state-aware covered
+`pre_boundary`, `boundary`, and `post_boundary`. The state-aware second and
+third decisions consumed prior live coverage and selected uncovered bins, so
+the feedback loop is executable. Random and state-aware nevertheless tie at
+three observed bins, all strategies reach the same freshness signature on the
+first launch, and all evaluate the same 16 applicable clauses. The evidence
+therefore supports live-backend correctness and greater timing coverage than
+the fixed sequence in this sample, but no ranking between random and
+state-aware and no general search-effectiveness claim.
+
 ## Achieved end state of this work package
 
 ### Repository state
 
-With Phases I--V complete, the repository contains:
+With Phases I--VI complete, the repository contains:
 
 - untouched Stage A1 primary and supplemental plans, ledgers, compact results,
   thresholds, statuses, and `200 / 151 / 94 / 57` accounting;
@@ -369,8 +411,11 @@ With Phases I--V complete, the repository contains:
   environment identity, preregistration, matrix, hash-chained ledger, compact
   evidence, matched-differential result, physical-consequence result, and final
   report;
-- a common official-sequence workload and public-action vertical slice for both
-  mechanisms, with the generic strategy executor explicitly left to Phase VI;
+- a shared state-conditioned live executor, deterministic replayable decisions,
+  feedback-bound state-aware selection, and fail-closed strategy validation;
+- a qualified and separately preregistered 18-launch strategy-comparison
+  study with an exact matrix, attestation, 54-event ledger, compact evidence,
+  per-attempt analysis, reproducible summary, and bounded final report;
 - a clean worktree and a complete repository-validation pass.
 
 ### Narrative and paper state
@@ -381,9 +426,11 @@ The narrative and paper state at this milestone is:
 Stage A1: COMPLETE WITH BOUNDED CLAIMS; frozen and unchanged
 Stage A2: COMPLETE under its own preregistration, identity, ledger, and denominator
 Paper Section 6 Motivation Study: COMPLETE
-Paper Section 7 Main Evaluation: PENDING
+Paper Section 7 Main Evaluation: PARTIALLY COMPLETE; one-action vertical slice complete
 Gate 4b moving-workload realism bridge: PASS WITH BOUNDED CLAIMS, retaining a null result if observed
-Gates 5--8 and contributions C6/C7: still PENDING
+Gate 5: PASS; Gate 6: PASS for the owned setpoint-stall backend
+Gate 7: PASS WITH BOUNDED CLAIMS for the 18-launch vertical slice
+Gate 8 and full route-corpus C6/C7 claims: still PENDING
 ```
 
 Stage A2 completion depended on admissible execution and honest reporting, not
@@ -394,11 +441,13 @@ motion context changed contract applicability, violation signatures, or
 physical exposure. It may not claim real-flight danger, a general PX4 defect
 rate, universal mechanism superiority, or state-aware search effectiveness.
 
-The active work package is Phase VI: connect bounded-random and
-state-aware to the shared live executor, qualify decision/schedule/request/
-effect replay, run the fixed-budget three-strategy campaign, and then cluster,
-reproduce, and minimize findings. Only that work can move paper Section 7,
-RQ2/RQ3, Gate 5--8, and prospective contributions C6/C7 to complete.
+The next work package expands Section 7 beyond this single action. It must
+freeze a representative route/action corpus, retain equal budgets and shared
+seeds, add confirmation and ablation sufficient to distinguish feedback value
+from random timing, and cluster/minimize independent findings. Until that work
+is complete, the paper may report the Phase VI implementation and bounded
+coverage result but must not claim overall state-aware superiority or complete
+C6/C7.
 
 For a beginner-oriented explanation of the repository narrative, the concrete
 Stage A1 flight workloads, Runtime Route Instance, and a complete transition,

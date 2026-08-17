@@ -1,0 +1,188 @@
+{
+  "attempts": {
+    "main-dynamic-official-001": {
+      "closure_digest": "sha256:9f9794ca7ed0fe100715b0bb1948c4ec534a200db773205ee0d22f2d9903fb05",
+      "evaluation_digest": "sha256:b31d82d61c49652427d319753518f5413b422daf341a6f5b3dfdc68a22198a6b",
+      "processing_result_digest": "sha256:f67b11a8ea4e69e9f71b469e0ae57964e02f6f87d27aa47fecd9852c4aa758f0",
+      "raw_action_marker_digest": "sha256:f28478cd68166e5660eb3b48b57f516e99f12233b9090ae33172be79716f7208",
+      "raw_manifest_digest": "sha256:0e678c13b2572e664614d20f316c9a452801f6d71c0f19f45955b23ff713febd",
+      "raw_strategy_lifecycle_digest": "sha256:539b62cd317bab72bff77163e376ffaf3825a039c4e49447f3ad19a785250eb1",
+      "raw_workload_lifecycle_digest": "sha256:f503604534e5a9933991f99666e5e30f052c07cc9e1373bfd210733c8fb85772",
+      "strategy_decision_digest": "sha256:8eb178d5f5febe9ff93196f45000d321d6ac848bc1e34a68f824a19cecd98f16"
+    },
+    "main-dynamic-official-002": {
+      "closure_digest": "sha256:8520d332d7f0386abe787f690c5915c9a2ec542f671c43389dbcf8059bbb71c8",
+      "evaluation_digest": "sha256:106c1054eea96a6c5a7af7571b3eec3e42fa9d3a5c0806156eb30ab7490944b4",
+      "processing_result_digest": "sha256:44b3944201872edc017274a93a7978855edbc518f73023833f2c44f3b94aba40",
+      "raw_action_marker_digest": "sha256:3621a539d9772e32e65b733aac124f6220fcf055d69324b8cd96b101c58da66f",
+      "raw_manifest_digest": "sha256:6ab8bda78dbb2ede5336ffe10e201dd76566818673ae14be7e57586ca9a2f865",
+      "raw_strategy_lifecycle_digest": "sha256:cff498f7f656dcb2413dafb233ece6b820da17048f76c45951d1e498a467343b",
+      "raw_workload_lifecycle_digest": "sha256:dffd2e0199f8a91de69da51d7d769020fd147153a14da406de9d58f7a0a7ff7f",
+      "strategy_decision_digest": "sha256:8eb2e323ef4f4d3fe2c56f2c0c7fc649a69b676d850886bd1107208da0547c15"
+    },
+    "main-dynamic-official-003": {
+      "closure_digest": "sha256:8bd283d80d963a633c25e73e1c71a9fdd15b9c9e4ce1d0b2738f86ce698113b9",
+      "evaluation_digest": "sha256:d8addede6d0300d5c2985a48c26ffd3b6ac78958c6ccdc17b90f6d4ae9216d64",
+      "processing_result_digest": "sha256:6da97822a8db4e0872404893763b8138a3583dae6478cb3af9eb65ce7d09e9a4",
+      "raw_action_marker_digest": "sha256:a5238a09435d260ca3648e47db3a002f0a6def1543a51962cf4832610a95e2bc",
+      "raw_manifest_digest": "sha256:40a077b37e297b3a1e673a5093b55cc8364f424ba9b2a6e6c35fc71f3a155ed9",
+      "raw_strategy_lifecycle_digest": "sha256:49b57c117214a61e39b23d2e5fed84a5bac47d1b9acacbf1d0187c1687624bb0",
+      "raw_workload_lifecycle_digest": "sha256:8d3e6151f2cdc61a6b16605419511f05dfcd917318179df1c03d021c3373085c",
+      "strategy_decision_digest": "sha256:8eb2e323ef4f4d3fe2c56f2c0c7fc649a69b676d850886bd1107208da0547c15"
+    },
+    "main-dynamic-random-001": {
+      "closure_digest": "sha256:dc08c72f259eb0e8dfbc6f446cd310599824cd2db1ebf1b327453a4c3ee864de",
+      "evaluation_digest": "sha256:800c4cd18a440adaf00f379e228f0c6c1f4ca32a1b6bee2ae2ac4e49143f8b15",
+      "processing_result_digest": "sha256:62effe9f9520a1d1d6426a02332c600be7b04a90bef8db982853a4fed9c996ac",
+      "raw_action_marker_digest": "sha256:36c17b6d9a23bd83f7a05b30ba79a7033f6a84b1c0a3a4ca4885e82a50e5e213",
+      "raw_manifest_digest": "sha256:387f6df2d55f87e4000b61bdf21d6596400d44d4a9ee89ef6e287dc68dcef59a",
+      "raw_strategy_lifecycle_digest": "sha256:2c268347fe47989dbe5e6e9f4762753463d613df7161e0e74154ac2e9c83bbe7",
+      "raw_workload_lifecycle_digest": "sha256:8433b65957f9a48646e85e2049eb9900e6c469edc7cbf2f9583733ab71e18a33",
+      "strategy_decision_digest": "sha256:472736cd8801af5fa6f465ae9ab7f50a39828d1520b93972b5cc103d80d9c11b"
+    },
+    "main-dynamic-random-002": {
+      "closure_digest": "sha256:cd6e72e7e09a51b5ed6f1cb65590a75b495ace601062ec0d87155dca9a33283e",
+      "evaluation_digest": "sha256:b63ad69436dd8c9c837aafcb14d7927af377e30159f0cd6b62cb335eab44a85f",
+      "processing_result_digest": "sha256:7a1580201645d84da4b9fff72e27e01ee4424bc8d8465b74819933f1caee8699",
+      "raw_action_marker_digest": "sha256:cb1977095ce41e4406859bcf88972a1b91c393cfb12f6e4866026f4fcab2f4cf",
+      "raw_manifest_digest": "sha256:cf26c9218199993485cfc7ece3fca20c7f98da1d2d1c2e7e80df94803c7417bd",
+      "raw_strategy_lifecycle_digest": "sha256:6bdfc7c1df136219c86dbb68a0b58eff9da6c5564f3be6183f6e3a7c76f084c8",
+      "raw_workload_lifecycle_digest": "sha256:e214cfc561bbe55ce2eb8898c3720f7f5b330e21358d0ade98b8b49288fd139c",
+      "strategy_decision_digest": "sha256:ea2f2af55db2d566e23a7f64d1896a3a746b04ae44c92365b51db905b3cc3c9a"
+    },
+    "main-dynamic-random-003": {
+      "closure_digest": "sha256:dd79c758dc3f66bc858928faf2b1c305e9061bc40d07c7ca0b7ce043f4be0d80",
+      "evaluation_digest": "sha256:b203b0f33811b18f1cf9c570abf9d62cdbc40748850bfe0b6eb5de9123db536d",
+      "processing_result_digest": "sha256:da731ef813bcf11ed809cbc4eceebbd4bc88132aeef9631bcef17324f8a29498",
+      "raw_action_marker_digest": "sha256:24a68e154b95f7c64ec327d584083fac2b024467b323327fa6e1da761bb59c33",
+      "raw_manifest_digest": "sha256:ea347f6afc7d504f4da271d6dc9a0ea201d58676b125860146ba772d1fa06a2f",
+      "raw_strategy_lifecycle_digest": "sha256:e9a2cae01e558e8a77a850a470bb73cd003dd41ce075e7eb23ce9c10bcc55e6d",
+      "raw_workload_lifecycle_digest": "sha256:37e7fd80e49f6144256b9d4aae3ebaa0b55381763be64014ca03c56a4b70fced",
+      "strategy_decision_digest": "sha256:81c215a0993c9713b29eb8c0507f32a11cd77243322042cdda882a79fc892281"
+    },
+    "main-dynamic-state-001": {
+      "closure_digest": "sha256:d9c67582949d712b30de1452d58d2a82bc0ad5d10265e3509a17f1ee53c677ca",
+      "evaluation_digest": "sha256:6a952e36f00dd0c196ced6eb220de5e05d6dfd02bcfc69eb695e3d334c26a392",
+      "processing_result_digest": "sha256:53800b4406b23982bd056c5f820b794335c77bd6793806067a667778748a9b70",
+      "raw_action_marker_digest": "sha256:853f7d82a6d3c19a56fde90e41200a28c4541c9f71f777e20eaaa204a7f08225",
+      "raw_manifest_digest": "sha256:30e7ddccbac9b7538fe00842d2d5801bc7b3f6d7f86ea2d893d93ed797952b6d",
+      "raw_strategy_lifecycle_digest": "sha256:48df4b879a38ca861fd6c48f39212344aaae3886847e3898502765b2a3f6dd48",
+      "raw_workload_lifecycle_digest": "sha256:65ab0d2c1dd983a812e12c567b05483be2835a4ce2b074a9d3e17fa908be7d65",
+      "strategy_decision_digest": "sha256:39dd2c489d2db9845a5cb52625fab216f517728076de188c3aae34aba6274cc9"
+    },
+    "main-dynamic-state-002": {
+      "closure_digest": "sha256:fb15fac9b281fc7f1a76f4916c619dcc6f1028780c0a77481cc65da975f27835",
+      "evaluation_digest": "sha256:59a450fa09910683e240b80b783bdc5d2c70594f9e878e11f7b37ef92e50e238",
+      "processing_result_digest": "sha256:301f130353b52dc78d7b57db33faad148c891bdaad9b9bc9ff9bd7411ebcc0f3",
+      "raw_action_marker_digest": "sha256:d72a6473d6b7e33e5348e213578e2c15050c6cb9c5c2554afa5b527186fbeb41",
+      "raw_manifest_digest": "sha256:cdd817553d7d06604a8c0fb5d3e9f6146da1ee6252bf630ca52a4a0aedb5f1e8",
+      "raw_strategy_lifecycle_digest": "sha256:f31ced6aaf83cb3841f2909284fd822d1ef601c8c01aa7a6bcc19b2e8ac7eb00",
+      "raw_workload_lifecycle_digest": "sha256:d509ff0696f60ba0231df4d53f911ac53f02064fd3fd27f010aacb0d71e3db46",
+      "strategy_decision_digest": "sha256:0c53d5cc352640ad2a4b2d7379381ed138a839efd28784daa43ef9f3e10ea0b6"
+    },
+    "main-dynamic-state-003": {
+      "closure_digest": "sha256:6c4fe7b271663273b523fbbb7e84669c45cf68496d88a95f3fea50f8b578afc1",
+      "evaluation_digest": "sha256:e54c954041ed7d12aa454e5a2072c891b2a648f4635365b412bae291b1719b4f",
+      "processing_result_digest": "sha256:4cb3af12bf7a6959045f3c6835f918ed6915f25b9a5a3687adbd660720ba5f99",
+      "raw_action_marker_digest": "sha256:7e8f7f8b7e2607df2fd09cb5fb028794f7fb5aeeecea3f320e5489d637773b60",
+      "raw_manifest_digest": "sha256:05db72e3bb96163feacd33fad9d64c4cbeb5bc6a7dcad62fb72f314f84b8b9f2",
+      "raw_strategy_lifecycle_digest": "sha256:f6e88dd6725835be8376c8de648ee2bf5d2fe115e1b3edcbf1d14f7d218cc36a",
+      "raw_workload_lifecycle_digest": "sha256:7970e9eb8ee3f584e998cdf3eefb006c3ba0d06135e24ee1177c95adfe915361",
+      "strategy_decision_digest": "sha256:ad5ac5425ba501de26788a0c09aec735e331a57bba99968350c1d20e2c4b2209"
+    },
+    "main-offboard-official-001": {
+      "closure_digest": "sha256:a06a5bd47e2b2a5a6e7083f3b62c3954d4038540030fe991812190811fdde03e",
+      "evaluation_digest": "sha256:de53358776fd9e92277b02cbd3f77a088a625f1b71f7f682b615589475f58949",
+      "processing_result_digest": "sha256:a9911ee90c4d786b4c704df9b17b4262939fc1e261300560aab453ec1a13c356",
+      "raw_action_marker_digest": "sha256:452d4bfdcc7cf0b9964d0b82a3cc3476dcdbe4ab5affe0419783a0b820c151c6",
+      "raw_manifest_digest": "sha256:c4326a9fa515e9b9eff85e6dae7b097ca17044cf822a719e8bb098ccd58a5476",
+      "raw_strategy_lifecycle_digest": "sha256:913bbcc35166c1acec3bdd4696209a26b47c7bb77e2b34a576ad6b0ebd4cd037",
+      "raw_workload_lifecycle_digest": "sha256:1cec02424b524c5fea7ed50865a543c5fb51fad00a0236536f504f01bd4520f5",
+      "strategy_decision_digest": "sha256:8eb178d5f5febe9ff93196f45000d321d6ac848bc1e34a68f824a19cecd98f16"
+    },
+    "main-offboard-official-002": {
+      "closure_digest": "sha256:f7094a3786a4033d75ffeaa786d57826360b42d4b979646f2b451194e648d0d2",
+      "evaluation_digest": "sha256:39c49786f371f597a0eb9f0941392e96b17864fe43018e8cee79d19e15be4367",
+      "processing_result_digest": "sha256:986a901d9113ba61acc77d7392bdfc1874e09c9e0e9b5b897117d260caa7e0fe",
+      "raw_action_marker_digest": "sha256:9dea61307e7def0045ccae1be9495ee6df7dd236a915024de18dedc62417a9d2",
+      "raw_manifest_digest": "sha256:f6ffe85c1e34af89c6890954ac8fd011b05394d95877c4c830a5189578f1545f",
+      "raw_strategy_lifecycle_digest": "sha256:056f5a32318f49c96c3d0a4932f0d1c98caa436c5c6b5dbf787756251f8591aa",
+      "raw_workload_lifecycle_digest": "sha256:f4e2d35cca638ad4576095278577bd50f489868c0b5351170dd186ef988f0a7b",
+      "strategy_decision_digest": "sha256:8eb2e323ef4f4d3fe2c56f2c0c7fc649a69b676d850886bd1107208da0547c15"
+    },
+    "main-offboard-official-003": {
+      "closure_digest": "sha256:a750fa33a3fc18fd8db6ef299522a199dbcd695e9ca46ab668e965b3d31759c9",
+      "evaluation_digest": "sha256:7ac6206d84718d7e6ef7166f794c095e77760e4585c2e31bc411bb8d3e708b8e",
+      "processing_result_digest": "sha256:39258e7766a0bae8eab4bbf41eaf3707b68005ee49bb4e05648c7ffdcc1fe955",
+      "raw_action_marker_digest": "sha256:63d384e8bc6441a77021dc3fa3ee7d9d91846c3631a502f738e6645fc4275a06",
+      "raw_manifest_digest": "sha256:c9142447f9ba2283a177c15cab37bac4271190b662dbc7dc9eb68d94f8cdb522",
+      "raw_strategy_lifecycle_digest": "sha256:046bacf706f5b38cd3c405cf1df08e62dcd279edb1e3840c7c9ececb3ea3704a",
+      "raw_workload_lifecycle_digest": "sha256:aa0b4d482d6eb341c47154ddc25cd982cedecb3af183daaa6e42f8a410e8233e",
+      "strategy_decision_digest": "sha256:8eb2e323ef4f4d3fe2c56f2c0c7fc649a69b676d850886bd1107208da0547c15"
+    },
+    "main-offboard-random-001": {
+      "closure_digest": "sha256:dd9d54e3d9d2ecb64def58ed27d4bc53a5eb543d7fcc13bdb65997974f22eacd",
+      "evaluation_digest": "sha256:5e1782fd20c7c9e9d06bd4b99b4c959c20b6acb2e9c263fe771779bffe1f1f54",
+      "processing_result_digest": "sha256:2f7454a2b359adb6d85cfc6d0a4a088e88d8d08010af2d1a186fd62825bbf606",
+      "raw_action_marker_digest": "sha256:7c3297e532d22f50a65e36c790da53dada1a850ea7800a73e09073b55fc1effa",
+      "raw_manifest_digest": "sha256:4e5c3a2bdda3f52e33970e26564428e88bf6d33f96f6b7d7224127bcae01de10",
+      "raw_strategy_lifecycle_digest": "sha256:eee6be6757d08739659e6ec9029e40a3ded1744c4ab69bdb44b0b96575e93d31",
+      "raw_workload_lifecycle_digest": "sha256:7ed17297658da364a11bcffbaa2920e085cae362d886afd9aca3d1d86e50df2a",
+      "strategy_decision_digest": "sha256:472736cd8801af5fa6f465ae9ab7f50a39828d1520b93972b5cc103d80d9c11b"
+    },
+    "main-offboard-random-002": {
+      "closure_digest": "sha256:4ea131bdbb012c265fd8d27276411baea6b561d09b8f17528a40202c0e918ebb",
+      "evaluation_digest": "sha256:551d8b66c3b2b4effb757604538aa2d5c7b9c0eeeceaaf1b25be6fc0e671230d",
+      "processing_result_digest": "sha256:6c6aeeb9fdef5e98f4964b13f45479609e964b8368e3de568ec2daf30c8cf6a0",
+      "raw_action_marker_digest": "sha256:5838e6797d017c2428302d4a01409a023bdea68c4584b70627dad539b1e8c71e",
+      "raw_manifest_digest": "sha256:5907ffdb1daab01fe5c448c1b38ac4d47eec699b022ba064454cad08638487a7",
+      "raw_strategy_lifecycle_digest": "sha256:8892e71899b2054e31be338fc767371eec1ef42d4c94b605a73b36783603c12e",
+      "raw_workload_lifecycle_digest": "sha256:ba9ffc62ff29fdb5d0a9ad68f9a2a1e06f29f94773634c3d59502923d8bc34b0",
+      "strategy_decision_digest": "sha256:ea2f2af55db2d566e23a7f64d1896a3a746b04ae44c92365b51db905b3cc3c9a"
+    },
+    "main-offboard-random-003": {
+      "closure_digest": "sha256:3f6b223e906295c9c52ef6f5192eac851e325e9a4168c0e4f2db737e69b0e9b8",
+      "evaluation_digest": "sha256:3dc3aff2b7db3e52e0638bdb3905f775c4d97d0bccbc141c924d560a49c088b7",
+      "processing_result_digest": "sha256:c0baa641d86d85b7c18fc2b045598eaaedfbc947c3fbbd95aac744606962b7f0",
+      "raw_action_marker_digest": "sha256:ee8b583c22527884a1318d9e9eb96252eefcae594058cf3d0318f0f1cef83fb4",
+      "raw_manifest_digest": "sha256:22460a72141efae987299ee7ebdcaa3e551e03828e61ab491a358176cd9316da",
+      "raw_strategy_lifecycle_digest": "sha256:9f4bc1ab3607229d7d1080d6252eca6831769ccd900c5e19ea8ab900fb27f9aa",
+      "raw_workload_lifecycle_digest": "sha256:928d563e784a4097372aa7364d6551b91053d2a0238fcde183abdeae6e7ccb33",
+      "strategy_decision_digest": "sha256:81c215a0993c9713b29eb8c0507f32a11cd77243322042cdda882a79fc892281"
+    },
+    "main-offboard-state-001": {
+      "closure_digest": "sha256:94c65886714ff54eb851d9e99d89dcadb5f1924ddd21e34120b02a9a39c0796e",
+      "evaluation_digest": "sha256:26fe14ba063e7a7986b170fb78705f81b3e50cf01bf32d8a75189355a68017c0",
+      "processing_result_digest": "sha256:fcfc8568e983fffea40f164ac236604cd3dc10a7985da411436f2315f3b401a1",
+      "raw_action_marker_digest": "sha256:5cc56ba70d186618628b9407f8a61f8823639e422ba171819144e3a178e0260a",
+      "raw_manifest_digest": "sha256:90734d60d7d275d66a2599ad490cd6fc0c09418393c5fe575ec08c3097f4e1fc",
+      "raw_strategy_lifecycle_digest": "sha256:d85e3eeb0c3bd24e5817db597f3c74140cd9ee228271eecec9c6f303742a6d69",
+      "raw_workload_lifecycle_digest": "sha256:acc1dfe1b301611a8f610ef5c8c3169f8216b7719996cfc30e05edb84f430833",
+      "strategy_decision_digest": "sha256:39dd2c489d2db9845a5cb52625fab216f517728076de188c3aae34aba6274cc9"
+    },
+    "main-offboard-state-002": {
+      "closure_digest": "sha256:860042332fc24178db5ca32362a2ac754db108fc58a983d8045c7c6513bc2088",
+      "evaluation_digest": "sha256:05cd767433ec5bd28e911d7d92f3ff2f057a69cb62d4aadddc29daafa453e5e4",
+      "processing_result_digest": "sha256:5cb20f5531a3c0c81ec0029d34c12d0505972051f30a037c4b89ebf7520b06a4",
+      "raw_action_marker_digest": "sha256:e8a48e8b1b7bc2c0925510e08201efd7144df80594a8ca5a46cdfd04db9f48a7",
+      "raw_manifest_digest": "sha256:0c6ebbc1c1cdc493534526d403fe4438f448a7954a03fe6bfad5eeee63277fb9",
+      "raw_strategy_lifecycle_digest": "sha256:2bca7dddd5d6be1bc73b4cc444977ca3788370a6d17b0cdec7c57c34e966a502",
+      "raw_workload_lifecycle_digest": "sha256:2db0c3201148bded6ed23061d6a42977eaa62b259fcd8c59ce2d262b42d2546a",
+      "strategy_decision_digest": "sha256:0c53d5cc352640ad2a4b2d7379381ed138a839efd28784daa43ef9f3e10ea0b6"
+    },
+    "main-offboard-state-003": {
+      "closure_digest": "sha256:8e3e6ff62ac5cfb62cd41649253e0e063c4a0f4adf2767411e7c0ae1ceda9016",
+      "evaluation_digest": "sha256:fc9772c2ad7cf35c88ac99da128e8ab2444231adc35f4ca568bf2df6718478ea",
+      "processing_result_digest": "sha256:64ff6774d64adb8209f7cf788ed551217d59bba0b6a15032f9d448d76d65f5bb",
+      "raw_action_marker_digest": "sha256:6daa873454a17a5c8831909f6ac765163c8eadfd07016523dcb78e1b183cc4e5",
+      "raw_manifest_digest": "sha256:1deec25220453b09f6880020d41cd33d083865dc50a64e67ecaa8b69d3efed30",
+      "raw_strategy_lifecycle_digest": "sha256:fe911976415373c83522dc35a447566e5383ceabeced780a2b35578782c31b81",
+      "raw_workload_lifecycle_digest": "sha256:71a833cb7b6bf8cadc8140ae1a78347a9fceed404bc3fe64ed1a6d4c837530de",
+      "strategy_decision_digest": "sha256:ad5ac5425ba501de26788a0c09aec735e331a57bba99968350c1d20e2c4b2209"
+    }
+  },
+  "ledger_digest": "sha256:ef041af326d8c115b3f44b8c8f7ca9a5f2278b1e9272eefa24fc9f4676848aa3",
+  "matrix_digest": "sha256:93dab2047ee07d7998b5c4dc0b2d74bb4ad86307cfb77b3321f78564587f0a36",
+  "schema_version": "1.0",
+  "study_id": "main-strategy-comparison-thor-v1"
+}

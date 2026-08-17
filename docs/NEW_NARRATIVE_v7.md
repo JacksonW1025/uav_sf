@@ -14,7 +14,7 @@ V7 的研究范围收敛为 **Family A：PX4 内部控制路径、Legacy Offboar
 
 ```text
 repository: uav_sf
-current narrative source: uav_sf/docs/NEW_NARRATIVE_v7.md on origin/main
+current narrative source: uav_sf/docs/NEW_NARRATIVE_v7.md
 Stage A1 formal launches retained by its two Thor studies: 200
 Stage A1 admissible evidence sets: 151
 Stage A1 overall Oracle results: 94 PASS, 57 VIOLATION
@@ -23,8 +23,10 @@ Stage A2 primary: closed MEASUREMENT_INSUFFICIENT at 51 launches
 Stage A2 independent remediation: complete, 26/26 accepted and admissible
 Stage A2 Oracle results in the remediation: 10 PASS, 16 deliberate freshness VIOLATION
 Stage A2 moving-workload realism bridge: complete with bounded claims
+Section 7 fixed-budget strategy vertical slice: complete, 18/18 accepted and admissible
+Section 7 strategy result: official covers 1 timing bin; bounded-random and state-aware each cover 3
 prior Orin evidence: documented as a separate historical evidence layer
-live formal strategy support: official sequence only
+live formal strategy support: all three strategies for owned_setpoint_stall_v1; other action grammars fail closed
 ```
 
 V7 将归属于 V6 的 Orin 实验摘要记录为 prior evidence lineage，包括 P5 v6 matched baseline、Issue #162 historical successor benchmark 和 current-version freshness pilot。当前 `origin/main` 不保留或暴露对应 V6 报告、账本、compact evidence 或可达历史分支；它们不进入 Thor 的 200 次 launch、151 份 admissible evidence 或 94/57 结果。精确核查或复用必须由另行提供的 V6 来源包、原 revision、study identity 和证据完成，不能只依赖本叙事摘要。
@@ -128,7 +130,7 @@ State-Aware Strategy
     优先探索尚未覆盖且接近契约边界的交接
 ```
 
-如果 state-aware 方法在相同预算下能够覆盖更多有效状态、更早找到 violation、产生更多可复现的独立问题，它就构成论文的主要方法贡献。当前仓库已经实现策略函数和验证逻辑，但 bounded-random 与 state-aware 尚未接入 live PX4 action backend，因此这部分仍是下一阶段，而不是已经完成的结果。
+如果 state-aware 方法在相同预算下能够覆盖更多有效状态、更早找到 violation、产生更多可复现的独立问题，它就构成论文的主要方法贡献。当前仓库已经为一个 moving healthy-setpoint-stall action 接通三种 live backend，并完成 18 次固定预算纵切片：official 覆盖 1 个 timing bin，bounded-random 与 state-aware 各覆盖 3 个，但后二者打平且只产生同一个 freshness signature。因此 backend 与 bounded coverage claim 已有实证，通用搜索增益仍需更广 route/action corpus、confirmation 和 ablation。
 
 ---
 
@@ -848,7 +850,7 @@ Primary study 关闭 51 次 launch，但因 command-subject clock closure 问题
 
 Stall 后两种机制均继续约 1.0 m 到达冻结在 3.0 m 的 position target，相对完整 3.5 m profile 的 median shortfall 分别为 0.459 m 与 0.472 m。该结果增加 physical interpretability，但不增加新的 violation class，也不形成 mechanism safety ranking。通过 Gate 的 moving trace 可作为主比较 campaign 的共同 workload；三种策略必须使用相同 motion profile，避免把 workload 差异混入 generation effect。
 
-## 10.3 Stage B：Live strategy backend — PENDING
+## 10.3 Stage B：Live strategy backend — COMPLETE FOR ONE ACTION
 
 按以下顺序实现：
 
@@ -859,7 +861,9 @@ Stall 后两种机制均继续约 1.0 m 到达冻结在 3.0 m 的 position targe
 5. 保留 unsupported strategy fail-closed；
 6. 增加同 seed schedule replay 和非法 action rejection test。
 
-## 10.4 Stage C：Non-formal qualification — PENDING
+以上六项已经在 `owned_setpoint_stall_v1` 中完成；未接通的 action grammar 继续 fail closed。
+
+## 10.4 Stage C：Non-formal qualification — COMPLETE FOR ONE ACTION
 
 正式实验前必须证明：
 
@@ -872,7 +876,9 @@ Stall 后两种机制均继续约 1.0 m 到达冻结在 3.0 m 的 position targe
 - strategy identity、method digest 和 environment attestation 被写入 plan/trace；
 - dry-run 和 resume 不产生重复 attempt。
 
-## 10.5 Stage D：Main comparative campaign — PENDING
+Legacy Offboard 与 Dynamic External Mode 各完成一组三策略并发资格飞行，6/6 accepted、admissible、physically valid。每次均记录唯一 decision、state-conditioned request、owned-process marker 与 observed fault；request error 为 2.924--14.650 ms。资格飞行不进入正式分母。
+
+## 10.5 Stage D：Main comparative campaign — PARTIAL
 
 ### 公平性原则
 
@@ -888,6 +894,8 @@ Stall 后两种机制均继续约 1.0 m 到达冻结在 3.0 m 的 position targe
 - 固定且相等的 launch budget 或 wall-clock budget。
 
 策略比较不以“达到 accepted target 后停止”作为主要预算，因为不同策略可能具有不同 evidence rejection rate。Accepted target 仍可用于证据质量监控，但主比较分母必须固定。
+
+第一轮纵切片已经按该原则完成：两种机制 × 三种策略 × 三次 launch，共 18/18 closed、accepted、admissible、physically valid。Official 只覆盖 `boundary`；bounded-random 覆盖 `pre_boundary`、`post_boundary`、`late`；state-aware 覆盖 `pre_boundary`、`boundary`、`post_boundary`。三种策略均在第一发得到同一个 freshness signature，random 与 state-aware 的 timing-bin coverage 打平，因此不能形成二者排序。完整核心矩阵仍待扩展。
 
 ### 核心矩阵
 
@@ -1028,7 +1036,7 @@ V7 记录归属于 V6 的 prior Orin evidence lineage 摘要，包括正常 matc
 
 ### C6：State-aware contract-guided generation
 
-只有 live backend、formal campaign 和 baseline comparison 完成后，才能声称方法能够增加覆盖或提高发现效率。
+One-action live backend、formal campaign 和 baseline comparison 已完成，支持 state-aware feedback 可执行以及相对固定 official timing 的 bounded coverage 增加。只有代表性 route/action corpus、ablation 与 finding confirmation 完成后，才能声称一般性的覆盖或发现效率提升；当前也不能声称优于 bounded-random。
 
 ### C7：Reproducible violation benchmark
 
@@ -1103,17 +1111,17 @@ Primary 保持 `MEASUREMENT_INSUFFICIENT`，独立 supplemental study 完成两�
 
 Legacy Offboard 与 Dynamic External Mode 已执行同一 position-only moving workload。独立 remediation 的 26 条 trace 全部 admissible，并达到全部 accepted target。Movement 没有增加新的 violation class，但把 freshness stall 转换为可量化 retained-target travel 与任务进度 shortfall；结果使用独立 preregistration 和 denominator，不能外推为真机风险或机制优劣。
 
-## Gate 5：Live bounded-random backend — PENDING
+## Gate 5：Live bounded-random backend — PASS FOR OWNED SETPOINT STALL
 
-需要证明 schedule 实际驱动 public PX4 action，并被 trace 记录。
+资格和正式 trace 已证明 schedule 实际驱动 owned-process PX4 setpoint stall，并记录 decision、request、marker 与 observed fault。
 
-## Gate 6：Live state-aware backend — PENDING
+## Gate 6：Live state-aware backend — PASS FOR OWNED SETPOINT STALL
 
-需要完成 closed-loop state extraction、candidate filtering、feedback update 与 action execution。
+已完成 live precondition extraction、candidate filtering、跨 launch coverage feedback 与 action execution；范围仅限当前 backend。
 
-## Gate 7：Main strategy comparison — PENDING
+## Gate 7：Main strategy comparison — PASS WITH BOUNDED CLAIMS FOR THE VERTICAL SLICE
 
-需要在固定预算下证明 coverage、efficiency 或 finding quality 的增益。
+18 次固定预算纵切片证明 official 与两种 later strategy 的 timing coverage 差异，但 random 与 state-aware 打平。完整 route/action corpus、效率统计和 finding-quality 比较仍未完成。
 
 ## Gate 8：Finding confirmation and clustering — PENDING
 
@@ -1123,26 +1131,20 @@ Legacy Offboard 与 Dynamic External Mode 已执行同一 position-only moving w
 
 只有核心方法成立后，才选择一个成本受控的扩展环境。
 
-论文目前已经跨过“方向调查、实验平台搭建和 bounded realism bridge”阶段，进入“核心方法实现与比较评价”阶段。Live strategy backend 和公平主实验是当前主要方法瓶颈。
+论文目前已经跨过“方向调查、实验平台搭建、bounded realism bridge 和单一 action 的 live strategy 纵切片”阶段。当前主要瓶颈是把相同公平合同扩展到代表性 route/action corpus，并完成 finding confirmation、clustering 和 feedback ablation。
 
 ---
 
 # 15. Recommended Execution Order
 
-1. 冻结 V7 的 Family A scope、RQ、action grammar、baselines 与固定预算原则；
-2. 保留已完成的 Stage A2 qualification、primary insufficient result 与独立 remediation；
-3. 将通过 Gate 的 moving trace 加入主实验共同 seed corpus；
-4. 接通 bounded-random live backend；
-5. 增加 decision/schedule/request/effect trace contract；
-6. 接通 state-aware closed-loop backend；
-7. 完成非正式 qualification 和 fail-closed test；
-8. 冻结新的 repository revision、container image 与 environment attestation；
-9. 预注册三策略主比较矩阵；
-10. 执行固定预算 formal campaign；
-11. 聚类、复现和最小化 violation；
-12. 完成 Oracle/feedback ablation；
-13. 根据核心结果决定是否增加一个 Stage A2 之外的 external-validity subject；
-14. 撰写完整论文并同步 artifact documentation。
+前十项已经完成：Family A scope 与固定预算原则已冻结，Stage A2 已保留，moving trace 已进入共同 workload，三种 live backend、trace contract、qualification、identity freeze、预注册和 18-launch formal campaign 均已闭合。下一顺序是：
+
+1. 依据 Section 7 RQ 冻结代表性 route/action corpus，而不是继续增加同一 stall 样本；
+2. 在共同 seed、固定预算和相同 Evidence Gate 下扩展三策略比较；
+3. 增加 no-feedback/state-extraction ablation，区分 feedback 价值与 timing diversity；
+4. 聚类、重放并最小化独立 violation，完成 Gate 8；
+5. 只有核心比较形成可支持结论后，才决定是否增加外部有效性 subject；
+6. 撰写完整论文并同步 artifact documentation。
 
 ---
 
@@ -1155,7 +1157,7 @@ Legacy Offboard 与 Dynamic External Mode 已执行同一 position-only moving w
 - Runtime Route Instance 可以统一描述 route epoch、producer、registration、activation、controller、allocator、writer 和 owner，并把逐 effect 的 command subject 绑定到该稳定实例；
 - Evidence Gate 能防止缺失证据被转换为 PASS；
 - Route、Freshness、Successor 和 Registration 检查具有不同适用边界；
-- Thor 环境已经完成 200 次正式 launch，151 份证据可采纳；
+- Stage A1 Thor 环境完成 200 次正式 launch，151 份证据可采纳；
 - 151 份 admissible evidence 中有 94 overall PASS 与 57 overall VIOLATION；
 - Primary study 仍为 `MEASUREMENT_INSUFFICIENT`；
 - 独立 supplemental study 完成两个修正 obligation；
@@ -1164,10 +1166,14 @@ Legacy Offboard 与 Dynamic External Mode 已执行同一 position-only moving w
 - Stage A2 独立 remediation 已完成 26/26 accepted、admissible launch 与 13 个 matched pair；
 - Stage A2 normal 为 10 PASS，healthy stall 为 16 条仅 freshness VIOLATION；
 - Stage A2 moving workload 增加了 bounded physical interpretability，但没有增加新的 violation class；
+- Section 7 的第一轮正式纵切片已关闭 18/18 launch，全部 accepted、admissible、physically valid；
+- 全部现存 Thor 正式 study 合计关闭 295 次 launch，各 study denominator 分开报告；
+- 三种策略均已通过同一 state-conditioned live backend 执行 owned setpoint stall；
+- official sequence 在该样本覆盖 1 个 timing bin，bounded-random 与 state-aware 各覆盖 3 个；
+- state-aware 的后续 decision 确实消费先前 live coverage，但当前样本不支持其优于 random；
 - V7 记录了归属于 V6 的 prior Orin evidence lineage 摘要，包括 P5 v6、Issue #162 和 freshness pilot；当前分支不独立支持其原始制品重放；
 - prior Orin evidence 与当前 Thor corpus 保持独立，不进入 Thor denominator；
-- Official Sequence live runtime 已可执行；
-- bounded-random 与 state-aware policy 已实现，但 live action backend 尚未实现。
+- 未接通的 action grammar 仍由 formal validator fail closed。
 
 ## 16.2 当前不能声称
 
@@ -1329,7 +1335,7 @@ Stage A2 已完成一个当前环境内的 mission-shaped moving workload。其�
 
 Thor Stage A1 使用约 3 m 悬停、水平姿态和零 body-rate 作为受控最小运动上下文。Stage A2 已在 Legacy Offboard 与 Dynamic External Mode 激活后执行共同的 position-only straight-translation workload，并在冻结移动时点执行 normal completion 或 healthy setpoint stall。Primary 保持 `MEASUREMENT_INSUFFICIENT`；独立 remediation 的 26/26 trace 全部 accepted、admissible，形成 10 PASS 和 16 条仅 freshness VIOLATION。Movement 没有增加 violation class，但把 retained-target behavior 解释为约 1.0 m post-stall travel 和约 0.46--0.47 m complete-profile shortfall。
 
-Motivation evidence 证明了问题和 Oracle suite 的必要性，但不证明测试生成方法的搜索增益。Stage A2 之后，论文接通 bounded-random 与 state-aware live action backend，并在相同 route corpus、共同 hover/moving seeds、安全约束和固定预算下与 Official Sequence 比较。State-aware strategy 观察当前 route、identity、health、completion、successor 和 coverage state，只选择满足前置条件的 public action，并优先逼近未覆盖的 contract boundary。
+Motivation evidence 证明了问题和 Oracle suite 的必要性，但不单独证明测试生成方法的搜索增益。Stage A2 之后，论文已经为一个 moving healthy-setpoint-stall action 接通 bounded-random 与 state-aware live backend，并在共同 seed、安全约束和固定 18-launch 预算下与 Official Sequence 比较。State-aware 的后续 decision 确实消费先前 coverage 并选择未覆盖 timing bin；但它与 bounded-random 都覆盖 3 个 bin，且都只产生 freshness signature。因此当前只支持 one-action backend/coverage claim，完整 route corpus 上的搜索效率、finding diversity 和独立问题数仍待评价。
 
 论文最终回答两个层次的问题：
 

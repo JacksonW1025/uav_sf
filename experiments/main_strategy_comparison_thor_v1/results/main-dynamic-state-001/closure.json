@@ -1,0 +1,22 @@
+{
+  "attempt_id": "main-dynamic-state-001",
+  "cell_id": "main-dynamic-state",
+  "compact_evidence": {
+    "container_driver_result": "sha256:1c89365aa0cdcf57f66b7674f8ea560373e1c9a31b4cb14d2d2ce29d39d5dfc1",
+    "evaluation": "sha256:6a952e36f00dd0c196ced6eb220de5e05d6dfd02bcfc69eb695e3d334c26a392",
+    "processing_result": "sha256:53800b4406b23982bd056c5f820b794335c77bd6793806067a667778748a9b70",
+    "raw_manifest": "sha256:30e7ddccbac9b7538fe00842d2d5801bc7b3f6d7f86ea2d893d93ed797952b6d",
+    "runtime_result": "sha256:241991a82f53bc0743b9a87e9a769f3be0d984b6130e6cf1231362157f83e138",
+    "strategy_decision": "sha256:39dd2c489d2db9845a5cb52625fab216f517728076de188c3aae34aba6274cc9",
+    "ulog_summary": "sha256:e0e75bd954932d800221d3373725acfc335369ac7ce2a2b601cd201a1576b12e"
+  },
+  "execution_model": "two_phase_barrier",
+  "image_id": "sha256:0900076eea14aecfbe446d2adc6458f5eec80f4feb3cf564b388d92bf7e8eee5",
+  "outcome": "ACCEPTED",
+  "plan_digest": "sha256:577d787e9a8c4c0bf74eca867d3509ed0563b800445e6d5da79727701c8fa1e4",
+  "processing_returncode": 0,
+  "runtime_driver_returncode": 0,
+  "schema_version": "1.0",
+  "strategy_decision_digest": "sha256:e0fbe3c77da97bdfe5f4199f7ae0eee2c6fb8c9b538cf81f0051c5927b0efab8",
+  "study_id": "main-strategy-comparison-thor-v1"
+}

@@ -1,0 +1,186 @@
+{
+  "attempt_id": "main-dynamic-official-001",
+  "clock_bridge": {
+    "bridge_id": "clock-b902932eacade117",
+    "knots": [
+      [
+        10746000000,
+        1687373384525941
+      ],
+      [
+        11752000000,
+        1687374392520950
+      ],
+      [
+        12756000000,
+        1687375396456090
+      ],
+      [
+        13760000000,
+        1687376400237107
+      ],
+      [
+        14764000000,
+        1687377404593006
+      ],
+      [
+        15768000000,
+        1687378408885015
+      ],
+      [
+        16772000000,
+        1687379412426969
+      ],
+      [
+        17776000000,
+        1687380416797978
+      ],
+      [
+        18780000000,
+        1687381420919959
+      ],
+      [
+        19784000000,
+        1687382425057117
+      ],
+      [
+        20788000000,
+        1687383428432775
+      ],
+      [
+        21792000000,
+        1687384432370774
+      ],
+      [
+        22796000000,
+        1687385436313599
+      ],
+      [
+        23800000000,
+        1687386440216163
+      ],
+      [
+        24804000000,
+        1687387444479848
+      ],
+      [
+        25808000000,
+        1687388448470969
+      ],
+      [
+        26812000000,
+        1687389452181857
+      ],
+      [
+        27816000000,
+        1687390456733793
+      ],
+      [
+        28820000000,
+        1687391460274163
+      ],
+      [
+        29824000000,
+        1687392464490644
+      ],
+      [
+        30828000000,
+        1687393468450562
+      ],
+      [
+        31832000000,
+        1687394472572839
+      ],
+      [
+        32836000000,
+        1687395476388089
+      ],
+      [
+        33840000000,
+        1687396480289117
+      ],
+      [
+        34844000000,
+        1687397484320950
+      ],
+      [
+        35848000000,
+        1687398488418821
+      ],
+      [
+        36852000000,
+        1687399492304913
+      ],
+      [
+        37856000000,
+        1687400496667849
+      ],
+      [
+        38860000000,
+        1687401504571812
+      ]
+    ],
+    "rate_ratio": 1.0002150484100447,
+    "reference_analysis_ns": 1687387444479848,
+    "reference_source_ns": 24804000000,
+    "sample_count": 29,
+    "source_domain": "px4_boot_ns",
+    "uncertainty_ns": 3770513,
+    "valid_from_ns": 10746000000,
+    "valid_until_ns": 38860000000
+  },
+  "environment_attestation_digest": "sha256:b9741184e07dbfe56eb939560bf5457f8ce16de0d8ebff2fd549792d6011bd3c",
+  "evaluation_status": "VIOLATION",
+  "evidence_gate_status": "ADMISSIBLE",
+  "gazebo": {
+    "central_minimum": 0.9987091683998433,
+    "median": 0.9999272552921775,
+    "minimum": 0.014551513372306021,
+    "sample_count": 392,
+    "status": "PASS"
+  },
+  "outcome": "ACCEPTED",
+  "physical_execution": {
+    "checks": {
+      "fault_after_motion_entry": true,
+      "motion_phase_entered": true,
+      "nominal_profile_coverage": true,
+      "sustained_takeoff": true,
+      "takeoff_before_tested_transition": true
+    },
+    "maximum_logged_completion_progress_m": 2.5060633961111307,
+    "maximum_logged_entry_progress_m": 0.7546291295439005,
+    "status": "PASS"
+  },
+  "plan_digest": "sha256:74b35a42ea97e9f2cfba7f9c4490e6f8f6f5ddf678e85f9cac01b732c41ae503",
+  "plan_id": "main-dynamic-official-001-plan",
+  "processing_error": null,
+  "raw_manifest_digest": "sha256:0e678c13b2572e664614d20f316c9a452801f6d71c0f19f45955b23ff713febd",
+  "runtime_outcome": "ACCEPTED",
+  "schema_version": "1.0",
+  "study_id": "main-strategy-comparison-thor-v1",
+  "ulog": {
+    "dropouts": [],
+    "file_corruption": false,
+    "first_sequence_by_instance": {
+      "0": 0,
+      "1": 75,
+      "2": 75,
+      "3": 63,
+      "4": 0
+    },
+    "route_observation_count": 13013,
+    "route_observation_instances": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "schema_version": "1.0",
+    "sequence_gaps": [],
+    "status": "PASS",
+    "ulog_end_us": 39856000,
+    "ulog_start_us": 5152000
+  }
+}

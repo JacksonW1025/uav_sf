@@ -1,0 +1,346 @@
+{
+  "action_requested_count": 18,
+  "cells": {
+    "main-dynamic-official": {
+      "absolute_request_error_ns": {
+        "maximum": 12832898,
+        "median": 11429751,
+        "minimum": 9650513
+      },
+      "accepted": 3,
+      "action_requested": 3,
+      "admissible": 3,
+      "applicable_contract_clause_count": 16,
+      "applicable_contract_clauses": [
+        "freshness_lineage:freshness",
+        "freshness_lineage:lineage",
+        "registration_contract:activation_rejection",
+        "registration_contract:registration_rejection",
+        "route_conformance:continuity",
+        "route_conformance:exclusivity",
+        "route_conformance:installation",
+        "route_conformance:ownership",
+        "route_conformance:reentry_identity",
+        "route_conformance:revocation",
+        "successor_progression:adjacent_order",
+        "successor_progression:adjacent_successor",
+        "successor_progression:adjacent_timing",
+        "successor_progression:expected_successor",
+        "successor_progression:fault_observation",
+        "successor_progression:safe_fallback"
+      ],
+      "executed_timing_boundary_count": 1,
+      "launches": 3,
+      "launches_to_first_violation": 1,
+      "mechanism": "dynamic_external_mode",
+      "physical_execution_pass": 3,
+      "selected_boundary_counts": {
+        "stall_offset:boundary": 3
+      },
+      "strategy": "official_sequence",
+      "violation_signature_count": 1,
+      "violation_signatures": [
+        "freshness_lineage:freshness"
+      ]
+    },
+    "main-dynamic-random": {
+      "absolute_request_error_ns": {
+        "maximum": 20402962,
+        "median": 15100659,
+        "minimum": 7178801
+      },
+      "accepted": 3,
+      "action_requested": 3,
+      "admissible": 3,
+      "applicable_contract_clause_count": 16,
+      "applicable_contract_clauses": [
+        "freshness_lineage:freshness",
+        "freshness_lineage:lineage",
+        "registration_contract:activation_rejection",
+        "registration_contract:registration_rejection",
+        "route_conformance:continuity",
+        "route_conformance:exclusivity",
+        "route_conformance:installation",
+        "route_conformance:ownership",
+        "route_conformance:reentry_identity",
+        "route_conformance:revocation",
+        "successor_progression:adjacent_order",
+        "successor_progression:adjacent_successor",
+        "successor_progression:adjacent_timing",
+        "successor_progression:expected_successor",
+        "successor_progression:fault_observation",
+        "successor_progression:safe_fallback"
+      ],
+      "executed_timing_boundary_count": 3,
+      "launches": 3,
+      "launches_to_first_violation": 1,
+      "mechanism": "dynamic_external_mode",
+      "physical_execution_pass": 3,
+      "selected_boundary_counts": {
+        "stall_offset:late": 1,
+        "stall_offset:post_boundary": 1,
+        "stall_offset:pre_boundary": 1
+      },
+      "strategy": "bounded_random_timing",
+      "violation_signature_count": 1,
+      "violation_signatures": [
+        "freshness_lineage:freshness"
+      ]
+    },
+    "main-dynamic-state": {
+      "absolute_request_error_ns": {
+        "maximum": 18993440,
+        "median": 16378285,
+        "minimum": 1555565
+      },
+      "accepted": 3,
+      "action_requested": 3,
+      "admissible": 3,
+      "applicable_contract_clause_count": 16,
+      "applicable_contract_clauses": [
+        "freshness_lineage:freshness",
+        "freshness_lineage:lineage",
+        "registration_contract:activation_rejection",
+        "registration_contract:registration_rejection",
+        "route_conformance:continuity",
+        "route_conformance:exclusivity",
+        "route_conformance:installation",
+        "route_conformance:ownership",
+        "route_conformance:reentry_identity",
+        "route_conformance:revocation",
+        "successor_progression:adjacent_order",
+        "successor_progression:adjacent_successor",
+        "successor_progression:adjacent_timing",
+        "successor_progression:expected_successor",
+        "successor_progression:fault_observation",
+        "successor_progression:safe_fallback"
+      ],
+      "executed_timing_boundary_count": 3,
+      "launches": 3,
+      "launches_to_first_violation": 1,
+      "mechanism": "dynamic_external_mode",
+      "physical_execution_pass": 3,
+      "selected_boundary_counts": {
+        "stall_offset:boundary": 1,
+        "stall_offset:post_boundary": 1,
+        "stall_offset:pre_boundary": 1
+      },
+      "strategy": "state_aware",
+      "violation_signature_count": 1,
+      "violation_signatures": [
+        "freshness_lineage:freshness"
+      ]
+    },
+    "main-offboard-official": {
+      "absolute_request_error_ns": {
+        "maximum": 12336355,
+        "median": 10871602,
+        "minimum": 1258695
+      },
+      "accepted": 3,
+      "action_requested": 3,
+      "admissible": 3,
+      "applicable_contract_clause_count": 16,
+      "applicable_contract_clauses": [
+        "freshness_lineage:freshness",
+        "freshness_lineage:lineage",
+        "registration_contract:activation_rejection",
+        "registration_contract:registration_rejection",
+        "route_conformance:continuity",
+        "route_conformance:exclusivity",
+        "route_conformance:installation",
+        "route_conformance:ownership",
+        "route_conformance:reentry_identity",
+        "route_conformance:revocation",
+        "successor_progression:adjacent_order",
+        "successor_progression:adjacent_successor",
+        "successor_progression:adjacent_timing",
+        "successor_progression:expected_successor",
+        "successor_progression:fault_observation",
+        "successor_progression:safe_fallback"
+      ],
+      "executed_timing_boundary_count": 1,
+      "launches": 3,
+      "launches_to_first_violation": 1,
+      "mechanism": "legacy_offboard",
+      "physical_execution_pass": 3,
+      "selected_boundary_counts": {
+        "stall_offset:boundary": 3
+      },
+      "strategy": "official_sequence",
+      "violation_signature_count": 1,
+      "violation_signatures": [
+        "freshness_lineage:freshness"
+      ]
+    },
+    "main-offboard-random": {
+      "absolute_request_error_ns": {
+        "maximum": 7539492,
+        "median": 7147264,
+        "minimum": 1747673
+      },
+      "accepted": 3,
+      "action_requested": 3,
+      "admissible": 3,
+      "applicable_contract_clause_count": 16,
+      "applicable_contract_clauses": [
+        "freshness_lineage:freshness",
+        "freshness_lineage:lineage",
+        "registration_contract:activation_rejection",
+        "registration_contract:registration_rejection",
+        "route_conformance:continuity",
+        "route_conformance:exclusivity",
+        "route_conformance:installation",
+        "route_conformance:ownership",
+        "route_conformance:reentry_identity",
+        "route_conformance:revocation",
+        "successor_progression:adjacent_order",
+        "successor_progression:adjacent_successor",
+        "successor_progression:adjacent_timing",
+        "successor_progression:expected_successor",
+        "successor_progression:fault_observation",
+        "successor_progression:safe_fallback"
+      ],
+      "executed_timing_boundary_count": 3,
+      "launches": 3,
+      "launches_to_first_violation": 1,
+      "mechanism": "legacy_offboard",
+      "physical_execution_pass": 3,
+      "selected_boundary_counts": {
+        "stall_offset:late": 1,
+        "stall_offset:post_boundary": 1,
+        "stall_offset:pre_boundary": 1
+      },
+      "strategy": "bounded_random_timing",
+      "violation_signature_count": 1,
+      "violation_signatures": [
+        "freshness_lineage:freshness"
+      ]
+    },
+    "main-offboard-state": {
+      "absolute_request_error_ns": {
+        "maximum": 13199554,
+        "median": 11299004,
+        "minimum": 4597975
+      },
+      "accepted": 3,
+      "action_requested": 3,
+      "admissible": 3,
+      "applicable_contract_clause_count": 16,
+      "applicable_contract_clauses": [
+        "freshness_lineage:freshness",
+        "freshness_lineage:lineage",
+        "registration_contract:activation_rejection",
+        "registration_contract:registration_rejection",
+        "route_conformance:continuity",
+        "route_conformance:exclusivity",
+        "route_conformance:installation",
+        "route_conformance:ownership",
+        "route_conformance:reentry_identity",
+        "route_conformance:revocation",
+        "successor_progression:adjacent_order",
+        "successor_progression:adjacent_successor",
+        "successor_progression:adjacent_timing",
+        "successor_progression:expected_successor",
+        "successor_progression:fault_observation",
+        "successor_progression:safe_fallback"
+      ],
+      "executed_timing_boundary_count": 3,
+      "launches": 3,
+      "launches_to_first_violation": 1,
+      "mechanism": "legacy_offboard",
+      "physical_execution_pass": 3,
+      "selected_boundary_counts": {
+        "stall_offset:boundary": 1,
+        "stall_offset:post_boundary": 1,
+        "stall_offset:pre_boundary": 1
+      },
+      "strategy": "state_aware",
+      "violation_signature_count": 1,
+      "violation_signatures": [
+        "freshness_lineage:freshness"
+      ]
+    }
+  },
+  "claim_scope": "fixed-budget live-backend comparison for one moving healthy setpoint-stall action",
+  "evaluation_status_counts": {
+    "VIOLATION": 18
+  },
+  "evidence_gate_admissible_count": 18,
+  "interpretation": {
+    "all_strategies_same_violation_signature": true,
+    "bounded_random_timing_boundary_count": 3,
+    "official_sequence_boundary_count": 1,
+    "reason": "The fixed three-launch cells demonstrate live execution and bounded timing coverage; random and state-aware tie on observed boundary count, and all arms expose the same freshness signature.",
+    "state_aware_boundary_count": 3,
+    "strategy_ranking_supported": false
+  },
+  "ledger": {
+    "accepted_count": 18,
+    "chain_head": "82edada94d9ae99b0b13af2e90487c2a7eb1e8aeb7a06f871f04dd2c4cc36499",
+    "closed_count": 18,
+    "event_count": 54,
+    "launched_count": 18
+  },
+  "physical_execution_pass_count": 18,
+  "schema_version": "1.0",
+  "status": "COMPLETE",
+  "strategies": {
+    "bounded_random_timing": {
+      "absolute_request_error_ns": {
+        "maximum": 20402962,
+        "median": 7359146.5,
+        "minimum": 1747673
+      },
+      "accepted": 6,
+      "admissible": 6,
+      "executed_timing_boundary_count": 3,
+      "launches": 6,
+      "selected_boundary_counts": {
+        "stall_offset:late": 2,
+        "stall_offset:post_boundary": 2,
+        "stall_offset:pre_boundary": 2
+      },
+      "violation_signatures": [
+        "freshness_lineage:freshness"
+      ]
+    },
+    "official_sequence": {
+      "absolute_request_error_ns": {
+        "maximum": 12832898,
+        "median": 11150676.5,
+        "minimum": 1258695
+      },
+      "accepted": 6,
+      "admissible": 6,
+      "executed_timing_boundary_count": 1,
+      "launches": 6,
+      "selected_boundary_counts": {
+        "stall_offset:boundary": 6
+      },
+      "violation_signatures": [
+        "freshness_lineage:freshness"
+      ]
+    },
+    "state_aware": {
+      "absolute_request_error_ns": {
+        "maximum": 18993440,
+        "median": 12249279.0,
+        "minimum": 1555565
+      },
+      "accepted": 6,
+      "admissible": 6,
+      "executed_timing_boundary_count": 3,
+      "launches": 6,
+      "selected_boundary_counts": {
+        "stall_offset:boundary": 2,
+        "stall_offset:post_boundary": 2,
+        "stall_offset:pre_boundary": 2
+      },
+      "violation_signatures": [
+        "freshness_lineage:freshness"
+      ]
+    }
+  },
+  "study_id": "main-strategy-comparison-thor-v1"
+}

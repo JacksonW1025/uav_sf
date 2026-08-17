@@ -1,0 +1,22 @@
+{
+  "attempt_id": "main-dynamic-official-001",
+  "cell_id": "main-dynamic-official",
+  "compact_evidence": {
+    "container_driver_result": "sha256:a803fea377cfa112ea0a9ef63fdecbb0bb4d91641b27dc57cd94f33b68a13532",
+    "evaluation": "sha256:b31d82d61c49652427d319753518f5413b422daf341a6f5b3dfdc68a22198a6b",
+    "processing_result": "sha256:f67b11a8ea4e69e9f71b469e0ae57964e02f6f87d27aa47fecd9852c4aa758f0",
+    "raw_manifest": "sha256:0e678c13b2572e664614d20f316c9a452801f6d71c0f19f45955b23ff713febd",
+    "runtime_result": "sha256:4b2030269241f223e5dac269b86e742e95fa36f4f06b110e2cead795855ce0a3",
+    "strategy_decision": "sha256:8eb178d5f5febe9ff93196f45000d321d6ac848bc1e34a68f824a19cecd98f16",
+    "ulog_summary": "sha256:008f8673ca461bafa4ba16d78b249b63f8793aa164c010f63c821167c887a1f8"
+  },
+  "execution_model": "two_phase_barrier",
+  "image_id": "sha256:0900076eea14aecfbe446d2adc6458f5eec80f4feb3cf564b388d92bf7e8eee5",
+  "outcome": "ACCEPTED",
+  "plan_digest": "sha256:74b35a42ea97e9f2cfba7f9c4490e6f8f6f5ddf678e85f9cac01b732c41ae503",
+  "processing_returncode": 0,
+  "runtime_driver_returncode": 0,
+  "schema_version": "1.0",
+  "strategy_decision_digest": "sha256:022863aff2bf907a3a4cd15059820b2ec44bfcf35180a8fe29cfb08b6dd4c2eb",
+  "study_id": "main-strategy-comparison-thor-v1"
+}

@@ -1,0 +1,178 @@
+{
+  "attempt_id": "main-dynamic-state-001",
+  "clock_bridge": {
+    "bridge_id": "clock-835d15f5326c4814",
+    "knots": [
+      [
+        10684000000,
+        1687373342289155
+      ],
+      [
+        11688000000,
+        1687374356279589
+      ],
+      [
+        12692000000,
+        1687375361103413
+      ],
+      [
+        13696000000,
+        1687376364395942
+      ],
+      [
+        14700000000,
+        1687377368281904
+      ],
+      [
+        15704000000,
+        1687378372923969
+      ],
+      [
+        16708000000,
+        1687379376378969
+      ],
+      [
+        17712000000,
+        1687380380485987
+      ],
+      [
+        18716000000,
+        1687381384263876
+      ],
+      [
+        19720000000,
+        1687382388501126
+      ],
+      [
+        20724000000,
+        1687383392269200
+      ],
+      [
+        21728000000,
+        1687384397211885
+      ],
+      [
+        22732000000,
+        1687385400282034
+      ],
+      [
+        23736000000,
+        1687386404514061
+      ],
+      [
+        24740000000,
+        1687387408359636
+      ],
+      [
+        25744000000,
+        1687388412310182
+      ],
+      [
+        26748000000,
+        1687389416309062
+      ],
+      [
+        27752000000,
+        1687390420312108
+      ],
+      [
+        28756000000,
+        1687391424231922
+      ],
+      [
+        29760000000,
+        1687392428413386
+      ],
+      [
+        30764000000,
+        1687393432332784
+      ],
+      [
+        31768000000,
+        1687394436368969
+      ],
+      [
+        32772000000,
+        1687395440352978
+      ],
+      [
+        33776000000,
+        1687396444281033
+      ],
+      [
+        34780000000,
+        1687397448242126
+      ],
+      [
+        35784000000,
+        1687398452285922
+      ],
+      [
+        36788000000,
+        1687399456350737
+      ]
+    ],
+    "rate_ratio": 1.0003854421544591,
+    "reference_analysis_ns": 1687386404514061,
+    "reference_source_ns": 23736000000,
+    "sample_count": 27,
+    "source_domain": "px4_boot_ns",
+    "uncertainty_ns": 4583305,
+    "valid_from_ns": 10684000000,
+    "valid_until_ns": 36788000000
+  },
+  "environment_attestation_digest": "sha256:b9741184e07dbfe56eb939560bf5457f8ce16de0d8ebff2fd549792d6011bd3c",
+  "evaluation_status": "VIOLATION",
+  "evidence_gate_status": "ADMISSIBLE",
+  "gazebo": {
+    "central_minimum": 0.9979863131167087,
+    "median": 0.99983702656467,
+    "minimum": 0.013547038543712323,
+    "sample_count": 366,
+    "status": "PASS"
+  },
+  "outcome": "ACCEPTED",
+  "physical_execution": {
+    "checks": {
+      "fault_after_motion_entry": true,
+      "motion_phase_entered": true,
+      "nominal_profile_coverage": true,
+      "sustained_takeoff": true,
+      "takeoff_before_tested_transition": true
+    },
+    "maximum_logged_completion_progress_m": 2.511489871540107,
+    "maximum_logged_entry_progress_m": 0.7515869770431891,
+    "status": "PASS"
+  },
+  "plan_digest": "sha256:577d787e9a8c4c0bf74eca867d3509ed0563b800445e6d5da79727701c8fa1e4",
+  "plan_id": "main-dynamic-state-001-plan",
+  "processing_error": null,
+  "raw_manifest_digest": "sha256:30e7ddccbac9b7538fe00842d2d5801bc7b3f6d7f86ea2d893d93ed797952b6d",
+  "runtime_outcome": "ACCEPTED",
+  "schema_version": "1.0",
+  "study_id": "main-strategy-comparison-thor-v1",
+  "ulog": {
+    "dropouts": [],
+    "file_corruption": false,
+    "first_sequence_by_instance": {
+      "0": 0,
+      "1": 76,
+      "2": 76,
+      "3": 62,
+      "4": 0
+    },
+    "route_observation_count": 12051,
+    "route_observation_instances": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "schema_version": "1.0",
+    "sequence_gaps": [],
+    "status": "PASS",
+    "ulog_end_us": 37236000,
+    "ulog_start_us": 5100000
+  }
+}

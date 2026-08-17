@@ -1,0 +1,16 @@
+{
+  "architecture": "arm64",
+  "container_name": "family-a-main-strategy-comparison-thor-v1-main-dynamic-state-002",
+  "container_runtime": "runc",
+  "cpu_set": "3-5",
+  "image": "uav-sf-family-a-thor:strategy-ea2381c",
+  "image_id": "sha256:0900076eea14aecfbe446d2adc6458f5eec80f4feb3cf564b388d92bf7e8eee5",
+  "memory": "24g",
+  "network_mode": "none",
+  "operating_system": "linux",
+  "outer_timeout": false,
+  "returncode": 0,
+  "run_id": "main-dynamic-state-002",
+  "schema_version": "1.0",
+  "study_id": "main-strategy-comparison-thor-v1"
+}

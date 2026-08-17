@@ -1,0 +1,68 @@
+{
+  "action": "setpoint_stall",
+  "backend": "owned_setpoint_stall_v1",
+  "candidates": [
+    {
+      "boundary": "early",
+      "enabled": true,
+      "offset_ns": 3500000000,
+      "required_state": {
+        "motion_entered": true,
+        "route_active": true
+      }
+    },
+    {
+      "boundary": "pre_boundary",
+      "enabled": true,
+      "offset_ns": 4250000000,
+      "required_state": {
+        "motion_entered": true,
+        "route_active": true
+      }
+    },
+    {
+      "boundary": "boundary",
+      "enabled": true,
+      "offset_ns": 5000000000,
+      "required_state": {
+        "motion_entered": true,
+        "route_active": true
+      }
+    },
+    {
+      "boundary": "post_boundary",
+      "enabled": true,
+      "offset_ns": 5750000000,
+      "required_state": {
+        "motion_entered": true,
+        "route_active": true
+      }
+    },
+    {
+      "boundary": "late",
+      "enabled": true,
+      "offset_ns": 6500000000,
+      "required_state": {
+        "motion_entered": true,
+        "route_active": true
+      }
+    }
+  ],
+  "covered_boundaries_before_decision": [
+    "stall_offset:boundary"
+  ],
+  "official_offset_ns": 5000000000,
+  "planned_offset_ns": 5000000000,
+  "required_state": {
+    "motion_entered": true,
+    "route_active": true
+  },
+  "schema_version": "1.0",
+  "seed": null,
+  "selected_boundary": "stall_offset:boundary",
+  "strategy": "official_sequence",
+  "timing_bounds_ns": [
+    3500000000,
+    6500000000
+  ]
+}

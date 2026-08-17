@@ -45,7 +45,11 @@ workload. Stage A2 has its own completed preregistration, identities, ledgers,
 physical analysis, and denominator; those artifacts do not authorize a new
 study or a different generation strategy.
 
-Bounded-random and state-aware policy selection can be preregistered and tested
-offline, but their live PX4 action backend is not yet implemented. The formal
-campaign validator rejects those strategy names rather than silently running
-the official sequence under a different label.
+For the separately qualified `owned_setpoint_stall_v1` action, the runtime can
+also execute bounded-random and state-aware timing through the same live
+executor. The first fixed-budget study is closed at 18 launches in
+`experiments/main_strategy_comparison_thor_v1/`. Extending either strategy to
+a different action grammar or route corpus requires a new backend contract,
+qualification, preregistration, identity, and denominator. The validator still
+rejects an unwired strategy/action combination rather than silently running an
+official sequence under another label.

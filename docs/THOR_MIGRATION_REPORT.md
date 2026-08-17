@@ -56,8 +56,9 @@ resolved package manifests, source/build verification, ROS runtime packages,
 public transition fixtures, ULog extraction and integrity checks, clock-domain
 closure, Evidence Gate integration, safety/cleanup supervision, isolation,
 formal accounting, campaign scheduling, concurrency qualification, the two
-Stage A1 studies, and the two separate Stage A2 studies. Raw evidence remains
-in ignored `runs/`; only digests and compact results are tracked.
+Stage A1 studies, the two separate Stage A2 studies, and the separately
+preregistered live-strategy vertical slice. Raw evidence remains in ignored
+`runs/`; only digests and compact results are tracked.
 
 The campaign scheduler now separates each parallel batch into a live phase
 and an offline evidence-processing phase. A barrier proves that every live
@@ -92,6 +93,12 @@ as accepted and admissible: 10 normal PASS and 16 deliberate freshness
 VIOLATION. These Stage A2 counts remain separate from the Stage A1
 `200 / 151 / 94 / 57` accounting.
 
+The Section 7 vertical slice adds 18 separately preregistered formal launches.
+All 18 are closed, accepted, admissible, physically valid, and overall
+freshness `VIOLATION`. Its 54-event ledger and compact results remain separate
+from both Stage A1 and Stage A2. Across all retained Thor formal studies there
+are now 295 closed launches.
+
 The V7 narrative documents a separate prior Orin evidence lineage, but no
 earlier-device evidence artifact is imported into, numerically compared inside,
 or counted in the Thor formal corpus. Those source artifacts are not retained
@@ -101,13 +108,14 @@ evidence.
 ## Readiness and remaining risks
 
 The locked container, build path, evidence pipeline, formal accounting, stable
-parallel execution, and existing official-sequence fixtures include the
-completed Stage A2 moving workload. A later state-aware study still needs its own
-cells, seeds, targets, caps, hypotheses, and live action backend. Strategy
-selection is implemented, but it is not yet wired to PX4 execution; formal
-validation fails closed instead of treating the label as behavior. No
-state-aware formal attempt is yet directly runnable, and no Section 7
-empirical claim is implied.
+parallel execution, and live fixtures include the completed Stage A2 moving
+workload plus one shared state-conditioned setpoint-stall strategy backend.
+A separately qualified and preregistered Section 7 vertical slice closed 18/18
+formal launches across official, bounded-random, and state-aware timing. All
+were accepted and admissible. Official timing covered one bin; each later
+strategy covered three, but random and state-aware tie and expose only the same
+freshness signature. This supports a bounded backend/coverage result, not full
+Main Evaluation completion or a general strategy ranking.
 
 Known bounded risks are the observed route/freshness/successor violations, the
 Stage A1 primary observability rejections, the diagnosed live-JSONL race, the

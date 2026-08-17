@@ -1,0 +1,133 @@
+{
+  "cell_status_counts": {
+    "COMPLETE": 6
+  },
+  "cells": {
+    "main-dynamic-official": {
+      "accepted": 3,
+      "accepted_target": 3,
+      "category": "fixed_budget",
+      "launch_cap": 3,
+      "launches": 3,
+      "outcomes": {
+        "ACCEPTED": 3
+      },
+      "status": "COMPLETE"
+    },
+    "main-dynamic-random": {
+      "accepted": 3,
+      "accepted_target": 3,
+      "category": "fixed_budget",
+      "launch_cap": 3,
+      "launches": 3,
+      "outcomes": {
+        "ACCEPTED": 3
+      },
+      "status": "COMPLETE"
+    },
+    "main-dynamic-state": {
+      "accepted": 3,
+      "accepted_target": 3,
+      "category": "fixed_budget",
+      "launch_cap": 3,
+      "launches": 3,
+      "outcomes": {
+        "ACCEPTED": 3
+      },
+      "status": "COMPLETE"
+    },
+    "main-offboard-official": {
+      "accepted": 3,
+      "accepted_target": 3,
+      "category": "fixed_budget",
+      "launch_cap": 3,
+      "launches": 3,
+      "outcomes": {
+        "ACCEPTED": 3
+      },
+      "status": "COMPLETE"
+    },
+    "main-offboard-random": {
+      "accepted": 3,
+      "accepted_target": 3,
+      "category": "fixed_budget",
+      "launch_cap": 3,
+      "launches": 3,
+      "outcomes": {
+        "ACCEPTED": 3
+      },
+      "status": "COMPLETE"
+    },
+    "main-offboard-state": {
+      "accepted": 3,
+      "accepted_target": 3,
+      "category": "fixed_budget",
+      "launch_cap": 3,
+      "launches": 3,
+      "outcomes": {
+        "ACCEPTED": 3
+      },
+      "status": "COMPLETE"
+    }
+  },
+  "environment_id": "thor-r38.2.1-main-strategy-v1",
+  "evaluation_counts": {
+    "VIOLATION": 18
+  },
+  "evidence_gate_counts": {
+    "ADMISSIBLE": 18
+  },
+  "formal_concurrency": 4,
+  "ledger": {
+    "accepted_count": 18,
+    "chain_head": "82edada94d9ae99b0b13af2e90487c2a7eb1e8aeb7a06f871f04dd2c4cc36499",
+    "closed_count": 18,
+    "digest": "sha256:ef041af326d8c115b3f44b8c8f7ca9a5f2278b1e9272eefa24fc9f4676848aa3",
+    "event_count": 54,
+    "launched_count": 18
+  },
+  "oracle_clause_counts": {
+    "freshness_lineage": {
+      "PASS": 18,
+      "VIOLATION": 18
+    },
+    "registration_contract": {
+      "NOT_APPLICABLE": 36
+    },
+    "route_conformance": {
+      "NOT_APPLICABLE": 18,
+      "PASS": 90
+    },
+    "successor_progression": {
+      "NOT_APPLICABLE": 72,
+      "PASS": 36
+    }
+  },
+  "outcome_counts": {
+    "ACCEPTED": 18
+  },
+  "raw_evidence_manifests": {
+    "main-dynamic-official-001": "sha256:0e678c13b2572e664614d20f316c9a452801f6d71c0f19f45955b23ff713febd",
+    "main-dynamic-official-002": "sha256:6ab8bda78dbb2ede5336ffe10e201dd76566818673ae14be7e57586ca9a2f865",
+    "main-dynamic-official-003": "sha256:40a077b37e297b3a1e673a5093b55cc8364f424ba9b2a6e6c35fc71f3a155ed9",
+    "main-dynamic-random-001": "sha256:387f6df2d55f87e4000b61bdf21d6596400d44d4a9ee89ef6e287dc68dcef59a",
+    "main-dynamic-random-002": "sha256:cf26c9218199993485cfc7ece3fca20c7f98da1d2d1c2e7e80df94803c7417bd",
+    "main-dynamic-random-003": "sha256:ea347f6afc7d504f4da271d6dc9a0ea201d58676b125860146ba772d1fa06a2f",
+    "main-dynamic-state-001": "sha256:30e7ddccbac9b7538fe00842d2d5801bc7b3f6d7f86ea2d893d93ed797952b6d",
+    "main-dynamic-state-002": "sha256:cdd817553d7d06604a8c0fb5d3e9f6146da1ee6252bf630ca52a4a0aedb5f1e8",
+    "main-dynamic-state-003": "sha256:05db72e3bb96163feacd33fad9d64c4cbeb5bc6a7dcad62fb72f314f84b8b9f2",
+    "main-offboard-official-001": "sha256:c4326a9fa515e9b9eff85e6dae7b097ca17044cf822a719e8bb098ccd58a5476",
+    "main-offboard-official-002": "sha256:f6ffe85c1e34af89c6890954ac8fd011b05394d95877c4c830a5189578f1545f",
+    "main-offboard-official-003": "sha256:c9142447f9ba2283a177c15cab37bac4271190b662dbc7dc9eb68d94f8cdb522",
+    "main-offboard-random-001": "sha256:4e5c3a2bdda3f52e33970e26564428e88bf6d33f96f6b7d7224127bcae01de10",
+    "main-offboard-random-002": "sha256:5907ffdb1daab01fe5c448c1b38ac4d47eec699b022ba064454cad08638487a7",
+    "main-offboard-random-003": "sha256:22460a72141efae987299ee7ebdcaa3e551e03828e61ab491a358176cd9316da",
+    "main-offboard-state-001": "sha256:90734d60d7d275d66a2599ad490cd6fc0c09418393c5fe575ec08c3097f4e1fc",
+    "main-offboard-state-002": "sha256:0c6ebbc1c1cdc493534526d403fe4438f448a7954a03fe6bfad5eeee63277fb9",
+    "main-offboard-state-003": "sha256:1deec25220453b09f6880020d41cd33d083865dc50a64e67ecaa8b69d3efed30"
+  },
+  "repository_revision": "ea2381c8cecfe2b885a92a68b5c803481da3e6e2",
+  "schema_version": "1.0",
+  "study_id": "main-strategy-comparison-thor-v1",
+  "study_status": "COMPLETE"
+}
