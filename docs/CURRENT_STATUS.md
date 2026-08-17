@@ -5,9 +5,9 @@ Formal experiment attempts: 200
 Retained historical results: 0
 Current empirical claims: bounded Thor SITL findings in the final reports
 Formal execution environments: primary and supplemental Thor v1 identities
-Study state: Stage A1 minimal-mechanism motivation complete and frozen; Stage A2 runtime prerequisites qualified, preregistration pending
+Study state: Stage A1 minimal-mechanism motivation complete and frozen; Stage A2 preregistered and ready for formal execution
 Current work package: Stage A2 readiness and moving-workload Motivation evidence (Phases I--V below)
-Active phase: Phase IV A2 preregistration and identity freeze; Phases I--III complete
+Active phase: Phase V formal matched Stage A2; Phases I--IV complete
 Paper state after this package: Section 6 Motivation Study complete; Section 7 Main Evaluation still pending
 ```
 
@@ -229,7 +229,7 @@ Legacy Offboard control. This qualifies the handshake for A2 execution but is no
 population-level failure-rate estimate. These attempts remain non-formal and
 change no paper denominator.
 
-## Phase IV: freeze an A2-specific plan and environment
+## Phase IV: freeze an A2-specific plan and environment — COMPLETE
 
 Do not overwrite the Stage A1 method or safety files. Introduce a
 backward-compatible plan revision and versioned A2 configuration artifacts.
@@ -252,6 +252,23 @@ physical-consequence threshold, and safety-supervisor boundary must remain
 separate. A safety stop must be preregistered as a censored physical endpoint
 or other explicit non-PASS outcome; a severe trace must not disappear merely
 because the supervisor intervened.
+
+The independent plan, qualification record, exact matrix, and attestation are
+frozen in
+[`experiments/motivation_stage_a2_thor_v1/`](../experiments/motivation_stage_a2_thor_v1/).
+Plan schema 1.3 adds workload and physical-validity bindings while schema 1.2
+remains valid for the frozen A1 plans. The A2 matrix binds the position-only
+straight-line profile, selected transition observer, physical-analysis plan,
+separate method and safety configurations, paired seeds, four-slot resources,
+image `sha256:e9f913...16f3d`, and repository revision `b10b475...34e6`.
+
+Three qualification rounds are retained outside the formal ledger. They first
+identified a landing-sensitive provisional safety bound, then an incorrect
+Legacy Offboard motion-clock anchor; neither issue was hidden by relaxing the
+physical contract. In the final exact-image four-arm probe, all arms were
+runtime-accepted, entered motion at 0.752--0.768 m, recorded at least 2.501 m
+coverage, and completed terminal cleanup. Formal execution is therefore
+authorized only under the frozen matrix.
 
 ## Phase V: execute the minimal matched Stage A2
 
