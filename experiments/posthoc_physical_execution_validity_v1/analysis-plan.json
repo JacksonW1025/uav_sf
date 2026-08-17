@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "analysis_id": "posthoc-physical-execution-validity-v1",
+  "analysis_kind": "read_only_physical_execution_validity",
+  "input_trace_count": 151,
+  "paper_role": {
+    "primary_section": "6 Motivation Study",
+    "secondary_section": "8 Discussion and threats to validity",
+    "research_questions": ["RQ4", "RQ5"],
+    "changes_formal_claim": false
+  },
+  "physical_execution_rule": {
+    "coordinate_frame": "PX4 local NED with z=0 local origin",
+    "metric": "maximum_height_above_local_origin_m=max(-z)",
+    "airborne_minimum_height_m": 0.5,
+    "rationale": "reuse the existing safety-supervisor became-airborne altitude and require more than a transient landed flag",
+    "classification_use": "descriptive post-hoc stratum only"
+  },
+  "aligned_windows": {
+    "transition_installation": "target request through complete installation or frozen installation deadline",
+    "target_authority": "target activation through target revocation or registered transition scope end",
+    "freshness_exposure": "first target effect older than the frozen command-age bound through target authority end",
+    "fault_exposure": "observed target fault through successor/fallback installation or target authority end",
+    "successor_installation": "completion or registered fault anchor through complete successor/fallback installation"
+  },
+  "rules": {
+    "read_only": true,
+    "rewrite_frozen_trace": false,
+    "rewrite_frozen_evaluation": false,
+    "change_stage_a1_denominator": false,
+    "physical_metrics_form_oracle": false,
+    "missing_physical_observation": "UNKNOWN",
+    "interpolate_missing": false,
+    "constant_trajectory_target": "report freshness consequence as structurally masked, not harmless"
+  },
+  "expected_outputs": [
+    "input-manifest.json",
+    "per-trace.jsonl",
+    "aligned-windows.jsonl",
+    "summary.json",
+    "FINAL_REPORT.md"
+  ]
+}

@@ -7,6 +7,7 @@ Current empirical claims: bounded Thor SITL findings in the final reports
 Formal execution environments: primary and supplemental Thor v1 identities
 Study state: Stage A1 minimal-mechanism motivation complete and frozen; Stage A2 blocked on physical-validity and runtime qualification
 Current work package: Stage A2 readiness and moving-workload Motivation evidence (Phases I--V below)
+Active phase: Phase II finding/consequence triage; Phase I physical audit complete
 Paper state after this package: Section 6 Motivation Study complete; Section 7 Main Evaluation still pending
 ```
 
@@ -43,8 +44,8 @@ fails closed; no later study or empirical claim is implied.
 
 ## Immediate evidence-quality finding
 
-A preliminary read-only inspection of the frozen telemetry found a physical
-execution-validity issue that must be recorded before any new formal study.
+A completed read-only, digest-bound audit of the frozen telemetry found a
+physical execution-validity issue that must be addressed before any new formal study.
 Twelve of the 151 admissible Stage A1 evidence sets reached no more than
 0.08 m above their local-position origin. All 12 belong to the attitude or
 body-rate Offboard cells; three have an overall `PASS` and nine have an
@@ -66,9 +67,11 @@ ground." Consequently:
 - failed physical preconditions must yield invalid/inconclusive execution,
   never an Oracle `PASS` or `VIOLATION`.
 
-This observation is currently a repository inspection result. It becomes a
-paper-facing statement only after a read-only post-hoc analysis records the
-input manifest, exact attempts, telemetry rule, digests, and limitations.
+The paper-facing post-hoc record is frozen in
+[`experiments/posthoc_physical_execution_validity_v1/`](../experiments/posthoc_physical_execution_validity_v1/).
+It records the analysis plan, input manifest, exact attempts, aligned physical
+windows, telemetry digests, generated summary, tests, and interpretation
+limits. Reproduction from an empty output directory is byte-identical.
 
 ## Current work package and paper placement
 
@@ -91,10 +94,10 @@ Thus, completing Phases I--V closes the paper's Motivation Study. Only
 completing Phase VI and its confirmation/ablation work can support the state-aware method
 claims in the Main Evaluation.
 
-## Phase I: freeze a physical-execution audit before changing runtime behavior
+## Phase I: freeze a physical-execution audit before changing runtime behavior — COMPLETE
 
-Create a read-only, digest-bound post-hoc analysis over the 151 frozen
-admissible traces. It must:
+The read-only, digest-bound post-hoc analysis covers all 151 frozen admissible
+traces. It:
 
 1. list the 12 non-airborne attempts, their cell, maximum achieved height,
    overall result, and affected clauses;
@@ -108,7 +111,7 @@ admissible traces. It must:
    design, while retained attitude/body-rate commands may still have an
    observable signature.
 
-The expected repository artifact is a new post-hoc study directory containing
+The repository artifact is a post-hoc study directory containing
 an analysis plan, input manifest, machine-readable summary, tests, and final
 report. It must not edit either Stage A1 formal study directory.
 

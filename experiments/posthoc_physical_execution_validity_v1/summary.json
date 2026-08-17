@@ -1,0 +1,596 @@
+{
+  "airborne_rule": {
+    "metric": "maximum_height_above_local_NED_origin_m",
+    "minimum_height_m": 0.5,
+    "requires_rewriting_frozen_gate": false
+  },
+  "analysis_kind": "read_only_physical_execution_validity",
+  "classification_separation": {
+    "largest_non_airborne_height_m": 0.079787463,
+    "smallest_airborne_height_m": 1.801775932,
+    "stable_cutoff_interval_m": {
+      "exclusive_lower_bound_m": 0.079787463,
+      "inclusive_upper_bound_m": 1.801775932
+    }
+  },
+  "freshness_exposure_by_setpoint_kind": {
+    "attitude": {
+      "horizontal_displacement_m": {
+        "maximum": 0.046887872,
+        "median": 0.021377568,
+        "minimum": 0.008102382,
+        "p90_nearest_rank": 0.046887872
+      },
+      "maximum_distance_from_window_start_m": {
+        "maximum": 0.15208416,
+        "median": 0.049972282,
+        "minimum": 0.037104258,
+        "p90_nearest_rank": 0.15208416
+      },
+      "observed_window_count": 6,
+      "peak_horizontal_speed_m_s": {
+        "maximum": 0.031191271,
+        "median": 0.02253307,
+        "minimum": 0.017492683,
+        "p90_nearest_rank": 0.031191271
+      },
+      "vertical_displacement_m": {
+        "maximum": 0.14467591,
+        "median": 0.031591192,
+        "minimum": -0.012058094,
+        "p90_nearest_rank": 0.14467591
+      }
+    },
+    "body_rate": {
+      "horizontal_displacement_m": {
+        "maximum": 0.077867536,
+        "median": 0.041263108,
+        "minimum": 0.031127783,
+        "p90_nearest_rank": 0.077867536
+      },
+      "maximum_distance_from_window_start_m": {
+        "maximum": 0.115380757,
+        "median": 0.107414607,
+        "minimum": 0.07785919,
+        "p90_nearest_rank": 0.115380757
+      },
+      "observed_window_count": 3,
+      "peak_horizontal_speed_m_s": {
+        "maximum": 0.02787401,
+        "median": 0.016825158,
+        "minimum": 0.013300097,
+        "p90_nearest_rank": 0.02787401
+      },
+      "vertical_displacement_m": {
+        "maximum": 0.102727205,
+        "median": 0.082428202,
+        "minimum": 0.066025823,
+        "p90_nearest_rank": 0.102727205
+      }
+    },
+    "trajectory": {
+      "horizontal_displacement_m": {
+        "maximum": 0.107449001,
+        "median": 0.045125142,
+        "minimum": 0.009934936,
+        "p90_nearest_rank": 0.07614179
+      },
+      "maximum_distance_from_window_start_m": {
+        "maximum": 2.845606911,
+        "median": 0.936411662,
+        "minimum": 0.030135925,
+        "p90_nearest_rank": 2.805298426
+      },
+      "observed_window_count": 32,
+      "peak_horizontal_speed_m_s": {
+        "maximum": 0.213761492,
+        "median": 0.076939899,
+        "minimum": 0.009289563,
+        "p90_nearest_rank": 0.19193295
+      },
+      "vertical_displacement_m": {
+        "maximum": 2.845388517,
+        "median": 0.931042552,
+        "minimum": 0.028451204,
+        "p90_nearest_rank": 2.805092111
+      }
+    }
+  },
+  "frozen_status_counts": {
+    "PASS": 94,
+    "VIOLATION": 57
+  },
+  "input_trace_count": 151,
+  "interpretation": {
+    "changes_frozen_denominator": false,
+    "changes_frozen_verdict": false,
+    "constant_trajectory_freshness_consequence": "STRUCTURALLY_MASKED",
+    "non_airborne_traces_enter_future_physical_effect_estimates": false,
+    "physical_metrics_are_a_fifth_oracle": false
+  },
+  "non_airborne": {
+    "attempt_count": 12,
+    "attempts": [
+      {
+        "attempt_id": "det-offboard-attitude-land-002",
+        "cell_id": "det-offboard-attitude-land",
+        "frozen_status": "VIOLATION",
+        "frozen_violation_clauses": [
+          {
+            "clause": "installation",
+            "oracle": "route_conformance"
+          }
+        ],
+        "maximum_height_m": 0.003569588,
+        "setpoint_kind": "attitude",
+        "study_id": "motivation-thor-v1"
+      },
+      {
+        "attempt_id": "det-offboard-attitude-land-004",
+        "cell_id": "det-offboard-attitude-land",
+        "frozen_status": "VIOLATION",
+        "frozen_violation_clauses": [
+          {
+            "clause": "continuity",
+            "oracle": "route_conformance"
+          }
+        ],
+        "maximum_height_m": 0.049060985,
+        "setpoint_kind": "attitude",
+        "study_id": "motivation-thor-v1"
+      },
+      {
+        "attempt_id": "det-offboard-body-rate-land-002",
+        "cell_id": "det-offboard-body-rate-land",
+        "frozen_status": "PASS",
+        "frozen_violation_clauses": [],
+        "maximum_height_m": 0.031576052,
+        "setpoint_kind": "body_rate",
+        "study_id": "motivation-thor-v1"
+      },
+      {
+        "attempt_id": "det-offboard-body-rate-land-004",
+        "cell_id": "det-offboard-body-rate-land",
+        "frozen_status": "PASS",
+        "frozen_violation_clauses": [],
+        "maximum_height_m": 0.079787463,
+        "setpoint_kind": "body_rate",
+        "study_id": "motivation-thor-v1"
+      },
+      {
+        "attempt_id": "det-offboard-body-rate-land-005",
+        "cell_id": "det-offboard-body-rate-land",
+        "frozen_status": "PASS",
+        "frozen_violation_clauses": [],
+        "maximum_height_m": 0.007873803,
+        "setpoint_kind": "body_rate",
+        "study_id": "motivation-thor-v1"
+      },
+      {
+        "attempt_id": "fault-offboard-attitude-stall-003",
+        "cell_id": "fault-offboard-attitude-stall",
+        "frozen_status": "VIOLATION",
+        "frozen_violation_clauses": [
+          {
+            "clause": "continuity",
+            "oracle": "route_conformance"
+          },
+          {
+            "clause": "freshness",
+            "oracle": "freshness_lineage"
+          }
+        ],
+        "maximum_height_m": 0.037274718,
+        "setpoint_kind": "attitude",
+        "study_id": "motivation-thor-v1"
+      },
+      {
+        "attempt_id": "fault-offboard-attitude-stall-005",
+        "cell_id": "fault-offboard-attitude-stall",
+        "frozen_status": "VIOLATION",
+        "frozen_violation_clauses": [
+          {
+            "clause": "installation",
+            "oracle": "route_conformance"
+          }
+        ],
+        "maximum_height_m": 0.036728904,
+        "setpoint_kind": "attitude",
+        "study_id": "motivation-thor-v1"
+      },
+      {
+        "attempt_id": "fault-offboard-body-rate-stall-001",
+        "cell_id": "fault-offboard-body-rate-stall",
+        "frozen_status": "VIOLATION",
+        "frozen_violation_clauses": [
+          {
+            "clause": "freshness",
+            "oracle": "freshness_lineage"
+          }
+        ],
+        "maximum_height_m": 0.061863601,
+        "setpoint_kind": "body_rate",
+        "study_id": "motivation-thor-v1"
+      },
+      {
+        "attempt_id": "fault-offboard-body-rate-stall-003",
+        "cell_id": "fault-offboard-body-rate-stall",
+        "frozen_status": "VIOLATION",
+        "frozen_violation_clauses": [
+          {
+            "clause": "freshness",
+            "oracle": "freshness_lineage"
+          }
+        ],
+        "maximum_height_m": 0.066256657,
+        "setpoint_kind": "body_rate",
+        "study_id": "motivation-thor-v1"
+      },
+      {
+        "attempt_id": "fault-offboard-body-rate-stall-004",
+        "cell_id": "fault-offboard-body-rate-stall",
+        "frozen_status": "VIOLATION",
+        "frozen_violation_clauses": [
+          {
+            "clause": "freshness",
+            "oracle": "freshness_lineage"
+          }
+        ],
+        "maximum_height_m": 0.066351309,
+        "setpoint_kind": "body_rate",
+        "study_id": "motivation-thor-v1"
+      },
+      {
+        "attempt_id": "fault-offboard-body-rate-stall-005",
+        "cell_id": "fault-offboard-body-rate-stall",
+        "frozen_status": "VIOLATION",
+        "frozen_violation_clauses": [
+          {
+            "clause": "freshness",
+            "oracle": "freshness_lineage"
+          }
+        ],
+        "maximum_height_m": 0.056526378,
+        "setpoint_kind": "body_rate",
+        "study_id": "motivation-thor-v1"
+      },
+      {
+        "attempt_id": "fault-offboard-body-rate-stall-008",
+        "cell_id": "fault-offboard-body-rate-stall",
+        "frozen_status": "VIOLATION",
+        "frozen_violation_clauses": [
+          {
+            "clause": "freshness",
+            "oracle": "freshness_lineage"
+          }
+        ],
+        "maximum_height_m": 0.017147183,
+        "setpoint_kind": "body_rate",
+        "study_id": "motivation-thor-v1"
+      }
+    ],
+    "cell_counts": {
+      "det-offboard-attitude-land": 2,
+      "det-offboard-body-rate-land": 3,
+      "fault-offboard-attitude-stall": 2,
+      "fault-offboard-body-rate-stall": 5
+    },
+    "frozen_violation_clause_count": 10,
+    "frozen_violation_clause_counts": {
+      "freshness_lineage/freshness": 6,
+      "route_conformance/continuity": 2,
+      "route_conformance/installation": 2
+    }
+  },
+  "physical_execution_status_counts": {
+    "AIRBORNE": 139,
+    "NON_AIRBORNE": 12
+  },
+  "physical_to_frozen_status_counts": {
+    "AIRBORNE->PASS": 91,
+    "AIRBORNE->VIOLATION": 48,
+    "NON_AIRBORNE->PASS": 3,
+    "NON_AIRBORNE->VIOLATION": 9
+  },
+  "schema_version": "1.0",
+  "study_counts": {
+    "motivation-thor-remediation-v1": 20,
+    "motivation-thor-v1": 131
+  },
+  "window_summaries": {
+    "fault_exposure": {
+      "airborne_calculable_physical_window_count": 25,
+      "airborne_only_metric_distributions": {
+        "horizontal_displacement_m": {
+          "maximum": 0.11296377,
+          "median": 0.050449652,
+          "minimum": 0.011516751,
+          "p90_nearest_rank": 0.085056497
+        },
+        "maximum_distance_from_window_start_m": {
+          "maximum": 2.855525962,
+          "median": 0.992019694,
+          "minimum": 0.042104508,
+          "p90_nearest_rank": 2.844262126
+        },
+        "peak_absolute_vertical_speed_m_s": {
+          "maximum": 1.928192616,
+          "median": 1.863429546,
+          "minimum": 0.003281966,
+          "p90_nearest_rank": 1.910817266
+        },
+        "peak_body_rate_rad_s": {
+          "maximum": 2.296673568,
+          "median": 2.272797522,
+          "minimum": 0.002356345,
+          "p90_nearest_rank": 2.281248555
+        },
+        "peak_horizontal_speed_m_s": {
+          "maximum": 0.213761492,
+          "median": 0.105847564,
+          "minimum": 0.013300097,
+          "p90_nearest_rank": 0.198041904
+        },
+        "peak_tilt_deg": {
+          "maximum": 3.692390343,
+          "median": 2.605400143,
+          "minimum": 0.061184132,
+          "p90_nearest_rank": 3.22459003
+        },
+        "sampled_path_length_m": {
+          "maximum": 2.942492548,
+          "median": 1.003689086,
+          "minimum": 0.10164929,
+          "p90_nearest_rank": 2.931118793
+        },
+        "vertical_displacement_m": {
+          "maximum": 2.854797065,
+          "median": 0.985566974,
+          "minimum": -0.008424163,
+          "p90_nearest_rank": 2.84365955
+        }
+      },
+      "airborne_window_count": 151,
+      "status_counts": {
+        "NOT_APPLICABLE": 123,
+        "OBSERVED": 40
+      },
+      "window_count": 163
+    },
+    "freshness_exposure": {
+      "airborne_calculable_physical_window_count": 41,
+      "airborne_only_metric_distributions": {
+        "horizontal_displacement_m": {
+          "maximum": 0.107449001,
+          "median": 0.040755168,
+          "minimum": 0.008102382,
+          "p90_nearest_rank": 0.07614179
+        },
+        "maximum_distance_from_window_start_m": {
+          "maximum": 2.845606911,
+          "median": 0.779787555,
+          "minimum": 0.030135925,
+          "p90_nearest_rank": 2.795500876
+        },
+        "peak_absolute_vertical_speed_m_s": {
+          "maximum": 1.928192616,
+          "median": 0.799495757,
+          "minimum": 0.003281966,
+          "p90_nearest_rank": 1.908701301
+        },
+        "peak_body_rate_rad_s": {
+          "maximum": 2.296673568,
+          "median": 0.018639391,
+          "minimum": 0.001966543,
+          "p90_nearest_rank": 2.280424286
+        },
+        "peak_horizontal_speed_m_s": {
+          "maximum": 0.213761492,
+          "median": 0.037143588,
+          "minimum": 0.009289563,
+          "p90_nearest_rank": 0.190683704
+        },
+        "peak_tilt_deg": {
+          "maximum": 3.692390343,
+          "median": 0.378413621,
+          "minimum": 0.03102718,
+          "p90_nearest_rank": 3.103921019
+        },
+        "sampled_path_length_m": {
+          "maximum": 2.909663025,
+          "median": 0.783289219,
+          "minimum": 0.032694048,
+          "p90_nearest_rank": 2.85466773
+        },
+        "vertical_displacement_m": {
+          "maximum": 2.845388517,
+          "median": 0.772958532,
+          "minimum": -0.012058094,
+          "p90_nearest_rank": 2.795127735
+        }
+      },
+      "airborne_window_count": 151,
+      "status_counts": {
+        "NOT_OBSERVED": 115,
+        "OBSERVED": 48
+      },
+      "window_count": 163
+    },
+    "successor_installation": {
+      "airborne_calculable_physical_window_count": 125,
+      "airborne_only_metric_distributions": {
+        "horizontal_displacement_m": {
+          "maximum": 0.11296377,
+          "median": 0.004222234,
+          "minimum": 5.6234e-05,
+          "p90_nearest_rank": 0.050449652
+        },
+        "maximum_distance_from_window_start_m": {
+          "maximum": 2.855525962,
+          "median": 0.006167649,
+          "minimum": 0.000547965,
+          "p90_nearest_rank": 0.992019694
+        },
+        "peak_absolute_vertical_speed_m_s": {
+          "maximum": 1.928192616,
+          "median": 0.024562007,
+          "minimum": 0.001621441,
+          "p90_nearest_rank": 1.863429546
+        },
+        "peak_body_rate_rad_s": {
+          "maximum": 2.296673568,
+          "median": 0.026121626,
+          "minimum": 0.001120592,
+          "p90_nearest_rank": 2.272797522
+        },
+        "peak_horizontal_speed_m_s": {
+          "maximum": 0.213761492,
+          "median": 0.020413665,
+          "minimum": 0.003546871,
+          "p90_nearest_rank": 0.105847564
+        },
+        "peak_tilt_deg": {
+          "maximum": 3.692390343,
+          "median": 0.208176211,
+          "minimum": 0.025215786,
+          "p90_nearest_rank": 2.605400143
+        },
+        "sampled_path_length_m": {
+          "maximum": 2.942492548,
+          "median": 0.006168205,
+          "minimum": 0.000664592,
+          "p90_nearest_rank": 1.003689086
+        },
+        "vertical_displacement_m": {
+          "maximum": 2.854797065,
+          "median": 0.002320051,
+          "minimum": -0.008424163,
+          "p90_nearest_rank": 0.985566974
+        }
+      },
+      "airborne_window_count": 151,
+      "status_counts": {
+        "COMPLETE": 137,
+        "INCOMPLETE": 12,
+        "NOT_APPLICABLE": 14
+      },
+      "window_count": 163
+    },
+    "target_authority": {
+      "airborne_calculable_physical_window_count": 151,
+      "airborne_only_metric_distributions": {
+        "horizontal_displacement_m": {
+          "maximum": 0.353231495,
+          "median": 0.043472587,
+          "minimum": 0.009264294,
+          "p90_nearest_rank": 0.085663366
+        },
+        "maximum_distance_from_window_start_m": {
+          "maximum": 3.020262064,
+          "median": 1.270102818,
+          "minimum": 0.083529325,
+          "p90_nearest_rank": 2.848325328
+        },
+        "peak_absolute_vertical_speed_m_s": {
+          "maximum": 3.32486105,
+          "median": 0.969184458,
+          "minimum": 0.096722119,
+          "p90_nearest_rank": 1.936129093
+        },
+        "peak_body_rate_rad_s": {
+          "maximum": 2.421006997,
+          "median": 0.049760579,
+          "minimum": 0.003861239,
+          "p90_nearest_rank": 2.292576075
+        },
+        "peak_horizontal_speed_m_s": {
+          "maximum": 0.660442328,
+          "median": 0.059674674,
+          "minimum": 0.01970095,
+          "p90_nearest_rank": 0.215353649
+        },
+        "peak_tilt_deg": {
+          "maximum": 5.509242273,
+          "median": 0.540263123,
+          "minimum": 0.080575073,
+          "p90_nearest_rank": 3.22459003
+        },
+        "sampled_path_length_m": {
+          "maximum": 3.130520737,
+          "median": 1.347339517,
+          "minimum": 0.331726676,
+          "p90_nearest_rank": 3.009863627
+        },
+        "vertical_displacement_m": {
+          "maximum": 3.020113364,
+          "median": 1.195440695,
+          "minimum": -2.068719208,
+          "p90_nearest_rank": 2.848222286
+        }
+      },
+      "airborne_window_count": 151,
+      "status_counts": {
+        "OBSERVED": 163
+      },
+      "window_count": 163
+    },
+    "transition_installation": {
+      "airborne_calculable_physical_window_count": 151,
+      "airborne_only_metric_distributions": {
+        "horizontal_displacement_m": {
+          "maximum": 0.064149384,
+          "median": 0.002733035,
+          "minimum": 0.0,
+          "p90_nearest_rank": 0.00733208
+        },
+        "maximum_distance_from_window_start_m": {
+          "maximum": 0.318028379,
+          "median": 0.008471817,
+          "minimum": 0.0,
+          "p90_nearest_rank": 0.075085536
+        },
+        "peak_absolute_vertical_speed_m_s": {
+          "maximum": 1.142407179,
+          "median": 0.220182166,
+          "minimum": 0.000342456,
+          "p90_nearest_rank": 0.759068012
+        },
+        "peak_body_rate_rad_s": {
+          "maximum": 2.258821669,
+          "median": 0.00993493,
+          "minimum": 0.001017843,
+          "p90_nearest_rank": 0.520101538
+        },
+        "peak_horizontal_speed_m_s": {
+          "maximum": 0.160732669,
+          "median": 0.018843953,
+          "minimum": 0.002503499,
+          "p90_nearest_rank": 0.042550149
+        },
+        "peak_tilt_deg": {
+          "maximum": 3.05116874,
+          "median": 0.118012241,
+          "minimum": 0.010936723,
+          "p90_nearest_rank": 0.341524981
+        },
+        "sampled_path_length_m": {
+          "maximum": 0.365294482,
+          "median": 0.00851837,
+          "minimum": 0.0,
+          "p90_nearest_rank": 0.087938247
+        },
+        "vertical_displacement_m": {
+          "maximum": 0.130946875,
+          "median": 0.003838301,
+          "minimum": -0.317511559,
+          "p90_nearest_rank": 0.068063259
+        }
+      },
+      "airborne_window_count": 151,
+      "status_counts": {
+        "COMPLETE": 163
+      },
+      "window_count": 163
+    }
+  }
+}
