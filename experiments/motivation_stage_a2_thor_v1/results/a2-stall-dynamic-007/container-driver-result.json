@@ -1,0 +1,16 @@
+{
+  "architecture": "arm64",
+  "container_name": "family-a-motivation-stage-a2-thor-v1-a2-stall-dynamic-007",
+  "container_runtime": "runc",
+  "cpu_set": "3-5",
+  "image": "uav-sf-family-a-thor:a2-b10b475",
+  "image_id": "sha256:e9f913b23798f052295abc8a643d56e499d8d1b4b669ea869f7892683f516f3d",
+  "memory": "24g",
+  "network_mode": "none",
+  "operating_system": "linux",
+  "outer_timeout": false,
+  "returncode": 0,
+  "run_id": "a2-stall-dynamic-007",
+  "schema_version": "1.0",
+  "study_id": "motivation-stage-a2-thor-v1"
+}

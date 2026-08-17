@@ -1,0 +1,19 @@
+{
+  "attempt_id": "a2-stall-dynamic-011",
+  "cell_id": "a2-stall-dynamic",
+  "compact_evidence": {
+    "container_driver_result": "sha256:9337df221b156543903adcb398af0d51c426749493faa5546d179fae72ad5243",
+    "processing_result": "sha256:98d349cc48c6ae1fc8d272a367f948842b13457b0f1f05f02aedf97b36bfcd8b",
+    "raw_manifest": "sha256:12f214a92b5d7618f09a444be57be4b584489b755a35b23034f70bb0e7262e4c",
+    "runtime_result": "sha256:2ef90b1f31330dbdc725c7801bd3662b7d3dc5052076f37aa7f64a72529b6c35",
+    "ulog_summary": "sha256:2306b783484c75f5ad5b3b3f93b92bf7773a9611874defe1890754785fca9a78"
+  },
+  "execution_model": "two_phase_barrier",
+  "image_id": "sha256:e9f913b23798f052295abc8a643d56e499d8d1b4b669ea869f7892683f516f3d",
+  "outcome": "OBSERVABILITY_REJECTED",
+  "plan_digest": "sha256:4cc862ac16ac8c7f35fdef4fb243bdde3f1e6d878fc1fba16ac35d1877fd1944",
+  "processing_returncode": 2,
+  "runtime_driver_returncode": 0,
+  "schema_version": "1.0",
+  "study_id": "motivation-stage-a2-thor-v1"
+}

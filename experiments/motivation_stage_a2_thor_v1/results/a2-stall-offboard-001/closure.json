@@ -1,0 +1,20 @@
+{
+  "attempt_id": "a2-stall-offboard-001",
+  "cell_id": "a2-stall-offboard",
+  "compact_evidence": {
+    "container_driver_result": "sha256:821cca57a19b80d05c27e065204b900da49fa997ad4e1a2cd6144782f691b0a3",
+    "evaluation": "sha256:cac85f1a150cadfc989424f7bc2098ad89049b5024b8da9fa6cf24b3be00a975",
+    "processing_result": "sha256:9a44ac5ced60305dfa398e6891ddb5c136ed509607a59b019bc93642b9179f4f",
+    "raw_manifest": "sha256:af99c89cff971d3f2688676b5ba4a357665c30e335113d9aed52a3601eefb2e1",
+    "runtime_result": "sha256:acec4d2d7a37ad525155de7cf78121f2302ae2f6e0bf806c2a5f96b32713df89",
+    "ulog_summary": "sha256:98aee787e6e6f377a4088a7911526f46ca99768c9d335553d09384bfb2586317"
+  },
+  "execution_model": "two_phase_barrier",
+  "image_id": "sha256:e9f913b23798f052295abc8a643d56e499d8d1b4b669ea869f7892683f516f3d",
+  "outcome": "ACCEPTED",
+  "plan_digest": "sha256:a0974034c4564a6eec16052b5f992066605fdaefe763bebaf5782652547e51bc",
+  "processing_returncode": 0,
+  "runtime_driver_returncode": 0,
+  "schema_version": "1.0",
+  "study_id": "motivation-stage-a2-thor-v1"
+}

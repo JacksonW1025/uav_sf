@@ -1,0 +1,55 @@
+{
+  "attempt_id": "a2-normal-offboard-005",
+  "clock_bridge": null,
+  "environment_attestation_digest": "sha256:8ffdd12e6fe5a0f79c55f0e55c605ce89429880129f11d307f36676507ca33a9",
+  "evaluation_status": null,
+  "evidence_gate_status": null,
+  "gazebo": {
+    "central_minimum": 0.9984646110443666,
+    "median": 0.9998807642188668,
+    "minimum": 0.013678942344451505,
+    "sample_count": 336,
+    "status": "PASS"
+  },
+  "outcome": "OBSERVABILITY_REJECTED",
+  "physical_execution": {
+    "checks": {
+      "fault_after_motion_entry": true,
+      "motion_phase_entered": true,
+      "nominal_profile_coverage": true,
+      "sustained_takeoff": true
+    },
+    "maximum_logged_completion_progress_m": 2.517315186560154,
+    "maximum_logged_entry_progress_m": 0.7574966922402382,
+    "status": "PASS"
+  },
+  "plan_digest": "sha256:c68aa52257154ede002aac30f9b15378d78bcac5b4671abee126e6767403607f",
+  "plan_id": "a2-normal-offboard-005-plan",
+  "processing_error": "timestamp is outside the bridge validity interval",
+  "raw_manifest_digest": "sha256:565c638737db8bc0453d20d8a98d14623a34fa50f10f7ea8cfc0da0739588765",
+  "runtime_outcome": "ACCEPTED",
+  "schema_version": "1.0",
+  "study_id": "motivation-stage-a2-thor-v1",
+  "ulog": {
+    "dropouts": [],
+    "file_corruption": false,
+    "first_sequence_by_instance": {
+      "0": 0,
+      "1": 74,
+      "2": 74,
+      "3": 60
+    },
+    "route_observation_count": 10968,
+    "route_observation_instances": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "schema_version": "1.0",
+    "sequence_gaps": [],
+    "status": "PASS",
+    "ulog_end_us": 34256000,
+    "ulog_start_us": 5016000
+  }
+}

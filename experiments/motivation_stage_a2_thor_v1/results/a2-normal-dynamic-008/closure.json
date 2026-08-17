@@ -1,0 +1,19 @@
+{
+  "attempt_id": "a2-normal-dynamic-008",
+  "cell_id": "a2-normal-dynamic",
+  "compact_evidence": {
+    "container_driver_result": "sha256:8bb43c38bdc5044ad42d36e4db5bc883e5e534b5c6886ec6a568fdebf4fab29e",
+    "processing_result": "sha256:4ef1646ac1987d852a5fe466fdee23c73d0563b25ac4a091f766350a00ed4211",
+    "raw_manifest": "sha256:f31ec8e07ffb4d5d124a74c18c941410f66dc8672c59d9c3c59e207e893a2206",
+    "runtime_result": "sha256:0958a63f30d70db2ee8dd43716d3626a1085bac9a23a23cc8ae197ca6c786bf0",
+    "ulog_summary": "sha256:cdca4d402e6e4d2c5eaf7f75e631d51fd48cda07b0fb2d4310d473b267a07476"
+  },
+  "execution_model": "two_phase_barrier",
+  "image_id": "sha256:e9f913b23798f052295abc8a643d56e499d8d1b4b669ea869f7892683f516f3d",
+  "outcome": "OBSERVABILITY_REJECTED",
+  "plan_digest": "sha256:2a62a3d62da76e0053246159e87abed935ad35465995737604ffe20a3a05bc1c",
+  "processing_returncode": 2,
+  "runtime_driver_returncode": 0,
+  "schema_version": "1.0",
+  "study_id": "motivation-stage-a2-thor-v1"
+}

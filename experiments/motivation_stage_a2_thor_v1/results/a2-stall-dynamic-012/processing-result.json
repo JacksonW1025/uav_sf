@@ -1,0 +1,57 @@
+{
+  "attempt_id": "a2-stall-dynamic-012",
+  "clock_bridge": null,
+  "environment_attestation_digest": "sha256:8ffdd12e6fe5a0f79c55f0e55c605ce89429880129f11d307f36676507ca33a9",
+  "evaluation_status": null,
+  "evidence_gate_status": null,
+  "gazebo": {
+    "central_minimum": 0.9987814865863647,
+    "median": 0.9999137574384209,
+    "minimum": 0.014604431968267665,
+    "sample_count": 350,
+    "status": "PASS"
+  },
+  "outcome": "OBSERVABILITY_REJECTED",
+  "physical_execution": {
+    "checks": {
+      "fault_after_motion_entry": true,
+      "motion_phase_entered": true,
+      "nominal_profile_coverage": true,
+      "sustained_takeoff": true
+    },
+    "maximum_logged_completion_progress_m": 2.5033760368824005,
+    "maximum_logged_entry_progress_m": 0.7504001557826996,
+    "status": "PASS"
+  },
+  "plan_digest": "sha256:ba28731af1e23cf734c790a06fa1cb53fd58657cd32fef9e67a06dd20b2024b3",
+  "plan_id": "a2-stall-dynamic-012-plan",
+  "processing_error": "timestamp is outside the bridge validity interval",
+  "raw_manifest_digest": "sha256:77021c863fc8fb47487cfc2f5327cbec57ffa5ef42623028822ea827e83bd538",
+  "runtime_outcome": "ACCEPTED",
+  "schema_version": "1.0",
+  "study_id": "motivation-stage-a2-thor-v1",
+  "ulog": {
+    "dropouts": [],
+    "file_corruption": false,
+    "first_sequence_by_instance": {
+      "0": 0,
+      "1": 79,
+      "2": 79,
+      "3": 67,
+      "4": 0
+    },
+    "route_observation_count": 11484,
+    "route_observation_instances": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "schema_version": "1.0",
+    "sequence_gaps": [],
+    "status": "PASS",
+    "ulog_end_us": 35640000,
+    "ulog_start_us": 5040000
+  }
+}

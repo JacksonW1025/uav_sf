@@ -1,0 +1,280 @@
+{
+  "evidence": {
+    "admissibility": "ADMISSIBLE",
+    "clause_count": 16,
+    "gate_reason_count": 0,
+    "oracle_count": 4
+  },
+  "evidence_gate": {
+    "checks": {
+      "clock_mapping": {
+        "domains": [
+          "analysis_monotonic"
+        ],
+        "status": "PASS",
+        "unmapped_sequences": []
+      },
+      "collection_bounds": {
+        "status": "PASS"
+      },
+      "critical_window_coverage": {
+        "gap_sequences": [],
+        "status": "PASS"
+      },
+      "execution_environment": {
+        "attestation_count": 1,
+        "attestation_sequence": 1,
+        "status": "PASS"
+      },
+      "hash_chain": {
+        "errors": [],
+        "status": "PASS"
+      },
+      "required_events": {
+        "missing": [],
+        "status": "PASS"
+      },
+      "route_identity": {
+        "errors": [],
+        "status": "PASS"
+      },
+      "run_identity": {
+        "status": "PASS"
+      }
+    },
+    "reasons": [],
+    "status": "ADMISSIBLE"
+  },
+  "findings": [],
+  "oracles": [
+    {
+      "clauses": {
+        "continuity": {
+          "evidence": {},
+          "reasons": [
+            "source-to-target actuator-effect boundary is incomplete"
+          ],
+          "status": "UNKNOWN"
+        },
+        "exclusivity": {
+          "evidence": {},
+          "reasons": [
+            "both source and target actuator-writer evidence are required"
+          ],
+          "status": "UNKNOWN"
+        },
+        "installation": {
+          "evidence": {
+            "complete": true,
+            "completed_at_ns": 1684733767940629,
+            "events": {
+              "activation": {
+                "sequence": 1400,
+                "timestamp_ns": 1684733763937358
+              },
+              "actuator_write": {
+                "sequence": 1405,
+                "timestamp_ns": 1684733767940629
+              },
+              "allocator_output": {
+                "sequence": 1404,
+                "timestamp_ns": 1684733767940629
+              },
+              "command_consumed": {
+                "sequence": 1402,
+                "timestamp_ns": 1684733763937358
+              },
+              "controller_output": {
+                "sequence": 1403,
+                "timestamp_ns": 1684733767940629
+              }
+            },
+            "identity": {
+              "activation_id": "nav-14-epoch-2",
+              "allocator_id": "px4-control-allocator",
+              "controller_id": "mc_position_control",
+              "executor_owner": "none",
+              "lifecycle_owner": "family_a_offboard_controller",
+              "producer_session": "offboard-a2-normal-offboard-006-epoch-2",
+              "registration_id": "dds-offboard",
+              "route": "legacy_offboard",
+              "route_epoch": "px4-epoch-2",
+              "writer_id": "px4-control-allocator-actuator-motors"
+            }
+          },
+          "reasons": [],
+          "status": "PASS"
+        },
+        "ownership": {
+          "evidence": {
+            "expected_executor_owner": "none",
+            "expected_lifecycle_owner": "family_a_offboard_controller",
+            "observed_executor_owner": "none",
+            "observed_lifecycle_owner": "family_a_offboard_controller"
+          },
+          "reasons": [],
+          "status": "PASS"
+        },
+        "reentry_identity": {
+          "evidence": {},
+          "reasons": [
+            "no repeated-entry identity obligation was preregistered"
+          ],
+          "status": "NOT_APPLICABLE"
+        },
+        "revocation": {
+          "evidence": {},
+          "reasons": [
+            "the source route instance active at the request is missing"
+          ],
+          "status": "UNKNOWN"
+        }
+      },
+      "oracle": "route_conformance",
+      "transition_sequence": 1386
+    },
+    {
+      "clauses": {
+        "freshness": {
+          "evidence": {
+            "authority_window_end_ns": 1684746303383808,
+            "checked_events": 6268,
+            "maximum_observed_age_ns": 58645109
+          },
+          "reasons": [],
+          "status": "PASS"
+        },
+        "lineage": {
+          "evidence": {
+            "installed_identity": {
+              "activation_id": "nav-14-epoch-2",
+              "allocator_id": "px4-control-allocator",
+              "controller_id": "mc_position_control",
+              "executor_owner": "none",
+              "lifecycle_owner": "family_a_offboard_controller",
+              "producer_session": "offboard-a2-normal-offboard-006-epoch-2",
+              "registration_id": "dds-offboard",
+              "route": "legacy_offboard",
+              "route_epoch": "px4-epoch-2",
+              "writer_id": "px4-control-allocator-actuator-motors"
+            }
+          },
+          "reasons": [],
+          "status": "PASS"
+        }
+      },
+      "oracle": "freshness_lineage"
+    },
+    {
+      "clauses": {
+        "adjacent_order": {
+          "evidence": {},
+          "reasons": [
+            "no adjacent request is planned"
+          ],
+          "status": "NOT_APPLICABLE"
+        },
+        "adjacent_successor": {
+          "evidence": {},
+          "reasons": [
+            "no adjacent request is planned"
+          ],
+          "status": "NOT_APPLICABLE"
+        },
+        "adjacent_timing": {
+          "evidence": {},
+          "reasons": [
+            "no adjacent request is planned"
+          ],
+          "status": "NOT_APPLICABLE"
+        },
+        "expected_successor": {
+          "evidence": {
+            "complete": true,
+            "completed_at_ns": 1684746315383791,
+            "events": {
+              "activation": {
+                "sequence": 7673,
+                "timestamp_ns": 1684746303383808
+              },
+              "actuator_write": {
+                "sequence": 7679,
+                "timestamp_ns": 1684746315383791
+              },
+              "allocator_output": {
+                "sequence": 7678,
+                "timestamp_ns": 1684746315383791
+              },
+              "command_consumed": {
+                "sequence": 7675,
+                "timestamp_ns": 1684746307383802
+              },
+              "controller_output": {
+                "sequence": 7677,
+                "timestamp_ns": 1684746315383791
+              }
+            },
+            "identity": {
+              "activation_id": "nav-18-epoch-3",
+              "allocator_id": "px4-control-allocator",
+              "controller_id": "mc_position_control",
+              "executor_owner": "none",
+              "lifecycle_owner": "px4_commander",
+              "producer_session": "px4-internal",
+              "registration_id": "px4-built-in",
+              "route": "internal_land",
+              "route_epoch": "px4-epoch-3",
+              "writer_id": "px4-control-allocator-actuator-motors"
+            }
+          },
+          "reasons": [],
+          "status": "PASS"
+        },
+        "fault_observation": {
+          "evidence": {},
+          "reasons": [
+            "fault is not part of this plan"
+          ],
+          "status": "NOT_APPLICABLE"
+        },
+        "safe_fallback": {
+          "evidence": {},
+          "reasons": [
+            "fault is not part of this plan"
+          ],
+          "status": "NOT_APPLICABLE"
+        }
+      },
+      "oracle": "successor_progression"
+    },
+    {
+      "clauses": {
+        "activation_rejection": {
+          "evidence": {},
+          "reasons": [
+            "activation rejection is not expected"
+          ],
+          "status": "NOT_APPLICABLE"
+        },
+        "registration_rejection": {
+          "evidence": {},
+          "reasons": [
+            "registration rejection is not expected"
+          ],
+          "status": "NOT_APPLICABLE"
+        }
+      },
+      "oracle": "registration_contract"
+    }
+  ],
+  "plan_id": "a2-normal-offboard-006-plan",
+  "run_id": "a2-normal-offboard-006",
+  "schema_version": "1.1",
+  "semantic_disposition": {
+    "all": [
+      "UNKNOWN"
+    ],
+    "primary": "UNKNOWN"
+  },
+  "status": "INCONCLUSIVE"
+}

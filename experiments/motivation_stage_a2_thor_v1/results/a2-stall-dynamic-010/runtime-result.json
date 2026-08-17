@@ -1,0 +1,23 @@
+{
+  "allocation": {
+    "attempt_id": "a2-stall-dynamic-010",
+    "cpu_set": "0-2",
+    "gazebo_partition": "family_a_motivation-stage-a2-thor-v1_0",
+    "mavlink_tcp_port": 4560,
+    "mavlink_udp_local_port": 14580,
+    "mavlink_udp_port": 14540,
+    "process_group_identity": "family-a-a2-stall-dynamic-010",
+    "px4_instance": 0,
+    "ros_domain_id": 40,
+    "run_directory": "/runs/motivation-stage-a2-thor-v1/a2-stall-dynamic-010",
+    "slot": 0,
+    "study_id": "motivation-stage-a2-thor-v1",
+    "temporary_directory": "/runs/motivation-stage-a2-thor-v1/a2-stall-dynamic-010/tmp",
+    "vehicle_identity": "x500_0",
+    "xrce_agent_port": 8888
+  },
+  "outcome": "ACCEPTED",
+  "run_id": "a2-stall-dynamic-010",
+  "schema_version": "1.0",
+  "ulog": "/runs/motivation-stage-a2-thor-v1/a2-stall-dynamic-010/raw/px4.ulg"
+}

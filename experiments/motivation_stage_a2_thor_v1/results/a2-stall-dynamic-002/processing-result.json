@@ -1,0 +1,185 @@
+{
+  "attempt_id": "a2-stall-dynamic-002",
+  "clock_bridge": {
+    "bridge_id": "clock-11b594e5c4d0d41c",
+    "knots": [
+      [
+        10608000000,
+        1684526272284783
+      ],
+      [
+        10640000000,
+        1684526307911589
+      ],
+      [
+        11644000000,
+        1684527313483163
+      ],
+      [
+        12648000000,
+        1684528317142627
+      ],
+      [
+        13652000000,
+        1684529320468969
+      ],
+      [
+        14656000000,
+        1684530324330626
+      ],
+      [
+        15660000000,
+        1684531328762303
+      ],
+      [
+        16664000000,
+        1684532332494673
+      ],
+      [
+        17668000000,
+        1684533336346034
+      ],
+      [
+        18672000000,
+        1684534340793173
+      ],
+      [
+        19676000000,
+        1684535344317089
+      ],
+      [
+        20680000000,
+        1684536348770479
+      ],
+      [
+        21684000000,
+        1684537352530006
+      ],
+      [
+        22688000000,
+        1684538356408673
+      ],
+      [
+        23692000000,
+        1684539360315905
+      ],
+      [
+        24696000000,
+        1684540364975784
+      ],
+      [
+        25700000000,
+        1684541368322969
+      ],
+      [
+        26704000000,
+        1684542372364024
+      ],
+      [
+        27708000000,
+        1684543376348033
+      ],
+      [
+        28712000000,
+        1684544380450876
+      ],
+      [
+        29716000000,
+        1684545384296904
+      ],
+      [
+        30720000000,
+        1684546388414913
+      ],
+      [
+        31724000000,
+        1684547392399117
+      ],
+      [
+        32728000000,
+        1684548396500858
+      ],
+      [
+        33732000000,
+        1684549400633765
+      ],
+      [
+        34736000000,
+        1684550404413719
+      ],
+      [
+        35740000000,
+        1684551408302052
+      ],
+      [
+        36744000000,
+        1684552413168988
+      ],
+      [
+        37748000000,
+        1684553416429941
+      ]
+    ],
+    "rate_ratio": 1.0001527324244657,
+    "reference_analysis_ns": 1684539360315905,
+    "reference_source_ns": 23692000000,
+    "sample_count": 29,
+    "source_domain": "px4_boot_ns",
+    "uncertainty_ns": 3466238,
+    "valid_from_ns": 10608000000,
+    "valid_until_ns": 37748000000
+  },
+  "environment_attestation_digest": "sha256:8ffdd12e6fe5a0f79c55f0e55c605ce89429880129f11d307f36676507ca33a9",
+  "evaluation_status": "VIOLATION",
+  "evidence_gate_status": "ADMISSIBLE",
+  "gazebo": {
+    "central_minimum": 0.9985520994557892,
+    "median": 0.9999125076555802,
+    "minimum": 0.014141765407153782,
+    "sample_count": 378,
+    "status": "PASS"
+  },
+  "outcome": "ACCEPTED",
+  "physical_execution": {
+    "checks": {
+      "fault_after_motion_entry": true,
+      "motion_phase_entered": true,
+      "nominal_profile_coverage": true,
+      "sustained_takeoff": true
+    },
+    "maximum_logged_completion_progress_m": 2.5047824708744884,
+    "maximum_logged_entry_progress_m": 0.7578630177304149,
+    "status": "PASS"
+  },
+  "plan_digest": "sha256:204b62ce5a02eee2c298f1aa3d011834b71706ea9ce706b62c911b1306a6e940",
+  "plan_id": "a2-stall-dynamic-002-plan",
+  "processing_error": null,
+  "raw_manifest_digest": "sha256:3b02d966627c0a5d09cf75962e81be1e0ca557266c433d487450530735789fb7",
+  "runtime_outcome": "ACCEPTED",
+  "schema_version": "1.0",
+  "study_id": "motivation-stage-a2-thor-v1",
+  "ulog": {
+    "dropouts": [],
+    "file_corruption": false,
+    "first_sequence_by_instance": {
+      "0": 0,
+      "1": 73,
+      "2": 73,
+      "3": 60,
+      "4": 0
+    },
+    "route_observation_count": 12531,
+    "route_observation_instances": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "schema_version": "1.0",
+    "sequence_gaps": [],
+    "status": "PASS",
+    "ulog_end_us": 38460000,
+    "ulog_start_us": 5036000
+  }
+}

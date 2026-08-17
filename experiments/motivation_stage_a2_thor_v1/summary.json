@@ -1,0 +1,154 @@
+{
+  "cell_status_counts": {
+    "COMPLETE": 1,
+    "MEASUREMENT_INSUFFICIENT": 3
+  },
+  "cells": {
+    "a2-normal-dynamic": {
+      "accepted": 4,
+      "accepted_target": 5,
+      "category": "deterministic",
+      "launch_cap": 10,
+      "launches": 10,
+      "outcomes": {
+        "ACCEPTED": 4,
+        "OBSERVABILITY_REJECTED": 6
+      },
+      "status": "MEASUREMENT_INSUFFICIENT"
+    },
+    "a2-normal-offboard": {
+      "accepted": 0,
+      "accepted_target": 5,
+      "category": "deterministic",
+      "launch_cap": 10,
+      "launches": 10,
+      "outcomes": {
+        "INCONCLUSIVE": 2,
+        "OBSERVABILITY_REJECTED": 8
+      },
+      "status": "MEASUREMENT_INSUFFICIENT"
+    },
+    "a2-stall-dynamic": {
+      "accepted": 8,
+      "accepted_target": 8,
+      "category": "fault",
+      "launch_cap": 16,
+      "launches": 15,
+      "outcomes": {
+        "ACCEPTED": 8,
+        "OBSERVABILITY_REJECTED": 7
+      },
+      "status": "COMPLETE"
+    },
+    "a2-stall-offboard": {
+      "accepted": 6,
+      "accepted_target": 8,
+      "category": "fault",
+      "launch_cap": 16,
+      "launches": 16,
+      "outcomes": {
+        "ACCEPTED": 6,
+        "OBSERVABILITY_REJECTED": 10
+      },
+      "status": "MEASUREMENT_INSUFFICIENT"
+    }
+  },
+  "environment_id": "thor-r38.2.1-stage-a2-v1",
+  "evaluation_counts": {
+    "INCONCLUSIVE": 2,
+    "PASS": 4,
+    "VIOLATION": 14
+  },
+  "evidence_gate_counts": {
+    "ADMISSIBLE": 20
+  },
+  "formal_concurrency": 4,
+  "ledger": {
+    "accepted_count": 18,
+    "chain_head": "31bac1e1b94f63bd7924b6d40483cf07153e2e6533317b420d68285d787a584a",
+    "closed_count": 51,
+    "digest": "sha256:a66282096fd70860f62b028a3d7d2384b6a847a6bbf7c489dc4fb0e64726ade5",
+    "event_count": 153,
+    "launched_count": 51
+  },
+  "oracle_clause_counts": {
+    "freshness_lineage": {
+      "PASS": 26,
+      "VIOLATION": 14
+    },
+    "registration_contract": {
+      "NOT_APPLICABLE": 40
+    },
+    "route_conformance": {
+      "NOT_APPLICABLE": 20,
+      "PASS": 76,
+      "UNKNOWN": 24
+    },
+    "successor_progression": {
+      "NOT_APPLICABLE": 86,
+      "PASS": 34
+    }
+  },
+  "outcome_counts": {
+    "ACCEPTED": 18,
+    "INCONCLUSIVE": 2,
+    "OBSERVABILITY_REJECTED": 31
+  },
+  "raw_evidence_manifests": {
+    "a2-normal-dynamic-001": "sha256:1cb92095f67b495cb4df36ac619e196bdc1990a37edb89755d36e13683d08acd",
+    "a2-normal-dynamic-002": "sha256:089a737d23f76b1ebbee862f79a59e68c16cac10969ecc9c6b26e7eb24bb69e8",
+    "a2-normal-dynamic-003": "sha256:46a7c4c9c071421ce1a98401d9f7b4681f229c9ec6335e6f788e4ac3cae84295",
+    "a2-normal-dynamic-004": "sha256:73af071ed6ae458699c79b227194267f17935612c70cc1619777c97f510d6eaf",
+    "a2-normal-dynamic-005": "sha256:0abbe14d011eace82a9d62b24b80ec77b8a103fc229afd590fe227929f5969d8",
+    "a2-normal-dynamic-006": "sha256:3b1ea86e15dd1b845959adb0f9217e86056389d867e6e02cd28f1a999a9a69fa",
+    "a2-normal-dynamic-007": "sha256:c98e9702daf0809cb1586358edbfca0b8121dd26ea2e07a2fbf10f7195a79bfa",
+    "a2-normal-dynamic-008": "sha256:f31ec8e07ffb4d5d124a74c18c941410f66dc8672c59d9c3c59e207e893a2206",
+    "a2-normal-dynamic-009": "sha256:11e2e9d305e38e474210cee1f5d2f7fe27f3ca0c365bb4153688d0d8dd09dbde",
+    "a2-normal-dynamic-010": "sha256:5f0ad5476d86c5ad67abcefe09b529bee01b04b8aa1914f94127c17efd107a4f",
+    "a2-normal-offboard-001": "sha256:b94864cfaa95d99e3c80cf82070bb20a5bae8a4c4ad720b6122f109b164c22de",
+    "a2-normal-offboard-002": "sha256:b27e39cf47db95c27030301f7ba82011e342b7bee9df1a871743ffa94f765676",
+    "a2-normal-offboard-003": "sha256:dc33dda1239bcc70e34e2078f708d5c6f37a5464e3216e5ce0ffd955f3cfb690",
+    "a2-normal-offboard-004": "sha256:7fa0b99a0ef2550bd10e884f642665ea2423f0d423f89f239a6356ebbd2f94ad",
+    "a2-normal-offboard-005": "sha256:565c638737db8bc0453d20d8a98d14623a34fa50f10f7ea8cfc0da0739588765",
+    "a2-normal-offboard-006": "sha256:d4feb615b356e64852ee100fbc85f8fbe65ffb660a05216707396499ee8b5ccc",
+    "a2-normal-offboard-007": "sha256:ff6aa84392b280b4eb76e24789520f66a1dded00f7d4f7c896d901c93b368063",
+    "a2-normal-offboard-008": "sha256:24a4ad48d8dec11d2b7f1f7afc01ebea6ca49207b16d395feecc2ce6a7ada3b5",
+    "a2-normal-offboard-009": "sha256:71305552fc18e2edd7377017f9f5be71e544abf61e7ffd7bd1a5918abf704229",
+    "a2-normal-offboard-010": "sha256:22aaac2990e789c94a76999704a1267ab4609db2ae432393f1d919cd5f0a16e2",
+    "a2-stall-dynamic-001": "sha256:f78fbd79c0ccb700a27005ce486a52ed0e90b1ed8dc156c8bb8899caa9808e60",
+    "a2-stall-dynamic-002": "sha256:3b02d966627c0a5d09cf75962e81be1e0ca557266c433d487450530735789fb7",
+    "a2-stall-dynamic-003": "sha256:673b06a91ca0d8b90e400768ecd08cb65c63f5f717315c5e0675b2b028ccdb07",
+    "a2-stall-dynamic-004": "sha256:1fa6fd643c910f18bffc940bb4b3a099d21558a46dec0c2264d66a175f85d702",
+    "a2-stall-dynamic-005": "sha256:52533f1c0884d1abab24e35745da2c12e66b82bbc46e988baaf7789f4c885b1e",
+    "a2-stall-dynamic-006": "sha256:6c024f246849f018935d1f2945a5cf47a952a1b0729f8a54bfb66334dcf7ebea",
+    "a2-stall-dynamic-007": "sha256:52323dd79df96a23e03d694aae07868f894cdc3479062c2511f3a2fbcf270fe8",
+    "a2-stall-dynamic-008": "sha256:93273dfc30cf6a0e9880012503f63a5a1c88880092796d65bd8035cca0f15aca",
+    "a2-stall-dynamic-009": "sha256:40666bd63d0425670215bc6ade45dc39ae76cc9514ab8a3252e202d80c8ed688",
+    "a2-stall-dynamic-010": "sha256:af089b7d4f5845bb193491f126a9881e03f0bb5fcd5feb4968c4839926df72f0",
+    "a2-stall-dynamic-011": "sha256:12f214a92b5d7618f09a444be57be4b584489b755a35b23034f70bb0e7262e4c",
+    "a2-stall-dynamic-012": "sha256:77021c863fc8fb47487cfc2f5327cbec57ffa5ef42623028822ea827e83bd538",
+    "a2-stall-dynamic-013": "sha256:dbb0ec3e667fa8125a77e9d50dd01806de5fe771e2c34067ac66b955fda085ef",
+    "a2-stall-dynamic-014": "sha256:af07d2ce3ab49020b9796c76eaf05a7bbe2c3204dc20e1bba5a3c8431e0deb89",
+    "a2-stall-dynamic-015": "sha256:ea0ca58845f5c9b2340adfed4d0aff068f042d1abe4206a631cb21b320d691a7",
+    "a2-stall-offboard-001": "sha256:af99c89cff971d3f2688676b5ba4a357665c30e335113d9aed52a3601eefb2e1",
+    "a2-stall-offboard-002": "sha256:cfef82a984777ad563cf701ed280fa003b79b91695946af6fd5cb2617ff82406",
+    "a2-stall-offboard-003": "sha256:36bcb98f09f3333278615eb3ac4931f67783b93b05ff9f57b99e7bc9ba034abe",
+    "a2-stall-offboard-004": "sha256:2daf1d164f7c69cc890861b5624874c6353bb517be85c26f20e522cee35e56ce",
+    "a2-stall-offboard-005": "sha256:d520132dd38db67882455bf5bb16a764b0763d728593b152d75c5d75feb09810",
+    "a2-stall-offboard-006": "sha256:bcdd38d7b17bfdc6f342cd272e03db42e6454703af487fa1e1431cd9734fcb52",
+    "a2-stall-offboard-007": "sha256:b1da5f57285ac9714df388d76a436a404c5981d57ed05027e9d2eb79cb460561",
+    "a2-stall-offboard-008": "sha256:b174d403bc6143b56e848624061aa72d9e8e9ee2eade5975ac2930fa9e858923",
+    "a2-stall-offboard-009": "sha256:9f48ed76583d0810d1338d7929ff339be97c00828b26effcc00fedc52ac5478e",
+    "a2-stall-offboard-010": "sha256:a75af82f1a18063bf64c1ffea119557ecb27850a464f8c65a08a60e2d26d04b6",
+    "a2-stall-offboard-011": "sha256:c085b333241a223fdeb5f5093361d2d3b96d218fa9a8c4b9e1c45f13fab74418",
+    "a2-stall-offboard-012": "sha256:c4fd69882cd9796952dc9cb60193c74c0c7a84c3560be11e4d1bc3aa76baf7c0",
+    "a2-stall-offboard-013": "sha256:ed5e889d8bc7476dd154da730da06c8e2acbf947d645c139e71b67641e184b87",
+    "a2-stall-offboard-014": "sha256:d99cc498649d01b4e2c6ad20aa9cee6bca0d00dbe52cb5d0805a29f48ee29ec6",
+    "a2-stall-offboard-015": "sha256:959690011f0cae043ebd256fedd6b036de43afd26c33fc15425a7d3375765ce8",
+    "a2-stall-offboard-016": "sha256:9bbdeb4ff3404d05c5d876c465b18c1dfc82e431dbef3cb9f65ade4120911a44"
+  },
+  "repository_revision": "b10b475015e1d0a91b0f138946445b179de334e6",
+  "schema_version": "1.0",
+  "study_id": "motivation-stage-a2-thor-v1",
+  "study_status": "MEASUREMENT_INSUFFICIENT"
+}
