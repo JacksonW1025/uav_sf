@@ -176,6 +176,8 @@ class MatchedDifferentialTests(unittest.TestCase):
         self.assertIsNotNone(effect["standardized_effect_dz"])
 
     def test_motivation_corpus_is_only_unpaired_descriptive_input(self) -> None:
+        if not Path("runs/motivation-thor-v1").is_dir():
+            self.skipTest("retained runtime traces are unavailable")
         records = motivation_unpaired_descriptive(Path("."))
         self.assertEqual(len(records), 151)
         self.assertEqual({item["pairing_status"] for item in records}, {"UNMATCHED"})
