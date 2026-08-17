@@ -14,13 +14,17 @@ V7 的研究范围收敛为 **Family A：PX4 内部控制路径、Legacy Offboar
 
 ```text
 repository: uav_sf
-current narrative review revision: ef2cd695f046209f2a9c9dbe4a520469f7a06599
+current narrative source: uav_sf/docs/NEW_NARRATIVE_v7.md on origin/main
 formal launches retained by the two Thor studies: 200
 admissible evidence sets: 151
 overall Oracle results among admissible evidence: 94 PASS, 57 VIOLATION
-current motivation scope: complete through a separate supplemental study
+Stage A1 minimal-mechanism motivation: complete through a separate supplemental study
+Stage A2 moving-workload realism bridge: planned
+prior Orin evidence: documented as a separate historical evidence layer
 live formal strategy support: official sequence only
 ```
+
+V6 记录的 Orin 实验构成本文的 prior evidence lineage，包括 P5 v6 matched baseline、Issue #162 historical successor benchmark 和 current-version freshness pilot。当前干净分支不恢复这些历史制品；它们不进入 Thor 的 200 次 launch、151 份 admissible evidence 或 94/57 结果。需要核查时可从 V6 和历史分支恢复对应记录。
 
 ---
 
@@ -88,9 +92,23 @@ PX4 内部控制
 - Land successor 可以完整安装，但 completion 与相邻请求的顺序仍可能离开预注册的时间桶；
 - 修正后的 RTL re-entry 可以连续两次进入 Offboard，并产生不同的 route epoch 与 activation identity，证明重复进入不能只靠模式名判断。
 
+在这组当前证据之前，V6 已记录另一层 Orin evidence：P5 v6 建立了 Legacy Offboard 与 Dynamic External Mode 的正常 matched baseline；Issue #162 稳定复现了 executor ownership 失配导致 Land successor 缺失；freshness pilot 记录了 retained-command exposure 和一次自然 stale-subject event。V7 保留这些结果的历史作用，同时把当前可复现实证分母限定为 Thor corpus。
+
 ## 1.5 下一步要做什么
 
-现有 Motivation study 使用的是预先写好的 official sequence。下一步不是继续重复相同流程，而是让测试器根据无人机当前的 route、health、completion、owner 和覆盖状态，主动选择下一个合法动作，逼近尚未覆盖的交接边界。
+现有 Thor Motivation 使用预先写好的 official sequence，并以约 3 m 定点悬停、水平姿态或零角速度为主要运动上下文。它已经完成最小机制与测量基础，下一步增加一个单独预注册的移动工作负载 Stage A2：
+
+```text
+Internal Takeoff
+    → Legacy Offboard or Dynamic External Mode
+    → Acceleration / Turn or Ascent–Translation–Descent
+    → Completion / Cancel / Process Exit during a selected motion phase
+    → Hold / RTL / Land
+```
+
+Stage A2 在两种外部机制上复用同一任务形状、运动目标和 transition phase，至少包含正常完成与一种故障或中断。它用于检验移动状态是否增加新的 route/freshness/successor observation，并解释同类 violation 的物理后果。该研究使用新的 preregistration、ledger、environment identity 和 denominator，不修改 Stage A1 的任何结果。
+
+方法主线随后让测试器根据无人机当前的 route、health、completion、owner 和覆盖状态，主动选择下一个合法动作，逼近尚未覆盖的交接边界。
 
 最终论文要比较三种方法：
 
@@ -123,7 +141,7 @@ Internal Takeoff
     → Internal Hold / RTL / Land / Recovery
 ```
 
-这些变化不是普通的 waypoint 更新，而是主要控制路径身份发生离散变化。每次变化都要求旧路径撤销、新路径完整安装、执行权保持独占和连续、命令来源有效，并在完成或故障后推进正确的 successor 或 fallback。
+这些变化体现主要控制路径身份的离散变化，超出普通 waypoint 更新。每次变化都要求旧路径撤销、新路径完整安装、执行权保持独占和连续、命令来源有效，并在完成或故障后推进正确的 successor 或 fallback。
 
 ## 2.2 核心问题
 
@@ -431,7 +449,35 @@ preflight
 
 # 7. Motivation Study：已经完成的实证基础
 
-## 7.1 研究环境
+## 7.1 Evidence Lineage：Orin prior evidence 与 Thor current evidence
+
+V7 使用两层相互补充、分母独立的 Motivation evidence。
+
+### Layer 1：V6 记录的 prior Orin evidence
+
+| V6 evidence | 记录结果 | 在 V7 中的作用 |
+| --- | --- | --- |
+| P5 v6 Controlled Offboard–External Differential | 35 matched pairs，70 accepted sides，70 Route PASS | 建立普通单事件交接稳定的 matched baseline，说明研究重点应进入 partial failure、freshness、successor 和 concurrency |
+| Issue #162 historical successor study | 3/3 fully instrumented reproduction，1/1 reduced-instrumentation confirmation | 提供 executor ownership 失配、completion 未交付和 Land successor 缺失的历史 benchmark |
+| Current-Version Freshness pilot | 16 formal attempts，10 accepted，10 EXPOSURE，9 Route PASS，1 Route VIOLATION | 提供 retained-command exposure 和一次 post-fallback stale-subject event 的前导证据 |
+| P0/P2/P3 deterministic probes | official handoff、process loss、health/setpoint decoupling baselines | 提供后续 Thor matrix 与 action grammar 的机制背景 |
+
+这些结果来自 V6 文档和可恢复的历史分支。当前干净分支不复制旧报告、账本或 compact evidence，因此本层只作为 prior documented evidence 和研究沿革；它不进入当前仓库的 Thor formal corpus，也不与 Thor 数字相加。论文若引用具体历史结论，需要同时标明 Orin 平台、历史 revision、原 study identity 和 V6 provenance。
+
+### Layer 2：当前 canonical Thor evidence
+
+当前分支保留 primary Thor study、独立 supplemental remediation、post-hoc Oracle ablation 和 threshold sensitivity。Thor evidence 使用当前统一的 Runtime Route Instance、Evidence Gate、Oracle semantics、formal accounting 和锁定环境，是 V7 对当前实现与已完成实验主张的唯一 canonical corpus。
+
+两层证据回答不同问题：
+
+- Orin P5 v6 表明受控普通单事件交接可以稳定，并提供历史 matched mechanism baseline；
+- Issue #162 表明 route 本身成功时，owner/completion/successor 链仍可能形成 lifecycle dead end；
+- Orin freshness pilot 提供 retained-command 风险窗口的早期证据；
+- Thor studies 在当前统一证据规则下系统验证 mode/terminal observation 的局限，并量化 Route、Freshness、Successor 与 Registration evidence 的独立增益。
+
+V7 不声称 Thor 151 条 trace 复现了 P5 v6 matched differential 或 Issue #162。当前 Thor matrix 没有预注册 matched blocks；Issue #162 也没有在 Thor 上重跑。
+
+## 7.2 Thor 研究环境
 
 主研究在以下边界中执行：
 
@@ -447,7 +493,7 @@ preflight
 
 该环境没有使用 GPU、CUDA、TensorRT 或 PyTorch 作为实验依赖。结论只属于锁定的 ARM64 Thor SITL 环境和已测试 public transition sequence。
 
-## 7.2 Primary Thor study
+## 7.3 Primary Thor study
 
 Primary matrix 包含：
 
@@ -457,6 +503,8 @@ Primary matrix 包含：
 5 timing/re-entry cells
 21 cells total
 ```
+
+这些 cell 使用受控的最小机制工作负载。飞行器主要在约 3 m 高度执行定点 trajectory、水平 attitude 或零 body-rate 控制；目标路径通常保持 8 s，再触发 completion、fault、adjacent request、successor 或 fallback。该设计优先隔离 route installation、revocation、freshness、owner 和 progression，暂不代表移动任务中的 motion-context generality。
 
 正式关闭结果：
 
@@ -475,7 +523,7 @@ Primary matrix 包含：
 
 这两个结果是 plan/fixture obligation 的失败，不是关于 SUT 行为的负面证据，也不能被事后修改原矩阵消除。
 
-## 7.3 Supplemental remediation study
+## 7.4 Supplemental remediation study
 
 Supplemental study 单独预注册、使用新的 study/environment identity，并只修正两个 invalid-plan obligation：
 
@@ -496,9 +544,9 @@ Executor-before 的十条证据全部可采纳，其中九条 PASS，一条保�
 
 RTL re-entry 的十条证据全部 PASS。每条 trace 都观察到两次 RTL-to-Offboard request，每次 installation 完整，且两次 route epoch 与 activation identity 不同。
 
-Supplemental study 不修改 primary attempt、threshold、Oracle、denominator 或 study status。Primary 仍是 `MEASUREMENT_INSUFFICIENT`；两个研究合起来完成当前声明的 Motivation scope。
+Supplemental study 不修改 primary attempt、threshold、Oracle、denominator 或 study status。Primary 仍是 `MEASUREMENT_INSUFFICIENT`；两个研究合起来完成 Stage A1 minimal-mechanism motivation scope。
 
-## 7.4 Combined evidence
+## 7.5 Combined Thor evidence
 
 | Item | Count |
 | --- | ---: |
@@ -510,7 +558,18 @@ Supplemental study 不修改 primary attempt、threshold、Oracle、denominator 
 
 所有 200 个 retained ULog 通过注册的 file、dropout 与 RouteObservability sequence-gap integrity checks。
 
-## 7.5 关键发现
+按主要机制划分，151 份 admissible evidence 包含：
+
+| Mechanism | Admissible traces |
+| --- | ---: |
+| Legacy Offboard | 77 |
+| Dynamic External Mode | 39 |
+| Mode Executor | 35 |
+| Total | 151 |
+
+因此当前 Motivation 同时覆盖 Legacy Offboard、Dynamic External Mode 和 Mode Executor。其主要局限是运动上下文集中在悬停与简单定值控制；三类机制均已覆盖。
+
+## 7.6 关键发现
 
 ### Finding 1：mode 和 terminal outcome 不足以证明 handoff
 
@@ -532,7 +591,7 @@ Remediation RTL re-entry 表明，同一个 mode 名称的两次成功进入必�
 
 Primary study 的 observability rejection、timeout 和 environment failure 均进入正式分母，但不被转换为 SUT PASS 或 VIOLATION。独立 remediation 修复测量义务，而不重写 primary evidence。
 
-## 7.6 当前证据不能支持的结论
+## 7.7 当前证据不能支持的结论
 
 当前研究不能声称：
 
@@ -543,6 +602,8 @@ Primary study 的 observability rejection、timeout 和 environment failure 均�
 - 结果可以推广到其他 airframe、OS、architecture、PX4 revision、HIL 或真机；
 - state-aware strategy 已经提高搜索效率；
 - 所有 observed violation 已经完成 source-level root cause。
+
+Stage A1 的 bounded claim 是：在受控最小运动上下文中，mode/terminal success 无法证明 route/freshness/successor correctness。移动任务状态下的适用性与物理后果由 Stage A2 单独评价。
 
 ---
 
@@ -648,7 +709,7 @@ Trace 需要记录 decision state、candidate set、selected action、seed、sch
 - 新 Oracle violation signature；
 - admissible evidence yield。
 
-搜索目标不是最大化不受约束的故障数量，而是在安全、可达、可复现的前提下增加有效 contract-state coverage。
+搜索目标是在安全、可达、可复现的前提下增加有效 contract-state coverage，不追求无约束的故障数量。
 
 ## 8.6 Reproduction and minimization
 
@@ -723,6 +784,7 @@ initial observation
 
 - Offboard、Dynamic External Mode 或 Mode Executor；
 - trajectory、attitude、body-rate setpoint；
+- hover、acceleration、turn、ascent/descent 等 motion context；
 - normal、process exit、setpoint stall、health loss、registration rejection；
 - completion 前、附近或后的 adjacent request；
 - repeated entry；
@@ -734,10 +796,11 @@ initial observation
 
 # 10. Evaluation Plan
 
-## 10.1 Stage A：Motivation and measurement foundation — COMPLETE
+## 10.1 Stage A1：Minimal-mechanism motivation and measurement foundation — COMPLETE
 
 已完成：
 
+- V6 prior Orin evidence lineage 的文档化定位；
 - Thor-native locked runtime；
 - four-slot isolation qualification；
 - Evidence Gate；
@@ -747,7 +810,35 @@ initial observation
 - 200 closed formal launches；
 - reproducible compact summaries。
 
-## 10.2 Stage B：Live strategy backend — PENDING
+Stage A1 的运动上下文以约 3 m 悬停、水平姿态和零 body-rate 为主。它完成问题存在性、证据准入和 Oracle 增益验证，不承担移动任务真实性或高动态物理后果的证明。
+
+## 10.2 Stage A2：Moving-workload realism bridge — PLANNED
+
+Stage A2 增加一个 bounded、mission-shaped moving workload：
+
+```text
+Internal Takeoff
+    → External Route Active
+    → Acceleration / Turn or Ascent–Translation–Descent
+    → Completion / Cancel / Process Exit during a selected motion phase
+    → Hold / RTL / Land
+```
+
+设计要求：
+
+- Legacy Offboard 与 Dynamic External Mode 使用相同任务形状、运动目标、setpoint level 和 transition phase；
+- 至少覆盖正常完成与一种故障或中断；
+- transition 分别发生在移动段和任务阶段边界附近；
+- 继续使用 public actions、Evidence Gate、Route/Freshness/Successor contracts、安全与 cleanup；
+- 记录 transition 时的速度、加速度、姿态、角速度、位置误差和恢复时间，用于解释物理后果；
+- 单独预注册 matrix、accepted target、launch cap、simulation seeds、environment identity 和 denominator；
+- 不修改 Stage A1 primary 或 supplemental 的任何 attempt、threshold、status 和结果。
+
+Stage A2 的判定重点是：移动任务是否增加新的 applicable contract state、violation signature 或更明显的物理后果。它不用于声称某种机制具有通用安全优势，也不承担三种生成策略的效率比较。
+
+完成后，移动任务 trace 可作为主比较 campaign 的共同 seed；三种策略必须使用相同 motion profile，避免把 workload 差异混入 generation effect。
+
+## 10.3 Stage B：Live strategy backend — PENDING
 
 按以下顺序实现：
 
@@ -758,7 +849,7 @@ initial observation
 5. 保留 unsupported strategy fail-closed；
 6. 增加同 seed schedule replay 和非法 action rejection test。
 
-## 10.3 Stage C：Non-formal qualification — PENDING
+## 10.4 Stage C：Non-formal qualification — PENDING
 
 正式实验前必须证明：
 
@@ -771,7 +862,7 @@ initial observation
 - strategy identity、method digest 和 environment attestation 被写入 plan/trace；
 - dry-run 和 resume 不产生重复 attempt。
 
-## 10.4 Stage D：Main comparative campaign — PENDING
+## 10.5 Stage D：Main comparative campaign — PENDING
 
 ### 公平性原则
 
@@ -783,6 +874,7 @@ initial observation
 - 相同 safety limits；
 - 相同 environment identity；
 - 相同 simulation-seed distribution；
+- 相同 hover 与 moving-workload seed distribution；
 - 固定且相等的 launch budget 或 wall-clock budget。
 
 策略比较不以“达到 accepted target 后停止”作为主要预算，因为不同策略可能具有不同 evidence rejection rate。Accepted target 仍可用于证据质量监控，但主比较分母必须固定。
@@ -802,7 +894,7 @@ initial observation
 
 只有在 backend qualification 后发现新的、安全且可达的 action semantics 时，才扩展矩阵。
 
-## 10.5 Stage E：Finding confirmation — PENDING
+## 10.6 Stage E：Finding confirmation — PENDING
 
 对主 campaign 的高价值 finding：
 
@@ -813,9 +905,9 @@ initial observation
 - 区分 SUT violation、plan error、environment failure 与 observability failure；
 - 在证据充分时形成 developer-facing report。
 
-## 10.6 Stage F：Optional external validity — CONDITIONAL
+## 10.7 Stage F：Optional external validity — CONDITIONAL
 
-核心方法评价完成后，最多选择一种成本受控的外部验证：
+Stage A2 计划提供一个当前环境内的 moving-workload realism bridge。核心方法评价完成后，最多再选择一种成本受控的外部验证：
 
 - 一个额外 PX4 revision；或
 - 一个额外 multicopter configuration；或
@@ -859,6 +951,7 @@ initial observation
 - command-age bucket；
 - controller/allocator/writer lineage；
 - lifecycle/successor state；
+- motion context 与 transition phase；
 - applicable contract boundary；
 - action interleaving。
 
@@ -878,6 +971,7 @@ initial observation
 - Gazebo real-time factor；
 - cleanup completion；
 - terminal Land/Disarm；
+- transition 时的 velocity、acceleration、attitude、body rate、position error 与 recovery time；
 - safety stop reason。
 
 Performance metrics 用于解释实验环境和搜索成本，不替代 correctness decision。
@@ -891,7 +985,8 @@ Performance metrics 用于解释实验环境和搜索成本，不替代 correctn
 - 去掉 Evidence Gate；
 - 去掉 state coverage feedback；
 - state-aware 只保留 random tie-breaking；
-- 固定 official order 与 bounded timing mutation。
+- 固定 official order 与 bounded timing mutation；
+- hover-only 与共同 moving workload；
 
 ---
 
@@ -915,9 +1010,9 @@ Performance metrics 用于解释实验环境和搜索成本，不替代 correctn
 
 提供 exact source/image identities、public-command fixtures、ULog route observability、clock closure、安全与 cleanup、formal accounting、isolated parallel execution 和 compact evidence verification。
 
-### C5：Bounded Motivation evidence
+### C5：Two-layer bounded Motivation evidence
 
-两个独立 study 共关闭 200 次 launch，产生 151 份 admissible evidence，并证明 mode/terminal success 与 route/freshness/successor correctness 不等价。
+V6 文档保留 prior Orin evidence lineage，包括正常 matched baseline、Issue #162 historical successor benchmark 和 freshness pilot。当前 canonical Thor 层的两个独立 study 共关闭 200 次 launch，产生 151 份 admissible evidence，并证明 mode/terminal success 与 route/freshness/successor correctness 不等价。两层证据保持独立平台、revision、study identity 和 denominator。
 
 ## 12.2 需要主实验后才能声称的贡献
 
@@ -990,9 +1085,13 @@ Live ROS/uORB/ULog observation、clock closure、Evidence Gate 和 identity chec
 
 Locked Thor runtime、four-slot isolation、safety、cleanup、accounting 和 reproducible summary 已完成。
 
-## Gate 4：Motivation study — PASS WITH BOUNDED CLAIMS
+## Gate 4a：Stage A1 minimal-mechanism motivation — PASS WITH BOUNDED CLAIMS
 
-Primary 保持 `MEASUREMENT_INSUFFICIENT`，独立 supplemental study 完成两个修正 obligation；合起来完成当前 Motivation scope。
+Primary 保持 `MEASUREMENT_INSUFFICIENT`，独立 supplemental study 完成两个修正 obligation；合起来完成 Stage A1。Prior Orin evidence 只作为单独的历史证据层，不进入 Thor 分母。
+
+## Gate 4b：Stage A2 moving-workload realism bridge — PENDING
+
+需要在 Legacy Offboard 与 Dynamic External Mode 上执行同一 mission-shaped moving workload，证明 moving phase 的 evidence admissibility，并评价其是否增加 contract-state coverage、violation signature 或物理后果解释。Stage A2 使用独立 preregistration 和 denominator。
 
 ## Gate 5：Live bounded-random backend — PENDING
 
@@ -1014,24 +1113,27 @@ Primary 保持 `MEASUREMENT_INSUFFICIENT`，独立 supplemental study 完成两�
 
 只有核心方法成立后，才选择一个成本受控的扩展环境。
 
-论文目前已经跨过“方向调查”和“实验平台搭建”阶段，进入“核心方法实现与比较评价”阶段。Motivation 不是下一步瓶颈；live strategy backend 和公平主实验才是。
+论文目前已经跨过“方向调查”和“实验平台搭建”阶段，进入“bounded realism bridge、核心方法实现与比较评价”阶段。Stage A2 是范围受控的说服力增强；live strategy backend 和公平主实验仍是主要方法瓶颈。
 
 ---
 
 # 15. Recommended Execution Order
 
 1. 冻结 V7 的 Family A scope、RQ、action grammar、baselines 与固定预算原则；
-2. 接通 bounded-random live backend；
-3. 增加 decision/schedule/request/effect trace contract；
-4. 接通 state-aware closed-loop backend；
-5. 完成非正式 qualification 和 fail-closed test；
-6. 冻结新的 repository revision、container image 与 environment attestation；
-7. 预注册三策略主比较矩阵；
-8. 执行固定预算 formal campaign；
-9. 聚类、复现和最小化 violation；
-10. 完成 Oracle/feedback ablation；
-11. 根据核心结果决定是否增加一个 external-validity subject；
-12. 撰写完整论文并同步 artifact documentation。
+2. 定义并 qualification Stage A2 的共同移动任务形状；
+3. 单独预注册并执行 Stage A2，不修改 Stage A1；
+4. 将通过 Gate 的 moving trace 加入主实验共同 seed corpus；
+5. 接通 bounded-random live backend；
+6. 增加 decision/schedule/request/effect trace contract；
+7. 接通 state-aware closed-loop backend；
+8. 完成非正式 qualification 和 fail-closed test；
+9. 冻结新的 repository revision、container image 与 environment attestation；
+10. 预注册三策略主比较矩阵；
+11. 执行固定预算 formal campaign；
+12. 聚类、复现和最小化 violation；
+13. 完成 Oracle/feedback ablation；
+14. 根据核心结果决定是否增加一个 Stage A2 之外的 external-validity subject；
+15. 撰写完整论文并同步 artifact documentation。
 
 ---
 
@@ -1048,7 +1150,9 @@ Primary 保持 `MEASUREMENT_INSUFFICIENT`，独立 supplemental study 完成两�
 - 151 份 admissible evidence 中有 94 overall PASS 与 57 overall VIOLATION；
 - Primary study 仍为 `MEASUREMENT_INSUFFICIENT`；
 - 独立 supplemental study 完成两个修正 obligation；
-- 当前 Motivation scope 已完成；
+- Stage A1 minimal-mechanism motivation 已完成；
+- V6 记录了独立的 prior Orin evidence lineage，包括 P5 v6、Issue #162 和 freshness pilot；
+- prior Orin evidence 与当前 Thor corpus 保持独立，不进入 Thor denominator；
 - Official Sequence live runtime 已可执行；
 - bounded-random 与 state-aware policy 已实现，但 live action backend 尚未实现。
 
@@ -1060,12 +1164,16 @@ Primary 保持 `MEASUREMENT_INSUFFICIENT`，独立 supplemental study 完成两�
 - 所有 violation 都已定位 root cause；
 - 结果适用于 HIL、真机或所有 PX4 revision；
 - Family B 已获得实现或实证支持；
+- Stage A2 moving workload 已完成；
+- Stage A2 moving workload 已经增加发现能力；
 - 真实 autonomy workload 已增加发现能力；
 - 一次安全 Land/Disarm 证明之前所有 authority transition 正确。
 
 ## 16.3 论文写作规则
 
 - 始终区分 `ACCEPTED` 与 Oracle `PASS`；
+- 始终区分 prior Orin evidence 与 current canonical Thor evidence；
+- 不跨平台、revision 或 study identity 合并 denominator；
 - 始终分别报告 primary 与 supplemental study；
 - 不修改 primary status 来吸收 remediation；
 - 按 root-cause cluster 而不是 trace 数报告独立 finding；
@@ -1121,10 +1229,14 @@ Primary 保持 `MEASUREMENT_INSUFFICIENT`，独立 supplemental study 完成两�
 
 ## 6. Motivation Study
 
+- Orin-to-Thor evidence lineage；
+- P5 v6、Issue #162 与 freshness pilot 的 prior documented role；
 - primary matrix；
+- controlled 3 m hover/minimal-mechanism workload；
 - measurement-insufficient cells；
 - supplemental remediation；
 - combined bounded findings；
+- Stage A2 moving-workload design and result；
 - motivation claim boundary。
 
 ## 7. Main Evaluation
@@ -1186,7 +1298,7 @@ Primary 保持 `MEASUREMENT_INSUFFICIENT`，独立 supplemental study 完成两�
 
 ## 18.3 Additional versions and workloads
 
-未来可选择不同 PX4 revision、airframe 或真实任务 trace，验证 finding 与方法的迁移性。扩展应由明确 hypothesis 驱动，而不是以增加 subject 数量为目的。
+Stage A2 已计划一个当前环境内的 mission-shaped moving workload。其后仍可选择不同 PX4 revision、airframe 或真实任务 trace，验证 finding 与方法的迁移性。扩展应由明确 hypothesis 驱动，而不是以增加 subject 数量为目的。
 
 ---
 
@@ -1198,9 +1310,13 @@ Primary 保持 `MEASUREMENT_INSUFFICIENT`，独立 supplemental study 完成两�
 
 我们构建了完整的 Thor-native PX4 SITL 实验平台，包括 locked source/image identities、public-command runtime fixtures、ROS/uORB/ULog observation、PX4 timesync clock closure、安全与 cleanup、four-slot isolation、formal attempt accounting 和 reproducible compact evidence。
 
-两个独立的预注册 Motivation study 共关闭 200 次正式 launch，产生 151 份 admissible evidence。其中 94 份 overall PASS，57 份 overall VIOLATION。结果表明，mode state 和 terminal outcome 看似正常时，route installation、continuity、command freshness 或 successor timing 仍可能违反独立契约。Primary study 对两个 invalid-plan cell 保持 `MEASUREMENT_INSUFFICIENT`；独立 supplemental study 在不修改 primary ledger、threshold 或 denominator 的前提下完成两个修正 obligation。
+本文明确保留两层 evidence lineage。V6 记录的 prior Orin evidence 包含 P5 v6 的正常 matched mechanism baseline、Issue #162 historical successor benchmark 和 current-version freshness pilot；这些结果保留为历史研究上下文，不恢复到当前干净分支，也不进入 Thor 的正式分母。当前 canonical evidence 来自 Thor studies 和现存 post-hoc analyses。
 
-Motivation evidence 证明了问题和 Oracle suite 的必要性，但不证明测试生成方法的搜索增益。论文的下一阶段是接通 bounded-random 与 state-aware live action backend，并在相同 route corpus、安全约束和固定预算下与 Official Sequence 比较。State-aware strategy 观察当前 route、identity、health、completion、successor 和 coverage state，只选择满足前置条件的 public action，并优先逼近未覆盖的 contract boundary。
+两个独立的预注册 Thor Motivation study 共关闭 200 次正式 launch，产生 151 份 admissible evidence，其中包括 77 条 Legacy Offboard、39 条 Dynamic External Mode 和 35 条 Mode Executor trace。94 份为 overall PASS，57 份为 overall VIOLATION。结果表明，mode state 和 terminal outcome 看似正常时，route installation、continuity、command freshness 或 successor timing 仍可能违反独立契约。Primary study 对两个 invalid-plan cell 保持 `MEASUREMENT_INSUFFICIENT`；独立 supplemental study 在不修改 primary ledger、threshold 或 denominator 的前提下完成两个修正 obligation。
+
+Thor Stage A1 使用约 3 m 悬停、水平姿态和零 body-rate 作为受控最小运动上下文。Stage A2 将在 Legacy Offboard 与 Dynamic External Mode 激活后执行共同的 mission-shaped moving workload，覆盖 acceleration/turn 或 ascent–translation–descent，并在选定移动阶段触发 completion、cancel 或 process exit。它使用独立 preregistration 和 denominator，用于评价 motion context 是否增加新的 contract state、violation signature 或物理后果。
+
+Motivation evidence 证明了问题和 Oracle suite 的必要性，但不证明测试生成方法的搜索增益。Stage A2 之后，论文接通 bounded-random 与 state-aware live action backend，并在相同 route corpus、共同 hover/moving seeds、安全约束和固定预算下与 Official Sequence 比较。State-aware strategy 观察当前 route、identity、health、completion、successor 和 coverage state，只选择满足前置条件的 public action，并优先逼近未覆盖的 contract boundary。
 
 论文最终回答两个层次的问题：
 
@@ -1263,5 +1379,9 @@ Motivation evidence 证明了问题和 Oracle suite 的必要性，但不证明�
 - `uav_sf/containers/family_a_runtime/`
 - `uav_sf/data/schemas/`
 - `uav_sf/tests/`
+
+## Historical evidence lineage
+
+V6 叙事及可恢复的历史分支记录 prior Orin studies，包括 P5 v6、Issue #162 和 freshness pilot。它们被有意保留在当前干净分支之外，只作为第 7.1 节定义的 historical evidence layer。引用这些结果时必须标明 historical/Orin provenance，且不得将其计入上列 current repository assets、Thor formal ledger 或 Thor denominator。
 
 如果未来仓库状态改变，先更新实现、实验或正式报告，再更新本文档；不得只修改叙事来扩大已经完成的 claim。
