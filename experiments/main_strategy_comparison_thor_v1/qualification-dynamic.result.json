@@ -1,0 +1,629 @@
+{
+  "barrier": {
+    "active_live_containers_before_processing": [],
+    "passed": true
+  },
+  "concurrency": 3,
+  "execution_model": "two_phase_barrier",
+  "live_phase": {
+    "completed_at": "2026-08-17T16:17:02.145647+00:00",
+    "errors": {},
+    "results": {
+      "strategy-q-dynamic-official": {
+        "attempt_id": "strategy-q-dynamic-official",
+        "phase": "LIVE_COMPLETE",
+        "runtime_driver_returncode": 0,
+        "runtime_result_present": true,
+        "schema_version": "1.0",
+        "study_id": "main-strategy-dynamic-qualification-v1"
+      },
+      "strategy-q-dynamic-random": {
+        "attempt_id": "strategy-q-dynamic-random",
+        "phase": "LIVE_COMPLETE",
+        "runtime_driver_returncode": 0,
+        "runtime_result_present": true,
+        "schema_version": "1.0",
+        "study_id": "main-strategy-dynamic-qualification-v1"
+      },
+      "strategy-q-dynamic-state": {
+        "attempt_id": "strategy-q-dynamic-state",
+        "phase": "LIVE_COMPLETE",
+        "runtime_driver_returncode": 0,
+        "runtime_result_present": true,
+        "schema_version": "1.0",
+        "study_id": "main-strategy-dynamic-qualification-v1"
+      }
+    },
+    "started_at": "2026-08-17T16:16:17.433818+00:00"
+  },
+  "outcomes": {
+    "ACCEPTED": 3
+  },
+  "processing_phase": {
+    "completed_at": "2026-08-17T16:17:11.830559+00:00",
+    "errors": {},
+    "results": {
+      "strategy-q-dynamic-official": {
+        "attempt_id": "strategy-q-dynamic-official",
+        "clock_bridge": {
+          "bridge_id": "clock-44feb636b8a1baa3",
+          "knots": [
+            [
+              10632000000,
+              1687153940790431
+            ],
+            [
+              11636000000,
+              1687154952934895
+            ],
+            [
+              12640000000,
+              1687155958238969
+            ],
+            [
+              13644000000,
+              1687156960742951
+            ],
+            [
+              14864000000,
+              1687158185707312
+            ],
+            [
+              15868000000,
+              1687159185256636
+            ],
+            [
+              16872000000,
+              1687160188820969
+            ],
+            [
+              17876000000,
+              1687161192736812
+            ],
+            [
+              18880000000,
+              1687162196809099
+            ],
+            [
+              19884000000,
+              1687163201353219
+            ],
+            [
+              20888000000,
+              1687164205104487
+            ],
+            [
+              21892000000,
+              1687165208914765
+            ],
+            [
+              22896000000,
+              1687166212713173
+            ],
+            [
+              23900000000,
+              1687167216764580
+            ],
+            [
+              24904000000,
+              1687168221043145
+            ],
+            [
+              25908000000,
+              1687169224827830
+            ],
+            [
+              26912000000,
+              1687170229285043
+            ],
+            [
+              27916000000,
+              1687171232672821
+            ],
+            [
+              28920000000,
+              1687172237179839
+            ],
+            [
+              29924000000,
+              1687173240941089
+            ],
+            [
+              30928000000,
+              1687174245263793
+            ],
+            [
+              31932000000,
+              1687175248859543
+            ],
+            [
+              32936000000,
+              1687176252903145
+            ],
+            [
+              33940000000,
+              1687177256861043
+            ],
+            [
+              34944000000,
+              1687178261261135
+            ],
+            [
+              35948000000,
+              1687179264674627
+            ],
+            [
+              36952000000,
+              1687180268656987
+            ],
+            [
+              37956000000,
+              1687181272747090
+            ],
+            [
+              38960000000,
+              1687182276818608
+            ],
+            [
+              39964000000,
+              1687183280905247
+            ]
+          ],
+          "rate_ratio": 1.0002766540297285,
+          "reference_analysis_ns": 1687169224827830,
+          "reference_source_ns": 25908000000,
+          "sample_count": 30,
+          "source_domain": "px4_boot_ns",
+          "uncertainty_ns": 4682573,
+          "valid_from_ns": 10632000000,
+          "valid_until_ns": 39964000000
+        },
+        "environment_attestation_digest": "sha256:b9741184e07dbfe56eb939560bf5457f8ce16de0d8ebff2fd549792d6011bd3c",
+        "evaluation_status": "VIOLATION",
+        "evidence_gate_status": "ADMISSIBLE",
+        "execution_model": "two_phase_barrier",
+        "gazebo": {
+          "central_minimum": 0.9989159264907759,
+          "median": 0.9998802643383455,
+          "minimum": 0.015032841064036366,
+          "sample_count": 394,
+          "status": "PASS"
+        },
+        "launch_driver_returncode": 0,
+        "outcome": "ACCEPTED",
+        "physical_execution": {
+          "checks": {
+            "fault_after_motion_entry": true,
+            "motion_phase_entered": true,
+            "nominal_profile_coverage": true,
+            "sustained_takeoff": true,
+            "takeoff_before_tested_transition": true
+          },
+          "maximum_logged_completion_progress_m": 2.5107091292738914,
+          "maximum_logged_entry_progress_m": 0.7520660981535912,
+          "status": "PASS"
+        },
+        "plan_digest": "sha256:29099704cefb0544cc1eebdd9116d8decf575acbf59ffd050a3e79e3a239d2c5",
+        "plan_id": "strategy-q-dynamic-official-qualification-plan",
+        "processing_driver_returncode": 0,
+        "processing_error": null,
+        "raw_manifest_digest": "sha256:d042bc689a5e1ee8aee9c11fda19561bd20e1802dcbcb83fb46c78c82b7a98d9",
+        "runtime_outcome": "ACCEPTED",
+        "schema_version": "1.0",
+        "study_id": "main-strategy-dynamic-qualification-v1",
+        "ulog": {
+          "dropouts": [],
+          "file_corruption": false,
+          "first_sequence_by_instance": {
+            "0": 0,
+            "1": 70,
+            "2": 70,
+            "3": 57,
+            "4": 0
+          },
+          "route_observation_count": 13208,
+          "route_observation_instances": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "schema_version": "1.0",
+          "sequence_gaps": [],
+          "status": "PASS",
+          "ulog_end_us": 40236000,
+          "ulog_start_us": 5016000
+        }
+      },
+      "strategy-q-dynamic-random": {
+        "attempt_id": "strategy-q-dynamic-random",
+        "clock_bridge": {
+          "bridge_id": "clock-f22b577ca3c87561",
+          "knots": [
+            [
+              10560000000,
+              1687153860980691
+            ],
+            [
+              11564000000,
+              1687154868883635
+            ],
+            [
+              12568000000,
+              1687155873306645
+            ],
+            [
+              13572000000,
+              1687156877252858
+            ],
+            [
+              14576000000,
+              1687157881379033
+            ],
+            [
+              15580000000,
+              1687158885077960
+            ],
+            [
+              16584000000,
+              1687159888933200
+            ],
+            [
+              17588000000,
+              1687160892855904
+            ],
+            [
+              18592000000,
+              1687161896825867
+            ],
+            [
+              19596000000,
+              1687162901011951
+            ],
+            [
+              20600000000,
+              1687163905244246
+            ],
+            [
+              21604000000,
+              1687164908930941
+            ],
+            [
+              22608000000,
+              1687165913396941
+            ],
+            [
+              23612000000,
+              1687166916995718
+            ],
+            [
+              24616000000,
+              1687167920960006
+            ],
+            [
+              25620000000,
+              1687168924929265
+            ],
+            [
+              26624000000,
+              1687169929088968
+            ],
+            [
+              27628000000,
+              1687170932906987
+            ],
+            [
+              28632000000,
+              1687171937340941
+            ],
+            [
+              29636000000,
+              1687172941014960
+            ],
+            [
+              30640000000,
+              1687173944972080
+            ],
+            [
+              31644000000,
+              1687174949141923
+            ],
+            [
+              32648000000,
+              1687175953086969
+            ],
+            [
+              33652000000,
+              1687176956857191
+            ],
+            [
+              34656000000,
+              1687177961415672
+            ],
+            [
+              35660000000,
+              1687178964929941
+            ],
+            [
+              36664000000,
+              1687179969023200
+            ]
+          ],
+          "rate_ratio": 1.0001548616687097,
+          "reference_analysis_ns": 1687166916995718,
+          "reference_source_ns": 23612000000,
+          "sample_count": 27,
+          "source_domain": "px4_boot_ns",
+          "uncertainty_ns": 1739967,
+          "valid_from_ns": 10560000000,
+          "valid_until_ns": 36664000000
+        },
+        "environment_attestation_digest": "sha256:b9741184e07dbfe56eb939560bf5457f8ce16de0d8ebff2fd549792d6011bd3c",
+        "evaluation_status": "VIOLATION",
+        "evidence_gate_status": "ADMISSIBLE",
+        "execution_model": "two_phase_barrier",
+        "gazebo": {
+          "central_minimum": 0.9989206662201491,
+          "median": 0.9998960108148752,
+          "minimum": 0.013857352777725937,
+          "sample_count": 364,
+          "status": "PASS"
+        },
+        "launch_driver_returncode": 0,
+        "outcome": "ACCEPTED",
+        "physical_execution": {
+          "checks": {
+            "fault_after_motion_entry": true,
+            "motion_phase_entered": true,
+            "nominal_profile_coverage": true,
+            "sustained_takeoff": true,
+            "takeoff_before_tested_transition": true
+          },
+          "maximum_logged_completion_progress_m": 0.0,
+          "maximum_logged_entry_progress_m": 0.751745343208313,
+          "status": "PASS"
+        },
+        "plan_digest": "sha256:09b2c68dd3f694e57068c5dc08634c842857c1ebaa60d69c92eecae6bebc7307",
+        "plan_id": "strategy-q-dynamic-random-qualification-plan",
+        "processing_driver_returncode": 0,
+        "processing_error": null,
+        "raw_manifest_digest": "sha256:cd67ccd5cd952a00b8dfdaac15990528481b739a2bd88447d9b701f1f7526000",
+        "runtime_outcome": "ACCEPTED",
+        "schema_version": "1.0",
+        "study_id": "main-strategy-dynamic-qualification-v1",
+        "ulog": {
+          "dropouts": [],
+          "file_corruption": false,
+          "first_sequence_by_instance": {
+            "0": 0,
+            "1": 71,
+            "2": 71,
+            "3": 59,
+            "4": 0
+          },
+          "route_observation_count": 12011,
+          "route_observation_instances": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "schema_version": "1.0",
+          "sequence_gaps": [],
+          "status": "PASS",
+          "ulog_end_us": 36988000,
+          "ulog_start_us": 4944000
+        }
+      },
+      "strategy-q-dynamic-state": {
+        "attempt_id": "strategy-q-dynamic-state",
+        "clock_bridge": {
+          "bridge_id": "clock-9881415c81cf3060",
+          "knots": [
+            [
+              10768000000,
+              1687154098346868
+            ],
+            [
+              11772000000,
+              1687155101718765
+            ],
+            [
+              12776000000,
+              1687156105647052
+            ],
+            [
+              13780000000,
+              1687157109709673
+            ],
+            [
+              14784000000,
+              1687158113713941
+            ],
+            [
+              15788000000,
+              1687159118096811
+            ],
+            [
+              16792000000,
+              1687160121734820
+            ],
+            [
+              17796000000,
+              1687161125692071
+            ],
+            [
+              18800000000,
+              1687162129541191
+            ],
+            [
+              19804000000,
+              1687163133757645
+            ],
+            [
+              20808000000,
+              1687164137591181
+            ],
+            [
+              21812000000,
+              1687165142159765
+            ],
+            [
+              22816000000,
+              1687166146058978
+            ],
+            [
+              23820000000,
+              1687167149879988
+            ],
+            [
+              24824000000,
+              1687168154085830
+            ],
+            [
+              25828000000,
+              1687169157715155
+            ],
+            [
+              26832000000,
+              1687170161969098
+            ],
+            [
+              27836000000,
+              1687171165686598
+            ],
+            [
+              28840000000,
+              1687172169664885
+            ],
+            [
+              29844000000,
+              1687173173764960
+            ],
+            [
+              30848000000,
+              1687174177834636
+            ],
+            [
+              31852000000,
+              1687175182195867
+            ],
+            [
+              32856000000,
+              1687176185680923
+            ],
+            [
+              33860000000,
+              1687177189891006
+            ],
+            [
+              34864000000,
+              1687178193645173
+            ],
+            [
+              35868000000,
+              1687179197604191
+            ],
+            [
+              36872000000,
+              1687180201765755
+            ],
+            [
+              37876000000,
+              1687181206082005
+            ],
+            [
+              38880000000,
+              1687182209712006
+            ]
+          ],
+          "rate_ratio": 0.9999774166903813,
+          "reference_analysis_ns": 1687168154085830,
+          "reference_source_ns": 24824000000,
+          "sample_count": 29,
+          "source_domain": "px4_boot_ns",
+          "uncertainty_ns": 438087,
+          "valid_from_ns": 10768000000,
+          "valid_until_ns": 38880000000
+        },
+        "environment_attestation_digest": "sha256:b9741184e07dbfe56eb939560bf5457f8ce16de0d8ebff2fd549792d6011bd3c",
+        "evaluation_status": "VIOLATION",
+        "evidence_gate_status": "ADMISSIBLE",
+        "execution_model": "two_phase_barrier",
+        "gazebo": {
+          "central_minimum": 0.9987612863146482,
+          "median": 0.9999195064797284,
+          "minimum": 0.015631862631943275,
+          "sample_count": 389,
+          "status": "PASS"
+        },
+        "launch_driver_returncode": 0,
+        "outcome": "ACCEPTED",
+        "physical_execution": {
+          "checks": {
+            "fault_after_motion_entry": true,
+            "motion_phase_entered": true,
+            "nominal_profile_coverage": true,
+            "sustained_takeoff": true,
+            "takeoff_before_tested_transition": true
+          },
+          "maximum_logged_completion_progress_m": 2.510259035974741,
+          "maximum_logged_entry_progress_m": 0.7588842548429966,
+          "status": "PASS"
+        },
+        "plan_digest": "sha256:63f1f401f12577d4aeea9fd18940e66383227a61a9fd4ff0d900b52fb9a9e9ed",
+        "plan_id": "strategy-q-dynamic-state-qualification-plan",
+        "processing_driver_returncode": 0,
+        "processing_error": null,
+        "raw_manifest_digest": "sha256:f5aba7c82bd0b050cb71971426e5b56b6bf8b6cc13764e0c6f1e589b0f05f037",
+        "runtime_outcome": "ACCEPTED",
+        "schema_version": "1.0",
+        "study_id": "main-strategy-dynamic-qualification-v1",
+        "ulog": {
+          "dropouts": [],
+          "file_corruption": false,
+          "first_sequence_by_instance": {
+            "0": 0,
+            "1": 81,
+            "2": 81,
+            "3": 66,
+            "4": 0
+          },
+          "route_observation_count": 12911,
+          "route_observation_instances": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "schema_version": "1.0",
+          "sequence_gaps": [],
+          "status": "PASS",
+          "ulog_end_us": 39616000,
+          "ulog_start_us": 5196000
+        }
+      }
+    },
+    "started_at": "2026-08-17T16:17:02.164977+00:00"
+  },
+  "qualification_gate": {
+    "checks": {
+      "admissible_fraction": true,
+      "all_results_present": true,
+      "barrier": true,
+      "central_real_time_factor": true,
+      "clock_uncertainty": true,
+      "isolation_and_cleanup": true,
+      "no_driver_errors": true,
+      "ulog_integrity_fraction": true
+    },
+    "failures": [],
+    "status": "PASS"
+  },
+  "schema_version": "1.0",
+  "spec_digest": "sha256:82bc1a399814e53fc950de8657c78e75f7ab44d642a03de29eecb038374416ad",
+  "study_id": "main-strategy-dynamic-qualification-v1"
+}

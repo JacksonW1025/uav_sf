@@ -1,0 +1,123 @@
+{
+  "schema_version": "1.0",
+  "study_id": "main-strategy-dynamic-qualification-v1",
+  "image": "uav-sf-family-a-thor:strategy-ea2381c",
+  "attestation": "experiments/main_strategy_comparison_thor_v1/environment-attestation.json",
+  "live_strategy_backend": "owned_setpoint_stall_v1",
+  "concurrency": 3,
+  "maximum_clock_uncertainty_ns": 20000000,
+  "thresholds": "config/main_evaluation_method.v1.json",
+  "safety_limits": "/opt/uav_sf/config/main_evaluation_safety.v1.json",
+  "resources": {
+    "cpu_sets": ["0-2", "3-5", "6-8"],
+    "memory_per_attempt": "24g"
+  },
+  "qualification_gate": {
+    "all_live_attempts_complete_before_processing": true,
+    "required_admissible_fraction": 1.0,
+    "required_ulog_integrity_fraction": 1.0,
+    "maximum_clock_uncertainty_ns": 20000000,
+    "minimum_central_real_time_factor": 0.97,
+    "require_zero_isolation_or_cleanup_failures": true
+  },
+  "attempts": [
+    {
+      "run_id": "strategy-q-dynamic-official",
+      "slot": 0,
+      "mechanism": "dynamic_external_mode",
+      "source_route": "internal_hold",
+      "successor_route": "internal_land",
+      "expected_fallback": "internal_land",
+      "setpoint_kind": "trajectory",
+      "fault_mode": "setpoint_stall",
+      "fault_expected": true,
+      "completion_expected": true,
+      "strategy": "official_sequence",
+      "simulation_seed": 1820001,
+      "timing_bounds_ns": {"setpoint_stall": [3500000000, 6500000000]},
+      "workload_profile": "straight_line",
+      "workload": {
+        "injection_phase": "straight_translation",
+        "observer_config_digest": "sha256:8246b23b051c747331d07437ea3a8b3d2e809d796f066e69af6a0e63863e874d",
+        "observer_profile": "transition",
+        "phases": ["public_takeoff", "stable_hover", "route_activation", "straight_translation", "successor_land"],
+        "physical_analysis_plan_digest": "sha256:61fe0b289c48bdf3584a1a1fc521f0e3df45820ac9a95b54d3e900d303af2c90",
+        "physical_validity": {
+          "minimum_motion_entry_progress_m": 0.75,
+          "minimum_nominal_completion_progress_m": 2.5,
+          "minimum_takeoff_height_m": 0.5,
+          "takeoff_dwell_s": 0.5
+        },
+        "profile_digest": "sha256:2acb24343006bd37c88621d39df3090f5d064db2e9410d56d4d06e5154b60404",
+        "profile_id": "a2-straight-position-v1",
+        "setpoint_semantics": "position_only"
+      }
+    },
+    {
+      "run_id": "strategy-q-dynamic-random",
+      "slot": 1,
+      "mechanism": "dynamic_external_mode",
+      "source_route": "internal_hold",
+      "successor_route": "internal_land",
+      "expected_fallback": "internal_land",
+      "setpoint_kind": "trajectory",
+      "fault_mode": "setpoint_stall",
+      "fault_expected": true,
+      "completion_expected": true,
+      "strategy": "bounded_random_timing",
+      "strategy_seed": 1820002,
+      "simulation_seed": 1820001,
+      "timing_bounds_ns": {"setpoint_stall": [3500000000, 6500000000]},
+      "workload_profile": "straight_line",
+      "workload": {
+        "injection_phase": "straight_translation",
+        "observer_config_digest": "sha256:8246b23b051c747331d07437ea3a8b3d2e809d796f066e69af6a0e63863e874d",
+        "observer_profile": "transition",
+        "phases": ["public_takeoff", "stable_hover", "route_activation", "straight_translation", "successor_land"],
+        "physical_analysis_plan_digest": "sha256:61fe0b289c48bdf3584a1a1fc521f0e3df45820ac9a95b54d3e900d303af2c90",
+        "physical_validity": {
+          "minimum_motion_entry_progress_m": 0.75,
+          "minimum_nominal_completion_progress_m": 2.5,
+          "minimum_takeoff_height_m": 0.5,
+          "takeoff_dwell_s": 0.5
+        },
+        "profile_digest": "sha256:2acb24343006bd37c88621d39df3090f5d064db2e9410d56d4d06e5154b60404",
+        "profile_id": "a2-straight-position-v1",
+        "setpoint_semantics": "position_only"
+      }
+    },
+    {
+      "run_id": "strategy-q-dynamic-state",
+      "slot": 2,
+      "mechanism": "dynamic_external_mode",
+      "source_route": "internal_hold",
+      "successor_route": "internal_land",
+      "expected_fallback": "internal_land",
+      "setpoint_kind": "trajectory",
+      "fault_mode": "setpoint_stall",
+      "fault_expected": true,
+      "completion_expected": true,
+      "strategy": "state_aware",
+      "strategy_seed": 1820003,
+      "simulation_seed": 1820001,
+      "timing_bounds_ns": {"setpoint_stall": [3500000000, 6500000000]},
+      "workload_profile": "straight_line",
+      "workload": {
+        "injection_phase": "straight_translation",
+        "observer_config_digest": "sha256:8246b23b051c747331d07437ea3a8b3d2e809d796f066e69af6a0e63863e874d",
+        "observer_profile": "transition",
+        "phases": ["public_takeoff", "stable_hover", "route_activation", "straight_translation", "successor_land"],
+        "physical_analysis_plan_digest": "sha256:61fe0b289c48bdf3584a1a1fc521f0e3df45820ac9a95b54d3e900d303af2c90",
+        "physical_validity": {
+          "minimum_motion_entry_progress_m": 0.75,
+          "minimum_nominal_completion_progress_m": 2.5,
+          "minimum_takeoff_height_m": 0.5,
+          "takeoff_dwell_s": 0.5
+        },
+        "profile_digest": "sha256:2acb24343006bd37c88621d39df3090f5d064db2e9410d56d4d06e5154b60404",
+        "profile_id": "a2-straight-position-v1",
+        "setpoint_semantics": "position_only"
+      }
+    }
+  ]
+}

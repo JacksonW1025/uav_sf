@@ -1,0 +1,611 @@
+{
+  "barrier": {
+    "active_live_containers_before_processing": [],
+    "passed": true
+  },
+  "concurrency": 3,
+  "execution_model": "two_phase_barrier",
+  "live_phase": {
+    "completed_at": "2026-08-17T16:15:54.858425+00:00",
+    "errors": {},
+    "results": {
+      "strategy-q-offboard-official": {
+        "attempt_id": "strategy-q-offboard-official",
+        "phase": "LIVE_COMPLETE",
+        "runtime_driver_returncode": 0,
+        "runtime_result_present": true,
+        "schema_version": "1.0",
+        "study_id": "main-strategy-offboard-qualification-v1"
+      },
+      "strategy-q-offboard-random": {
+        "attempt_id": "strategy-q-offboard-random",
+        "phase": "LIVE_COMPLETE",
+        "runtime_driver_returncode": 0,
+        "runtime_result_present": true,
+        "schema_version": "1.0",
+        "study_id": "main-strategy-offboard-qualification-v1"
+      },
+      "strategy-q-offboard-state": {
+        "attempt_id": "strategy-q-offboard-state",
+        "phase": "LIVE_COMPLETE",
+        "runtime_driver_returncode": 0,
+        "runtime_result_present": true,
+        "schema_version": "1.0",
+        "study_id": "main-strategy-offboard-qualification-v1"
+      }
+    },
+    "started_at": "2026-08-17T16:15:11.843441+00:00"
+  },
+  "outcomes": {
+    "ACCEPTED": 3
+  },
+  "processing_phase": {
+    "completed_at": "2026-08-17T16:16:04.083264+00:00",
+    "errors": {},
+    "results": {
+      "strategy-q-offboard-official": {
+        "attempt_id": "strategy-q-offboard-official",
+        "clock_bridge": {
+          "bridge_id": "clock-e97d61c3aec4faea",
+          "knots": [
+            [
+              10648000000,
+              1687088364360987
+            ],
+            [
+              11652000000,
+              1687089367352811
+            ],
+            [
+              12656000000,
+              1687090371363043
+            ],
+            [
+              13660000000,
+              1687091375745811
+            ],
+            [
+              14664000000,
+              1687092379568664
+            ],
+            [
+              15668000000,
+              1687093383459006
+            ],
+            [
+              16672000000,
+              1687094387543154
+            ],
+            [
+              17676000000,
+              1687095391595766
+            ],
+            [
+              18680000000,
+              1687096395699719
+            ],
+            [
+              19684000000,
+              1687097399598942
+            ],
+            [
+              20688000000,
+              1687098403588840
+            ],
+            [
+              21692000000,
+              1687099407555043
+            ],
+            [
+              22696000000,
+              1687100411517701
+            ],
+            [
+              23700000000,
+              1687101415520765
+            ],
+            [
+              24704000000,
+              1687102419462997
+            ],
+            [
+              25708000000,
+              1687103423455154
+            ],
+            [
+              26712000000,
+              1687104427519996
+            ],
+            [
+              27716000000,
+              1687105431444839
+            ],
+            [
+              28720000000,
+              1687106435968561
+            ],
+            [
+              29724000000,
+              1687107439513923
+            ],
+            [
+              30728000000,
+              1687108443493617
+            ],
+            [
+              31732000000,
+              1687109447907775
+            ],
+            [
+              32736000000,
+              1687110451347173
+            ],
+            [
+              33740000000,
+              1687111455397562
+            ],
+            [
+              34744000000,
+              1687112459513163
+            ],
+            [
+              35748000000,
+              1687113463336876
+            ],
+            [
+              36752000000,
+              1687114467584728
+            ],
+            [
+              37756000000,
+              1687115472084727
+            ]
+          ],
+          "rate_ratio": 0.9999898089124981,
+          "reference_analysis_ns": 1687102419462997,
+          "reference_source_ns": 24704000000,
+          "sample_count": 28,
+          "source_domain": "px4_boot_ns",
+          "uncertainty_ns": 509204,
+          "valid_from_ns": 10648000000,
+          "valid_until_ns": 37756000000
+        },
+        "environment_attestation_digest": "sha256:b9741184e07dbfe56eb939560bf5457f8ce16de0d8ebff2fd549792d6011bd3c",
+        "evaluation_status": "VIOLATION",
+        "evidence_gate_status": "ADMISSIBLE",
+        "execution_model": "two_phase_barrier",
+        "gazebo": {
+          "central_minimum": 0.998880005793504,
+          "median": 0.9998700168978033,
+          "minimum": 0.01465993348626918,
+          "sample_count": 376,
+          "status": "PASS"
+        },
+        "launch_driver_returncode": 0,
+        "outcome": "ACCEPTED",
+        "physical_execution": {
+          "checks": {
+            "fault_after_motion_entry": true,
+            "motion_phase_entered": true,
+            "nominal_profile_coverage": true,
+            "sustained_takeoff": true,
+            "takeoff_before_tested_transition": true
+          },
+          "maximum_logged_completion_progress_m": 2.511725673917681,
+          "maximum_logged_entry_progress_m": 0.7653730609454215,
+          "status": "PASS"
+        },
+        "plan_digest": "sha256:521c4225787e7f096f44af08e82049d001e69b8642fc0e78c677efaff62ff2b5",
+        "plan_id": "strategy-q-offboard-official-qualification-plan",
+        "processing_driver_returncode": 0,
+        "processing_error": null,
+        "raw_manifest_digest": "sha256:15dac9a8a59e8d201444922eaeb56a6eba197ea0378982dcd846b97b97263f4d",
+        "runtime_outcome": "ACCEPTED",
+        "schema_version": "1.0",
+        "study_id": "main-strategy-offboard-qualification-v1",
+        "ulog": {
+          "dropouts": [],
+          "file_corruption": false,
+          "first_sequence_by_instance": {
+            "0": 0,
+            "1": 71,
+            "2": 71,
+            "3": 59
+          },
+          "route_observation_count": 12486,
+          "route_observation_instances": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "schema_version": "1.0",
+          "sequence_gaps": [],
+          "status": "PASS",
+          "ulog_end_us": 38308000,
+          "ulog_start_us": 5032000
+        }
+      },
+      "strategy-q-offboard-random": {
+        "attempt_id": "strategy-q-offboard-random",
+        "clock_bridge": {
+          "bridge_id": "clock-64ebde1ed3e9858b",
+          "knots": [
+            [
+              10728000000,
+              1687088432340182
+            ],
+            [
+              11732000000,
+              1687089433894765
+            ],
+            [
+              12736000000,
+              1687090438550987
+            ],
+            [
+              13740000000,
+              1687091442053802
+            ],
+            [
+              14744000000,
+              1687092445990895
+            ],
+            [
+              15748000000,
+              1687093449987710
+            ],
+            [
+              16752000000,
+              1687094454048284
+            ],
+            [
+              17756000000,
+              1687095458705052
+            ],
+            [
+              18760000000,
+              1687096461950979
+            ],
+            [
+              19764000000,
+              1687097466223089
+            ],
+            [
+              20768000000,
+              1687098470008876
+            ],
+            [
+              21772000000,
+              1687099475430663
+            ],
+            [
+              22776000000,
+              1687100477935135
+            ],
+            [
+              23780000000,
+              1687101481993876
+            ],
+            [
+              24784000000,
+              1687102485890191
+            ],
+            [
+              25788000000,
+              1687103490177154
+            ],
+            [
+              26792000000,
+              1687104493993469
+            ],
+            [
+              27796000000,
+              1687105497907145
+            ],
+            [
+              28800000000,
+              1687106502017858
+            ],
+            [
+              29804000000,
+              1687107506137636
+            ],
+            [
+              30808000000,
+              1687108510338043
+            ],
+            [
+              31812000000,
+              1687109514019784
+            ],
+            [
+              32816000000,
+              1687110518037877
+            ],
+            [
+              33820000000,
+              1687111521950820
+            ],
+            [
+              34824000000,
+              1687112526047552
+            ],
+            [
+              35828000000,
+              1687113530394376
+            ],
+            [
+              36832000000,
+              1687114534904117
+            ]
+          ],
+          "rate_ratio": 0.9999449867836346,
+          "reference_analysis_ns": 1687101481993876,
+          "reference_source_ns": 23780000000,
+          "sample_count": 27,
+          "source_domain": "px4_boot_ns",
+          "uncertainty_ns": 1550819,
+          "valid_from_ns": 10728000000,
+          "valid_until_ns": 36832000000
+        },
+        "environment_attestation_digest": "sha256:b9741184e07dbfe56eb939560bf5457f8ce16de0d8ebff2fd549792d6011bd3c",
+        "evaluation_status": "VIOLATION",
+        "evidence_gate_status": "ADMISSIBLE",
+        "execution_model": "two_phase_barrier",
+        "gazebo": {
+          "central_minimum": 0.9989842827305337,
+          "median": 0.9999092582348152,
+          "minimum": 0.01376499575413544,
+          "sample_count": 370,
+          "status": "PASS"
+        },
+        "launch_driver_returncode": 0,
+        "outcome": "ACCEPTED",
+        "physical_execution": {
+          "checks": {
+            "fault_after_motion_entry": true,
+            "motion_phase_entered": true,
+            "nominal_profile_coverage": true,
+            "sustained_takeoff": true,
+            "takeoff_before_tested_transition": true
+          },
+          "maximum_logged_completion_progress_m": 2.512792552821338,
+          "maximum_logged_entry_progress_m": 0.7671610964462161,
+          "status": "PASS"
+        },
+        "plan_digest": "sha256:26995b825b9736c2a8e80ff8db65c68c292ae696c6dbfe48d28d2c03a28f8d32",
+        "plan_id": "strategy-q-offboard-random-qualification-plan",
+        "processing_driver_returncode": 0,
+        "processing_error": null,
+        "raw_manifest_digest": "sha256:b4ed3e510991a9fd43610859aebc36e06324fbb33cf5e2d037834537ac2f5025",
+        "runtime_outcome": "ACCEPTED",
+        "schema_version": "1.0",
+        "study_id": "main-strategy-offboard-qualification-v1",
+        "ulog": {
+          "dropouts": [],
+          "file_corruption": false,
+          "first_sequence_by_instance": {
+            "0": 0,
+            "1": 72,
+            "2": 72,
+            "3": 60
+          },
+          "route_observation_count": 12217,
+          "route_observation_instances": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "schema_version": "1.0",
+          "sequence_gaps": [],
+          "status": "PASS",
+          "ulog_end_us": 37708000,
+          "ulog_start_us": 5128000
+        }
+      },
+      "strategy-q-offboard-state": {
+        "attempt_id": "strategy-q-offboard-state",
+        "clock_bridge": {
+          "bridge_id": "clock-a208149cfcfd5b6d",
+          "knots": [
+            [
+              10704000000,
+              1687088438509071
+            ],
+            [
+              11708000000,
+              1687089442223127
+            ],
+            [
+              12712000000,
+              1687090445928710
+            ],
+            [
+              13716000000,
+              1687091450253080
+            ],
+            [
+              14720000000,
+              1687092454049830
+            ],
+            [
+              15724000000,
+              1687093458345784
+            ],
+            [
+              16728000000,
+              1687094462079784
+            ],
+            [
+              17732000000,
+              1687095466032951
+            ],
+            [
+              18736000000,
+              1687096470135080
+            ],
+            [
+              19740000000,
+              1687097474184034
+            ],
+            [
+              20744000000,
+              1687098478331941
+            ],
+            [
+              21748000000,
+              1687099482053932
+            ],
+            [
+              22752000000,
+              1687100487228923
+            ],
+            [
+              23756000000,
+              1687101489944062
+            ],
+            [
+              24760000000,
+              1687102493998978
+            ],
+            [
+              25764000000,
+              1687103497942802
+            ],
+            [
+              26768000000,
+              1687104501905080
+            ],
+            [
+              27772000000,
+              1687105506080756
+            ],
+            [
+              28776000000,
+              1687106510465978
+            ],
+            [
+              29780000000,
+              1687107514866238
+            ],
+            [
+              30784000000,
+              1687108518475969
+            ],
+            [
+              31788000000,
+              1687109523016738
+            ],
+            [
+              32792000000,
+              1687110526016858
+            ],
+            [
+              33796000000,
+              1687111530504265
+            ],
+            [
+              34800000000,
+              1687112534008080
+            ],
+            [
+              35804000000,
+              1687113538140108
+            ],
+            [
+              36808000000,
+              1687114542559071
+            ],
+            [
+              37812000000,
+              1687115546088960
+            ]
+          ],
+          "rate_ratio": 0.9999845023240372,
+          "reference_analysis_ns": 1687102493998978,
+          "reference_source_ns": 24760000000,
+          "sample_count": 28,
+          "source_domain": "px4_boot_ns",
+          "uncertainty_ns": 1229926,
+          "valid_from_ns": 10704000000,
+          "valid_until_ns": 37812000000
+        },
+        "environment_attestation_digest": "sha256:b9741184e07dbfe56eb939560bf5457f8ce16de0d8ebff2fd549792d6011bd3c",
+        "evaluation_status": "VIOLATION",
+        "evidence_gate_status": "ADMISSIBLE",
+        "execution_model": "two_phase_barrier",
+        "gazebo": {
+          "central_minimum": 0.9988777608357011,
+          "median": 0.9999485026521134,
+          "minimum": 0.014563304761622129,
+          "sample_count": 378,
+          "status": "PASS"
+        },
+        "launch_driver_returncode": 0,
+        "outcome": "ACCEPTED",
+        "physical_execution": {
+          "checks": {
+            "fault_after_motion_entry": true,
+            "motion_phase_entered": true,
+            "nominal_profile_coverage": true,
+            "sustained_takeoff": true,
+            "takeoff_before_tested_transition": true
+          },
+          "maximum_logged_completion_progress_m": 2.508828766644001,
+          "maximum_logged_entry_progress_m": 0.7517684772610664,
+          "status": "PASS"
+        },
+        "plan_digest": "sha256:94bb76dc29ad6e5528488bccbd39dcbb38504c4e1166337bcd265ef8761d23db",
+        "plan_id": "strategy-q-offboard-state-qualification-plan",
+        "processing_driver_returncode": 0,
+        "processing_error": null,
+        "raw_manifest_digest": "sha256:4ac7effa79e2eebf691e59ab26fae872229f7c335164083c4ad5d01b570cefd0",
+        "runtime_outcome": "ACCEPTED",
+        "schema_version": "1.0",
+        "study_id": "main-strategy-offboard-qualification-v1",
+        "ulog": {
+          "dropouts": [],
+          "file_corruption": false,
+          "first_sequence_by_instance": {
+            "0": 0,
+            "1": 73,
+            "2": 73,
+            "3": 60
+          },
+          "route_observation_count": 12522,
+          "route_observation_instances": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "schema_version": "1.0",
+          "sequence_gaps": [],
+          "status": "PASS",
+          "ulog_end_us": 38500000,
+          "ulog_start_us": 5116000
+        }
+      }
+    },
+    "started_at": "2026-08-17T16:15:54.877852+00:00"
+  },
+  "qualification_gate": {
+    "checks": {
+      "admissible_fraction": true,
+      "all_results_present": true,
+      "barrier": true,
+      "central_real_time_factor": true,
+      "clock_uncertainty": true,
+      "isolation_and_cleanup": true,
+      "no_driver_errors": true,
+      "ulog_integrity_fraction": true
+    },
+    "failures": [],
+    "status": "PASS"
+  },
+  "schema_version": "1.0",
+  "spec_digest": "sha256:0ba766e7b22535cfee08f480f28a72900a7644041ae9c7afbdca0cc9614ec9f2",
+  "study_id": "main-strategy-offboard-qualification-v1"
+}
