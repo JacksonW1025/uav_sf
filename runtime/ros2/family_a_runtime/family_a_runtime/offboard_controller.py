@@ -124,6 +124,7 @@ class OffboardController(Node):
         self._ever_airborne = False
         self._latest_x_m: float | None = None
         self._motion_origin_x_m: float | None = None
+        self._motion_started_ns: int | None = None
         self._motion_entered = False
         self._motion_completed = False
         self._control_pub = self.create_publisher(
@@ -218,6 +219,8 @@ class OffboardController(Node):
     def _update_motion_state(self) -> None:
         if self._workload_profile != "straight_line" or self._activation_ns is None or self._latest_x_m is None or not self._ever_airborne:
             return
+        if self._motion_started_ns is None:
+            self._motion_started_ns = time.monotonic_ns()
         if self._motion_origin_x_m is None:
             self._motion_origin_x_m = self._latest_x_m
         progress = progress_from_origin(self._latest_x_m, self._motion_origin_x_m)
@@ -274,9 +277,9 @@ class OffboardController(Node):
             message = TrajectorySetpoint()
             message.timestamp = timestamp
             target_x = 0.0
-            if self._workload_profile == "straight_line" and self._activation_ns is not None:
+            if self._workload_profile == "straight_line" and self._motion_started_ns is not None:
                 target_x = straight_line_target(
-                    (time.monotonic_ns() - self._activation_ns) / 1_000_000_000,
+                    (time.monotonic_ns() - self._motion_started_ns) / 1_000_000_000,
                     settle_s=self._motion_settle_s,
                     speed_m_s=self._motion_speed_m_s,
                     distance_m=self._motion_distance_m,
@@ -342,8 +345,8 @@ class OffboardController(Node):
         self._update_physical_takeoff_state()
         elapsed = (now_ns - self._started_ns) / 1_000_000_000
         active_elapsed = (
-            (time.monotonic_ns() - self._activation_ns) / 1_000_000_000
-            if self._activation_ns is not None
+            (time.monotonic_ns() - (self._motion_started_ns if self._workload_profile == "straight_line" else self._activation_ns)) / 1_000_000_000
+            if self._activation_ns is not None and (self._workload_profile != "straight_line" or self._motion_started_ns is not None)
             else 0.0
         )
         stalled = (
