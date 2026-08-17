@@ -12,7 +12,7 @@ RUN test "${OBSERVER_PROFILE}" = off || test "${OBSERVER_PROFILE}" = transition
 RUN rm -rf /opt/uav_sf/.github
 COPY . /opt/uav_sf
 RUN git -C external/px4_autopilot apply \
-      patches/px4/route_observability/observer_profiles.patch \
+      /opt/uav_sf/patches/px4/route_observability/observer_profiles.patch \
     && printf '%s\n' "${REPOSITORY_COMMIT}" > /opt/family_a_repository_revision \
     && ./scripts/validation/validate_repo.sh \
     && ./scripts/setup/build_candidates.sh --jobs "${BUILD_JOBS}" \
