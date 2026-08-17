@@ -37,7 +37,14 @@ accounting close. No ULog, clock, Gate, or Oracle processing starts while
 another attempt in the batch is still live. Any preflight or evidence failure
 is recorded honestly and cannot be promoted to an empirical result.
 
-The current Thor runtime can directly execute new official-sequence matrices.
+The current Thor runtime can directly execute new official-sequence matrices
+composed from the existing live fixture semantics: the retained constant
+trajectory, attitude, body-rate, fault, rejection, adjacent-request, and
+re-entry actions. The planned Stage A2 moving workload is not one of those
+implemented fixtures; it needs a new public-action workload, motion-context
+observations, qualification, and its own preregistered plan before formal
+execution.
+
 Bounded-random and state-aware policy selection can be preregistered and tested
 offline, but their live PX4 action backend is not yet implemented. The formal
 campaign validator rejects those strategy names rather than silently running

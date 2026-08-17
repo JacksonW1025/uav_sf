@@ -3,8 +3,9 @@
 ## Verified entry
 
 The complete Thor container and formal campaign entry can directly run a newly
-preregistered Family A official-sequence matrix. Verification after both
-motivation studies covered:
+preregistered Family A official-sequence matrix that uses the existing live
+fixture semantics. Verification after both Stage A1 motivation studies
+covered:
 
 - exact local image identity and ARM64 container preflight;
 - repository, dependency, binary, environment, method, and safety digests;
@@ -31,6 +32,16 @@ The formal default remains concurrency four. Five-way is retained only as a
 non-formal qualification result; it must not be selected by a formal matrix.
 See `experiments/concurrency_barrier_qualification/` for the frozen specs and
 decision record.
+
+## Planned Stage A2 boundary
+
+The moving-workload realism bridge described by the V7 narrative is planned,
+not executable today. The current fixtures provide constant position,
+attitude, or body-rate targets and the already qualified fault, rejection,
+timing, and re-entry actions. Stage A2 still needs a shared moving mission for
+Legacy Offboard and Dynamic External Mode, motion-phase observations, safety
+qualification, a new frozen environment identity, and a separate formal
+matrix. Existing readiness does not authorize that study without those steps.
 
 ## Explicit limitation
 

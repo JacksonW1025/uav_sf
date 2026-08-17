@@ -20,6 +20,11 @@ state-aware is rejected until a study-specific live action backend applies the
 selected actions and records that schedule. A strategy label alone is never
 treated as execution evidence.
 
+The existing official-sequence fixtures use constant position, attitude, or
+body-rate targets. The V7 Stage A2 moving workload is planned but not
+implemented or qualified. It requires a separate public-action fixture and
+preregistration; it is not implied by general official-sequence support.
+
 ## Collection
 
 Adapters normalize source observations into the event schema. The collector
@@ -29,6 +34,12 @@ by explicit start and stop events. Runtime files are written below `runs/`.
 The trace also carries a target-environment attestation copied from the
 preregistered plan; validation performed on a repository maintenance host is
 not a substitute for this runtime observation.
+
+Authority-bearing events carry the ten stable Runtime Route Instance identity
+fields. Command-consumption and downstream effect events additionally carry
+`command_subject_ns`. That value changes as new commands are consumed and is
+therefore freshness evidence associated with an instance, not part of its
+stable identity.
 
 ## Evidence Admissibility Gate
 

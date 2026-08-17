@@ -20,7 +20,7 @@ The scope is one connected Family A route system:
 - internal Hold, RTL, Land, and Recovery routes.
 
 The repository contains only model definitions, observation adapters,
-collectors, three contract Oracles, evidence admission, controlled generation
+collectors, four contract Oracles, evidence admission, controlled generation
 strategies, safety and cleanup rules, attempt accounting, schemas, tests, and a
 locked validation/reference toolchain needed for that system. The formal
 execution environment is supplied and registered separately for each future
@@ -31,6 +31,6 @@ experiment.
 Static validation and unit tests establish internal consistency of the
 implementation. They do not establish flight behavior, defect prevalence,
 search effectiveness, transition pass rate, or generalization beyond the
-supported mechanisms. Any empirical claim requires a new preregistered plan
-that identifies the actual target environment and newly collected admissible
-evidence from that environment.
+supported mechanisms. Any new empirical claim beyond the retained final
+reports requires a new preregistered plan that identifies the actual target
+environment and newly collected admissible evidence from that environment.

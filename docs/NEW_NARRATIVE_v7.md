@@ -24,7 +24,7 @@ prior Orin evidence: documented as a separate historical evidence layer
 live formal strategy support: official sequence only
 ```
 
-V6 记录的 Orin 实验构成本文的 prior evidence lineage，包括 P5 v6 matched baseline、Issue #162 historical successor benchmark 和 current-version freshness pilot。当前干净分支不恢复这些历史制品；它们不进入 Thor 的 200 次 launch、151 份 admissible evidence 或 94/57 结果。需要核查时可从 V6 和历史分支恢复对应记录。
+V7 将归属于 V6 的 Orin 实验摘要记录为 prior evidence lineage，包括 P5 v6 matched baseline、Issue #162 historical successor benchmark 和 current-version freshness pilot。当前 `origin/main` 不保留或暴露对应 V6 报告、账本、compact evidence 或可达历史分支；它们不进入 Thor 的 200 次 launch、151 份 admissible evidence 或 94/57 结果。精确核查或复用必须由另行提供的 V6 来源包、原 revision、study identity 和证据完成，不能只依赖本叙事摘要。
 
 ---
 
@@ -92,7 +92,7 @@ PX4 内部控制
 - Land successor 可以完整安装，但 completion 与相邻请求的顺序仍可能离开预注册的时间桶；
 - 修正后的 RTL re-entry 可以连续两次进入 Offboard，并产生不同的 route epoch 与 activation identity，证明重复进入不能只靠模式名判断。
 
-在这组当前证据之前，V6 已记录另一层 Orin evidence：P5 v6 建立了 Legacy Offboard 与 Dynamic External Mode 的正常 matched baseline；Issue #162 稳定复现了 executor ownership 失配导致 Land successor 缺失；freshness pilot 记录了 retained-command exposure 和一次自然 stale-subject event。V7 保留这些结果的历史作用，同时把当前可复现实证分母限定为 Thor corpus。
+在这组当前证据之前，V7 记录的 V6 摘要描述了另一层 Orin evidence：P5 v6 建立了 Legacy Offboard 与 Dynamic External Mode 的正常 matched baseline；Issue #162 稳定复现了 executor ownership 失配导致 Land successor 缺失；freshness pilot 记录了 retained-command exposure 和一次自然 stale-subject event。V7 保留这些结果的历史研究作用，同时明确当前分支不能独立复核其原始制品，并把当前可复现实证分母限定为 Thor corpus。
 
 ## 1.5 下一步要做什么
 
@@ -211,7 +211,7 @@ PX4 Internal Route
 
 ## 4.1 Runtime Route Instance
 
-一条当前能够产生飞行关键 actuator effect 的路径由下列身份定义：
+一条当前能够产生飞行关键 actuator effect 的路径由下列稳定身份定义：
 
 ```text
 RuntimeRouteInstance = (
@@ -220,7 +220,6 @@ RuntimeRouteInstance = (
     producer_session,
     registration_id,
     activation_id,
-    command_subject_time,
     controller_id,
     allocator_id,
     writer_id,
@@ -235,9 +234,13 @@ RuntimeRouteInstance = (
 - `route_epoch` 区分每次 authority-relevant route state；
 - `producer_session` 区分 producer 重启前后的实例；
 - `registration_id` 与 `activation_id` 分别区分 slot allocation 和实际使用；
-- `command_subject_time` 是被消费命令所描述状态的时间，而不是日志写入时间；
 - `controller_id`、`allocator_id`、`writer_id` 形成下游 lineage；
 - `lifecycle_owner` 与 `executor_owner` 描述完成、释放和 successor 的责任主体。
+
+每个 command-consumption 和下游 effect event 另外携带
+`command_subject_ns`。它表示被消费命令所描述状态的时间，而不是日志写入
+时间。一个活跃实例会连续消费多条新命令，因此 subject time 是绑定到稳定
+Route Instance 的动态 freshness evidence，不是稳定 identity field。
 
 只要 authority-relevant identity 变化，即使 route 名称或 mode label 相同，也产生新的 Runtime Route Instance。
 
@@ -462,7 +465,7 @@ V7 使用两层相互补充、分母独立的 Motivation evidence。
 | Current-Version Freshness pilot | 16 formal attempts，10 accepted，10 EXPOSURE，9 Route PASS，1 Route VIOLATION | 提供 retained-command exposure 和一次 post-fallback stale-subject event 的前导证据 |
 | P0/P2/P3 deterministic probes | official handoff、process loss、health/setpoint decoupling baselines | 提供后续 Thor matrix 与 action grammar 的机制背景 |
 
-这些结果来自 V6 文档和可恢复的历史分支。当前干净分支不复制旧报告、账本或 compact evidence，因此本层只作为 prior documented evidence 和研究沿革；它不进入当前仓库的 Thor formal corpus，也不与 Thor 数字相加。论文若引用具体历史结论，需要同时标明 Orin 平台、历史 revision、原 study identity 和 V6 provenance。
+这些数字是 V7 对 V6 的 provenance summary。当前 `origin/main` 不包含对应旧报告、账本、compact evidence 或可达历史分支，因此本层只作为 prior documented evidence 和研究沿革；它不能由当前分支独立重放，不进入当前仓库的 Thor formal corpus，也不与 Thor 数字相加。论文若引用具体历史结论，需要另行取得并核对 Orin 平台、原 revision、原 study identity、V6 provenance 和原始证据。
 
 ### Layer 2：当前 canonical Thor evidence
 
@@ -470,9 +473,9 @@ V7 使用两层相互补充、分母独立的 Motivation evidence。
 
 两层证据回答不同问题：
 
-- Orin P5 v6 表明受控普通单事件交接可以稳定，并提供历史 matched mechanism baseline；
-- Issue #162 表明 route 本身成功时，owner/completion/successor 链仍可能形成 lifecycle dead end；
-- Orin freshness pilot 提供 retained-command 风险窗口的早期证据；
+- V7 记录的 Orin P5 v6 摘要表明受控普通单事件交接可以稳定，并描述一个 prior matched mechanism baseline；
+- V7 记录的 Issue #162 摘要表明 route 本身成功时，owner/completion/successor 链仍可能形成 lifecycle dead end；
+- V7 记录的 Orin freshness pilot 摘要提供 retained-command 风险窗口的早期证据；
 - Thor studies 在当前统一证据规则下系统验证 mode/terminal observation 的局限，并量化 Route、Freshness、Successor 与 Registration evidence 的独立增益。
 
 V7 不声称 Thor 151 条 trace 复现了 P5 v6 matched differential 或 Issue #162。当前 Thor matrix 没有预注册 matched blocks；Issue #162 也没有在 Thor 上重跑。
@@ -1000,7 +1003,7 @@ Performance metrics 用于解释实验环境和搜索成本，不替代 correctn
 
 ### C2：Runtime Route Instance model
 
-用 route epoch、producer session、registration/activation、command subject、controller/allocator/writer 与 owner 描述真实 authority path，而不是只使用 mode label。
+用 route epoch、producer session、registration/activation、controller/allocator/writer 与 owner 定义稳定 route identity，并用每个 effect 的 command subject 描述 freshness，而不是只使用 mode label。
 
 ### C3：Evidence-gated contract Oracle suite
 
@@ -1012,7 +1015,7 @@ Performance metrics 用于解释实验环境和搜索成本，不替代 correctn
 
 ### C5：Two-layer bounded Motivation evidence
 
-V6 文档保留 prior Orin evidence lineage，包括正常 matched baseline、Issue #162 historical successor benchmark 和 freshness pilot。当前 canonical Thor 层的两个独立 study 共关闭 200 次 launch，产生 151 份 admissible evidence，并证明 mode/terminal success 与 route/freshness/successor correctness 不等价。两层证据保持独立平台、revision、study identity 和 denominator。
+V7 记录归属于 V6 的 prior Orin evidence lineage 摘要，包括正常 matched baseline、Issue #162 historical successor benchmark 和 freshness pilot；当前分支不保留其可重放制品。当前 canonical Thor 层的两个独立 study 共关闭 200 次 launch，产生 151 份 admissible evidence，并证明 mode/terminal success 与 route/freshness/successor correctness 不等价。两层证据保持独立平台、revision、study identity 和 denominator。
 
 ## 12.2 需要主实验后才能声称的贡献
 
@@ -1143,7 +1146,7 @@ Primary 保持 `MEASUREMENT_INSUFFICIENT`，独立 supplemental study 完成两�
 
 - PX4 Family A 中存在会替换主要控制路径的运行时 transition；
 - mode label 不能单独证明 command-to-actuator route 完整；
-- Runtime Route Instance 可以统一描述 route epoch、producer、registration、activation、command subject、controller、allocator、writer 和 owner；
+- Runtime Route Instance 可以统一描述 route epoch、producer、registration、activation、controller、allocator、writer 和 owner，并把逐 effect 的 command subject 绑定到该稳定实例；
 - Evidence Gate 能防止缺失证据被转换为 PASS；
 - Route、Freshness、Successor 和 Registration 检查具有不同适用边界；
 - Thor 环境已经完成 200 次正式 launch，151 份证据可采纳；
@@ -1151,7 +1154,7 @@ Primary 保持 `MEASUREMENT_INSUFFICIENT`，独立 supplemental study 完成两�
 - Primary study 仍为 `MEASUREMENT_INSUFFICIENT`；
 - 独立 supplemental study 完成两个修正 obligation；
 - Stage A1 minimal-mechanism motivation 已完成；
-- V6 记录了独立的 prior Orin evidence lineage，包括 P5 v6、Issue #162 和 freshness pilot；
+- V7 记录了归属于 V6 的 prior Orin evidence lineage 摘要，包括 P5 v6、Issue #162 和 freshness pilot；当前分支不独立支持其原始制品重放；
 - prior Orin evidence 与当前 Thor corpus 保持独立，不进入 Thor denominator；
 - Official Sequence live runtime 已可执行；
 - bounded-random 与 state-aware policy 已实现，但 live action backend 尚未实现。
@@ -1306,11 +1309,11 @@ Stage A2 已计划一个当前环境内的 mission-shaped moving workload。其�
 
 现实 PX4 自主任务会在内部飞行模式、Legacy Offboard、Dynamic External Mode、Mode Executor 和内部安全路径之间转移飞行关键控制权。现有测试和运行监控通常依赖 mode state、command acknowledgement 或最终 Land/Disarm，但这些信号无法证明实际 command-to-actuator route 已经完成交接。
 
-本文将控制权交接建模为 Runtime Route Instance 的替换。该实例联合 route epoch、producer session、registration/activation、command subject time、controller/allocator/writer lineage 与 lifecycle/executor ownership。基于这一模型，本文定义 Route Conformance、Freshness and Lineage、Successor Progression 与 Registration Contract，并在所有 correctness interpretation 之前执行 Evidence Admissibility Gate。
+本文将控制权交接建模为 Runtime Route Instance 的替换。该稳定实例联合 route epoch、producer session、registration/activation、controller/allocator/writer lineage 与 lifecycle/executor ownership；每个 command-consumption 和 effect event 再携带 command subject time，用于评价 freshness。基于这一模型，本文定义 Route Conformance、Freshness and Lineage、Successor Progression 与 Registration Contract，并在所有 correctness interpretation 之前执行 Evidence Admissibility Gate。
 
 我们构建了完整的 Thor-native PX4 SITL 实验平台，包括 locked source/image identities、public-command runtime fixtures、ROS/uORB/ULog observation、PX4 timesync clock closure、安全与 cleanup、four-slot isolation、formal attempt accounting 和 reproducible compact evidence。
 
-本文明确保留两层 evidence lineage。V6 记录的 prior Orin evidence 包含 P5 v6 的正常 matched mechanism baseline、Issue #162 historical successor benchmark 和 current-version freshness pilot；这些结果保留为历史研究上下文，不恢复到当前干净分支，也不进入 Thor 的正式分母。当前 canonical evidence 来自 Thor studies 和现存 post-hoc analyses。
+本文明确区分两层 evidence lineage。V7 记录归属于 V6 的 prior Orin evidence 摘要，包括 P5 v6 的正常 matched mechanism baseline、Issue #162 historical successor benchmark 和 current-version freshness pilot；当前 `origin/main` 不保留对应可重放制品，因此这些摘要只作为历史研究上下文，也不进入 Thor 的正式分母。当前 canonical evidence 来自 Thor studies 和现存 post-hoc analyses。
 
 两个独立的预注册 Thor Motivation study 共关闭 200 次正式 launch，产生 151 份 admissible evidence，其中包括 77 条 Legacy Offboard、39 条 Dynamic External Mode 和 35 条 Mode Executor trace。94 份为 overall PASS，57 份为 overall VIOLATION。结果表明，mode state 和 terminal outcome 看似正常时，route installation、continuity、command freshness 或 successor timing 仍可能违反独立契约。Primary study 对两个 invalid-plan cell 保持 `MEASUREMENT_INSUFFICIENT`；独立 supplemental study 在不修改 primary ledger、threshold 或 denominator 的前提下完成两个修正 obligation。
 
@@ -1342,6 +1345,12 @@ Motivation evidence 证明了问题和 Oracle suite 的必要性，但不证明�
 - `uav_sf/docs/CURRENT_STATUS.md`
 - `uav_sf/docs/FOLLOWUP_READINESS.md`
 - `uav_sf/docs/THOR_MIGRATION_REPORT.md`
+
+## Reader guide
+
+- `uav_sf/docs/REPOSITORY_UNDERSTANDING_GUIDE.md`
+
+该指南面向刚接触 PX4 的读者，记录逐步理解仓库和研究逻辑的问答；它是非规范性解释，不扩大本叙事或正式报告的 claim。
 
 ## Primary Motivation study
 
@@ -1382,6 +1391,6 @@ Motivation evidence 证明了问题和 Oracle suite 的必要性，但不证明�
 
 ## Historical evidence lineage
 
-V6 叙事及可恢复的历史分支记录 prior Orin studies，包括 P5 v6、Issue #162 和 freshness pilot。它们被有意保留在当前干净分支之外，只作为第 7.1 节定义的 historical evidence layer。引用这些结果时必须标明 historical/Orin provenance，且不得将其计入上列 current repository assets、Thor formal ledger 或 Thor denominator。
+V7 记录归属于 V6 的 prior Orin study 摘要，包括 P5 v6、Issue #162 和 freshness pilot。当前 `origin/main` 不包含对应 V6 叙事、报告、账本、compact evidence 或可达历史分支，因此第 7.1 节只构成 historical evidence lineage 的摘要。引用这些数字前必须另行取得并核对 historical/Orin provenance 与原始证据，且不得将其计入上列 current repository assets、Thor formal ledger 或 Thor denominator。
 
 如果未来仓库状态改变，先更新实现、实验或正式报告，再更新本文档；不得只修改叙事来扩大已经完成的 claim。

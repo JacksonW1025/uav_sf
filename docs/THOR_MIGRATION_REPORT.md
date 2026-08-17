@@ -82,21 +82,28 @@ evidence sets. Accepted traces contain 94 overall Oracle passes and 57 overall
 Oracle violations. All 200 retained ULogs passed the registered integrity and
 RouteObservability gap checks.
 
-No earlier-device result is imported, compared, or counted.
+The V7 narrative documents a separate prior Orin evidence lineage, but no
+earlier-device evidence artifact is imported into, numerically compared inside,
+or counted in the Thor formal corpus. Those source artifacts are not retained
+on `origin/main`; exact reuse requires separately supplied provenance and
+evidence.
 
 ## Readiness and remaining risks
 
 The locked container, build path, evidence pipeline, formal accounting, stable
-parallel execution, and official-sequence runtime are ready for a new
-experiment matrix. A later state-aware study still needs its own preregistered
+parallel execution, and existing official-sequence fixtures are ready for a
+new matrix using their current semantics. The planned Stage A2 moving workload
+still needs a new live fixture, motion-context observations, qualification,
+and separate preregistration. A later state-aware study also needs its own
 cells, seeds, targets, caps, hypotheses, and live action backend. Strategy
 selection is implemented, but it is not yet wired to PX4 execution; formal
-validation fails closed instead of treating the label as behavior. The
-environment is ready, but state-aware formal attempts are not yet directly
-runnable and no later empirical claim is implied.
+validation fails closed instead of treating the label as behavior. No Stage A2
+or state-aware formal attempt is yet directly runnable, and no later empirical
+claim is implied.
 
 Known bounded risks are the observed route/freshness/successor violations, the
 20 primary observability rejections, the one diagnosed live-JSONL race in the
 primary environment, and the fact that claims cover only ARM64 Thor PX4 SITL,
-`gz_x500`, and headless Gazebo Harmonic. Hardware-in-the-loop and real flight
-remain outside scope.
+`gz_x500`, headless Gazebo Harmonic, and the Stage A1 constant-target motion
+context. Hardware-in-the-loop, real flight, and the planned Stage A2 moving
+workload remain outside the completed evidence.
