@@ -15,7 +15,7 @@ from typing import Any
 
 from scripts.accounting.study import StudyLedger, verify_study_ledger
 from scripts.evaluator.plan import validate_plan
-from scripts.runtime.live_strategy_backend import create_live_decision, decision_digest
+from scripts.runtime.live_strategy_backend import CONTRACTS, create_live_decision, decision_digest
 from scripts.runtime.make_plan import create_plan
 from scripts.runtime.run_campaign import CampaignError, attempt_cell, validate_matrix
 
@@ -207,13 +207,15 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     attempt_root = args.run_root / study_id / args.attempt_id
     strategy_decision = None
     strategy_decision_path = None
-    if matrix.get("live_strategy_backend") == "owned_setpoint_stall_v1":
+    live_backend = matrix.get("live_strategy_backend")
+    if cell.get("category") == "fixed_budget" and live_backend in CONTRACTS:
         strategy_decision = create_live_decision(
             strategy=strategy_name,
             seed=strategy_seed,
             timing_bounds_ns=plan_spec["timing_bounds_ns"],
             official_offset_ns=int(float(runtime.get("stall_after_s", 5.0)) * 1_000_000_000),
             covered_boundaries=set(args.covered_boundary),
+            backend=str(live_backend),
         )
         strategy_decision_path = (
             args.run_root / study_id / "strategy-decisions" / f"{args.attempt_id}.json"

@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.runtime.isolation import allocate_isolation
+from scripts.runtime.live_strategy_backend import validate_live_decision
 from scripts.runtime.physical_readiness import physical_takeoff_observed
 from scripts.runtime.preflight import self_check
 
@@ -243,6 +244,23 @@ def _mission_started(path: Path, mechanism: str) -> bool:
 
 
 def run(args: argparse.Namespace) -> dict[str, Any]:
+    strategy_decision = None
+    if args.strategy_decision_path is not None:
+        try:
+            strategy_decision = json.loads(
+                args.strategy_decision_path.read_text(encoding="utf-8")
+            )
+        except json.JSONDecodeError as exc:
+            raise RuntimeFailure("live strategy decision is not valid JSON") from exc
+        if not isinstance(strategy_decision, dict):
+            raise RuntimeFailure("live strategy decision is not an object")
+        validate_live_decision(strategy_decision)
+        if strategy_decision["action"] != args.fault_mode:
+            raise RuntimeFailure("live strategy action differs from the runtime fault mode")
+        if args.workload_profile != "straight_line":
+            raise RuntimeFailure("the live strategy backend requires the moving workload")
+        if args.mechanism not in {"legacy_offboard", "dynamic_external_mode"}:
+            raise RuntimeFailure("the live strategy backend does not support this mechanism")
     preflight = self_check()
     if preflight["status"] != "PASS":
         raise RuntimeFailure("formal container preflight failed: " + ", ".join(preflight["failures"]))
@@ -282,7 +300,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     px4_work.mkdir()
     telemetry = raw / "telemetry.sidecar.jsonl"
     decision = raw / "safety.decision.json"
-    stall_request = raw / "setpoint-stall.request.json"
+    action_request = raw / "strategy-action.request.json"
     environment = dict(os.environ)
     environment.update(
         {
@@ -471,7 +489,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     "-p",
                     f"motion_completion_progress_m:={args.motion_completion_progress_m}",
                     "-p",
-                    f"stall_request_path:={stall_request if args.strategy_decision_path else ''}",
+                    f"action_request_path:={action_request if strategy_decision else ''}",
                 ],
             )
         elif args.mechanism == "dynamic_external_mode":
@@ -509,7 +527,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     "-p",
                     f"motion_completion_progress_m:={args.motion_completion_progress_m}",
                     "-p",
-                    f"stall_request_path:={stall_request if args.strategy_decision_path else ''}",
+                    f"action_request_path:={action_request if strategy_decision else ''}",
                 ],
             )
             time.sleep(0.5)
@@ -542,7 +560,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     "-p",
                     f"motion_distance_m:={args.motion_distance_m}",
                     "-p",
-                    f"stall_request_path:={stall_request if args.strategy_decision_path else ''}",
+                    f"action_request_path:={action_request if strategy_decision else ''}",
                 ],
             )
             if args.duplicate_registration:
@@ -619,10 +637,6 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         else:
             raise RuntimeFailure(f"attempt mechanism is not implemented: {args.mechanism}")
         if args.strategy_decision_path is not None:
-            if args.fault_mode != "setpoint_stall" or args.workload_profile != "straight_line":
-                raise RuntimeFailure("the live strategy backend requires the moving setpoint-stall workload")
-            if args.mechanism not in {"legacy_offboard", "dynamic_external_mode"}:
-                raise RuntimeFailure("the live strategy backend does not support this mechanism")
             start(
                 "strategy_action_executor",
                 [
@@ -636,7 +650,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     "--lifecycle",
                     str(raw / "workload.lifecycle.jsonl"),
                     "--request",
-                    str(stall_request),
+                    str(action_request),
                     "--output",
                     str(raw / "strategy.lifecycle.jsonl"),
                 ],

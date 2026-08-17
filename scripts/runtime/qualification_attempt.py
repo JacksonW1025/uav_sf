@@ -13,7 +13,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from scripts.runtime.live_strategy_backend import create_live_decision
+from scripts.runtime.live_strategy_backend import CONTRACTS, create_live_decision
 from scripts.runtime.make_plan import create_plan
 
 
@@ -125,7 +125,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             json.dumps(plan, indent=2, sort_keys=True) + "\n", encoding="utf-8"
         )
         if args.live_strategy_backend is not None:
-            if args.live_strategy_backend != "owned_setpoint_stall_v1":
+            if args.live_strategy_backend not in CONTRACTS:
                 raise QualificationError("unsupported qualification live strategy backend")
             decision = create_live_decision(
                 strategy=args.strategy,
@@ -133,6 +133,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 timing_bounds_ns=timing_bounds,
                 official_offset_ns=int(args.stall_after_s * 1_000_000_000),
                 covered_boundaries=set(args.covered_boundary),
+                backend=args.live_strategy_backend,
             )
             _write_new(decision_path, decision)
         launch = [
@@ -329,7 +330,7 @@ def main() -> int:
         default="official_sequence",
     )
     parser.add_argument("--strategy-seed", type=int)
-    parser.add_argument("--live-strategy-backend", choices=["owned_setpoint_stall_v1"])
+    parser.add_argument("--live-strategy-backend", choices=sorted(CONTRACTS))
     parser.add_argument("--covered-boundary", action="append", default=[])
     parser.set_defaults(timing_bounds_ns={}, workload=None)
     parser.add_argument("--maximum-clock-uncertainty-ns", type=int, default=20_000_000)

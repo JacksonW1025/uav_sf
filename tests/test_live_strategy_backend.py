@@ -4,7 +4,11 @@ from __future__ import annotations
 
 import unittest
 
-from scripts.runtime.live_strategy_backend import create_live_decision
+from scripts.runtime.live_strategy_backend import (
+    LiveStrategyError,
+    create_live_decision,
+    validate_live_decision,
+)
 from scripts.runtime.strategy_action_executor import observed_preconditions
 
 
@@ -40,6 +44,41 @@ class LiveStrategyBackendTests(unittest.TestCase):
         )
         self.assertEqual(first["selected_boundary"], "stall_offset:boundary")
         self.assertNotEqual(first["selected_boundary"], second["selected_boundary"])
+
+    def test_process_exit_uses_the_same_strategy_contract_with_distinct_action(self) -> None:
+        first = create_live_decision(
+            strategy="state_aware",
+            seed=171,
+            timing_bounds_ns={"process_exit": [3_500_000_000, 6_500_000_000]},
+            official_offset_ns=5_000_000_000,
+            covered_boundaries=set(),
+            backend="owned_process_exit_fallback_v1",
+        )
+        second = create_live_decision(
+            strategy="state_aware",
+            seed=172,
+            timing_bounds_ns={"process_exit": [3_500_000_000, 6_500_000_000]},
+            official_offset_ns=5_000_000_000,
+            covered_boundaries={first["selected_boundary"]},
+            backend="owned_process_exit_fallback_v1",
+        )
+        self.assertEqual(first["action"], "process_exit")
+        self.assertEqual(first["selected_boundary"], "exit_offset:boundary")
+        self.assertNotEqual(first["selected_boundary"], second["selected_boundary"])
+        validate_live_decision(second)
+
+    def test_backend_action_mismatch_is_refused(self) -> None:
+        value = create_live_decision(
+            strategy="official_sequence",
+            seed=None,
+            timing_bounds_ns={"process_exit": [3_500_000_000, 6_500_000_000]},
+            official_offset_ns=5_000_000_000,
+            covered_boundaries=set(),
+            backend="owned_process_exit_fallback_v1",
+        )
+        value["action"] = "setpoint_stall"
+        with self.assertRaisesRegex(LiveStrategyError, "action differs"):
+            validate_live_decision(value)
 
     def test_action_requires_both_live_preconditions(self) -> None:
         active = {"kind": "offboard_observed_active", "received_monotonic_ns": 10}

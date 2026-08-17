@@ -32,6 +32,7 @@ class FamilyAExternalMode : public px4_ros2::ModeBase {
     node.declare_parameter("motion_speed_m_s", 0.75);
     node.declare_parameter("motion_distance_m", 3.5);
     node.declare_parameter("stall_request_path", std::string{});
+    node.declare_parameter("action_request_path", std::string{});
     _active_duration_s = node.get_parameter("active_duration_s").as_double();
     _stall_after_s = node.get_parameter("stall_after_s").as_double();
     _fault_mode = node.get_parameter("fault_mode").as_string();
@@ -44,6 +45,10 @@ class FamilyAExternalMode : public px4_ros2::ModeBase {
     _motion_speed_m_s = node.get_parameter("motion_speed_m_s").as_double();
     _motion_distance_m = node.get_parameter("motion_distance_m").as_double();
     _stall_request_path = node.get_parameter("stall_request_path").as_string();
+    _action_request_path = node.get_parameter("action_request_path").as_string();
+    if (_action_request_path.empty()) {
+      _action_request_path = _stall_request_path;
+    }
     setArmingCheckReplyEnabled(node.get_parameter("health_reply_enabled").as_bool());
     if (_fault_mode != "normal" && _fault_mode != "setpoint_stall" &&
         _fault_mode != "process_exit") {
@@ -79,14 +84,14 @@ class FamilyAExternalMode : public px4_ros2::ModeBase {
       return;
     }
     const double elapsed = (node().get_clock()->now() - _activation_time).seconds();
-    if (_fault_mode == "process_exit" && elapsed >= _stall_after_s) {
+    const bool scheduled_action = _action_request_path.empty()
+        ? elapsed >= _stall_after_s
+        : std::filesystem::exists(_action_request_path);
+    if (_fault_mode == "process_exit" && scheduled_action) {
       RCLCPP_ERROR(node().get_logger(), "FAMILY_A_EVENT external_mode_process_exit");
       std::_Exit(74);
     }
-    const bool scheduled_stall = _stall_request_path.empty()
-        ? elapsed >= _stall_after_s
-        : std::filesystem::exists(_stall_request_path);
-    if (_fault_mode != "setpoint_stall" || !scheduled_stall) {
+    if (_fault_mode != "setpoint_stall" || !scheduled_action) {
       const float target_x = _workload_profile == "straight_line"
           ? static_cast<float>(std::min(_motion_distance_m,
               std::max(0.0, elapsed - _motion_settle_s) * _motion_speed_m_s))
@@ -114,6 +119,7 @@ class FamilyAExternalMode : public px4_ros2::ModeBase {
   std::string _run_id;
   std::string _registration_handoff_path;
   std::string _stall_request_path;
+  std::string _action_request_path;
   bool _completion_sent{false};
   std::shared_ptr<px4_ros2::TrajectorySetpointType> _trajectory;
 };

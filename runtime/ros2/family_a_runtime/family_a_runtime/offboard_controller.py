@@ -49,6 +49,7 @@ class OffboardController(Node):
             "motion_entry_progress_m": 0.75,
             "motion_completion_progress_m": 2.5,
             "stall_request_path": "",
+            "action_request_path": "",
         }
         for name, value in defaults.items():
             self.declare_parameter(name, value)
@@ -77,7 +78,9 @@ class OffboardController(Node):
         self._motion_entry_progress_m = float(self.get_parameter("motion_entry_progress_m").value)
         self._motion_completion_progress_m = float(self.get_parameter("motion_completion_progress_m").value)
         stall_request_path = self.get_parameter("stall_request_path").value
-        self._stall_request_path = Path(stall_request_path) if stall_request_path else None
+        action_request_path = self.get_parameter("action_request_path").value
+        request_path = action_request_path or stall_request_path
+        self._action_request_path = Path(request_path) if request_path else None
         self._takeoff_gate = PhysicalTakeoffGate(
             minimum_height_m=float(
                 self.get_parameter("airborne_minimum_height_m").value
@@ -353,15 +356,15 @@ class OffboardController(Node):
             if self._activation_ns is not None and (self._workload_profile != "straight_line" or self._motion_started_ns is not None)
             else 0.0
         )
-        scheduled_stall = (
-            self._stall_request_path.is_file()
-            if self._stall_request_path is not None
+        scheduled_action = (
+            self._action_request_path.is_file()
+            if self._action_request_path is not None
             else active_elapsed >= self._stall_after_s
         )
         stalled = (
             self._fault_mode == "setpoint_stall"
             and self._activation_ns is not None
-            and scheduled_stall
+            and scheduled_action
             and (self._workload_profile != "straight_line" or self._motion_entered)
         )
         if stalled and not self._fault_logged:
@@ -463,7 +466,8 @@ class OffboardController(Node):
         if (
             self._fault_mode == "process_exit"
             and self._activation_ns is not None
-            and active_elapsed >= self._stall_after_s
+            and scheduled_action
+            and (self._workload_profile != "straight_line" or self._motion_entered)
         ):
             self._log.append(
                 "fault_detected",

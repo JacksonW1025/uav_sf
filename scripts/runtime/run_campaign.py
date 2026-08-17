@@ -13,6 +13,7 @@ from typing import Any
 
 from scripts.accounting.study import verify_study_ledger
 from scripts.runtime.isolation import verify_disjoint_cpu_sets
+from scripts.runtime.live_strategy_backend import CONTRACTS, live_action_contract
 
 
 class CampaignError(RuntimeError):
@@ -131,19 +132,20 @@ def validate_matrix(matrix: dict[str, Any]) -> None:
             raise CampaignError(f"cell {cell_id} lacks a formal seed base")
         strategy = plan.get("strategy", "official_sequence")
         live_backend = matrix.get("live_strategy_backend")
-        if strategy != "official_sequence" and live_backend != "owned_setpoint_stall_v1":
+        if strategy != "official_sequence" and live_backend not in CONTRACTS:
             raise CampaignError(
                 f"cell {cell_id} requests {strategy}, but the live formal runtime "
                 "currently implements only official_sequence"
             )
         if category == "fixed_budget":
-            if live_backend != "owned_setpoint_stall_v1":
+            if live_backend not in CONTRACTS:
                 raise CampaignError(f"cell {cell_id} lacks the qualified live strategy backend")
+            contract = live_action_contract(str(live_backend))
             if strategy not in {"official_sequence", "bounded_random_timing", "state_aware"}:
                 raise CampaignError(f"cell {cell_id} has an unsupported fixed-budget strategy")
-            if runtime.get("fault_mode") != "setpoint_stall":
+            if runtime.get("fault_mode") != contract.action:
                 raise CampaignError(f"cell {cell_id} changes the fixed-budget action")
-            bounds = plan.get("timing_bounds_ns", {}).get("setpoint_stall")
+            bounds = plan.get("timing_bounds_ns", {}).get(contract.action)
             if bounds != [3_500_000_000, 6_500_000_000]:
                 raise CampaignError(f"cell {cell_id} changes the fixed-budget timing interval")
             if strategy != "official_sequence" and not isinstance(plan.get("seed_base"), int):

@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Freeze one executable setpoint-stall decision for the shared live backend."""
+"""Freeze and validate one executable decision for a registered live action."""
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 import hashlib
 import json
 from typing import Any
@@ -19,7 +20,6 @@ class LiveStrategyError(ValueError):
     """A live strategy decision is outside the registered action contract."""
 
 
-ACTION = "setpoint_stall"
 STATE = {"route_active": True, "motion_entered": True}
 OFFSETS_NS = (
     ("early", 3_500_000_000),
@@ -28,6 +28,42 @@ OFFSETS_NS = (
     ("post_boundary", 5_750_000_000),
     ("late", 6_500_000_000),
 )
+SUPPORTED_STRATEGIES = {
+    "official_sequence",
+    "bounded_random_timing",
+    "state_aware",
+}
+
+
+@dataclass(frozen=True)
+class LiveActionContract:
+    backend: str
+    action: str
+    boundary_prefix: str
+
+
+CONTRACTS = {
+    contract.backend: contract
+    for contract in (
+        LiveActionContract(
+            backend="owned_setpoint_stall_v1",
+            action="setpoint_stall",
+            boundary_prefix="stall_offset",
+        ),
+        LiveActionContract(
+            backend="owned_process_exit_fallback_v1",
+            action="process_exit",
+            boundary_prefix="exit_offset",
+        ),
+    )
+}
+
+
+def live_action_contract(backend: str) -> LiveActionContract:
+    try:
+        return CONTRACTS[backend]
+    except KeyError as exc:
+        raise LiveStrategyError(f"unsupported live strategy backend: {backend}") from exc
 
 
 def boundary_for_offset(offset_ns: int) -> str:
@@ -46,13 +82,20 @@ def create_live_decision(
     timing_bounds_ns: dict[str, list[int]],
     official_offset_ns: int,
     covered_boundaries: set[str],
+    backend: str = "owned_setpoint_stall_v1",
 ) -> dict[str, Any]:
-    bounds = timing_bounds_ns.get(ACTION)
+    contract = live_action_contract(backend)
+    action = contract.action
+    bounds = timing_bounds_ns.get(action)
     if not isinstance(bounds, list) or len(bounds) != 2:
-        raise LiveStrategyError("setpoint_stall timing bounds are required")
+        raise LiveStrategyError(f"{action} timing bounds are required")
     lower, upper = bounds
     if not all(isinstance(value, int) for value in bounds) or lower < 0 or upper < lower:
-        raise LiveStrategyError("setpoint_stall timing bounds are invalid")
+        raise LiveStrategyError(f"{action} timing bounds are invalid")
+    if not isinstance(official_offset_ns, int):
+        raise LiveStrategyError("official action offset must be an integer")
+    if not all(isinstance(value, str) for value in covered_boundaries):
+        raise LiveStrategyError("covered boundaries must be strings")
     candidates = [
         {
             "boundary": name,
@@ -65,13 +108,13 @@ def create_live_decision(
     if strategy == "official_sequence":
         if seed is not None:
             raise LiveStrategyError("official sequence must not use a strategy seed")
-        official_sequence([ACTION])
+        official_sequence([action])
         selected_offset = official_offset_ns
     elif strategy == "bounded_random_timing":
         if seed is None:
             raise LiveStrategyError("bounded random timing requires a seed")
         selected_offset = int(
-            bounded_random_timing([ACTION], {ACTION: bounds}, seed=seed)[0]["delay_ns"]
+            bounded_random_timing([action], {action: bounds}, seed=seed)[0]["delay_ns"]
         )
     elif strategy == "state_aware":
         if seed is None:
@@ -84,7 +127,7 @@ def create_live_decision(
                 ActionCandidate(
                     name=name,
                     required_state=tuple(sorted(STATE.items())),
-                    covers=(f"stall_offset:{name}",),
+                    covers=(f"{contract.boundary_prefix}:{name}",),
                     deadline_distance_ns=offset - official_offset_ns,
                 )
                 for name, offset in enabled
@@ -101,15 +144,15 @@ def create_live_decision(
     boundary = boundary_for_offset(selected_offset)
     return {
         "schema_version": "1.0",
-        "backend": "owned_setpoint_stall_v1",
+        "backend": contract.backend,
         "strategy": strategy,
         "seed": seed,
-        "action": ACTION,
+        "action": action,
         "required_state": STATE,
         "timing_bounds_ns": bounds,
         "official_offset_ns": official_offset_ns,
         "planned_offset_ns": selected_offset,
-        "selected_boundary": f"stall_offset:{boundary}",
+        "selected_boundary": f"{contract.boundary_prefix}:{boundary}",
         "covered_boundaries_before_decision": sorted(covered_boundaries),
         "candidates": candidates,
     }
@@ -132,17 +175,23 @@ def validate_live_decision(value: dict[str, Any]) -> None:
     }
     if set(value) != required or value.get("schema_version") != "1.0":
         raise LiveStrategyError("live strategy decision shape differs")
-    if value.get("backend") != "owned_setpoint_stall_v1" or value.get("action") != ACTION:
-        raise LiveStrategyError("live strategy decision backend differs")
-    if value.get("required_state") != STATE:
-        raise LiveStrategyError("live action precondition differs")
+    contract = live_action_contract(str(value.get("backend", "")))
+    if value.get("action") != contract.action:
+        raise LiveStrategyError("live strategy decision action differs from its backend")
+    covered = value.get("covered_boundaries_before_decision")
+    if not isinstance(covered, list) or not all(isinstance(item, str) for item in covered):
+        raise LiveStrategyError("live strategy coverage feedback is invalid")
     bounds = value.get("timing_bounds_ns")
-    offset = value.get("planned_offset_ns")
-    if (
-        not isinstance(bounds, list)
-        or len(bounds) != 2
-        or not all(isinstance(item, int) for item in bounds)
-        or not isinstance(offset, int)
-        or not bounds[0] <= offset <= bounds[1]
-    ):
-        raise LiveStrategyError("live strategy schedule is invalid")
+    strategy = value.get("strategy")
+    if strategy not in SUPPORTED_STRATEGIES:
+        raise LiveStrategyError("live strategy decision names an unsupported strategy")
+    expected = create_live_decision(
+        strategy=strategy,
+        seed=value.get("seed"),
+        timing_bounds_ns={contract.action: bounds},
+        official_offset_ns=value.get("official_offset_ns"),
+        covered_boundaries=set(covered),
+        backend=contract.backend,
+    )
+    if value != expected:
+        raise LiveStrategyError("live strategy decision differs from the registered contract")

@@ -17,6 +17,7 @@ from scripts.runtime.run_campaign import (
     read_matrix,
     validate_matrix,
 )
+from scripts.runtime.live_strategy_backend import CONTRACTS
 
 
 STRATEGIES = ("official_sequence", "bounded_random_timing", "state_aware")
@@ -48,7 +49,7 @@ def _cell_key(cell: dict[str, Any]) -> tuple[str, str]:
 
 def validate_fixed_matrix(matrix: dict[str, Any]) -> dict[tuple[str, str], dict[str, Any]]:
     validate_matrix(matrix)
-    if matrix.get("live_strategy_backend") != "owned_setpoint_stall_v1":
+    if matrix.get("live_strategy_backend") not in CONTRACTS:
         raise CampaignError("fixed-budget matrix lacks the shared live backend")
     cells = {_cell_key(cell): cell for cell in matrix["cells"]}
     expected = {(mechanism, strategy) for mechanism in MECHANISMS for strategy in STRATEGIES}

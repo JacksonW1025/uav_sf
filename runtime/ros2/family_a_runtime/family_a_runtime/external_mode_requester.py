@@ -44,6 +44,7 @@ class ExternalModeRequester(Node):
             "motion_entry_progress_m": 0.75,
             "motion_completion_progress_m": 2.5,
             "stall_request_path": "",
+            "action_request_path": "",
         }
         for name, value in defaults.items():
             self.declare_parameter(name, value)
@@ -66,7 +67,9 @@ class ExternalModeRequester(Node):
         self._motion_entry_progress_m = float(self.get_parameter("motion_entry_progress_m").value)
         self._motion_completion_progress_m = float(self.get_parameter("motion_completion_progress_m").value)
         stall_request_path = self.get_parameter("stall_request_path").value
-        self._stall_request_path = Path(stall_request_path) if stall_request_path else None
+        action_request_path = self.get_parameter("action_request_path").value
+        request_path = action_request_path or stall_request_path
+        self._action_request_path = Path(request_path) if request_path else None
         registration_handoff_path = self.get_parameter(
             "registration_handoff_path"
         ).value
@@ -367,9 +370,9 @@ class ExternalModeRequester(Node):
         if self._mode_id is None or self._status is None:
             return
         now = time.monotonic_ns()
-        scheduled_stall = (
-            self._stall_request_path.is_file()
-            if self._stall_request_path is not None
+        scheduled_action = (
+            self._action_request_path.is_file()
+            if self._action_request_path is not None
             else self._activated_ns is not None
             and now - self._activated_ns >= int(self._stall_after_s * 1_000_000_000)
         )
@@ -377,7 +380,7 @@ class ExternalModeRequester(Node):
             self._fault_mode == "setpoint_stall"
             and self._activated_ns is not None
             and not self._fault_logged
-            and scheduled_stall
+            and scheduled_action
             and (self._workload_profile != "straight_line" or self._motion_entered)
         ):
             self._fault_logged = True
