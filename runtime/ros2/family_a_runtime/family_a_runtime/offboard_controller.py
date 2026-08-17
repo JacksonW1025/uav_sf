@@ -216,7 +216,7 @@ class OffboardController(Node):
         self._update_motion_state()
 
     def _update_motion_state(self) -> None:
-        if self._workload_profile != "straight_line" or self._activation_ns is None or self._latest_x_m is None:
+        if self._workload_profile != "straight_line" or self._activation_ns is None or self._latest_x_m is None or not self._ever_airborne:
             return
         if self._motion_origin_x_m is None:
             self._motion_origin_x_m = self._latest_x_m
