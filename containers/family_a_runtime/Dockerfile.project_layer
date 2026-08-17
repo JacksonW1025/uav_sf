@@ -3,9 +3,16 @@ FROM ${UPSTREAM_IMAGE}
 
 ARG BUILD_JOBS=12
 ARG REPOSITORY_COMMIT
+ARG OBSERVER_PROFILE=baseline
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 WORKDIR /opt/uav_sf
+RUN if [[ -f /opt/family_a_observer_profile ]]; then \
+      test "$(cat /opt/family_a_observer_profile)" = "${OBSERVER_PROFILE}"; \
+    else \
+      test "${OBSERVER_PROFILE}" = baseline \
+      && printf '%s\n' baseline > /opt/family_a_observer_profile; \
+    fi
 
 # Only use a previously attested full Family A image. The immutable apt,
 # Python, source, patch, PX4, Agent, and upstream ROS layers are retained;
@@ -20,6 +27,7 @@ RUN test -n "${REPOSITORY_COMMIT}" \
        --prefix /opt --phase project-workspace
 
 LABEL org.opencontainers.image.revision="${REPOSITORY_COMMIT}"
+LABEL org.opencontainers.image.observer-profile="${OBSERVER_PROFILE}"
 
 ENTRYPOINT ["/opt/uav_sf/containers/family_a_runtime/entrypoint.sh"]
 CMD ["python3", "-m", "scripts.runtime.preflight", "--self-check"]

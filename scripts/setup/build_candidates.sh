@@ -5,6 +5,7 @@ repository_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 jobs=12
 prefix="/opt"
 phase="all"
+observer_profile="baseline"
 
 while (($#)); do
   case "$1" in
@@ -20,6 +21,10 @@ while (($#)); do
       phase="$2"
       shift 2
       ;;
+    --observer-profile)
+      observer_profile="$2"
+      shift 2
+      ;;
     *)
       echo "unsupported argument: $1" >&2
       exit 2
@@ -31,6 +36,11 @@ if [[ "${phase}" != "all" && "${phase}" != "source" && \
       "${phase}" != "workspace" && "${phase}" != "upstream-workspace" && \
       "${phase}" != "project-workspace" ]]; then
   echo "--phase must be one of: all, source, workspace, upstream-workspace, project-workspace" >&2
+  exit 2
+fi
+if [[ "${observer_profile}" != "off" && "${observer_profile}" != "baseline" && \
+      "${observer_profile}" != "transition" ]]; then
+  echo "--observer-profile must be one of: off, baseline, transition" >&2
   exit 2
 fi
 
@@ -78,7 +88,20 @@ if [[ "${phase}" == "all" || "${phase}" == "source" ]]; then
   cmake --install "${agent_source}/build-family-a"
 
   cd "${px4_source}"
-  make -j"${jobs}" px4_sitl_default PYTHON_EXECUTABLE=/opt/px4-venv/bin/python3
+  observer_define=""
+  if [[ "${observer_profile}" == "off" ]]; then
+    observer_define="-DROUTE_OBSERVABILITY_OFF"
+  elif [[ "${observer_profile}" == "transition" ]]; then
+    observer_define="-DROUTE_OBSERVABILITY_TRANSITION"
+  fi
+  printf '%s\n' "${observer_profile}" > "${prefix}/family_a_observer_profile"
+  if [[ -n "${observer_define}" ]]; then
+    make -j"${jobs}" px4_sitl_default \
+      PYTHON_EXECUTABLE=/opt/px4-venv/bin/python3 \
+      CMAKE_ARGS="-DCMAKE_CXX_FLAGS=${observer_define}"
+  else
+    make -j"${jobs}" px4_sitl_default PYTHON_EXECUTABLE=/opt/px4-venv/bin/python3
+  fi
 fi
 
 if [[ "${phase}" == "all" || "${phase}" == "workspace" || \

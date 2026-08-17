@@ -125,6 +125,12 @@ def build_manifest(
     revision_path = Path("/opt/family_a_repository_revision")
     if not revision_path.is_file():
         raise CandidateError("repository revision record is missing")
+    observer_profile_path = Path("/opt/family_a_observer_profile")
+    if not observer_profile_path.is_file():
+        raise CandidateError("observer profile record is missing")
+    observer_profile = observer_profile_path.read_text(encoding="utf-8").strip()
+    if observer_profile not in {"off", "baseline", "transition"}:
+        raise CandidateError("observer profile record is invalid")
     return {
         "schema_version": "1.0",
         "architecture": platform.machine(),
@@ -133,6 +139,7 @@ def build_manifest(
         "ros_distribution": os.environ.get("ROS_DISTRO"),
         "rmw_implementation": os.environ.get("RMW_IMPLEMENTATION"),
         "repository_revision": revision_path.read_text(encoding="utf-8").strip(),
+        "observer_profile": observer_profile,
         "gazebo_sim_version": _command_identity("gz", "sim", "--versions"),
         "binaries": {
             "px4_sitl": {

@@ -3,10 +3,12 @@ FROM ${BASE_IMAGE}
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG BUILD_JOBS=12
+ARG OBSERVER_PROFILE=baseline
 
 LABEL org.opencontainers.image.title="PX4 Family A Thor experiment runtime" \
       org.opencontainers.image.base.digest="sha256:b82a5ba3869a81196414cf34e4fc25c7935aab78b1f5187570ca9362c478cdbd" \
-      org.opencontainers.image.platform="linux/arm64"
+      org.opencontainers.image.platform="linux/arm64" \
+      org.opencontainers.image.observer-profile="${OBSERVER_PROFILE}"
 
 ENV LANG=C.UTF-8 \
     LC_ALL=C.UTF-8 \
@@ -51,7 +53,8 @@ RUN /usr/bin/python3 scripts/setup/prepare_sources.py --with-px4-submodules
 # files are copied.  Runtime and oracle edits therefore cannot silently alter
 # or repeatedly rebuild the selected PX4 and Agent binaries.
 COPY scripts/setup/build_candidates.sh /opt/uav_sf/scripts/setup/build_candidates.sh
-RUN ./scripts/setup/build_candidates.sh --jobs "${BUILD_JOBS}" --prefix /opt --phase source
+RUN ./scripts/setup/build_candidates.sh --jobs "${BUILD_JOBS}" --prefix /opt --phase source \
+      --observer-profile "${OBSERVER_PROFILE}"
 RUN ./scripts/setup/build_candidates.sh --jobs "${BUILD_JOBS}" --prefix /opt --phase upstream-workspace
 
 COPY . /opt/uav_sf
