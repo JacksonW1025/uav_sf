@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 import hashlib
 import json
 from pathlib import Path
+import shutil
 import sys
 from typing import Any
 
@@ -155,6 +156,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     study_id = str(spec["study_id"])
     if (run_root / study_id).exists():
         raise QualificationBatchError("qualification run root already exists")
+    study_root = run_root / study_id
+    study_root.mkdir(parents=True)
+    shutil.copyfile(Path(spec["attestation"]), study_root / "environment.json")
     started_at = _now()
     process_results: dict[str, dict[str, Any]] = {}
     rounds = []
