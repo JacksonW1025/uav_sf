@@ -63,6 +63,7 @@ def create_plan(
     seed: int | None = None,
     timing_bounds_ns: dict[str, list[int]] | None = None,
     target_activation_count: list[int] | None = None,
+    workload: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     try:
         candidate = attestation["attestation_payload"]["container"]["candidate"]
@@ -88,7 +89,7 @@ def create_plan(
     if timing_bounds_ns and "adjacent_after_activation_ns" in timing_bounds_ns:
         required.append("adjacent_request")
     plan = {
-        "schema_version": "1.2",
+        "schema_version": "1.3" if workload is not None else "1.2",
         "plan_id": plan_id,
         "run_id": run_id,
         "strategy": {
@@ -126,6 +127,8 @@ def create_plan(
             "safe_terminal_routes": ["internal_land", "internal_recovery"],
         },
     }
+    if workload is not None:
+        plan["workload"] = workload
     validate_plan(plan)
     return plan
 

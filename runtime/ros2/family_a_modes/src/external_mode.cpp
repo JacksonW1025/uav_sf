@@ -1,4 +1,5 @@
 #include <Eigen/Core>
+#include <algorithm>
 #include <chrono>
 #include <cstdio>
 #include <cstdlib>
@@ -25,6 +26,10 @@ class FamilyAExternalMode : public px4_ros2::ModeBase {
     node.declare_parameter("hover_altitude_m", 3.0);
     node.declare_parameter("run_id", std::string{});
     node.declare_parameter("registration_handoff_path", std::string{});
+    node.declare_parameter("workload_profile", std::string{"hover"});
+    node.declare_parameter("motion_settle_s", 1.0);
+    node.declare_parameter("motion_speed_m_s", 0.75);
+    node.declare_parameter("motion_distance_m", 3.5);
     _active_duration_s = node.get_parameter("active_duration_s").as_double();
     _stall_after_s = node.get_parameter("stall_after_s").as_double();
     _fault_mode = node.get_parameter("fault_mode").as_string();
@@ -32,10 +37,17 @@ class FamilyAExternalMode : public px4_ros2::ModeBase {
     _run_id = node.get_parameter("run_id").as_string();
     _registration_handoff_path =
         node.get_parameter("registration_handoff_path").as_string();
+    _workload_profile = node.get_parameter("workload_profile").as_string();
+    _motion_settle_s = node.get_parameter("motion_settle_s").as_double();
+    _motion_speed_m_s = node.get_parameter("motion_speed_m_s").as_double();
+    _motion_distance_m = node.get_parameter("motion_distance_m").as_double();
     setArmingCheckReplyEnabled(node.get_parameter("health_reply_enabled").as_bool());
     if (_fault_mode != "normal" && _fault_mode != "setpoint_stall" &&
         _fault_mode != "process_exit") {
       throw std::runtime_error("unsupported fault_mode");
+    }
+    if (_workload_profile != "hover" && _workload_profile != "straight_line") {
+      throw std::runtime_error("unsupported workload_profile");
     }
     _trajectory = std::make_shared<px4_ros2::TrajectorySetpointType>(*this);
   }
@@ -69,8 +81,12 @@ class FamilyAExternalMode : public px4_ros2::ModeBase {
       std::_Exit(74);
     }
     if (_fault_mode != "setpoint_stall" || elapsed < _stall_after_s) {
+      const float target_x = _workload_profile == "straight_line"
+          ? static_cast<float>(std::min(_motion_distance_m,
+              std::max(0.0, elapsed - _motion_settle_s) * _motion_speed_m_s))
+          : 0.f;
       _trajectory->updatePosition(
-          Eigen::Vector3f{0.f, 0.f, static_cast<float>(-_hover_altitude_m)});
+          Eigen::Vector3f{target_x, 0.f, static_cast<float>(-_hover_altitude_m)});
     }
     if (elapsed >= _active_duration_s) {
       RCLCPP_INFO(node().get_logger(), "FAMILY_A_EVENT external_mode_completed");
@@ -84,7 +100,11 @@ class FamilyAExternalMode : public px4_ros2::ModeBase {
   double _active_duration_s{8.0};
   double _stall_after_s{3.0};
   double _hover_altitude_m{3.0};
+  double _motion_settle_s{1.0};
+  double _motion_speed_m_s{0.75};
+  double _motion_distance_m{3.5};
   std::string _fault_mode{"normal"};
+  std::string _workload_profile{"hover"};
   std::string _run_id;
   std::string _registration_handoff_path;
   bool _completion_sent{false};

@@ -448,6 +448,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     "-p",
                     f"active_s:={args.active_s}",
                     "-p",
+                    f"stall_after_s:={args.stall_after_s}",
+                    "-p",
                     f"source_route:={args.source_route}",
                     "-p",
                     f"successor_route:={args.successor_route}",
@@ -455,6 +457,18 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     f"repeat_count:={args.repeat_count}",
                     "-p",
                     f"target_system:={allocation.px4_instance + 1}",
+                    "-p",
+                    f"workload_profile:={args.workload_profile}",
+                    "-p",
+                    f"motion_settle_s:={args.motion_settle_s}",
+                    "-p",
+                    f"motion_speed_m_s:={args.motion_speed_m_s}",
+                    "-p",
+                    f"motion_distance_m:={args.motion_distance_m}",
+                    "-p",
+                    f"motion_entry_progress_m:={args.motion_entry_progress_m}",
+                    "-p",
+                    f"motion_completion_progress_m:={args.motion_completion_progress_m}",
                 ],
             )
         elif args.mechanism == "dynamic_external_mode":
@@ -483,6 +497,14 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     f"target_system:={allocation.px4_instance + 1}",
                     "-p",
                     f"registration_handoff_path:={registration_handoff}",
+                    "-p",
+                    f"workload_profile:={args.workload_profile}",
+                    "-p",
+                    f"stall_after_s:={args.stall_after_s}",
+                    "-p",
+                    f"motion_entry_progress_m:={args.motion_entry_progress_m}",
+                    "-p",
+                    f"motion_completion_progress_m:={args.motion_completion_progress_m}",
                 ],
             )
             time.sleep(0.5)
@@ -504,6 +526,16 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     f"run_id:={args.run_id}",
                     "-p",
                     f"registration_handoff_path:={registration_handoff}",
+                    "-p",
+                    f"workload_profile:={args.workload_profile}",
+                    "-p",
+                    f"stall_after_s:={args.stall_after_s}",
+                    "-p",
+                    f"motion_settle_s:={args.motion_settle_s}",
+                    "-p",
+                    f"motion_speed_m_s:={args.motion_speed_m_s}",
+                    "-p",
+                    f"motion_distance_m:={args.motion_distance_m}",
                 ],
             )
             if args.duplicate_registration:
@@ -754,6 +786,13 @@ def main() -> int:
     parser.add_argument("--slot", type=int, default=0)
     parser.add_argument("--cpu-set", default="0-11")
     parser.add_argument("--active-s", type=float, default=8.0)
+    parser.add_argument("--stall-after-s", type=float, default=3.0)
+    parser.add_argument("--workload-profile", choices=["hover", "straight_line"], default="hover")
+    parser.add_argument("--motion-settle-s", type=float, default=1.0)
+    parser.add_argument("--motion-speed-m-s", type=float, default=0.75)
+    parser.add_argument("--motion-distance-m", type=float, default=3.5)
+    parser.add_argument("--motion-entry-progress-m", type=float, default=0.75)
+    parser.add_argument("--motion-completion-progress-m", type=float, default=2.5)
     parser.add_argument("--simulation-seed", type=int, required=True)
     parser.add_argument("--readiness-timeout-s", type=float, default=45.0)
     parser.add_argument("--attempt-timeout-s", type=float, default=60.0)

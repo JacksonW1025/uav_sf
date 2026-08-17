@@ -131,6 +131,20 @@ def launch(args: argparse.Namespace) -> dict[str, object]:
         args.cpu_set,
         "--active-s",
         str(args.active_s),
+        "--stall-after-s",
+        str(args.stall_after_s),
+        "--workload-profile",
+        args.workload_profile,
+        "--motion-settle-s",
+        str(args.motion_settle_s),
+        "--motion-speed-m-s",
+        str(args.motion_speed_m_s),
+        "--motion-distance-m",
+        str(args.motion_distance_m),
+        "--motion-entry-progress-m",
+        str(args.motion_entry_progress_m),
+        "--motion-completion-progress-m",
+        str(args.motion_completion_progress_m),
         "--simulation-seed",
         str(args.simulation_seed),
         "--readiness-timeout-s",
@@ -226,6 +240,13 @@ def main() -> int:
     parser.add_argument("--shm-size", default="1g")
     parser.add_argument("--pids-limit", type=int, default=4096)
     parser.add_argument("--active-s", type=float, default=8.0)
+    parser.add_argument("--stall-after-s", type=float, default=3.0)
+    parser.add_argument("--workload-profile", choices=["hover", "straight_line"], default="hover")
+    parser.add_argument("--motion-settle-s", type=float, default=1.0)
+    parser.add_argument("--motion-speed-m-s", type=float, default=0.75)
+    parser.add_argument("--motion-distance-m", type=float, default=3.5)
+    parser.add_argument("--motion-entry-progress-m", type=float, default=0.75)
+    parser.add_argument("--motion-completion-progress-m", type=float, default=2.5)
     parser.add_argument("--simulation-seed", type=int, required=True)
     parser.add_argument("--readiness-timeout-s", type=float, default=45.0)
     parser.add_argument("--attempt-timeout-s", type=float, default=60.0)

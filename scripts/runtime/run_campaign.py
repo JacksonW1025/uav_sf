@@ -67,6 +67,9 @@ def validate_matrix(matrix: dict[str, Any]) -> None:
     ):
         if not _exact_digest(matrix.get(field)):
             raise CampaignError(f"matrix {field} is not an exact SHA-256 digest")
+    for field in ("method_config_path", "safety_config_path"):
+        if field in matrix and (not isinstance(matrix[field], str) or not matrix[field].startswith("config/")):
+            raise CampaignError(f"matrix {field} is not a repository config path")
     if int(matrix.get("formal_concurrency", 0)) != 4:
         raise CampaignError("formal concurrency must equal the qualified value four")
     resources = matrix.get("resources", {})
@@ -131,6 +134,14 @@ def validate_matrix(matrix: dict[str, Any]) -> None:
                 f"cell {cell_id} requests {strategy}, but the live formal runtime "
                 "currently implements only official_sequence"
             )
+        workload = plan.get("workload")
+        if workload is not None:
+            if runtime.get("workload_profile") != "straight_line":
+                raise CampaignError(f"cell {cell_id} does not bind the moving runtime")
+            if workload.get("setpoint_semantics") != "position_only":
+                raise CampaignError(f"cell {cell_id} changes the A2 setpoint semantics")
+            if runtime.get("motion_entry_progress_m") != workload.get("physical_validity", {}).get("minimum_motion_entry_progress_m"):
+                raise CampaignError(f"cell {cell_id} runtime and physical entry bounds differ")
 
 
 def attempt_cell(matrix: dict[str, Any], attempt_id: str) -> dict[str, Any]:

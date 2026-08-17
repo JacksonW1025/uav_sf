@@ -134,8 +134,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         raise FormalAttemptError("matrix and attestation image identities differ")
     if matrix["environment_attestation_digest"] != _sha256(args.attestation):
         raise FormalAttemptError("environment attestation digest differs from the matrix")
-    method_path = ROOT / "config/method.defaults.json"
-    safety_path = ROOT / "config/safety_limits.formal.json"
+    method_path = ROOT / matrix.get("method_config_path", "config/method.defaults.json")
+    safety_path = ROOT / matrix.get("safety_config_path", "config/safety_limits.formal.json")
+    if ROOT not in method_path.resolve().parents or ROOT not in safety_path.resolve().parents:
+        raise FormalAttemptError("matrix configuration path escapes the repository")
     if matrix["method_defaults_digest"] != _sha256(method_path):
         raise FormalAttemptError("method defaults digest differs from the matrix")
     if matrix["safety_limits_digest"] != _sha256(safety_path):
@@ -191,6 +193,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         seed=plan_spec.get("seed"),
         timing_bounds_ns=plan_spec.get("timing_bounds_ns"),
         target_activation_count=plan_spec.get("target_activation_count"),
+        workload=plan_spec.get("workload"),
     )
     validate_plan(plan)
     plan_path = args.run_root / study_id / "plans" / f"{args.attempt_id}.json"
@@ -267,6 +270,20 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             args.memory,
             "--active-s",
             str(runtime.get("active_s", 8.0)),
+            "--stall-after-s",
+            str(runtime.get("stall_after_s", 3.0)),
+            "--workload-profile",
+            runtime.get("workload_profile", "hover"),
+            "--motion-settle-s",
+            str(runtime.get("motion_settle_s", 1.0)),
+            "--motion-speed-m-s",
+            str(runtime.get("motion_speed_m_s", 0.75)),
+            "--motion-distance-m",
+            str(runtime.get("motion_distance_m", 3.5)),
+            "--motion-entry-progress-m",
+            str(runtime.get("motion_entry_progress_m", 0.75)),
+            "--motion-completion-progress-m",
+            str(runtime.get("motion_completion_progress_m", 2.5)),
             "--simulation-seed",
             str(simulation_seed),
             "--attempt-timeout-s",
@@ -274,7 +291,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "--outer-timeout-s",
             str(runtime.get("outer_timeout_s", 160.0)),
             "--safety-limits",
-            "/opt/uav_sf/config/safety_limits.formal.json",
+            f"/opt/uav_sf/{safety_path.relative_to(ROOT)}",
         ]
         if runtime.get("health_loss"):
             command.append("--health-loss")

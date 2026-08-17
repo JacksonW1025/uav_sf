@@ -18,6 +18,7 @@ from rclpy.node import Node
 
 from family_a_runtime.common import DurableJsonl, PX4_QOS, versioned_topic
 from scripts.runtime.physical_readiness import PhysicalTakeoffGate
+from scripts.runtime.moving_workload import progress_from_origin, straight_line_target
 
 
 class OffboardController(Node):
@@ -40,6 +41,12 @@ class OffboardController(Node):
             "target_system": 1,
             "airborne_minimum_height_m": 0.5,
             "airborne_dwell_s": 0.5,
+            "workload_profile": "hover",
+            "motion_settle_s": 1.0,
+            "motion_speed_m_s": 0.75,
+            "motion_distance_m": 3.5,
+            "motion_entry_progress_m": 0.75,
+            "motion_completion_progress_m": 2.5,
         }
         for name, value in defaults.items():
             self.declare_parameter(name, value)
@@ -61,6 +68,12 @@ class OffboardController(Node):
             float(self.get_parameter("source_dwell_s").value) * 1_000_000_000
         )
         self._target_system = int(self.get_parameter("target_system").value)
+        self._workload_profile = self.get_parameter("workload_profile").value
+        self._motion_settle_s = float(self.get_parameter("motion_settle_s").value)
+        self._motion_speed_m_s = float(self.get_parameter("motion_speed_m_s").value)
+        self._motion_distance_m = float(self.get_parameter("motion_distance_m").value)
+        self._motion_entry_progress_m = float(self.get_parameter("motion_entry_progress_m").value)
+        self._motion_completion_progress_m = float(self.get_parameter("motion_completion_progress_m").value)
         self._takeoff_gate = PhysicalTakeoffGate(
             minimum_height_m=float(
                 self.get_parameter("airborne_minimum_height_m").value
@@ -83,6 +96,8 @@ class OffboardController(Node):
             raise RuntimeError("source_dwell_s must be non-negative")
         if not 1 <= self._target_system <= 255:
             raise RuntimeError("target_system must be in [1, 255]")
+        if self._workload_profile not in {"hover", "straight_line"}:
+            raise RuntimeError("unsupported workload_profile")
         if self._repeat_count > 1 and self._successor_route == "internal_land":
             raise RuntimeError("re-entry requires Hold or RTL as the intermediate successor")
         self._log = DurableJsonl(lifecycle_path)
@@ -107,6 +122,10 @@ class OffboardController(Node):
         self._ever_armed = False
         self._ever_offboard = False
         self._ever_airborne = False
+        self._latest_x_m: float | None = None
+        self._motion_origin_x_m: float | None = None
+        self._motion_entered = False
+        self._motion_completed = False
         self._control_pub = self.create_publisher(
             OffboardControlMode, "/fmu/in/offboard_control_mode", PX4_QOS
         )
@@ -187,12 +206,27 @@ class OffboardController(Node):
         self._update_physical_takeoff_state()
 
     def _local_position_callback(self, message: VehicleLocalPosition) -> None:
+        self._latest_x_m = float(message.x) if bool(message.xy_valid) else None
         self._takeoff_gate.observe_local_position(
             z_m=float(message.z),
             z_valid=bool(message.z_valid),
             now_ns=time.monotonic_ns(),
         )
         self._update_physical_takeoff_state()
+        self._update_motion_state()
+
+    def _update_motion_state(self) -> None:
+        if self._workload_profile != "straight_line" or self._activation_ns is None or self._latest_x_m is None:
+            return
+        if self._motion_origin_x_m is None:
+            self._motion_origin_x_m = self._latest_x_m
+        progress = progress_from_origin(self._latest_x_m, self._motion_origin_x_m)
+        if not self._motion_entered and progress >= self._motion_entry_progress_m:
+            self._motion_entered = True
+            self._log.append("motion_phase_entered", run_id=self._run_id, along_track_progress_m=progress)
+        if not self._motion_completed and progress >= self._motion_completion_progress_m:
+            self._motion_completed = True
+            self._log.append("motion_phase_completed", run_id=self._run_id, along_track_progress_m=progress)
 
     def _update_physical_takeoff_state(self) -> None:
         if self._ever_airborne or not self._takeoff_gate.evaluate(time.monotonic_ns()):
@@ -239,7 +273,15 @@ class OffboardController(Node):
         if self._setpoint_kind == "trajectory":
             message = TrajectorySetpoint()
             message.timestamp = timestamp
-            message.position = [0.0, 0.0, -self._altitude]
+            target_x = 0.0
+            if self._workload_profile == "straight_line" and self._activation_ns is not None:
+                target_x = straight_line_target(
+                    (time.monotonic_ns() - self._activation_ns) / 1_000_000_000,
+                    settle_s=self._motion_settle_s,
+                    speed_m_s=self._motion_speed_m_s,
+                    distance_m=self._motion_distance_m,
+                )
+            message.position = [target_x, 0.0, -self._altitude]
             message.velocity = [math.nan, math.nan, math.nan]
             message.acceleration = [math.nan, math.nan, math.nan]
             message.jerk = [math.nan, math.nan, math.nan]
@@ -308,6 +350,7 @@ class OffboardController(Node):
             self._fault_mode == "setpoint_stall"
             and self._activation_ns is not None
             and active_elapsed >= self._stall_after_s
+            and (self._workload_profile != "straight_line" or self._motion_entered)
         )
         if stalled and not self._fault_logged:
             self._log.append(

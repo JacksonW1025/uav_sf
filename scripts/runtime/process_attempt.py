@@ -17,6 +17,7 @@ from scripts.evaluator.evaluate_trace import evaluate
 from scripts.evaluator.plan import load_plan
 from scripts.model.runtime_route import read_trace
 from scripts.runtime.artifacts import create_manifest
+from scripts.runtime.physical_readiness import physical_takeoff_observed
 
 
 class ProcessingError(RuntimeError):
@@ -70,6 +71,45 @@ def _gazebo_metrics(path: Path) -> dict[str, Any]:
     }
 
 
+def _read_jsonl(path: Path) -> list[dict[str, Any]]:
+    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line]
+
+
+def _physical_execution_contract(raw: Path, plan: dict[str, Any]) -> dict[str, Any] | None:
+    workload = plan.get("workload")
+    if workload is None:
+        return None
+    telemetry = _read_jsonl(raw / "telemetry.sidecar.jsonl")
+    lifecycle = _read_jsonl(raw / "workload.lifecycle.jsonl")
+    physical = workload["physical_validity"]
+    takeoff = physical_takeoff_observed(
+        telemetry,
+        minimum_height_m=float(physical["minimum_takeoff_height_m"]),
+        dwell_s=float(physical["takeoff_dwell_s"]),
+    )
+    entries = [item for item in lifecycle if item.get("kind") == "motion_phase_entered"]
+    completions = [item for item in lifecycle if item.get("kind") == "motion_phase_completed"]
+    faults = [item for item in lifecycle if item.get("kind") == "fault_detected"]
+    entry_progress = max((float(item.get("along_track_progress_m", 0.0)) for item in entries), default=0.0)
+    completion_progress = max((float(item.get("along_track_progress_m", 0.0)) for item in completions), default=0.0)
+    entry_ok = entry_progress >= float(physical["minimum_motion_entry_progress_m"])
+    nominal = not bool(plan["transition"]["fault_expected"])
+    completion_ok = (not nominal) or completion_progress >= float(physical["minimum_nominal_completion_progress_m"])
+    fault_after_entry = (not faults) or bool(entries and min(int(item["received_monotonic_ns"]) for item in faults) >= min(int(item["received_monotonic_ns"]) for item in entries))
+    checks = {
+        "sustained_takeoff": takeoff,
+        "motion_phase_entered": entry_ok,
+        "nominal_profile_coverage": completion_ok,
+        "fault_after_motion_entry": fault_after_entry,
+    }
+    return {
+        "status": "PASS" if all(checks.values()) else "FAIL",
+        "checks": checks,
+        "maximum_logged_entry_progress_m": entry_progress,
+        "maximum_logged_completion_progress_m": completion_progress,
+    }
+
+
 def process_attempt(
     *,
     attempt_root: Path,
@@ -91,6 +131,7 @@ def process_attempt(
     _write_new(derived / "raw-evidence.manifest.json", raw_manifest)
 
     processing_error: str | None = None
+    physical_execution = _physical_execution_contract(raw, plan)
     ulog_summary: dict[str, Any] | None = None
     evaluation: dict[str, Any] | None = None
     try:
@@ -129,6 +170,8 @@ def process_attempt(
         "TIMEOUT",
     }:
         outcome = runtime_outcome
+    elif physical_execution is not None and physical_execution["status"] != "PASS":
+        outcome = "INCONCLUSIVE"
     elif processing_error is not None:
         outcome = "OBSERVABILITY_REJECTED"
     elif evaluation is None or evaluation["evidence_gate"]["status"] != "ADMISSIBLE":
@@ -164,6 +207,7 @@ def process_attempt(
         "ulog": ulog_summary,
         "clock_bridge": clock,
         "gazebo": _gazebo_metrics(raw / "gazebo_stats.stdout.log"),
+        "physical_execution": physical_execution,
     }
     _write_new(attempt_root / "processing_result.json", result)
     return result

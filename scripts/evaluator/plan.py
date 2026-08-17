@@ -54,10 +54,13 @@ def validate_plan(plan: dict[str, Any], *, allow_template: bool = False) -> None
         "execution_environment",
         "cleanup",
     }
+    version = plan.get("schema_version")
+    if version == "1.3":
+        required.add("workload")
     if set(plan) != required:
         raise PlanError("plan fields differ from the current schema")
-    if plan["schema_version"] != "1.2":
-        raise PlanError("plan schema_version must be 1.2")
+    if version not in {"1.2", "1.3"}:
+        raise PlanError("plan schema_version must be 1.2 or 1.3")
     for field in ("plan_id", "run_id"):
         value = plan[field]
         if not isinstance(value, str) or not value.strip():
@@ -195,6 +198,37 @@ def validate_plan(plan: dict[str, Any], *, allow_template: bool = False) -> None
         mandatory.add("adjacent_request")
     if not mandatory <= set(kinds):
         raise PlanError("required_event_kinds omits a mandatory route contract event")
+
+    if version == "1.3":
+        workload = _mapping(plan["workload"], "workload")
+        fields = {
+            "profile_id", "profile_digest", "setpoint_semantics", "phases",
+            "injection_phase", "physical_analysis_plan_digest", "observer_profile",
+            "observer_config_digest", "physical_validity",
+        }
+        if set(workload) != fields:
+            raise PlanError("workload fields differ from schema 1.3")
+        if workload["setpoint_semantics"] not in {"position_only", "position_plus_velocity"}:
+            raise PlanError("unsupported setpoint semantics")
+        phases = workload["phases"]
+        if not isinstance(phases, list) or not phases or len(phases) != len(set(phases)):
+            raise PlanError("workload phases must be a non-empty unique list")
+        if workload["injection_phase"] not in phases:
+            raise PlanError("injection phase must name a frozen workload phase")
+        if workload["observer_profile"] not in {"baseline", "transition"}:
+            raise PlanError("unsupported formal observer profile")
+        for field in ("profile_digest", "physical_analysis_plan_digest", "observer_config_digest"):
+            if DIGEST.fullmatch(str(workload[field])) is None:
+                raise PlanError(f"workload.{field} must be an exact SHA-256 digest")
+        physical = _mapping(workload["physical_validity"], "physical_validity")
+        physical_fields = {
+            "minimum_takeoff_height_m", "takeoff_dwell_s",
+            "minimum_motion_entry_progress_m", "minimum_nominal_completion_progress_m",
+        }
+        if set(physical) != physical_fields or any(
+            not isinstance(value, (int, float)) or value < 0 for value in physical.values()
+        ) or physical["minimum_takeoff_height_m"] <= 0 or physical["minimum_motion_entry_progress_m"] <= 0 or physical["minimum_nominal_completion_progress_m"] <= 0:
+            raise PlanError("physical validity contract is incomplete")
 
     identity = _mapping(plan["source_identity"], "source_identity")
     if set(identity) != {"repository_commit", "dependency_lock_digest"}:

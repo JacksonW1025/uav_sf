@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "thresholds": {
+    "revocation_deadline_ns": 300000000,
+    "installation_deadline_ns": 300000000,
+    "maximum_effect_gap_ns": 250000000,
+    "maximum_command_age_ns": 200000000,
+    "successor_deadline_ns": 300000000,
+    "fallback_deadline_ns": 1500000000
+  },
+  "workload_config_path": "config/stage_a2_workload.v1.json",
+  "observer_config_path": "config/stage_a2_observer.v1.json",
+  "physical_analysis_plan_path": "config/stage_a2_physical_analysis.v1.json"
+}

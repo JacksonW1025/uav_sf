@@ -18,6 +18,7 @@ from rclpy.node import Node
 
 from family_a_runtime.common import DurableJsonl, PX4_QOS, versioned_topic
 from scripts.runtime.physical_readiness import PhysicalTakeoffGate
+from scripts.runtime.moving_workload import progress_from_origin
 
 
 class ExternalModeRequester(Node):
@@ -38,6 +39,10 @@ class ExternalModeRequester(Node):
             "registration_handoff_path": "",
             "airborne_minimum_height_m": 0.5,
             "airborne_dwell_s": 0.5,
+            "stall_after_s": 5.0,
+            "workload_profile": "hover",
+            "motion_entry_progress_m": 0.75,
+            "motion_completion_progress_m": 2.5,
         }
         for name, value in defaults.items():
             self.declare_parameter(name, value)
@@ -55,6 +60,10 @@ class ExternalModeRequester(Node):
             float(self.get_parameter("source_dwell_s").value) * 1_000_000_000
         )
         self._target_system = int(self.get_parameter("target_system").value)
+        self._stall_after_s = float(self.get_parameter("stall_after_s").value)
+        self._workload_profile = self.get_parameter("workload_profile").value
+        self._motion_entry_progress_m = float(self.get_parameter("motion_entry_progress_m").value)
+        self._motion_completion_progress_m = float(self.get_parameter("motion_completion_progress_m").value)
         registration_handoff_path = self.get_parameter(
             "registration_handoff_path"
         ).value
@@ -83,6 +92,8 @@ class ExternalModeRequester(Node):
             raise RuntimeError("source_dwell_s must be non-negative")
         if not 1 <= self._target_system <= 255:
             raise RuntimeError("target_system must be in [1, 255]")
+        if self._workload_profile not in {"hover", "straight_line"}:
+            raise RuntimeError("unsupported workload_profile")
         self._log = DurableJsonl(lifecycle_path)
         self._mode_id: int | None = None
         self._registered_ns: int | None = None
@@ -98,6 +109,10 @@ class ExternalModeRequester(Node):
         self._fault_logged = False
         self._land: VehicleLandDetected | None = None
         self._source_ready_ns: int | None = None
+        self._latest_x_m: float | None = None
+        self._motion_origin_x_m: float | None = None
+        self._motion_entered = False
+        self._motion_completed = False
         self._command_pub = self.create_publisher(
             VehicleCommand, "/fmu/in/vehicle_command", PX4_QOS
         )
@@ -239,12 +254,27 @@ class ExternalModeRequester(Node):
         self._update_physical_takeoff_state()
 
     def _local_position_callback(self, message: VehicleLocalPosition) -> None:
+        self._latest_x_m = float(message.x) if bool(message.xy_valid) else None
         self._takeoff_gate.observe_local_position(
             z_m=float(message.z),
             z_valid=bool(message.z_valid),
             now_ns=time.monotonic_ns(),
         )
         self._update_physical_takeoff_state()
+        self._update_motion_state()
+
+    def _update_motion_state(self) -> None:
+        if self._workload_profile != "straight_line" or self._activated_ns is None or self._latest_x_m is None:
+            return
+        if self._motion_origin_x_m is None:
+            self._motion_origin_x_m = self._latest_x_m
+        progress = progress_from_origin(self._latest_x_m, self._motion_origin_x_m)
+        if not self._motion_entered and progress >= self._motion_entry_progress_m:
+            self._motion_entered = True
+            self._log.append("motion_phase_entered", run_id=self._run_id, along_track_progress_m=progress)
+        if not self._motion_completed and progress >= self._motion_completion_progress_m:
+            self._motion_completed = True
+            self._log.append("motion_phase_completed", run_id=self._run_id, along_track_progress_m=progress)
 
     def _update_physical_takeoff_state(self) -> None:
         if self._airborne or not self._takeoff_gate.evaluate(time.monotonic_ns()):
@@ -334,6 +364,20 @@ class ExternalModeRequester(Node):
         if self._mode_id is None or self._status is None:
             return
         now = time.monotonic_ns()
+        if (
+            self._fault_mode == "setpoint_stall"
+            and self._activated_ns is not None
+            and not self._fault_logged
+            and now - self._activated_ns >= int(self._stall_after_s * 1_000_000_000)
+            and (self._workload_profile != "straight_line" or self._motion_entered)
+        ):
+            self._fault_logged = True
+            self._log.append(
+                "fault_detected",
+                run_id=self._run_id,
+                reason="setpoint_stream_stalled_while_mode_remained_active",
+                route="dynamic_external_mode",
+            )
         if self._land_sent:
             if (
                 self._land is not None

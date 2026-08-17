@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "analysis_id": "stage-a2-physical-consequence-v1",
+  "coordinate_contract": "PX4 local NED, origin fixed per attempt",
+  "primary_metrics": [
+    "along_track_lag_m",
+    "cross_track_error_m",
+    "integrated_absolute_along_track_error_m_s",
+    "exposure_duration_s",
+    "exposure_distance_m",
+    "peak_horizontal_speed_m_s",
+    "recovery_distance_m"
+  ],
+  "stratification": ["mechanism", "fault_mode"],
+  "paired_unit": "shared simulation seed and workload profile",
+  "missing_physical_precondition_disposition": "INCONCLUSIVE",
+  "claim_boundary": "bounded Thor SITL consequence; not a real-flight risk estimate"
+}
