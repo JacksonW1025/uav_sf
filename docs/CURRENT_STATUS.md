@@ -4,10 +4,10 @@
 Formal Thor launches retained across completed and closed studies: 295
 Retained historical results: 0
 Current empirical claims: bounded Thor SITL findings in the final reports
-Formal execution environments: Stage A1 primary/supplemental, Stage A2 primary/remediation, and Main strategy-comparison Thor identities
-Study state: Stage A1 frozen; Stage A2 complete; the 18-launch live-strategy vertical slice complete with bounded claims
-Completed work package: Stage A2 Motivation evidence plus the first Main Evaluation vertical slice (Phases I--VI below)
-Active phase: expand Section 7 beyond one action, then confirm/cluster/minimize findings
+Formal execution environments: Stage A1 primary/supplemental, Stage A2 primary/remediation, and the completed setpoint-stall Main study; one process-exit candidate is attested but has zero formal launches
+Study state: Stage A1 frozen; Stage A2 complete; the first Section 7 slice complete; the second action is qualified and preregistered but not started
+Completed work package: Stage A2 Motivation evidence, the first Main Evaluation vertical slice, and process-exit formal-run readiness (Phases I--VII below)
+Active phase: explicit go/no-go for the frozen process-exit formal campaign; no campaign is running
 Paper state: Section 6 Motivation Study complete; Section 7 Main Evaluation partially complete, not paper-complete
 ```
 
@@ -46,6 +46,16 @@ formal launches: two mechanisms by three strategies by three launches. All
 18 are closed, accepted, Evidence Gate admissible, physically valid, and
 overall `VIOLATION` only on freshness. These counts are not pooled into either
 Stage A1 or Stage A2. The complete formal Thor total is therefore 295 launches.
+
+The next Section 7 action is now frozen at **formal-run ready**, not complete.
+Its `owned_process_exit_fallback_v1` backend terminates the active external
+producer during observed motion and requires PX4 safe fallback: Land for Legacy Offboard
+and RTL for Dynamic External Mode. The final non-formal qualification
+crossed two mechanisms, three strategies, and three rounds: all 18/18 attempts
+were accepted, admissible, physically valid, action-contract complete, and
+safe-fallback passing. Its formal matrix is fixed at another 18 launches and
+passes dry-run and negative mismatch checks, but no formal ledger exists and
+the 295-launch total is unchanged.
 
 The campaign now separates live batches from offline evidence processing.
 Four-way remains the qualified formal concurrency after a non-formal 4/5-way
@@ -92,10 +102,11 @@ limits. Reproduction from an empty output directory is byte-identical.
 
 ## Completed evidence package and current paper placement
 
-The completed evidence package is **Phases I--VI: Stage A2 readiness and
-moving-workload Motivation evidence, followed by one fixed-budget live-strategy
-vertical slice**. Phases I--V belong primarily to paper Section 6,
-`Motivation Study`; Phase VI belongs to Sections 4 and 7. Infrastructure
+The completed evidence package is **Phases I--VII: Stage A2 readiness and
+moving-workload Motivation evidence, one completed fixed-budget live-strategy
+vertical slice, and a second action frozen immediately before formal
+execution**. Phases I--V belong primarily to paper Section 6,
+`Motivation Study`; Phases VI--VII belong to Sections 4 and 7. Infrastructure
 qualification also updates Section 5, `Implementation`, and the corresponding
 threats-to-validity discussion.
 
@@ -107,9 +118,12 @@ threats-to-validity discussion.
 | Phase IV: A2 preregistration and identity freeze | Section 5 evaluation setup | Bind workload, physical validity, safety, timing, observer, and environment before execution | A plan is authorization for only its exact frozen study |
 | Phase V: formal matched Stage A2 | Section 6; chiefly RQ5, with bounded support for RQ1/RQ4 | Test whether moving context changes applicable contract states, signatures, or interpretable physical consequences | Does not compare generation strategies or establish a general mechanism safety ranking |
 | Phase VI: live backends and fixed-budget comparison | Sections 4 and 7; bounded RQ2/RQ3 evidence | Demonstrate online strategy execution, feedback, and timing-boundary coverage under an equal denominator | Complete only for one moving healthy-setpoint-stall action; it does not establish general strategy superiority |
+| Phase VII: process-exit formal-run readiness | Sections 4, 5, and 7 evaluation setup | Add a distinct producer-loss action, safe-fallback Oracle contract, six-unit qualification, exact identities, fixed matrix, and preregistration | Qualification evidence is non-formal; the frozen 18-launch matrix has not been executed and contributes zero formal results |
 
 Phases I--V close the paper's Motivation Study. Phase VI establishes the first
-executable Section 7 slice. A broader route/action corpus plus
+executable Section 7 slice. Phase VII proves that a second action is executable
+and formally frozen without silently starting its denominator. A broader
+route/action corpus plus
 confirmation/clustering and ablation remains necessary before the Main
 Evaluation or the full state-aware method claim can be called complete.
 
@@ -388,11 +402,47 @@ therefore supports live-backend correctness and greater timing coverage than
 the fixed sequence in this sample, but no ranking between random and
 state-aware and no general search-effectiveness claim.
 
+## Phase VII: qualify process exit and freeze the next formal study — FORMAL-RUN READY / NOT STARTED
+
+Phase VII adds `owned_process_exit_fallback_v1` without changing the completed
+setpoint-stall study. The shared decision and action executor still waits for
+observed route activation plus motion entry, but its one durable request now
+terminates the external producer. Legacy Offboard records its owned producer
+shutdown and PX4 installs Land; Dynamic External Mode exits with reserved
+stimulus status 74 and PX4 installs RTL before cleanup landing. The plan
+requires `fault_detected`, `fallback_triggered`, physically valid execution,
+admissible evidence, and a passing safe-fallback Oracle clause.
+
+The first complete qualification exposed two safety stops, not action or PX4
+failures: expected RTL-to-Land descent exceeded the generic 5.0 m cumulative
+altitude-loss bound after RTL climbed to 5.395416 m. The action-specific safety
+configuration changes only this bound to 6.0 m; all independent speed,
+attitude, body-rate, contact, heartbeat, collector, and timeout guards remain
+unchanged. A separate concurrent environment-initialization race was then
+refused and fixed by serializing attestation before the live barrier. Both
+records remain retained rather than being counted as successful qualification.
+
+The final qualification uses candidate revision `eebaefe`, image
+`sha256:1b8e2285aa85e81393d866b7165557996b3001597ce3506fee211497dfbd1867`,
+new seeds, and a new study ID. All six mechanism-strategy units passed 3/3;
+18/18 attempts were `ACCEPTED`, `ADMISSIBLE`, physically valid, and
+safe-fallback passing. State-aware selected boundary, pre-boundary, then
+post-boundary for both mechanisms, and the later decisions contain the actual
+prior `action_requested` coverage.
+
+The exact matrix, attestation, qualification digests, action configuration,
+safety configuration, readiness verification, and preregistration are in
+[`experiments/main_process_exit_strategy_thor_v1/`](../experiments/main_process_exit_strategy_thor_v1/).
+Dry-run reports six pending cells and zero launches. Backend/action mismatch
+tests refuse execution. `attempt-ledger.jsonl` is deliberately absent. This
+phase stops here: it contributes implementation and readiness evidence to
+Section 7, but no formal result or denominator.
+
 ## Achieved end state of this work package
 
 ### Repository state
 
-With Phases I--VI complete, the repository contains:
+With Phases I--VII complete, the repository contains:
 
 - untouched Stage A1 primary and supplemental plans, ledgers, compact results,
   thresholds, statuses, and `200 / 151 / 94 / 57` accounting;
@@ -416,6 +466,10 @@ With Phases I--VI complete, the repository contains:
 - a qualified and separately preregistered 18-launch strategy-comparison
   study with an exact matrix, attestation, 54-event ledger, compact evidence,
   per-attempt analysis, reproducible summary, and bounded final report;
+- a second registered live action for moving producer exit and safe fallback,
+  18/18 passing non-formal qualification attempts, an exact attested image,
+  fixed 18-launch matrix, dry-run/fail-closed record, and frozen
+  preregistration with no formal ledger;
 - a clean worktree and a complete repository-validation pass.
 
 ### Narrative and paper state
@@ -426,10 +480,11 @@ The narrative and paper state at this milestone is:
 Stage A1: COMPLETE WITH BOUNDED CLAIMS; frozen and unchanged
 Stage A2: COMPLETE under its own preregistration, identity, ledger, and denominator
 Paper Section 6 Motivation Study: COMPLETE
-Paper Section 7 Main Evaluation: PARTIALLY COMPLETE; one-action vertical slice complete
+Paper Section 7 Main Evaluation: PARTIALLY COMPLETE; one formal slice complete and a distinct second action formal-run ready
 Gate 4b moving-workload realism bridge: PASS WITH BOUNDED CLAIMS, retaining a null result if observed
 Gate 5: PASS; Gate 6: PASS for the owned setpoint-stall backend
 Gate 7: PASS WITH BOUNDED CLAIMS for the 18-launch vertical slice
+Process-exit readiness gate: PASS; formal campaign NOT STARTED
 Gate 8 and full route-corpus C6/C7 claims: still PENDING
 ```
 
@@ -441,13 +496,14 @@ motion context changed contract applicability, violation signatures, or
 physical exposure. It may not claim real-flight danger, a general PX4 defect
 rate, universal mechanism superiority, or state-aware search effectiveness.
 
-The next work package expands Section 7 beyond this single action. It must
-freeze a representative route/action corpus, retain equal budgets and shared
-seeds, add confirmation and ablation sufficient to distinguish feedback value
-from random timing, and cluster/minimize independent findings. Until that work
-is complete, the paper may report the Phase VI implementation and bounded
-coverage result but must not claim overall state-aware superiority or complete
-C6/C7.
+The next explicit decision is whether to start the already frozen process-exit
+18-launch campaign or continue backend expansion before spending that formal
+denominator. Either path must retain equal budgets and shared seeds, then add
+confirmation and ablation sufficient to distinguish feedback value from random
+timing and cluster/minimize independent findings. Until that work is complete,
+the paper may report the Phase VI result and Phase VII readiness evidence but
+must not claim process-exit formal results, overall state-aware superiority, or
+complete C6/C7.
 
 For a beginner-oriented explanation of the repository narrative, the concrete
 Stage A1 flight workloads, Runtime Route Instance, and a complete transition,

@@ -25,8 +25,9 @@ Stage A2 Oracle results in the remediation: 10 PASS, 16 deliberate freshness VIO
 Stage A2 moving-workload realism bridge: complete with bounded claims
 Section 7 fixed-budget strategy vertical slice: complete, 18/18 accepted and admissible
 Section 7 strategy result: official covers 1 timing bin; bounded-random and state-aware each cover 3
+Section 7 second action: moving process exit and safe fallback qualified 18/18; formal matrix frozen with 0 launches
 prior Orin evidence: documented as a separate historical evidence layer
-live formal strategy support: all three strategies for owned_setpoint_stall_v1; other action grammars fail closed
+live formal strategy support: all three strategies for owned_setpoint_stall_v1 and owned_process_exit_fallback_v1; other action grammars fail closed
 ```
 
 V7 将归属于 V6 的 Orin 实验摘要记录为 prior evidence lineage，包括 P5 v6 matched baseline、Issue #162 historical successor benchmark 和 current-version freshness pilot。当前 `origin/main` 不保留或暴露对应 V6 报告、账本、compact evidence 或可达历史分支；它们不进入 Thor 的 200 次 launch、151 份 admissible evidence 或 94/57 结果。精确核查或复用必须由另行提供的 V6 来源包、原 revision、study identity 和证据完成，不能只依赖本叙事摘要。
@@ -850,7 +851,7 @@ Primary study 关闭 51 次 launch，但因 command-subject clock closure 问题
 
 Stall 后两种机制均继续约 1.0 m 到达冻结在 3.0 m 的 position target，相对完整 3.5 m profile 的 median shortfall 分别为 0.459 m 与 0.472 m。该结果增加 physical interpretability，但不增加新的 violation class，也不形成 mechanism safety ranking。通过 Gate 的 moving trace 可作为主比较 campaign 的共同 workload；三种策略必须使用相同 motion profile，避免把 workload 差异混入 generation effect。
 
-## 10.3 Stage B：Live strategy backend — COMPLETE FOR ONE ACTION
+## 10.3 Stage B：Live strategy backend — COMPLETE FOR TWO ACTIONS
 
 按以下顺序实现：
 
@@ -861,9 +862,14 @@ Stall 后两种机制均继续约 1.0 m 到达冻结在 3.0 m 的 position targe
 5. 保留 unsupported strategy fail-closed；
 6. 增加同 seed schedule replay 和非法 action rejection test。
 
-以上六项已经在 `owned_setpoint_stall_v1` 中完成；未接通的 action grammar 继续 fail closed。
+以上六项已经在 `owned_setpoint_stall_v1` 中完成。随后新增的
+`owned_process_exit_fallback_v1` 复用同一 decision、live-state 与执行证据合同，
+但使用独立 action identity 和 `exit_offset:*` 覆盖边界。它在已观测 route active
+且进入直线运动后终止外部 producer，并要求 Legacy Offboard 安装 Land、Dynamic
+External Mode 安装 RTL。backend/action 不匹配在分配飞行资源前 fail closed；其余未
+接通的 action grammar 仍然 fail closed。
 
-## 10.4 Stage C：Non-formal qualification — COMPLETE FOR ONE ACTION
+## 10.4 Stage C：Non-formal qualification — COMPLETE FOR TWO ACTIONS
 
 正式实验前必须证明：
 
@@ -877,6 +883,20 @@ Stall 后两种机制均继续约 1.0 m 到达冻结在 3.0 m 的 position targe
 - dry-run 和 resume 不产生重复 attempt。
 
 Legacy Offboard 与 Dynamic External Mode 各完成一组三策略并发资格飞行，6/6 accepted、admissible、physically valid。每次均记录唯一 decision、state-conditioned request、owned-process marker 与 observed fault；request error 为 2.924--14.650 ms。资格飞行不进入正式分母。
+
+Process-exit action 使用更严格的六单元资格设计：两种机制 × 三种策略，每个单元
+连续三轮，共 18 次非正式 launch。初次完整资格中 16 次 accepted，另两次在
+Dynamic RTL 正常爬升后终端下降时超过通用 5.0 m 累积高度损失界限，被 safety
+supervisor 正确截断并保留。观测到的安全 RTL 峰值为 5.395416 m；冻结配置只把该
+动作的高度损失界限改为 6.0 m，其他速度、姿态、角速率、触地、心跳和超时保护
+不变。一次共享 environment 文件并发初始化竞态随后被拒绝，并通过在 live barrier
+前串行固定 attestation 修复。
+
+最终资格使用新 candidate、新 study ID 和新 seeds，18/18 均为 accepted、
+admissible、physically valid、action-contract complete，并满足
+`successor_progression.safe_fallback=PASS`。两种机制上的 state-aware 都依次选择
+`boundary → pre_boundary → post_boundary`，后两次 decision 的 coverage 输入来自
+先前真实 `action_requested` 记录。所有这些资格 launch 仍在正式分母之外。
 
 ## 10.5 Stage D：Main comparative campaign — PARTIAL
 
@@ -897,6 +917,14 @@ Legacy Offboard 与 Dynamic External Mode 各完成一组三策略并发资格�
 
 第一轮纵切片已经按该原则完成：两种机制 × 三种策略 × 三次 launch，共 18/18 closed、accepted、admissible、physically valid。Official 只覆盖 `boundary`；bounded-random 覆盖 `pre_boundary`、`post_boundary`、`late`；state-aware 覆盖 `pre_boundary`、`boundary`、`post_boundary`。三种策略均在第一发得到同一个 freshness signature，random 与 state-aware 的 timing-bin coverage 打平，因此不能形成二者排序。完整核心矩阵仍待扩展。
 
+第二个纵切片的 process-exit 正式矩阵已经冻结，但尚未执行。它同样固定为两种
+机制 × 三种策略 × 三次 launch，使用共同 simulation seeds、每 cell 固定预算和
+机制对应的安全 fallback。Matrix dry-run 显示六个 pending cell、0 launch；精确
+image/revision/config/qualification digest 检查与 backend/action 负向拒绝测试均通过。
+`attempt-ledger.jsonl` 不存在，因此这部分当前只能作为 Section 7 的 formal-run
+readiness evidence，不能报告 process-exit 的正式比较结果，也不改变 Thor 295 次
+正式 launch 总数。
+
 ### 核心矩阵
 
 优先覆盖：
@@ -904,7 +932,7 @@ Legacy Offboard 与 Dynamic External Mode 各完成一组三策略并发资格�
 1. Internal Hold → Offboard → Land/Hold/RTL；
 2. Internal Hold → Dynamic External Mode → Land/Hold/RTL；
 3. Mode Executor completion 与 adjacent Land request；
-4. process exit 与 safe fallback；
+4. process exit 与 safe fallback（backend、资格验证、矩阵和预注册已完成；正式 campaign 未启动）；
 5. setpoint stall 与 health-retained route；
 6. health loss 与 activation rejection；
 7. registration capacity rejection；
@@ -1337,6 +1365,14 @@ Thor Stage A1 使用约 3 m 悬停、水平姿态和零 body-rate 作为受控�
 
 Motivation evidence 证明了问题和 Oracle suite 的必要性，但不单独证明测试生成方法的搜索增益。Stage A2 之后，论文已经为一个 moving healthy-setpoint-stall action 接通 bounded-random 与 state-aware live backend，并在共同 seed、安全约束和固定 18-launch 预算下与 Official Sequence 比较。State-aware 的后续 decision 确实消费先前 coverage 并选择未覆盖 timing bin；但它与 bounded-random 都覆盖 3 个 bin，且都只产生 freshness signature。因此当前只支持 one-action backend/coverage claim，完整 route corpus 上的搜索效率、finding diversity 和独立问题数仍待评价。
 
+仓库还为第二个、语义不同的 moving process-exit action 完成了 formal-run readiness：
+它终止活动外部 producer，并验证 PX4 的 Land 或 RTL 安全接管。最终 18 次非正式
+资格 launch 全部 accepted、admissible、physically valid 且 safe-fallback passing；
+state-aware 后续 decision 确实受 live coverage 影响。精确 candidate、环境证明、
+固定 18-launch 矩阵、dry-run、负向 fail-closed 检查和预注册均已冻结，但正式 ledger
+不存在。因而它扩大了可执行 action grammar 和 Section 7 evaluation setup，不增加
+任何正式结果，也不把当前结论扩大为多 action 上的策略优越性。
+
 论文最终回答两个层次的问题：
 
 > 当 PX4 声明控制路径已经切换或任务已经完成时，旧路径是否真正停手，新路径是否真正接棒，当前命令是否仍然有效，正确 successor 是否真正安装？
@@ -1399,11 +1435,28 @@ Motivation evidence 证明了问题和 Oracle suite 的必要性，但不单独�
 - `uav_sf/scripts/runtime/formal_attempt.py`
 - `uav_sf/scripts/runtime/run_sitl.py`
 - `uav_sf/scripts/runtime/process_attempt.py`
+- `uav_sf/scripts/runtime/live_strategy_backend.py`
+- `uav_sf/scripts/runtime/strategy_action_executor.py`
+- `uav_sf/scripts/runtime/run_strategy_qualification.py`
 - `uav_sf/scripts/runtime/summarize_study.py`
 - `uav_sf/runtime/ros2/`
 - `uav_sf/containers/family_a_runtime/`
 - `uav_sf/data/schemas/`
 - `uav_sf/tests/`
+
+## Section 7 process-exit formal readiness
+
+- `uav_sf/config/main_evaluation_process_exit_strategy.v1.json`
+- `uav_sf/config/main_process_exit_safety.v1.json`
+- `uav_sf/experiments/main_process_exit_strategy_thor_v1/environment-attestation.final.json`
+- `uav_sf/experiments/main_process_exit_strategy_thor_v1/qualification.final.spec.json`
+- `uav_sf/experiments/main_process_exit_strategy_thor_v1/qualification.final.result.json`
+- `uav_sf/experiments/main_process_exit_strategy_thor_v1/matrix.json`
+- `uav_sf/experiments/main_process_exit_strategy_thor_v1/readiness-verification.json`
+- `uav_sf/experiments/main_process_exit_strategy_thor_v1/preregistration.md`
+
+该目录明确不包含正式 `attempt-ledger.jsonl`、formal results 或 summary；加入这些
+资产必须由另一次显式 campaign 决策触发，不能由当前 readiness milestone 推断。
 
 ## Historical evidence lineage
 

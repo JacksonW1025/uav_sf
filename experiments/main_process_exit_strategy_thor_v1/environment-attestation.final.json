@@ -1,0 +1,174 @@
+{
+  "attestation_payload": {
+    "container": {
+      "candidate": {
+        "architecture": "aarch64",
+        "binaries": {
+          "external_mode": {
+            "file_identity": "ELF 64-bit LSB pie executable, ARM aarch64, version 1 (GNU/Linux), dynamically linked, interpreter /lib/ld-linux-aarch64.so.1, BuildID[sha1]=9fa54dc6bd8d3ee3ea301a9f8041137392f25b1e, for GNU/Linux 3.7.0, not stripped",
+            "path": "/opt/family_a_ws/install/lib/family_a_modes/external_mode",
+            "sha256": "sha256:4834091d369b20c0e47d72cec8ab540d55180300dc6d7b7eb90d4476ad91f731"
+          },
+          "gazebo_clock_sidecar": {
+            "file_identity": "ELF 64-bit LSB pie executable, ARM aarch64, version 1 (GNU/Linux), dynamically linked, interpreter /lib/ld-linux-aarch64.so.1, BuildID[sha1]=bae80e561a5ef3c353a235733b9cc320245e5af6, for GNU/Linux 3.7.0, not stripped",
+            "path": "/opt/family_a_ws/install/lib/family_a_modes/gazebo_clock_sidecar",
+            "sha256": "sha256:eee3edb85ee200da762c72882705f3bff1bddf1ded4b036a957dff15358c0822"
+          },
+          "micro_xrce_dds_agent": {
+            "file_identity": "ELF 64-bit LSB pie executable, ARM aarch64, version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux-aarch64.so.1, BuildID[sha1]=1ff70c78f7083f09b411811e2efeb8ceb1569e95, for GNU/Linux 3.7.0, not stripped",
+            "logger_profile": false,
+            "p2p_profile": false,
+            "path": "/opt/microxrce/bin/MicroXRCEAgent",
+            "sha256": "sha256:979ea218840131892295cdbfdca562c2c09a20870978e5ca92c727cb92a5e333"
+          },
+          "mode_executor": {
+            "file_identity": "ELF 64-bit LSB pie executable, ARM aarch64, version 1 (GNU/Linux), dynamically linked, interpreter /lib/ld-linux-aarch64.so.1, BuildID[sha1]=8db9ed3727de7b3502d248b3cbdfd1be01969042, for GNU/Linux 3.7.0, not stripped",
+            "path": "/opt/family_a_ws/install/lib/family_a_modes/mode_executor",
+            "sha256": "sha256:48d2ff05d770975e532feae755a24db198200cc0a8ab1791a12ae227f83c681e"
+          },
+          "px4_sitl": {
+            "file_identity": "ELF 64-bit LSB pie executable, ARM aarch64, version 1 (GNU/Linux), dynamically linked, interpreter /lib/ld-linux-aarch64.so.1, for GNU/Linux 3.7.0, BuildID[sha1]=01ce4a3921c1ea770ffadd5b5e434b35a3226d8a, with debug_info, not stripped",
+            "path": "/opt/uav_sf/external/px4_autopilot/build/px4_sitl_default/bin/px4",
+            "sha256": "sha256:a01553180c7fa3cdd784fcfa28edd0fb7f45c226033211fd112ad91cac4f1c2b"
+          }
+        },
+        "gazebo_sim_version": "8.11.0",
+        "locks": {
+          "dependencies": "sha256:bae7533dcd93e34f012248a7028672e330ae216b244204527d15bdfc4b23683f",
+          "installed_deb": "sha256:19ed1a1312445482e1f06bbb2a83f385273f859f151e19ac1b28d5637c8fec04",
+          "installed_python": "sha256:28848349598753c7efac1ab54568db3285a140a44ace29a1ef00f31158474544",
+          "patches": "sha256:f95d583464e08d40caaa95bce28a6aa41e366492a4ed7ab594e8f45cc5644343",
+          "runtime_apt": "sha256:1233dc708940a9f991a886e30d5932d6a3c1670512234f09806d616b60727c1f",
+          "runtime_python": "sha256:146ea529bd2ca3ff3975504a9fc874511b4f911b08810bceb8e0ba48cb274ac2",
+          "runtime_ros": "sha256:f7d16302dc4dc91cdea2d3153c9a824d48206472fe4f5287a9b3485ddaa70e8f"
+        },
+        "observer_profile": "transition",
+        "operating_system": "Ubuntu 24.04.4 LTS",
+        "python": "3.12.3",
+        "repository_revision": "eebaefe79a3ee5ac3f952aa76bf9bdbcaa7d201c",
+        "rmw_implementation": "rmw_fastrtps_cpp",
+        "ros_distribution": "jazzy",
+        "schema_version": "1.0",
+        "source_trees": {
+          "Micro-XRCE-DDS-Agent": {
+            "changed_paths": [],
+            "commit": "73622810d984349b80bbac0ef55fc0b694d62222",
+            "submodule_count": 0,
+            "submodule_status_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "PX4-Autopilot": {
+            "changed_paths": [
+              "msg/CMakeLists.txt",
+              "msg/RouteObservability.msg",
+              "src/lib/route_observability/RouteObservability.hpp",
+              "src/modules/commander/Commander.cpp",
+              "src/modules/commander/Commander.hpp",
+              "src/modules/commander/HealthAndArmingChecks/HealthAndArmingChecks.hpp",
+              "src/modules/commander/ModeManagement.cpp",
+              "src/modules/commander/ModeManagement.hpp",
+              "src/modules/control_allocator/ControlAllocator.cpp",
+              "src/modules/control_allocator/ControlAllocator.hpp",
+              "src/modules/logger/logged_topics.cpp",
+              "src/modules/mc_att_control/mc_att_control.hpp",
+              "src/modules/mc_att_control/mc_att_control_main.cpp",
+              "src/modules/mc_pos_control/MulticopterPositionControl.cpp",
+              "src/modules/mc_pos_control/MulticopterPositionControl.hpp",
+              "src/modules/mc_rate_control/MulticopterRateControl.cpp",
+              "src/modules/mc_rate_control/MulticopterRateControl.hpp",
+              "src/modules/rover_ackermann/AckermannActControl/AckermannActControl.cpp",
+              "src/modules/rover_ackermann/AckermannActControl/AckermannActControl.hpp",
+              "src/modules/rover_differential/DifferentialActControl/DifferentialActControl.cpp",
+              "src/modules/rover_differential/DifferentialActControl/DifferentialActControl.hpp",
+              "src/modules/rover_mecanum/MecanumActControl/MecanumActControl.cpp",
+              "src/modules/rover_mecanum/MecanumActControl/MecanumActControl.hpp"
+            ],
+            "commit": "4ae21a5e569d3d89c2f6366688cbacb3e93437c9",
+            "submodule_count": 46,
+            "submodule_status_sha256": "sha256:22d27750c6b2e9e4dac42373900e66a74913909b276bcf2cc2b1339db57bd8bb"
+          },
+          "px4_msgs": {
+            "changed_paths": [],
+            "commit": "18ecff03041c6f8d8a0012fbc63af0b23dd60af1",
+            "submodule_count": 0,
+            "submodule_status_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "px4_ros2_interface_lib": {
+            "changed_paths": [
+              "px4_ros2_cpp/include/px4_ros2/components/health_and_arming_checks.hpp",
+              "px4_ros2_cpp/include/px4_ros2/components/mode.hpp",
+              "px4_ros2_cpp/src/components/health_and_arming_checks.cpp"
+            ],
+            "commit": "c3e410f035806e8c56246708432ded09c976434b",
+            "submodule_count": 0,
+            "submodule_status_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "workspace_packages": [
+          "family_a_modes",
+          "family_a_runtime",
+          "px4_msgs",
+          "px4_ros2_cpp"
+        ]
+      },
+      "image_id": "sha256:1b8e2285aa85e81393d866b7165557996b3001597ce3506fee211497dfbd1867",
+      "image_reference": "uav-sf-family-a-thor:process-exit-final-eebaefe",
+      "platform": "linux/arm64",
+      "preflight": {
+        "checks": {
+          "architecture": true,
+          "candidate_paths": true,
+          "host_gazebo_paths_absent": true,
+          "host_python_absent": true,
+          "operating_system": true,
+          "python": true,
+          "rmw": true,
+          "ros_distribution": true
+        },
+        "failures": [],
+        "python_executable": "/opt/px4-venv/bin/python3",
+        "status": "PASS"
+      },
+      "repo_digests": []
+    },
+    "environment_id": "thor-process-exit-strategy-final-20260818-v1",
+    "host": {
+      "cpu_governors": [
+        "schedutil"
+      ],
+      "cuda_toolkit": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2025 NVIDIA Corporation\nBuilt on Wed_Jul_16_07:31:19_PM_PDT_2025\nCuda compilation tools, release 13.0, V13.0.48\nBuild cuda_13.0.r13.0/compiler.36260728_0",
+      "docker_default_runtime": "nvidia",
+      "docker_runtimes": [
+        "io.containerd.runc.v2",
+        "nvidia",
+        "runc"
+      ],
+      "docker_version": "27.5.1",
+      "experiment_container_runtime": "runc",
+      "kernel": "6.8.12-tegra",
+      "l4t_release": "# R38 (release), REVISION: 2.1, GCID: 42061081, BOARD: generic, EABI: aarch64, DATE: Wed Sep 10 19:49:31 UTC 2025\n# KERNEL_VARIANT: oot\nTARGET_USERSPACE_LIB_DIR=nvidia\nTARGET_USERSPACE_LIB_DIR_PATH=usr/lib/aarch64-linux-gnu/nvidia\nINSTALL_TYPE=",
+      "logical_cpu_count": 14,
+      "machine": "aarch64",
+      "memory_total_bytes": 131881746432,
+      "model": "NVIDIA Jetson AGX Thor Developer Kit",
+      "nvidia_container_toolkit": "NVIDIA Container Toolkit CLI version 1.18.0-rc.1\ncommit: ced79e51ed36e9b19931bac9b4880a512dcc7334",
+      "nvidia_driver": "580.00",
+      "nvidia_jetpack": null,
+      "nvidia_l4t_core": "ii |38.2.1-20250910123945",
+      "nvpmodel": "NV Power Mode: 120W\n1",
+      "operating_system": "Ubuntu 24.04.3 LTS"
+    },
+    "schema_version": "1.0"
+  },
+  "attestation_payload_digest": "sha256:7973c2fedae0260e5dc7fcc9a00c19dbeb970b899e7c485484a48aa23e2d301e",
+  "execution_environment": {
+    "architecture": "aarch64",
+    "collector_host_id": "agx-thor-local",
+    "environment_id": "thor-process-exit-strategy-final-20260818-v1",
+    "environment_manifest_digest": "sha256:7973c2fedae0260e5dc7fcc9a00c19dbeb970b899e7c485484a48aa23e2d301e",
+    "execution_host_id": "agx-thor-local",
+    "operating_system": "Ubuntu 24.04 Noble container on L4T R38.2.1",
+    "px4_binary_digest": "sha256:a01553180c7fa3cdd784fcfa28edd0fb7f45c226033211fd112ad91cac4f1c2b",
+    "target_kind": "sitl"
+  },
+  "schema_version": "1.0"
+}

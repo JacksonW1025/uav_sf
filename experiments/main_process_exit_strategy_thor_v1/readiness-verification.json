@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0",
+  "status": "PASS",
+  "formal_campaign_started": false,
+  "formal_ledger_present": false,
+  "matrix_digest": "sha256:032342321b1c4ab3928679004489de3cb308d65bd25e1e519bd41df069203249",
+  "dry_run": {
+    "status": "PASS",
+    "formal_concurrency": 4,
+    "completed_this_run": 0,
+    "pending_cells": 6,
+    "launches": 0,
+    "accepted": 0,
+    "next_attempt_ids": [
+      "main-process-exit-offboard-official-001",
+      "main-process-exit-offboard-random-001",
+      "main-process-exit-offboard-state-001",
+      "main-process-exit-dynamic-official-001",
+      "main-process-exit-dynamic-random-001",
+      "main-process-exit-dynamic-state-001"
+    ]
+  },
+  "identity_checks": {
+    "attested_image": true,
+    "attested_revision": true,
+    "environment_attestation_digest": true,
+    "local_image": true,
+    "method_defaults_digest": true,
+    "qualification_result_digest": true,
+    "qualification_spec_digest": true,
+    "safety_limits_digest": true,
+    "strategy_config_digest": true
+  },
+  "qualification_checks": {
+    "attempt_count": 18,
+    "passed_attempt_count": 18,
+    "unit_count": 6,
+    "passed_unit_count": 6,
+    "state_aware_live_feedback_verified_for_both_mechanisms": true
+  },
+  "fail_closed_checks": {
+    "matrix_action_mismatch_refused": true,
+    "decision_backend_action_mismatch_refused": true
+  },
+  "stop_condition": "pre-registration frozen; do not invoke the formal attempt driver in this milestone"
+}
