@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Canonical Runtime Route Instance and trace-event validation."""
+"""Partial V8 Runtime Route Instance and normalized-event skeleton."""
 
 from __future__ import annotations
 
@@ -53,6 +53,8 @@ EVENT_KINDS = frozenset(
 EFFECT_EVENT_KINDS = frozenset(
     {"command_consumed", "controller_output", "allocator_output", "actuator_write"}
 )
+# Retained prototype coverage only. Step 1 must replace this with the reviewed
+# V8 authority-bearing event set before any combined Gate can exist.
 AUTHORITY_EVENT_KINDS = frozenset({"activation", *EFFECT_EVENT_KINDS})
 IDENTITY_FIELDS = (
     "route",

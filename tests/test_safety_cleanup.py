@@ -4,7 +4,7 @@ import unittest
 
 from scripts.safety.cleanup import evaluate_cleanup
 from scripts.safety.supervisor import SafetyLimits, SafetySupervisor
-from tests.helpers import passing_events, plan
+from tests.helpers import obligation_contract, passing_events
 
 
 class SafetyCleanupTests(unittest.TestCase):
@@ -45,9 +45,11 @@ class SafetyCleanupTests(unittest.TestCase):
         self.assertEqual(supervisor.check_time(now_ns=101)["decision"], "STOP_AND_INSTALL_FALLBACK")
 
     def test_cleanup_passes_only_after_revocation_and_terminal_state(self) -> None:
-        result = evaluate_cleanup(passing_events(), plan())
+        result = evaluate_cleanup(passing_events(), obligation_contract())
         self.assertEqual(result["status"], "PASS")
-        incomplete = evaluate_cleanup(passing_events()[:-2] + passing_events()[-1:], plan())
+        incomplete = evaluate_cleanup(
+            passing_events()[:-2] + passing_events()[-1:], obligation_contract()
+        )
         self.assertEqual(incomplete["status"], "INCOMPLETE")
 
 

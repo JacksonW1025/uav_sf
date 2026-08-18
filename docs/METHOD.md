@@ -1,202 +1,209 @@
 # Method
 
-This file separates the target paper method from the implementation that is
-available today. See [NEW_NARRATIVE_v8.md](NEW_NARRATIVE_v8.md) for rationale
-and [CURRENT_STATUS.md](CURRENT_STATUS.md) for completed evidence.
+This file separates the V8 target method from the partial components retained
+after repository consolidation. The rationale is defined in
+[NEW_NARRATIVE_v8.md](NEW_NARRATIVE_v8.md), completed facts in
+[CURRENT_STATUS.md](CURRENT_STATUS.md), and implementation order in the
+[experiment plan](EXPERIMENT_PLAN.md).
 
 ## Target method
 
 The target is evidence-gated, route-state-guided generation for PX4 authority
 handoffs. It combines:
 
-1. grey-box observation and semantic-state extraction;
-2. admissibility and cross-layer contract Oracles;
-3. a reachable action grammar with lifecycle preconditions;
+1. independently supported cross-layer observation and semantic-state
+   extraction;
+2. combined evidence admissibility and a layered contract suite;
+3. a reachable action grammar with lifecycle and safety preconditions;
 4. closed-loop action-sequence and timing selection;
-5. semantic-transition and contract-boundary feedback; and
-6. replay, minimization, clustering, attribution, and full-stack validation.
+5. semantic-transition and contract-boundary feedback;
+6. independent reproduction, minimization, clustering, and attribution; and
+7. representative full-stack consequence replay.
 
-The Oracle and generator are mutually enabling. The Oracle projects raw
-execution into a state that generation can consume; the generator explores
-conditions under which the Oracle obligations become informative. The paper's
-headline is the generation method, but its feedback is not meaningful without
-the route model and evidence discipline.
+The generation method is the paper headline. Observation, Gate, Oracle, and
+finding confirmation are necessary support; they cannot substitute for a
+comparative method result.
 
 ## Current implementation boundary
 
-The executable prototype is narrower. It waits for `route_active` and
-`motion_entered`, selects one owned action at a bounded time, and carries
-timing-boundary coverage between launches in the same mechanism-strategy cell.
+Stage 0 repository consolidation is complete. The checkout retains only
+partial, V8-relevant primitives:
 
-Qualified live actions are:
+- the route-event and Runtime Route Instance skeleton;
+- raw hash-chained collection, clock fitting, and ULog field extraction;
+- Route, Freshness/Lineage, Successor, and Registration Oracle primitives;
+- append-only accounting, safety/cleanup, artifact hashing, isolation, and
+  physical-takeoff helpers; and
+- in-scope Stage A2 and ROS/PX4 workload components.
 
-- `owned_setpoint_stall_v1`, with one completed 18-launch formal comparison;
-- `owned_process_exit_fallback_v1`, with passing non-formal qualification and
-  a preregistered candidate matrix containing zero formal launches.
+It deliberately has no active normalized-trace closure, plan/result schema,
+semantic-state extractor, combined admissibility Gate, finding state machine,
+observation patch, flight image, campaign runner, evaluator, or formal matrix.
+No retained component is an executable V8 method.
 
-The prototype does not yet implement the complete route, lifecycle, health,
-registration, completion, successor, fallback, mission-context, and action-
-history state. It is feasibility evidence, not the final method.
+The completed 18-launch timing slice is evidence that one bounded feedback
+prototype was executable in its frozen environment. Its policy, runner, and
+configuration are not active V8 implementation.
 
-## Semantic state extraction
+## Observation and identity contract
 
-Adapters normalize PX4, ROS, lifecycle, workload, safety, and physical
-observations into the event schema. Authority-bearing events carry the ten
-stable Runtime Route Instance fields. Command-consumption and downstream-
-effect events also carry `command_subject_ns`.
+The target Runtime Route Instance has ten stable fields:
 
-The state extractor derives the model in [ROUTE_MODEL.md](ROUTE_MODEL.md):
+```text
+(route, route_epoch, producer_session, registration_id, activation_id,
+ controller_id, allocator_id, writer_id, lifecycle_owner, executor_owner)
+```
 
-- route identity and epoch;
-- owner and downstream lineage;
-- lifecycle and replacement phase;
-- registration, activation, health, and freshness;
-- completion, successor, and fallback progress;
-- coarse motion or mission context; and
-- bounded action history.
+Every normalized field must carry provenance:
 
-The primary observation contract is grey-box. A reduced-observation replay
-must quantify whether method behavior or finding classification depends on
-custom instrumentation unavailable through ordinary PX4 interfaces.
+- `OBSERVED`: independently emitted at the claimed boundary;
+- `DERIVED`: deterministically computed from observed fields under a frozen
+  rule that does not encode the expected result;
+- `INFERRED`: a hypothesis that cannot establish a correctness obligation;
+- `CONSTANT`: configuration metadata that cannot prove runtime identity.
 
-## Reachable action grammar
+The earlier closure derived or fixed several identity fields and converted one
+actuator-output event into both allocator and writer events. That closure was
+removed. The new contract must provide independent allocator publication and
+writer/effect boundaries, and it must require complete identity on every
+authority-bearing lifecycle/effect event.
 
-Actions are selected by lifecycle phase and mechanism provenance, not by
-backend convenience. The core candidate space covers:
+## Semantic state
 
-- register, activate, release, complete, replace, and re-enter;
-- internal Hold, RTL, Land, Recovery, manual/GCS, and failsafe requests;
-- producer exit or restart;
-- callback or setpoint stall;
-- communication delay or reconnect;
-- health loss and capacity rejection; and
-- adjacent or concurrent authority requests.
+After the observation contract closes, the extractor derives:
 
-Every action has explicit preconditions, ownership, observable request and
-effect markers, cleanup semantics, and safety limits. Unsupported action/state
-combinations fail closed. Real mission traces, public interfaces, source
-transitions, issue histories, and reproducible natural events provide
-provenance and parameter ranges.
+- route identity, family, and epoch;
+- authority owner and downstream lineage;
+- registration, activation, execution, completion, replacement, fallback,
+  and re-entry phase;
+- health and command freshness;
+- successor request, installation, and ownership progression;
+- coarse physical/mission context; and
+- bounded action history for the current episode.
 
-The final corpus is not frozen merely by this list. Each included action must
-have a stated lifecycle/failure obligation, reachable implementation, and
-ground-truth or discovery role.
+Equivalent evidence must produce deterministic state. A reduced-observation
+replay must quantify dependence on custom instrumentation.
 
-## Closed-loop generation
+## Combined evidence admissibility
 
-For each episode, the target generator performs:
+The final overall decision composes, without short-circuiting away diagnostic
+detail:
+
+```text
+TRACE_INTEGRITY
++ IDENTITY_PROVENANCE
++ CLOCK_CLOSURE
++ ENVIRONMENT_MATCH
++ REQUIRED_EVENT_COVERAGE
++ PHYSICAL_VALIDITY
+-> OVERALL_ADMISSIBLE | INCONCLUSIVE
+```
+
+The retained `scripts/oracles/evidence_gate.py` is only a trace-level
+prototype. It does not include the complete authority-event or physical
+contract and cannot authorize a V8 result. Contract Oracles run only after
+`OVERALL_ADMISSIBLE` passes.
+
+## Contract suite
+
+- **Route Conformance**: source revocation, target installation, writer
+  exclusivity, and effect continuity.
+- **Freshness and Lineage**: command age and consistent producer-to-writer
+  lineage across the complete authority window.
+- **Successor Progression**: completion successor, planned-fault observation,
+  and complete safe-fallback installation.
+- **Registration and Activation**: explicit rejection obligations; absence of
+  activation is not rejection evidence.
+
+Clause states remain `PASS`, `VIOLATION`, `UNKNOWN`, and `NOT_APPLICABLE`.
+They are contract outcomes, not automatically findings.
+
+## Finding confirmation
+
+Each candidate follows a recorded state machine:
+
+```text
+CANDIDATE
+-> REPRODUCED
+-> MINIMIZED
+-> CLUSTERED
+-> ATTRIBUTED
+-> FULL_STACK_REPLAYED (when selected)
+```
+
+Reports keep four interpretation levels separate:
+
+1. research-contract exposure;
+2. reproducible cross-layer contract violation;
+3. source-grounded PX4 defect; and
+4. safety-relevant finding with reproducible full-stack consequence.
+
+Historical, seeded, confirmed-current, and newly discovered natural origins
+remain separate. Formal-run candidates cannot be fed back into the same run's
+frozen benchmark.
+
+## Realistic action corpus
+
+Candidate actions are organized by lifecycle phase and authority/failure
+mechanism. Every included action records provenance, reachable preconditions,
+observable request/effect boundaries, cleanup, safety limits, reality distance,
+and benchmark/discovery role.
+
+The upper mission/behavior stack is integrated before corpus freeze to supply
+traces, parameter ranges, and reachability evidence. Controlled harnesses may
+search and minimize. A preregistered representative subset returns to the full
+stack for consequence replay.
+
+## Closed-loop generation and feedback
+
+For each episode:
 
 ```text
 observe semantic state
 -> filter admissible actions
--> choose action and timing
--> execute and collect evidence
--> derive the next semantic state
--> update coverage and corpus
+-> select action and timing
+-> execute
+-> recompute overall admissibility
+-> observe the next semantic state
+-> update coverage/corpus only if admissible
 -> continue, terminate, or reset
 ```
 
-Stateful behavior requires both admissible-action filtering and re-observation
-after every action. Precomputing a complete sequence or filtering actions once
-is insufficient for the target claim.
-
-## Feedback
-
-The primary online coverage unit is:
+The primary online unit is:
 
 ```text
 (semantic state, action, timing bucket) -> next semantic state
 ```
 
-The policy gives priority to:
+Repeated instances of one candidate remain visitation data; they do not create
+unbounded reward or distinct confirmed findings.
 
-1. admissible executions;
-2. new semantic transitions;
-3. previously uncovered contract boundaries; and
-4. candidates that enter a separate finding-confirmation queue.
+## Comparative methods
 
-Repeated instances of an existing violation signature remain visitation data
-but do not create new semantic coverage or receive unbounded reward. Raw
-telemetry coverage is diagnostic, not the main feedback abstraction.
-
-## Evidence Admissibility Gate
-
-The collector assigns a contiguous sequence and SHA-256 hash chain. Critical
-events retain source time domains and clock-bridge identity. The trace carries
-the target-environment attestation registered by the experiment plan.
-
-A trace is inadmissible when it has an invalid chain or sequence, inconsistent
-run identity, missing collection bounds, missing required events, a critical
-gap, an unmapped clock domain, incomplete route identity, mismatched
-environment attestation, or failed plan-specific physical preconditions.
-
-An inadmissible trace produces an overall `INCONCLUSIVE` result. Missing
-evidence is never converted into a system `PASS` or `VIOLATION`.
-
-## Contract suite
-
-- Route Conformance checks source revocation, target installation, exclusive
-  writers, and actuator-effect continuity.
-- Freshness and Lineage checks consumed command age and end-to-end identity
-  across the complete target-authority window.
-- Successor Progression separately checks completion successor installation,
-  explicit fault observation, and complete safe-route installation when a
-  fallback is preregistered.
-- Registration and Activation checks explicit rejection obligations; lack of
-  activation alone is not rejection evidence.
-
-Clause states remain `PASS`, `VIOLATION`, `UNKNOWN`, and `NOT_APPLICABLE`.
-
-## Finding confirmation
-
-Every candidate follows this pipeline:
-
-```text
-independent reproduction
--> sequence and timing minimization
--> measurement and instrumentation check
--> signature clustering
--> source/specification attribution
--> full-stack replay for representative cases
-```
-
-Reports distinguish research-contract exposure, reproducible contract
-violation, source-grounded PX4 defect, and safety-relevant finding. Seeded,
-historical, existing natural, and newly discovered natural cases remain
-separate categories.
-
-## Full-stack realism
-
-The upper mission and behavior stack supplies trace-derived seeds and verifies
-reachability. Search and minimization may run in a controlled harness. A
-representative subset is replayed in PX4 SITL with the complete upper software
-stack to measure mission and physical consequences. The upper stack is not the
-defect target.
-
-## Execution, safety, and cleanup
-
-Formal parallel execution has separate live and offline phases. All live PX4,
-Gazebo, ROS, DDS, safety, and raw-collection work in a batch stops before ULog,
-clock, Gate, Oracle, compact-evidence, or ledger processing begins. Qualified
-formal concurrency remains four.
-
-The supervisor stops an episode on heartbeat or collector loss, clock failure,
-non-finite control values, physical boundary violation, or timeout. Cleanup
-requires a closed collector, no active external registration or producer
-session, a safe internal route, landing when required, and disarming. An
-attempt is not accounting-closed until cleanup passes.
-
-## Required comparative method
-
-The main comparison must use a common grammar, seed corpus, reset contract,
-observable outcome, and budget for:
+The core comparison uses a common action grammar, seed corpus, reset contract,
+outcome contract, safety rules, and execution budget for:
 
 - grammar-aware bounded random generation;
 - deterministic/systematic enumeration;
 - state-conditioned but feedback-free generation; and
 - full state- and feedback-guided generation.
 
-Official scenarios are a practice reference. The required core ablations are
-feedback removal, route-only versus full semantic state, and timing-only
-versus sequence-plus-timing generation. Statistical and execution details are
-defined in [EXPERIMENT_PLAN.md](EXPERIMENT_PLAN.md).
+Official or handwritten scenarios are a separate practice reference. Required
+core ablations are feedback removal, route-identity-only versus full semantic
+state, and timing-only versus action-sequence-plus-timing generation.
+
+## Execution and statistics
+
+One adaptive campaign, starting with empty generator memory, is the independent
+statistical unit. Episodes and launches inside a campaign are correlated.
+Paired seeds, budgets, reset semantics, effect sizes, uncertainty, and stopping
+rules are frozen after pilot work and before formal execution.
+
+No concurrency value carries forward automatically from the retained runtime.
+The new V8 image and workload require serial-versus-parallel interference
+qualification. Live work on an experiment host must not overlap offline ULog,
+clock, Gate, Oracle, or reporting work from any batch.
+
+Implementation must follow the gates in
+[EXPERIMENT_PLAN.zh-CN.md](EXPERIMENT_PLAN.zh-CN.md). Readiness at one gate never
+authorizes a later gate.

@@ -1,4 +1,4 @@
-"""Evidence admission and route-transition Oracles."""
+"""Retained V8 contract primitives; no active end-to-end evaluator."""
 
 from .evidence_gate import evaluate_evidence
 from .freshness_lineage import evaluate_freshness_lineage

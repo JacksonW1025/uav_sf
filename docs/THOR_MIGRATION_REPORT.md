@@ -55,15 +55,18 @@ No host apt package, Conda package, CUDA component, TensorRT component, PyTorch
 package, BSP, driver, kernel, or firmware was installed or replaced. All new
 software builds and package locks live in Docker images or the repository.
 
-Repository additions include the complete ARM64 runtime image, exact direct and
-resolved package manifests, source/build verification, ROS runtime packages,
-public transition fixtures, ULog extraction and integrity checks, clock-domain
-closure, Evidence Gate integration, safety/cleanup supervision, isolation,
-formal accounting, campaign scheduling, concurrency qualification, the two
-Stage A1 studies, the two separate Stage A2 studies, the completed setpoint-
-stall live-strategy vertical slice, and the qualified but not formally executed
-process-exit strategy study. Raw evidence remains in ignored `runs/`; only
-digests and compact results are tracked.
+The recorded Thor environment included an ARM64 runtime image, package
+manifests, source/build verification, ROS runtime packages, public transition
+fixtures, ULog extraction, clock closure, Gate/Oracle processing,
+safety/cleanup, isolation, accounting, campaign scheduling, the two Stage A1
+studies, the two Stage A2 studies, and the completed setpoint-stall timing
+slice. Raw evidence remains in ignored `runs/`; only digests and compact results
+are tracked.
+
+Those high-level build and execution components belonged to their bound Git
+revisions. The current V8 checkout intentionally removes the old patch bundle,
+flight image, closure, evaluator, and runner. This report records environment
+facts; it is not a current build instruction.
 
 The campaign scheduler now separates each parallel batch into a live phase
 and an offline evidence-processing phase. A barrier proves that every live
@@ -72,7 +75,8 @@ Oracle execution begin. Four-way regression passed with 4/4 admissible traces.
 A five-way trial also produced 5/5 admissible traces, but it was not promoted:
 maximum clock uncertainty increased from 5.505 ms to 15.068 ms and one matched
 Dynamic baseline changed its timing-sensitive Freshness interpretation. Formal
-concurrency therefore remains four, and no additional six-way trial was run.
+concurrency was therefore fixed at four for that runtime, and no additional
+six-way trial was run. A future V8 runtime must qualify concurrency again.
 
 ## Formal study closure
 
@@ -110,27 +114,22 @@ or counted in the Thor formal corpus. Those source artifacts are retained on
 neither the current working branch nor `origin/main`; exact reuse requires separately supplied
 provenance and evidence.
 
-## Readiness and remaining risks
+## Current V8 boundary and remaining risks
 
-The locked container, build path, evidence pipeline, formal accounting, stable
-parallel execution, and live fixtures include the completed Stage A2 moving
-workload plus shared state-conditioned setpoint-stall and process-exit strategy
-backends. The setpoint-stall Section 7 slice closed 18/18 formal launches across
-official, bounded-random, and state-aware timing. All were accepted and
-admissible. Official timing covered one bin; each later strategy covered three,
-but random and state-aware tie and expose only the same freshness signature.
-The process-exit action passed 18/18 final non-formal qualification attempts and
-has a frozen formal matrix with no ledger and zero formal launches. These facts
-support bounded executability and readiness claims, not full Main Evaluation
-completion or a general strategy ranking.
+The setpoint-stall timing slice closed 18/18 formal launches across a fixed
+policy, bounded-random timing, and a prototype feedback policy. All were
+accepted and admissible under the frozen study contract. The fixed policy
+covered one bin; the other two covered three, but random and the prototype tied
+and exposed only the same freshness signature. These facts support bounded
+executability of that historical prototype, not V8 method readiness or a
+general strategy ranking.
 
-The target paper method is full semantic-state-guided action-sequence and
-timing generation. Before any further formal campaign, the semantic state,
-route/action corpus, systematic and feedback-free baselines, operational
-coverage and finding metrics, repeated-campaign statistics, and confirmation
-rules must be implemented and frozen. Environment readiness alone does not
-answer the method evaluation, and the current timing selector remains a
-prototype.
+The current checkout has no active Thor flight image or runner. Before any new
+formal campaign it must establish independent identity/effect observation,
+combined physical/evidence admissibility, the complete semantic state, a
+provenance-backed route/action corpus, four fair strategies, finding
+confirmation, repeated-campaign statistics, and new resource-interference
+qualification. Environment history cannot answer the method evaluation.
 
 Known bounded risks are the observed route/freshness/successor violations, the
 Stage A1 primary observability rejections, the diagnosed live-JSONL race, the

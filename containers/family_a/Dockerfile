@@ -3,7 +3,7 @@ FROM ${BASE_IMAGE}
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-LABEL org.opencontainers.image.title="PX4 Family A validation and reference tooling" \
+LABEL org.opencontainers.image.title="UAV-SF V8 repository boundary validation" \
       org.opencontainers.image.base.digest="sha256:b82a5ba3869a81196414cf34e4fc25c7935aab78b1f5187570ca9362c478cdbd" \
       org.opencontainers.image.platform="linux/arm64"
 
@@ -38,4 +38,4 @@ WORKDIR /opt/uav_sf
 
 RUN ./scripts/validation/validate_repo.sh
 
-ENTRYPOINT ["python3", "-m", "scripts.evaluator.evaluate_trace"]
+ENTRYPOINT ["./scripts/validation/validate_repo.sh"]

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Evidence Admissibility Gate for Family A route traces."""
+"""Retained trace-level Gate primitive; not the combined V8 admissibility Gate."""
 
 from __future__ import annotations
 

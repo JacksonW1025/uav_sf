@@ -3,6 +3,10 @@
 The narrative source is [NEW_NARRATIVE_v8.md](NEW_NARRATIVE_v8.md). This file
 defines the model used by collection, Oracles, and the target generator.
 
+The model below is the V8 target contract. The current Python/event schema is a
+partial skeleton only: no active trace closure proves that all fields are
+independently observed, and no V8 semantic-state extractor is active.
+
 ## Runtime Route Instance
 
 A Runtime Route Instance identifies one distinguishable control path capable
@@ -24,12 +28,19 @@ Every command-consumption and downstream-effect event additionally carries
 `command_subject_ns`, the subject time of the consumed command or state. It is
 dynamic freshness evidence, not part of stable route identity.
 
+Every normalized identity/effect field must carry provenance classified as
+`OBSERVED`, `DERIVED`, `INFERRED`, or `CONSTANT`. Only independently supported
+observations, and reviewed non-circular derivations where the contract
+explicitly permits them, may establish a correctness obligation.
+
 ## Transition interval
 
 A transition begins at `transition_requested`. It closes only after target
 activation and a complete target path have been observed. A complete path has
-activation, command consumption, controller output, allocator output, and
-actuator write events with one consistent Runtime Route Instance identity.
+independently supported activation, command consumption, controller output,
+allocator output, and actuator write/effect events with one consistent Runtime
+Route Instance identity. One raw event cannot serve as both the allocator and
+writer boundary.
 
 The contracts distinguish:
 
@@ -85,9 +96,9 @@ Coverage separately records visited states, semantic edges, lifecycle phases,
 and contract boundaries. Repeated visits remain counts for reporting but do
 not create new coverage.
 
-The current executable prototype observes `route_active` and
-`motion_entered`, selects one bounded action time, and feeds back timing-bin
-coverage. It does not implement the complete state above.
+The retained timing study observed `route_active` and `motion_entered`, selected
+one bounded action time, and fed back timing-bin coverage. Its policy and runner
+are not active in the current checkout. It did not implement the state above.
 
 ## Result semantics
 

@@ -21,17 +21,11 @@ def identity(route: str, label: str) -> dict[str, str]:
     }
 
 
-def plan() -> dict[str, Any]:
+def obligation_contract() -> dict[str, Any]:
+    """Fixture for retained Oracle/safety primitives, not a V8 plan schema."""
+
     return {
-        "schema_version": "1.2",
-        "plan_id": "plan-family-a-001",
         "run_id": "run-family-a-001",
-        "strategy": {
-            "name": "official_sequence",
-            "seed": None,
-            "simulation_seed": 1,
-            "timing_bounds_ns": {},
-        },
         "transition": {
             "source_route": "legacy_offboard",
             "target_route": "dynamic_external_mode",
@@ -55,6 +49,7 @@ def plan() -> dict[str, Any]:
             "successor_deadline_ns": 300_000_000,
             "fallback_deadline_ns": 300_000_000,
         },
+        "timing_bounds_ns": {},
         "required_event_kinds": [
             "collection_started",
             "collection_stopped",
@@ -68,10 +63,6 @@ def plan() -> dict[str, Any]:
             "actuator_write",
             "completion",
         ],
-        "source_identity": {
-            "repository_commit": "1" * 40,
-            "dependency_lock_digest": "sha256:" + "2" * 64,
-        },
         "execution_environment": {
             "environment_id": "target-lab-a",
             "execution_host_id": "runner-a",
@@ -111,10 +102,15 @@ def passing_raw_events() -> list[dict[str, Any]]:
         raw_event(
             "environment_attested",
             1_000_000,
-            execution_environment=plan()["execution_environment"],
+            execution_environment=obligation_contract()["execution_environment"],
         ),
         raw_event("activation", 10_000_000, **source),
-        raw_event("actuator_write", 115_000_000, command_subject_ns=100_000_000, **source),
+        raw_event(
+            "actuator_write",
+            115_000_000,
+            command_subject_ns=100_000_000,
+            **source,
+        ),
         raw_event(
             "transition_requested",
             110_000_000,
@@ -123,17 +119,45 @@ def passing_raw_events() -> list[dict[str, Any]]:
         ),
         raw_event("revocation", 116_000_000, **source),
         raw_event("activation", 120_000_000, **target),
-        raw_event("command_consumed", 122_000_000, command_subject_ns=115_000_000, **target),
-        raw_event("controller_output", 124_000_000, command_subject_ns=115_000_000, **target),
-        raw_event("allocator_output", 126_000_000, command_subject_ns=115_000_000, **target),
-        raw_event("actuator_write", 128_000_000, command_subject_ns=115_000_000, **target),
+        raw_event(
+            "command_consumed", 122_000_000, command_subject_ns=115_000_000, **target
+        ),
+        raw_event(
+            "controller_output", 124_000_000, command_subject_ns=115_000_000, **target
+        ),
+        raw_event(
+            "allocator_output", 126_000_000, command_subject_ns=115_000_000, **target
+        ),
+        raw_event(
+            "actuator_write", 128_000_000, command_subject_ns=115_000_000, **target
+        ),
         raw_event("completion", 150_000_000, route="dynamic_external_mode"),
         raw_event("revocation", 151_000_000, **target),
         raw_event("activation", 160_000_000, **successor),
-        raw_event("command_consumed", 162_000_000, command_subject_ns=155_000_000, **successor),
-        raw_event("controller_output", 164_000_000, command_subject_ns=155_000_000, **successor),
-        raw_event("allocator_output", 166_000_000, command_subject_ns=155_000_000, **successor),
-        raw_event("actuator_write", 168_000_000, command_subject_ns=155_000_000, **successor),
+        raw_event(
+            "command_consumed",
+            162_000_000,
+            command_subject_ns=155_000_000,
+            **successor,
+        ),
+        raw_event(
+            "controller_output",
+            164_000_000,
+            command_subject_ns=155_000_000,
+            **successor,
+        ),
+        raw_event(
+            "allocator_output",
+            166_000_000,
+            command_subject_ns=155_000_000,
+            **successor,
+        ),
+        raw_event(
+            "actuator_write",
+            168_000_000,
+            command_subject_ns=155_000_000,
+            **successor,
+        ),
         raw_event(
             "terminal_state",
             170_000_000,

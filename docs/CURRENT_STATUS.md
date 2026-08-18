@@ -1,214 +1,158 @@
 # Current status
 
-Last narrative alignment: 2026-08-18. The research direction is defined in
-[NEW_NARRATIVE_v8.md](NEW_NARRATIVE_v8.md). This file records facts available
-in the current repository and deliberately separates completed evidence from
-the target method.
+Last V8 repository audit: 2026-08-18. The research direction is defined in
+[NEW_NARRATIVE_v8.md](NEW_NARRATIVE_v8.md). This file records completed facts
+and the current checkout boundary.
 
 ## Executive status
 
 ```text
-Retained Thor formal launches across separate closed studies: 295
-Retained historical/Orin results in the current branch: 0
+Repository consolidation (Stage 0): COMPLETE
+Next gate: observation/evidence provenance contract
+Retained formal launches across separate Thor studies: 295
+Retained earlier-device results: 0
 Motivation and measurement foundation: complete with bounded claims
 Full semantic-state generation method: not implemented
-Main method evaluation: not complete
-Formal campaign currently running: none
-Process-exit candidate: qualified and preregistered, zero formal launches
+Active V8 flight image / runner / formal matrix: none
+Formal campaign currently running or authorized: none
 ```
 
-The 295 launches are a repository total, not one pooled experiment. Every
-study retains its own identity, matrix, ledger, thresholds, and denominator.
+The 295 launches are a repository total, not one pooled experiment. Each study
+retains its own identity, matrix, ledger, thresholds, and denominator.
 
 ## Formal study accounting
 
-| Study | Formal launches | Admissible/accepted evidence | Result boundary |
+| Study | Formal launches | Accepted/admissible evidence | Result boundary |
 | --- | ---: | ---: | --- |
 | Stage A1 primary | 180 | 131 | 75 PASS, 56 VIOLATION; two invalid-plan cells did not reach target |
-| Stage A1 supplemental | 20 | 20 | 19 PASS, 1 VIOLATION under an independent remediation identity |
+| Stage A1 remediation | 20 | 20 | 19 PASS, 1 VIOLATION under an independent identity |
 | Stage A2 primary | 51 | 18 | Permanently `MEASUREMENT_INSUFFICIENT`; 31 observability rejection and 2 inconclusive |
 | Stage A2 remediation | 26 | 26 | 10 normal PASS, 16 deliberate freshness VIOLATION |
-| Setpoint-stall strategy slice | 18 | 18 | 18 deliberate freshness VIOLATION; bounded timing comparison only |
+| Timing/feedback feasibility slice | 18 | 18 | 18 deliberate freshness VIOLATION; bounded prototype evidence only |
 
-The sum is 295 closed formal launches. Stage A1 alone has the combined
-`200 / 151 / 94 / 57` accounting. Stage A2 and the strategy slice are not
-added to that denominator.
-
-## Stage A1: measurement and Motivation foundation
+## Stage A1 Motivation
 
 The primary study closed 180 launches: 131 accepted, 20 observability
-rejections, 28 timeouts, and one environment failure. Nineteen cells reached
-target; two invalid-plan cells reached their cap.
+rejections, 28 timeouts, and one environment failure. The separately
+preregistered remediation closed 20/20 new launches. Across the two identities,
+151 accepted/admissible traces contain 94 overall PASS and 57 overall
+VIOLATION.
 
-The independently preregistered supplemental study corrected only those
-plan/fixture obligations. It closed 20/20 new launches as accepted and reached
-both 10/10 targets without modifying the primary ledger.
-
-Across both studies, 151 accepted/admissible traces contain 94 overall PASS
-and 57 overall VIOLATION. These counts support the following bounded facts:
-
-- mode and terminal outcome do not establish complete authority handoff;
-- Route and Freshness are independent evidence dimensions;
-- successor installation and completion/request order are independent facts;
-- repeated use of one route name requires epoch and activation identity; and
-- evidence, environment, and clock failures must not become SUT results.
-
-The counts are not a defect rate. A violation trace is not automatically a
-source-grounded PX4 defect.
+These results support bounded claims that mode/terminal outcomes do not prove a
+complete authority handoff, route and freshness are separate dimensions,
+successor installation and timing order are separate facts, route names require
+runtime instance identity, and measurement failures must remain separate from
+SUT results. They are not a defect rate.
 
 Evidence:
 
-- [primary report](../experiments/motivation_thor_v1/FINAL_REPORT.md)
-- [supplemental report](../experiments/motivation_thor_remediation_v1/FINAL_REPORT.md)
+- [Stage A1 primary report](../experiments/motivation_thor_v1/FINAL_REPORT.md)
+- [Stage A1 remediation report](../experiments/motivation_thor_remediation_v1/FINAL_REPORT.md)
 
-## Stage A1 physical-validity audit
+## Physical-validity audit
 
-A digest-bound post-hoc audit found that 12 of the 151 admissible Stage A1
-traces reached no more than 0.08 m above their local-position origin. They
-include 3 PASS and 9 VIOLATION traces. The frozen Stage A1 result is unchanged,
-but physical interpretation is limited.
+A digest-bound post-hoc audit found 12 of the 151 Stage A1 admissible traces did
+not rise more than 0.08 m above their local-position origin: 3 PASS and 9
+VIOLATION. Frozen results are unchanged, but physical interpretation is limited.
 
-This established an additional rule: evidence admissibility does not by itself
-prove that the intended physical task executed. Later plans require sustained
-takeoff, valid local position, motion-phase entry, minimum progress, and
-profile coverage where applicable.
+This establishes a V8 requirement: trace admissibility alone does not establish
+physical task validity.
 
 Evidence: [physical-validity report](../experiments/posthoc_physical_execution_validity_v1/FINAL_REPORT.md).
 
-## Stage A2: moving-workload realism bridge
+## Stage A2 realism bridge
 
-The Stage A2 primary study closed at 51 launches but remains
-`MEASUREMENT_INSUFFICIENT` because a command-subject clock-closure defect
-prevented three cells from reaching target. Its result and ledger remain
-unchanged.
+The Stage A2 primary study closed 51 launches and remains
+`MEASUREMENT_INSUFFICIENT` because a command-subject clock-closure problem
+prevented three cells from reaching target. The independent remediation changed
+the evidence-closure rule and public takeoff obligation under a new identity,
+then closed 26/26 accepted/admissible launches:
 
-An independent remediation changed only the evidence-closure rule and the
-public takeoff-before-transition obligation. It closed 26/26 formal launches
-as accepted and admissible:
+- 10 normal traces PASS;
+- 16 deliberate healthy-stall traces violate freshness only;
+- median post-stall motion is approximately 1.01--1.03 m; and
+- median task-progress shortfall is approximately 0.46--0.47 m.
 
-- 5/5 normal Legacy Offboard PASS;
-- 5/5 normal Dynamic External Mode PASS;
-- 8/8 Legacy Offboard healthy-stall freshness VIOLATION; and
-- 8/8 Dynamic External Mode healthy-stall freshness VIOLATION.
-
-All 16 deliberate violations are freshness-only; applicable route and
-successor clauses pass. The moving task adds physical interpretability without
-creating a new violation class:
-
-- median motion after the stall boundary is approximately 1.033 m and 1.012 m;
-- median task-progress shortfall is approximately 0.459 m and 0.472 m; and
-- no mechanism-superiority threshold was preregistered.
-
-The result does not establish flyaway, real-flight danger, or a general PX4
-defect.
+The result supports bounded physical interpretability, not mechanism
+superiority, flyaway, real-flight danger, or a general PX4 defect.
 
 Evidence:
 
-- [primary Stage A2 report](../experiments/motivation_stage_a2_thor_v1/FINAL_REPORT.md)
-- [remediation report](../experiments/motivation_stage_a2_thor_remediation_v1/FINAL_REPORT.md)
+- [Stage A2 primary report](../experiments/motivation_stage_a2_thor_v1/FINAL_REPORT.md)
+- [Stage A2 remediation report](../experiments/motivation_stage_a2_thor_remediation_v1/FINAL_REPORT.md)
+- [Stage A2 runtime qualification](../experiments/stage_a2_runtime_qualification_v1/FINAL_REPORT.md)
 
-## Completed generation vertical slice
+## Timing/feedback feasibility evidence
 
-The separately preregistered setpoint-stall comparison closed 18/18 formal
-launches across two mechanisms, three strategies, and three launches per cell.
-Every attempt is accepted, admissible, physically valid, and a deliberate
-freshness VIOLATION.
+The retained setpoint-stall slice closed 18/18 formal launches across two
+mechanisms and three frozen timing policies. All attempts were accepted,
+admissible, physically valid deliberate freshness violations. The fixed policy
+covered one timing bin; bounded random and the prototype feedback policy each
+covered three and exposed the same signature on their first launch.
 
-Observed timing-bin coverage was:
+The frozen label `official_sequence` denotes a fixed policy inside that study;
+it is not a provenance-backed official PX4 scenario baseline. The slice proves
+only that bounded live feedback plumbing executed. It does not establish the
+V8 method, a strategy ranking, distinct finding quality, or campaign-level
+statistics.
 
-- official sequence: one fixed boundary bin;
-- bounded random: three bins; and
-- current state-aware prototype: three bins.
+Evidence: [timing-slice report](../experiments/main_strategy_comparison_thor_v1/FINAL_REPORT.md).
 
-The prototype consumed prior live coverage when making later decisions, so
-the feedback loop is executable. Random and the prototype tie on observed
-coverage, and every strategy reaches the same freshness signature on its first
-launch. This study does not establish strategy superiority, distinct finding
-quality, or the complete semantic-state method.
+## Other retained evidence support
 
-Evidence: [strategy-slice report](../experiments/main_strategy_comparison_thor_v1/FINAL_REPORT.md).
+- [Oracle ablation](../experiments/posthoc_oracle_ablation_v1/FINAL_REPORT.md)
+  records component sensitivity without creating new findings.
+- [Threshold sensitivity](../experiments/posthoc_threshold_sensitivity_v1/FINAL_REPORT.md)
+  records dependence on research thresholds.
+- [Finding/consequence triage](../experiments/posthoc_finding_consequence_triage_v1/FINAL_REPORT.md)
+  localizes exposures but does not establish source-level cause.
+- [Concurrency qualification](../experiments/concurrency_barrier_qualification/README.md)
+  records a four-way result for the old workload. It does not authorize any
+  concurrency for a new V8 runtime.
 
-## Process-exit candidate
+## Current tracked implementation
 
-The `owned_process_exit_fallback_v1` action terminates the active external
-producer during observed motion and requires a safe internal fallback. The
-final non-formal qualification covers two mechanisms, three strategies, and
-three rounds. All 18/18 qualification attempts were accepted, admissible,
-physically valid, action-contract complete, and safe-fallback passing.
+Retained partial primitives include:
 
-The candidate formal matrix contains 18 planned launches, passes dry-run and
-mismatch checks, and has no formal ledger. It contributes zero launches to the
-295 total. Under the v8 plan, readiness does not authorize execution; the
-action must first be assessed as part of the common corpus and evaluation
-contract.
+- route-event and Runtime Route Instance skeletons;
+- raw hash-chained collection, ULog field extraction, and clock fitting;
+- Route, Freshness/Lineage, Successor, and Registration Oracle components;
+- append-only accounting, safety/cleanup, artifact hashing, isolation, and
+  physical-takeoff helpers; and
+- in-scope Stage A2 and ROS/PX4 workload components.
 
-Evidence: [process-exit preregistration](../experiments/main_process_exit_strategy_thor_v1/preregistration.md).
+The checkout intentionally does not contain:
 
-## Other completed evidence work
+- an active observation/stimulus patch or flight image;
+- a normalized V8 trace closure with field provenance;
+- a combined trace/environment/physical admissibility Gate;
+- V8 plan, campaign, episode, action-sequence, result, or finding schemas;
+- a complete semantic-state extractor;
+- multi-action closed-loop generation or four comparable methods;
+- an active runner, evaluator, formal matrix, or flight command;
+- a frozen benchmark or confirmation state machine; or
+- full-stack seed extraction and representative consequence replay.
 
-- Finding and consequence triage localizes the observed attitude-installation
-  signatures but does not establish a source-level cause:
-  [report](../experiments/posthoc_finding_consequence_triage_v1/FINAL_REPORT.md).
-- Oracle ablation measures which contract components change detection:
-  [report](../experiments/posthoc_oracle_ablation_v1/FINAL_REPORT.md).
-- Threshold sensitivity records dependence on research-contract thresholds:
-  [report](../experiments/posthoc_threshold_sensitivity_v1/FINAL_REPORT.md).
-- Observer, physical-validity, and Dynamic readiness qualification is retained
-  separately from formal denominators:
-  [report](../experiments/stage_a2_runtime_qualification_v1/FINAL_REPORT.md).
-- Four-way remains the qualified formal concurrency. A five-way trial was not
-  promoted because it reduced clock margin and changed one matched timing-
-  sensitive interpretation:
-  [record](../experiments/concurrency_barrier_qualification/README.md).
-
-## Available implementation
-
-The repository currently contains:
-
-- normalized event schemas and Runtime Route Instance fields;
-- hash-chained collection and environment attestation;
-- Evidence Admissibility Gate;
-- Route, Freshness/Lineage, Successor, and Registration contracts;
-- safety supervision, cleanup, attempt accounting, and batch barriers;
-- locked sources and ARM64 Thor container/toolchain definitions;
-- official, bounded-random timing, and prototype state-aware policies;
-- qualified setpoint-stall and process-exit live backends; and
-- retained formal reports, compact evidence, and ledgers.
-
-The repository does not yet contain:
-
-- the complete semantic state defined by v8;
-- multi-action closed-loop sequence generation;
-- the mechanism- and provenance-selected core corpus;
-- deterministic and feedback-free main baselines under one common contract;
-- a confirmed historical/natural/seeded benchmark;
-- repeated campaign-level statistical evaluation; or
-- full-stack seed extraction and representative finding replay.
+See [V8_REPOSITORY_AUDIT.md](V8_REPOSITORY_AUDIT.md) for retained/deleted
+inventory and known conflicts.
 
 ## Historical evidence boundary
 
-Earlier narrative work referred to Orin-era evidence, including a lifecycle
-successor case. The current branch contains no source report, ledger, compact
-evidence, or replayable artifact for that layer. The retained count for that
-layer therefore remains zero. Such material can become background or a benchmark only
-after its provenance and evidence are supplied independently.
+Earlier narrative work mentioned prior-device evidence, but this checkout has
+no source report, ledger, compact evidence, or replayable artifact for it. Its
+retained count remains zero. It may enter a future benchmark only after
+independent provenance and evidence are supplied.
 
 ## Active next step
 
-No formal campaign is currently authorized. Work proceeds through the decision
-gates in [EXPERIMENT_PLAN.md](EXPERIMENT_PLAN.md): implement full semantic
-state, justify the corpus, complete the generator and baselines, establish
-ground truth and full-stack replay, then pilot and preregister repeated
-campaigns.
+No flight or formal campaign is authorized. Follow the
+[Chinese step-by-step plan](EXPERIMENT_PLAN.zh-CN.md), beginning with the
+observation/evidence provenance contract. The current repository validator
+proves Stage 0 boundary consistency only.
 
 ## Current claim boundary
 
-The repository supports a bounded measurement and Motivation claim plus one
-generation-feasibility slice. It does not support:
-
-- a general method-effectiveness claim;
-- random-versus-state-aware ranking;
-- a process-exit formal result;
-- a PX4 defect prevalence estimate;
-- pooling independent study denominators; or
-- generalization beyond the retained Thor SITL scope.
+The repository supports a bounded Thor SITL Motivation/measurement claim plus
+one feedback-feasibility slice. It does not support method effectiveness,
+random-versus-guided ranking, PX4 defect prevalence, pooled denominators,
+full-stack consequences, or generalization beyond the retained scope.

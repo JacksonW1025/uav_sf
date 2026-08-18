@@ -7,9 +7,11 @@ facts live in [CURRENT_STATUS.md](CURRENT_STATUS.md).
 ## Core question
 
 The paper studies whether a route-state-guided testing method can expose PX4
-authority-handoff problems more effectively than official scenarios,
-grammar-aware random generation, deterministic enumeration, and
-feedback-free state-conditioned generation under a common budget.
+authority-handoff problems more effectively than grammar-aware random
+generation, deterministic enumeration, and feedback-free state-conditioned
+generation under a common budget. Official or handwritten scenarios are a
+separately reported practice reference, not a forced budget-equivalent member
+of the four-strategy causal comparison.
 
 The object-level obligation is to determine whether a handoff:
 

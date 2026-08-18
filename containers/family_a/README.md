@@ -1,15 +1,16 @@
-# Locked Family A validation and reference image
+# Locked V8 repository-validation image
 
-The image is fixed to the ARM64 platform digest recorded in
-`config/dependencies.lock.json`. Every package installed by the Dockerfile has
-an exact distribution version. The image contains repository validation,
-evaluation, and reference-build tools; locked upstream source trees are
-prepared with `scripts/setup/prepare_sources.sh`.
+This ARM64 image runs the repository boundary validator in a digest-pinned
+Noble/Jazzy environment. It is not a PX4 flight runtime, a source-preparation
+image, or a formal experiment environment.
 
-This image does not identify the formal experiment environment and a build on
-the repository maintenance host produces no runtime evidence. Each formal run
-must register its actual target environment in the experiment plan and attest
-that identity in the collected trace.
+Build it from the repository root:
 
-Build from the repository root with the command in `README.md`. Do not replace
-the digest or package versions with tags, ranges, or unversioned package names.
+```bash
+docker buildx build --platform linux/arm64 \
+  --file containers/family_a/Dockerfile \
+  --tag uav-sf-v8-validation:local .
+```
+
+The default entry point runs `./scripts/validation/validate_repo.sh`. A passing
+image build establishes repository consistency only.

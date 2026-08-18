@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://jacksonw1025.github.io/uav_sf/route_event.schema.json",
   "title": "Family A route event",
+  "description": "Partial V8 normalized-event skeleton; field provenance and combined admissibility are not yet implemented.",
   "type": "object",
   "required": [
     "schema_version",

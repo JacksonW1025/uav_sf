@@ -1,18 +1,35 @@
-"""Focused tests for repository validation policy."""
+"""Focused tests for the V8 tracked-tree boundary."""
 
 from __future__ import annotations
 
 import unittest
-from pathlib import Path
 
-from scripts.validation.validate_repo import ROOT, TERM_SCAN_EXEMPT
+from scripts.validation.validate_repo import (
+    FORBIDDEN_ACTIVE_PATHS,
+    RETAINED_EXPERIMENTS,
+    ROOT,
+    has_active_files,
+)
 
 
 class RepositoryValidationTests(unittest.TestCase):
-    def test_only_reviewed_narrative_is_exempt_from_scope_term_scan(self) -> None:
-        self.assertEqual(TERM_SCAN_EXEMPT, {Path("docs/NEW_NARRATIVE_v8.md")})
-        narrative = ROOT / next(iter(TERM_SCAN_EXEMPT))
-        self.assertTrue(narrative.is_file())
+    def test_retained_experiment_allowlist_matches_the_checkout(self) -> None:
+        observed = {
+            path.name
+            for path in (ROOT / "experiments").iterdir()
+            if path.is_dir() and has_active_files(path)
+        }
+        self.assertEqual(observed, RETAINED_EXPERIMENTS)
+
+    def test_removed_active_paths_are_absent(self) -> None:
+        self.assertTrue(FORBIDDEN_ACTIVE_PATHS)
+        self.assertFalse(
+            [
+                path
+                for path in FORBIDDEN_ACTIVE_PATHS
+                if has_active_files(ROOT / path)
+            ]
+        )
 
 
 if __name__ == "__main__":

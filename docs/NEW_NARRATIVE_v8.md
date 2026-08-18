@@ -13,6 +13,8 @@
 - [ROUTE_MODEL.md](ROUTE_MODEL.md)：Runtime Route Instance、语义状态和契约；
 - [METHOD.md](METHOD.md)：目标方法、当前原型与实现义务；
 - [EXPERIMENT_PLAN.md](EXPERIMENT_PLAN.md)：下一阶段的决策门和执行顺序；
+- [EXPERIMENT_PLAN.zh-CN.md](EXPERIMENT_PLAN.zh-CN.md)：可逐步执行并可持续更新的中文蓝图；
+- [V8_REPOSITORY_AUDIT.md](V8_REPOSITORY_AUDIT.md)：当前 tracked tree 的保留、删除与准入边界；
 - [THOR_MIGRATION_REPORT.md](THOR_MIGRATION_REPORT.md)：Thor 环境与迁移事实。
 
 冻结实验的 preregistration、ledger、summary 和 final report 始终优先于概括性文档。本文明确区分三种内容：
@@ -31,7 +33,7 @@ PX4 的控制权交接不是一个 mode 值的变化，而是命令生产者、�
 
 待检验的中心 thesis 是：
 
-> PX4 authority handoff 是一个跨层、有状态且受 lifecycle 与 timing 共同影响的过程。相较于 official scenarios、grammar-aware random、deterministic enumeration 和 feedback-free state-conditioned generation，使用完整 route/contract semantic state 闭环选择 action sequence 与 timing，能够在相同预算下更有效地覆盖语义边界并命中不同、可确认的 handoff findings；代表性 finding 能在完整上层飞控栈的闭环仿真中重放，并产生可解释的任务或物理后果。
+> PX4 authority handoff 是一个跨层、有状态且受 lifecycle 与 timing 共同影响的过程。相较于 grammar-aware random、deterministic enumeration 和 feedback-free state-conditioned generation，使用完整 route/contract semantic state 闭环选择 action sequence 与 timing，能够在相同预算下更有效地覆盖语义边界并命中不同、可确认的 handoff findings；代表性 finding 能在完整上层飞控栈的闭环仿真中重放，并产生可解释的任务或物理后果。Official/handwritten scenarios 作为单独的 practice reference 报告，不进入这项四策略核心因果比较。
 
 这是一项**研究假设**，不是当前结果。现有 18-launch vertical slice 只证明 live feedback plumbing 和 bounded timing coverage 可执行，尚未证明上述方法优势。
 
@@ -141,7 +143,11 @@ Stage A2 primary 在 51 次 launch 后因 measurement closure 问题保持 `MEAS
 
 ### 5.3 当前 generation vertical slice
 
-Setpoint-stall comparison 共 18 次独立 formal launch。Official 覆盖一个 timing bin，bounded random 与 current state-aware prototype 各覆盖三个；三者第一发都触发同一 deliberate freshness signature，random 与 prototype 打平。
+Setpoint-stall comparison 共 18 次独立 formal launch。冻结研究中名为
+`official_sequence` 的固定时序覆盖一个 timing bin，bounded random 与
+current state-aware prototype 各覆盖三个；三者第一发都触发同一
+deliberate freshness signature，random 与 prototype 打平。这里的冻结
+label 不是经过 provenance 论证的 PX4 official-scenario baseline。
 
 因此当前结果只证明：
 
@@ -150,8 +156,6 @@ Setpoint-stall comparison 共 18 次独立 formal launch。Official 覆盖一个
 - 一项 bounded timing action 能在统一 runtime 中比较。
 
 它不证明完整 semantic state 已实现，也不证明 state-aware generation 优于 random 或 systematic search。
-
-Process-exit backend 已完成 18/18 non-formal qualification，并有零 formal launch 的 preregistered candidate matrix。Readiness 不是执行授权；是否复用该设计必须由新的共同 corpus 与评价合同决定。
 
 完整数字、study identity 和证据入口见 [CURRENT_STATUS.md](CURRENT_STATUS.md)。
 
@@ -375,18 +379,22 @@ Official/handwritten scenarios 是现实测试实践参照，不与四个生成�
 
 ## 14. 下一阶段执行门
 
-下一阶段按 [EXPERIMENT_PLAN.md](EXPERIMENT_PLAN.md) 推进。核心顺序是：
+下一阶段按 [中文实验计划](EXPERIMENT_PLAN.zh-CN.md) 和其
+[英文镜像](EXPERIMENT_PLAN.md) 推进。核心顺序是：
 
-1. 实现完整语义状态与状态抽取；
-2. 用 lifecycle、failure mechanism 和真实 provenance 冻结核心 corpus；
-3. 实现闭环 sequence/timing generation 与 feedback；
-4. 建立 historical/natural/seeded benchmark 和确认协议；
-5. 接入真实上层栈，获得 seed 与 replay contract；
-6. 实现公平 baseline，pilot 预算与方差；
-7. preregister 并执行正式 repeated campaigns；
-8. 重放、最小化、聚类和归因代表性 findings。
+1. 冻结 observed/derived/inferred evidence contract，并重建独立 identity/effect observation；
+2. 建立 combined admissibility Gate 与 V8 finding confirmation state machine；
+3. 创建最小 V8 instrumentation/stimulus patch、image 和 environment identity；
+4. 早期接入真实上层栈，提取 seed、parameter range 和 reachability evidence；
+5. 冻结 lifecycle × mechanism corpus，再实现完整 semantic state；
+6. 实现 campaign/episode/action-sequence schema、闭环 generator 和四个公平策略；
+7. 建立无泄漏 benchmark，完成 non-formal qualification 与 pilot；
+8. preregister 并执行 repeated formal campaigns；
+9. 独立重放、最小化、聚类、归因并完成代表性 full-stack consequence replay。
 
-已有 process-exit candidate 的 readiness 不授权立即执行。只有当它进入新的共同 corpus、共享 baseline 和统计合同时，才能在新的或经确认仍有效的 identity 下开始 formal denominator。
+Stage 0 仓库整理已经完成，但没有 active flight runner、plan schema、
+observation patch 或 formal matrix。任何曾经 qualified 的 action 都必须在
+新的共同 corpus、baseline、schema 和统计合同下重新取得执行身份。
 
 ## 15. 推荐论文结构
 
@@ -412,7 +420,6 @@ Official/handwritten scenarios 是现实测试实践参照，不与四个生成�
 - Stage A2 primary: [final report](../experiments/motivation_stage_a2_thor_v1/FINAL_REPORT.md)
 - Stage A2 remediation: [final report](../experiments/motivation_stage_a2_thor_remediation_v1/FINAL_REPORT.md)
 - Setpoint-stall vertical slice: [final report](../experiments/main_strategy_comparison_thor_v1/FINAL_REPORT.md)
-- Process-exit candidate: [preregistration](../experiments/main_process_exit_strategy_thor_v1/preregistration.md)
 
 ## 17. v8 相对旧叙事的决策
 

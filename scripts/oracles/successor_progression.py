@@ -111,7 +111,9 @@ def evaluate_successor_progression(
         else:
             fallback = installation_clause(installation, label="safe fallback")
 
-    timing_bounds = plan["strategy"]["timing_bounds_ns"]
+    # The retained primitive consumes an explicit obligation fragment. The old
+    # three-policy plan nesting was removed during V8 consolidation.
+    timing_bounds = plan.get("timing_bounds_ns", {})
     adjacent_delay_bound = timing_bounds.get("adjacent_after_activation_ns")
     if adjacent_delay_bound is None:
         adjacent_timing = clause("NOT_APPLICABLE", "no adjacent request is planned")
