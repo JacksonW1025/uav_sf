@@ -1,5 +1,9 @@
 # AGX Thor environment and migration report
 
+This file records environment and migration facts only. Research direction and
+claim boundaries are defined in [NEW_NARRATIVE_v8.md](NEW_NARRATIVE_v8.md) and
+[CURRENT_STATUS.md](CURRENT_STATUS.md).
+
 ## Host and formal-container inventory
 
 | Component | AGX Thor host | Formal experiment boundary |
@@ -56,9 +60,10 @@ resolved package manifests, source/build verification, ROS runtime packages,
 public transition fixtures, ULog extraction and integrity checks, clock-domain
 closure, Evidence Gate integration, safety/cleanup supervision, isolation,
 formal accounting, campaign scheduling, concurrency qualification, the two
-Stage A1 studies, the two separate Stage A2 studies, and the separately
-preregistered live-strategy vertical slice. Raw evidence remains in ignored
-`runs/`; only digests and compact results are tracked.
+Stage A1 studies, the two separate Stage A2 studies, the completed setpoint-
+stall live-strategy vertical slice, and the qualified but not formally executed
+process-exit strategy study. Raw evidence remains in ignored `runs/`; only
+digests and compact results are tracked.
 
 The campaign scheduler now separates each parallel batch into a live phase
 and an offline evidence-processing phase. A barrier proves that every live
@@ -99,23 +104,33 @@ freshness `VIOLATION`. Its 54-event ledger and compact results remain separate
 from both Stage A1 and Stage A2. Across all retained Thor formal studies there
 are now 295 closed launches.
 
-The V7 narrative documents a separate prior Orin evidence lineage, but no
+Earlier narrative work documented a separate prior Orin evidence lineage, but no
 earlier-device evidence artifact is imported into, numerically compared inside,
-or counted in the Thor formal corpus. Those source artifacts are not retained
-on `origin/main`; exact reuse requires separately supplied provenance and
-evidence.
+or counted in the Thor formal corpus. Those source artifacts are retained on
+neither the current working branch nor `origin/main`; exact reuse requires separately supplied
+provenance and evidence.
 
 ## Readiness and remaining risks
 
 The locked container, build path, evidence pipeline, formal accounting, stable
 parallel execution, and live fixtures include the completed Stage A2 moving
-workload plus one shared state-conditioned setpoint-stall strategy backend.
-A separately qualified and preregistered Section 7 vertical slice closed 18/18
-formal launches across official, bounded-random, and state-aware timing. All
-were accepted and admissible. Official timing covered one bin; each later
-strategy covered three, but random and state-aware tie and expose only the same
-freshness signature. This supports a bounded backend/coverage result, not full
-Main Evaluation completion or a general strategy ranking.
+workload plus shared state-conditioned setpoint-stall and process-exit strategy
+backends. The setpoint-stall Section 7 slice closed 18/18 formal launches across
+official, bounded-random, and state-aware timing. All were accepted and
+admissible. Official timing covered one bin; each later strategy covered three,
+but random and state-aware tie and expose only the same freshness signature.
+The process-exit action passed 18/18 final non-formal qualification attempts and
+has a frozen formal matrix with no ledger and zero formal launches. These facts
+support bounded executability and readiness claims, not full Main Evaluation
+completion or a general strategy ranking.
+
+The target paper method is full semantic-state-guided action-sequence and
+timing generation. Before any further formal campaign, the semantic state,
+route/action corpus, systematic and feedback-free baselines, operational
+coverage and finding metrics, repeated-campaign statistics, and confirmation
+rules must be implemented and frozen. Environment readiness alone does not
+answer the method evaluation, and the current timing selector remains a
+prototype.
 
 Known bounded risks are the observed route/freshness/successor violations, the
 Stage A1 primary observability rejections, the diagnosed live-JSONL race, the

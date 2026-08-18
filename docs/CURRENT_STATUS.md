@@ -1,510 +1,214 @@
 # Current status
 
-```text
-Formal Thor launches retained across completed and closed studies: 295
-Retained historical results: 0
-Current empirical claims: bounded Thor SITL findings in the final reports
-Formal execution environments: Stage A1 primary/supplemental, Stage A2 primary/remediation, and the completed setpoint-stall Main study; one process-exit candidate is attested but has zero formal launches
-Study state: Stage A1 frozen; Stage A2 complete; the first Section 7 slice complete; the second action is qualified and preregistered but not started
-Completed work package: Stage A2 Motivation evidence, the first Main Evaluation vertical slice, and process-exit formal-run readiness (Phases I--VII below)
-Active phase: explicit go/no-go for the frozen process-exit formal campaign; no campaign is running
-Paper state: Section 6 Motivation Study complete; Section 7 Main Evaluation partially complete, not paper-complete
-```
+Last narrative alignment: 2026-08-18. The research direction is defined in
+[NEW_NARRATIVE_v8.md](NEW_NARRATIVE_v8.md). This file records facts available
+in the current repository and deliberately separates completed evidence from
+the target method.
 
-Available today: the Family A route model, normalized event contracts,
-hash-chained collection, Route Conformance Oracle, Freshness and Lineage
-Oracle, Successor Progression Oracle, Evidence Admissibility Gate, controlled
-generation strategies, safety supervision, cleanup checking, attempt
-accounting, locked sources, a validation/reference container definition, and
-non-flight tests.
-
-The primary Thor matrix remains closed at 180 launches: 131 accepted evidence
-sets, 20 observability rejections, 28 timeouts, and one environment failure.
-Nineteen cells reached target and two invalid-plan cells reached cap. The
-separate supplemental study corrected only those plan/fixture contracts and
-closed 20/20 new launches as accepted, reaching both 10/10 targets. It does not
-change the primary ledger or status.
-
-Across both studies, 200 formal launches are closed and 151 evidence sets are
-accepted. Qualification checks remain outside every formal ledger and result.
-The V7 narrative also documents a separate prior Orin evidence lineage. Its
-source artifacts are not retained on `origin/main`, it is not included in the
-Thor counts above, and exact reuse requires separately supplied provenance and
-evidence.
-
-Stage A2 adds 77 closed formal launches under two separate studies. Its primary
-study remains `MEASUREMENT_INSUFFICIENT` at 51 launches: 18 accepted, 31
-observability-rejected, and two inconclusive. The independent remediation
-closed 26/26 launches as accepted and admissible, reaching all four frozen
-targets without modifying the primary ledger. Its 10 normal traces are overall
-PASS and its 16 deliberate healthy-stall traces are overall VIOLATION only on
-freshness. Counts are reported per study and are not pooled into the Stage A1
-`200 / 151 / 94 / 57` result.
-
-The first Section 7 strategy study adds a separate fixed denominator of 18
-formal launches: two mechanisms by three strategies by three launches. All
-18 are closed, accepted, Evidence Gate admissible, physically valid, and
-overall `VIOLATION` only on freshness. These counts are not pooled into either
-Stage A1 or Stage A2. The complete formal Thor total is therefore 295 launches.
-
-The next Section 7 action is now frozen at **formal-run ready**, not complete.
-Its `owned_process_exit_fallback_v1` backend terminates the active external
-producer during observed motion and requires PX4 safe fallback: Land for Legacy Offboard
-and RTL for Dynamic External Mode. The final non-formal qualification
-crossed two mechanisms, three strategies, and three rounds: all 18/18 attempts
-were accepted, admissible, physically valid, action-contract complete, and
-safe-fallback passing. Its formal matrix is fixed at another 18 launches and
-passes dry-run and negative mismatch checks, but no formal ledger exists and
-the 295-launch total is unchanged.
-
-The campaign now separates live batches from offline evidence processing.
-Four-way remains the qualified formal concurrency after a non-formal 4/5-way
-comparison; five-way was not promoted and no new six-way trial was run. The
-locked environment and campaign entry are ready for separately preregistered
-experiments using qualified live fixture semantics. Stage A2 has its own
-implemented fixture, observation contract,
-qualification, preregistration, formal evidence, physical analysis, and final
-report. Phase VI adds a shared state-conditioned setpoint-stall executor for
-official sequence, bounded random timing, and state-aware selection. Its
-18-launch result is a Section 7 vertical slice, not a general
-search-effectiveness result.
-
-## Resolved Stage A2 evidence-quality prerequisite
-
-A completed read-only, digest-bound audit of the frozen telemetry found a
-physical execution-validity issue that was addressed before Stage A2 formal execution.
-Twelve of the 151 admissible Stage A1 evidence sets reached no more than
-0.08 m above their local-position origin. All 12 belong to the attitude or
-body-rate Offboard cells; three have an overall `PASS` and nine have an
-overall `VIOLATION`. The nine violating traces contribute ten violation
-clauses. This is not a new formal denominator and does not retroactively
-change the frozen `94 PASS / 57 VIOLATION` result.
-
-The current fixture latches `ever_airborne` after one
-`VehicleLandDetected.landed == false` sample. That condition can be satisfied
-by ground-contact fluctuation before the intended public Takeoff has reached a
-meaningful altitude. The current Evidence Gate verifies trace and route
-evidence but does not distinguish "flew and landed" from "never left the
-ground." Consequently:
-
-- the 12 attempts remain part of the Stage A1 result under its frozen plan;
-- they must be reported separately in any post-hoc physical analysis;
-- Stage A2 was not allowed to start until its plan and Gate required sustained
-  takeoff and motion-phase completion;
-- failed physical preconditions must yield invalid/inconclusive execution,
-  never an Oracle `PASS` or `VIOLATION`.
-
-The paper-facing post-hoc record is frozen in
-[`experiments/posthoc_physical_execution_validity_v1/`](../experiments/posthoc_physical_execution_validity_v1/).
-It records the analysis plan, input manifest, exact attempts, aligned physical
-windows, telemetry digests, generated summary, tests, and interpretation
-limits. Reproduction from an empty output directory is byte-identical.
-
-## Completed evidence package and current paper placement
-
-The completed evidence package is **Phases I--VII: Stage A2 readiness and
-moving-workload Motivation evidence, one completed fixed-budget live-strategy
-vertical slice, and a second action frozen immediately before formal
-execution**. Phases I--V belong primarily to paper Section 6,
-`Motivation Study`; Phases VI--VII belong to Sections 4 and 7. Infrastructure
-qualification also updates Section 5, `Implementation`, and the corresponding
-threats-to-validity discussion.
-
-| Work | Paper location | Research role | Claim boundary |
-| --- | --- | --- | --- |
-| Phase I: physical execution audit | Section 6 and Section 8 threats to validity | Qualify what Stage A1 can say about physical behavior | Does not change any Stage A1 attempt, status, threshold, or denominator |
-| Phase II: finding/consequence triage | Section 6; RQ4 and RQ5 | Separate concentrated Route findings from motion-dependent physical exposure | A contract violation or trace signature is not automatically a PX4 bug or root cause |
-| Phase III: runtime and observation qualification | Section 5 and Section 8 | Protect Evidence Gate validity, probe sensitivity, and reproducibility; strengthen C3/C4 | Qualification attempts remain outside every formal study denominator |
-| Phase IV: A2 preregistration and identity freeze | Section 5 evaluation setup | Bind workload, physical validity, safety, timing, observer, and environment before execution | A plan is authorization for only its exact frozen study |
-| Phase V: formal matched Stage A2 | Section 6; chiefly RQ5, with bounded support for RQ1/RQ4 | Test whether moving context changes applicable contract states, signatures, or interpretable physical consequences | Does not compare generation strategies or establish a general mechanism safety ranking |
-| Phase VI: live backends and fixed-budget comparison | Sections 4 and 7; bounded RQ2/RQ3 evidence | Demonstrate online strategy execution, feedback, and timing-boundary coverage under an equal denominator | Complete only for one moving healthy-setpoint-stall action; it does not establish general strategy superiority |
-| Phase VII: process-exit formal-run readiness | Sections 4, 5, and 7 evaluation setup | Add a distinct producer-loss action, safe-fallback Oracle contract, six-unit qualification, exact identities, fixed matrix, and preregistration | Qualification evidence is non-formal; the frozen 18-launch matrix has not been executed and contributes zero formal results |
-
-Phases I--V close the paper's Motivation Study. Phase VI establishes the first
-executable Section 7 slice. Phase VII proves that a second action is executable
-and formally frozen without silently starting its denominator. A broader
-route/action corpus plus
-confirmation/clustering and ablation remains necessary before the Main
-Evaluation or the full state-aware method claim can be called complete.
-
-## Phase I: freeze a physical-execution audit before changing runtime behavior — COMPLETE
-
-The read-only, digest-bound post-hoc analysis covers all 151 frozen admissible
-traces. It:
-
-1. list the 12 non-airborne attempts, their cell, maximum achieved height,
-   overall result, and affected clauses;
-2. retain the original 151-attempt denominator and report the 139 airborne
-   and 12 non-airborne traces as descriptive strata only;
-3. align physical telemetry with transition, freshness, successor, and fault
-   windows without modifying a closed trace or evaluation;
-4. report continuous position, velocity, attitude, body-rate, exposure, and
-   recovery measurements where the existing workload makes them identifiable;
-5. distinguish the masked numeric stale-versus-fresh reference difference from
-   the physically observable update-starvation response; retained
-   attitude/body-rate commands are reported separately.
-
-The repository artifact is a post-hoc study directory containing
-an analysis plan, input manifest, machine-readable summary, tests, and final
-report. It must not edit either Stage A1 formal study directory.
-
-## Phase II: run two distinct offline triage tracks — COMPLETE
-
-The root-cause and physical-consequence priorities are intentionally
-different.
-
-**Route/root-cause track.** All 11 observed installation violations are in the
-attitude setpoint path. Nine of them occur in traces that did become airborne,
-so the concentration cannot be dismissed as only the physical-precondition
-problem. Reconstruct request, activation, command-consumption, controller,
-allocator, and actuator-write timing. Classify the signature as an observer
-resolution effect, fixture effect, research-contract finding, or source-level
-SUT cause. Do not call it a PX4 bug without a qualified reproduction and
-public-spec or source-level grounding.
-
-**Physical-consequence track.** Freshness is the primary A2 exposure
-hypothesis. Constant position targets make stale and fresh numerical references
-identical, but Phase I shows that update starvation itself remains physically
-observable: all eight airborne trajectory-stall traces move approximately
-2.70--2.85 m during the freshness window. Existing airborne attitude/body-rate
-traces provide smaller retained-command drift signatures. Phase II must
-separate reference-value masking, update-starvation response, recovery/landing
-motion, and causal attribution before selecting the A2 primary hypothesis.
-
-The eight Dynamic External Mode timeouts outside the invalid RTL fixture also
-receive a separate infrastructure diagnosis. Seven share the signature that
-the C++ mode received its registration reply while the Python requester never
-recorded readiness. This is consistent with a one-shot discovery/reply race,
-but the exact DDS cause remains unproven until reproduced.
-
-The frozen triage is recorded in
-[`experiments/posthoc_finding_consequence_triage_v1/`](../experiments/posthoc_finding_consequence_triage_v1/).
-It localizes all 11 attitude installation signatures to the
-activation-to-command-consumption segment: observed complete installation is
-401.749--785.004 ms, while activation itself appears in 13.459--28.866 ms.
-Nine of these traces are airborne. All 11 remain beyond 300 ms after subtracting
-one 100 ms observation period and the registered clock uncertainty, but the
-source-level cause remains unresolved pending the high-rate qualification.
-
-The same triage separates 41 airborne freshness-exposure windows and selects
-the Stage A2 primary hypothesis: time-varying position-only straight
-translation with `SETPOINT_STALL_HEALTHY`, measuring motion-relative tracking
-lag and recovery. It also confirms seven
-`CPP_REGISTERED_REQUESTER_MISSED_READINESS` timeouts and one distinct
-post-registration timeout. The generated results and manifests reproduce
-byte-for-byte from an empty output directory.
-
-## Phase III: qualify physical validity, Dynamic readiness, and observer sensitivity — COMPLETE
-
-All Phase III changes and flights use a new qualification identity. They are not
-executed "under A1" and do not alter the A1 image, configuration, matrices, or
-ledgers.
-
-### Physical-validity contract
-
-The next plan/schema and Evidence Gate must bind study-specific execution
-preconditions. At minimum they require:
-
-- valid local-position observations;
-- a preregistered takeoff height held for a preregistered dwell interval;
-- `landed == false` only as one member of a multi-signal airborne predicate;
-- entry into the required motion phase and minimum along-track progress before
-  a transition or fault is injected;
-- required profile coverage for a nominal completion arm.
-
-The fixture must establish the airborne source state through public PX4
-actions before it requests the tested route. Merely increasing a constant
-attitude/body-rate thrust value is not an acceptable substitute for a robust
-takeoff and readiness contract.
-
-### Dynamic requester readiness
-
-Replace dependence on an unrepeatable registration reply with an explicit,
-observable readiness handshake or an equivalent retry/query contract. Formal
-attempt timing must not start until requester readiness is recorded. The fix
-must be exercised under the qualified four-slot load. The qualification sample
-size and exit rule must be chosen from the tolerated matched-block loss rate,
-not from an arbitrary number of successful examples.
-
-### Observer qualification
-
-Run matched non-formal qualification for three instrument configurations:
-
-1. observation off, used only to measure probe effect and physical/runtime
-   equivalence;
-2. the Stage A1 baseline profile at approximately 10 Hz;
-3. the existing transition profile at approximately 125 Hz.
-
-Compare real-time factor, clock uncertainty, CPU/scheduling load, log volume,
-physical trajectory, control-loop behavior, installation/continuity timing,
-and evidence yield. The off configuration cannot compute the Route Oracle; it
-is only the no-probe reference. Each configuration has a distinct image
-identity. The A2 observer is selected and frozen from this result before
-formal execution.
-
-Phase III exits only when no physically unexecuted attempt can be admitted as a valid
-flight, Dynamic readiness meets its preregistered reliability rule, and the
-selected observation profile meets both sensitivity and probe-effect bounds.
-
-The qualification is frozen in
-[`experiments/stage_a2_runtime_qualification_v1/`](../experiments/stage_a2_runtime_qualification_v1/).
-All three matched observer tasks were runtime-accepted and satisfied the
-sustained physical-takeoff predicate. Their stable real-time-factor medians
-were 0.999888--0.999939. The selected `transition` profile retained 7,751
-Route observations without a sequence gap or dropout; compared with the
-10 Hz baseline, its ULog grew by 443,055 bytes (9.01%), below the frozen 15%
-bound. The observer-off image correctly yields no Route evidence and therefore
-cannot run the Route Oracles.
-
-Both repaired Dynamic qualification attempts loaded the explicit registration
-handoff and were accepted under the three-attempt batch, alongside the
-Legacy Offboard control. This qualifies the handshake for A2 execution but is not a
-population-level failure-rate estimate. These attempts remain non-formal and
-change no paper denominator.
-
-## Phase IV: freeze an A2-specific plan and environment — COMPLETE
-
-Do not overwrite the Stage A1 method or safety files. Introduce a
-backward-compatible plan revision and versioned A2 configuration artifacts.
-The formal runner must bind the matrix-selected configuration paths and
-digests while continuing to read the frozen Stage A1 schema/configuration.
-
-The A2 plan must bind at least:
-
-- `profile_id` and `profile_digest`;
-- position-only versus position-plus-velocity setpoint semantics;
-- named motion phases and the logical injection phase;
-- physical-validity and profile-coverage requirements;
-- `physical_analysis_plan_digest`;
-- observer profile and image identity;
-- mission envelope, supervisor limits, run/outer timeouts, and cleanup;
-- matched-block fields, seeds, accepted-pair targets, and launch caps.
-
-Qualification determines timeout and envelope values. The nominal envelope,
-physical-consequence threshold, and safety-supervisor boundary must remain
-separate. A safety stop must be preregistered as a censored physical endpoint
-or other explicit non-PASS outcome; a severe trace must not disappear merely
-because the supervisor intervened.
-
-The independent plan, qualification record, exact matrix, and attestation are
-frozen in
-[`experiments/motivation_stage_a2_thor_v1/`](../experiments/motivation_stage_a2_thor_v1/).
-Plan schema 1.3 adds workload and physical-validity bindings while schema 1.2
-remains valid for the frozen A1 plans. The A2 matrix binds the position-only
-straight-line profile, selected transition observer, physical-analysis plan,
-separate method and safety configurations, paired seeds, four-slot resources,
-image `sha256:e9f913...16f3d`, and repository revision `b10b475...34e6`.
-
-Three qualification rounds are retained outside the formal ledger. They first
-identified a landing-sensitive provisional safety bound, then an incorrect
-Legacy Offboard motion-clock anchor; neither issue was hidden by relaxing the
-physical contract. In the final exact-image four-arm probe, all arms were
-runtime-accepted, entered motion at 0.752--0.768 m, recorded at least 2.501 m
-coverage, and completed terminal cleanup. Formal execution is therefore
-authorized only under the frozen matrix.
-
-## Phase V: execute the minimal matched Stage A2 — COMPLETE
-
-The first A2 workload is deliberately simple and interpretable:
+## Executive status
 
 ```text
-Public Takeoff
-    -> stable hover at the qualified altitude
-    -> tested external route active
-    -> constant-altitude straight-line translation
-    -> normal completion or SETPOINT_STALL_HEALTHY
-    -> internal Land
+Retained Thor formal launches across separate closed studies: 295
+Retained historical/Orin results in the current branch: 0
+Motivation and measurement foundation: complete with bounded claims
+Full semantic-state generation method: not implemented
+Main method evaluation: not complete
+Formal campaign currently running: none
+Process-exit candidate: qualified and preregistered, zero formal launches
 ```
 
-The moving command is position-only; velocity and acceleration remain unset.
-Under a stall, the aircraft therefore retains the last position target instead
-of retaining a nonzero velocity command and flying away. A later A2b may study
-position-plus-velocity semantics, but it is not mixed into this first causal
-experiment.
+The 295 launches are a repository total, not one pooled experiment. Every
+study retains its own identity, matrix, ledger, thresholds, and denominator.
 
-The formal core has four cells: Legacy Offboard and Dynamic External Mode,
-each under normal completion and `SETPOINT_STALL_HEALTHY`. The two mechanisms
-share the same profile, logical phase, seed, schedule, successor, observer,
-and physical analysis plan. Normal arms target five complete matched blocks;
-fault arms target eight. A block with an invalid or missing arm remains in
-accounting but does not enter the paired estimate.
+## Formal study accounting
 
-The physical layer reports continuous along-track lag, cross-track error,
-integrated tracking error, exposure duration/distance, peak motion values, and
-recovery after successor installation. It is hash-bound to the formal inputs
-and trace but remains separate from the four correctness Oracles; it does not
-become a fifth Oracle or change the Stage A1 thresholds.
+| Study | Formal launches | Admissible/accepted evidence | Result boundary |
+| --- | ---: | ---: | --- |
+| Stage A1 primary | 180 | 131 | 75 PASS, 56 VIOLATION; two invalid-plan cells did not reach target |
+| Stage A1 supplemental | 20 | 20 | 19 PASS, 1 VIOLATION under an independent remediation identity |
+| Stage A2 primary | 51 | 18 | Permanently `MEASUREMENT_INSUFFICIENT`; 31 observability rejection and 2 inconclusive |
+| Stage A2 remediation | 26 | 26 | 10 normal PASS, 16 deliberate freshness VIOLATION |
+| Setpoint-stall strategy slice | 18 | 18 | 18 deliberate freshness VIOLATION; bounded timing comparison only |
 
-The official A2 workload uses the same workload and public-action contract in
-both mechanisms. Its mechanism-specific runtime remains the executable
-baseline. Phase VI subsequently added the generic
-decision/schedule/action/request/effect layer under a separate qualification,
-identity, preregistration, ledger, and denominator.
+The sum is 295 closed formal launches. Stage A1 alone has the combined
+`200 / 151 / 94 / 57` accounting. Stage A2 and the strategy slice are not
+added to that denominator.
 
-The frozen primary execution closed at 51 launches but could not reach three
-cell targets because 31 traces hit a command-subject clock-closure defect; it
-remains permanently `MEASUREMENT_INSUFFICIENT`. A separately preregistered
-remediation changed only that evidence closure rule and the public
-takeoff-before-transition fixture obligation, then used a new image,
-environment, seeds, ledger, and denominator.
+## Stage A1: measurement and Motivation foundation
 
-The remediation closed 26/26 formal launches as `ACCEPTED` and
-`ADMISSIBLE`: normal Legacy Offboard and Dynamic External Mode both reached
-5/5 overall PASS, while both healthy-stall cells reached 8/8 overall VIOLATION.
-All 16 violations are the deliberately exercised freshness clause; all
-applicable route and successor clauses pass. Thirteen same-seed mechanism
-pairs are complete and agree on Oracle status.
+The primary study closed 180 launches: 131 accepted, 20 observability
+rejections, 28 timeouts, and one environment failure. Nineteen cells reached
+target; two invalid-plan cells reached their cap.
 
-The moving task makes the physical effect identifiable without manufacturing
-a flyaway. Normal traces end at median x=3.575 m for Legacy Offboard and
-3.581 m for Dynamic External Mode. Healthy-stall traces freeze the position
-reference at 3.0 m and end at median x=3.041 m and 3.028 m, leaving median
-shortfalls of 0.459 m and 0.472 m relative to the complete 3.5 m profile. They
-travel a median 1.033 m and 1.012 m after the scheduled stall boundary before
-stabilizing at that retained target. The paired differences are small and no
-mechanism-superiority threshold was registered.
+The independently preregistered supplemental study corrected only those
+plan/fixture obligations. It closed 20/20 new launches as accepted and reached
+both 10/10 targets without modifying the primary ledger.
 
-The result therefore adds bounded physical interpretability, but no new
-violation class and no general PX4 defect claim. The complete record is in
-[`experiments/motivation_stage_a2_thor_remediation_v1/`](../experiments/motivation_stage_a2_thor_remediation_v1/).
+Across both studies, 151 accepted/admissible traces contain 94 overall PASS
+and 57 overall VIOLATION. These counts support the following bounded facts:
 
-## Phase VI: qualify live strategies and run a fixed-budget comparison — COMPLETE WITH BOUNDED CLAIMS
+- mode and terminal outcome do not establish complete authority handoff;
+- Route and Freshness are independent evidence dimensions;
+- successor installation and completion/request order are independent facts;
+- repeated use of one route name requires epoch and activation identity; and
+- evidence, environment, and clock failures must not become SUT results.
 
-Phase VI implements one shared live backend for `setpoint_stall`. Every
-strategy decision contains the candidate set, seed, planned offset, required
-live state, and prior boundary coverage. A separate executor waits for both
-observed route activation and motion entry, then writes one owned-process stall
-request. The workload records the resulting fault; the raw manifest and formal
-closure bind the execution evidence and compact decision.
+The counts are not a defect rate. A violation trace is not automatically a
+source-grounded PX4 defect.
 
-Six non-formal qualification flights crossed both mechanisms and all three
-strategies. All 6/6 were accepted, admissible, and physically valid; absolute
-request error was 2.924--14.650 ms. These flights do not enter a formal
-denominator.
+Evidence:
 
-The separately preregistered formal study
-[`experiments/main_strategy_comparison_thor_v1/`](../experiments/main_strategy_comparison_thor_v1/)
-closed exactly 18/18 launches as accepted, admissible, and physically valid.
-Its append-only ledger has 54 events and chain head
-`82edada94d9ae99b0b13af2e90487c2a7eb1e8aeb7a06f871f04dd2c4cc36499`.
-All attempts produced one state-conditioned action request and one admissible
-freshness violation.
+- [primary report](../experiments/motivation_thor_v1/FINAL_REPORT.md)
+- [supplemental report](../experiments/motivation_thor_remediation_v1/FINAL_REPORT.md)
 
-Under three launches per mechanism-strategy cell, official sequence covered
-only the fixed `boundary` timing bin. Bounded random timing covered
-`pre_boundary`, `post_boundary`, and `late`; state-aware covered
-`pre_boundary`, `boundary`, and `post_boundary`. The state-aware second and
-third decisions consumed prior live coverage and selected uncovered bins, so
-the feedback loop is executable. Random and state-aware nevertheless tie at
-three observed bins, all strategies reach the same freshness signature on the
-first launch, and all evaluate the same 16 applicable clauses. The evidence
-therefore supports live-backend correctness and greater timing coverage than
-the fixed sequence in this sample, but no ranking between random and
-state-aware and no general search-effectiveness claim.
+## Stage A1 physical-validity audit
 
-## Phase VII: qualify process exit and freeze the next formal study — FORMAL-RUN READY / NOT STARTED
+A digest-bound post-hoc audit found that 12 of the 151 admissible Stage A1
+traces reached no more than 0.08 m above their local-position origin. They
+include 3 PASS and 9 VIOLATION traces. The frozen Stage A1 result is unchanged,
+but physical interpretation is limited.
 
-Phase VII adds `owned_process_exit_fallback_v1` without changing the completed
-setpoint-stall study. The shared decision and action executor still waits for
-observed route activation plus motion entry, but its one durable request now
-terminates the external producer. Legacy Offboard records its owned producer
-shutdown and PX4 installs Land; Dynamic External Mode exits with reserved
-stimulus status 74 and PX4 installs RTL before cleanup landing. The plan
-requires `fault_detected`, `fallback_triggered`, physically valid execution,
-admissible evidence, and a passing safe-fallback Oracle clause.
+This established an additional rule: evidence admissibility does not by itself
+prove that the intended physical task executed. Later plans require sustained
+takeoff, valid local position, motion-phase entry, minimum progress, and
+profile coverage where applicable.
 
-The first complete qualification exposed two safety stops, not action or PX4
-failures: expected RTL-to-Land descent exceeded the generic 5.0 m cumulative
-altitude-loss bound after RTL climbed to 5.395416 m. The action-specific safety
-configuration changes only this bound to 6.0 m; all independent speed,
-attitude, body-rate, contact, heartbeat, collector, and timeout guards remain
-unchanged. A separate concurrent environment-initialization race was then
-refused and fixed by serializing attestation before the live barrier. Both
-records remain retained rather than being counted as successful qualification.
+Evidence: [physical-validity report](../experiments/posthoc_physical_execution_validity_v1/FINAL_REPORT.md).
 
-The final qualification uses candidate revision `eebaefe`, image
-`sha256:1b8e2285aa85e81393d866b7165557996b3001597ce3506fee211497dfbd1867`,
-new seeds, and a new study ID. All six mechanism-strategy units passed 3/3;
-18/18 attempts were `ACCEPTED`, `ADMISSIBLE`, physically valid, and
-safe-fallback passing. State-aware selected boundary, pre-boundary, then
-post-boundary for both mechanisms, and the later decisions contain the actual
-prior `action_requested` coverage.
+## Stage A2: moving-workload realism bridge
 
-The exact matrix, attestation, qualification digests, action configuration,
-safety configuration, readiness verification, and preregistration are in
-[`experiments/main_process_exit_strategy_thor_v1/`](../experiments/main_process_exit_strategy_thor_v1/).
-Dry-run reports six pending cells and zero launches. Backend/action mismatch
-tests refuse execution. `attempt-ledger.jsonl` is deliberately absent. This
-phase stops here: it contributes implementation and readiness evidence to
-Section 7, but no formal result or denominator.
+The Stage A2 primary study closed at 51 launches but remains
+`MEASUREMENT_INSUFFICIENT` because a command-subject clock-closure defect
+prevented three cells from reaching target. Its result and ledger remain
+unchanged.
 
-## Achieved end state of this work package
+An independent remediation changed only the evidence-closure rule and the
+public takeoff-before-transition obligation. It closed 26/26 formal launches
+as accepted and admissible:
 
-### Repository state
+- 5/5 normal Legacy Offboard PASS;
+- 5/5 normal Dynamic External Mode PASS;
+- 8/8 Legacy Offboard healthy-stall freshness VIOLATION; and
+- 8/8 Dynamic External Mode healthy-stall freshness VIOLATION.
 
-With Phases I--VII complete, the repository contains:
+All 16 deliberate violations are freshness-only; applicable route and
+successor clauses pass. The moving task adds physical interpretability without
+creating a new violation class:
 
-- untouched Stage A1 primary and supplemental plans, ledgers, compact results,
-  thresholds, statuses, and `200 / 151 / 94 / 57` accounting;
-- a reproducible physical-execution audit that explicitly records the 12
-  non-airborne traces and limits their physical interpretation;
-- a digest-bound triage result for attitude installation and freshness
-  exposure, including unresolved classifications where evidence is
-  insufficient;
-- a backward-compatible plan/schema path for workload and physical-validity
-  bindings, plus separate versioned A2 method and safety configurations;
-- tests proving that absent takeoff or absent required motion is never admitted
-  as a valid flight result;
-- a qualified Dynamic readiness contract and a frozen off/10 Hz/125 Hz
-  observer-sensitivity decision;
-- a new attested A2 repository revision, container image, PX4 binary,
-  environment identity, preregistration, matrix, hash-chained ledger, compact
-  evidence, matched-differential result, physical-consequence result, and final
-  report;
-- a shared state-conditioned live executor, deterministic replayable decisions,
-  feedback-bound state-aware selection, and fail-closed strategy validation;
-- a qualified and separately preregistered 18-launch strategy-comparison
-  study with an exact matrix, attestation, 54-event ledger, compact evidence,
-  per-attempt analysis, reproducible summary, and bounded final report;
-- a second registered live action for moving producer exit and safe fallback,
-  18/18 passing non-formal qualification attempts, an exact attested image,
-  fixed 18-launch matrix, dry-run/fail-closed record, and frozen
-  preregistration with no formal ledger;
-- a clean worktree and a complete repository-validation pass.
+- median motion after the stall boundary is approximately 1.033 m and 1.012 m;
+- median task-progress shortfall is approximately 0.459 m and 0.472 m; and
+- no mechanism-superiority threshold was preregistered.
 
-### Narrative and paper state
+The result does not establish flyaway, real-flight danger, or a general PX4
+defect.
 
-The narrative and paper state at this milestone is:
+Evidence:
 
-```text
-Stage A1: COMPLETE WITH BOUNDED CLAIMS; frozen and unchanged
-Stage A2: COMPLETE under its own preregistration, identity, ledger, and denominator
-Paper Section 6 Motivation Study: COMPLETE
-Paper Section 7 Main Evaluation: PARTIALLY COMPLETE; one formal slice complete and a distinct second action formal-run ready
-Gate 4b moving-workload realism bridge: PASS WITH BOUNDED CLAIMS, retaining a null result if observed
-Gate 5: PASS; Gate 6: PASS for the owned setpoint-stall backend
-Gate 7: PASS WITH BOUNDED CLAIMS for the 18-launch vertical slice
-Process-exit readiness gate: PASS; formal campaign NOT STARTED
-Gate 8 and full route-corpus C6/C7 claims: still PENDING
-```
+- [primary Stage A2 report](../experiments/motivation_stage_a2_thor_v1/FINAL_REPORT.md)
+- [remediation report](../experiments/motivation_stage_a2_thor_remediation_v1/FINAL_REPORT.md)
 
-Stage A2 completion depended on admissible execution and honest reporting, not
-on obtaining a positive result. A null result must be retained if movement
-adds no new signature or measurable consequence. If it does add evidence, the
-allowable claim is bounded to the locked Thor SITL mission and may state that
-motion context changed contract applicability, violation signatures, or
-physical exposure. It may not claim real-flight danger, a general PX4 defect
-rate, universal mechanism superiority, or state-aware search effectiveness.
+## Completed generation vertical slice
 
-The next explicit decision is whether to start the already frozen process-exit
-18-launch campaign or continue backend expansion before spending that formal
-denominator. Either path must retain equal budgets and shared seeds, then add
-confirmation and ablation sufficient to distinguish feedback value from random
-timing and cluster/minimize independent findings. Until that work is complete,
-the paper may report the Phase VI result and Phase VII readiness evidence but
-must not claim process-exit formal results, overall state-aware superiority, or
-complete C6/C7.
+The separately preregistered setpoint-stall comparison closed 18/18 formal
+launches across two mechanisms, three strategies, and three launches per cell.
+Every attempt is accepted, admissible, physically valid, and a deliberate
+freshness VIOLATION.
 
-For a beginner-oriented explanation of the repository narrative, the concrete
-Stage A1 flight workloads, Runtime Route Instance, and a complete transition,
-see [REPOSITORY_UNDERSTANDING_GUIDE.md](REPOSITORY_UNDERSTANDING_GUIDE.md).
+Observed timing-bin coverage was:
+
+- official sequence: one fixed boundary bin;
+- bounded random: three bins; and
+- current state-aware prototype: three bins.
+
+The prototype consumed prior live coverage when making later decisions, so
+the feedback loop is executable. Random and the prototype tie on observed
+coverage, and every strategy reaches the same freshness signature on its first
+launch. This study does not establish strategy superiority, distinct finding
+quality, or the complete semantic-state method.
+
+Evidence: [strategy-slice report](../experiments/main_strategy_comparison_thor_v1/FINAL_REPORT.md).
+
+## Process-exit candidate
+
+The `owned_process_exit_fallback_v1` action terminates the active external
+producer during observed motion and requires a safe internal fallback. The
+final non-formal qualification covers two mechanisms, three strategies, and
+three rounds. All 18/18 qualification attempts were accepted, admissible,
+physically valid, action-contract complete, and safe-fallback passing.
+
+The candidate formal matrix contains 18 planned launches, passes dry-run and
+mismatch checks, and has no formal ledger. It contributes zero launches to the
+295 total. Under the v8 plan, readiness does not authorize execution; the
+action must first be assessed as part of the common corpus and evaluation
+contract.
+
+Evidence: [process-exit preregistration](../experiments/main_process_exit_strategy_thor_v1/preregistration.md).
+
+## Other completed evidence work
+
+- Finding and consequence triage localizes the observed attitude-installation
+  signatures but does not establish a source-level cause:
+  [report](../experiments/posthoc_finding_consequence_triage_v1/FINAL_REPORT.md).
+- Oracle ablation measures which contract components change detection:
+  [report](../experiments/posthoc_oracle_ablation_v1/FINAL_REPORT.md).
+- Threshold sensitivity records dependence on research-contract thresholds:
+  [report](../experiments/posthoc_threshold_sensitivity_v1/FINAL_REPORT.md).
+- Observer, physical-validity, and Dynamic readiness qualification is retained
+  separately from formal denominators:
+  [report](../experiments/stage_a2_runtime_qualification_v1/FINAL_REPORT.md).
+- Four-way remains the qualified formal concurrency. A five-way trial was not
+  promoted because it reduced clock margin and changed one matched timing-
+  sensitive interpretation:
+  [record](../experiments/concurrency_barrier_qualification/README.md).
+
+## Available implementation
+
+The repository currently contains:
+
+- normalized event schemas and Runtime Route Instance fields;
+- hash-chained collection and environment attestation;
+- Evidence Admissibility Gate;
+- Route, Freshness/Lineage, Successor, and Registration contracts;
+- safety supervision, cleanup, attempt accounting, and batch barriers;
+- locked sources and ARM64 Thor container/toolchain definitions;
+- official, bounded-random timing, and prototype state-aware policies;
+- qualified setpoint-stall and process-exit live backends; and
+- retained formal reports, compact evidence, and ledgers.
+
+The repository does not yet contain:
+
+- the complete semantic state defined by v8;
+- multi-action closed-loop sequence generation;
+- the mechanism- and provenance-selected core corpus;
+- deterministic and feedback-free main baselines under one common contract;
+- a confirmed historical/natural/seeded benchmark;
+- repeated campaign-level statistical evaluation; or
+- full-stack seed extraction and representative finding replay.
+
+## Historical evidence boundary
+
+Earlier narrative work referred to Orin-era evidence, including a lifecycle
+successor case. The current branch contains no source report, ledger, compact
+evidence, or replayable artifact for that layer. The retained count for that
+layer therefore remains zero. Such material can become background or a benchmark only
+after its provenance and evidence are supplied independently.
+
+## Active next step
+
+No formal campaign is currently authorized. Work proceeds through the decision
+gates in [EXPERIMENT_PLAN.md](EXPERIMENT_PLAN.md): implement full semantic
+state, justify the corpus, complete the generator and baselines, establish
+ground truth and full-stack replay, then pilot and preregister repeated
+campaigns.
+
+## Current claim boundary
+
+The repository supports a bounded measurement and Motivation claim plus one
+generation-feasibility slice. It does not support:
+
+- a general method-effectiveness claim;
+- random-versus-state-aware ranking;
+- a process-exit formal result;
+- a PX4 defect prevalence estimate;
+- pooling independent study denominators; or
+- generalization beyond the retained Thor SITL scope.

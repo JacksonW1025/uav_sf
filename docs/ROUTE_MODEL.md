@@ -1,47 +1,50 @@
-# Runtime route model
+# Runtime route and semantic-state model
+
+The narrative source is [NEW_NARRATIVE_v8.md](NEW_NARRATIVE_v8.md). This file
+defines the model used by collection, Oracles, and the target generator.
 
 ## Runtime Route Instance
 
-A Runtime Route Instance identifies the control path currently capable of
-producing a flight-critical actuator effect. Its stable identity is:
+A Runtime Route Instance identifies one distinguishable control path capable
+of producing a flight-critical actuator effect. Its stable identity is:
 
 ```text
 (route, route_epoch, producer_session, registration_id, activation_id,
  controller_id, allocator_id, writer_id, lifecycle_owner, executor_owner)
 ```
 
-`route_epoch` changes whenever PX4 changes authority-relevant route state.
-Producer/session identity distinguishes a restarted producer from its
-predecessor. Registration and activation identities distinguish allocation of
-an external slot from use of that slot. Controller, allocator, and writer
-fields form the downstream lineage. Lifecycle and executor fields identify the
-owner responsible for completion, unregistration, and successor selection.
+- `route_epoch` changes when authority-relevant route state changes.
+- `producer_session` distinguishes a restarted producer from its predecessor.
+- registration and activation identities distinguish allocation from use.
+- controller, allocator, and writer form the downstream command lineage.
+- lifecycle and executor owners identify responsibility for completion,
+  unregistration, and successor selection.
 
-Every command-consumption and downstream effect event additionally carries
-`command_subject_ns`: the subject time of the state or command being consumed,
-not the time a log record was emitted. It is dynamic evidence associated with
-the stable route instance rather than a stable identity field, because one
-active instance normally consumes many successively newer commands. The
-Freshness and Lineage contract evaluates that subject time across the complete
-target-authority window.
+Every command-consumption and downstream-effect event additionally carries
+`command_subject_ns`, the subject time of the consumed command or state. It is
+dynamic freshness evidence, not part of stable route identity.
 
 ## Transition interval
 
-The interval begins at `transition_requested`. It closes only after a target
+A transition begins at `transition_requested`. It closes only after target
 activation and a complete target path have been observed. A complete path has
 activation, command consumption, controller output, allocator output, and
-actuator write events with one consistent stable Runtime Route Instance
-identity. Each effect event must also contain a valid command subject time.
+actuator write events with one consistent Runtime Route Instance identity.
 
-Revocation is timely when source effects stop by the configured deadline and
-no source effect appears after target installation. Exclusivity requires that
-source and target writers do not overlap after installation. Continuity
-requires that the actuator-effect sequence has no observation gap exceeding
-the configured bound.
+The contracts distinguish:
 
-## Route names
+- source revocation;
+- target installation;
+- writer exclusivity;
+- actuator-effect continuity;
+- command freshness and lineage;
+- completion and successor progression; and
+- planned-failure observation and safe-fallback installation.
 
-The schema uses these stable names:
+Declared mode is an observation field. It is never sufficient route-identity
+or transition-completion evidence by itself.
+
+## Stable route names
 
 - `px4_internal`
 - `legacy_offboard`
@@ -52,5 +55,50 @@ The schema uses these stable names:
 - `internal_land`
 - `internal_recovery`
 
-Declared mode remains an observation field, but it is not part of the route
-identity proof by itself.
+## Target generator state
+
+The final semantic state contains:
+
+1. route identity, family, and epoch;
+2. authority owner and command lineage;
+3. registration, activation, execution, completion, replacement, fallback,
+   and re-entry phase;
+4. health and command-freshness state;
+5. successor request, installation, and ownership progress;
+6. coarse motion or mission context; and
+7. bounded action history for the current sequence.
+
+Raw telemetry and instrumented PX4 events are evidence from which this state
+is derived. They are not the paper-level state abstraction. The primary method
+is grey-box and must include reduced-observation replay to quantify dependence
+on custom instrumentation.
+
+## State transitions and coverage
+
+The target feedback unit is a semantic edge:
+
+```text
+(semantic state, action, timing bucket) -> next semantic state
+```
+
+Coverage separately records visited states, semantic edges, lifecycle phases,
+and contract boundaries. Repeated visits remain counts for reporting but do
+not create new coverage.
+
+The current executable prototype observes `route_active` and
+`motion_entered`, selects one bounded action time, and feeds back timing-bin
+coverage. It does not implement the complete state above.
+
+## Result semantics
+
+Evidence admission precedes all contract results. An inadmissible trace is
+`INCONCLUSIVE` even if an individual clause appears favorable.
+
+Finding interpretation is layered:
+
+1. research-contract exposure;
+2. reproducible cross-layer contract violation;
+3. source-grounded PX4 defect; and
+4. safety-relevant finding with a reproducible task or physical consequence.
+
+These levels must remain separate in coverage, benchmark, and defect counts.

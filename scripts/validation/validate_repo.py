@@ -52,7 +52,7 @@ TERM_SCAN_EXEMPT = {
     # is governed by a separate evidence-to-claim review.  Keep all other
     # repository checks active while avoiding an implementation-scope blacklist
     # being used to rewrite user-supplied narrative text.
-    Path("docs/NEW_NARRATIVE_v7.md"),
+    Path("docs/NEW_NARRATIVE_v8.md"),
 }
 FORBIDDEN = (
     re.compile("Family" + r" B", re.IGNORECASE),

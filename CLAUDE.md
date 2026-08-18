@@ -2,6 +2,18 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Authority
+
+`codex-b` is the authoritative development branch. `main` and `origin/main`
+are publication mirrors of reviewed `codex-b` milestones, not independent
+sources of truth. Fetch before publishing to inspect divergence, but do not
+merge an older `main` into `codex-b` to restore authority. Preserve a recovery
+reference before intentionally rewriting a published `main` tip.
+
+[docs/NEW_NARRATIVE_v8.md](docs/NEW_NARRATIVE_v8.md) is the sole research
+narrative. Closed experiment reports and ledgers remain authoritative for
+their own identities and denominators.
+
 ## What this repository is
 
 A research testbed, not an application. It tests whether a *route-replacing
@@ -84,8 +96,8 @@ starts, so analysis load cannot perturb a still-running attempt's timing.
    SHA-256 event chain. `validate_repo` asserts these Python constants equal the
    enums in [data/schemas/route_event.schema.json](data/schemas/route_event.schema.json)
    and the plan schema, so a route or event kind must be added in both places.
-2. **Plan** — [scripts/evaluator/plan.py](scripts/evaluator/plan.py) (schema
-   `1.2`) validates with exact field-set equality at every level. Adding one
+2. **Plan** — [scripts/evaluator/plan.py](scripts/evaluator/plan.py) validates
+   the supported schema revisions with exact field-set equality at every level. Adding one
    plan field means touching `plan.py`, `data/schemas/experiment_plan.schema.json`,
    `config/experiment.template.json`, `scripts/runtime/make_plan.py`, and
    `tests/helpers.py` together.
@@ -129,9 +141,10 @@ starts, so analysis load cannot perturb a still-running attempt's timing.
 - **Formal concurrency is exactly 4** with four disjoint CPU sets
   ([run_campaign.py:70](scripts/runtime/run_campaign.py#L70)); five-way exists
   only as a non-formal qualification result.
-- **Only `official_sequence` is executable live.** The other two strategies in
-  `scripts/evaluator/strategies.py` are implemented and validated but rejected by
-  the formal runtime until a live action backend records the applied schedule.
+- **Non-official live strategies are action-scoped.** Bounded-random timing and
+  the current state-aware prototype are executable only for explicitly
+  qualified action backends that record their applied schedule. Unsupported
+  strategy/action combinations fail closed.
 - **`runs/` is ignored and must never be committed**; `experiments/` keeps only
   compact evidence and ledgers. The checkout host is never the experiment
   environment — each plan registers its target environment and the trace must
@@ -150,7 +163,7 @@ stricter than a lint pass and will block otherwise-reasonable edits:
   A separate line-scoped rule rejects the bare route word unless the same line
   writes it as `legacy_offboard` or "legacy offboard".
   Read the list before writing prose or comments; it applies to every tracked
-  file except `docs/NEW_NARRATIVE_v7.md`.
+  file except `docs/NEW_NARRATIVE_v8.md`.
 - **Every `scripts/**/*.py` is imported** — an import-time error in any module
   fails the whole gate.
 - **Local Markdown links must resolve**, `README.md` must keep its four
@@ -161,15 +174,16 @@ stricter than a lint pass and will block otherwise-reasonable edits:
 
 From [AGENT.md](AGENT.md), which stays authoritative:
 
-- `origin/main` is the authoritative state; fetch with pruning and confirm a
-  clean worktree before investigating or changing code.
+- `codex-b` is the authoritative development branch; `main` mirrors reviewed
+  milestones and must not be merged back as an older source of truth.
 - Scope is Family A route-replacing authority transitions only — no controller
   replacement, no actuator-level authority transfer, no other research family.
 - Keep every dependency, source commit, image, and package pinned to an
   immutable identity.
 - Run `./scripts/validation/validate_repo.sh` before handoff.
 
-`docs/` is normative: [RESEARCH_SCOPE.md](docs/RESEARCH_SCOPE.md),
+`docs/NEW_NARRATIVE_v8.md` is the research narrative source. The supporting
+normative documents are [RESEARCH_SCOPE.md](docs/RESEARCH_SCOPE.md),
 [ROUTE_MODEL.md](docs/ROUTE_MODEL.md), [METHOD.md](docs/METHOD.md),
 [EXPERIMENT_PLAN.md](docs/EXPERIMENT_PLAN.md), and
 [CURRENT_STATUS.md](docs/CURRENT_STATUS.md). A behavior change that contradicts

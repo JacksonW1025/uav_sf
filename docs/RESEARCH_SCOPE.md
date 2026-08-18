@@ -1,36 +1,77 @@
 # Research scope
 
-## Research question
+This file is the implementation-facing scope contract. The paper narrative and
+research rationale live in [NEW_NARRATIVE_v8.md](NEW_NARRATIVE_v8.md); completed
+facts live in [CURRENT_STATUS.md](CURRENT_STATUS.md).
 
-This project tests route-replacing authority transitions in PX4. A transition
-is correct only when the previous runtime route is revoked on time, the next
-route is fully installed, actuator authority stays exclusive and continuous,
-the consumed command is fresh and attributable, lifecycle ownership is
-correct, completion reaches the intended successor, and failure reaches a
-fully installed safe route.
+## Core question
 
-## Supported mechanisms
+The paper studies whether a route-state-guided testing method can expose PX4
+authority-handoff problems more effectively than official scenarios,
+grammar-aware random generation, deterministic enumeration, and
+feedback-free state-conditioned generation under a common budget.
 
-The scope is one connected Family A route system:
+The object-level obligation is to determine whether a handoff:
 
-- PX4 internal route;
+- revokes the source route on time;
+- completely installs the target route;
+- preserves exclusive and continuous actuator authority;
+- consumes fresh commands with valid lineage;
+- assigns lifecycle ownership correctly;
+- reaches the intended successor after completion; and
+- installs a complete safe route after a planned failure.
+
+The measurement foundation is established with bounded claims. The target
+generation method and its comparative effectiveness are not yet established.
+
+## Core SUT
+
+The required empirical scope is one connected PX4 route system:
+
+- PX4 internal routes;
 - Legacy Offboard;
 - Dynamic External Mode;
-- Mode Executor;
-- internal Hold, RTL, Land, and Recovery routes.
+- Mode Executor; and
+- internal Hold, RTL, Land, and Recovery.
 
-The repository contains only model definitions, observation adapters,
-collectors, four contract Oracles, evidence admission, controlled generation
-strategies, safety and cleanup rules, attempt accounting, schemas, tests, and a
-locked validation/reference toolchain needed for that system. The formal
-execution environment is supplied and registered separately for each future
-experiment.
+The tested mechanisms include registration, activation, health, command
+consumption, controller/allocator/writer lineage, completion, successor, and
+fallback progression.
+
+The upper mission, planning, behavior, and companion stack is not the SUT. It
+provides realistic seeds and execution context, demonstrates reachability, and
+replays representative findings in full-stack closed-loop simulation.
+
+## Required method scope
+
+The final method must use a semantic state larger than route identity alone.
+It includes route epoch, authority ownership and lineage, lifecycle phase,
+registration and activation, health and freshness, successor/fallback
+progress, motion or mission context, and bounded action history.
+
+The generator must choose both lifecycle action sequences and timing in a
+closed loop. The current timing-selection implementation is a prototype, not
+the completed paper method.
+
+## Optional external validation
+
+Additional route mechanisms, PX4 revisions, autopilots, airframes, HITL, and
+real flight may strengthen external validity. The core claim must stand on the
+PX4 scope above and full-stack SITL; optional systems cannot become a hidden
+completion dependency.
+
+## Non-goals
+
+- modifying PX4 control logic;
+- building runtime protection or automatic recovery;
+- treating the upper autonomy stack as the defect target;
+- equating every research-contract violation with a PX4 defect or security
+  vulnerability; or
+- claiming cross-system generality without corresponding evidence.
 
 ## Claim boundary
 
-Static validation and unit tests establish internal consistency of the
-implementation. They do not establish flight behavior, defect prevalence,
-search effectiveness, transition pass rate, or generalization beyond the
-supported mechanisms. Any new empirical claim beyond the retained final
-reports requires a new preregistered plan that identifies the actual target
-environment and newly collected admissible evidence from that environment.
+Static validation and unit tests establish repository consistency, not flight
+behavior or method effectiveness. Every new empirical claim requires a new
+preregistered plan, an attested execution environment, admissible evidence,
+and a denominator separate from completed studies.
