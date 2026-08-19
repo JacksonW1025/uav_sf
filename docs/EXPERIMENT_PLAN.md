@@ -32,6 +32,13 @@ Exit only when equivalent retained evidence produces deterministic state and
 the implementation distinguishes route epoch, owner, lifecycle progress, and
 command freshness without relying on mode labels.
 
+Status: the state schema, the deterministic extractor, the replay over every
+retained admissible trace, and the reduced-observation comparison are
+available; the exit checks are computed mechanically by
+[the replay analysis](../experiments/stage1_semantic_state_replay_v1/FINAL_REPORT.md)
+rather than asserted. What remains for the generator is Stage 3: the live loop
+must consume this state instead of the narrower prototype state.
+
 ## Stage 2: construct the core action and workload corpus
 
 Build an inventory along two axes:

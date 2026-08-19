@@ -2,15 +2,22 @@
 
 ## Authority and synchronization
 
-- `codex-b` is the authoritative development branch.
+- `codex-b` and `cc-b` are the key development branches. Both carry
+  authoritative work; neither may silently discard or overwrite the other.
 - `main` and `origin/main` are synchronized publication mirrors of reviewed
-  `codex-b` state; they are not independent sources of truth.
-- Never merge an older `main` into `codex-b` merely to make histories agree.
-  Inspect divergence, preserve a recovery reference when rewriting a published
-  tip, then move `main` to the reviewed `codex-b` commit.
+  development state; they are not independent sources of truth.
+- A development branch takes the other branch's reviewed work by
+  fast-forwarding from `main`, and publishes its own by moving `main` to the
+  reviewed development commit. Start new work from an up-to-date branch.
+- Never merge an older `main` into a development branch merely to make
+  histories agree. Inspect divergence, preserve a recovery reference when
+  rewriting a published tip, then move `main` to the reviewed commit.
 - Fetch remote references before publishing so divergence is explicit, but
-  base research and implementation decisions on `codex-b` and the current
-  normative documents.
+  base research and implementation decisions on the development branches and
+  the current normative documents.
+- When the two development branches diverge, resolve it explicitly against the
+  normative documents and the closed evidence. Do not resolve it by dropping a
+  published milestone from either side.
 - Confirm a clean worktree before experiments, branch synchronization, or
   release operations. Ordinary code changes may begin from a deliberately
   dirty worktree only after the existing modifications are understood and

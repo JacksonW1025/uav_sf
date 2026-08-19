@@ -4,11 +4,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Authority
 
-`codex-b` is the authoritative development branch. `main` and `origin/main`
-are publication mirrors of reviewed `codex-b` milestones, not independent
-sources of truth. Fetch before publishing to inspect divergence, but do not
-merge an older `main` into `codex-b` to restore authority. Preserve a recovery
-reference before intentionally rewriting a published `main` tip.
+`codex-b` and `cc-b` are the key development branches; both carry
+authoritative work and neither may silently discard the other's. `main` and
+`origin/main` are publication mirrors of reviewed milestones from either
+branch, not independent sources of truth.
+
+Take the other branch's reviewed work by fast-forwarding from `main`, and
+publish your own by moving `main` to the reviewed commit. Check whether your
+branch is behind `main` before starting work — it usually is. Fetch before
+publishing to inspect divergence, never merge an older `main` back to restore
+authority, and preserve a recovery reference before rewriting a published tip.
 
 [docs/NEW_NARRATIVE_v8.md](docs/NEW_NARRATIVE_v8.md) is the sole research
 narrative. Closed experiment reports and ledgers remain authoritative for
@@ -61,6 +66,10 @@ python3 -m scripts.runtime.run_campaign \
 python3 -m scripts.analysis.oracle_ablation     --root . --output-root <fresh dir>
 python3 -m scripts.analysis.sensitivity         --root . --output-root <fresh dir>
 python3 -m scripts.analysis.matched_differential --root . --output-root <fresh dir> --motivation-smoke
+
+# Replay the semantic-state extractor over every retained admissible trace
+# (add --study <id> to restrict it; takes a few minutes over the full corpus)
+python3 -m scripts.analysis.semantic_state_replay --root . --output-root <fresh dir>
 
 # Detached source checkouts at the locked commits, then images
 ./scripts/setup/prepare_sources.sh
@@ -123,7 +132,16 @@ starts, so analysis load cannot perturb a still-running attempt's timing.
    the frozen corpus to exact per-study accepted counts (131 + 20 = 151). It
    fails loudly if `runs/` no longer holds those plans and traces, so the
    post-hoc analyses are not runnable from a clean clone.
-8. **In-container runtime** — [runtime/ros2/](runtime/ros2/) holds the actual
+8. **Semantic state** — [scripts/state/semantic_state.py](scripts/state/semantic_state.py)
+   folds one closed trace, in hash-chain order, into the v8 generator state
+   (route identity/family/epoch, owner and lineage, lifecycle phase, freshness
+   and health, successor/fallback progress, motion context, bounded action
+   history) plus the `(state, action, timing bucket) -> state` edges. It reads
+   no declared-mode field and marks unobserved evidence as an explicit unknown.
+   `validate_repo` asserts its Python vocabularies equal the enums in
+   [data/schemas/semantic_state.schema.json](data/schemas/semantic_state.schema.json),
+   so a phase or fault class must be added in both places.
+9. **In-container runtime** — [runtime/ros2/](runtime/ros2/) holds the actual
    ROS 2 nodes (`external_mode.cpp`, `mode_executor.cpp`,
    `gazebo_clock_sidecar.cpp`, plus Python requester/telemetry/safety nodes).
    Observation-only upstream changes live in [patches/](patches/) and are digest-locked
@@ -174,8 +192,9 @@ stricter than a lint pass and will block otherwise-reasonable edits:
 
 From [AGENT.md](AGENT.md), which stays authoritative:
 
-- `codex-b` is the authoritative development branch; `main` mirrors reviewed
-  milestones and must not be merged back as an older source of truth.
+- `codex-b` and `cc-b` are the key development branches; `main` mirrors
+  reviewed milestones from either and must not be merged back as an older
+  source of truth.
 - Scope is Family A route-replacing authority transitions only — no controller
   replacement, no actuator-level authority transfer, no other research family.
 - Keep every dependency, source commit, image, and package pinned to an

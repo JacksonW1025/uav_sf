@@ -1,0 +1,117 @@
+{
+  "analysis_id": "stage1-semantic-state-replay-v1",
+  "attempts_per_study": {
+    "main-strategy-comparison-thor-v1": 18,
+    "motivation-stage-a2-thor-remediation-v1": 26,
+    "motivation-stage-a2-thor-v1": 18,
+    "motivation-thor-remediation-v1": 20,
+    "motivation-thor-v1": 131
+  },
+  "attempts_replayed": 213,
+  "attempts_with_mode_label_fields_in_evidence": 78,
+  "corpus_coverage": {
+    "attempts_per_action": {
+      "adjacent_request": 30,
+      "complete": 175,
+      "fault_health_loss": 8,
+      "fault_other": 8,
+      "fault_process_exit": 16,
+      "fault_setpoint_stall": 72,
+      "register": 108,
+      "release_to_successor": 154,
+      "request_activation": 8,
+      "request_external_route": 205,
+      "request_internal_route": 48
+    },
+    "attempts_per_contract_boundary": {
+      "command_stale": 93,
+      "fallback_installed": 7,
+      "source_revoked": 213,
+      "successor_installed": 171,
+      "successor_requested": 154,
+      "target_installed": 213,
+      "target_partially_installed": 213
+    },
+    "attempts_with_route_re_entry": 175,
+    "distinct_actions": [
+      "adjacent_request",
+      "complete",
+      "fault_health_loss",
+      "fault_other",
+      "fault_process_exit",
+      "fault_setpoint_stall",
+      "register",
+      "release_to_successor",
+      "request_activation",
+      "request_external_route",
+      "request_internal_route"
+    ],
+    "distinct_contract_boundaries": [
+      "command_stale",
+      "fallback_installed",
+      "source_revoked",
+      "successor_installed",
+      "successor_requested",
+      "target_installed",
+      "target_partially_installed"
+    ],
+    "distinct_final_state_keys": 29,
+    "distinct_lifecycle_phases": [
+      "activated",
+      "activation_requested",
+      "completed",
+      "executing",
+      "fallback",
+      "idle",
+      "re_entry",
+      "replacing",
+      "terminal"
+    ],
+    "distinct_semantic_edges": 54,
+    "distinct_semantic_states": 191,
+    "observed_fault_classes": [
+      "health_loss",
+      "none",
+      "other",
+      "process_exit",
+      "setpoint_stall"
+    ],
+    "observed_freshness_states": [
+      "aging",
+      "fresh",
+      "stale",
+      "unknown"
+    ],
+    "observed_motion_phases": [
+      "unobserved"
+    ],
+    "observed_owner_classes": [
+      "external",
+      "internal",
+      "none"
+    ]
+  },
+  "exit_criteria": {
+    "deterministic_replay": true,
+    "distinguishes_command_freshness": true,
+    "distinguishes_lifecycle_progress": true,
+    "distinguishes_owner": true,
+    "distinguishes_route_epoch": true,
+    "ignores_mode_labels": true
+  },
+  "exit_criteria_met": true,
+  "immutability": {
+    "created_formal_denominator": false,
+    "modified_frozen_evidence": false
+  },
+  "mode_label_dependent_attempts": [],
+  "non_deterministic_attempts": [],
+  "reduced_observation": {
+    "attempts": 213,
+    "attempts_retaining_any_contract_boundary": 0,
+    "attempts_retaining_command_freshness": 0,
+    "attempts_retaining_command_lineage": 0,
+    "attempts_with_equal_final_state": 1
+  },
+  "schema_version": "1.0"
+}

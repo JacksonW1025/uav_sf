@@ -13,6 +13,13 @@ from typing import Any
 
 from scripts.evaluator.plan import load_plan
 from scripts.model.runtime_route import EVENT_KINDS, ROUTES
+from scripts.state.semantic_state import (
+    FAULT_CLASSES,
+    FRESHNESS_STATES,
+    LIFECYCLE_PHASES,
+    MOTION_PHASES,
+    ROUTE_FAMILIES,
+)
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -206,6 +213,26 @@ def check_json_and_schemas(files: list[Path]) -> None:
         )
 
 
+def check_semantic_state_schema() -> None:
+    """The derived-state vocabulary must exist once, in Python and in schema."""
+
+    schema = load_json(ROOT / "data/schemas/semantic_state.schema.json")
+    expected = {
+        "route": sorted(ROUTES),
+        "route_family": sorted({"none", *ROUTE_FAMILIES.values()}),
+        "lifecycle_phase": list(LIFECYCLE_PHASES),
+        "freshness_state": list(FRESHNESS_STATES),
+        "fault_class": list(FAULT_CLASSES),
+        "motion_phase": list(MOTION_PHASES),
+    }
+    for name, values in expected.items():
+        declared = schema["$defs"][name]["enum"]
+        if sorted(declared) != sorted(values):
+            raise ValidationError(
+                f"semantic state schema and Python {name} values differ"
+            )
+
+
 def check_locks() -> None:
     dependencies = load_json(ROOT / "config/dependencies.lock.json")
     if dependencies.get("tooling_platform") != "linux/arm64":
@@ -274,6 +301,7 @@ def main() -> int:
         check_terms(files)
         check_markdown_links(files)
         check_json_and_schemas(files)
+        check_semantic_state_schema()
         check_locks()
         check_imports()
         check_readme_commands()

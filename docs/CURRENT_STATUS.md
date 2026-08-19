@@ -172,12 +172,16 @@ The repository currently contains:
 - safety supervision, cleanup, attempt accounting, and batch barriers;
 - locked sources and ARM64 Thor container/toolchain definitions;
 - official, bounded-random timing, and prototype state-aware policies;
-- qualified setpoint-stall and process-exit live backends; and
+- qualified setpoint-stall and process-exit live backends;
+- the v8 semantic-state schema, its deterministic offline extractor, and the
+  digest-bound replay of that extractor over every retained admissible trace;
+  and
 - retained formal reports, compact evidence, and ledgers.
 
 The repository does not yet contain:
 
-- the complete semantic state defined by v8;
+- a live generator that consumes the full semantic state, rather than the
+  narrower `route_active` / `motion_entered` prototype state;
 - multi-action closed-loop sequence generation;
 - the mechanism- and provenance-selected core corpus;
 - deterministic and feedback-free main baselines under one common contract;
@@ -193,13 +197,41 @@ evidence, or replayable artifact for that layer. The retained count for that
 layer therefore remains zero. Such material can become background or a benchmark only
 after its provenance and evidence are supplied independently.
 
+## Semantic state extraction
+
+The v8 state defined in [ROUTE_MODEL.md](ROUTE_MODEL.md) now has a tracked
+schema, a deterministic extractor, and a read-only replay over the whole
+retained corpus: 213 accepted attempts across the five closed studies.
+
+- 213 / 213 attempts re-derive to an identical trajectory digest from an
+  independent parse of the retained file;
+- 213 / 213 are unchanged when every declared-mode field is removed and when it
+  is replaced by an impossible value, so mode independence is measured rather
+  than asserted;
+- the derived state separates route epoch, authority owner, lifecycle progress
+  and command freshness, reaching 191 distinct semantic states, 54 semantic
+  edges, 9 lifecycle phases, 11 actions and 7 contract boundaries; and
+- under reduced observation none of the 213 attempts retains command lineage,
+  command freshness, or any contract boundary.
+
+This is Stage 1 implementation and measurement work. It adds no formal launch,
+no denominator, and no claim about PX4 behavior.
+
+Evidence: [Stage 1 replay report](../experiments/stage1_semantic_state_replay_v1/FINAL_REPORT.md).
+
 ## Active next step
 
 No formal campaign is currently authorized. Work proceeds through the decision
-gates in [EXPERIMENT_PLAN.md](EXPERIMENT_PLAN.md): implement full semantic
-state, justify the corpus, complete the generator and baselines, establish
-ground truth and full-stack replay, then pilot and preregister repeated
-campaigns.
+gates in [EXPERIMENT_PLAN.md](EXPERIMENT_PLAN.md). Stage 1 extraction is
+available and its exit checks are met; the remaining Stage 1 obligation is that
+the live loop consume this state instead of the prototype state. Then justify
+the corpus, complete the generator and baselines, establish ground truth and
+full-stack replay, and finally pilot and preregister repeated campaigns.
+
+The preregistered process-exit matrix still verifies as launch-ready: its
+dry-run resolves six pending cells and 18 planned launches against the attested
+image, and it still has no formal ledger. Readiness remains separate from
+authorization.
 
 ## Current claim boundary
 

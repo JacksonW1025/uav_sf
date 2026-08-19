@@ -73,6 +73,14 @@ is derived. They are not the paper-level state abstraction. The primary method
 is grey-box and must include reduced-observation replay to quantify dependence
 on custom instrumentation.
 
+This state has a tracked schema in
+[data/schemas/semantic_state.schema.json](../data/schemas/semantic_state.schema.json)
+and a deterministic extractor in
+[scripts/state/semantic_state.py](../scripts/state/semantic_state.py). The
+vocabulary exists once: repository validation refuses a schema whose route,
+route-family, lifecycle-phase, freshness, fault, or motion values differ from
+the Python constants.
+
 ## State transitions and coverage
 
 The target feedback unit is a semantic edge:

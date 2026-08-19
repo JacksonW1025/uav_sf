@@ -1,0 +1,84 @@
+{
+  "analysis_id": "stage1-semantic-state-replay-v1",
+  "analysis_kind": "read_only_posthoc",
+  "contract_boundaries": [
+    "source_revoked",
+    "target_installed",
+    "target_partially_installed",
+    "command_stale",
+    "successor_requested",
+    "successor_installed",
+    "fallback_installed",
+    "registration_rejected",
+    "activation_rejected",
+    "evidence_gap"
+  ],
+  "decision_rules": {
+    "creates_formal_denominator": false,
+    "determinism_check": "re-parse the retained trace and re-derive",
+    "freshness_bound": "the maximum_command_age_ns frozen in each attempt plan",
+    "mode_label_rule": "re-derive with every declared-mode field removed and with it replaced by an impossible sentinel; both trajectories must equal the original",
+    "mutates_frozen_evidence": false,
+    "reduced_observation_rule": "drop every event carrying raw_source_domain, which is exactly the evidence produced by the tracked observability patches",
+    "selected_attempts": "every CLOSED attempt whose outcome is ACCEPTED"
+  },
+  "extractor": "scripts/state/semantic_state.py",
+  "inputs": [
+    {
+      "ledger": "experiments/main_strategy_comparison_thor_v1/attempt-ledger.jsonl",
+      "ledger_digest": "sha256:ef041af326d8c115b3f44b8c8f7ca9a5f2278b1e9272eefa24fc9f4676848aa3",
+      "study_id": "main-strategy-comparison-thor-v1"
+    },
+    {
+      "ledger": "experiments/motivation_stage_a2_thor_remediation_v1/attempt-ledger.jsonl",
+      "ledger_digest": "sha256:d468519cb72d431b53919d3fbd10d8e8759db9dd9f12d0b0e24a6f1b326c640e",
+      "study_id": "motivation-stage-a2-thor-remediation-v1"
+    },
+    {
+      "ledger": "experiments/motivation_stage_a2_thor_v1/attempt-ledger.jsonl",
+      "ledger_digest": "sha256:a66282096fd70860f62b028a3d7d2384b6a847a6bbf7c489dc4fb0e64726ade5",
+      "study_id": "motivation-stage-a2-thor-v1"
+    },
+    {
+      "ledger": "experiments/motivation_thor_remediation_v1/attempt-ledger.jsonl",
+      "ledger_digest": "sha256:99ef1259f47ff0443c9a21908719ee91dca2d8d05acacee85d2485f254f3f9ad",
+      "study_id": "motivation-thor-remediation-v1"
+    },
+    {
+      "ledger": "experiments/motivation_thor_v1/attempt-ledger.jsonl",
+      "ledger_digest": "sha256:3558dba3180c1bfc9bbdfdab0e7b80c7a18da593dbb283ea36c34b65b39beb2a",
+      "study_id": "motivation-thor-v1"
+    }
+  ],
+  "lifecycle_phases": [
+    "idle",
+    "registered",
+    "activation_requested",
+    "activated",
+    "executing",
+    "completed",
+    "replacing",
+    "re_entry",
+    "fallback",
+    "terminal"
+  ],
+  "mode_label_fields": [
+    "nav_state",
+    "nav_state_user_intention",
+    "mode",
+    "declared_mode",
+    "flight_mode"
+  ],
+  "purpose": "Replay the deterministic semantic-state extractor over retained admissible traces and quantify instrumentation dependence.",
+  "required_phases": [
+    "idle",
+    "activation_requested",
+    "activated",
+    "executing",
+    "completed",
+    "replacing",
+    "terminal"
+  ],
+  "schema_version": "1.0",
+  "state_schema": "data/schemas/semantic_state.schema.json"
+}

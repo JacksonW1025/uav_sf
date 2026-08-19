@@ -59,6 +59,18 @@ The primary observation contract is grey-box. A reduced-observation replay
 must quantify whether method behavior or finding classification depends on
 custom instrumentation unavailable through ordinary PX4 interfaces.
 
+The extractor is implemented in
+[scripts/state/semantic_state.py](../scripts/state/semantic_state.py) against
+the tracked contract in
+[data/schemas/semantic_state.schema.json](../data/schemas/semantic_state.schema.json).
+It folds one closed trace in hash-chain order into a state trajectory, uses no
+declared-mode field, and represents unobserved evidence as an explicit unknown
+rather than an inferred value. Motion context is an optional input from an
+independent physical source; without samples every state reports `unobserved`.
+The feedback unit `(semantic state, action, timing bucket) -> next semantic
+state` is derived by the same fold. Extraction is offline today: the live
+generator still consumes the narrower prototype state described above.
+
 ## Reachable action grammar
 
 Actions are selected by lifecycle phase and mechanism provenance, not by

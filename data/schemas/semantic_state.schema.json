@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jacksonw1025.github.io/uav_sf/semantic_state.schema.json",
+  "title": "Semantic state derived from normalized route evidence",
+  "type": "object",
+  "required": [
+    "route_identity",
+    "authority",
+    "lifecycle",
+    "freshness",
+    "progression",
+    "motion",
+    "action_history",
+    "evidence_gap",
+    "state_key"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "route_identity": {
+      "type": "object",
+      "required": ["route", "route_family", "route_epoch", "route_epoch_index"],
+      "additionalProperties": false,
+      "properties": {
+        "route": {"oneOf": [{"$ref": "#/$defs/route"}, {"type": "null"}]},
+        "route_family": {"$ref": "#/$defs/route_family"},
+        "route_epoch": {"type": ["string", "null"], "minLength": 1},
+        "route_epoch_index": {"type": "integer", "minimum": 0}
+      }
+    },
+    "authority": {
+      "type": "object",
+      "required": [
+        "lifecycle_owner",
+        "executor_owner",
+        "producer_session",
+        "registration_id",
+        "activation_id",
+        "controller_id",
+        "allocator_id",
+        "writer_id",
+        "owner_class",
+        "lineage",
+        "lineage_stages"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "lifecycle_owner": {"type": ["string", "null"], "minLength": 1},
+        "executor_owner": {"type": ["string", "null"], "minLength": 1},
+        "producer_session": {"type": ["string", "null"], "minLength": 1},
+        "registration_id": {"type": ["string", "null"], "minLength": 1},
+        "activation_id": {"type": ["string", "null"], "minLength": 1},
+        "controller_id": {"type": ["string", "null"], "minLength": 1},
+        "allocator_id": {"type": ["string", "null"], "minLength": 1},
+        "writer_id": {"type": ["string", "null"], "minLength": 1},
+        "owner_class": {"enum": ["none", "internal", "external"]},
+        "lineage": {"enum": ["none", "partial", "complete"]},
+        "lineage_stages": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "command_consumed",
+              "controller_output",
+              "allocator_output",
+              "actuator_write"
+            ]
+          }
+        }
+      }
+    },
+    "lifecycle": {
+      "type": "object",
+      "required": [
+        "phase",
+        "completion_observed",
+        "pending_target_route",
+        "registration_state",
+        "activation_state",
+        "re_entry_count",
+        "source_revoked"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "phase": {"$ref": "#/$defs/lifecycle_phase"},
+        "completion_observed": {"type": "boolean"},
+        "pending_target_route": {
+          "oneOf": [{"$ref": "#/$defs/route"}, {"type": "null"}]
+        },
+        "registration_state": {"enum": ["none", "registered", "rejected"]},
+        "activation_state": {
+          "enum": ["none", "requested", "activated", "revoked", "rejected"]
+        },
+        "re_entry_count": {"type": "integer", "minimum": 0},
+        "source_revoked": {"type": "boolean"}
+      }
+    },
+    "freshness": {
+      "type": "object",
+      "required": ["state", "command_age_ns", "fault_class", "fault_observed"],
+      "additionalProperties": false,
+      "properties": {
+        "state": {"$ref": "#/$defs/freshness_state"},
+        "command_age_ns": {"type": ["integer", "null"], "minimum": 0},
+        "fault_class": {"$ref": "#/$defs/fault_class"},
+        "fault_observed": {"type": "boolean"}
+      }
+    },
+    "progression": {
+      "type": "object",
+      "required": [
+        "successor_requested_route",
+        "successor_installed",
+        "fallback_route",
+        "fallback_installed"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "successor_requested_route": {
+          "oneOf": [{"$ref": "#/$defs/route"}, {"type": "null"}]
+        },
+        "successor_installed": {"type": "boolean"},
+        "fallback_route": {
+          "oneOf": [{"$ref": "#/$defs/route"}, {"type": "null"}]
+        },
+        "fallback_installed": {"type": "boolean"}
+      }
+    },
+    "motion": {
+      "type": "object",
+      "required": ["phase"],
+      "additionalProperties": false,
+      "properties": {"phase": {"$ref": "#/$defs/motion_phase"}}
+    },
+    "action_history": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "evidence_gap": {"type": "boolean"},
+    "state_key": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "route": {
+      "enum": [
+        "px4_internal",
+        "legacy_offboard",
+        "dynamic_external_mode",
+        "mode_executor",
+        "internal_hold",
+        "internal_rtl",
+        "internal_land",
+        "internal_recovery"
+      ]
+    },
+    "route_family": {
+      "enum": [
+        "none",
+        "internal_navigator",
+        "internal_safe",
+        "external_offboard",
+        "external_dynamic",
+        "external_executor"
+      ]
+    },
+    "lifecycle_phase": {
+      "enum": [
+        "idle",
+        "registered",
+        "activation_requested",
+        "activated",
+        "executing",
+        "completed",
+        "replacing",
+        "re_entry",
+        "fallback",
+        "terminal"
+      ]
+    },
+    "freshness_state": {"enum": ["unknown", "fresh", "aging", "stale"]},
+    "fault_class": {
+      "enum": ["none", "setpoint_stall", "health_loss", "process_exit", "other"]
+    },
+    "motion_phase": {
+      "enum": [
+        "unobserved",
+        "ground",
+        "takeoff",
+        "hover",
+        "translating",
+        "landing"
+      ]
+    }
+  }
+}
