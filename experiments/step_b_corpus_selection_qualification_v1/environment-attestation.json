@@ -45,7 +45,7 @@
         "observer_profile": "transition",
         "operating_system": "Ubuntu 24.04.4 LTS",
         "python": "3.12.3",
-        "repository_revision": "c2fc081407c936d5ed5ae2aada646f11d57d5235",
+        "repository_revision": "2c6b754f9dd85bcf8e941eabfe19bee470ff832b",
         "rmw_implementation": "rmw_fastrtps_cpp",
         "ros_distribution": "jazzy",
         "schema_version": "1.0",
@@ -110,8 +110,8 @@
           "px4_ros2_cpp"
         ]
       },
-      "image_id": "sha256:e3538af7e7617e2e346fbf543267f6854737c3e20635475b381c44d010d4f61a",
-      "image_reference": "uav-sf-family-a-thor:step-b-c2fc081",
+      "image_id": "sha256:aa1728bf65b070d66e94491e0173b262d2a72e5276f8fb310d764d0e68d4dc00",
+      "image_reference": "uav-sf-family-a-thor:step-b-2c6b754",
       "platform": "linux/arm64",
       "preflight": {
         "checks": {
@@ -159,12 +159,12 @@
     },
     "schema_version": "1.0"
   },
-  "attestation_payload_digest": "sha256:2832c95ebf5bac1b4517e44390791a97fbc73583db55034c5b570e6ea4e09dcd",
+  "attestation_payload_digest": "sha256:bb9c5def30d5e3b45841c4645c4316ed4c9296dfc733f01faf1269d39afe3394",
   "execution_environment": {
     "architecture": "aarch64",
     "collector_host_id": "agx-thor-local",
     "environment_id": "thor-r38.2.1-step-b-corpus-qualification-v1",
-    "environment_manifest_digest": "sha256:2832c95ebf5bac1b4517e44390791a97fbc73583db55034c5b570e6ea4e09dcd",
+    "environment_manifest_digest": "sha256:bb9c5def30d5e3b45841c4645c4316ed4c9296dfc733f01faf1269d39afe3394",
     "execution_host_id": "agx-thor-local",
     "operating_system": "Ubuntu 24.04 Noble container on L4T R38.2.1",
     "px4_binary_digest": "sha256:a01553180c7fa3cdd784fcfa28edd0fb7f45c226033211fd112ad91cac4f1c2b",

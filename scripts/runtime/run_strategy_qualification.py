@@ -119,6 +119,10 @@ def _observed_coverage(run_root: Path, study_id: str, prefix: str) -> list[str]:
 
 
 def _fallback_status(evaluation_path: Path) -> str | None:
+    # An observability-rejected attempt closes without an evaluation.  That is a
+    # failed qualification attempt, not a reason to abandon the whole batch.
+    if not evaluation_path.is_file():
+        return None
     evaluation = _read_object(evaluation_path)
     for oracle in evaluation.get("oracles", []):
         if oracle.get("oracle") == "successor_progression":
@@ -154,7 +158,11 @@ def _attempt_summary(
         expects_fallback = live_profile(str(decision["action"])).fallback_expected
     else:
         expects_fallback = True
-    fallback_ok = fallback == "PASS" if expects_fallback else fallback != "VIOLATION"
+    fallback_ok = (
+        fallback == "PASS"
+        if expects_fallback
+        else fallback is not None and fallback != "VIOLATION"
+    )
     passed = all(
         (
             result.get("outcome") == "ACCEPTED",
@@ -173,6 +181,7 @@ def _attempt_summary(
         "physical_execution_status": physical.get("status"),
         "safe_fallback_status": fallback,
         "safe_fallback_required": expects_fallback,
+        "evaluated": (attempt_root / "derived" / "evaluation.json").is_file(),
         "selected_action": decision["action"],
         "strategy_lifecycle_complete": complete_lifecycle,
         "action_contract_valid": action_valid,
