@@ -30,7 +30,7 @@ repository validation passes. A step that is partly done says which part.
 v8 plan stage:      Stage 2, construct the core action and workload corpus
 Stage 1:            complete, exit checks met
 Corpus freeze:      proposed and conditional, deliberately not signed
-Current step:       Step C-reentry, make re-entry selectable on both mechanisms
+Current step:       Step C-restart, implement the restart action
 Formal campaigns:   none authorized, none running
 ```
 
@@ -161,14 +161,20 @@ wired actions keep `route_active`, so their behaviour is unchanged.
 
 This changed the decision schema, so the next live batch needs a rebuilt image.
 
-#### C-reentry — make re-entry selectable on both mechanisms — NOT STARTED
+#### C-reentry — make re-entry selectable on both mechanisms — COMPLETE
 
-Work: the dynamic requester has no repeat-cycle loop at all, and in both nodes
-re-entry currently fires on a fixed successor dwell rather than on the policy's
-schedule. Both need a `scheduled_action` parameter so the node re-enters when
-the executor's request appears. The qualification cell then needs
-`successor_route: internal_hold`, because re-entering from a landing successor
-is a different experiment.
+The dynamic requester now has a repeat-cycle loop, both nodes take a
+`scheduled_action` parameter and wait for the executor's request when the policy
+selected re-entry, and the action anchors on `successor_installed`. The
+qualification passed 18 of 18 on the first batch, with all three actions
+selected and applied across both mechanisms over 8 distinct units and the
+state-aware cells visiting every action. A re-entry attempt enters the tested
+route twice in one episode, separated by route epoch and activation identity.
+See [the qualification record](../experiments/step_c_reentry_qualification_v1/QUALIFICATION.md).
+
+A latent defect surfaced here: an unset action-request path was passed as an
+empty ROS parameter override, which the parameter parser rejects, so any run
+without a strategy decision would have failed at node startup.
 
 #### C-restart — implement the restart action — NOT STARTED
 
@@ -217,11 +223,15 @@ generation — remain deferred by standing decision 3.
 
 ## Next concrete action
 
-Continue with C-reentry. The dynamic requester needs a repeat-cycle loop, and both
-workload nodes need a `scheduled_action` parameter so re-entry fires on the
-policy's schedule rather than a fixed dwell. Then wire re-entry as a live action,
-rebuild the image, and qualify it under the Step B spec pattern with
-`successor_route: internal_hold`.
+Continue with C-restart. Implement `restart_producer_after_loss` on top of the
+producer-exit fixture: after the fallback is installed, the runner starts a
+fresh producer session which re-requests the tested route. Give it a live
+profile anchored on a marker the executor can observe after a fallback, wire it,
+rebuild the image, and qualify it under the same spec pattern.
+
+This is the action the corpus was sized around: its legality depends on the
+outcome of an earlier action, which is what a feedback-free baseline cannot
+exploit.
 
 Before any live batch, confirm no unpinned process competes for the pinned CPU
 sets, and afterwards confirm the central real-time factor is near 1.0.
