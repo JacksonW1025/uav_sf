@@ -1,0 +1,59 @@
+{
+  "axis_pairs_without_evidence": [
+    {
+      "lifecycle_phase": "execution",
+      "mechanism": "communication_delay"
+    },
+    {
+      "lifecycle_phase": "replacement",
+      "mechanism": "manual_or_failsafe_takeover"
+    },
+    {
+      "lifecycle_phase": "fallback",
+      "mechanism": "manual_or_failsafe_takeover"
+    }
+  ],
+  "boundaries": {
+    "declared": [
+      "activation_rejected",
+      "command_stale",
+      "fallback_installed",
+      "registration_rejected",
+      "source_revoked",
+      "successor_installed",
+      "successor_requested",
+      "target_installed"
+    ],
+    "declared_not_observed": [],
+    "model_boundaries_no_candidate_declares": [
+      "evidence_gap",
+      "target_partially_installed"
+    ],
+    "observed": [
+      "activation_rejected",
+      "command_stale",
+      "fallback_installed",
+      "registration_rejected",
+      "source_revoked",
+      "successor_installed",
+      "successor_requested",
+      "target_installed",
+      "target_partially_installed"
+    ]
+  },
+  "frozen": false,
+  "inventory_id": "stage2-action-corpus-inventory-v1",
+  "schema_version": "1.0",
+  "totals": {
+    "candidates": 12,
+    "gaps": 5,
+    "roles": {
+      "benchmark": 6,
+      "discovery": 2,
+      "realism_validation": 4,
+      "undecided": 5
+    },
+    "with_live_backend": 2,
+    "with_retained_evidence": 12
+  }
+}

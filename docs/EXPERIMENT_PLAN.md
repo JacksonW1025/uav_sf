@@ -64,6 +64,14 @@ event is not ground truth until reproduced and attributed.
 Stage 2 freezes a minimal representative corpus only after this inventory. The
 number and identity of actions are outputs of the analysis, not assumptions.
 
+Status: the inventory exists and is verified against the repository — 12
+candidates with retained evidence and 5 named gaps, each record bound to real
+provenance, matrix cells, wired backends and contract boundaries. See
+[the inventory report](../experiments/stage2_action_corpus_inventory_v1/FINAL_REPORT.md).
+The corpus is deliberately not frozen: selecting the minimal representative
+subset, and deciding whether the qualified process-exit action re-enters under a
+new identity, are the remaining Stage 2 decisions.
+
 ## Stage 3: implement closed-loop generation and feedback
 
 Deliver the loop defined in [METHOD.md](METHOD.md): observe, filter, select,

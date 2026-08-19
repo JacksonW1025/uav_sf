@@ -115,6 +115,24 @@ def route_family(route: str | None) -> str:
         raise SemanticStateError(f"unsupported route: {route}") from exc
 
 
+def _registration_rejected(event: Mapping[str, Any]) -> bool:
+    """Rejection marker used by the Registration Contract Oracle.
+
+    PX4 reports the outcome as a numeric `result_code`; the boolean form only
+    appears in synthetic evidence.  Both must mean the same thing here, or the
+    derived state would disagree with the Oracle about the same event.
+    """
+
+    return int(event.get("result_code", -1)) == 2 or bool(event.get("rejected"))
+
+
+def _activation_rejection_fault(event: Mapping[str, Any]) -> bool:
+    return (
+        "reject" in str(event.get("reason", "")).lower()
+        or int(event.get("result_code", -1)) == 2
+    )
+
+
 def _fault_class(reason: str) -> str:
     lowered = reason.lower()
     if "stall" in lowered:
@@ -483,7 +501,7 @@ def _action_label(event: Mapping[str, Any], state: SemanticState) -> str:
             return "request_external_route"
         return "request_internal_route"
     if kind == "registration":
-        return "register_rejected" if event.get("rejected") else "register"
+        return "register_rejected" if _registration_rejected(event) else "register"
     if kind == "activation_requested":
         return "request_activation"
     if kind == "adjacent_request":
@@ -563,8 +581,7 @@ def _apply(event: Mapping[str, Any], state: SemanticState, fold: _Fold) -> Seman
         return replace(state, evidence_gap=True, freshness="unknown", command_age_ns=None)
 
     if kind == "registration":
-        rejected = bool(event.get("rejected"))
-        if rejected:
+        if _registration_rejected(event):
             fold.record_boundary("registration_rejected")
             return replace(state, registration_state="rejected")
         updated = replace(
@@ -723,11 +740,15 @@ def _apply(event: Mapping[str, Any], state: SemanticState, fold: _Fold) -> Seman
         return replace(state, phase="completed", completion_observed=True)
 
     if kind == "fault_detected":
-        return replace(
+        updated = replace(
             state,
             fault_class=_fault_class(str(event.get("reason", ""))),
             fault_observed=True,
         )
+        if _activation_rejection_fault(event):
+            fold.record_boundary("activation_rejected")
+            updated = replace(updated, activation_state="rejected")
+        return updated
 
     if kind == "fallback_triggered":
         route = event.get("route")

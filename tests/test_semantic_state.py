@@ -216,6 +216,44 @@ class SemanticStateTests(unittest.TestCase):
         self.assertTrue(final.fallback_installed)
         self.assertIn("fallback_installed", trajectory.coverage.contract_boundaries)
 
+    def test_registration_rejection_follows_the_oracle_result_code(self) -> None:
+        marks = identity("dynamic_external_mode", "target")
+        events = chain(
+            [
+                raw_event("collection_started", 0),
+                instrumented("registration", 10_000_000, result_code=1, reason_code=0, **marks),
+                instrumented("registration", 20_000_000, result_code=2, reason_code=4, **marks),
+            ]
+        )
+        trajectory = derive_trajectory(events)
+        self.assertEqual(trajectory.final_state.registration_state, "rejected")
+        self.assertIn("registration_rejected", trajectory.coverage.contract_boundaries)
+        self.assertIn("register_rejected", trajectory.coverage.actions)
+        self.assertIn("register", trajectory.coverage.actions)
+
+    def test_activation_rejection_is_read_from_the_rejection_fault(self) -> None:
+        events = chain(
+            [
+                raw_event("collection_started", 0),
+                raw_event(
+                    "activation_requested",
+                    10_000_000,
+                    source_route="internal_hold",
+                    target_route="dynamic_external_mode",
+                ),
+                raw_event(
+                    "fault_detected",
+                    20_000_000,
+                    route="dynamic_external_mode",
+                    reason="activation_rejected_after_health_loss",
+                ),
+            ]
+        )
+        trajectory = derive_trajectory(events)
+        self.assertEqual(trajectory.final_state.activation_state, "rejected")
+        self.assertTrue(trajectory.final_state.fault_observed)
+        self.assertIn("activation_rejected", trajectory.coverage.contract_boundaries)
+
     def test_reduced_observation_loses_lineage_freshness_and_boundaries(self) -> None:
         events = chain(
             [

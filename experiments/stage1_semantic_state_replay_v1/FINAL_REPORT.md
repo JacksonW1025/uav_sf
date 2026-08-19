@@ -51,19 +51,27 @@ than a claim about the evidence.
 
 ## Derived coverage over the retained corpus
 
-- 191 distinct semantic states and 54 distinct semantic edges;
+- 191 distinct semantic states and 56 distinct semantic edges;
 - 29 distinct final states;
 - 9 of the 10 lifecycle phases (`registered` is not reached as a distinct
   phase because every traced registration occurs while an internal route is
   already executing);
-- 11 distinct actions, including four fault classes; and
-- 7 of the 10 contract boundaries.
+- 12 distinct actions, including four fault classes and an explicit
+  registration rejection; and
+- 9 of the 10 contract boundaries.
 
-Three boundaries are absent from the retained corpus:
-`registration_rejected`, `activation_rejected`, and `evidence_gap`. The first
-two exist in the model because the Registration contract requires them; the
-rejection cells that would exercise them are not part of these five accepted
-sets. Their absence is a property of the retained corpus, not of the extractor.
+Both rejection boundaries are exercised: `registration_rejected` in the 8
+accepted capacity attempts and `activation_rejected` in the 8 accepted
+health-loss attempts. Only `evidence_gap` is absent, which is expected because
+a critical collection gap normally makes a trace inadmissible and so keeps it
+out of an accepted corpus.
+
+The rejection rules are the ones the Registration Contract Oracle already uses:
+a `registration` event with `result_code` 2, and a `fault_detected` event whose
+reason states a rejection. An earlier revision of this extractor looked for a
+boolean rejection flag that real evidence never carries, which made both
+boundaries unreachable. The defect was found while building the Stage 2
+inventory and is fixed here.
 
 Motion context is `unobserved` for all 213 attempts. The closed trace carries
 no physical observation, and this analysis deliberately supplies no motion
@@ -81,15 +89,20 @@ emit.
 | --- | ---: |
 | Command lineage observable | 0 / 213 |
 | Command freshness observable | 0 / 213 |
-| Any contract boundary observable | 0 / 213 |
+| Any contract boundary observable | 8 / 213 |
 | Final state identical to the full view | 1 / 213 |
 
 Under reduced observation the derived state keeps only request, completion,
 fault and terminal markers; route identity, epoch, owner, lineage and freshness
-all collapse to explicit unknowns. The single attempt whose final state matches
-is `fault-dynamic-health-loss-010`, a health-loss cell whose full-view final
-state already has no route installed and unknown freshness. That match is an
-absence agreeing with an absence, not the reduced view recovering evidence.
+all collapse to explicit unknowns. The 8 attempts that keep a boundary are the
+health-loss cells, whose `activation_rejected` marker rides on a public fault
+event rather than on instrumented uORB evidence; registration rejection, by
+contrast, is instrumented and is lost.
+
+The single attempt whose final state matches is `fault-dynamic-health-loss-010`,
+a health-loss cell whose full-view final state already has no route installed
+and unknown freshness. That match is an absence agreeing with an absence, not
+the reduced view recovering evidence.
 
 This is the quantified instrumentation dependence the method requires. It says
 the grey-box contract is load-bearing for this state; it does not say the

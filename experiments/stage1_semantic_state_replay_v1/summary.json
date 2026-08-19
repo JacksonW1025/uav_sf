@@ -18,14 +18,17 @@
       "fault_process_exit": 16,
       "fault_setpoint_stall": 72,
       "register": 108,
+      "register_rejected": 8,
       "release_to_successor": 154,
       "request_activation": 8,
       "request_external_route": 205,
       "request_internal_route": 48
     },
     "attempts_per_contract_boundary": {
+      "activation_rejected": 8,
       "command_stale": 93,
       "fallback_installed": 7,
+      "registration_rejected": 8,
       "source_revoked": 213,
       "successor_installed": 171,
       "successor_requested": 154,
@@ -41,14 +44,17 @@
       "fault_process_exit",
       "fault_setpoint_stall",
       "register",
+      "register_rejected",
       "release_to_successor",
       "request_activation",
       "request_external_route",
       "request_internal_route"
     ],
     "distinct_contract_boundaries": [
+      "activation_rejected",
       "command_stale",
       "fallback_installed",
+      "registration_rejected",
       "source_revoked",
       "successor_installed",
       "successor_requested",
@@ -67,7 +73,7 @@
       "replacing",
       "terminal"
     ],
-    "distinct_semantic_edges": 54,
+    "distinct_semantic_edges": 56,
     "distinct_semantic_states": 191,
     "observed_fault_classes": [
       "health_loss",
@@ -108,7 +114,7 @@
   "non_deterministic_attempts": [],
   "reduced_observation": {
     "attempts": 213,
-    "attempts_retaining_any_contract_boundary": 0,
+    "attempts_retaining_any_contract_boundary": 8,
     "attempts_retaining_command_freshness": 0,
     "attempts_retaining_command_lineage": 0,
     "attempts_with_equal_final_state": 1

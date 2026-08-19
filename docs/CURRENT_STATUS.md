@@ -209,24 +209,44 @@ retained corpus: 213 accepted attempts across the five closed studies.
   is replaced by an impossible value, so mode independence is measured rather
   than asserted;
 - the derived state separates route epoch, authority owner, lifecycle progress
-  and command freshness, reaching 191 distinct semantic states, 54 semantic
-  edges, 9 lifecycle phases, 11 actions and 7 contract boundaries; and
-- under reduced observation none of the 213 attempts retains command lineage,
-  command freshness, or any contract boundary.
+  and command freshness, reaching 191 distinct semantic states, 56 semantic
+  edges, 9 lifecycle phases, 12 actions and 9 contract boundaries; and
+- under reduced observation none of the 213 attempts retains command lineage or
+  command freshness, and only the 8 health-loss attempts keep any contract
+  boundary, because their activation rejection rides on a public fault event.
 
 This is Stage 1 implementation and measurement work. It adds no formal launch,
 no denominator, and no claim about PX4 behavior.
 
 Evidence: [Stage 1 replay report](../experiments/stage1_semantic_state_replay_v1/FINAL_REPORT.md).
 
+## Candidate action corpus
+
+The Stage 2 inventory is available and machine-verified against the repository:
+17 records over the two plan axes, 12 candidates that all have retained
+evidence, and 5 gaps whose role stays undecided because no implementation and no
+evidence exist for them. Every declared contract boundary is observed in that
+candidate's own evidence.
+
+The five gaps are communication delay or reconnect, operator or ground-station
+takeover, concurrent external producers, producer restart after loss, and
+induced failsafe takeover. Three axis pairs consequently have no evidence at
+all.
+
+The corpus is not frozen. Choosing the minimal representative subset is the
+remaining Stage 2 decision.
+
+Evidence: [Stage 2 inventory report](../experiments/stage2_action_corpus_inventory_v1/FINAL_REPORT.md).
+
 ## Active next step
 
 No formal campaign is currently authorized. Work proceeds through the decision
 gates in [EXPERIMENT_PLAN.md](EXPERIMENT_PLAN.md). Stage 1 extraction is
-available and its exit checks are met; the remaining Stage 1 obligation is that
-the live loop consume this state instead of the prototype state. Then justify
-the corpus, complete the generator and baselines, establish ground truth and
-full-stack replay, and finally pilot and preregister repeated campaigns.
+available and its exit checks are met, and the Stage 2 inventory is available
+and unfrozen. The next decisions are the Stage 2 corpus freeze and the Stage 3
+closed loop, which must consume the semantic state instead of the prototype
+state. Then come baselines, ground truth and full-stack replay, and finally
+pilot and preregistered repeated campaigns.
 
 The preregistered process-exit matrix still verifies as launch-ready: its
 dry-run resolves six pending cells and 18 planned launches against the attested

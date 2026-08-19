@@ -1,0 +1,1576 @@
+{
+  "actions": [
+    {
+      "action_id": "register_external_mode",
+      "cleanup": "unregister the component and leave no active producer session",
+      "evidence": {
+        "accepted": 10,
+        "cells": [
+          {
+            "accepted": 5,
+            "cell_id": "det-dynamic-trajectory-land",
+            "launches": 6,
+            "observed_contract_boundaries": [
+              "source_revoked",
+              "successor_installed",
+              "successor_requested",
+              "target_installed",
+              "target_partially_installed"
+            ],
+            "study_id": "motivation-thor-v1"
+          },
+          {
+            "accepted": 5,
+            "cell_id": "det-executor-completion-land",
+            "launches": 5,
+            "observed_contract_boundaries": [
+              "source_revoked",
+              "successor_installed",
+              "target_installed",
+              "target_partially_installed"
+            ],
+            "study_id": "motivation-thor-v1"
+          }
+        ],
+        "expected_boundaries_not_observed": [],
+        "implemented": true,
+        "launches": 11,
+        "live_backend_wired": false,
+        "observed_contract_boundaries": [
+          "source_revoked",
+          "successor_installed",
+          "successor_requested",
+          "target_installed",
+          "target_partially_installed"
+        ]
+      },
+      "expected_boundaries": [],
+      "inclusion": "candidate",
+      "inclusion_basis": "implemented, exercised by retained evidence in two studies",
+      "kind": "action",
+      "lifecycle_phase": "registration",
+      "live_backend": null,
+      "matrix_cells": [
+        {
+          "cell_id": "det-dynamic-trajectory-land",
+          "study_id": "motivation-thor-v1"
+        },
+        {
+          "cell_id": "det-executor-completion-land",
+          "study_id": "motivation-thor-v1"
+        }
+      ],
+      "mechanism": "nominal",
+      "observation_requirements": [
+        "registration events carrying registration identity and result code"
+      ],
+      "preconditions": [
+        "a running external component with a reachable DDS session"
+      ],
+      "provenance": [
+        "runtime/ros2/family_a_modes/src/external_mode.cpp",
+        "runtime/ros2/family_a_modes/src/mode_executor.cpp",
+        "scripts/runtime/run_sitl.py"
+      ],
+      "role": "realism_validation",
+      "role_basis": "every dynamic external mode and mode executor transition depends on it; it is a precondition rather than a defect target",
+      "route_mechanisms": [
+        "dynamic_external_mode",
+        "mode_executor"
+      ],
+      "summary": "Register an external mode component and obtain a navigation slot.",
+      "workload_profiles": []
+    },
+    {
+      "action_id": "registration_capacity_rejection",
+      "cleanup": "stop every additional component and keep the primary session consistent",
+      "evidence": {
+        "accepted": 8,
+        "cells": [
+          {
+            "accepted": 8,
+            "cell_id": "fault-dynamic-registration-capacity",
+            "launches": 9,
+            "observed_contract_boundaries": [
+              "registration_rejected",
+              "source_revoked",
+              "successor_installed",
+              "successor_requested",
+              "target_installed",
+              "target_partially_installed"
+            ],
+            "study_id": "motivation-thor-v1"
+          }
+        ],
+        "expected_boundaries_not_observed": [],
+        "implemented": true,
+        "launches": 9,
+        "live_backend_wired": false,
+        "observed_contract_boundaries": [
+          "registration_rejected",
+          "source_revoked",
+          "successor_installed",
+          "successor_requested",
+          "target_installed",
+          "target_partially_installed"
+        ]
+      },
+      "expected_boundaries": [
+        "registration_rejected"
+      ],
+      "inclusion": "candidate",
+      "inclusion_basis": "implemented with retained evidence; the rejection is a specified outcome",
+      "kind": "action",
+      "lifecycle_phase": "registration",
+      "live_backend": null,
+      "matrix_cells": [
+        {
+          "cell_id": "fault-dynamic-registration-capacity",
+          "study_id": "motivation-thor-v1"
+        }
+      ],
+      "mechanism": "rejection",
+      "observation_requirements": [
+        "registration result code, not merely the absence of an activation"
+      ],
+      "preconditions": [
+        "armed vehicle",
+        "the primary external component already registered"
+      ],
+      "provenance": [
+        "scripts/runtime/run_sitl.py",
+        "runtime/ros2/family_a_modes/src/external_mode.cpp"
+      ],
+      "role": "benchmark",
+      "role_basis": "a public capacity obligation with a deterministic rejection result code and retained accepted evidence",
+      "route_mechanisms": [
+        "dynamic_external_mode"
+      ],
+      "summary": "Exhaust the external navigation-state slots so a further registration is refused.",
+      "workload_profiles": []
+    },
+    {
+      "action_id": "request_external_activation",
+      "cleanup": "release authority to a preregistered internal successor",
+      "evidence": {
+        "accepted": 10,
+        "cells": [
+          {
+            "accepted": 5,
+            "cell_id": "det-offboard-trajectory-land",
+            "launches": 5,
+            "observed_contract_boundaries": [
+              "source_revoked",
+              "successor_installed",
+              "successor_requested",
+              "target_installed",
+              "target_partially_installed"
+            ],
+            "study_id": "motivation-thor-v1"
+          },
+          {
+            "accepted": 5,
+            "cell_id": "det-dynamic-trajectory-land",
+            "launches": 6,
+            "observed_contract_boundaries": [
+              "source_revoked",
+              "successor_installed",
+              "successor_requested",
+              "target_installed",
+              "target_partially_installed"
+            ],
+            "study_id": "motivation-thor-v1"
+          }
+        ],
+        "expected_boundaries_not_observed": [],
+        "implemented": true,
+        "launches": 11,
+        "live_backend_wired": false,
+        "observed_contract_boundaries": [
+          "source_revoked",
+          "successor_installed",
+          "successor_requested",
+          "target_installed",
+          "target_partially_installed"
+        ]
+      },
+      "expected_boundaries": [
+        "source_revoked",
+        "target_installed"
+      ],
+      "inclusion": "candidate",
+      "inclusion_basis": "implemented, exercised in every retained study",
+      "kind": "action",
+      "lifecycle_phase": "activation",
+      "live_backend": null,
+      "matrix_cells": [
+        {
+          "cell_id": "det-offboard-trajectory-land",
+          "study_id": "motivation-thor-v1"
+        },
+        {
+          "cell_id": "det-dynamic-trajectory-land",
+          "study_id": "motivation-thor-v1"
+        }
+      ],
+      "mechanism": "nominal",
+      "observation_requirements": [
+        "activation and the four downstream lineage events under one route identity"
+      ],
+      "preconditions": [
+        "the source route is installed and has dwelled for its preregistered interval",
+        "the producer prestream satisfies the public activation precondition"
+      ],
+      "provenance": [
+        "runtime/ros2/family_a_runtime/family_a_runtime/offboard_controller.py",
+        "runtime/ros2/family_a_runtime/family_a_runtime/external_mode_requester.py",
+        "scripts/runtime/run_sitl.py"
+      ],
+      "role": "realism_validation",
+      "role_basis": "the transition under test; it carries the route and installation obligations",
+      "route_mechanisms": [
+        "legacy_offboard",
+        "dynamic_external_mode",
+        "mode_executor"
+      ],
+      "summary": "Request the tested external route from a fully established internal source route.",
+      "workload_profiles": []
+    },
+    {
+      "action_id": "activation_rejection_after_health_loss",
+      "cleanup": "the vehicle must reach an internal safe route and disarm",
+      "evidence": {
+        "accepted": 8,
+        "cells": [
+          {
+            "accepted": 8,
+            "cell_id": "fault-dynamic-health-loss",
+            "launches": 10,
+            "observed_contract_boundaries": [
+              "activation_rejected",
+              "source_revoked",
+              "target_installed",
+              "target_partially_installed"
+            ],
+            "study_id": "motivation-thor-v1"
+          }
+        ],
+        "expected_boundaries_not_observed": [],
+        "implemented": true,
+        "launches": 10,
+        "live_backend_wired": false,
+        "observed_contract_boundaries": [
+          "activation_rejected",
+          "source_revoked",
+          "target_installed",
+          "target_partially_installed"
+        ]
+      },
+      "expected_boundaries": [
+        "activation_rejected"
+      ],
+      "inclusion": "candidate",
+      "inclusion_basis": "implemented with retained evidence and a specified rejection outcome",
+      "kind": "action",
+      "lifecycle_phase": "activation",
+      "live_backend": null,
+      "matrix_cells": [
+        {
+          "cell_id": "fault-dynamic-health-loss",
+          "study_id": "motivation-thor-v1"
+        }
+      ],
+      "mechanism": "health_loss",
+      "observation_requirements": [
+        "an explicit rejection fault reason distinguishable from a silent non-activation"
+      ],
+      "preconditions": [
+        "a registered external component",
+        "an airborne internal source route"
+      ],
+      "provenance": [
+        "scripts/runtime/run_sitl.py",
+        "runtime/ros2/family_a_modes/src/external_mode.cpp",
+        "runtime/ros2/family_a_runtime/family_a_runtime/external_mode_requester.py"
+      ],
+      "role": "benchmark",
+      "role_basis": "an explicit rejection obligation; lack of activation alone is not rejection evidence, so the fault marker is required",
+      "route_mechanisms": [
+        "dynamic_external_mode"
+      ],
+      "summary": "Withhold the external mode health reply so the requested activation is refused.",
+      "workload_profiles": []
+    },
+    {
+      "action_id": "owned_setpoint_stall_healthy",
+      "cleanup": "release to the preregistered successor and land",
+      "evidence": {
+        "accepted": 30,
+        "cells": [
+          {
+            "accepted": 8,
+            "cell_id": "fault-offboard-trajectory-stall",
+            "launches": 8,
+            "observed_contract_boundaries": [
+              "command_stale",
+              "source_revoked",
+              "successor_installed",
+              "successor_requested",
+              "target_installed",
+              "target_partially_installed"
+            ],
+            "study_id": "motivation-thor-v1"
+          },
+          {
+            "accepted": 8,
+            "cell_id": "a2-stall-offboard-remediation",
+            "launches": 8,
+            "observed_contract_boundaries": [
+              "command_stale",
+              "source_revoked",
+              "successor_installed",
+              "successor_requested",
+              "target_installed",
+              "target_partially_installed"
+            ],
+            "study_id": "motivation-stage-a2-thor-remediation-v1"
+          },
+          {
+            "accepted": 8,
+            "cell_id": "a2-stall-dynamic-remediation",
+            "launches": 8,
+            "observed_contract_boundaries": [
+              "command_stale",
+              "source_revoked",
+              "successor_installed",
+              "successor_requested",
+              "target_installed",
+              "target_partially_installed"
+            ],
+            "study_id": "motivation-stage-a2-thor-remediation-v1"
+          },
+          {
+            "accepted": 3,
+            "cell_id": "main-offboard-state",
+            "launches": 3,
+            "observed_contract_boundaries": [
+              "command_stale",
+              "source_revoked",
+              "successor_installed",
+              "successor_requested",
+              "target_installed",
+              "target_partially_installed"
+            ],
+            "study_id": "main-strategy-comparison-thor-v1"
+          },
+          {
+            "accepted": 3,
+            "cell_id": "main-dynamic-state",
+            "launches": 3,
+            "observed_contract_boundaries": [
+              "command_stale",
+              "source_revoked",
+              "successor_installed",
+              "successor_requested",
+              "target_installed",
+              "target_partially_installed"
+            ],
+            "study_id": "main-strategy-comparison-thor-v1"
+          }
+        ],
+        "expected_boundaries_not_observed": [],
+        "implemented": true,
+        "launches": 30,
+        "live_backend_wired": true,
+        "observed_contract_boundaries": [
+          "command_stale",
+          "source_revoked",
+          "successor_installed",
+          "successor_requested",
+          "target_installed",
+          "target_partially_installed"
+        ]
+      },
+      "expected_boundaries": [
+        "command_stale"
+      ],
+      "inclusion": "candidate",
+      "inclusion_basis": "implemented, live-wired, and the only action with a completed comparison",
+      "kind": "action",
+      "lifecycle_phase": "execution",
+      "live_backend": "owned_setpoint_stall_v1",
+      "matrix_cells": [
+        {
+          "cell_id": "fault-offboard-trajectory-stall",
+          "study_id": "motivation-thor-v1"
+        },
+        {
+          "cell_id": "a2-stall-offboard-remediation",
+          "study_id": "motivation-stage-a2-thor-remediation-v1"
+        },
+        {
+          "cell_id": "a2-stall-dynamic-remediation",
+          "study_id": "motivation-stage-a2-thor-remediation-v1"
+        },
+        {
+          "cell_id": "main-offboard-state",
+          "study_id": "main-strategy-comparison-thor-v1"
+        },
+        {
+          "cell_id": "main-dynamic-state",
+          "study_id": "main-strategy-comparison-thor-v1"
+        }
+      ],
+      "mechanism": "setpoint_or_callback_stall",
+      "observation_requirements": [
+        "consumed command subject time across the whole target-authority window",
+        "producer health separated from the setpoint stream"
+      ],
+      "preconditions": [
+        "the tested route is installed and consuming fresh commands"
+      ],
+      "provenance": [
+        "runtime/ros2/family_a_runtime/family_a_runtime/offboard_controller.py",
+        "runtime/ros2/family_a_runtime/family_a_runtime/external_mode_requester.py",
+        "scripts/runtime/live_strategy_backend.py"
+      ],
+      "role": "benchmark",
+      "role_basis": "a deliberate and reproducible freshness signature with a completed 18-launch formal comparison and 16 retained moving-workload violations",
+      "route_mechanisms": [
+        "legacy_offboard",
+        "dynamic_external_mode"
+      ],
+      "summary": "Stop the owned setpoint stream while the producer proof-of-life continues.",
+      "workload_profiles": [
+        "hover_constant",
+        "straight_line"
+      ]
+    },
+    {
+      "action_id": "setpoint_kind_variation",
+      "cleanup": "release to the preregistered successor and land",
+      "evidence": {
+        "accepted": 26,
+        "cells": [
+          {
+            "accepted": 5,
+            "cell_id": "det-offboard-attitude-land",
+            "launches": 5,
+            "observed_contract_boundaries": [
+              "command_stale",
+              "source_revoked",
+              "successor_installed",
+              "successor_requested",
+              "target_installed",
+              "target_partially_installed"
+            ],
+            "study_id": "motivation-thor-v1"
+          },
+          {
+            "accepted": 5,
+            "cell_id": "det-offboard-body-rate-land",
+            "launches": 5,
+            "observed_contract_boundaries": [
+              "command_stale",
+              "source_revoked",
+              "successor_installed",
+              "successor_requested",
+              "target_installed",
+              "target_partially_installed"
+            ],
+            "study_id": "motivation-thor-v1"
+          },
+          {
+            "accepted": 8,
+            "cell_id": "fault-offboard-attitude-stall",
+            "launches": 8,
+            "observed_contract_boundaries": [
+              "command_stale",
+              "source_revoked",
+              "successor_installed",
+              "successor_requested",
+              "target_installed",
+              "target_partially_installed"
+            ],
+            "study_id": "motivation-thor-v1"
+          },
+          {
+            "accepted": 8,
+            "cell_id": "fault-offboard-body-rate-stall",
+            "launches": 8,
+            "observed_contract_boundaries": [
+              "command_stale",
+              "source_revoked",
+              "successor_installed",
+              "successor_requested",
+              "target_installed",
+              "target_partially_installed"
+            ],
+            "study_id": "motivation-thor-v1"
+          }
+        ],
+        "expected_boundaries_not_observed": [],
+        "implemented": true,
+        "launches": 26,
+        "live_backend_wired": false,
+        "observed_contract_boundaries": [
+          "command_stale",
+          "source_revoked",
+          "successor_installed",
+          "successor_requested",
+          "target_installed",
+          "target_partially_installed"
+        ]
+      },
+      "expected_boundaries": [
+        "target_installed"
+      ],
+      "inclusion": "candidate",
+      "inclusion_basis": "implemented with retained evidence and an open question attached",
+      "kind": "workload",
+      "lifecycle_phase": "execution",
+      "live_backend": null,
+      "matrix_cells": [
+        {
+          "cell_id": "det-offboard-attitude-land",
+          "study_id": "motivation-thor-v1"
+        },
+        {
+          "cell_id": "det-offboard-body-rate-land",
+          "study_id": "motivation-thor-v1"
+        },
+        {
+          "cell_id": "fault-offboard-attitude-stall",
+          "study_id": "motivation-thor-v1"
+        },
+        {
+          "cell_id": "fault-offboard-body-rate-stall",
+          "study_id": "motivation-thor-v1"
+        }
+      ],
+      "mechanism": "nominal",
+      "observation_requirements": [
+        "controller and allocator identity per setpoint kind",
+        "a physical-validity contract, because these cells produced the non-airborne stratum in the Stage A1 audit"
+      ],
+      "preconditions": [
+        "an airborne vehicle established by public actions before the tested request"
+      ],
+      "provenance": [
+        "runtime/ros2/family_a_runtime/family_a_runtime/offboard_controller.py"
+      ],
+      "role": "discovery",
+      "role_basis": "the retained attitude-path installation signatures are localized but not source-attributed, so this variant selects an unexplained region",
+      "route_mechanisms": [
+        "legacy_offboard"
+      ],
+      "summary": "Drive the tested route through position, attitude, or body-rate setpoints.",
+      "workload_profiles": [
+        "hover_constant"
+      ]
+    },
+    {
+      "action_id": "communication_delay_or_reconnect",
+      "cleanup": "restore the transport and reach an internal safe route",
+      "evidence": {
+        "accepted": 0,
+        "cells": [],
+        "expected_boundaries_not_observed": [
+          "command_stale"
+        ],
+        "implemented": false,
+        "launches": 0,
+        "live_backend_wired": false,
+        "observed_contract_boundaries": []
+      },
+      "expected_boundaries": [
+        "command_stale"
+      ],
+      "inclusion": "gap",
+      "inclusion_basis": "named by the method action grammar but not implemented or qualified",
+      "kind": "action",
+      "lifecycle_phase": "execution",
+      "live_backend": null,
+      "matrix_cells": [],
+      "mechanism": "communication_delay",
+      "observation_requirements": [
+        "a controlled transport delay with a recorded applied schedule",
+        "consumed command age separated from producer liveness",
+        "evidence that the delay, not scheduler jitter, produced the age"
+      ],
+      "preconditions": [
+        "the tested route is installed and consuming fresh commands"
+      ],
+      "provenance": [
+        "scripts/runtime/run_sitl.py"
+      ],
+      "role": "undecided",
+      "role_basis": "no implementation and no retained evidence; whether it adds a signature beyond the owned stall is unknown",
+      "route_mechanisms": [
+        "legacy_offboard",
+        "dynamic_external_mode"
+      ],
+      "summary": "Delay or briefly interrupt the producer transport without stopping the producer.",
+      "workload_profiles": []
+    },
+    {
+      "action_id": "nominal_completion_release",
+      "cleanup": "the successor must be completely installed before landing",
+      "evidence": {
+        "accepted": 20,
+        "cells": [
+          {
+            "accepted": 5,
+            "cell_id": "det-offboard-trajectory-hold",
+            "launches": 5,
+            "observed_contract_boundaries": [
+              "source_revoked",
+              "successor_installed",
+              "successor_requested",
+              "target_installed",
+              "target_partially_installed"
+            ],
+            "study_id": "motivation-thor-v1"
+          },
+          {
+            "accepted": 5,
+            "cell_id": "det-offboard-trajectory-rtl",
+            "launches": 5,
+            "observed_contract_boundaries": [
+              "source_revoked",
+              "successor_installed",
+              "successor_requested",
+              "target_installed",
+              "target_partially_installed"
+            ],
+            "study_id": "motivation-thor-v1"
+          },
+          {
+            "accepted": 5,
+            "cell_id": "a2-normal-offboard-remediation",
+            "launches": 5,
+            "observed_contract_boundaries": [
+              "source_revoked",
+              "successor_installed",
+              "successor_requested",
+              "target_installed",
+              "target_partially_installed"
+            ],
+            "study_id": "motivation-stage-a2-thor-remediation-v1"
+          },
+          {
+            "accepted": 5,
+            "cell_id": "a2-normal-dynamic-remediation",
+            "launches": 5,
+            "observed_contract_boundaries": [
+              "source_revoked",
+              "successor_installed",
+              "successor_requested",
+              "target_installed",
+              "target_partially_installed"
+            ],
+            "study_id": "motivation-stage-a2-thor-remediation-v1"
+          }
+        ],
+        "expected_boundaries_not_observed": [],
+        "implemented": true,
+        "launches": 20,
+        "live_backend_wired": false,
+        "observed_contract_boundaries": [
+          "source_revoked",
+          "successor_installed",
+          "successor_requested",
+          "target_installed",
+          "target_partially_installed"
+        ]
+      },
+      "expected_boundaries": [
+        "successor_requested",
+        "successor_installed"
+      ],
+      "inclusion": "candidate",
+      "inclusion_basis": "implemented, exercised in four retained studies",
+      "kind": "action",
+      "lifecycle_phase": "completion",
+      "live_backend": null,
+      "matrix_cells": [
+        {
+          "cell_id": "det-offboard-trajectory-hold",
+          "study_id": "motivation-thor-v1"
+        },
+        {
+          "cell_id": "det-offboard-trajectory-rtl",
+          "study_id": "motivation-thor-v1"
+        },
+        {
+          "cell_id": "a2-normal-offboard-remediation",
+          "study_id": "motivation-stage-a2-thor-remediation-v1"
+        },
+        {
+          "cell_id": "a2-normal-dynamic-remediation",
+          "study_id": "motivation-stage-a2-thor-remediation-v1"
+        }
+      ],
+      "mechanism": "nominal",
+      "observation_requirements": [
+        "successor installation under one route identity"
+      ],
+      "preconditions": [
+        "the tested route is installed and executing"
+      ],
+      "provenance": [
+        "runtime/ros2/family_a_runtime/family_a_runtime/offboard_controller.py",
+        "runtime/ros2/family_a_runtime/family_a_runtime/external_mode_requester.py"
+      ],
+      "role": "realism_validation",
+      "role_basis": "establishes the nominal reference against which fault arms are read",
+      "route_mechanisms": [
+        "legacy_offboard",
+        "dynamic_external_mode"
+      ],
+      "summary": "Complete the tested route and request the preregistered internal successor.",
+      "workload_profiles": [
+        "hover_constant",
+        "straight_line"
+      ]
+    },
+    {
+      "action_id": "mode_executor_completion",
+      "cleanup": "the executor must release ownership and the successor must install",
+      "evidence": {
+        "accepted": 5,
+        "cells": [
+          {
+            "accepted": 5,
+            "cell_id": "det-executor-completion-land",
+            "launches": 5,
+            "observed_contract_boundaries": [
+              "source_revoked",
+              "successor_installed",
+              "target_installed",
+              "target_partially_installed"
+            ],
+            "study_id": "motivation-thor-v1"
+          }
+        ],
+        "expected_boundaries_not_observed": [],
+        "implemented": true,
+        "launches": 5,
+        "live_backend_wired": false,
+        "observed_contract_boundaries": [
+          "source_revoked",
+          "successor_installed",
+          "target_installed",
+          "target_partially_installed"
+        ]
+      },
+      "expected_boundaries": [
+        "successor_installed"
+      ],
+      "inclusion": "candidate",
+      "inclusion_basis": "implemented with retained evidence",
+      "kind": "action",
+      "lifecycle_phase": "completion",
+      "live_backend": null,
+      "matrix_cells": [
+        {
+          "cell_id": "det-executor-completion-land",
+          "study_id": "motivation-thor-v1"
+        }
+      ],
+      "mechanism": "nominal",
+      "observation_requirements": [
+        "lifecycle owner and executor owner separately"
+      ],
+      "preconditions": [
+        "a registered executor owning the tested mode"
+      ],
+      "provenance": [
+        "runtime/ros2/family_a_modes/src/mode_executor.cpp"
+      ],
+      "role": "realism_validation",
+      "role_basis": "covers executor ownership, which the other mechanisms do not exercise",
+      "route_mechanisms": [
+        "mode_executor"
+      ],
+      "summary": "Let a mode executor complete its owned mode and hand over to its successor.",
+      "workload_profiles": []
+    },
+    {
+      "action_id": "adjacent_land_request_near_completion",
+      "cleanup": "one successor must win and install completely",
+      "evidence": {
+        "accepted": 30,
+        "cells": [
+          {
+            "accepted": 0,
+            "cell_id": "timing-executor-before",
+            "launches": 20,
+            "observed_contract_boundaries": [],
+            "study_id": "motivation-thor-v1"
+          },
+          {
+            "accepted": 10,
+            "cell_id": "timing-executor-near",
+            "launches": 10,
+            "observed_contract_boundaries": [
+              "source_revoked",
+              "successor_installed",
+              "target_installed",
+              "target_partially_installed"
+            ],
+            "study_id": "motivation-thor-v1"
+          },
+          {
+            "accepted": 10,
+            "cell_id": "timing-executor-after",
+            "launches": 10,
+            "observed_contract_boundaries": [
+              "command_stale",
+              "source_revoked",
+              "successor_installed",
+              "target_installed",
+              "target_partially_installed"
+            ],
+            "study_id": "motivation-thor-v1"
+          },
+          {
+            "accepted": 10,
+            "cell_id": "timing-executor-before-remediation",
+            "launches": 10,
+            "observed_contract_boundaries": [
+              "command_stale",
+              "source_revoked",
+              "target_installed",
+              "target_partially_installed"
+            ],
+            "study_id": "motivation-thor-remediation-v1"
+          }
+        ],
+        "expected_boundaries_not_observed": [],
+        "implemented": true,
+        "launches": 50,
+        "live_backend_wired": false,
+        "observed_contract_boundaries": [
+          "command_stale",
+          "source_revoked",
+          "successor_installed",
+          "target_installed",
+          "target_partially_installed"
+        ]
+      },
+      "expected_boundaries": [
+        "successor_installed"
+      ],
+      "inclusion": "candidate",
+      "inclusion_basis": "implemented across three timing buckets with retained evidence",
+      "kind": "action",
+      "lifecycle_phase": "replacement",
+      "live_backend": null,
+      "matrix_cells": [
+        {
+          "cell_id": "timing-executor-before",
+          "study_id": "motivation-thor-v1"
+        },
+        {
+          "cell_id": "timing-executor-near",
+          "study_id": "motivation-thor-v1"
+        },
+        {
+          "cell_id": "timing-executor-after",
+          "study_id": "motivation-thor-v1"
+        },
+        {
+          "cell_id": "timing-executor-before-remediation",
+          "study_id": "motivation-thor-remediation-v1"
+        }
+      ],
+      "mechanism": "adjacent_authority_request",
+      "observation_requirements": [
+        "adjacent request time anchored to the transition, not to wall clock"
+      ],
+      "preconditions": [
+        "an executor-owned mode approaching its completion boundary"
+      ],
+      "provenance": [
+        "runtime/ros2/family_a_runtime/family_a_runtime/manual_requester.py",
+        "scripts/runtime/run_sitl.py"
+      ],
+      "role": "discovery",
+      "role_basis": "retained evidence shows request timing and order leaving the frozen bucket while the successor still installed, which no terminal outcome would show",
+      "route_mechanisms": [
+        "mode_executor"
+      ],
+      "summary": "Issue an adjacent internal Land request just before, at, or after completion.",
+      "workload_profiles": []
+    },
+    {
+      "action_id": "manual_or_gcs_takeover",
+      "cleanup": "the taking route must install completely and reach a safe terminal state",
+      "evidence": {
+        "accepted": 0,
+        "cells": [],
+        "expected_boundaries_not_observed": [
+          "source_revoked",
+          "target_installed"
+        ],
+        "implemented": false,
+        "launches": 0,
+        "live_backend_wired": false,
+        "observed_contract_boundaries": []
+      },
+      "expected_boundaries": [
+        "source_revoked",
+        "target_installed"
+      ],
+      "inclusion": "gap",
+      "inclusion_basis": "named by the method action grammar; only the adjacent internal request exists",
+      "kind": "action",
+      "lifecycle_phase": "replacement",
+      "live_backend": null,
+      "matrix_cells": [],
+      "mechanism": "manual_or_failsafe_takeover",
+      "observation_requirements": [
+        "an operator request path distinguishable from the adjacent internal request"
+      ],
+      "preconditions": [
+        "the tested route is installed and executing"
+      ],
+      "provenance": [
+        "runtime/ros2/family_a_runtime/family_a_runtime/manual_requester.py"
+      ],
+      "role": "undecided",
+      "role_basis": "no operator or ground-station channel is implemented in the harness",
+      "route_mechanisms": [
+        "legacy_offboard",
+        "dynamic_external_mode"
+      ],
+      "summary": "Take authority through an operator or ground-station request during execution.",
+      "workload_profiles": []
+    },
+    {
+      "action_id": "concurrent_external_producers",
+      "cleanup": "exactly one writer must remain and the other must be released",
+      "evidence": {
+        "accepted": 0,
+        "cells": [],
+        "expected_boundaries_not_observed": [
+          "target_installed"
+        ],
+        "implemented": false,
+        "launches": 0,
+        "live_backend_wired": false,
+        "observed_contract_boundaries": []
+      },
+      "expected_boundaries": [
+        "target_installed"
+      ],
+      "inclusion": "gap",
+      "inclusion_basis": "not implemented; distinct from the registration capacity action",
+      "kind": "action",
+      "lifecycle_phase": "replacement",
+      "live_backend": null,
+      "matrix_cells": [],
+      "mechanism": "adjacent_authority_request",
+      "observation_requirements": [
+        "writer exclusivity across two producer sessions"
+      ],
+      "preconditions": [
+        "two registered components with distinct sessions"
+      ],
+      "provenance": [
+        "runtime/ros2/family_a_modes/src/external_mode.cpp"
+      ],
+      "role": "undecided",
+      "role_basis": "the capacity cell registers extra components but never lets a second producer contend for an installed route",
+      "route_mechanisms": [
+        "dynamic_external_mode"
+      ],
+      "summary": "Run two external producers that contend for the same authority.",
+      "workload_profiles": []
+    },
+    {
+      "action_id": "owned_process_exit_fallback",
+      "cleanup": "a complete internal safe route must install without operator action",
+      "evidence": {
+        "accepted": 16,
+        "cells": [
+          {
+            "accepted": 8,
+            "cell_id": "fault-offboard-process-exit",
+            "launches": 9,
+            "observed_contract_boundaries": [
+              "command_stale",
+              "fallback_installed",
+              "source_revoked",
+              "target_installed",
+              "target_partially_installed"
+            ],
+            "study_id": "motivation-thor-v1"
+          },
+          {
+            "accepted": 8,
+            "cell_id": "fault-dynamic-process-exit",
+            "launches": 9,
+            "observed_contract_boundaries": [
+              "command_stale",
+              "fallback_installed",
+              "source_revoked",
+              "target_installed",
+              "target_partially_installed"
+            ],
+            "study_id": "motivation-thor-v1"
+          },
+          {
+            "accepted": 0,
+            "cell_id": "main-process-exit-offboard-state",
+            "launches": 0,
+            "observed_contract_boundaries": [],
+            "study_id": "main-process-exit-strategy-thor-v1"
+          },
+          {
+            "accepted": 0,
+            "cell_id": "main-process-exit-dynamic-state",
+            "launches": 0,
+            "observed_contract_boundaries": [],
+            "study_id": "main-process-exit-strategy-thor-v1"
+          }
+        ],
+        "expected_boundaries_not_observed": [],
+        "implemented": true,
+        "launches": 18,
+        "live_backend_wired": true,
+        "observed_contract_boundaries": [
+          "command_stale",
+          "fallback_installed",
+          "source_revoked",
+          "target_installed",
+          "target_partially_installed"
+        ]
+      },
+      "expected_boundaries": [
+        "fallback_installed"
+      ],
+      "inclusion": "candidate",
+      "inclusion_basis": "implemented and live-wired; its preregistered matrix has zero formal launches and is not authorized by readiness alone",
+      "kind": "action",
+      "lifecycle_phase": "fallback",
+      "live_backend": "owned_process_exit_fallback_v1",
+      "matrix_cells": [
+        {
+          "cell_id": "fault-offboard-process-exit",
+          "study_id": "motivation-thor-v1"
+        },
+        {
+          "cell_id": "fault-dynamic-process-exit",
+          "study_id": "motivation-thor-v1"
+        },
+        {
+          "cell_id": "main-process-exit-offboard-state",
+          "study_id": "main-process-exit-strategy-thor-v1"
+        },
+        {
+          "cell_id": "main-process-exit-dynamic-state",
+          "study_id": "main-process-exit-strategy-thor-v1"
+        }
+      ],
+      "mechanism": "process_loss_restart",
+      "observation_requirements": [
+        "producer session end distinguished from a stalled stream",
+        "complete fallback installation, not merely a safe mode label"
+      ],
+      "preconditions": [
+        "the tested route is installed and the producer owns it"
+      ],
+      "provenance": [
+        "runtime/ros2/family_a_runtime/family_a_runtime/offboard_controller.py",
+        "runtime/ros2/family_a_runtime/family_a_runtime/external_mode_requester.py",
+        "scripts/runtime/live_strategy_backend.py"
+      ],
+      "role": "benchmark",
+      "role_basis": "a specified failsafe obligation with retained Stage A1 evidence and a passing non-formal qualification of the live backend",
+      "route_mechanisms": [
+        "legacy_offboard",
+        "dynamic_external_mode"
+      ],
+      "summary": "Terminate the owning external producer and require a safe internal fallback.",
+      "workload_profiles": [
+        "hover_constant",
+        "straight_line"
+      ]
+    },
+    {
+      "action_id": "producer_restart_after_exit",
+      "cleanup": "either the reclaim installs completely or the safe route is retained",
+      "evidence": {
+        "accepted": 0,
+        "cells": [],
+        "expected_boundaries_not_observed": [
+          "target_installed"
+        ],
+        "implemented": false,
+        "launches": 0,
+        "live_backend_wired": false,
+        "observed_contract_boundaries": []
+      },
+      "expected_boundaries": [
+        "target_installed"
+      ],
+      "inclusion": "gap",
+      "inclusion_basis": "named by the method action grammar but not implemented",
+      "kind": "action",
+      "lifecycle_phase": "fallback",
+      "live_backend": null,
+      "matrix_cells": [],
+      "mechanism": "process_loss_restart",
+      "observation_requirements": [
+        "a new producer session identity distinct from the lost one"
+      ],
+      "preconditions": [
+        "an already installed fallback route after a producer loss"
+      ],
+      "provenance": [
+        "runtime/ros2/family_a_runtime/family_a_runtime/external_mode_requester.py"
+      ],
+      "role": "undecided",
+      "role_basis": "only the loss is implemented; reclaim after loss has no fixture",
+      "route_mechanisms": [
+        "legacy_offboard",
+        "dynamic_external_mode"
+      ],
+      "summary": "Restart the producer after a loss and attempt to reclaim authority.",
+      "workload_profiles": []
+    },
+    {
+      "action_id": "failsafe_takeover",
+      "cleanup": "the failsafe route must install completely and terminate safely",
+      "evidence": {
+        "accepted": 0,
+        "cells": [],
+        "expected_boundaries_not_observed": [
+          "fallback_installed"
+        ],
+        "implemented": false,
+        "launches": 0,
+        "live_backend_wired": false,
+        "observed_contract_boundaries": []
+      },
+      "expected_boundaries": [
+        "fallback_installed"
+      ],
+      "inclusion": "gap",
+      "inclusion_basis": "not implemented; would need its own safety qualification",
+      "kind": "action",
+      "lifecycle_phase": "fallback",
+      "live_backend": null,
+      "matrix_cells": [],
+      "mechanism": "manual_or_failsafe_takeover",
+      "observation_requirements": [
+        "the failsafe trigger source recorded as an action, not inferred afterwards",
+        "safety limits that separate an induced failsafe from a supervisor stop"
+      ],
+      "preconditions": [
+        "the tested route is installed and executing"
+      ],
+      "provenance": [
+        "scripts/runtime/run_sitl.py"
+      ],
+      "role": "undecided",
+      "role_basis": "the harness disables only the absent power and datalink interfaces; no failsafe condition is deliberately induced",
+      "route_mechanisms": [
+        "legacy_offboard",
+        "dynamic_external_mode"
+      ],
+      "summary": "Trigger an internal failsafe condition that replaces the tested route.",
+      "workload_profiles": []
+    },
+    {
+      "action_id": "route_re_entry_through_hold",
+      "cleanup": "the final entry must release to a landing successor",
+      "evidence": {
+        "accepted": 10,
+        "cells": [
+          {
+            "accepted": 10,
+            "cell_id": "timing-offboard-reentry-hold",
+            "launches": 10,
+            "observed_contract_boundaries": [
+              "source_revoked",
+              "successor_installed",
+              "successor_requested",
+              "target_installed",
+              "target_partially_installed"
+            ],
+            "study_id": "motivation-thor-v1"
+          }
+        ],
+        "expected_boundaries_not_observed": [],
+        "implemented": true,
+        "launches": 10,
+        "live_backend_wired": false,
+        "observed_contract_boundaries": [
+          "source_revoked",
+          "successor_installed",
+          "successor_requested",
+          "target_installed",
+          "target_partially_installed"
+        ]
+      },
+      "expected_boundaries": [
+        "target_installed",
+        "source_revoked"
+      ],
+      "inclusion": "candidate",
+      "inclusion_basis": "implemented with retained evidence",
+      "kind": "action",
+      "lifecycle_phase": "re_entry",
+      "live_backend": null,
+      "matrix_cells": [
+        {
+          "cell_id": "timing-offboard-reentry-hold",
+          "study_id": "motivation-thor-v1"
+        }
+      ],
+      "mechanism": "nominal",
+      "observation_requirements": [
+        "route epoch and activation identity per entry"
+      ],
+      "preconditions": [
+        "a completed first entry and a re-established prestream"
+      ],
+      "provenance": [
+        "runtime/ros2/family_a_runtime/family_a_runtime/offboard_controller.py"
+      ],
+      "role": "benchmark",
+      "role_basis": "two successful entries under one route name can only be separated by epoch and activation identity, which is the representation claim",
+      "route_mechanisms": [
+        "legacy_offboard"
+      ],
+      "summary": "Leave the tested route to internal Hold and enter it again in one attempt.",
+      "workload_profiles": []
+    },
+    {
+      "action_id": "route_re_entry_through_rtl",
+      "cleanup": "the final entry must release to a landing successor",
+      "evidence": {
+        "accepted": 10,
+        "cells": [
+          {
+            "accepted": 0,
+            "cell_id": "timing-offboard-reentry-rtl",
+            "launches": 20,
+            "observed_contract_boundaries": [],
+            "study_id": "motivation-thor-v1"
+          },
+          {
+            "accepted": 10,
+            "cell_id": "timing-offboard-reentry-rtl-remediation",
+            "launches": 10,
+            "observed_contract_boundaries": [
+              "source_revoked",
+              "successor_installed",
+              "successor_requested",
+              "target_installed",
+              "target_partially_installed"
+            ],
+            "study_id": "motivation-thor-remediation-v1"
+          }
+        ],
+        "expected_boundaries_not_observed": [],
+        "implemented": true,
+        "launches": 30,
+        "live_backend_wired": false,
+        "observed_contract_boundaries": [
+          "source_revoked",
+          "successor_installed",
+          "successor_requested",
+          "target_installed",
+          "target_partially_installed"
+        ]
+      },
+      "expected_boundaries": [
+        "target_installed",
+        "source_revoked"
+      ],
+      "inclusion": "candidate",
+      "inclusion_basis": "implemented; the primary cell reached its cap with no accepted evidence and an independent remediation supplied it",
+      "kind": "action",
+      "lifecycle_phase": "re_entry",
+      "live_backend": null,
+      "matrix_cells": [
+        {
+          "cell_id": "timing-offboard-reentry-rtl",
+          "study_id": "motivation-thor-v1"
+        },
+        {
+          "cell_id": "timing-offboard-reentry-rtl-remediation",
+          "study_id": "motivation-thor-remediation-v1"
+        }
+      ],
+      "mechanism": "nominal",
+      "observation_requirements": [
+        "route epoch and activation identity per entry"
+      ],
+      "preconditions": [
+        "an airborne RTL source established by public arm, takeoff and RTL requests"
+      ],
+      "provenance": [
+        "runtime/ros2/family_a_runtime/family_a_runtime/offboard_controller.py"
+      ],
+      "role": "benchmark",
+      "role_basis": "the same identity claim as the Hold variant, and its primary cell is the worked example of an unreachable fixture obligation",
+      "route_mechanisms": [
+        "legacy_offboard"
+      ],
+      "summary": "Leave the tested route to internal RTL and enter it again in one attempt.",
+      "workload_profiles": []
+    }
+  ],
+  "axes": {
+    "lifecycle_phases": [
+      "registration",
+      "activation",
+      "execution",
+      "completion",
+      "replacement",
+      "fallback",
+      "re_entry"
+    ],
+    "mechanisms": [
+      "nominal",
+      "process_loss_restart",
+      "setpoint_or_callback_stall",
+      "communication_delay",
+      "health_loss",
+      "rejection",
+      "manual_or_failsafe_takeover",
+      "adjacent_authority_request"
+    ]
+  },
+  "axis_matrix": [
+    {
+      "action_ids": [
+        "register_external_mode"
+      ],
+      "gaps": [],
+      "lifecycle_phase": "registration",
+      "mechanism": "nominal",
+      "with_retained_evidence": [
+        "register_external_mode"
+      ]
+    },
+    {
+      "action_ids": [
+        "registration_capacity_rejection"
+      ],
+      "gaps": [],
+      "lifecycle_phase": "registration",
+      "mechanism": "rejection",
+      "with_retained_evidence": [
+        "registration_capacity_rejection"
+      ]
+    },
+    {
+      "action_ids": [
+        "request_external_activation"
+      ],
+      "gaps": [],
+      "lifecycle_phase": "activation",
+      "mechanism": "nominal",
+      "with_retained_evidence": [
+        "request_external_activation"
+      ]
+    },
+    {
+      "action_ids": [
+        "activation_rejection_after_health_loss"
+      ],
+      "gaps": [],
+      "lifecycle_phase": "activation",
+      "mechanism": "health_loss",
+      "with_retained_evidence": [
+        "activation_rejection_after_health_loss"
+      ]
+    },
+    {
+      "action_ids": [
+        "setpoint_kind_variation"
+      ],
+      "gaps": [],
+      "lifecycle_phase": "execution",
+      "mechanism": "nominal",
+      "with_retained_evidence": [
+        "setpoint_kind_variation"
+      ]
+    },
+    {
+      "action_ids": [
+        "owned_setpoint_stall_healthy"
+      ],
+      "gaps": [],
+      "lifecycle_phase": "execution",
+      "mechanism": "setpoint_or_callback_stall",
+      "with_retained_evidence": [
+        "owned_setpoint_stall_healthy"
+      ]
+    },
+    {
+      "action_ids": [
+        "communication_delay_or_reconnect"
+      ],
+      "gaps": [
+        "communication_delay_or_reconnect"
+      ],
+      "lifecycle_phase": "execution",
+      "mechanism": "communication_delay",
+      "with_retained_evidence": []
+    },
+    {
+      "action_ids": [
+        "nominal_completion_release",
+        "mode_executor_completion"
+      ],
+      "gaps": [],
+      "lifecycle_phase": "completion",
+      "mechanism": "nominal",
+      "with_retained_evidence": [
+        "nominal_completion_release",
+        "mode_executor_completion"
+      ]
+    },
+    {
+      "action_ids": [
+        "manual_or_gcs_takeover"
+      ],
+      "gaps": [
+        "manual_or_gcs_takeover"
+      ],
+      "lifecycle_phase": "replacement",
+      "mechanism": "manual_or_failsafe_takeover",
+      "with_retained_evidence": []
+    },
+    {
+      "action_ids": [
+        "adjacent_land_request_near_completion",
+        "concurrent_external_producers"
+      ],
+      "gaps": [
+        "concurrent_external_producers"
+      ],
+      "lifecycle_phase": "replacement",
+      "mechanism": "adjacent_authority_request",
+      "with_retained_evidence": [
+        "adjacent_land_request_near_completion"
+      ]
+    },
+    {
+      "action_ids": [
+        "owned_process_exit_fallback",
+        "producer_restart_after_exit"
+      ],
+      "gaps": [
+        "producer_restart_after_exit"
+      ],
+      "lifecycle_phase": "fallback",
+      "mechanism": "process_loss_restart",
+      "with_retained_evidence": [
+        "owned_process_exit_fallback"
+      ]
+    },
+    {
+      "action_ids": [
+        "failsafe_takeover"
+      ],
+      "gaps": [
+        "failsafe_takeover"
+      ],
+      "lifecycle_phase": "fallback",
+      "mechanism": "manual_or_failsafe_takeover",
+      "with_retained_evidence": []
+    },
+    {
+      "action_ids": [
+        "route_re_entry_through_hold",
+        "route_re_entry_through_rtl"
+      ],
+      "gaps": [],
+      "lifecycle_phase": "re_entry",
+      "mechanism": "nominal",
+      "with_retained_evidence": [
+        "route_re_entry_through_hold",
+        "route_re_entry_through_rtl"
+      ]
+    }
+  ],
+  "axis_pairs_without_evidence": [
+    {
+      "lifecycle_phase": "execution",
+      "mechanism": "communication_delay"
+    },
+    {
+      "lifecycle_phase": "replacement",
+      "mechanism": "manual_or_failsafe_takeover"
+    },
+    {
+      "lifecycle_phase": "fallback",
+      "mechanism": "manual_or_failsafe_takeover"
+    }
+  ],
+  "boundaries": {
+    "declared": [
+      "activation_rejected",
+      "command_stale",
+      "fallback_installed",
+      "registration_rejected",
+      "source_revoked",
+      "successor_installed",
+      "successor_requested",
+      "target_installed"
+    ],
+    "declared_not_observed": [],
+    "model_boundaries_no_candidate_declares": [
+      "evidence_gap",
+      "target_partially_installed"
+    ],
+    "observed": [
+      "activation_rejected",
+      "command_stale",
+      "fallback_installed",
+      "registration_rejected",
+      "source_revoked",
+      "successor_installed",
+      "successor_requested",
+      "target_installed",
+      "target_partially_installed"
+    ]
+  },
+  "freeze_rule": "Stage 2 freezes a minimal representative corpus only after this inventory is reviewed; this artifact is the inventory, not the corpus",
+  "frozen": false,
+  "inventory_id": "stage2-action-corpus-inventory-v1",
+  "schema_version": "1.0",
+  "sources": {
+    "experiments/main_process_exit_strategy_thor_v1/matrix.json": "sha256:032342321b1c4ab3928679004489de3cb308d65bd25e1e519bd41df069203249",
+    "experiments/main_strategy_comparison_thor_v1/attempt-ledger.jsonl": "sha256:ef041af326d8c115b3f44b8c8f7ca9a5f2278b1e9272eefa24fc9f4676848aa3",
+    "experiments/main_strategy_comparison_thor_v1/matrix.json": "sha256:93dab2047ee07d7998b5c4dc0b2d74bb4ad86307cfb77b3321f78564587f0a36",
+    "experiments/motivation_stage_a2_thor_remediation_v1/attempt-ledger.jsonl": "sha256:d468519cb72d431b53919d3fbd10d8e8759db9dd9f12d0b0e24a6f1b326c640e",
+    "experiments/motivation_stage_a2_thor_remediation_v1/matrix.json": "sha256:afb06c6b11000d08768297dbb0ca93a152889a75891d12bdc4ff88e606bee349",
+    "experiments/motivation_stage_a2_thor_v1/attempt-ledger.jsonl": "sha256:a66282096fd70860f62b028a3d7d2384b6a847a6bbf7c489dc4fb0e64726ade5",
+    "experiments/motivation_stage_a2_thor_v1/matrix.json": "sha256:ae5897ede3cb1f9208bbeba65ac4be57bc5a80c038a0479b77ea0960fe0f69df",
+    "experiments/motivation_thor_remediation_v1/attempt-ledger.jsonl": "sha256:99ef1259f47ff0443c9a21908719ee91dca2d8d05acacee85d2485f254f3f9ad",
+    "experiments/motivation_thor_remediation_v1/matrix.json": "sha256:e53c4aaacf22e651145e49ce4be0659f4d36493a77d3b5fb59a1fb5540f08e1a",
+    "experiments/motivation_thor_v1/attempt-ledger.jsonl": "sha256:3558dba3180c1bfc9bbdfdab0e7b80c7a18da593dbb283ea36c34b65b39beb2a",
+    "experiments/motivation_thor_v1/matrix.json": "sha256:f22af8ea7e211223d9a8cb9059e34d035078555de23626324b8b6b6fb05781a1"
+  },
+  "totals": {
+    "candidates": 12,
+    "gaps": 5,
+    "roles": {
+      "benchmark": 6,
+      "discovery": 2,
+      "realism_validation": 4,
+      "undecided": 5
+    },
+    "with_live_backend": 2,
+    "with_retained_evidence": 12
+  }
+}

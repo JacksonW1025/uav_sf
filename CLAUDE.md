@@ -71,6 +71,9 @@ python3 -m scripts.analysis.matched_differential --root . --output-root <fresh d
 # (add --study <id> to restrict it; takes a few minutes over the full corpus)
 python3 -m scripts.analysis.semantic_state_replay --root . --output-root <fresh dir>
 
+# Rebuild the Stage 2 candidate action inventory (needs the replay artifact)
+python3 -m scripts.corpus.action_inventory --root . --output-root <fresh dir>
+
 # Detached source checkouts at the locked commits, then images
 ./scripts/setup/prepare_sources.sh
 docker buildx build --platform linux/arm64 --file containers/family_a/Dockerfile --tag uav-sf-family-a:locked .
@@ -141,7 +144,13 @@ starts, so analysis load cannot perturb a still-running attempt's timing.
    `validate_repo` asserts its Python vocabularies equal the enums in
    [data/schemas/semantic_state.schema.json](data/schemas/semantic_state.schema.json),
    so a phase or fault class must be added in both places.
-9. **In-container runtime** — [runtime/ros2/](runtime/ros2/) holds the actual
+9. **Candidate corpus** — [scripts/corpus/action_inventory.py](scripts/corpus/action_inventory.py)
+   declares the Stage 2 action and workload candidates over the two plan axes.
+   A declared candidate is refused unless its provenance paths, matrix cells,
+   live backend and contract boundaries all verify against the repository, and
+   evidence counts are joined from ledgers and the Stage 1 replay rather than
+   declared. The inventory is not a frozen corpus.
+10. **In-container runtime** — [runtime/ros2/](runtime/ros2/) holds the actual
    ROS 2 nodes (`external_mode.cpp`, `mode_executor.cpp`,
    `gazebo_clock_sidecar.cpp`, plus Python requester/telemetry/safety nodes).
    Observation-only upstream changes live in [patches/](patches/) and are digest-locked
