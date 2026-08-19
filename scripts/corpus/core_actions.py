@@ -65,6 +65,17 @@ class LiveActionProfile:
     # reclaim enters it twice even though each producer session enters once, so
     # this is separate from the repeat count a single producer performs.
     activation_count: int = 1
+    # Each action's five timing bins span its own feasible window.  The count
+    # stays fixed so systematic enumeration remains well defined; only the
+    # seconds differ, because a reclaim has to land inside a ten second window
+    # while a stall has the whole active period.
+    timing_offsets_ns: tuple[int, ...] = (
+        3_500_000_000,
+        4_250_000_000,
+        5_000_000_000,
+        5_750_000_000,
+        6_500_000_000,
+    )
     # Actions do not share one clock.  A stall is interesting relative to route
     # activation, a re-entry relative to the successor taking over, an adjacent
     # request relative to completion.  Anchoring every action to activation
@@ -115,6 +126,7 @@ class CoreAction:
                     "repeat_count": self.live_profile.repeat_count,
                     "activation_count": self.live_profile.activation_count,
                     "timing_anchor": self.live_profile.timing_anchor,
+                    "timing_offsets_ns": list(self.live_profile.timing_offsets_ns),
                 }
                 if self.live_profile is not None
                 else None
@@ -363,7 +375,10 @@ CORE_ACTIONS: tuple[CoreAction, ...] = (
             fault_mode="process_exit",
             completion_expected=True,
             fault_expected=True,
-            fallback_expected=True,
+            # The reclaim preempts the safe route by design, so requiring a
+            # completely installed fallback would be a self-contradictory
+            # obligation rather than a contract the system could satisfy.
+            fallback_expected=False,
             workload_phases=(
                 "public_takeoff",
                 "stable_hover",
@@ -376,6 +391,16 @@ CORE_ACTIONS: tuple[CoreAction, ...] = (
             repeat_count=1,
             activation_count=2,
             timing_anchor="fallback_installed",
+            # Measured: ten seconds from the telemetry-visible fallback to
+            # disarm, and the reclaim spends about three of them starting its
+            # process and prestreaming before it can request.
+            timing_offsets_ns=(
+                500_000_000,
+                1_000_000_000,
+                1_500_000_000,
+                2_000_000_000,
+                2_500_000_000,
+            ),
         ),
         notes=(
             "the only proposed action whose legality depends on the outcome of an "
@@ -431,6 +456,11 @@ def validate_declarations() -> None:
                 f"{action.action_id}: a wired action needs a live profile and only a wired action may have one"
             )
         if action.live_profile is not None:
+            offsets = action.live_profile.timing_offsets_ns
+            if len(offsets) != 5 or sorted(offsets) != list(offsets) or offsets[0] < 0:
+                raise CoreActionError(
+                    f"{action.action_id}: timing offsets must be five ordered non-negative values"
+                )
             anchor = action.live_profile.timing_anchor
             if anchor not in action.live_markers:
                 raise CoreActionError(

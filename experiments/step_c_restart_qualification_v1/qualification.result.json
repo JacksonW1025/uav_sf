@@ -156,7 +156,7 @@
       "strategy_lifecycle_complete": true
     },
     "step-cr-q-dynamic-state-003": {
-      "action_contract_valid": false,
+      "action_contract_valid": true,
       "attempt_id": "step-cr-q-dynamic-state-003",
       "covered_units_before_decision": [
         "stop_owned_setpoint_stream:boundary",
@@ -164,8 +164,8 @@
       ],
       "decision_digest": "sha256:c6ee2ae02cef98bff4395c8c9cdf3763a298bbb8f8b256e59e9edb284a7f6cef",
       "evaluated": true,
-      "evidence_gate_status": "ADMISSIBLE",
-      "outcome": "ACCEPTED",
+      "evidence_gate_status": "INADMISSIBLE",
+      "outcome": "FORMAL_SAFETY_STOP",
       "passed": false,
       "physical_execution_status": "PASS",
       "planned_offset_ns": 5000000000,
@@ -174,7 +174,7 @@
       "selected_action": "restart_producer_after_loss",
       "selected_boundary": "boundary",
       "selected_unit": "restart_producer_after_loss:boundary",
-      "strategy_lifecycle_complete": false
+      "strategy_lifecycle_complete": true
     },
     "step-cr-q-offboard-official-001": {
       "action_contract_valid": true,
@@ -235,13 +235,13 @@
       "strategy_lifecycle_complete": true
     },
     "step-cr-q-offboard-random-001": {
-      "action_contract_valid": false,
+      "action_contract_valid": true,
       "attempt_id": "step-cr-q-offboard-random-001",
       "covered_units_before_decision": [],
       "decision_digest": "sha256:ec1df28f5df10178550c45467a182617f84af7527479995e2368cea5eed91a34",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
-      "outcome": "ACCEPTED",
+      "outcome": "FORMAL_SAFETY_STOP",
       "passed": false,
       "physical_execution_status": "PASS",
       "planned_offset_ns": 5000000000,
@@ -250,13 +250,15 @@
       "selected_action": "restart_producer_after_loss",
       "selected_boundary": "boundary",
       "selected_unit": "restart_producer_after_loss:boundary",
-      "strategy_lifecycle_complete": false
+      "strategy_lifecycle_complete": true
     },
     "step-cr-q-offboard-random-002": {
       "action_contract_valid": true,
       "attempt_id": "step-cr-q-offboard-random-002",
-      "covered_units_before_decision": [],
-      "decision_digest": "sha256:b835530ad2acc86ac96ad55c5a13749810356abed8ec34ce21fc1ba2df5ef2fd",
+      "covered_units_before_decision": [
+        "restart_producer_after_loss:boundary"
+      ],
+      "decision_digest": "sha256:650f34ba7d45ec69321fe5e8b600ab75c95d64ac3f338e2497295577713d9375",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -274,9 +276,10 @@
       "action_contract_valid": true,
       "attempt_id": "step-cr-q-offboard-random-003",
       "covered_units_before_decision": [
-        "re_enter_route_after_successor:pre_boundary"
+        "re_enter_route_after_successor:pre_boundary",
+        "restart_producer_after_loss:boundary"
       ],
-      "decision_digest": "sha256:aa14d9f5a3a44eb4f3b616f63624383fe7cb381f3d0539e45f5dd089b0c43ba3",
+      "decision_digest": "sha256:e0390543589d20c51494900b2cd1ecae7e3f462511a6892a5d265bb4a1759ce8",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -291,7 +294,7 @@
       "strategy_lifecycle_complete": true
     },
     "step-cr-q-offboard-state-001": {
-      "action_contract_valid": false,
+      "action_contract_valid": true,
       "attempt_id": "step-cr-q-offboard-state-001",
       "covered_units_before_decision": [],
       "decision_digest": "sha256:03e2c3273afb286c87f8b77382f249f175c9656182f6885a686c542d4e2a5828",
@@ -306,31 +309,15 @@
       "selected_action": "restart_producer_after_loss",
       "selected_boundary": "boundary",
       "selected_unit": "restart_producer_after_loss:boundary",
-      "strategy_lifecycle_complete": false
+      "strategy_lifecycle_complete": true
     },
     "step-cr-q-offboard-state-002": {
-      "action_contract_valid": false,
-      "attempt_id": "step-cr-q-offboard-state-002",
-      "covered_units_before_decision": [],
-      "decision_digest": "sha256:e8a7d4cebd48a67d99dbf480328813e6ffb58804c6c042f08662d0e8f5caca23",
-      "evaluated": true,
-      "evidence_gate_status": "ADMISSIBLE",
-      "outcome": "ACCEPTED",
-      "passed": false,
-      "physical_execution_status": "PASS",
-      "planned_offset_ns": 5000000000,
-      "safe_fallback_required": true,
-      "safe_fallback_status": "VIOLATION",
-      "selected_action": "restart_producer_after_loss",
-      "selected_boundary": "boundary",
-      "selected_unit": "restart_producer_after_loss:boundary",
-      "strategy_lifecycle_complete": false
-    },
-    "step-cr-q-offboard-state-003": {
       "action_contract_valid": true,
-      "attempt_id": "step-cr-q-offboard-state-003",
-      "covered_units_before_decision": [],
-      "decision_digest": "sha256:d2b5cf25fde0d89376735d4207ca6ec5c3acb03db5db0f2b7460cf63e2076673",
+      "attempt_id": "step-cr-q-offboard-state-002",
+      "covered_units_before_decision": [
+        "restart_producer_after_loss:boundary"
+      ],
+      "decision_digest": "sha256:5cfac377e2a86ba6618f3422d824727e2a41dafac0ebe99db1654e28917aebbf",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -343,9 +330,30 @@
       "selected_boundary": "boundary",
       "selected_unit": "terminate_owning_producer:boundary",
       "strategy_lifecycle_complete": true
+    },
+    "step-cr-q-offboard-state-003": {
+      "action_contract_valid": true,
+      "attempt_id": "step-cr-q-offboard-state-003",
+      "covered_units_before_decision": [
+        "restart_producer_after_loss:boundary",
+        "terminate_owning_producer:boundary"
+      ],
+      "decision_digest": "sha256:246509ff5527cecd679f8b4112d624faad6dc2914252560311d8e6d137802da1",
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "planned_offset_ns": 5000000000,
+      "safe_fallback_required": false,
+      "safe_fallback_status": "NOT_APPLICABLE",
+      "selected_action": "re_enter_route_after_successor",
+      "selected_boundary": "boundary",
+      "selected_unit": "re_enter_route_after_successor:boundary",
+      "strategy_lifecycle_complete": true
     }
   },
-  "completed_at": "2026-08-19T12:58:20.459015+00:00",
+  "completed_at": "2026-08-19T13:22:00.056594+00:00",
   "corpus": [
     "stop_owned_setpoint_stream",
     "terminate_owning_producer",
@@ -419,12 +427,12 @@
     }
   ],
   "schema_version": "1.0",
-  "spec_digest": "sha256:11e6c01ed35732f737e4a733b82a73b12e980e15536ed284398df852723ac52b",
-  "started_at": "2026-08-19T12:52:22.444330+00:00",
+  "spec_digest": "sha256:1f9caf3e3fb3578e2440ae6c5d7627481bdcb2594aafce7b0b253d6701016822",
+  "started_at": "2026-08-19T13:15:41.678735+00:00",
   "state_aware_feedback_checks": [
     {
       "mechanism": "legacy_offboard",
-      "subsequent_decisions_used_live_feedback": false
+      "subsequent_decisions_used_live_feedback": true
     },
     {
       "mechanism": "dynamic_external_mode",
@@ -481,11 +489,11 @@
     {
       "attempt_count": 3,
       "mechanism": "legacy_offboard",
-      "passed_count": 1,
+      "passed_count": 2,
       "selected_actions": [
         "restart_producer_after_loss",
-        "restart_producer_after_loss",
-        "terminate_owning_producer"
+        "terminate_owning_producer",
+        "re_enter_route_after_successor"
       ],
       "selected_boundaries": [
         "boundary",
@@ -494,8 +502,8 @@
       ],
       "selected_units": [
         "restart_producer_after_loss:boundary",
-        "restart_producer_after_loss:boundary",
-        "terminate_owning_producer:boundary"
+        "terminate_owning_producer:boundary",
+        "re_enter_route_after_successor:boundary"
       ],
       "status": "FAIL",
       "strategy": "state_aware"

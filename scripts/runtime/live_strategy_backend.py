@@ -196,7 +196,12 @@ def enabled_corpus_candidates(
         lower, upper = bounds
         if not all(isinstance(value, int) for value in bounds) or lower < 0 or upper < lower:
             raise LiveStrategyError(f"{action_id} timing bounds are invalid")
-        for boundary, offset in OFFSETS_NS:
+        offsets = (
+            action.live_profile.timing_offsets_ns
+            if action.live_profile is not None
+            else tuple(value for _, value in OFFSETS_NS)
+        )
+        for (boundary, _), offset in zip(OFFSETS_NS, offsets):
             candidates.append(
                 {
                     "action": action_id,
@@ -290,11 +295,9 @@ def create_corpus_decision(
                 [action], {action: bounds}, seed=_derived_seed(seed, action)
             )[0]["delay_ns"]
         )
-        boundary = boundary_for_offset(offset)
-        selected = next(
-            item
-            for item in enabled
-            if item["action"] == action and item["boundary"] == boundary
+        selected = min(
+            (item for item in enabled if item["action"] == action),
+            key=lambda item: (abs(item["offset_ns"] - offset), item["offset_ns"]),
         )
     else:
         if seed is None:

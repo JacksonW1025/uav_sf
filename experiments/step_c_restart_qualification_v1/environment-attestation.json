@@ -45,7 +45,7 @@
         "observer_profile": "transition",
         "operating_system": "Ubuntu 24.04.4 LTS",
         "python": "3.12.3",
-        "repository_revision": "12eb3f44dc0c9f0fe5ad50d9e31fd1a491b3cb9c",
+        "repository_revision": "8900d6df4532624234a3791153398d5b4ebc1c46",
         "rmw_implementation": "rmw_fastrtps_cpp",
         "ros_distribution": "jazzy",
         "schema_version": "1.0",
@@ -110,8 +110,8 @@
           "px4_ros2_cpp"
         ]
       },
-      "image_id": "sha256:17f43ef5722f1ab6d4e7c507bf526d142668a2197ced0a486c6abf9bfd2f7534",
-      "image_reference": "uav-sf-family-a-thor:step-c-restart-12eb3f4",
+      "image_id": "sha256:de5ef612a56e115324d68058f9262e4face1f362577b005e837cf4308975e86a",
+      "image_reference": "uav-sf-family-a-thor:step-c-reclaim-8900d6d",
       "platform": "linux/arm64",
       "preflight": {
         "checks": {
@@ -130,7 +130,7 @@
       },
       "repo_digests": []
     },
-    "environment_id": "thor-r38.2.1-step-c-restart-qualification-v1",
+    "environment_id": "thor-r38.2.1-step-c-reclaim-qualification-v1",
     "host": {
       "cpu_governors": [
         "schedutil"
@@ -159,12 +159,12 @@
     },
     "schema_version": "1.0"
   },
-  "attestation_payload_digest": "sha256:6dbe0003eb77b13332ad654f1a0b72b7fde32b7db01bf0f1a446f99268f25d9b",
+  "attestation_payload_digest": "sha256:3af9ed460fbf50355a8b4b86d02ac179a39c5ca73ae2638823fa2afe3a613c5c",
   "execution_environment": {
     "architecture": "aarch64",
     "collector_host_id": "agx-thor-local",
-    "environment_id": "thor-r38.2.1-step-c-restart-qualification-v1",
-    "environment_manifest_digest": "sha256:6dbe0003eb77b13332ad654f1a0b72b7fde32b7db01bf0f1a446f99268f25d9b",
+    "environment_id": "thor-r38.2.1-step-c-reclaim-qualification-v1",
+    "environment_manifest_digest": "sha256:3af9ed460fbf50355a8b4b86d02ac179a39c5ca73ae2638823fa2afe3a613c5c",
     "execution_host_id": "agx-thor-local",
     "operating_system": "Ubuntu 24.04 Noble container on L4T R38.2.1",
     "px4_binary_digest": "sha256:a01553180c7fa3cdd784fcfa28edd0fb7f45c226033211fd112ad91cac4f1c2b",
