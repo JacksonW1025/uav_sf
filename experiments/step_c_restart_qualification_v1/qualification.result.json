@@ -4,7 +4,7 @@
       "action_contract_valid": true,
       "attempt_id": "step-cr-q-dynamic-official-001",
       "covered_units_before_decision": [],
-      "decision_digest": "sha256:358d701d76543b31d8c6ffeb3dfa829c33bb2a1639c530dafc0f07b43aa197ea",
+      "decision_digest": "sha256:f72343909f61ca8ddba395953060521c2f3b43b621ebc525233f969607a6b627",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -24,7 +24,7 @@
       "covered_units_before_decision": [
         "stop_owned_setpoint_stream:boundary"
       ],
-      "decision_digest": "sha256:f6806ccd1528b6a8cf2fd411fb046f77de49ba028187bcdca38b23df6dd66ef7",
+      "decision_digest": "sha256:f738d0d1594f873d0b3e94162d26aeef338724fd4042433aa06864a65d5e2fce",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -44,7 +44,7 @@
       "covered_units_before_decision": [
         "stop_owned_setpoint_stream:boundary"
       ],
-      "decision_digest": "sha256:f6806ccd1528b6a8cf2fd411fb046f77de49ba028187bcdca38b23df6dd66ef7",
+      "decision_digest": "sha256:f738d0d1594f873d0b3e94162d26aeef338724fd4042433aa06864a65d5e2fce",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -62,7 +62,7 @@
       "action_contract_valid": true,
       "attempt_id": "step-cr-q-dynamic-random-001",
       "covered_units_before_decision": [],
-      "decision_digest": "sha256:f721b841871249bc7379db6fe3544624404198d3925c5bcefb764368a476baa9",
+      "decision_digest": "sha256:902405b849f1d6682dffd70a8a9f72187fba2fab16331c982d8e766377c51589",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -82,7 +82,7 @@
       "covered_units_before_decision": [
         "re_enter_route_after_successor:boundary"
       ],
-      "decision_digest": "sha256:f5d5c99872c0d4358cc213d3236d70fce74e14131598054fbcbf4ccf9f4ce814",
+      "decision_digest": "sha256:bc161796bec0157ea99853b266fbaca249f7e7b4536943d4b2308cfe1255668c",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -103,7 +103,7 @@
         "re_enter_route_after_successor:boundary",
         "terminate_owning_producer:boundary"
       ],
-      "decision_digest": "sha256:72b78e32a16e398bd2c53d782e427fc5e0d893fc0e7bfeba13a4825ab7cd5519",
+      "decision_digest": "sha256:33350cb1f51b6f378115f2aeb6023459016974035df9f504af6ae5c5d165ba1d",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -121,7 +121,7 @@
       "action_contract_valid": true,
       "attempt_id": "step-cr-q-dynamic-state-001",
       "covered_units_before_decision": [],
-      "decision_digest": "sha256:ed05ebfe7bda4a54f6b4c9dc7b53ce92d50d5775f624020ffd87acaf42123afb",
+      "decision_digest": "sha256:ad9d4523147b7d4596a31d22023216e6c27671e6b668a6a17c201ce455164e4d",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -141,7 +141,7 @@
       "covered_units_before_decision": [
         "terminate_owning_producer:boundary"
       ],
-      "decision_digest": "sha256:895d85504d24fecdc63daddc5162409cf041f5495a4ca47624ac67a41348f33a",
+      "decision_digest": "sha256:1585ca292356d1e70162348c781cfce31f199c985bc75fa94ca29d42f8515a50",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -162,25 +162,25 @@
         "stop_owned_setpoint_stream:boundary",
         "terminate_owning_producer:boundary"
       ],
-      "decision_digest": "sha256:c6ee2ae02cef98bff4395c8c9cdf3763a298bbb8f8b256e59e9edb284a7f6cef",
+      "decision_digest": "sha256:ac7f5d01b2a5e23f6910f7e88e565395ace9b9b74f95f0e4bd9a5e3d94ccf093",
       "evaluated": true,
-      "evidence_gate_status": "INADMISSIBLE",
-      "outcome": "FORMAL_SAFETY_STOP",
-      "passed": false,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
       "physical_execution_status": "PASS",
       "planned_offset_ns": 5000000000,
-      "safe_fallback_required": true,
-      "safe_fallback_status": "VIOLATION",
-      "selected_action": "restart_producer_after_loss",
+      "safe_fallback_required": false,
+      "safe_fallback_status": "NOT_APPLICABLE",
+      "selected_action": "re_enter_route_after_successor",
       "selected_boundary": "boundary",
-      "selected_unit": "restart_producer_after_loss:boundary",
+      "selected_unit": "re_enter_route_after_successor:boundary",
       "strategy_lifecycle_complete": true
     },
     "step-cr-q-offboard-official-001": {
       "action_contract_valid": true,
       "attempt_id": "step-cr-q-offboard-official-001",
       "covered_units_before_decision": [],
-      "decision_digest": "sha256:d8904c810952dbc2f45814dfe757988df86ca78b7cfddebb66030bd4444fc699",
+      "decision_digest": "sha256:a851453c701b73dfc6cc9719d01faa84e4362c0a8bad4510916c2afc23f120ba",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -200,7 +200,7 @@
       "covered_units_before_decision": [
         "stop_owned_setpoint_stream:boundary"
       ],
-      "decision_digest": "sha256:24bb2f146e0cd897f772f74da5ffc33b99349b969ab2c90f59fe2d882ad37c6c",
+      "decision_digest": "sha256:5294dadc4531bbaaddc3abc66fedaeab6858c9bb1722b7b91fdd33a97f92b092",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -220,7 +220,7 @@
       "covered_units_before_decision": [
         "stop_owned_setpoint_stream:boundary"
       ],
-      "decision_digest": "sha256:24bb2f146e0cd897f772f74da5ffc33b99349b969ab2c90f59fe2d882ad37c6c",
+      "decision_digest": "sha256:5294dadc4531bbaaddc3abc66fedaeab6858c9bb1722b7b91fdd33a97f92b092",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -238,15 +238,15 @@
       "action_contract_valid": true,
       "attempt_id": "step-cr-q-offboard-random-001",
       "covered_units_before_decision": [],
-      "decision_digest": "sha256:ec1df28f5df10178550c45467a182617f84af7527479995e2368cea5eed91a34",
+      "decision_digest": "sha256:a8eaf7885af04e331221b45f41be1ec1d2a4df79b303d10eece9004fe948614d",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
-      "outcome": "FORMAL_SAFETY_STOP",
-      "passed": false,
+      "outcome": "ACCEPTED",
+      "passed": true,
       "physical_execution_status": "PASS",
-      "planned_offset_ns": 5000000000,
-      "safe_fallback_required": true,
-      "safe_fallback_status": "VIOLATION",
+      "planned_offset_ns": 1500000000,
+      "safe_fallback_required": false,
+      "safe_fallback_status": "NOT_APPLICABLE",
       "selected_action": "restart_producer_after_loss",
       "selected_boundary": "boundary",
       "selected_unit": "restart_producer_after_loss:boundary",
@@ -258,7 +258,7 @@
       "covered_units_before_decision": [
         "restart_producer_after_loss:boundary"
       ],
-      "decision_digest": "sha256:650f34ba7d45ec69321fe5e8b600ab75c95d64ac3f338e2497295577713d9375",
+      "decision_digest": "sha256:c78e81b0e38e183baa512e18f8d20b842ac21f7c6a8e5136d8445ce1f43b2d3c",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -279,7 +279,7 @@
         "re_enter_route_after_successor:pre_boundary",
         "restart_producer_after_loss:boundary"
       ],
-      "decision_digest": "sha256:e0390543589d20c51494900b2cd1ecae7e3f462511a6892a5d265bb4a1759ce8",
+      "decision_digest": "sha256:7b0558e3b7efb679bedd79c3fcd30ab6101c8f19f8f567e81456a15707be3489",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -297,27 +297,27 @@
       "action_contract_valid": true,
       "attempt_id": "step-cr-q-offboard-state-001",
       "covered_units_before_decision": [],
-      "decision_digest": "sha256:03e2c3273afb286c87f8b77382f249f175c9656182f6885a686c542d4e2a5828",
+      "decision_digest": "sha256:3bb7d44b283fa27c64b5058609e33c80b48304fda97d7aaacbc742f37f5e9612",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
-      "passed": false,
+      "passed": true,
       "physical_execution_status": "PASS",
       "planned_offset_ns": 5000000000,
-      "safe_fallback_required": true,
-      "safe_fallback_status": "VIOLATION",
-      "selected_action": "restart_producer_after_loss",
+      "safe_fallback_required": false,
+      "safe_fallback_status": "NOT_APPLICABLE",
+      "selected_action": "re_enter_route_after_successor",
       "selected_boundary": "boundary",
-      "selected_unit": "restart_producer_after_loss:boundary",
+      "selected_unit": "re_enter_route_after_successor:boundary",
       "strategy_lifecycle_complete": true
     },
     "step-cr-q-offboard-state-002": {
       "action_contract_valid": true,
       "attempt_id": "step-cr-q-offboard-state-002",
       "covered_units_before_decision": [
-        "restart_producer_after_loss:boundary"
+        "re_enter_route_after_successor:boundary"
       ],
-      "decision_digest": "sha256:5cfac377e2a86ba6618f3422d824727e2a41dafac0ebe99db1654e28917aebbf",
+      "decision_digest": "sha256:1b3bd46677f2f2168f7752806263e71a7833da97c6f12a684bcdce2c44661a1a",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -335,10 +335,10 @@
       "action_contract_valid": true,
       "attempt_id": "step-cr-q-offboard-state-003",
       "covered_units_before_decision": [
-        "restart_producer_after_loss:boundary",
+        "re_enter_route_after_successor:boundary",
         "terminate_owning_producer:boundary"
       ],
-      "decision_digest": "sha256:246509ff5527cecd679f8b4112d624faad6dc2914252560311d8e6d137802da1",
+      "decision_digest": "sha256:42b4762efd401c313a961336ffc621eaad53077ed913f210f9c56ae0376c66a5",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -347,13 +347,13 @@
       "planned_offset_ns": 5000000000,
       "safe_fallback_required": false,
       "safe_fallback_status": "NOT_APPLICABLE",
-      "selected_action": "re_enter_route_after_successor",
+      "selected_action": "stop_owned_setpoint_stream",
       "selected_boundary": "boundary",
-      "selected_unit": "re_enter_route_after_successor:boundary",
+      "selected_unit": "stop_owned_setpoint_stream:boundary",
       "strategy_lifecycle_complete": true
     }
   },
-  "completed_at": "2026-08-19T13:22:00.056594+00:00",
+  "completed_at": "2026-08-19T13:31:38.192607+00:00",
   "corpus": [
     "stop_owned_setpoint_stream",
     "terminate_owning_producer",
@@ -427,8 +427,8 @@
     }
   ],
   "schema_version": "1.0",
-  "spec_digest": "sha256:1f9caf3e3fb3578e2440ae6c5d7627481bdcb2594aafce7b0b253d6701016822",
-  "started_at": "2026-08-19T13:15:41.678735+00:00",
+  "spec_digest": "sha256:92631b1c584a308fba4de209c29d600740a9e51a46d62f7cb1837cb932be99b6",
+  "started_at": "2026-08-19T13:25:11.610926+00:00",
   "state_aware_feedback_checks": [
     {
       "mechanism": "legacy_offboard",
@@ -439,7 +439,7 @@
       "subsequent_decisions_used_live_feedback": true
     }
   ],
-  "status": "FAIL",
+  "status": "PASS",
   "study_id": "step-c-restart-qualification-v1",
   "units": [
     {
@@ -467,7 +467,7 @@
     {
       "attempt_count": 3,
       "mechanism": "legacy_offboard",
-      "passed_count": 2,
+      "passed_count": 3,
       "selected_actions": [
         "restart_producer_after_loss",
         "re_enter_route_after_successor",
@@ -483,17 +483,17 @@
         "re_enter_route_after_successor:pre_boundary",
         "re_enter_route_after_successor:post_boundary"
       ],
-      "status": "FAIL",
+      "status": "PASS",
       "strategy": "bounded_random_timing"
     },
     {
       "attempt_count": 3,
       "mechanism": "legacy_offboard",
-      "passed_count": 2,
+      "passed_count": 3,
       "selected_actions": [
-        "restart_producer_after_loss",
+        "re_enter_route_after_successor",
         "terminate_owning_producer",
-        "re_enter_route_after_successor"
+        "stop_owned_setpoint_stream"
       ],
       "selected_boundaries": [
         "boundary",
@@ -501,11 +501,11 @@
         "boundary"
       ],
       "selected_units": [
-        "restart_producer_after_loss:boundary",
+        "re_enter_route_after_successor:boundary",
         "terminate_owning_producer:boundary",
-        "re_enter_route_after_successor:boundary"
+        "stop_owned_setpoint_stream:boundary"
       ],
-      "status": "FAIL",
+      "status": "PASS",
       "strategy": "state_aware"
     },
     {
@@ -555,11 +555,11 @@
     {
       "attempt_count": 3,
       "mechanism": "dynamic_external_mode",
-      "passed_count": 2,
+      "passed_count": 3,
       "selected_actions": [
         "terminate_owning_producer",
         "stop_owned_setpoint_stream",
-        "restart_producer_after_loss"
+        "re_enter_route_after_successor"
       ],
       "selected_boundaries": [
         "boundary",
@@ -569,9 +569,9 @@
       "selected_units": [
         "terminate_owning_producer:boundary",
         "stop_owned_setpoint_stream:boundary",
-        "restart_producer_after_loss:boundary"
+        "re_enter_route_after_successor:boundary"
       ],
-      "status": "FAIL",
+      "status": "PASS",
       "strategy": "state_aware"
     }
   ]

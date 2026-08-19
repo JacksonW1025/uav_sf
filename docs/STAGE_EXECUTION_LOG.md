@@ -30,7 +30,7 @@ repository validation passes. A step that is partly done says which part.
 v8 plan stage:      Stage 2, construct the core action and workload corpus
 Stage 1:            complete, exit checks met
 Corpus freeze:      proposed and conditional, deliberately not signed
-Current step:       Step C-adjacent, or resolve the reclaim reachability decision
+Current step:       Step C-adjacent, port the adjacent Land request
 Formal campaigns:   none authorized, none running
 ```
 
@@ -176,30 +176,31 @@ A latent defect surfaced here: an unset action-request path was passed as an
 empty ROS parameter override, which the parameter parser rejects, so any run
 without a strategy decision would have failed at node startup.
 
-#### C-restart — implement the reclaim — IMPLEMENTED, FOUND UNREACHABLE
+#### C-restart — implement the reclaim — COMPLETE
 
-The reclaim was implemented, wired and flown: the runner starts a fresh producer
-session with its own identity and sidecar when the executor requests it, the
-offline chain reads that sidecar, and the executor observes the fallback from
-the runner lifecycle because a lost producer stops writing its own.
+The reclaim was implemented, found unreachable, and then made reachable by
+correcting the measurement rather than the system.
 
-The 18-attempt qualification failed, and every failure was the reclaim. The
-three already-qualified actions were unaffected. Under the configured offboard
-failsafe the aircraft lands and disarms about ten seconds after the loss, and
-the runner observes the loss by polling the producer process — in the recorded
-attempts it logged the loss after the aircraft had already landed. On dynamic
-external mode the loss comes from a component whose exit is not synchronised
-with the policy anchor, so the episode completed normally instead.
+The first attempt failed on every reclaim: the runner learned of the producer
+loss by polling the process, about eleven seconds after telemetry already showed
+the installed safe route, by which time the aircraft had landed. The loss is now
+derived from telemetry, and the reclaim starts from the main loop instead of the
+branch that waits for that notice. The tested failsafe configuration is
+unchanged.
 
-The action is recorded as unreachable rather than dropped or forced to pass, and
-the failsafe configuration was not changed to create a window, because that
-would change the system under test to fit the test.
-See [the reachability finding](../experiments/step_c_restart_qualification_v1/REACHABILITY_FINDING.md),
-which states the three options for resolving it.
+Two further defects appeared once it executed. Its plan required a completely
+installed fallback that the action exists to preempt, which is a
+self-contradictory obligation, so it no longer expects one. And its timing bins
+were 3.5 to 6.5 s after the anchor while the window closes on touchdown, so the
+supervisor stopped those attempts on ground contact; timing bins now belong to
+the action, still five ordered discrete values, with the reclaim's spanning 0.5
+to 2.5 s.
 
-This costs the corpus its only action whose legality depends on an earlier
-action, which is the property the seven-action selection was argued from. That
-is now an open preregistration decision rather than an implementation task.
+The qualification then passed 18 of 18 with four selectable actions over seven
+distinct units. A reclaim episode completes, loses its producer, has the safe
+route installed and revoked, and reclaims the tested route under a new producer
+session and route epoch.
+See [the record](../experiments/step_c_restart_qualification_v1/REACHABILITY_FINDING.md).
 
 #### C-adjacent — port the adjacent Land request — NOT STARTED
 
@@ -241,18 +242,17 @@ generation — remain deferred by standing decision 3.
 
 ## Next concrete action
 
-Two things are open, and the first needs a decision rather than code.
+C-adjacent is the last availability gap: launch the manual requester for both
+compared mechanisms and anchor it on the completion boundary through the
+per-action anchor and bins. It is the one core action still implemented only for
+the mode executor.
 
-1. The reclaim is unreachable. Choose between preregistering a failsafe
-   configuration that holds after a producer loss, giving the runner a
-   telemetry-based loss signal, or accepting a corpus with no state-dependent
-   action. The options and their costs are in the reachability finding.
-2. C-adjacent is untouched: launch the manual requester for both compared
-   mechanisms and anchor it on the completion boundary through the anchor
-   mechanism.
+After that, Step D wires the registration and health actions, which are
+dynamic-only by nature of the system under test and need live markers the
+executor cannot observe yet. Then the corpus freeze can be signed.
 
-Three actions are qualified and selectable today: the owned stall, the producer
-termination, and route re-entry.
+Four actions are qualified and selectable today: the owned stall, the producer
+termination, route re-entry, and the producer reclaim.
 
 Before any live batch, confirm no unpinned process competes for the pinned CPU
 sets, and afterwards confirm the central real-time factor is near 1.0.

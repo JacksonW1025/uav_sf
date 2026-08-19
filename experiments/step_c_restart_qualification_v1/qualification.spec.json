@@ -21,8 +21,8 @@
         6500000000
       ],
       "restart_producer_after_loss": [
-        3500000000,
-        5000000000
+        500000000,
+        2500000000
       ],
       "stop_owned_setpoint_stream": [
         3500000000,
@@ -121,7 +121,7 @@
     "restart_producer_after_loss"
   ],
   "formal_ledger_path": "experiments/step_c_restart_qualification_v1/attempt-ledger.jsonl",
-  "image": "uav-sf-family-a-thor:step-c-reclaim-8900d6d",
+  "image": "uav-sf-family-a-thor:step-c-reclaim-a4cb63a",
   "maximum_clock_uncertainty_ns": 20000000,
   "official_action": "stop_owned_setpoint_stream",
   "qualification_only": true,
