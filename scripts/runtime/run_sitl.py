@@ -15,7 +15,8 @@ from pathlib import Path
 from typing import Any
 
 from scripts.runtime.isolation import allocate_isolation
-from scripts.runtime.live_strategy_backend import validate_live_decision
+from scripts.corpus.core_actions import live_profile
+from scripts.runtime.live_strategy_backend import CORPUS_SCHEMA, validate_live_decision
 from scripts.runtime.physical_readiness import physical_takeoff_observed
 from scripts.runtime.preflight import self_check
 
@@ -255,7 +256,15 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         if not isinstance(strategy_decision, dict):
             raise RuntimeFailure("live strategy decision is not an object")
         validate_live_decision(strategy_decision)
-        if strategy_decision["action"] != args.fault_mode:
+        # The flight must perform the action that was decided.  A corpus
+        # decision names a core action, whose live profile fixes the runtime
+        # fault mode; the earlier single-action decision names that mode
+        # directly.
+        if strategy_decision.get("schema_version") == CORPUS_SCHEMA:
+            expected_fault_mode = live_profile(str(strategy_decision["action"])).fault_mode
+        else:
+            expected_fault_mode = strategy_decision["action"]
+        if expected_fault_mode != args.fault_mode:
             raise RuntimeFailure("live strategy action differs from the runtime fault mode")
         if args.workload_profile != "straight_line":
             raise RuntimeFailure("the live strategy backend requires the moving workload")

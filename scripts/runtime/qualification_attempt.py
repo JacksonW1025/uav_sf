@@ -13,7 +13,12 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from scripts.runtime.live_strategy_backend import CONTRACTS, create_live_decision
+from scripts.corpus.core_actions import live_profile
+from scripts.runtime.live_strategy_backend import (
+    CONTRACTS,
+    create_corpus_decision,
+    create_live_decision,
+)
 from scripts.runtime.make_plan import create_plan
 
 
@@ -89,6 +94,32 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             else:
                 timing_bounds["adjacent_completion_distance_ns"] = [0, 100_000_000]
         timing_bounds.update(args.timing_bounds_ns)
+        corpus = tuple(getattr(args, "corpus", None) or ())
+        corpus_decision = None
+        if corpus:
+            # The action is selected before the flight, so the flight must be
+            # launched to perform exactly that action and the plan must carry
+            # exactly that action's obligations.
+            corpus_decision = create_corpus_decision(
+                strategy=args.strategy,
+                seed=args.strategy_seed,
+                mechanism=args.mechanism,
+                corpus=corpus,
+                timing_bounds_ns=args.timing_bounds_ns,
+                official_action=str(args.official_action),
+                official_offset_ns=int(args.stall_after_s * 1_000_000_000),
+                covered_units=set(args.covered_boundary),
+            )
+            profile = live_profile(str(corpus_decision["action"]))
+            args.fault_mode = profile.fault_mode
+            args.completion_expected = profile.completion_expected
+            args.fault_expected = profile.fault_expected
+            args.fallback_expected = profile.fallback_expected
+            if isinstance(args.workload, dict):
+                args.workload = {
+                    **args.workload,
+                    "phases": list(profile.workload_phases),
+                }
         plan = create_plan(
             attestation=attestation,
             run_id=args.run_id,
@@ -124,7 +155,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         plan_path.write_text(
             json.dumps(plan, indent=2, sort_keys=True) + "\n", encoding="utf-8"
         )
-        if args.live_strategy_backend is not None:
+        if corpus_decision is not None:
+            _write_new(decision_path, corpus_decision)
+        elif args.live_strategy_backend is not None:
             if args.live_strategy_backend not in CONTRACTS:
                 raise QualificationError("unsupported qualification live strategy backend")
             decision = create_live_decision(
@@ -193,7 +226,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "--safety-limits",
             args.safety_limits,
         ]
-        if args.live_strategy_backend is not None:
+        if corpus_decision is not None or args.live_strategy_backend is not None:
             launch.extend(["--strategy-decision", str(decision_path)])
         if args.health_loss:
             launch.append("--health-loss")
@@ -331,6 +364,8 @@ def main() -> int:
     )
     parser.add_argument("--strategy-seed", type=int)
     parser.add_argument("--live-strategy-backend", choices=sorted(CONTRACTS))
+    parser.add_argument("--corpus", action="append", default=[])
+    parser.add_argument("--official-action")
     parser.add_argument("--covered-boundary", action="append", default=[])
     parser.set_defaults(timing_bounds_ns={}, workload=None)
     parser.add_argument("--maximum-clock-uncertainty-ns", type=int, default=20_000_000)

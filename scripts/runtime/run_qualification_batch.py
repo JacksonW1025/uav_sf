@@ -117,6 +117,8 @@ def _namespace(
         strategy=str(attempt.get("strategy", "official_sequence")),
         strategy_seed=attempt.get("strategy_seed"),
         live_strategy_backend=spec.get("live_strategy_backend"),
+        corpus=list(spec.get("corpus", [])),
+        official_action=spec.get("official_action"),
         covered_boundary=list(attempt.get("covered_boundary", [])),
         timing_bounds_ns=dict(attempt.get("timing_bounds_ns", {})),
         workload=attempt.get("workload"),

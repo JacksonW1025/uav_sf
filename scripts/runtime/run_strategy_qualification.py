@@ -12,7 +12,8 @@ import shutil
 import sys
 from typing import Any
 
-from scripts.runtime.live_strategy_backend import validate_live_decision
+from scripts.corpus.core_actions import live_profile
+from scripts.runtime.live_strategy_backend import CORPUS_SCHEMA, validate_live_decision
 from scripts.runtime.run_qualification_batch import (
     QualificationBatchError,
     _active_containers,
@@ -72,6 +73,27 @@ def _validate_spec(spec: dict[str, Any]) -> dict[tuple[str, str], dict[str, Any]
         raise QualificationBatchError("qualification requires four frozen CPU sets")
     if Path(spec["formal_ledger_path"]).exists():
         raise QualificationBatchError("formal attempt ledger already exists; qualification must not open it")
+    corpus = spec.get("corpus", [])
+    if corpus:
+        if spec.get("live_strategy_backend") is not None:
+            raise QualificationBatchError(
+                "a corpus qualification selects its own action and must not pin one backend"
+            )
+        if not isinstance(corpus, list) or not all(isinstance(item, str) for item in corpus):
+            raise QualificationBatchError("qualification corpus must be a list of action names")
+        official = spec.get("official_action")
+        if official not in corpus:
+            raise QualificationBatchError("the official action must belong to the corpus")
+        for action in corpus:
+            live_profile(action)
+        bounds = spec.get("attempt", {}).get("timing_bounds_ns", {})
+        missing = sorted(set(corpus) - set(bounds))
+        if missing:
+            raise QualificationBatchError(
+                "the corpus needs timing bounds for: " + ", ".join(missing)
+            )
+    elif spec.get("live_strategy_backend") is None:
+        raise QualificationBatchError("qualification needs a corpus or a live strategy backend")
     return cells
 
 
@@ -84,7 +106,15 @@ def _observed_coverage(run_root: Path, study_id: str, prefix: str) -> list[str]:
         if any(record.get("kind") == "action_requested" for record in _records(lifecycle)):
             decision = _read_object(decision_path)
             validate_live_decision(decision)
-            values.append(str(decision["selected_boundary"]))
+            # A corpus decision covers an (action, timing) unit; the earlier
+            # single-action decision covers a timing boundary only.
+            values.append(
+                str(
+                    decision["selected_unit"]
+                    if decision.get("schema_version") == CORPUS_SCHEMA
+                    else decision["selected_boundary"]
+                )
+            )
     return sorted(set(values))
 
 
@@ -113,18 +143,25 @@ def _attempt_summary(
     ]
     action_valid = (
         len(action_records) == 1
-        and action_records[0].get("action") == "process_exit"
+        and action_records[0].get("action") == decision["action"]
         and action_records[0].get("selected_boundary") == decision["selected_boundary"]
     )
     physical = result.get("physical_execution", {})
     fallback = _fallback_status(attempt_root / "derived" / "evaluation.json")
+    if decision.get("schema_version") == CORPUS_SCHEMA:
+        # A stall action owes no fallback, so requiring one would fail a
+        # correct flight.  Each action is held to its own obligation.
+        expects_fallback = live_profile(str(decision["action"])).fallback_expected
+    else:
+        expects_fallback = True
+    fallback_ok = fallback == "PASS" if expects_fallback else fallback != "VIOLATION"
     passed = all(
         (
             result.get("outcome") == "ACCEPTED",
             result.get("evidence_gate_status") == "ADMISSIBLE",
             result.get("ulog", {}).get("status") == "PASS",
             physical.get("status") == "PASS",
-            fallback == "PASS",
+            fallback_ok,
             complete_lifecycle,
             action_valid,
         )
@@ -135,6 +172,8 @@ def _attempt_summary(
         "evidence_gate_status": result.get("evidence_gate_status"),
         "physical_execution_status": physical.get("status"),
         "safe_fallback_status": fallback,
+        "safe_fallback_required": expects_fallback,
+        "selected_action": decision["action"],
         "strategy_lifecycle_complete": complete_lifecycle,
         "action_contract_valid": action_valid,
         "selected_boundary": decision["selected_boundary"],
@@ -237,6 +276,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     "attempt_count": len(unit_attempts),
                     "passed_count": sum(value["passed"] for value in unit_attempts),
                     "selected_boundaries": [value["selected_boundary"] for value in unit_attempts],
+                    "selected_actions": [value["selected_action"] for value in unit_attempts],
                     "status": "PASS" if all(value["passed"] for value in unit_attempts) else "FAIL",
                 }
             )

@@ -39,6 +39,23 @@ Marker = Callable[[Mapping[str, Any], SemanticState, SemanticState], bool]
 
 
 @dataclass(frozen=True)
+class LiveActionProfile:
+    """How a wired action is applied and what contract it then owes.
+
+    The workload applies the fault mode it was launched with, so selecting an
+    action must select the launch parameters and the plan obligations too.
+    Otherwise the policy would name one action while the flight performed
+    another.
+    """
+
+    fault_mode: str
+    completion_expected: bool
+    fault_expected: bool
+    fallback_expected: bool
+    workload_phases: tuple[str, ...]
+
+
+@dataclass(frozen=True)
 class CoreAction:
     """One action proposed for the core corpus."""
 
@@ -55,6 +72,7 @@ class CoreAction:
     target_boundaries: tuple[str, ...]
     live_markers: tuple[str, ...]
     backend: str | None = None
+    live_profile: LiveActionProfile | None = None
     notes: str = ""
 
     def as_dict(self) -> dict[str, Any]:
@@ -70,6 +88,17 @@ class CoreAction:
             "target_boundaries": list(self.target_boundaries),
             "live_markers": list(self.live_markers),
             "backend": self.backend,
+            "live_profile": (
+                {
+                    "fault_mode": self.live_profile.fault_mode,
+                    "completion_expected": self.live_profile.completion_expected,
+                    "fault_expected": self.live_profile.fault_expected,
+                    "fallback_expected": self.live_profile.fallback_expected,
+                    "workload_phases": list(self.live_profile.workload_phases),
+                }
+                if self.live_profile is not None
+                else None
+            ),
             "notes": self.notes,
         }
 
@@ -121,6 +150,19 @@ CORE_ACTIONS: tuple[CoreAction, ...] = (
         target_boundaries=("command_stale",),
         live_markers=("route_active", "motion_entered"),
         backend="owned_setpoint_stall_v1",
+        live_profile=LiveActionProfile(
+            fault_mode="setpoint_stall",
+            completion_expected=True,
+            fault_expected=True,
+            fallback_expected=False,
+            workload_phases=(
+                "public_takeoff",
+                "stable_hover",
+                "route_activation",
+                "straight_translation",
+                "successor_land",
+            ),
+        ),
     ),
     CoreAction(
         action_id="terminate_owning_producer",
@@ -147,6 +189,20 @@ CORE_ACTIONS: tuple[CoreAction, ...] = (
         target_boundaries=("fallback_installed",),
         live_markers=("route_active", "motion_entered"),
         backend="owned_process_exit_fallback_v1",
+        live_profile=LiveActionProfile(
+            fault_mode="process_exit",
+            completion_expected=False,
+            fault_expected=True,
+            fallback_expected=True,
+            workload_phases=(
+                "public_takeoff",
+                "stable_hover",
+                "route_activation",
+                "straight_translation",
+                "safe_fallback",
+                "successor_land",
+            ),
+        ),
     ),
     CoreAction(
         action_id="adjacent_land_request",
@@ -308,6 +364,10 @@ def validate_declarations() -> None:
             raise CoreActionError(
                 f"{action.action_id}: a wired action may only require observable markers"
             )
+        if (action.backend is None) != (action.live_profile is None):
+            raise CoreActionError(
+                f"{action.action_id}: a wired action needs a live profile and only a wired action may have one"
+            )
 
 
 def core_action(action_id: str) -> CoreAction:
@@ -328,6 +388,15 @@ def wired_actions(mechanism: str) -> tuple[CoreAction, ...]:
         if action.backend is not None
         and action.availability[mechanism] == "implemented"
     )
+
+
+def live_profile(action_id: str) -> LiveActionProfile:
+    """How to launch the flight that applies this action."""
+
+    profile = core_action(action_id).live_profile
+    if profile is None:
+        raise CoreActionError(f"{action_id} has no live backend to apply it")
+    return profile
 
 
 def core_action_records() -> list[dict[str, Any]]:

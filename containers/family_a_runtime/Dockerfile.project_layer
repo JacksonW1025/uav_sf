@@ -17,7 +17,15 @@ RUN if [[ -f /opt/family_a_observer_profile ]]; then \
 # Only use a previously attested full Family A image. The immutable apt,
 # Python, source, patch, PX4, Agent, and upstream ROS layers are retained;
 # current project code and its ROS packages are rebuilt below.
-RUN rm -rf /opt/uav_sf/.github
+# COPY merges into the existing tree, so a file the repository has deleted
+# would survive from the upstream image and the result would no longer match
+# the revision it is labelled with.  Remove the directories the build context
+# replaces in full, and keep detached sources and build outputs such as
+# external/ that the context deliberately excludes.
+RUN rm -rf /opt/uav_sf/.github \
+    /opt/uav_sf/config /opt/uav_sf/containers /opt/uav_sf/data \
+    /opt/uav_sf/docs /opt/uav_sf/patches /opt/uav_sf/runtime \
+    /opt/uav_sf/scripts /opt/uav_sf/tests
 COPY . /opt/uav_sf
 RUN test -n "${REPOSITORY_COMMIT}" \
     && printf '%s\n' "${REPOSITORY_COMMIT}" > /opt/family_a_repository_revision \
