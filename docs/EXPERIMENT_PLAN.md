@@ -68,9 +68,16 @@ Status: the inventory exists and is verified against the repository — 12
 candidates with retained evidence and 5 named gaps, each record bound to real
 provenance, matrix cells, wired backends and contract boundaries. See
 [the inventory report](../experiments/stage2_action_corpus_inventory_v1/FINAL_REPORT.md).
-The corpus is deliberately not frozen: selecting the minimal representative
-subset, and deciding whether the qualified process-exit action re-enters under a
-new identity, are the remaining Stage 2 decisions.
+
+A seven-action selection is proposed and its preconditions are written as
+predicates over the semantic state and replayed against every retained accepted
+attempt; six are consistent with all retained firings and the seventh has no
+implementation yet. The selection is deliberately **not signed**: the generator
+cannot select an action at all today, so a corpus frozen over the current
+decision space would fix a null result by construction. The decision record, its
+signing conditions and the replay result are in
+[the conditional freeze](../experiments/stage2_core_corpus_freeze_v1/CONDITIONAL_FREEZE.md)
+and [its report](../experiments/stage2_core_corpus_freeze_v1/FINAL_REPORT.md).
 
 ## Stage 3: implement closed-loop generation and feedback
 

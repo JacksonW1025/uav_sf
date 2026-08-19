@@ -1,0 +1,127 @@
+{
+  "actions": [
+    {
+      "action_id": "stop_owned_setpoint_stream",
+      "availability": {
+        "dynamic_external_mode": "implemented",
+        "legacy_offboard": "implemented"
+      },
+      "cleanup": "release to the preregistered successor and land",
+      "inventory_action_id": "owned_setpoint_stall_healthy",
+      "lifecycle_phase": "execution",
+      "marker": "a fault_detected event whose reason names a stalled stream",
+      "notes": "",
+      "precondition": "an external route holds complete authority and no fault has been observed yet in this episode",
+      "summary": "Stop the owned setpoint stream while proof-of-life continues.",
+      "target_boundaries": [
+        "command_stale"
+      ]
+    },
+    {
+      "action_id": "terminate_owning_producer",
+      "availability": {
+        "dynamic_external_mode": "implemented",
+        "legacy_offboard": "implemented"
+      },
+      "cleanup": "a complete internal safe route must install without operator action",
+      "inventory_action_id": "owned_process_exit_fallback",
+      "lifecycle_phase": "fallback",
+      "marker": "a fault_detected event whose reason names a producer exit",
+      "notes": "",
+      "precondition": "an external route holds complete authority and no fault has been observed yet in this episode",
+      "summary": "Terminate the producer that owns the installed external route.",
+      "target_boundaries": [
+        "fallback_installed"
+      ]
+    },
+    {
+      "action_id": "adjacent_land_request",
+      "availability": {
+        "dynamic_external_mode": "port_required",
+        "legacy_offboard": "port_required"
+      },
+      "cleanup": "exactly one successor must win and install completely",
+      "inventory_action_id": "adjacent_land_request_near_completion",
+      "lifecycle_phase": "replacement",
+      "marker": "an adjacent_request event",
+      "notes": "implemented only for the mode executor today; the request itself is a public Land command, so the port is an anchoring change rather than a new stimulus",
+      "precondition": "some route currently holds complete authority",
+      "summary": "Issue a public Land request next to the completion boundary.",
+      "target_boundaries": [
+        "successor_installed"
+      ]
+    },
+    {
+      "action_id": "re_enter_route_after_successor",
+      "availability": {
+        "dynamic_external_mode": "port_required",
+        "legacy_offboard": "implemented"
+      },
+      "cleanup": "the final entry must release to a landing successor",
+      "inventory_action_id": "route_re_entry_through_hold",
+      "lifecycle_phase": "re_entry",
+      "marker": "a transition_requested event the producer recorded as a repeat cycle",
+      "notes": "the intermediate safe route is a parameter: the core corpus selects Hold, while the retained evidence that validates this predicate uses the RTL variant. The derived re_entry phase is deliberately broader than this action, because a fixture can enter a route twice without any tester action; the marker therefore uses the producer's own recorded cycle rather than the system's observed behaviour. The dynamic requester has no re-entry loop yet",
+      "precondition": "a completion has been observed and an internal safe route now holds complete authority",
+      "summary": "Request the tested route again while an internal safe route holds authority.",
+      "target_boundaries": [
+        "target_installed",
+        "source_revoked"
+      ]
+    },
+    {
+      "action_id": "withhold_health_reply",
+      "availability": {
+        "dynamic_external_mode": "implemented",
+        "legacy_offboard": "not_applicable"
+      },
+      "cleanup": "the vehicle must reach an internal safe route and disarm",
+      "inventory_action_id": "activation_rejection_after_health_loss",
+      "lifecycle_phase": "activation",
+      "marker": "a fault_detected event whose reason names a rejection",
+      "notes": "legacy offboard has no health-reply protocol, so this is not portable",
+      "precondition": "activation of the external route has been requested and no external route holds authority yet",
+      "summary": "Withhold the external mode health reply so activation is refused.",
+      "target_boundaries": [
+        "activation_rejected"
+      ]
+    },
+    {
+      "action_id": "exhaust_registration_capacity",
+      "availability": {
+        "dynamic_external_mode": "implemented",
+        "legacy_offboard": "not_applicable"
+      },
+      "cleanup": "stop every additional component and keep the primary session consistent",
+      "inventory_action_id": "registration_capacity_rejection",
+      "lifecycle_phase": "registration",
+      "marker": "a registration event whose result code reports a rejection",
+      "notes": "legacy offboard has no registration protocol, so this is not portable",
+      "precondition": "the episode is running and some route holds complete authority",
+      "summary": "Register components until a further registration is refused.",
+      "target_boundaries": [
+        "registration_rejected"
+      ]
+    },
+    {
+      "action_id": "restart_producer_after_loss",
+      "availability": {
+        "dynamic_external_mode": "new",
+        "legacy_offboard": "new"
+      },
+      "cleanup": "either the reclaim installs completely or the safe route is retained",
+      "inventory_action_id": "producer_restart_after_exit",
+      "lifecycle_phase": "fallback",
+      "marker": "no retained evidence; the action does not exist yet",
+      "notes": "the only proposed action whose legality depends on the outcome of an earlier action, which is what separates feedback-guided generation from feedback-free generation",
+      "precondition": "a producer loss has been observed and an internal safe route now holds complete authority",
+      "summary": "Restart the producer after a loss and reclaim authority.",
+      "target_boundaries": [
+        "target_installed"
+      ]
+    }
+  ],
+  "check_id": "stage2-core-action-precondition-check-v1",
+  "frozen": false,
+  "schema_version": "1.0"
+}

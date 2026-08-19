@@ -233,10 +233,21 @@ takeover, concurrent external producers, producer restart after loss, and
 induced failsafe takeover. Three axis pairs consequently have no evidence at
 all.
 
-The corpus is not frozen. Choosing the minimal representative subset is the
-remaining Stage 2 decision.
+A seven-action core selection is proposed on top of that inventory: six actions
+that already exist as fixtures with retained evidence, plus one new action whose
+legality depends on the outcome of an earlier action. Each precondition is a
+predicate over the semantic state and was replayed against all 213 accepted
+attempts; six are consistent with every retained firing and the seventh is
+reported as unvalidated because it has no implementation.
 
-Evidence: [Stage 2 inventory report](../experiments/stage2_action_corpus_inventory_v1/FINAL_REPORT.md).
+The corpus is not signed. The generator cannot select an action today — it
+chooses only a timing offset for a preconfigured action — so a corpus frozen
+over that decision space would fix a null generation result by construction. The
+signing conditions are recorded with the decision.
+
+Evidence: [Stage 2 inventory report](../experiments/stage2_action_corpus_inventory_v1/FINAL_REPORT.md),
+[conditional freeze](../experiments/stage2_core_corpus_freeze_v1/CONDITIONAL_FREEZE.md),
+[precondition check](../experiments/stage2_core_corpus_freeze_v1/FINAL_REPORT.md).
 
 ## Active next step
 

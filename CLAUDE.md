@@ -74,6 +74,9 @@ python3 -m scripts.analysis.semantic_state_replay --root . --output-root <fresh 
 # Rebuild the Stage 2 candidate action inventory (needs the replay artifact)
 python3 -m scripts.corpus.action_inventory --root . --output-root <fresh dir>
 
+# Replay core-action preconditions against every retained accepted attempt
+python3 -m scripts.corpus.precondition_check --root . --output-root <fresh dir>
+
 # Detached source checkouts at the locked commits, then images
 ./scripts/setup/prepare_sources.sh
 docker buildx build --platform linux/arm64 --file containers/family_a/Dockerfile --tag uav-sf-family-a:locked .
@@ -150,6 +153,12 @@ starts, so analysis load cannot perturb a still-running attempt's timing.
    live backend and contract boundaries all verify against the repository, and
    evidence counts are joined from ledgers and the Stage 1 replay rather than
    declared. The inventory is not a frozen corpus.
+   [core_actions.py](scripts/corpus/core_actions.py) then writes the proposed
+   core set as preconditions over the semantic state, and
+   [precondition_check.py](scripts/corpus/precondition_check.py) replays those
+   predicates against retained evidence. A derived state phase is never treated
+   as evidence that the tester took an action, and one action recorded by two
+   observers is separated by activation identity rather than by a time window.
 10. **In-container runtime** — [runtime/ros2/](runtime/ros2/) holds the actual
    ROS 2 nodes (`external_mode.cpp`, `mode_executor.cpp`,
    `gazebo_clock_sidecar.cpp`, plus Python requester/telemetry/safety nodes).
