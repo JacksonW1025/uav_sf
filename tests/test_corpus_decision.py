@@ -132,7 +132,9 @@ class CorpusDecisionTests(unittest.TestCase):
 
     def test_the_adjacent_request_straddles_the_scheduled_completion(self) -> None:
         profile = live_profile("adjacent_land_request")
-        self.assertEqual(profile.timing_anchor, "motion_entered")
+        # Both producers measure the active period from route activation, so
+        # that is the anchor the completion can be straddled from.
+        self.assertEqual(profile.timing_anchor, "route_active")
         # Two bins before the scheduled completion, one on it, two after.
         # Anchoring on the completion event itself could never place a request
         # before it.

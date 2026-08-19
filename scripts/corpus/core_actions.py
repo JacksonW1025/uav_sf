@@ -269,11 +269,13 @@ CORE_ACTIONS: tuple[CoreAction, ...] = (
                 "adjacent_request",
                 "successor_land",
             ),
-            timing_anchor="motion_entered",
-            # The scheduled completion is the motion start plus the active
-            # period, so these bins straddle it: two before, one on it, two
-            # after. Anchoring on the completion event itself could never place
-            # a request before it.
+            timing_anchor="route_active",
+            # Both producers measure their active period from route activation,
+            # so these bins straddle the scheduled completion: two before, one
+            # on it, two after. Anchoring on the completion event itself could
+            # never place a request before it, and anchoring on motion entry
+            # was measured to land every bin about three seconds late because
+            # entry is progress-based rather than time-based.
             timing_offsets_ns=(
                 7_500_000_000,
                 7_750_000_000,
