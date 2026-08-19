@@ -113,6 +113,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             profile = live_profile(str(corpus_decision["action"]))
             args.fault_mode = profile.fault_mode
             args.repeat_count = profile.repeat_count
+            args.target_activation_count = profile.activation_count
             args.scheduled_action = str(corpus_decision["action"])
             args.completion_expected = profile.completion_expected
             args.fault_expected = profile.fault_expected

@@ -26,6 +26,9 @@ MARKER_SOURCES = {
     "route_active": ACTIVE_KINDS,
     "motion_entered": {"motion_phase_entered"},
     "successor_installed": {"successor_observed_active"},
+    # A lost producer stops writing, so the fallback it triggered is only
+    # visible in the runner's own lifecycle record.
+    "fallback_installed": {"fallback_triggered"},
 }
 
 
@@ -148,7 +151,7 @@ def execute(args: argparse.Namespace) -> None:
         raise ActionExecutorError("the timing anchor is not a required live marker")
     deadline = time.monotonic() + args.precondition_timeout_s
     while time.monotonic() < deadline:
-        records = _read_records(args.lifecycle)
+        records = _read_records(args.lifecycle) + _read_records(args.runner_lifecycle)
         markers = observed_markers(records, required)
         activation_ns = markers.get("route_active")
         motion_ns = markers.get("motion_entered")
@@ -195,6 +198,7 @@ def main() -> int:
     parser.add_argument("--run-id", required=True)
     parser.add_argument("--decision", type=Path, required=True)
     parser.add_argument("--lifecycle", type=Path, required=True)
+    parser.add_argument("--runner-lifecycle", type=Path, required=True)
     parser.add_argument("--request", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--precondition-timeout-s", type=float, default=45.0)

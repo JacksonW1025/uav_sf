@@ -32,7 +32,12 @@ AVAILABILITY = ("implemented", "port_required", "not_applicable", "new")
 # Markers the in-flight executor can observe today.  An action wired to a live
 # backend may only require markers from this set, so its precondition is
 # checkable before the action is applied rather than after the fact.
-OBSERVABLE_LIVE_MARKERS = ("route_active", "motion_entered", "successor_installed")
+OBSERVABLE_LIVE_MARKERS = (
+    "route_active",
+    "motion_entered",
+    "successor_installed",
+    "fallback_installed",
+)
 
 Precondition = Callable[[SemanticState], bool]
 Marker = Callable[[Mapping[str, Any], SemanticState, SemanticState], bool]
@@ -56,6 +61,10 @@ class LiveActionProfile:
     # How many times the tested route must be entered for this action to be
     # meaningful.  Re-entry needs two entries in one episode.
     repeat_count: int = 1
+    # How many times the tested route is entered across the whole episode. A
+    # reclaim enters it twice even though each producer session enters once, so
+    # this is separate from the repeat count a single producer performs.
+    activation_count: int = 1
     # Actions do not share one clock.  A stall is interesting relative to route
     # activation, a re-entry relative to the successor taking over, an adjacent
     # request relative to completion.  Anchoring every action to activation
@@ -104,6 +113,7 @@ class CoreAction:
                     "fallback_expected": self.live_profile.fallback_expected,
                     "workload_phases": list(self.live_profile.workload_phases),
                     "repeat_count": self.live_profile.repeat_count,
+                    "activation_count": self.live_profile.activation_count,
                     "timing_anchor": self.live_profile.timing_anchor,
                 }
                 if self.live_profile is not None
@@ -334,8 +344,8 @@ CORE_ACTIONS: tuple[CoreAction, ...] = (
         summary="Restart the producer after a loss and reclaim authority.",
         lifecycle_phase="fallback",
         availability={
-            "legacy_offboard": "new",
-            "dynamic_external_mode": "new",
+            "legacy_offboard": "implemented",
+            "dynamic_external_mode": "implemented",
         },
         precondition=lambda state: state.fault_class == "process_exit"
         and _internal_safe_authority(state),
@@ -348,6 +358,25 @@ CORE_ACTIONS: tuple[CoreAction, ...] = (
         cleanup_text="either the reclaim installs completely or the safe route is retained",
         target_boundaries=("target_installed",),
         live_markers=("fallback_installed",),
+        backend="owned_producer_restart_v1",
+        live_profile=LiveActionProfile(
+            fault_mode="process_exit",
+            completion_expected=True,
+            fault_expected=True,
+            fallback_expected=True,
+            workload_phases=(
+                "public_takeoff",
+                "stable_hover",
+                "route_activation",
+                "straight_translation",
+                "safe_fallback",
+                "route_reclaim",
+                "successor_land",
+            ),
+            repeat_count=1,
+            activation_count=2,
+            timing_anchor="fallback_installed",
+        ),
         notes=(
             "the only proposed action whose legality depends on the outcome of an "
             "earlier action, which is what separates feedback-guided generation "

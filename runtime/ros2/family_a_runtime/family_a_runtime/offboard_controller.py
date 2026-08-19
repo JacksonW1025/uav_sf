@@ -51,6 +51,7 @@ class OffboardController(Node):
             "stall_request_path": "",
             "action_request_path": "",
             "scheduled_action": "",
+            "producer_session_label": "",
         }
         for name, value in defaults.items():
             self.declare_parameter(name, value)
@@ -80,6 +81,7 @@ class OffboardController(Node):
         self._motion_completion_progress_m = float(self.get_parameter("motion_completion_progress_m").value)
         stall_request_path = self.get_parameter("stall_request_path").value
         self._scheduled_action = str(self.get_parameter("scheduled_action").value)
+        self._session_label = str(self.get_parameter("producer_session_label").value)
         action_request_path = self.get_parameter("action_request_path").value
         request_path = action_request_path or stall_request_path
         self._action_request_path = Path(request_path) if request_path else None
@@ -175,7 +177,7 @@ class OffboardController(Node):
         self._log.append(
             "producer_started",
             run_id=self._run_id,
-            producer_session=f"offboard-{self._run_id}",
+            producer_session=self._producer_session(),
             setpoint_kind=self._setpoint_kind,
             fault_mode=self._fault_mode,
         )
@@ -542,7 +544,7 @@ class OffboardController(Node):
                 self._log.append(
                     "producer_session_started",
                     run_id=self._run_id,
-                    producer_session=f"offboard-{self._run_id}-{self._cycle}",
+                    producer_session=f"{self._producer_session()}-{self._cycle}",
                     cycle=self._cycle,
                 )
             else:
@@ -567,6 +569,17 @@ class OffboardController(Node):
                 self._log.append("producer_completed", run_id=self._run_id)
                 self._log.close()
                 rclpy.shutdown()
+
+    def _producer_session(self) -> str:
+        """Identity of this producer session.
+
+        A restarted producer must not reuse the identity of the session that was
+        lost, or the two would be indistinguishable in the evidence.
+        """
+
+        if self._session_label:
+            return f"offboard-{self._run_id}-{self._session_label}"
+        return f"offboard-{self._run_id}"
 
     def _post_successor_due(self, now_ns: int, action_requested: bool) -> bool:
         """When the step after a successor installation may be taken.

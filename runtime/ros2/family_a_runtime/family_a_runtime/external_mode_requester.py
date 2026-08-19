@@ -47,6 +47,7 @@ class ExternalModeRequester(Node):
             "action_request_path": "",
             "repeat_count": 1,
             "scheduled_action": "",
+            "producer_session_label": "",
         }
         for name, value in defaults.items():
             self.declare_parameter(name, value)
@@ -70,6 +71,7 @@ class ExternalModeRequester(Node):
         self._motion_completion_progress_m = float(self.get_parameter("motion_completion_progress_m").value)
         self._repeat_count = int(self.get_parameter("repeat_count").value)
         self._scheduled_action = str(self.get_parameter("scheduled_action").value)
+        self._session_label = str(self.get_parameter("producer_session_label").value)
         if self._repeat_count < 1:
             raise RuntimeError("repeat_count must be positive")
         if self._repeat_count > 1 and self._successor_route == "internal_land":

@@ -93,25 +93,25 @@ class CorpusDecisionTests(unittest.TestCase):
         self.assertEqual(len(units), len(CORPUS) * len(OFFSETS_NS))
 
     def test_an_unwired_action_is_never_selectable(self) -> None:
-        corpus = (*CORPUS, "restart_producer_after_loss")
-        bounds = dict(BOUNDS, restart_producer_after_loss=[3_500_000_000, 6_500_000_000])
+        corpus = (*CORPUS, "adjacent_land_request")
+        bounds = dict(BOUNDS, adjacent_land_request=[3_500_000_000, 6_500_000_000])
         decision = decide(
             "state_aware", 7, corpus=corpus, timing_bounds_ns=bounds
         )
         offered = {
             item["action"] for item in decision["candidates"] if item["enabled"]
         }
-        self.assertNotIn("restart_producer_after_loss", offered)
-        self.assertIn("restart_producer_after_loss", {item["action"] for item in decision["candidates"]})
+        self.assertNotIn("adjacent_land_request", offered)
+        self.assertIn("adjacent_land_request", {item["action"] for item in decision["candidates"]})
 
     def test_a_corpus_without_an_executable_candidate_is_refused(self) -> None:
         with self.assertRaises(LiveStrategyError):
             decide(
                 "state_aware",
                 7,
-                corpus=("restart_producer_after_loss",),
-                timing_bounds_ns={"restart_producer_after_loss": [3_500_000_000, 6_500_000_000]},
-                official_action="restart_producer_after_loss",
+                corpus=("adjacent_land_request",),
+                timing_bounds_ns={"adjacent_land_request": [3_500_000_000, 6_500_000_000]},
+                official_action="adjacent_land_request",
             )
         with self.assertRaises(LiveStrategyError):
             decide("state_aware", 7, corpus=())
@@ -127,6 +127,22 @@ class CorpusDecisionTests(unittest.TestCase):
                 self.assertLessEqual(
                     set(CORPUS), {item.action_id for item in wired_actions(mechanism)}
                 )
+
+    def test_restart_is_wired_and_anchors_on_the_installed_fallback(self) -> None:
+        profile = live_profile("restart_producer_after_loss")
+        self.assertEqual(profile.timing_anchor, "fallback_installed")
+        self.assertEqual(profile.fault_mode, "process_exit")
+        self.assertTrue(profile.fallback_expected)
+        # One producer session enters the route once, but the episode enters it
+        # twice: the lost session and the reclaim.
+        self.assertEqual(profile.repeat_count, 1)
+        self.assertEqual(profile.activation_count, 2)
+        self.assertIn("fallback_installed", MARKER_SOURCES)
+        records = [{"kind": "fallback_triggered", "received_monotonic_ns": 11}]
+        self.assertEqual(
+            observed_markers(records, ["fallback_installed"]),
+            {"fallback_installed": 11},
+        )
 
     def test_re_entry_is_wired_for_both_mechanisms_and_anchors_on_its_successor(self) -> None:
         corpus = (*CORPUS, "re_enter_route_after_successor")
@@ -179,7 +195,7 @@ class CorpusDecisionTests(unittest.TestCase):
         )
         self.assertIsNone(observed_markers([], ["route_active"])["route_active"])
         with self.assertRaises(ActionExecutorError):
-            observed_markers(records, ["fallback_installed"])
+            observed_markers(records, ["activation_requested"])
 
     def test_the_decision_carries_the_action_timing_anchor(self) -> None:
         decision = decide("state_aware", 7)

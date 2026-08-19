@@ -75,12 +75,20 @@ def _read_jsonl(path: Path) -> list[dict[str, Any]]:
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line]
 
 
+def _read_optional_jsonl(path: Path) -> list[dict[str, Any]]:
+    """A sidecar only some attempts produce, such as a reclaim session."""
+
+    return _read_jsonl(path) if path.is_file() else []
+
+
 def _physical_execution_contract(raw: Path, plan: dict[str, Any]) -> dict[str, Any] | None:
     workload = plan.get("workload")
     if workload is None:
         return None
     telemetry = _read_jsonl(raw / "telemetry.sidecar.jsonl")
-    lifecycle = _read_jsonl(raw / "workload.lifecycle.jsonl")
+    lifecycle = _read_jsonl(raw / "workload.lifecycle.jsonl") + _read_optional_jsonl(
+        raw / "workload.reclaim.lifecycle.jsonl"
+    )
     physical = workload["physical_validity"]
     takeoff = physical_takeoff_observed(
         telemetry,
@@ -158,6 +166,9 @@ def process_attempt(
             raw / "runner.lifecycle.jsonl",
             raw / "gazebo.clock.jsonl",
             raw / "adjacent.lifecycle.jsonl",
+            # A reclaimed route is produced by a second producer session, which
+            # keeps its own sidecar because the first one may not be reopened.
+            raw / "workload.reclaim.lifecycle.jsonl",
         ]
         close_trace(
             plan_path=plan_path,

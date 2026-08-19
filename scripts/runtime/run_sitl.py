@@ -72,6 +72,9 @@ class ManagedProcess:
         cpu_set: str,
     ) -> None:
         self.name = name
+        # Retained so a lost producer can be restarted with the same contract
+        # and only the session-specific parameters replaced.
+        self.command = list(command)
         self.stdout_path = output_directory / f"{name}.stdout.log"
         self.stderr_path = output_directory / f"{name}.stderr.log"
         self._stdout = self.stdout_path.open("xb")
@@ -372,6 +375,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     outcome = "ENVIRONMENT_FAILURE"
     failure_reason: str | None = None
     workload: ManagedProcess | None = None
+    reclaim_process: ManagedProcess | None = None
+    reclaim_command: list[str] = []
+    reclaim_session = f"reclaim-{args.run_id}"
     safety: ManagedProcess | None = None
     expected_fault_observed = False
     observed_fallback_route: str | None = None
@@ -666,6 +672,18 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 )
         else:
             raise RuntimeFailure(f"attempt mechanism is not implemented: {args.mechanism}")
+        if args.scheduled_action == "restart_producer_after_loss" and workload is not None:
+            reclaim_command = [
+                *workload.command,
+                "-p",
+                f"lifecycle_path:={raw / 'workload.reclaim.lifecycle.jsonl'}",
+                "-p",
+                "fault_mode:=normal",
+                "-p",
+                "source_route:=px4_internal",
+                "-p",
+                f"producer_session_label:={reclaim_session}",
+            ]
         if args.strategy_decision_path is not None:
             start(
                 "strategy_action_executor",
@@ -679,6 +697,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     str(args.strategy_decision_path),
                     "--lifecycle",
                     str(raw / "workload.lifecycle.jsonl"),
+                    "--runner-lifecycle",
+                    str(raw / "runner.lifecycle.jsonl"),
                     "--request",
                     str(action_request),
                     "--output",
@@ -715,6 +735,23 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                             lifecycle.append(
                                 "fallback_triggered", route=observed_fallback_route
                             )
+                    if (
+                        args.scheduled_action == "restart_producer_after_loss"
+                        and reclaim_process is None
+                        and action_request.is_file()
+                    ):
+                        # The lost producer cannot restart itself.  The runner
+                        # starts a fresh session, which reclaims authority from
+                        # whatever safe route the failsafe installed.
+                        reclaim_process = start("workload_reclaim", reclaim_command)
+                        lifecycle.append(
+                            "producer_restarted",
+                            producer_session=reclaim_session,
+                            fallback_route=observed_fallback_route,
+                        )
+                    if reclaim_process is not None and reclaim_process.process.poll() is None:
+                        time.sleep(0.2)
+                        continue
                     if _terminal_safe(telemetry):
                         success, reasons = _semantic_success(telemetry, args.mechanism)
                         outcome = "ACCEPTED" if success else "INCONCLUSIVE"
