@@ -15,6 +15,7 @@ from scripts.runtime.live_strategy_backend import (
     enabled_corpus_candidates,
     validate_live_decision,
 )
+from scripts.runtime.run_sitl import _adjacent_bucket
 from scripts.runtime.strategy_action_executor import (
     MARKER_SOURCES,
     ActionExecutorError,
@@ -94,25 +95,25 @@ class CorpusDecisionTests(unittest.TestCase):
         self.assertEqual(len(units), len(CORPUS) * len(OFFSETS_NS))
 
     def test_an_unwired_action_is_never_selectable(self) -> None:
-        corpus = (*CORPUS, "adjacent_land_request")
-        bounds = dict(BOUNDS, adjacent_land_request=[3_500_000_000, 6_500_000_000])
+        corpus = (*CORPUS, "withhold_health_reply")
+        bounds = dict(BOUNDS, withhold_health_reply=[3_500_000_000, 6_500_000_000])
         decision = decide(
             "state_aware", 7, corpus=corpus, timing_bounds_ns=bounds
         )
         offered = {
             item["action"] for item in decision["candidates"] if item["enabled"]
         }
-        self.assertNotIn("adjacent_land_request", offered)
-        self.assertIn("adjacent_land_request", {item["action"] for item in decision["candidates"]})
+        self.assertNotIn("withhold_health_reply", offered)
+        self.assertIn("withhold_health_reply", {item["action"] for item in decision["candidates"]})
 
     def test_a_corpus_without_an_executable_candidate_is_refused(self) -> None:
         with self.assertRaises(LiveStrategyError):
             decide(
                 "state_aware",
                 7,
-                corpus=("adjacent_land_request",),
-                timing_bounds_ns={"adjacent_land_request": [3_500_000_000, 6_500_000_000]},
-                official_action="adjacent_land_request",
+                corpus=("withhold_health_reply",),
+                timing_bounds_ns={"withhold_health_reply": [3_500_000_000, 6_500_000_000]},
+                official_action="withhold_health_reply",
             )
         with self.assertRaises(LiveStrategyError):
             decide("state_aware", 7, corpus=())
@@ -128,6 +129,38 @@ class CorpusDecisionTests(unittest.TestCase):
                 self.assertLessEqual(
                     set(CORPUS), {item.action_id for item in wired_actions(mechanism)}
                 )
+
+    def test_the_adjacent_request_straddles_the_scheduled_completion(self) -> None:
+        profile = live_profile("adjacent_land_request")
+        self.assertEqual(profile.timing_anchor, "motion_entered")
+        # Two bins before the scheduled completion, one on it, two after.
+        # Anchoring on the completion event itself could never place a request
+        # before it.
+        self.assertEqual(
+            [value / 1_000_000_000 for value in profile.timing_offsets_ns],
+            [7.5, 7.75, 8.0, 8.25, 8.5],
+        )
+        # A request placed before the completion legally preempts it.
+        self.assertFalse(profile.completion_expected)
+        for mechanism in ("legacy_offboard", "dynamic_external_mode"):
+            self.assertIn(
+                "adjacent_land_request",
+                {item.action_id for item in wired_actions(mechanism)},
+            )
+
+    def test_the_adjacent_bucket_keeps_the_stage_a1_vocabulary(self) -> None:
+        for boundary, bucket in (
+            ("early", "before"),
+            ("pre_boundary", "before"),
+            ("boundary", "near"),
+            ("post_boundary", "after"),
+            ("late", "after"),
+        ):
+            with self.subTest(boundary=boundary):
+                self.assertEqual(
+                    _adjacent_bucket({"selected_boundary": boundary}), bucket
+                )
+        self.assertEqual(_adjacent_bucket(None), "near")
 
     def test_the_reclaim_anchors_on_a_telemetry_visible_fallback(self) -> None:
         profile = live_profile("restart_producer_after_loss")

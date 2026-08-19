@@ -242,8 +242,8 @@ CORE_ACTIONS: tuple[CoreAction, ...] = (
         summary="Issue a public Land request next to the completion boundary.",
         lifecycle_phase="replacement",
         availability={
-            "legacy_offboard": "port_required",
-            "dynamic_external_mode": "port_required",
+            "legacy_offboard": "implemented",
+            "dynamic_external_mode": "implemented",
         },
         precondition=_any_authority,
         precondition_text="some route currently holds complete authority",
@@ -251,11 +251,40 @@ CORE_ACTIONS: tuple[CoreAction, ...] = (
         cleanup_text="exactly one successor must win and install completely",
         marker_text="an adjacent_request event",
         target_boundaries=("successor_installed",),
-        live_markers=("route_active",),
+        live_markers=("route_active", "motion_entered"),
+        backend="owned_adjacent_land_v1",
+        live_profile=LiveActionProfile(
+            fault_mode="normal",
+            # A request placed before the completion legally preempts it, so
+            # requiring a completion would be the same self-contradictory
+            # obligation that made a Stage A1 cell unreachable.
+            completion_expected=False,
+            fault_expected=False,
+            fallback_expected=False,
+            workload_phases=(
+                "public_takeoff",
+                "stable_hover",
+                "route_activation",
+                "straight_translation",
+                "adjacent_request",
+                "successor_land",
+            ),
+            timing_anchor="motion_entered",
+            # The scheduled completion is the motion start plus the active
+            # period, so these bins straddle it: two before, one on it, two
+            # after. Anchoring on the completion event itself could never place
+            # a request before it.
+            timing_offsets_ns=(
+                7_500_000_000,
+                7_750_000_000,
+                8_000_000_000,
+                8_250_000_000,
+                8_500_000_000,
+            ),
+        ),
         notes=(
-            "implemented only for the mode executor today; the request itself is a "
-            "public Land command, so the port is an anchoring change rather than a "
-            "new stimulus"
+            "the request is a public Land command, so porting it from the mode "
+            "executor was an anchoring change rather than a new stimulus"
         ),
     ),
     CoreAction(

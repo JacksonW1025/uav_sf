@@ -58,6 +58,11 @@ CONTRACTS = {
             boundary_prefix="exit_offset",
         ),
         LiveActionContract(
+            backend="owned_adjacent_land_v1",
+            action="adjacent_land",
+            boundary_prefix="adjacent_offset",
+        ),
+        LiveActionContract(
             backend="owned_producer_restart_v1",
             action="producer_restart",
             boundary_prefix="restart_offset",
