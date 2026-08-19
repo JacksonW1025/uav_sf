@@ -497,8 +497,16 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     f"motion_entry_progress_m:={args.motion_entry_progress_m}",
                     "-p",
                     f"motion_completion_progress_m:={args.motion_completion_progress_m}",
-                    "-p",
-                    f"action_request_path:={action_request if strategy_decision else ''}",
+                    *(
+                        ["-p", f"action_request_path:={action_request}"]
+                        if strategy_decision
+                        else []
+                    ),
+                    *(
+                        ["-p", f"scheduled_action:={args.scheduled_action}"]
+                        if args.scheduled_action
+                        else []
+                    ),
                 ],
             )
         elif args.mechanism == "dynamic_external_mode":
@@ -535,8 +543,18 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     f"motion_entry_progress_m:={args.motion_entry_progress_m}",
                     "-p",
                     f"motion_completion_progress_m:={args.motion_completion_progress_m}",
+                    *(
+                        ["-p", f"action_request_path:={action_request}"]
+                        if strategy_decision
+                        else []
+                    ),
+                    *(
+                        ["-p", f"scheduled_action:={args.scheduled_action}"]
+                        if args.scheduled_action
+                        else []
+                    ),
                     "-p",
-                    f"action_request_path:={action_request if strategy_decision else ''}",
+                    f"repeat_count:={args.repeat_count}",
                 ],
             )
             time.sleep(0.5)
@@ -568,8 +586,11 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     f"motion_speed_m_s:={args.motion_speed_m_s}",
                     "-p",
                     f"motion_distance_m:={args.motion_distance_m}",
-                    "-p",
-                    f"action_request_path:={action_request if strategy_decision else ''}",
+                    *(
+                        ["-p", f"action_request_path:={action_request}"]
+                        if strategy_decision
+                        else []
+                    ),
                 ],
             )
             if args.duplicate_registration:
@@ -835,6 +856,7 @@ def main() -> int:
         default="internal_land",
     )
     parser.add_argument("--repeat-count", type=int, default=1)
+    parser.add_argument("--scheduled-action", default="")
     parser.add_argument("--manual-land-offset-s", type=float)
     parser.add_argument("--slot", type=int, default=0)
     parser.add_argument("--cpu-set", default="0-11")

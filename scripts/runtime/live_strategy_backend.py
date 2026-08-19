@@ -57,6 +57,11 @@ CONTRACTS = {
             action="process_exit",
             boundary_prefix="exit_offset",
         ),
+        LiveActionContract(
+            backend="owned_route_re_entry_v1",
+            action="re_entry",
+            boundary_prefix="re_entry_offset",
+        ),
     )
 }
 

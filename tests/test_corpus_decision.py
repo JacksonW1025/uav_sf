@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections import Counter
 import unittest
 
-from scripts.corpus.core_actions import wired_actions
+from scripts.corpus.core_actions import live_profile, wired_actions
 from scripts.runtime.live_strategy_backend import (
     CORPUS_SCHEMA,
     OFFSETS_NS,
@@ -124,9 +124,32 @@ class CorpusDecisionTests(unittest.TestCase):
                 )
                 enabled = [item for item in candidates if item["enabled"]]
                 self.assertEqual(len(enabled), len(CORPUS) * len(OFFSETS_NS))
-                self.assertEqual(
-                    {item.action_id for item in wired_actions(mechanism)}, set(CORPUS)
+                self.assertLessEqual(
+                    set(CORPUS), {item.action_id for item in wired_actions(mechanism)}
                 )
+
+    def test_re_entry_is_wired_for_both_mechanisms_and_anchors_on_its_successor(self) -> None:
+        corpus = (*CORPUS, "re_enter_route_after_successor")
+        bounds = dict(BOUNDS, re_enter_route_after_successor=[3_500_000_000, 6_500_000_000])
+        for mechanism in ("legacy_offboard", "dynamic_external_mode"):
+            with self.subTest(mechanism=mechanism):
+                self.assertIn(
+                    "re_enter_route_after_successor",
+                    {item.action_id for item in wired_actions(mechanism)},
+                )
+                offered = {
+                    item["action"]
+                    for item in enabled_corpus_candidates(
+                        mechanism=mechanism, corpus=corpus, timing_bounds_ns=bounds
+                    )
+                    if item["enabled"]
+                }
+                self.assertIn("re_enter_route_after_successor", offered)
+        profile = live_profile("re_enter_route_after_successor")
+        self.assertEqual(profile.timing_anchor, "successor_installed")
+        self.assertEqual(profile.repeat_count, 2)
+        self.assertEqual(profile.fault_mode, "normal")
+        self.assertFalse(profile.fallback_expected)
 
     def test_timing_bounds_restrict_the_offered_boundaries(self) -> None:
         narrow = {action: [4_900_000_000, 5_100_000_000] for action in CORPUS}

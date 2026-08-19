@@ -50,6 +50,7 @@ class OffboardController(Node):
             "motion_completion_progress_m": 2.5,
             "stall_request_path": "",
             "action_request_path": "",
+            "scheduled_action": "",
         }
         for name, value in defaults.items():
             self.declare_parameter(name, value)
@@ -78,6 +79,7 @@ class OffboardController(Node):
         self._motion_entry_progress_m = float(self.get_parameter("motion_entry_progress_m").value)
         self._motion_completion_progress_m = float(self.get_parameter("motion_completion_progress_m").value)
         stall_request_path = self.get_parameter("stall_request_path").value
+        self._scheduled_action = str(self.get_parameter("scheduled_action").value)
         action_request_path = self.get_parameter("action_request_path").value
         request_path = action_request_path or stall_request_path
         self._action_request_path = Path(request_path) if request_path else None
@@ -518,8 +520,7 @@ class OffboardController(Node):
             self._released
             and not self._landing_commanded
             and self._successor_observed_ns is not None
-            and time.monotonic_ns() - self._successor_observed_ns
-            >= int(self._successor_dwell_s * 1_000_000_000)
+            and self._post_successor_due(time.monotonic_ns(), scheduled_action)
         ):
             if self._cycle + 1 < self._repeat_count:
                 self._cycle += 1
@@ -566,6 +567,21 @@ class OffboardController(Node):
                 self._log.append("producer_completed", run_id=self._run_id)
                 self._log.close()
                 rclpy.shutdown()
+
+    def _post_successor_due(self, now_ns: int, action_requested: bool) -> bool:
+        """When the step after a successor installation may be taken.
+
+        A policy-scheduled re-entry waits for the executor's request, so its
+        timing is the decision's rather than a fixture constant.  Everything
+        else keeps the preregistered dwell.
+        """
+
+        if self._scheduled_action == "re_enter_route_after_successor" and self._action_request_path is not None:
+            return action_requested
+        return (
+            now_ns - self._successor_observed_ns
+            >= int(self._successor_dwell_s * 1_000_000_000)
+        )
 
     def destroy_node(self) -> bool:
         self._log.close()

@@ -45,6 +45,8 @@ class ExternalModeRequester(Node):
             "motion_completion_progress_m": 2.5,
             "stall_request_path": "",
             "action_request_path": "",
+            "repeat_count": 1,
+            "scheduled_action": "",
         }
         for name, value in defaults.items():
             self.declare_parameter(name, value)
@@ -66,6 +68,13 @@ class ExternalModeRequester(Node):
         self._workload_profile = self.get_parameter("workload_profile").value
         self._motion_entry_progress_m = float(self.get_parameter("motion_entry_progress_m").value)
         self._motion_completion_progress_m = float(self.get_parameter("motion_completion_progress_m").value)
+        self._repeat_count = int(self.get_parameter("repeat_count").value)
+        self._scheduled_action = str(self.get_parameter("scheduled_action").value)
+        if self._repeat_count < 1:
+            raise RuntimeError("repeat_count must be positive")
+        if self._repeat_count > 1 and self._successor_route == "internal_land":
+            raise RuntimeError("re-entry requires Hold or RTL as the intermediate successor")
+        self._cycle = 0
         stall_request_path = self.get_parameter("stall_request_path").value
         action_request_path = self.get_parameter("action_request_path").value
         request_path = action_request_path or stall_request_path
@@ -224,6 +233,7 @@ class ExternalModeRequester(Node):
                     "successor_observed_active",
                     run_id=self._run_id,
                     route=self._successor_route,
+                    cycle=self._cycle,
                 )
         elif (
             self._activated_ns is not None
@@ -370,7 +380,7 @@ class ExternalModeRequester(Node):
         if self._mode_id is None or self._status is None:
             return
         now = time.monotonic_ns()
-        scheduled_action = (
+        action_requested = (
             self._action_request_path.is_file()
             if self._action_request_path is not None
             else self._activated_ns is not None
@@ -380,7 +390,7 @@ class ExternalModeRequester(Node):
             self._fault_mode == "setpoint_stall"
             and self._activated_ns is not None
             and not self._fault_logged
-            and scheduled_action
+            and action_requested
             and (self._workload_profile != "straight_line" or self._motion_entered)
         ):
             self._fault_logged = True
@@ -475,9 +485,29 @@ class ExternalModeRequester(Node):
             self._released
             and not self._land_sent
             and self._successor_observed_ns is not None
-            and now - self._successor_observed_ns
-            >= int(self._successor_dwell_s * 1_000_000_000)
+            and self._post_successor_due(now, action_requested)
         ):
+            if self._cycle + 1 < self._repeat_count:
+                # Re-enter the tested route from the installed safe route.  The
+                # component stays registered, so the two entries are separated
+                # by route epoch and activation identity rather than by name.
+                self._cycle += 1
+                self._log.append(
+                    "transition_requested",
+                    run_id=self._run_id,
+                    source_route=self._successor_route,
+                    target_route="dynamic_external_mode",
+                    cycle=self._cycle,
+                )
+                self._command(
+                    VehicleCommand.VEHICLE_CMD_SET_NAV_STATE,
+                    param1=float(self._mode_id),
+                )
+                self._released = False
+                self._activated_ns = None
+                self._successor_observed_ns = None
+                self._fault_logged = False
+                return
             self._log.append(
                 "transition_requested",
                 run_id=self._run_id,
@@ -488,6 +518,21 @@ class ExternalModeRequester(Node):
             self._command(VehicleCommand.VEHICLE_CMD_NAV_LAND)
             self._land_sent = True
             self._log.append("cleanup_land_requested", run_id=self._run_id)
+
+    def _post_successor_due(self, now: int, action_requested: bool) -> bool:
+        """When the step after a successor installation may be taken.
+
+        A policy-scheduled re-entry waits for the executor's request, so its
+        timing is the decision's rather than a fixture constant.  Everything
+        else keeps the preregistered dwell.
+        """
+
+        if self._scheduled_action == "re_enter_route_after_successor" and self._action_request_path is not None:
+            return action_requested
+        return (
+            now - self._successor_observed_ns
+            >= int(self._successor_dwell_s * 1_000_000_000)
+        )
 
     def destroy_node(self) -> bool:
         self._log.close()

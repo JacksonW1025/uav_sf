@@ -125,6 +125,8 @@ def launch(args: argparse.Namespace) -> dict[str, object]:
         args.successor_route,
         "--repeat-count",
         str(args.repeat_count),
+        "--scheduled-action",
+        str(args.scheduled_action or ""),
         "--slot",
         str(args.slot),
         "--cpu-set",
@@ -242,6 +244,7 @@ def main() -> int:
         default="internal_land",
     )
     parser.add_argument("--repeat-count", type=int, default=1)
+    parser.add_argument("--scheduled-action", default="")
     parser.add_argument("--manual-land-offset-s", type=float)
     parser.add_argument("--slot", type=int, default=0)
     parser.add_argument("--cpu-set", default="0-11")

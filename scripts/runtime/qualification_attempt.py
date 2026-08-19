@@ -112,6 +112,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             )
             profile = live_profile(str(corpus_decision["action"]))
             args.fault_mode = profile.fault_mode
+            args.repeat_count = profile.repeat_count
+            args.scheduled_action = str(corpus_decision["action"])
             args.completion_expected = profile.completion_expected
             args.fault_expected = profile.fault_expected
             args.fallback_expected = profile.fallback_expected
@@ -195,6 +197,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             args.successor_route,
             "--repeat-count",
             str(args.repeat_count),
+            "--scheduled-action",
+            str(getattr(args, "scheduled_action", "") or ""),
             "--slot",
             str(args.slot),
             "--cpu-set",

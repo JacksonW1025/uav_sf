@@ -53,6 +53,9 @@ class LiveActionProfile:
     fault_expected: bool
     fallback_expected: bool
     workload_phases: tuple[str, ...]
+    # How many times the tested route must be entered for this action to be
+    # meaningful.  Re-entry needs two entries in one episode.
+    repeat_count: int = 1
     # Actions do not share one clock.  A stall is interesting relative to route
     # activation, a re-entry relative to the successor taking over, an adjacent
     # request relative to completion.  Anchoring every action to activation
@@ -100,6 +103,7 @@ class CoreAction:
                     "fault_expected": self.live_profile.fault_expected,
                     "fallback_expected": self.live_profile.fallback_expected,
                     "workload_phases": list(self.live_profile.workload_phases),
+                    "repeat_count": self.live_profile.repeat_count,
                     "timing_anchor": self.live_profile.timing_anchor,
                 }
                 if self.live_profile is not None
@@ -239,7 +243,7 @@ CORE_ACTIONS: tuple[CoreAction, ...] = (
         lifecycle_phase="re_entry",
         availability={
             "legacy_offboard": "implemented",
-            "dynamic_external_mode": "port_required",
+            "dynamic_external_mode": "implemented",
         },
         precondition=lambda state: _internal_safe_authority(state)
         and state.completion_observed,
@@ -253,6 +257,24 @@ CORE_ACTIONS: tuple[CoreAction, ...] = (
         cleanup_text="the final entry must release to a landing successor",
         target_boundaries=("target_installed", "source_revoked"),
         live_markers=("successor_installed",),
+        backend="owned_route_re_entry_v1",
+        live_profile=LiveActionProfile(
+            fault_mode="normal",
+            completion_expected=True,
+            fault_expected=False,
+            fallback_expected=False,
+            workload_phases=(
+                "public_takeoff",
+                "stable_hover",
+                "route_activation",
+                "straight_translation",
+                "successor_hold",
+                "route_re_entry",
+                "successor_land",
+            ),
+            repeat_count=2,
+            timing_anchor="successor_installed",
+        ),
         notes=(
             "the intermediate safe route is a parameter: the core corpus selects "
             "Hold, while the retained evidence that validates this predicate uses "
