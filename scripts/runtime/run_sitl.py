@@ -699,6 +699,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     str(raw / "workload.lifecycle.jsonl"),
                     "--runner-lifecycle",
                     str(raw / "runner.lifecycle.jsonl"),
+                    "--telemetry",
+                    str(telemetry),
                     "--request",
                     str(action_request),
                     "--output",
@@ -707,6 +709,19 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             )
         deadline = time.monotonic() + args.attempt_timeout_s
         while time.monotonic() < deadline:
+            if (
+                args.scheduled_action == "restart_producer_after_loss"
+                and reclaim_process is None
+                and action_request.is_file()
+            ):
+                # The lost producer cannot restart itself.  This is checked
+                # before the producer's exit is noticed, because that notice was
+                # measured about eleven seconds late and the aircraft lands
+                # first.
+                reclaim_process = start("workload_reclaim", reclaim_command)
+                lifecycle.append(
+                    "producer_restarted", producer_session=reclaim_session
+                )
             if decision.exists():
                 lifecycle.append("fault_detected", reason="active_safety_stop")
                 outcome = "FORMAL_SAFETY_STOP"
@@ -735,20 +750,6 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                             lifecycle.append(
                                 "fallback_triggered", route=observed_fallback_route
                             )
-                    if (
-                        args.scheduled_action == "restart_producer_after_loss"
-                        and reclaim_process is None
-                        and action_request.is_file()
-                    ):
-                        # The lost producer cannot restart itself.  The runner
-                        # starts a fresh session, which reclaims authority from
-                        # whatever safe route the failsafe installed.
-                        reclaim_process = start("workload_reclaim", reclaim_command)
-                        lifecycle.append(
-                            "producer_restarted",
-                            producer_session=reclaim_session,
-                            fallback_route=observed_fallback_route,
-                        )
                     if reclaim_process is not None and reclaim_process.process.poll() is None:
                         time.sleep(0.2)
                         continue

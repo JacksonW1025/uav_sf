@@ -26,10 +26,16 @@ MARKER_SOURCES = {
     "route_active": ACTIVE_KINDS,
     "motion_entered": {"motion_phase_entered"},
     "successor_installed": {"successor_observed_active"},
-    # A lost producer stops writing, so the fallback it triggered is only
-    # visible in the runner's own lifecycle record.
+    # A lost producer stops writing, so the fallback it triggered is not in
+    # its own sidecar.  The runner records one, but only after it notices the
+    # process is gone, which was measured at about eleven seconds late — long
+    # enough for the aircraft to land first.  Telemetry shows the installed
+    # safe route immediately, so it is the primary source and the runner record
+    # is the fallback of last resort.
     "fallback_installed": {"fallback_triggered"},
 }
+# AUTO_LOITER, AUTO_RTL, AUTO_LAND.
+SAFE_NAV_STATES = {4, 5, 18}
 
 
 def _read_records(path: Path) -> list[dict[str, Any]]:
@@ -52,8 +58,28 @@ def _read_records(path: Path) -> list[dict[str, Any]]:
     return records
 
 
+def safe_route_after_route_active(
+    telemetry: list[dict[str, Any]], route_active_ns: int | None
+) -> int | None:
+    """When a safe internal route took over after the tested route was active."""
+
+    if route_active_ns is None:
+        return None
+    for value in telemetry:
+        if value.get("kind") != "vehicle_status":
+            continue
+        observed = value.get("received_monotonic_ns")
+        if not isinstance(observed, int) or observed <= route_active_ns:
+            continue
+        if int(value.get("nav_state", -1)) in SAFE_NAV_STATES:
+            return observed
+    return None
+
+
 def observed_markers(
-    records: list[dict[str, Any]], required: list[str]
+    records: list[dict[str, Any]],
+    required: list[str],
+    telemetry: list[dict[str, Any]] | None = None,
 ) -> dict[str, int | None]:
     """First observation time of each required live marker."""
 
@@ -73,6 +99,14 @@ def observed_markers(
             and isinstance(value.get("received_monotonic_ns"), int)
         ]
         observed[marker] = min(times) if times else None
+    if telemetry and "fallback_installed" in required:
+        route_active = observed_markers(records, ["route_active"])["route_active"]
+        derived = safe_route_after_route_active(telemetry, route_active)
+        if derived is not None:
+            recorded = observed["fallback_installed"]
+            observed["fallback_installed"] = (
+                derived if recorded is None else min(derived, recorded)
+            )
     return observed
 
 
@@ -150,9 +184,18 @@ def execute(args: argparse.Namespace) -> None:
     if anchor not in required:
         raise ActionExecutorError("the timing anchor is not a required live marker")
     deadline = time.monotonic() + args.precondition_timeout_s
+    telemetry: list[dict[str, Any]] = []
+    telemetry_read_at = 0.0
     while time.monotonic() < deadline:
         records = _read_records(args.lifecycle) + _read_records(args.runner_lifecycle)
-        markers = observed_markers(records, required)
+        if "fallback_installed" in required and time.monotonic() - telemetry_read_at >= 0.5:
+            # Telemetry is orders of magnitude larger than a lifecycle sidecar,
+            # so it is re-read on its own slower cadence.  Polling it as fast as
+            # the action loop would compete with the attempt for CPU, which is
+            # what the clock bound measures.
+            telemetry = _read_records(args.telemetry)
+            telemetry_read_at = time.monotonic()
+        markers = observed_markers(records, required, telemetry=telemetry)
         activation_ns = markers.get("route_active")
         motion_ns = markers.get("motion_entered")
         anchor_ns = markers.get(anchor)
@@ -199,6 +242,7 @@ def main() -> int:
     parser.add_argument("--decision", type=Path, required=True)
     parser.add_argument("--lifecycle", type=Path, required=True)
     parser.add_argument("--runner-lifecycle", type=Path, required=True)
+    parser.add_argument("--telemetry", type=Path, required=True)
     parser.add_argument("--request", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--precondition-timeout-s", type=float, default=45.0)

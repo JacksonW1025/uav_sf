@@ -344,8 +344,8 @@ CORE_ACTIONS: tuple[CoreAction, ...] = (
         summary="Restart the producer after a loss and reclaim authority.",
         lifecycle_phase="fallback",
         availability={
-            "legacy_offboard": "not_applicable",
-            "dynamic_external_mode": "new",
+            "legacy_offboard": "implemented",
+            "dynamic_external_mode": "implemented",
         },
         precondition=lambda state: state.fault_class == "process_exit"
         and _internal_safe_authority(state),
@@ -358,18 +358,34 @@ CORE_ACTIONS: tuple[CoreAction, ...] = (
         cleanup_text="either the reclaim installs completely or the safe route is retained",
         target_boundaries=("target_installed",),
         live_markers=("fallback_installed",),
+        backend="owned_producer_restart_v1",
+        live_profile=LiveActionProfile(
+            fault_mode="process_exit",
+            completion_expected=True,
+            fault_expected=True,
+            fallback_expected=True,
+            workload_phases=(
+                "public_takeoff",
+                "stable_hover",
+                "route_activation",
+                "straight_translation",
+                "safe_fallback",
+                "route_reclaim",
+                "successor_land",
+            ),
+            repeat_count=1,
+            activation_count=2,
+            timing_anchor="fallback_installed",
+        ),
         notes=(
             "the only proposed action whose legality depends on the outcome of an "
             "earlier action, which is what separates feedback-guided generation "
-            "from feedback-free generation. It was implemented and flown, and is "
-            "recorded as unreachable rather than as available: under the "
-            "configured offboard failsafe the aircraft lands and disarms about "
-            "ten seconds after the producer is lost, and the runner observes the "
-            "loss only after touchdown, so no reclaim window exists; on the "
-            "dynamic mechanism the loss is produced by a component whose exit is "
-            "not synchronised with the policy anchor, so the episode completed "
-            "normally instead. Making it reachable is a failsafe-configuration "
-            "and fixture decision, not a wiring change"
+            "from feedback-free generation. A first attempt found it unreachable "
+            "because the runner learned of the producer loss by polling the "
+            "process, about eleven seconds after telemetry already showed the "
+            "installed safe route, by which time the aircraft had landed. The "
+            "loss is now observed from telemetry, which leaves the measured ten "
+            "second window; the tested failsafe configuration is unchanged"
         ),
     ),
 )

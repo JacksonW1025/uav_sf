@@ -19,6 +19,7 @@ from scripts.runtime.strategy_action_executor import (
     MARKER_SOURCES,
     ActionExecutorError,
     observed_markers,
+    safe_route_after_route_active,
 )
 
 
@@ -128,24 +129,46 @@ class CorpusDecisionTests(unittest.TestCase):
                     set(CORPUS), {item.action_id for item in wired_actions(mechanism)}
                 )
 
-    def test_the_reclaim_stays_unreachable_until_its_blocker_is_resolved(self) -> None:
-        # It was implemented and flown, then recorded as unreachable: the
-        # offboard failsafe lands and disarms before a reclaim can be requested.
-        reclaim = core_action("restart_producer_after_loss")
-        self.assertIsNone(reclaim.backend)
-        self.assertIsNone(reclaim.live_profile)
+    def test_the_reclaim_anchors_on_a_telemetry_visible_fallback(self) -> None:
+        profile = live_profile("restart_producer_after_loss")
+        self.assertEqual(profile.timing_anchor, "fallback_installed")
+        self.assertEqual(profile.fault_mode, "process_exit")
+        # One producer session enters the route once; the episode enters it
+        # twice, because the reclaim is a second session.
+        self.assertEqual(profile.repeat_count, 1)
+        self.assertEqual(profile.activation_count, 2)
         for mechanism in ("legacy_offboard", "dynamic_external_mode"):
-            self.assertNotIn(
+            self.assertIn(
                 "restart_producer_after_loss",
                 {item.action_id for item in wired_actions(mechanism)},
             )
-        # The marker its anchor would use stays observable and tested, because
-        # the blocker is a failsafe and fixture decision rather than wiring.
-        self.assertIn("fallback_installed", MARKER_SOURCES)
-        records = [{"kind": "fallback_triggered", "received_monotonic_ns": 11}]
+
+    def test_the_fallback_is_taken_from_telemetry_rather_than_process_polling(self) -> None:
+        lifecycle = [
+            {"kind": "offboard_observed_active", "received_monotonic_ns": 1_000},
+            # What the runner recorded, eleven seconds after the fact.
+            {"kind": "fallback_triggered", "received_monotonic_ns": 12_000},
+        ]
+        telemetry = [
+            {"kind": "vehicle_status", "nav_state": 14, "received_monotonic_ns": 1_000},
+            {"kind": "vehicle_status", "nav_state": 4, "received_monotonic_ns": 2_000},
+        ]
         self.assertEqual(
-            observed_markers(records, ["fallback_installed"]),
-            {"fallback_installed": 11},
+            observed_markers(lifecycle, ["fallback_installed"], telemetry=telemetry),
+            {"fallback_installed": 2_000},
+        )
+        # Without telemetry the late record is all there is, and it is used.
+        self.assertEqual(
+            observed_markers(lifecycle, ["fallback_installed"]),
+            {"fallback_installed": 12_000},
+        )
+        # A safe route seen before the tested route was ever active is the
+        # source route, not a fallback.
+        self.assertIsNone(
+            safe_route_after_route_active(
+                [{"kind": "vehicle_status", "nav_state": 4, "received_monotonic_ns": 500}],
+                1_000,
+            )
         )
 
     def test_re_entry_is_wired_for_both_mechanisms_and_anchors_on_its_successor(self) -> None:
