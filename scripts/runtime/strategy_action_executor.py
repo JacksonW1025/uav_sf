@@ -25,6 +25,7 @@ ACTIVE_KINDS = {"offboard_observed_active", "dynamic_mode_observed_active"}
 MARKER_SOURCES = {
     "route_active": ACTIVE_KINDS,
     "motion_entered": {"motion_phase_entered"},
+    "successor_installed": {"successor_observed_active"},
 }
 
 
@@ -142,14 +143,18 @@ def execute(args: argparse.Namespace) -> None:
     required = list(decision.get("required_state") or [])
     if isinstance(decision.get("required_state"), dict):
         required = sorted(decision["required_state"])
+    anchor = str(decision.get("timing_anchor", "route_active"))
+    if anchor not in required:
+        raise ActionExecutorError("the timing anchor is not a required live marker")
     deadline = time.monotonic() + args.precondition_timeout_s
     while time.monotonic() < deadline:
         records = _read_records(args.lifecycle)
         markers = observed_markers(records, required)
         activation_ns = markers.get("route_active")
         motion_ns = markers.get("motion_entered")
-        if all(value is not None for value in markers.values()) and activation_ns is not None:
-            due_ns = activation_ns + int(decision["planned_offset_ns"])
+        anchor_ns = markers.get(anchor)
+        if all(value is not None for value in markers.values()) and anchor_ns is not None:
+            due_ns = anchor_ns + int(decision["planned_offset_ns"])
             if time.monotonic_ns() >= due_ns:
                 request = {
                     "schema_version": "1.0",
@@ -159,6 +164,8 @@ def execute(args: argparse.Namespace) -> None:
                     "planned_offset_ns": decision["planned_offset_ns"],
                     "activation_observed_ns": activation_ns,
                     "motion_entry_observed_ns": motion_ns,
+                    "timing_anchor": anchor,
+                    "anchor_observed_ns": anchor_ns,
                     "requested_monotonic_ns": time.monotonic_ns(),
                 }
                 if args.request.exists():
@@ -171,7 +178,7 @@ def execute(args: argparse.Namespace) -> None:
                     action=decision["action"],
                     selected_boundary=decision["selected_boundary"],
                     planned_offset_ns=decision["planned_offset_ns"],
-                    actual_offset_ns=request["requested_monotonic_ns"] - activation_ns,
+                    actual_offset_ns=request["requested_monotonic_ns"] - anchor_ns,
                     preconditions={marker: True for marker in markers},
                 )
                 while True:

@@ -8,7 +8,7 @@ import hashlib
 import json
 from typing import Any
 
-from scripts.corpus.core_actions import core_action, wired_actions
+from scripts.corpus.core_actions import core_action, live_profile, wired_actions
 from scripts.evaluator.strategies import (
     ActionCandidate,
     bounded_random_action,
@@ -195,6 +195,11 @@ def enabled_corpus_candidates(
                     "offset_ns": offset,
                     "unit": f"{action_id}:{boundary}",
                     "required_state": sorted(action.live_markers),
+                    "timing_anchor": (
+                        action.live_profile.timing_anchor
+                        if action.live_profile is not None
+                        else None
+                    ),
                     "enabled": action_id in wired and lower <= offset <= upper,
                 }
             )
@@ -316,6 +321,7 @@ def create_corpus_decision(
         "action": selected["action"],
         "backend": selected["backend"],
         "required_state": selected["required_state"],
+        "timing_anchor": live_profile(selected["action"]).timing_anchor,
         "timing_bounds_ns": dict(sorted(timing_bounds_ns.items())),
         "official_action": official_action,
         "official_offset_ns": official_offset_ns,
@@ -337,6 +343,7 @@ def validate_corpus_decision(value: dict[str, Any]) -> None:
         "action",
         "backend",
         "required_state",
+        "timing_anchor",
         "timing_bounds_ns",
         "official_action",
         "official_offset_ns",

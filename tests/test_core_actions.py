@@ -142,6 +142,33 @@ class CoreActionTests(unittest.TestCase):
         self.assertTrue(after.fault_observed)
         self.assertFalse(stall.precondition(after))
 
+    def test_a_wired_action_anchors_its_timing_on_one_of_its_markers(self) -> None:
+        from scripts.corpus.core_actions import OBSERVABLE_LIVE_MARKERS
+
+        for item in CORE_ACTIONS:
+            if item.live_profile is None:
+                continue
+            with self.subTest(action=item.action_id):
+                self.assertIn(item.live_profile.timing_anchor, item.live_markers)
+                self.assertIn(item.live_profile.timing_anchor, OBSERVABLE_LIVE_MARKERS)
+
+    def test_an_anchor_outside_the_declared_markers_is_refused(self) -> None:
+        import scripts.corpus.core_actions as module
+        from dataclasses import replace as data_replace
+
+        wired = next(item for item in CORE_ACTIONS if item.live_profile is not None)
+        broken = data_replace(
+            wired,
+            live_profile=data_replace(wired.live_profile, timing_anchor="successor_installed"),
+        )
+        original = module.CORE_ACTIONS
+        try:
+            module.CORE_ACTIONS = (broken,)
+            with self.assertRaises(CoreActionError):
+                validate_declarations()
+        finally:
+            module.CORE_ACTIONS = original
+
     def test_every_action_targets_a_boundary_and_states_cleanup(self) -> None:
         for item in CORE_ACTIONS:
             with self.subTest(action=item.action_id):

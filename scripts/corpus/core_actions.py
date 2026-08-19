@@ -32,7 +32,7 @@ AVAILABILITY = ("implemented", "port_required", "not_applicable", "new")
 # Markers the in-flight executor can observe today.  An action wired to a live
 # backend may only require markers from this set, so its precondition is
 # checkable before the action is applied rather than after the fact.
-OBSERVABLE_LIVE_MARKERS = ("route_active", "motion_entered")
+OBSERVABLE_LIVE_MARKERS = ("route_active", "motion_entered", "successor_installed")
 
 Precondition = Callable[[SemanticState], bool]
 Marker = Callable[[Mapping[str, Any], SemanticState, SemanticState], bool]
@@ -53,6 +53,11 @@ class LiveActionProfile:
     fault_expected: bool
     fallback_expected: bool
     workload_phases: tuple[str, ...]
+    # Actions do not share one clock.  A stall is interesting relative to route
+    # activation, a re-entry relative to the successor taking over, an adjacent
+    # request relative to completion.  Anchoring every action to activation
+    # would quietly remove the distinction each one exists to test.
+    timing_anchor: str = "route_active"
 
 
 @dataclass(frozen=True)
@@ -95,6 +100,7 @@ class CoreAction:
                     "fault_expected": self.live_profile.fault_expected,
                     "fallback_expected": self.live_profile.fallback_expected,
                     "workload_phases": list(self.live_profile.workload_phases),
+                    "timing_anchor": self.live_profile.timing_anchor,
                 }
                 if self.live_profile is not None
                 else None
@@ -368,6 +374,16 @@ def validate_declarations() -> None:
             raise CoreActionError(
                 f"{action.action_id}: a wired action needs a live profile and only a wired action may have one"
             )
+        if action.live_profile is not None:
+            anchor = action.live_profile.timing_anchor
+            if anchor not in action.live_markers:
+                raise CoreActionError(
+                    f"{action.action_id}: the timing anchor must be one of its live markers"
+                )
+            if anchor not in OBSERVABLE_LIVE_MARKERS:
+                raise CoreActionError(
+                    f"{action.action_id}: the timing anchor must be observable in flight"
+                )
 
 
 def core_action(action_id: str) -> CoreAction:

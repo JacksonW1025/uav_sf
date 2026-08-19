@@ -15,7 +15,11 @@ from scripts.runtime.live_strategy_backend import (
     enabled_corpus_candidates,
     validate_live_decision,
 )
-from scripts.runtime.strategy_action_executor import ActionExecutorError, observed_markers
+from scripts.runtime.strategy_action_executor import (
+    MARKER_SOURCES,
+    ActionExecutorError,
+    observed_markers,
+)
 
 
 CORPUS = ("stop_owned_setpoint_stream", "terminate_owning_producer")
@@ -153,6 +157,22 @@ class CorpusDecisionTests(unittest.TestCase):
         self.assertIsNone(observed_markers([], ["route_active"])["route_active"])
         with self.assertRaises(ActionExecutorError):
             observed_markers(records, ["fallback_installed"])
+
+    def test_the_decision_carries_the_action_timing_anchor(self) -> None:
+        decision = decide("state_aware", 7)
+        self.assertEqual(decision["timing_anchor"], "route_active")
+        self.assertIn(decision["timing_anchor"], decision["required_state"])
+        for candidate in decision["candidates"]:
+            if candidate["enabled"]:
+                self.assertIn(candidate["timing_anchor"], candidate["required_state"])
+
+    def test_the_executor_refuses_an_anchor_outside_the_required_markers(self) -> None:
+        self.assertIn("successor_installed", MARKER_SOURCES)
+        records = [{"kind": "successor_observed_active", "received_monotonic_ns": 7}]
+        self.assertEqual(
+            observed_markers(records, ["successor_installed"]),
+            {"successor_installed": 7},
+        )
 
     def test_every_wired_action_declares_only_observable_markers(self) -> None:
         for mechanism in ("legacy_offboard", "dynamic_external_mode"):

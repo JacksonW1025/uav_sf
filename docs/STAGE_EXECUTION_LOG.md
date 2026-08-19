@@ -30,7 +30,7 @@ repository validation passes. A step that is partly done says which part.
 v8 plan stage:      Stage 2, construct the core action and workload corpus
 Stage 1:            complete, exit checks met
 Corpus freeze:      proposed and conditional, deliberately not signed
-Current step:       Step C, close the availability gaps and add the restart action
+Current step:       Step C1, make re-entry selectable on both mechanisms
 Formal campaigns:   none authorized, none running
 ```
 
@@ -133,19 +133,54 @@ internal RTL, not Land, so the spec now declares the fallback per mechanism. The
 successor a workload requests after a completion and the fallback the system
 installs after a fault are different obligations.
 
-### Step C — close the availability gaps — NOT STARTED
+### Step C — close the availability gaps — IN PROGRESS
 
 Goal: make the grammar orthogonal and add the one new action.
-
-Work: port the adjacent Land request to both compared mechanisms (an anchoring
-change, since the request is already a public command); add a repeat-cycle loop
-to the dynamic requester so re-entry works there; implement
-`restart_producer_after_loss` on top of the existing producer-exit fixture.
 
 Acceptance: each ported or new action has a non-formal qualification recording
 that its precondition gates execution, its applied schedule is recorded, and its
 cleanup holds; the precondition replay from Step A still reports every action
 consistent and none unvalidated.
+
+#### C0 — give each action its own timing anchor — COMPLETE
+
+Planning the three ports exposed a shared blocker. Timing offsets were anchored
+to route activation for every action, but the three remaining actions do not
+share that clock: a re-entry is interesting relative to the successor taking
+over, and an adjacent request relative to the completion boundary. Anchoring
+them to activation would have kept the code working while silently removing the
+distinction each action exists to test — the adjacent request's before, near and
+after buckets would all have collapsed to before.
+
+The live profile now carries a `timing_anchor`, which must be one of the
+action's own live markers and must be observable in flight. The executor
+resolves the anchor from the decision and measures the applied offset from it.
+`successor_installed` became an observable marker, sourced from the
+`successor_observed_active` record both workload nodes already emit. The two
+wired actions keep `route_active`, so their behaviour is unchanged.
+
+This changed the decision schema, so the next live batch needs a rebuilt image.
+
+#### C1 — make re-entry selectable on both mechanisms — NOT STARTED
+
+Work: the dynamic requester has no repeat-cycle loop at all, and in both nodes
+re-entry currently fires on a fixed successor dwell rather than on the policy's
+schedule. Both need a `scheduled_action` parameter so the node re-enters when
+the executor's request appears. The qualification cell then needs
+`successor_route: internal_hold`, because re-entering from a landing successor
+is a different experiment.
+
+#### C2 — implement the restart action — NOT STARTED
+
+Work: `restart_producer_after_loss` on top of the producer-exit fixture. The
+runner must start a fresh producer session after the fallback is installed. This
+is the action the corpus was sized around, because its legality depends on the
+outcome of an earlier action.
+
+#### C3 — port the adjacent Land request — NOT STARTED
+
+Work: launch the manual requester for both compared mechanisms and anchor it on
+the completion boundary through the C0 mechanism.
 
 ### Step D — wire the registration and health actions — NOT STARTED
 
@@ -182,11 +217,11 @@ generation — remain deferred by standing decision 3.
 
 ## Next concrete action
 
-Start Step C. Port the adjacent Land request to both compared mechanisms, add a
-repeat-cycle loop to the dynamic requester so re-entry works there, and
-implement `restart_producer_after_loss` on top of the producer-exit fixture.
-Each new action needs a live profile, live markers the executor can observe, and
-its own non-formal qualification under the Step B spec pattern.
+Continue with C1. The dynamic requester needs a repeat-cycle loop, and both
+workload nodes need a `scheduled_action` parameter so re-entry fires on the
+policy's schedule rather than a fixed dwell. Then wire re-entry as a live action,
+rebuild the image, and qualify it under the Step B spec pattern with
+`successor_route: internal_hold`.
 
 Before any live batch, confirm no unpinned process competes for the pinned CPU
 sets, and afterwards confirm the central real-time factor is near 1.0.
