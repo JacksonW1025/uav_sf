@@ -30,7 +30,7 @@ repository validation passes. A step that is partly done says which part.
 v8 plan stage:      Stage 2, construct the core action and workload corpus
 Stage 1:            complete, exit checks met
 Corpus freeze:      proposed and conditional, deliberately not signed
-Current step:       Step C-adjacent, port the adjacent Land request
+Current step:       Step D, wire the registration and health actions
 Formal campaigns:   none authorized, none running
 ```
 
@@ -202,10 +202,26 @@ route installed and revoked, and reclaims the tested route under a new producer
 session and route epoch.
 See [the record](../experiments/step_c_restart_qualification_v1/REACHABILITY_FINDING.md).
 
-#### C-adjacent — port the adjacent Land request — NOT STARTED
+#### C-adjacent — port the adjacent Land request — COMPLETE
 
-Work: launch the manual requester for both compared mechanisms and anchor it on
-the completion boundary through the C0 mechanism.
+The request is a public Land command, so porting it from the mode executor was
+an anchoring change rather than a new stimulus. The qualification passed 18 of
+18 with five selectable actions, and the request lands where it was aimed: +4 ms
+from the completion for the boundary bin and +270 ms for the next one, against a
+250 ms bin spacing.
+
+Two timing defects were found by measuring the request against the completion,
+and both would have passed a qualification that only asked whether the action
+executed. Starting the requester on demand cost 600 ms, wider than the spacing
+between the bins it exists to distinguish, so it now starts with the workload
+and fires on a trigger. And the bins were anchored on motion entry, which is
+progress-based, so every bin landed about three seconds late; both producers
+measure their active period from route activation, so that is now the anchor.
+
+A fixture change was drafted on a misreading — that the two mechanisms anchored
+their completions differently — and reverted before it was flown. They do not:
+the offboard producer sets its motion start on the first tick after activation.
+See [the record](../experiments/step_c_adjacent_qualification_v1/QUALIFICATION.md).
 
 ### Step D — wire the registration and health actions — NOT STARTED
 
@@ -242,17 +258,17 @@ generation — remain deferred by standing decision 3.
 
 ## Next concrete action
 
-C-adjacent is the last availability gap: launch the manual requester for both
-compared mechanisms and anchor it on the completion boundary through the
-per-action anchor and bins. It is the one core action still implemented only for
-the mode executor.
+Step D is the last signing condition: make `withhold_health_reply` and
+`exhaust_registration_capacity` selectable rather than cell-configured. Both are
+dynamic-only by nature of the system under test, and both need a live marker the
+executor cannot observe yet — registration replies and activation requests are
+recorded by the requester, so the marker source exists but is not mapped.
 
-After that, Step D wires the registration and health actions, which are
-dynamic-only by nature of the system under test and need live markers the
-executor cannot observe yet. Then the corpus freeze can be signed.
+Five actions are qualified and selectable today: the owned stall, the producer
+termination, route re-entry, the producer reclaim, and the adjacent Land
+request.
 
-Four actions are qualified and selectable today: the owned stall, the producer
-termination, route re-entry, and the producer reclaim.
+After Step D the corpus freeze can be signed, which closes Stage 2.
 
 Before any live batch, confirm no unpinned process competes for the pinned CPU
 sets, and afterwards confirm the central real-time factor is near 1.0.

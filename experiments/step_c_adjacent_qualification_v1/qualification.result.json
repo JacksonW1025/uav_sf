@@ -4,7 +4,7 @@
       "action_contract_valid": true,
       "attempt_id": "step-ca-q-dynamic-official-001",
       "covered_units_before_decision": [],
-      "decision_digest": "sha256:bc852fd506141f78b0c783abad41dce7a8afcd9b4a5b94fae60811aae8b65f98",
+      "decision_digest": "sha256:a61b2b39be724276935fafef3eb0bb6879194a3b9eae252a5e3139e75457c9a0",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -24,7 +24,7 @@
       "covered_units_before_decision": [
         "stop_owned_setpoint_stream:boundary"
       ],
-      "decision_digest": "sha256:e714f3f15cd09060e027b1bb1530e69da6e4210c6ac5ba8852a516fcfb8ffb96",
+      "decision_digest": "sha256:fc387d12f8a3b46952724be541f9dc46b63fde0c20f3ce8c4839721e62e4c773",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -44,7 +44,7 @@
       "covered_units_before_decision": [
         "stop_owned_setpoint_stream:boundary"
       ],
-      "decision_digest": "sha256:e714f3f15cd09060e027b1bb1530e69da6e4210c6ac5ba8852a516fcfb8ffb96",
+      "decision_digest": "sha256:fc387d12f8a3b46952724be541f9dc46b63fde0c20f3ce8c4839721e62e4c773",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -62,7 +62,7 @@
       "action_contract_valid": true,
       "attempt_id": "step-ca-q-dynamic-random-001",
       "covered_units_before_decision": [],
-      "decision_digest": "sha256:a14b95849ec5799bf62f6491d80139cd03d65afe20d84cb5f9220a48da7bddd8",
+      "decision_digest": "sha256:77db500fb15a9b0389eb01e3e2c23caaf63ad86b3abda4779a44603c2b95cbd2",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -82,7 +82,7 @@
       "covered_units_before_decision": [
         "adjacent_land_request:post_boundary"
       ],
-      "decision_digest": "sha256:b9e9702c6a02085cf167e75ae69f1e919578983f89b758c07e26888ee7c85144",
+      "decision_digest": "sha256:613704782895bec81f987e7ee1a1448c857bc606c450cdc5f3afd36aab2dc81f",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -103,7 +103,7 @@
         "adjacent_land_request:boundary",
         "adjacent_land_request:post_boundary"
       ],
-      "decision_digest": "sha256:ad7937481cfa5f5604cf247e62fe4647b48cff451b00a9a8741ac7ce78287284",
+      "decision_digest": "sha256:e9420a0480a5442c1071fdec51bf59addd7064bef90c39588f6c9729af2fc012",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -121,7 +121,7 @@
       "action_contract_valid": true,
       "attempt_id": "step-ca-q-dynamic-state-001",
       "covered_units_before_decision": [],
-      "decision_digest": "sha256:66c15e96824e1987b85f2ffc3fe1a7f945cd1252046dbc87fa56a9aaa4e4b459",
+      "decision_digest": "sha256:dab7999cea26fdda368e9f0b1d2147fe91f0dfc7bba1c675af4d5363e3a737cf",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -141,7 +141,7 @@
       "covered_units_before_decision": [
         "terminate_owning_producer:boundary"
       ],
-      "decision_digest": "sha256:ba6d1b12d7c2c816b71b4876f31137ce28d3295b82e4867e1bbc1ec401b3825f",
+      "decision_digest": "sha256:15c9e27dc9f4af44319f605967eb0f3da1a46401d955b0c60ca968a144631f13",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -162,7 +162,7 @@
         "stop_owned_setpoint_stream:boundary",
         "terminate_owning_producer:boundary"
       ],
-      "decision_digest": "sha256:d67d2397ded450a4d281e03054c290da9337964643e604ff8155b14b1b495626",
+      "decision_digest": "sha256:f3264fc85e5742746e4197d07ecaa5c34b87f23e4eadd91090b61fdeebea57a4",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -180,7 +180,7 @@
       "action_contract_valid": true,
       "attempt_id": "step-ca-q-offboard-official-001",
       "covered_units_before_decision": [],
-      "decision_digest": "sha256:a0d6cc3665207ec08def3f820eb1dcdfe5ab915696733e89aa737a4664f02426",
+      "decision_digest": "sha256:9be891e5ba1dae83e4fdebd8b6721dd9e40422794d79cff1fc9a44eb8e29bd80",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -200,7 +200,7 @@
       "covered_units_before_decision": [
         "stop_owned_setpoint_stream:boundary"
       ],
-      "decision_digest": "sha256:d343296037c0d4de60a4ac8371a1a9f3e5269faa494c3ee80dafa4cf9b9c26ac",
+      "decision_digest": "sha256:3f2e48315f7e75d2654c2bb04912af5ef2dd2b6cb8ab88f9ed8e540697a84c1a",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -220,7 +220,7 @@
       "covered_units_before_decision": [
         "stop_owned_setpoint_stream:boundary"
       ],
-      "decision_digest": "sha256:d343296037c0d4de60a4ac8371a1a9f3e5269faa494c3ee80dafa4cf9b9c26ac",
+      "decision_digest": "sha256:3f2e48315f7e75d2654c2bb04912af5ef2dd2b6cb8ab88f9ed8e540697a84c1a",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -238,7 +238,7 @@
       "action_contract_valid": true,
       "attempt_id": "step-ca-q-offboard-random-001",
       "covered_units_before_decision": [],
-      "decision_digest": "sha256:e8c7cb71a6e8ff06cad0bb143673f2f316ae4ee025073f3729d84307390bb599",
+      "decision_digest": "sha256:d8ba8f414807b77199ad28d350a657150fee935a9ccc571f197f765c4c318c4b",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -258,7 +258,7 @@
       "covered_units_before_decision": [
         "terminate_owning_producer:boundary"
       ],
-      "decision_digest": "sha256:236d14c730ca524de02d5f1ece44481850a9cd3d05d600f4e47e2ce9d2ceaa99",
+      "decision_digest": "sha256:b695a30bed0d641338fd336809680f7273c1af72453d699001cd757ed4d64589",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -279,7 +279,7 @@
         "stop_owned_setpoint_stream:boundary",
         "terminate_owning_producer:boundary"
       ],
-      "decision_digest": "sha256:6a05e07188cbe54aa844118fa4d70965939043707610239964cb7fd62d66f82b",
+      "decision_digest": "sha256:e97bc43f2d9ab7a3e3c08aa6db59feada74ead5a2b04cf139c2b8549992e6d0a",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -297,7 +297,7 @@
       "action_contract_valid": true,
       "attempt_id": "step-ca-q-offboard-state-001",
       "covered_units_before_decision": [],
-      "decision_digest": "sha256:4969ae76ef12df6a24ebbc3554edb76f1e94664a4ac4414b974a728a3776e84b",
+      "decision_digest": "sha256:02388e107715ade4565c5ed56c43eb17135c873b09664ffa7d512e7b6729c31b",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -317,7 +317,7 @@
       "covered_units_before_decision": [
         "terminate_owning_producer:boundary"
       ],
-      "decision_digest": "sha256:3714eab6077a2764a58ccba22c7ddb7fe00b371db4e2d5f05d05629159565f82",
+      "decision_digest": "sha256:769ade02daaa51803b195c1271c0f52561675a57215a5ba80ed1c15b2f552cf5",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -338,7 +338,7 @@
         "stop_owned_setpoint_stream:boundary",
         "terminate_owning_producer:boundary"
       ],
-      "decision_digest": "sha256:03d87580bd17d72c3a5f6de9e66edd2f264e874d90b1f8b922eef66608b9b731",
+      "decision_digest": "sha256:f32ae6dc308c2148b42d89737c9e59e012457a09a675a561c12f4b7d2840f6c0",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
       "outcome": "ACCEPTED",
@@ -353,7 +353,7 @@
       "strategy_lifecycle_complete": true
     }
   },
-  "completed_at": "2026-08-19T19:47:17.802124+00:00",
+  "completed_at": "2026-08-19T19:56:34.171489+00:00",
   "corpus": [
     "stop_owned_setpoint_stream",
     "terminate_owning_producer",
@@ -428,8 +428,8 @@
     }
   ],
   "schema_version": "1.0",
-  "spec_digest": "sha256:ca91209cc56d15a7a9b370548b18e72a2ba5dae3695a3cef8893c6db74b7de1d",
-  "started_at": "2026-08-19T19:41:24.268311+00:00",
+  "spec_digest": "sha256:1277cacbb9819d79502ed525d0937b23c34602c845df099b349f0445d7a67a6f",
+  "started_at": "2026-08-19T19:50:38.173671+00:00",
   "state_aware_feedback_checks": [
     {
       "mechanism": "legacy_offboard",
