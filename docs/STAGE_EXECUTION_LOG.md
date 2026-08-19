@@ -30,7 +30,7 @@ repository validation passes. A step that is partly done says which part.
 v8 plan stage:      Stage 2, construct the core action and workload corpus
 Stage 1:            complete, exit checks met
 Corpus freeze:      proposed and conditional, deliberately not signed
-Current step:       Step C1, make re-entry selectable on both mechanisms
+Current step:       Step C-reentry, make re-entry selectable on both mechanisms
 Formal campaigns:   none authorized, none running
 ```
 
@@ -142,7 +142,7 @@ that its precondition gates execution, its applied schedule is recorded, and its
 cleanup holds; the precondition replay from Step A still reports every action
 consistent and none unvalidated.
 
-#### C0 — give each action its own timing anchor — COMPLETE
+#### C-anchor — give each action its own timing anchor — COMPLETE
 
 Planning the three ports exposed a shared blocker. Timing offsets were anchored
 to route activation for every action, but the three remaining actions do not
@@ -161,7 +161,7 @@ wired actions keep `route_active`, so their behaviour is unchanged.
 
 This changed the decision schema, so the next live batch needs a rebuilt image.
 
-#### C1 — make re-entry selectable on both mechanisms — NOT STARTED
+#### C-reentry — make re-entry selectable on both mechanisms — NOT STARTED
 
 Work: the dynamic requester has no repeat-cycle loop at all, and in both nodes
 re-entry currently fires on a fixed successor dwell rather than on the policy's
@@ -170,14 +170,14 @@ the executor's request appears. The qualification cell then needs
 `successor_route: internal_hold`, because re-entering from a landing successor
 is a different experiment.
 
-#### C2 — implement the restart action — NOT STARTED
+#### C-restart — implement the restart action — NOT STARTED
 
 Work: `restart_producer_after_loss` on top of the producer-exit fixture. The
 runner must start a fresh producer session after the fallback is installed. This
 is the action the corpus was sized around, because its legality depends on the
 outcome of an earlier action.
 
-#### C3 — port the adjacent Land request — NOT STARTED
+#### C-adjacent — port the adjacent Land request — NOT STARTED
 
 Work: launch the manual requester for both compared mechanisms and anchor it on
 the completion boundary through the C0 mechanism.
@@ -217,7 +217,7 @@ generation — remain deferred by standing decision 3.
 
 ## Next concrete action
 
-Continue with C1. The dynamic requester needs a repeat-cycle loop, and both
+Continue with C-reentry. The dynamic requester needs a repeat-cycle loop, and both
 workload nodes need a `scheduled_action` parameter so re-entry fires on the
 policy's schedule rather than a fixed dwell. Then wire re-entry as a live action,
 rebuild the image, and qualify it under the Step B spec pattern with
