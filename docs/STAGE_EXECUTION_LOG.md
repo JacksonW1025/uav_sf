@@ -30,7 +30,7 @@ repository validation passes. A step that is partly done says which part.
 v8 plan stage:      Stage 2, construct the core action and workload corpus
 Stage 1:            complete, exit checks met
 Corpus freeze:      proposed and conditional, deliberately not signed
-Current step:       Step C-restart, implement the restart action
+Current step:       Step C-adjacent, or resolve the reclaim reachability decision
 Formal campaigns:   none authorized, none running
 ```
 
@@ -176,12 +176,30 @@ A latent defect surfaced here: an unset action-request path was passed as an
 empty ROS parameter override, which the parameter parser rejects, so any run
 without a strategy decision would have failed at node startup.
 
-#### C-restart — implement the restart action — NOT STARTED
+#### C-restart — implement the reclaim — IMPLEMENTED, FOUND UNREACHABLE
 
-Work: `restart_producer_after_loss` on top of the producer-exit fixture. The
-runner must start a fresh producer session after the fallback is installed. This
-is the action the corpus was sized around, because its legality depends on the
-outcome of an earlier action.
+The reclaim was implemented, wired and flown: the runner starts a fresh producer
+session with its own identity and sidecar when the executor requests it, the
+offline chain reads that sidecar, and the executor observes the fallback from
+the runner lifecycle because a lost producer stops writing its own.
+
+The 18-attempt qualification failed, and every failure was the reclaim. The
+three already-qualified actions were unaffected. Under the configured offboard
+failsafe the aircraft lands and disarms about ten seconds after the loss, and
+the runner observes the loss by polling the producer process — in the recorded
+attempts it logged the loss after the aircraft had already landed. On dynamic
+external mode the loss comes from a component whose exit is not synchronised
+with the policy anchor, so the episode completed normally instead.
+
+The action is recorded as unreachable rather than dropped or forced to pass, and
+the failsafe configuration was not changed to create a window, because that
+would change the system under test to fit the test.
+See [the reachability finding](../experiments/step_c_restart_qualification_v1/REACHABILITY_FINDING.md),
+which states the three options for resolving it.
+
+This costs the corpus its only action whose legality depends on an earlier
+action, which is the property the seven-action selection was argued from. That
+is now an open preregistration decision rather than an implementation task.
 
 #### C-adjacent — port the adjacent Land request — NOT STARTED
 
@@ -223,15 +241,18 @@ generation — remain deferred by standing decision 3.
 
 ## Next concrete action
 
-Continue with C-restart. Implement `restart_producer_after_loss` on top of the
-producer-exit fixture: after the fallback is installed, the runner starts a
-fresh producer session which re-requests the tested route. Give it a live
-profile anchored on a marker the executor can observe after a fallback, wire it,
-rebuild the image, and qualify it under the same spec pattern.
+Two things are open, and the first needs a decision rather than code.
 
-This is the action the corpus was sized around: its legality depends on the
-outcome of an earlier action, which is what a feedback-free baseline cannot
-exploit.
+1. The reclaim is unreachable. Choose between preregistering a failsafe
+   configuration that holds after a producer loss, giving the runner a
+   telemetry-based loss signal, or accepting a corpus with no state-dependent
+   action. The options and their costs are in the reachability finding.
+2. C-adjacent is untouched: launch the manual requester for both compared
+   mechanisms and anchor it on the completion boundary through the anchor
+   mechanism.
+
+Three actions are qualified and selectable today: the owned stall, the producer
+termination, and route re-entry.
 
 Before any live batch, confirm no unpinned process competes for the pinned CPU
 sets, and afterwards confirm the central real-time factor is near 1.0.

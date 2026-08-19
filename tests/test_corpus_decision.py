@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections import Counter
 import unittest
 
-from scripts.corpus.core_actions import live_profile, wired_actions
+from scripts.corpus.core_actions import core_action, live_profile, wired_actions
 from scripts.runtime.live_strategy_backend import (
     CORPUS_SCHEMA,
     OFFSETS_NS,
@@ -128,15 +128,19 @@ class CorpusDecisionTests(unittest.TestCase):
                     set(CORPUS), {item.action_id for item in wired_actions(mechanism)}
                 )
 
-    def test_restart_is_wired_and_anchors_on_the_installed_fallback(self) -> None:
-        profile = live_profile("restart_producer_after_loss")
-        self.assertEqual(profile.timing_anchor, "fallback_installed")
-        self.assertEqual(profile.fault_mode, "process_exit")
-        self.assertTrue(profile.fallback_expected)
-        # One producer session enters the route once, but the episode enters it
-        # twice: the lost session and the reclaim.
-        self.assertEqual(profile.repeat_count, 1)
-        self.assertEqual(profile.activation_count, 2)
+    def test_the_reclaim_stays_unreachable_until_its_blocker_is_resolved(self) -> None:
+        # It was implemented and flown, then recorded as unreachable: the
+        # offboard failsafe lands and disarms before a reclaim can be requested.
+        reclaim = core_action("restart_producer_after_loss")
+        self.assertIsNone(reclaim.backend)
+        self.assertIsNone(reclaim.live_profile)
+        for mechanism in ("legacy_offboard", "dynamic_external_mode"):
+            self.assertNotIn(
+                "restart_producer_after_loss",
+                {item.action_id for item in wired_actions(mechanism)},
+            )
+        # The marker its anchor would use stays observable and tested, because
+        # the blocker is a failsafe and fixture decision rather than wiring.
         self.assertIn("fallback_installed", MARKER_SOURCES)
         records = [{"kind": "fallback_triggered", "received_monotonic_ns": 11}]
         self.assertEqual(
