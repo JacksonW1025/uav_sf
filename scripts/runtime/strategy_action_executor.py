@@ -19,6 +19,13 @@ class ActionExecutorError(RuntimeError):
 
 
 ACTIVE_KINDS = {"offboard_observed_active", "dynamic_mode_observed_active"}
+# Live markers the executor can observe, and the workload lifecycle records
+# that establish them.  A decision requiring anything else is refused rather
+# than applied on an unchecked assumption.
+MARKER_SOURCES = {
+    "route_active": ACTIVE_KINDS,
+    "motion_entered": {"motion_phase_entered"},
+}
 
 
 def _read_records(path: Path) -> list[dict[str, Any]]:
@@ -39,6 +46,30 @@ def _read_records(path: Path) -> list[dict[str, Any]]:
             raise ActionExecutorError("workload lifecycle contains a non-object")
         records.append(value)
     return records
+
+
+def observed_markers(
+    records: list[dict[str, Any]], required: list[str]
+) -> dict[str, int | None]:
+    """First observation time of each required live marker."""
+
+    unsupported = sorted(set(required) - set(MARKER_SOURCES))
+    if unsupported:
+        raise ActionExecutorError(
+            "the decision requires markers this executor cannot observe: "
+            + ", ".join(unsupported)
+        )
+    observed: dict[str, int | None] = {}
+    for marker in required:
+        kinds = MARKER_SOURCES[marker]
+        times = [
+            int(value["received_monotonic_ns"])
+            for value in records
+            if value.get("kind") in kinds
+            and isinstance(value.get("received_monotonic_ns"), int)
+        ]
+        observed[marker] = min(times) if times else None
+    return observed
 
 
 def observed_preconditions(records: list[dict[str, Any]]) -> tuple[int | None, int | None]:
@@ -102,10 +133,16 @@ def execute(args: argparse.Namespace) -> None:
         planned_offset_ns=decision["planned_offset_ns"],
         required_state=decision["required_state"],
     )
+    required = list(decision.get("required_state") or [])
+    if isinstance(decision.get("required_state"), dict):
+        required = sorted(decision["required_state"])
     deadline = time.monotonic() + args.precondition_timeout_s
     while time.monotonic() < deadline:
-        activation_ns, motion_ns = observed_preconditions(_read_records(args.lifecycle))
-        if activation_ns is not None and motion_ns is not None:
+        records = _read_records(args.lifecycle)
+        markers = observed_markers(records, required)
+        activation_ns = markers.get("route_active")
+        motion_ns = markers.get("motion_entered")
+        if all(value is not None for value in markers.values()) and activation_ns is not None:
             due_ns = activation_ns + int(decision["planned_offset_ns"])
             if time.monotonic_ns() >= due_ns:
                 request = {
@@ -129,12 +166,15 @@ def execute(args: argparse.Namespace) -> None:
                     selected_boundary=decision["selected_boundary"],
                     planned_offset_ns=decision["planned_offset_ns"],
                     actual_offset_ns=request["requested_monotonic_ns"] - activation_ns,
-                    preconditions={"route_active": True, "motion_entered": True},
+                    preconditions={marker: True for marker in markers},
                 )
                 while True:
                     time.sleep(0.2)
         time.sleep(0.02)
-    raise ActionExecutorError("live action preconditions did not become executable")
+    raise ActionExecutorError(
+        "live action preconditions did not become executable: "
+        + ", ".join(sorted(required))
+    )
 
 
 def main() -> int:

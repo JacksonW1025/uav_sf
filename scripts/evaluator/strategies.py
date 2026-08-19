@@ -39,6 +39,17 @@ def bounded_random_timing(
     return scheduled
 
 
+def bounded_random_action(actions: Iterable[str], *, seed: int) -> str:
+    """Draw one action uniformly from a grammar-enabled set."""
+
+    values = sorted(set(actions))
+    if not values:
+        raise StrategyError("bounded random selection needs at least one action")
+    if any(not isinstance(action, str) or not action for action in values):
+        raise StrategyError("bounded random actions must be non-empty strings")
+    return random.Random(seed).choice(values)
+
+
 @dataclass(frozen=True)
 class ActionCandidate:
     name: str

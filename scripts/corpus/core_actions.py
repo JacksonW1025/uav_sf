@@ -29,6 +29,10 @@ class CoreActionError(ValueError):
 
 MECHANISMS = ("legacy_offboard", "dynamic_external_mode")
 AVAILABILITY = ("implemented", "port_required", "not_applicable", "new")
+# Markers the in-flight executor can observe today.  An action wired to a live
+# backend may only require markers from this set, so its precondition is
+# checkable before the action is applied rather than after the fact.
+OBSERVABLE_LIVE_MARKERS = ("route_active", "motion_entered")
 
 Precondition = Callable[[SemanticState], bool]
 Marker = Callable[[Mapping[str, Any], SemanticState, SemanticState], bool]
@@ -49,6 +53,8 @@ class CoreAction:
     marker_text: str
     cleanup_text: str
     target_boundaries: tuple[str, ...]
+    live_markers: tuple[str, ...]
+    backend: str | None = None
     notes: str = ""
 
     def as_dict(self) -> dict[str, Any]:
@@ -62,6 +68,8 @@ class CoreAction:
             "marker": self.marker_text,
             "cleanup": self.cleanup_text,
             "target_boundaries": list(self.target_boundaries),
+            "live_markers": list(self.live_markers),
+            "backend": self.backend,
             "notes": self.notes,
         }
 
@@ -111,6 +119,8 @@ CORE_ACTIONS: tuple[CoreAction, ...] = (
         marker_text="a fault_detected event whose reason names a stalled stream",
         cleanup_text="release to the preregistered successor and land",
         target_boundaries=("command_stale",),
+        live_markers=("route_active", "motion_entered"),
+        backend="owned_setpoint_stall_v1",
     ),
     CoreAction(
         action_id="terminate_owning_producer",
@@ -135,6 +145,8 @@ CORE_ACTIONS: tuple[CoreAction, ...] = (
         marker_text="a fault_detected event whose reason names a producer exit",
         cleanup_text="a complete internal safe route must install without operator action",
         target_boundaries=("fallback_installed",),
+        live_markers=("route_active", "motion_entered"),
+        backend="owned_process_exit_fallback_v1",
     ),
     CoreAction(
         action_id="adjacent_land_request",
@@ -151,6 +163,7 @@ CORE_ACTIONS: tuple[CoreAction, ...] = (
         cleanup_text="exactly one successor must win and install completely",
         marker_text="an adjacent_request event",
         target_boundaries=("successor_installed",),
+        live_markers=("route_active",),
         notes=(
             "implemented only for the mode executor today; the request itself is a "
             "public Land command, so the port is an anchoring change rather than a "
@@ -177,6 +190,7 @@ CORE_ACTIONS: tuple[CoreAction, ...] = (
         marker_text="a transition_requested event the producer recorded as a repeat cycle",
         cleanup_text="the final entry must release to a landing successor",
         target_boundaries=("target_installed", "source_revoked"),
+        live_markers=("successor_installed",),
         notes=(
             "the intermediate safe route is a parameter: the core corpus selects "
             "Hold, while the retained evidence that validates this predicate uses "
@@ -208,6 +222,7 @@ CORE_ACTIONS: tuple[CoreAction, ...] = (
         marker_text="a fault_detected event whose reason names a rejection",
         cleanup_text="the vehicle must reach an internal safe route and disarm",
         target_boundaries=("activation_rejected",),
+        live_markers=("activation_requested",),
         notes="legacy offboard has no health-reply protocol, so this is not portable",
     ),
     CoreAction(
@@ -226,6 +241,7 @@ CORE_ACTIONS: tuple[CoreAction, ...] = (
         marker_text="a registration event whose result code reports a rejection",
         cleanup_text="stop every additional component and keep the primary session consistent",
         target_boundaries=("registration_rejected",),
+        live_markers=("route_active",),
         notes="legacy offboard has no registration protocol, so this is not portable",
     ),
     CoreAction(
@@ -247,6 +263,7 @@ CORE_ACTIONS: tuple[CoreAction, ...] = (
         marker_text="no retained evidence; the action does not exist yet",
         cleanup_text="either the reclaim installs completely or the safe route is retained",
         target_boundaries=("target_installed",),
+        live_markers=("fallback_installed",),
         notes=(
             "the only proposed action whose legality depends on the outcome of an "
             "earlier action, which is what separates feedback-guided generation "
@@ -283,6 +300,34 @@ def validate_declarations() -> None:
             raise CoreActionError(
                 f"{action.action_id}: precondition holds in the empty initial state"
             )
+        if not action.live_markers:
+            raise CoreActionError(f"{action.action_id}: a core action needs a live marker")
+        if action.backend is not None and not set(action.live_markers) <= set(
+            OBSERVABLE_LIVE_MARKERS
+        ):
+            raise CoreActionError(
+                f"{action.action_id}: a wired action may only require observable markers"
+            )
+
+
+def core_action(action_id: str) -> CoreAction:
+    for action in CORE_ACTIONS:
+        if action.action_id == action_id:
+            return action
+    raise CoreActionError(f"unknown core action: {action_id}")
+
+
+def wired_actions(mechanism: str) -> tuple[CoreAction, ...]:
+    """Core actions that a live backend can apply for this mechanism today."""
+
+    if mechanism not in MECHANISMS:
+        raise CoreActionError(f"unsupported mechanism: {mechanism}")
+    return tuple(
+        action
+        for action in CORE_ACTIONS
+        if action.backend is not None
+        and action.availability[mechanism] == "implemented"
+    )
 
 
 def core_action_records() -> list[dict[str, Any]]:

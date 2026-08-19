@@ -34,6 +34,9 @@
 - A frozen experiment report, preregistration, ledger, or attestation remains
   authoritative for its own identity and denominator. Narrative updates never
   rewrite closed evidence.
+- `docs/STAGE_EXECUTION_LOG.md` records step-by-step execution state so work can
+  be resumed without prior context. Update it in the same commit as the work it
+  describes, and never record proposed work there as complete.
 
 ## Research boundary
 

@@ -19,6 +19,15 @@ authority, and preserve a recovery reference before rewriting a published tip.
 narrative. Closed experiment reports and ledgers remain authoritative for
 their own identities and denominators.
 
+**Start here when resuming work:**
+[docs/STAGE_EXECUTION_LOG.md](docs/STAGE_EXECUTION_LOG.md) records how the
+experiment plan is being executed step by step — position, standing decisions,
+what each step delivered, and the next concrete action. It exists so a session
+with no memory of earlier steps can continue. **Update it in the same commit as
+the work it describes**: mark a step complete only when its artifacts exist and
+`./scripts/validation/validate_repo.sh` passes, and say which part is done when
+a step is partly finished. Never record proposed work there as complete.
+
 ## What this repository is
 
 A research testbed, not an application. It tests whether a *route-replacing
@@ -181,6 +190,13 @@ starts, so analysis load cannot perturb a still-running attempt's timing.
   the current state-aware prototype are executable only for explicitly
   qualified action backends that record their applied schedule. Unsupported
   strategy/action combinations fail closed.
+- **A live decision is re-derived, not trusted.** `run_sitl` recomputes the
+  strategy decision from its own inputs and refuses any difference, so a
+  decision cannot be forged in transit. Schema `1.0` selects a timing for a
+  preconfigured action and stays reachable so retained studies remain
+  reproducible; schema `2.0` selects an action and a timing from the declared
+  corpus. New behaviour goes into a new schema version rather than changing an
+  existing one.
 - **`runs/` is ignored and must never be committed**; `experiments/` keeps only
   compact evidence and ledgers. The checkout host is never the experiment
   environment — each plan registers its target environment and the trace must
@@ -223,5 +239,7 @@ From [AGENT.md](AGENT.md), which stays authoritative:
 normative documents are [RESEARCH_SCOPE.md](docs/RESEARCH_SCOPE.md),
 [ROUTE_MODEL.md](docs/ROUTE_MODEL.md), [METHOD.md](docs/METHOD.md),
 [EXPERIMENT_PLAN.md](docs/EXPERIMENT_PLAN.md), and
-[CURRENT_STATUS.md](docs/CURRENT_STATUS.md). A behavior change that contradicts
-those documents is a documentation change too.
+[CURRENT_STATUS.md](docs/CURRENT_STATUS.md); step-by-step execution state lives
+in [STAGE_EXECUTION_LOG.md](docs/STAGE_EXECUTION_LOG.md) and is kept in sync
+with the work. A behavior change that contradicts those documents is a
+documentation change too.
