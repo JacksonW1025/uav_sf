@@ -1,0 +1,576 @@
+{
+  "attempts": {
+    "step-b-q-dynamic-official-001": {
+      "action_contract_valid": true,
+      "attempt_id": "step-b-q-dynamic-official-001",
+      "covered_units_before_decision": [],
+      "decision_digest": "sha256:0bd142f1d3c8ae14566acc155a1929ad5892e11d158b3457afb49655da6ef819",
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "planned_offset_ns": 5000000000,
+      "safe_fallback_required": false,
+      "safe_fallback_status": "NOT_APPLICABLE",
+      "selected_action": "stop_owned_setpoint_stream",
+      "selected_boundary": "boundary",
+      "selected_unit": "stop_owned_setpoint_stream:boundary",
+      "strategy_lifecycle_complete": true
+    },
+    "step-b-q-dynamic-official-002": {
+      "action_contract_valid": true,
+      "attempt_id": "step-b-q-dynamic-official-002",
+      "covered_units_before_decision": [
+        "stop_owned_setpoint_stream:boundary"
+      ],
+      "decision_digest": "sha256:9dc800e59d84ec0e2fae2c66808e6ff53f3f9042b14b74084cbb26a4fe9d1d31",
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "planned_offset_ns": 5000000000,
+      "safe_fallback_required": false,
+      "safe_fallback_status": "NOT_APPLICABLE",
+      "selected_action": "stop_owned_setpoint_stream",
+      "selected_boundary": "boundary",
+      "selected_unit": "stop_owned_setpoint_stream:boundary",
+      "strategy_lifecycle_complete": true
+    },
+    "step-b-q-dynamic-official-003": {
+      "action_contract_valid": true,
+      "attempt_id": "step-b-q-dynamic-official-003",
+      "covered_units_before_decision": [
+        "stop_owned_setpoint_stream:boundary"
+      ],
+      "decision_digest": "sha256:9dc800e59d84ec0e2fae2c66808e6ff53f3f9042b14b74084cbb26a4fe9d1d31",
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "planned_offset_ns": 5000000000,
+      "safe_fallback_required": false,
+      "safe_fallback_status": "NOT_APPLICABLE",
+      "selected_action": "stop_owned_setpoint_stream",
+      "selected_boundary": "boundary",
+      "selected_unit": "stop_owned_setpoint_stream:boundary",
+      "strategy_lifecycle_complete": true
+    },
+    "step-b-q-dynamic-random-001": {
+      "action_contract_valid": true,
+      "attempt_id": "step-b-q-dynamic-random-001",
+      "covered_units_before_decision": [],
+      "decision_digest": "sha256:03e9a2b68e423a0e1a5ef26a66900b379927707c71df8521ef31f160499625e4",
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "planned_offset_ns": 4250000000,
+      "safe_fallback_required": true,
+      "safe_fallback_status": "PASS",
+      "selected_action": "terminate_owning_producer",
+      "selected_boundary": "pre_boundary",
+      "selected_unit": "terminate_owning_producer:pre_boundary",
+      "strategy_lifecycle_complete": true
+    },
+    "step-b-q-dynamic-random-002": {
+      "action_contract_valid": true,
+      "attempt_id": "step-b-q-dynamic-random-002",
+      "covered_units_before_decision": [
+        "terminate_owning_producer:pre_boundary"
+      ],
+      "decision_digest": "sha256:ae78c8032d18c64e693aedeb867be81fda0faebb65bef27b94984b1254562ab1",
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "planned_offset_ns": 5000000000,
+      "safe_fallback_required": false,
+      "safe_fallback_status": "NOT_APPLICABLE",
+      "selected_action": "stop_owned_setpoint_stream",
+      "selected_boundary": "boundary",
+      "selected_unit": "stop_owned_setpoint_stream:boundary",
+      "strategy_lifecycle_complete": true
+    },
+    "step-b-q-dynamic-random-003": {
+      "action_contract_valid": true,
+      "attempt_id": "step-b-q-dynamic-random-003",
+      "covered_units_before_decision": [
+        "stop_owned_setpoint_stream:boundary",
+        "terminate_owning_producer:pre_boundary"
+      ],
+      "decision_digest": "sha256:2ef679c6d42b15e374edbb0b9d01f723a9bcff12380479d223f7177ba9443852",
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "planned_offset_ns": 6500000000,
+      "safe_fallback_required": false,
+      "safe_fallback_status": "NOT_APPLICABLE",
+      "selected_action": "stop_owned_setpoint_stream",
+      "selected_boundary": "late",
+      "selected_unit": "stop_owned_setpoint_stream:late",
+      "strategy_lifecycle_complete": true
+    },
+    "step-b-q-dynamic-state-001": {
+      "action_contract_valid": true,
+      "attempt_id": "step-b-q-dynamic-state-001",
+      "covered_units_before_decision": [],
+      "decision_digest": "sha256:c98df043a2de86875d60a88821e814de5c1a7eab81903b43f2bc0af9818b512c",
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "planned_offset_ns": 5000000000,
+      "safe_fallback_required": false,
+      "safe_fallback_status": "NOT_APPLICABLE",
+      "selected_action": "stop_owned_setpoint_stream",
+      "selected_boundary": "boundary",
+      "selected_unit": "stop_owned_setpoint_stream:boundary",
+      "strategy_lifecycle_complete": true
+    },
+    "step-b-q-dynamic-state-002": {
+      "action_contract_valid": true,
+      "attempt_id": "step-b-q-dynamic-state-002",
+      "covered_units_before_decision": [
+        "stop_owned_setpoint_stream:boundary"
+      ],
+      "decision_digest": "sha256:caee2f63641e8d37aa6c5c58853ea67e5be3324ed05d062ebe0b1cda8487a275",
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "planned_offset_ns": 5000000000,
+      "safe_fallback_required": true,
+      "safe_fallback_status": "PASS",
+      "selected_action": "terminate_owning_producer",
+      "selected_boundary": "boundary",
+      "selected_unit": "terminate_owning_producer:boundary",
+      "strategy_lifecycle_complete": true
+    },
+    "step-b-q-dynamic-state-003": {
+      "action_contract_valid": true,
+      "attempt_id": "step-b-q-dynamic-state-003",
+      "covered_units_before_decision": [
+        "stop_owned_setpoint_stream:boundary",
+        "terminate_owning_producer:boundary"
+      ],
+      "decision_digest": "sha256:0654bd0153a043ad1a892446baf617158483bee770555e8c1fda340664583363",
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "planned_offset_ns": 4250000000,
+      "safe_fallback_required": true,
+      "safe_fallback_status": "PASS",
+      "selected_action": "terminate_owning_producer",
+      "selected_boundary": "pre_boundary",
+      "selected_unit": "terminate_owning_producer:pre_boundary",
+      "strategy_lifecycle_complete": true
+    },
+    "step-b-q-offboard-official-001": {
+      "action_contract_valid": true,
+      "attempt_id": "step-b-q-offboard-official-001",
+      "covered_units_before_decision": [],
+      "decision_digest": "sha256:15e900e6b148e503db7b83415d303b23482179abe8ae09b012a85452a124097a",
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "planned_offset_ns": 5000000000,
+      "safe_fallback_required": false,
+      "safe_fallback_status": "NOT_APPLICABLE",
+      "selected_action": "stop_owned_setpoint_stream",
+      "selected_boundary": "boundary",
+      "selected_unit": "stop_owned_setpoint_stream:boundary",
+      "strategy_lifecycle_complete": true
+    },
+    "step-b-q-offboard-official-002": {
+      "action_contract_valid": true,
+      "attempt_id": "step-b-q-offboard-official-002",
+      "covered_units_before_decision": [
+        "stop_owned_setpoint_stream:boundary"
+      ],
+      "decision_digest": "sha256:fcd7aaf9ac68edc65d159c9c6f54d68ce6cf8a55559dd97a4810c962a6e301a8",
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "planned_offset_ns": 5000000000,
+      "safe_fallback_required": false,
+      "safe_fallback_status": "NOT_APPLICABLE",
+      "selected_action": "stop_owned_setpoint_stream",
+      "selected_boundary": "boundary",
+      "selected_unit": "stop_owned_setpoint_stream:boundary",
+      "strategy_lifecycle_complete": true
+    },
+    "step-b-q-offboard-official-003": {
+      "action_contract_valid": true,
+      "attempt_id": "step-b-q-offboard-official-003",
+      "covered_units_before_decision": [
+        "stop_owned_setpoint_stream:boundary"
+      ],
+      "decision_digest": "sha256:fcd7aaf9ac68edc65d159c9c6f54d68ce6cf8a55559dd97a4810c962a6e301a8",
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "planned_offset_ns": 5000000000,
+      "safe_fallback_required": false,
+      "safe_fallback_status": "NOT_APPLICABLE",
+      "selected_action": "stop_owned_setpoint_stream",
+      "selected_boundary": "boundary",
+      "selected_unit": "stop_owned_setpoint_stream:boundary",
+      "strategy_lifecycle_complete": true
+    },
+    "step-b-q-offboard-random-001": {
+      "action_contract_valid": true,
+      "attempt_id": "step-b-q-offboard-random-001",
+      "covered_units_before_decision": [],
+      "decision_digest": "sha256:a72d3f8183abee9fdff0ed82ee581ce8d14ab12a04360335729fa14e5584ef61",
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "planned_offset_ns": 5750000000,
+      "safe_fallback_required": false,
+      "safe_fallback_status": "NOT_APPLICABLE",
+      "selected_action": "stop_owned_setpoint_stream",
+      "selected_boundary": "post_boundary",
+      "selected_unit": "stop_owned_setpoint_stream:post_boundary",
+      "strategy_lifecycle_complete": true
+    },
+    "step-b-q-offboard-random-002": {
+      "action_contract_valid": true,
+      "attempt_id": "step-b-q-offboard-random-002",
+      "covered_units_before_decision": [
+        "stop_owned_setpoint_stream:post_boundary"
+      ],
+      "decision_digest": "sha256:3d2b069d916a0927999cfa768ba8a39a961ff75559eb2efc3f5df902c0477024",
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "planned_offset_ns": 4250000000,
+      "safe_fallback_required": true,
+      "safe_fallback_status": "PASS",
+      "selected_action": "terminate_owning_producer",
+      "selected_boundary": "pre_boundary",
+      "selected_unit": "terminate_owning_producer:pre_boundary",
+      "strategy_lifecycle_complete": true
+    },
+    "step-b-q-offboard-random-003": {
+      "action_contract_valid": true,
+      "attempt_id": "step-b-q-offboard-random-003",
+      "covered_units_before_decision": [
+        "stop_owned_setpoint_stream:post_boundary",
+        "terminate_owning_producer:pre_boundary"
+      ],
+      "decision_digest": "sha256:7d7f65d295ebe0a862d18df9ef47b02f227ccc907a4bf9befcdc18bb3d6c297c",
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "planned_offset_ns": 6500000000,
+      "safe_fallback_required": false,
+      "safe_fallback_status": "NOT_APPLICABLE",
+      "selected_action": "stop_owned_setpoint_stream",
+      "selected_boundary": "late",
+      "selected_unit": "stop_owned_setpoint_stream:late",
+      "strategy_lifecycle_complete": true
+    },
+    "step-b-q-offboard-state-001": {
+      "action_contract_valid": true,
+      "attempt_id": "step-b-q-offboard-state-001",
+      "covered_units_before_decision": [],
+      "decision_digest": "sha256:f30224a4981893af468b4a9cf5a21e1d9e6d5ad8d1d15f8042348f3820ebf9e6",
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "planned_offset_ns": 5000000000,
+      "safe_fallback_required": true,
+      "safe_fallback_status": "PASS",
+      "selected_action": "terminate_owning_producer",
+      "selected_boundary": "boundary",
+      "selected_unit": "terminate_owning_producer:boundary",
+      "strategy_lifecycle_complete": true
+    },
+    "step-b-q-offboard-state-002": {
+      "action_contract_valid": true,
+      "attempt_id": "step-b-q-offboard-state-002",
+      "covered_units_before_decision": [
+        "terminate_owning_producer:boundary"
+      ],
+      "decision_digest": "sha256:9471d7f520262e86a87b50fb018caf90e40cc0c8969f6f35ffd27af6ade8964f",
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "planned_offset_ns": 5000000000,
+      "safe_fallback_required": false,
+      "safe_fallback_status": "NOT_APPLICABLE",
+      "selected_action": "stop_owned_setpoint_stream",
+      "selected_boundary": "boundary",
+      "selected_unit": "stop_owned_setpoint_stream:boundary",
+      "strategy_lifecycle_complete": true
+    },
+    "step-b-q-offboard-state-003": {
+      "action_contract_valid": true,
+      "attempt_id": "step-b-q-offboard-state-003",
+      "covered_units_before_decision": [
+        "stop_owned_setpoint_stream:boundary",
+        "terminate_owning_producer:boundary"
+      ],
+      "decision_digest": "sha256:468fbb87fab92c4b1d3276d89149fc7d0849094391f77108464972a114985fae",
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "planned_offset_ns": 5750000000,
+      "safe_fallback_required": false,
+      "safe_fallback_status": "NOT_APPLICABLE",
+      "selected_action": "stop_owned_setpoint_stream",
+      "selected_boundary": "post_boundary",
+      "selected_unit": "stop_owned_setpoint_stream:post_boundary",
+      "strategy_lifecycle_complete": true
+    }
+  },
+  "completed_at": "2026-08-19T11:14:35.879230+00:00",
+  "corpus": [
+    "stop_owned_setpoint_stream",
+    "terminate_owning_producer"
+  ],
+  "formal_campaign_started": false,
+  "live_strategy_backend": null,
+  "official_action": "stop_owned_setpoint_stream",
+  "qualification_only": true,
+  "rounds": [
+    {
+      "attempt_ids": [
+        "step-b-q-offboard-official-001",
+        "step-b-q-offboard-random-001",
+        "step-b-q-offboard-state-001"
+      ],
+      "barrier_passed": true,
+      "mechanism": "legacy_offboard",
+      "ordinal": 1
+    },
+    {
+      "attempt_ids": [
+        "step-b-q-offboard-official-002",
+        "step-b-q-offboard-random-002",
+        "step-b-q-offboard-state-002"
+      ],
+      "barrier_passed": true,
+      "mechanism": "legacy_offboard",
+      "ordinal": 2
+    },
+    {
+      "attempt_ids": [
+        "step-b-q-offboard-official-003",
+        "step-b-q-offboard-random-003",
+        "step-b-q-offboard-state-003"
+      ],
+      "barrier_passed": true,
+      "mechanism": "legacy_offboard",
+      "ordinal": 3
+    },
+    {
+      "attempt_ids": [
+        "step-b-q-dynamic-official-001",
+        "step-b-q-dynamic-random-001",
+        "step-b-q-dynamic-state-001"
+      ],
+      "barrier_passed": true,
+      "mechanism": "dynamic_external_mode",
+      "ordinal": 1
+    },
+    {
+      "attempt_ids": [
+        "step-b-q-dynamic-official-002",
+        "step-b-q-dynamic-random-002",
+        "step-b-q-dynamic-state-002"
+      ],
+      "barrier_passed": true,
+      "mechanism": "dynamic_external_mode",
+      "ordinal": 2
+    },
+    {
+      "attempt_ids": [
+        "step-b-q-dynamic-official-003",
+        "step-b-q-dynamic-random-003",
+        "step-b-q-dynamic-state-003"
+      ],
+      "barrier_passed": true,
+      "mechanism": "dynamic_external_mode",
+      "ordinal": 3
+    }
+  ],
+  "schema_version": "1.0",
+  "spec_digest": "sha256:2d5164117e0c889c5cbcbedff44053a194a0074765681ba95a5c0287e1e8c922",
+  "started_at": "2026-08-19T11:09:10.789023+00:00",
+  "state_aware_feedback_checks": [
+    {
+      "mechanism": "legacy_offboard",
+      "subsequent_decisions_used_live_feedback": true
+    },
+    {
+      "mechanism": "dynamic_external_mode",
+      "subsequent_decisions_used_live_feedback": true
+    }
+  ],
+  "status": "PASS",
+  "study_id": "step-b-corpus-selection-qualification-v1",
+  "units": [
+    {
+      "attempt_count": 3,
+      "mechanism": "legacy_offboard",
+      "passed_count": 3,
+      "selected_actions": [
+        "stop_owned_setpoint_stream",
+        "stop_owned_setpoint_stream",
+        "stop_owned_setpoint_stream"
+      ],
+      "selected_boundaries": [
+        "boundary",
+        "boundary",
+        "boundary"
+      ],
+      "selected_units": [
+        "stop_owned_setpoint_stream:boundary",
+        "stop_owned_setpoint_stream:boundary",
+        "stop_owned_setpoint_stream:boundary"
+      ],
+      "status": "PASS",
+      "strategy": "official_sequence"
+    },
+    {
+      "attempt_count": 3,
+      "mechanism": "legacy_offboard",
+      "passed_count": 3,
+      "selected_actions": [
+        "stop_owned_setpoint_stream",
+        "terminate_owning_producer",
+        "stop_owned_setpoint_stream"
+      ],
+      "selected_boundaries": [
+        "post_boundary",
+        "pre_boundary",
+        "late"
+      ],
+      "selected_units": [
+        "stop_owned_setpoint_stream:post_boundary",
+        "terminate_owning_producer:pre_boundary",
+        "stop_owned_setpoint_stream:late"
+      ],
+      "status": "PASS",
+      "strategy": "bounded_random_timing"
+    },
+    {
+      "attempt_count": 3,
+      "mechanism": "legacy_offboard",
+      "passed_count": 3,
+      "selected_actions": [
+        "terminate_owning_producer",
+        "stop_owned_setpoint_stream",
+        "stop_owned_setpoint_stream"
+      ],
+      "selected_boundaries": [
+        "boundary",
+        "boundary",
+        "post_boundary"
+      ],
+      "selected_units": [
+        "terminate_owning_producer:boundary",
+        "stop_owned_setpoint_stream:boundary",
+        "stop_owned_setpoint_stream:post_boundary"
+      ],
+      "status": "PASS",
+      "strategy": "state_aware"
+    },
+    {
+      "attempt_count": 3,
+      "mechanism": "dynamic_external_mode",
+      "passed_count": 3,
+      "selected_actions": [
+        "stop_owned_setpoint_stream",
+        "stop_owned_setpoint_stream",
+        "stop_owned_setpoint_stream"
+      ],
+      "selected_boundaries": [
+        "boundary",
+        "boundary",
+        "boundary"
+      ],
+      "selected_units": [
+        "stop_owned_setpoint_stream:boundary",
+        "stop_owned_setpoint_stream:boundary",
+        "stop_owned_setpoint_stream:boundary"
+      ],
+      "status": "PASS",
+      "strategy": "official_sequence"
+    },
+    {
+      "attempt_count": 3,
+      "mechanism": "dynamic_external_mode",
+      "passed_count": 3,
+      "selected_actions": [
+        "terminate_owning_producer",
+        "stop_owned_setpoint_stream",
+        "stop_owned_setpoint_stream"
+      ],
+      "selected_boundaries": [
+        "pre_boundary",
+        "boundary",
+        "late"
+      ],
+      "selected_units": [
+        "terminate_owning_producer:pre_boundary",
+        "stop_owned_setpoint_stream:boundary",
+        "stop_owned_setpoint_stream:late"
+      ],
+      "status": "PASS",
+      "strategy": "bounded_random_timing"
+    },
+    {
+      "attempt_count": 3,
+      "mechanism": "dynamic_external_mode",
+      "passed_count": 3,
+      "selected_actions": [
+        "stop_owned_setpoint_stream",
+        "terminate_owning_producer",
+        "terminate_owning_producer"
+      ],
+      "selected_boundaries": [
+        "boundary",
+        "boundary",
+        "pre_boundary"
+      ],
+      "selected_units": [
+        "stop_owned_setpoint_stream:boundary",
+        "terminate_owning_producer:boundary",
+        "terminate_owning_producer:pre_boundary"
+      ],
+      "status": "PASS",
+      "strategy": "state_aware"
+    }
+  ]
+}

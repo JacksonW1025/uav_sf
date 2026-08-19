@@ -30,7 +30,7 @@ repository validation passes. A step that is partly done says which part.
 v8 plan stage:      Stage 2, construct the core action and workload corpus
 Stage 1:            complete, exit checks met
 Corpus freeze:      proposed and conditional, deliberately not signed
-Current step:       Step B, decision path proven live; qualification blocked on machine quiet time
+Current step:       Step C, close the availability gaps and add the restart action
 Formal campaigns:   none authorized, none running
 ```
 
@@ -74,7 +74,7 @@ implementation. Two model defects found and fixed — a derived `re_entry` phase
 is not evidence of a re-entry action, and one action can be recorded by two
 observers, which is now separated by activation identity.
 
-### Step B — make the action selectable — MECHANISM PROVEN LIVE, QUALIFICATION NOT SIGNED
+### Step B — make the action selectable — COMPLETE
 
 Goal: the policy chooses which action to apply and when, instead of choosing
 only when to apply an action fixed by the matrix cell.
@@ -101,30 +101,37 @@ cannot observe. Schema 1.0 is untouched and still validates, so retained
 evidence stays reproducible. Covered by
 [tests/test_corpus_decision.py](../tests/test_corpus_decision.py).
 
-Live: the qualification was built and executed. The image
-`uav-sf-family-a-thor:step-b-2c6b754` was built, attested, and 18 attempts ran
-across two mechanisms and three strategies. Four integration defects were found
-and fixed by running it — the decision never reached the container in corpus
-mode, the `run_sitl` guard compared a core action against a fault mode, the
-in-flight executor read the single-action coverage key, and the summary read
-those keys and aborted on a rejected attempt.
+Live: the qualification passed. The image `uav-sf-family-a-thor:step-b-2c6b754`
+was built and attested, and 18 attempts across two mechanisms and three
+strategies were all accepted, admissible, physically valid and action-contract
+complete, with all six units passing and the state-aware feedback check passing
+for both mechanisms. The policies applied the stall 13 times and the producer
+termination 5 times over 5 distinct (action, timing) units, so the action was
+chosen rather than configured. No formal ledger was opened.
+See [the qualification record](../experiments/step_b_corpus_selection_qualification_v1/QUALIFICATION_ATTEMPT.md)
+and [its result](../experiments/step_b_corpus_selection_qualification_v1/qualification.result.json).
 
-The attempt does not qualify. All 18 attempts were rejected with
-`clock uncertainty exceeds the configured bound`, because an unpinned
-remote-desktop process was taking about two cores and the simulation fell behind
-real time in its central window: 0.563 here against 0.999 in the retained
-process-exit qualification. No admissible evidence was produced, so no
-qualification result may be cited.
+Running it found five defects that no host-side test could reach: the decision
+never reached the container in corpus mode; the `run_sitl` guard compared a core
+action identity against a runtime fault mode; the workload applied the fault
+mode it was launched with, so a policy could name one action while the flight
+performed another; the in-flight executor read the single-action coverage key;
+and the batch summary read those keys and aborted on one rejected attempt. All
+are fixed, and each wired action now carries a live profile that fixes its
+runtime fault mode and contract obligations.
 
-What the run does establish, from records the clock closure does not affect: 17
-of 18 attempts applied exactly the action their decision selected, with the
-complete strategy lifecycle recorded and an applied-versus-planned offset error
-of 1.4 ms to 21.8 ms; both actions were selected and applied by bounded random
-and by state-aware selection, while the official sequence held its single unit.
-See [the attempt record](../experiments/step_b_corpus_selection_qualification_v1/QUALIFICATION_ATTEMPT.md).
+Two environment findings are recorded rather than tuned away. Machine quiet time
+is a precondition: an earlier batch had every attempt rejected for clock
+uncertainty because an unpinned desktop process took about two cores from the
+pinned CPU sets, dropping the central real-time factor to 0.563 against 0.999.
+And the clock fit still flakes at roughly one attempt in 36 even on a quiet
+machine, so a gate demanding 18 of 18 will occasionally fail for reasons
+unrelated to what it tests. Decide about that before a fixed-budget campaign.
 
-Remaining: re-run the same spec on a quiet machine. The clock bound must not be
-relaxed to make the batch pass.
+A plan error was corrected: a dynamic external mode producer loss installs
+internal RTL, not Land, so the spec now declares the fallback per mechanism. The
+successor a workload requests after a completion and the fallback the system
+installs after a fault are different obligations.
 
 ### Step C — close the availability gaps — NOT STARTED
 
@@ -175,17 +182,11 @@ generation — remain deferred by standing decision 3.
 
 ## Next concrete action
 
-Re-run the Step B qualification on a quiet machine:
+Start Step C. Port the adjacent Land request to both compared mechanisms, add a
+repeat-cycle loop to the dynamic requester so re-entry works there, and
+implement `restart_producer_after_loss` on top of the producer-exit fixture.
+Each new action needs a live profile, live markers the executor can observe, and
+its own non-formal qualification under the Step B spec pattern.
 
-```bash
-rm -rf runs/step-b-corpus-selection-qualification-v1
-python3 -m scripts.runtime.run_strategy_qualification \
-  --spec experiments/step_b_corpus_selection_qualification_v1/qualification.spec.json \
-  --output experiments/step_b_corpus_selection_qualification_v1/qualification.result.json \
-  --run-root runs
-```
-
-Before starting, confirm that no unpinned process is competing for the CPU sets
-the spec pins, and afterwards confirm that the central real-time factor is near
-1.0 rather than near 0.6. The image and attestation already exist; only quiet
-machine time is missing. Step C does not start until this batch qualifies.
+Before any live batch, confirm no unpinned process competes for the pinned CPU
+sets, and afterwards confirm the central real-time factor is near 1.0.

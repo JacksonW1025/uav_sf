@@ -80,7 +80,7 @@
     },
     {
       "attempt_id_prefix": "step-b-q-dynamic-official",
-      "expected_fallback": "internal_land",
+      "expected_fallback": "internal_rtl",
       "mechanism": "dynamic_external_mode",
       "simulation_seed_base": 3120000,
       "strategy": "official_sequence",
@@ -88,7 +88,7 @@
     },
     {
       "attempt_id_prefix": "step-b-q-dynamic-random",
-      "expected_fallback": "internal_land",
+      "expected_fallback": "internal_rtl",
       "mechanism": "dynamic_external_mode",
       "simulation_seed_base": 3120000,
       "strategy": "bounded_random_timing",
@@ -97,7 +97,7 @@
     },
     {
       "attempt_id_prefix": "step-b-q-dynamic-state",
-      "expected_fallback": "internal_land",
+      "expected_fallback": "internal_rtl",
       "mechanism": "dynamic_external_mode",
       "simulation_seed_base": 3120000,
       "strategy": "state_aware",
