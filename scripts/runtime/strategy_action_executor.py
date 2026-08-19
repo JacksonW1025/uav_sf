@@ -124,8 +124,14 @@ def execute(args: argparse.Namespace) -> None:
         strategy=decision["strategy"],
         seed=decision["seed"],
         candidates=decision["candidates"],
-        covered_boundaries=decision["covered_boundaries_before_decision"],
+        # A corpus decision carries coverage over (action, timing) units; the
+        # earlier single-action decision carries it over timing boundaries.
+        covered_boundaries=decision.get(
+            "covered_units_before_decision",
+            decision.get("covered_boundaries_before_decision"),
+        ),
         selected_boundary=decision["selected_boundary"],
+        selected_unit=decision.get("selected_unit"),
     )
     log.append(
         "action_scheduled",
