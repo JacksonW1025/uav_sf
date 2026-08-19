@@ -54,6 +54,24 @@ def _now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="microseconds")
 
 
+def _selected_unit(decision: dict[str, Any]) -> str:
+    """The coverage unit a decision claims.
+
+    A corpus decision covers an (action, timing) unit; the earlier
+    single-action decision covers a timing boundary only.
+    """
+
+    if decision.get("schema_version") == CORPUS_SCHEMA:
+        return str(decision["selected_unit"])
+    return str(decision["selected_boundary"])
+
+
+def _covered_units(decision: dict[str, Any]) -> list[str]:
+    if decision.get("schema_version") == CORPUS_SCHEMA:
+        return list(decision["covered_units_before_decision"])
+    return list(decision["covered_boundaries_before_decision"])
+
+
 def _cell_key(cell: dict[str, Any]) -> tuple[str, str]:
     return str(cell.get("mechanism")), str(cell.get("strategy"))
 
@@ -108,13 +126,7 @@ def _observed_coverage(run_root: Path, study_id: str, prefix: str) -> list[str]:
             validate_live_decision(decision)
             # A corpus decision covers an (action, timing) unit; the earlier
             # single-action decision covers a timing boundary only.
-            values.append(
-                str(
-                    decision["selected_unit"]
-                    if decision.get("schema_version") == CORPUS_SCHEMA
-                    else decision["selected_boundary"]
-                )
-            )
+            values.append(_selected_unit(decision))
     return sorted(set(values))
 
 
@@ -186,10 +198,9 @@ def _attempt_summary(
         "strategy_lifecycle_complete": complete_lifecycle,
         "action_contract_valid": action_valid,
         "selected_boundary": decision["selected_boundary"],
+        "selected_unit": _selected_unit(decision),
         "planned_offset_ns": decision["planned_offset_ns"],
-        "covered_boundaries_before_decision": decision[
-            "covered_boundaries_before_decision"
-        ],
+        "covered_units_before_decision": _covered_units(decision),
         "decision_digest": _digest(decision_path),
         "passed": passed,
     }
@@ -286,15 +297,16 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     "passed_count": sum(value["passed"] for value in unit_attempts),
                     "selected_boundaries": [value["selected_boundary"] for value in unit_attempts],
                     "selected_actions": [value["selected_action"] for value in unit_attempts],
+                    "selected_units": [value["selected_unit"] for value in unit_attempts],
                     "status": "PASS" if all(value["passed"] for value in unit_attempts) else "FAIL",
                 }
             )
             if strategy == "state_aware":
                 feedback_ok = all(
-                    set(unit_attempts[index]["covered_boundaries_before_decision"])
-                    == {value["selected_boundary"] for value in unit_attempts[:index]}
-                    and unit_attempts[index]["selected_boundary"]
-                    not in unit_attempts[index]["covered_boundaries_before_decision"]
+                    set(unit_attempts[index]["covered_units_before_decision"])
+                    == {value["selected_unit"] for value in unit_attempts[:index]}
+                    and unit_attempts[index]["selected_unit"]
+                    not in unit_attempts[index]["covered_units_before_decision"]
                     for index in range(1, 3)
                 )
                 feedback_checks.append(
