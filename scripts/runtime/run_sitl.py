@@ -703,6 +703,29 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 "-p",
                 f"producer_session_label:={reclaim_session}",
             ]
+        if args.scheduled_action == "adjacent_land_request":
+            # Started with the workload, not on demand, so it is already
+            # running when the decided moment arrives.
+            adjacent_process = start(
+                "manual_requester",
+                [
+                    "ros2",
+                    "run",
+                    "family_a_runtime",
+                    "manual_requester",
+                    "--ros-args",
+                    "-p",
+                    f"run_id:={args.run_id}",
+                    "-p",
+                    f"output_path:={raw / 'adjacent.lifecycle.jsonl'}",
+                    "-p",
+                    f"trigger_path:={action_request}",
+                    "-p",
+                    f"timing_bucket:={_adjacent_bucket(strategy_decision)}",
+                    "-p",
+                    f"target_system:={allocation.px4_instance + 1}",
+                ],
+            )
         if args.strategy_decision_path is not None:
             start(
                 "strategy_action_executor",
@@ -728,33 +751,6 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             )
         deadline = time.monotonic() + args.attempt_timeout_s
         while time.monotonic() < deadline:
-            if (
-                args.scheduled_action == "adjacent_land_request"
-                and adjacent_process is None
-                and action_request.is_file()
-            ):
-                adjacent_process = start(
-                    "manual_requester",
-                    [
-                        "ros2",
-                        "run",
-                        "family_a_runtime",
-                        "manual_requester",
-                        "--ros-args",
-                        "-p",
-                        f"run_id:={args.run_id}",
-                        "-p",
-                        f"output_path:={raw / 'adjacent.lifecycle.jsonl'}",
-                        "-p",
-                        "request_delay_s:=0.0",
-                        "-p",
-                        f"anchor_monotonic_ns:={time.monotonic_ns()}",
-                        "-p",
-                        f"timing_bucket:={_adjacent_bucket(strategy_decision)}",
-                        "-p",
-                        f"target_system:={allocation.px4_instance + 1}",
-                    ],
-                )
             if (
                 args.scheduled_action == "restart_producer_after_loss"
                 and reclaim_process is None

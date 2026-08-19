@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import math
 import time
+from pathlib import Path
 
 import rclpy
 from px4_msgs.msg import VehicleCommand, VehicleStatus
@@ -21,12 +22,18 @@ class ManualRequester(Node):
         self.declare_parameter("anchor_monotonic_ns", 0)
         self.declare_parameter("timing_bucket", "near")
         self.declare_parameter("target_system", 1)
+        self.declare_parameter("trigger_path", "")
         self._run_id = str(self.get_parameter("run_id").value)
         output_path = str(self.get_parameter("output_path").value)
         self._delay_ns = int(float(self.get_parameter("request_delay_s").value) * 1e9)
         configured_anchor = int(self.get_parameter("anchor_monotonic_ns").value)
         self._bucket = str(self.get_parameter("timing_bucket").value)
         self._target_system = int(self.get_parameter("target_system").value)
+        trigger_path = str(self.get_parameter("trigger_path").value)
+        # Starting this node on demand cost about 600 ms, which is wider than
+        # the spacing between the timing bins it is supposed to distinguish.
+        # With a trigger it is already running and fires on the decided moment.
+        self._trigger_path = Path(trigger_path) if trigger_path else None
         if not self._run_id or not output_path or self._delay_ns < 0:
             raise RuntimeError("run_id, output_path, and a non-negative request delay are required")
         if self._bucket not in {"before", "near", "after"}:
@@ -64,11 +71,18 @@ class ManualRequester(Node):
             )
 
     def _tick(self) -> None:
-        if self._sent or self._activation_ns is None:
+        if self._sent:
             return
-        elapsed_ns = time.monotonic_ns() - self._activation_ns
-        if elapsed_ns < self._delay_ns:
-            return
+        if self._trigger_path is not None:
+            if not self._trigger_path.is_file():
+                return
+            elapsed_ns = 0
+        else:
+            if self._activation_ns is None:
+                return
+            elapsed_ns = time.monotonic_ns() - self._activation_ns
+            if elapsed_ns < self._delay_ns:
+                return
         message = VehicleCommand()
         message.timestamp = self.get_clock().now().nanoseconds // 1000
         message.command = VehicleCommand.VEHICLE_CMD_NAV_LAND
