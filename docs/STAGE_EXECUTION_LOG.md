@@ -30,7 +30,7 @@ repository validation passes. A step that is partly done says which part.
 v8 plan stage:      Stage 3, close the selection loop
 Stage 1:            complete, exit checks met
 Corpus freeze:      signed, seven actions, unchanged by this step
-Current step:       Step F; F-state and F-obligations complete, F-loop next
+Current step:       Step F; F-state, F-obligations, F-decide complete
 Formal campaigns:   none authorized, none running
 ```
 
@@ -433,22 +433,74 @@ including a check that the two branches are not interchangeable: a reclaim
 judged by the terminate-only obligations must not pass, or the conditional plan
 would be decoration.
 
-#### F-loop — select in flight — NOT STARTED
+#### F-decide — choose in flight and still re-derive it — COMPLETE
 
-The executor still applies one action decided before the flight. Making it
-observe, filter, apply, re-observe and select again needs a decision surface
-that stays re-derivable: the container cannot re-derive a decision that depends
-on what the flight observed, so a new schema version has to record each step's
-input state and candidate set and re-derive the choice from those. Two further
-questions are open and unanswered, and both need a decision before code:
+Every earlier decision surface was computed on the host before the flight, so
+the container could recompute it and refuse a difference. A decision that
+depends on what the flight observed cannot work that way: the host does not
+have the inputs.
 
-* the launch configuration fixes the fault mode, the workload phases and the
-  plan obligations from the single selected action, so an episode that may
-  carry several actions needs an episode class whose obligations hold for every
-  sequence it admits; and
-* the natural feedback pair — terminate the producer, then reclaim — already
-  shares one fault mode, so it is the cheapest first sequence to make
-  selectable.
+The invariant is kept by moving what is frozen. The host freezes a *policy* in
+[closed_loop_policy.py](../scripts/runtime/closed_loop_policy.py), schema 3.0 —
+strategy, seed, episode class and its corpus, timing bins. The flight applies
+that policy at each decision point and records the inputs it applied it to.
+Re-derivation replays the policy over those recorded inputs and refuses any
+step whose choice differs.
+
+That leaves exactly one thing the flight is trusted for, and it is named rather
+than hidden: the observed state. A choice cannot be forged, because it is
+recomputed. The admissible set is not trusted at all — it is recomputed from
+the recorded state rather than read from the record, so a flight cannot widen
+its own options. The state itself could be, and is checked separately by
+replaying the retained sidecars through the F-state projection.
+
+[episode_classes.py](../scripts/corpus/episode_classes.py) declares what one
+launch admits. Grouping the seven core actions by expected fault and fault mode
+yields exactly four classes; only `process_exit_reclaim` is declared, because
+it is the only one whose second action depends on the outcome of its first. It
+carries the baseline obligations and the branch F-obligations resolves between,
+and its fallback differs by mechanism.
+
+Three findings came out of building it.
+
+**The first action is not a choice.** The class is launched with its fault mode
+installed and its plan declares `fault_expected`, which is two-sided, so an
+episode that applied nothing would violate its own plan. Stopping is therefore
+offered only once something has been applied, and a first decision point with
+nothing admissible fails closed rather than flying an episode that is already a
+violation. What follows the first action is the choice.
+
+**Stopping is a unit, not a timeout.** An episode that ended because the policy
+chose to stop and one that ended because nothing was admissible are different
+outcomes. Making the choice explicit keeps them distinguishable instead of both
+looking like an episode that ran out of time.
+
+**Each action scores against its own window.** The single-action decision
+compared every bin against one global offset because all five surrounded one
+moment. Here they do not: a termination's bins span the active period and a
+reclaim's span the ten seconds between the fallback and touchdown. The global
+offset left the policy ranking a reclaim's bins by a property they do not have,
+and always picking the latest; each action's official timing is now the middle
+bin of its own window, and the global offset is gone from the contract.
+
+Measured over 60 seeds: the bounded-random policy reaches all five termination
+bins and produces both one-action and two-action episodes, so the sequence
+length is chosen rather than fixed by the class. The state-aware policy prefers
+an uncovered unit and stops once nothing uncovered is left.
+Covered by [tests/test_closed_loop_policy.py](../tests/test_closed_loop_policy.py).
+
+#### F-executor — run the loop in flight — NOT STARTED
+
+The executor still waits for one action's markers and applies it. It needs to
+fold the in-flight sidecars into the online state, call the policy, apply the
+selected unit at its own anchor, and go back to observing.
+
+#### F-wiring — one launch that admits both sequences — NOT STARTED
+
+`run_sitl` takes a single `--scheduled-action` and the workload applies the
+fault mode it was launched with. A class launch has to admit every action the
+policy may select, and the plan has to be generated from the class rather than
+from one action.
 
 ## Invariants
 
@@ -471,19 +523,20 @@ questions are open and unanswered, and both need a decision before code:
 
 ## Next concrete action
 
-F-loop. Both prerequisites are now in place: the live state the filter runs on
-exists and its cost is measured, and an episode that carries a sequence can be
-judged without switching off the boundaries it tests. Both open questions are
-decided — the episode class is the process_exit class, and the first selectable
-sequence is terminating the producer and then reclaiming.
+F-executor, then F-wiring. Three of the five parts of Step F are done and all
+of them are host-side and verified: the live state the filter runs on and its
+measured cost, obligations that judge a sequence episode without switching off
+the boundaries it tests, and a policy that chooses in flight and is re-derived
+from what it recorded.
 
-What remains is the loop itself: a decision surface that stays re-derivable
-when the choice depends on what the flight observed. The container cannot
-re-derive a decision it did not have the inputs for, so a new schema version
-has to record each step's input state and candidate set and re-derive the
-choice from those. Then the executor's observe, filter, apply, re-observe and
-select again cycle, and the workload wiring that lets one launch admit both
-sequences.
+What remains touches the flight. The executor must fold the sidecars into the
+online state, call the policy, apply the selected unit at that action's own
+anchor, and go back to observing. Then `run_sitl` and the workload must accept
+an episode class rather than a single action, so one launch admits both
+sequences and the plan is generated from the class.
+
+A rebuilt image is needed before the qualification, because the decision
+surface changed.
 
 The corpus it consumes is [signed](../experiments/stage2_signed_corpus_v1/SIGNED_CORPUS.md)
 and unchanged: seven actions, six timed and one applied at launch, all
