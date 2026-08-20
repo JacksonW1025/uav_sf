@@ -119,6 +119,9 @@ def _namespace(
         live_strategy_backend=spec.get("live_strategy_backend"),
         corpus=list(spec.get("corpus", [])),
         official_action=spec.get("official_action"),
+        # A class launch admits a sequence and selects its own actions, so it
+        # names no corpus and no official action.
+        episode_class=spec.get("episode_class"),
         covered_boundary=list(attempt.get("covered_boundary", [])),
         timing_bounds_ns=dict(attempt.get("timing_bounds_ns", {})),
         workload=attempt.get("workload"),

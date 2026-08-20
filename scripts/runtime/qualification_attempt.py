@@ -14,6 +14,8 @@ from pathlib import Path
 from typing import Any
 
 from scripts.corpus.core_actions import live_profile
+from scripts.corpus.episode_classes import episode_class
+from scripts.runtime.closed_loop_policy import create_policy
 from scripts.runtime.live_strategy_backend import (
     CONTRACTS,
     create_corpus_decision,
@@ -94,6 +96,42 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             else:
                 timing_bounds["adjacent_completion_distance_ns"] = [0, 100_000_000]
         timing_bounds.update(args.timing_bounds_ns)
+        class_id = getattr(args, "episode_class", None) or None
+        episode = None
+        if class_id is not None:
+            # A class launch admits a sequence, so nothing here selects an
+            # action. The policy is frozen and the flight applies it.
+            episode = episode_class(class_id)
+            policy = create_policy(
+                strategy=args.strategy,
+                seed=args.strategy_seed,
+                mechanism=args.mechanism,
+                class_id=class_id,
+                timing_bounds_ns=args.timing_bounds_ns,
+                covered_units=set(args.covered_boundary),
+            )
+            args.fault_mode = episode.fault_mode
+            args.workload_profile = episode.workload_profile
+            obligations = episode.obligations(args.mechanism)
+            args.expected_fallback = obligations["expected_fallback"]
+            args.successor_route = obligations["expected_successor"]
+            args.target_activation_expected = obligations["target_activation_expected"]
+            args.target_activation_count = obligations["target_activation_count"][0]
+            args.registration_rejection_expected = obligations[
+                "registration_rejection_expected"
+            ]
+            args.activation_rejection_expected = obligations[
+                "activation_rejection_expected"
+            ]
+            args.completion_expected = obligations["completion_expected"]
+            args.fault_expected = obligations["fault_expected"]
+            args.fallback_expected = obligations["fallback_expected"]
+            if isinstance(args.workload, dict):
+                args.workload = {
+                    **args.workload,
+                    "phases": list(episode.workload_phases),
+                    "injection_phase": episode.injection_phase,
+                }
         corpus = tuple(getattr(args, "corpus", None) or ())
         corpus_decision = None
         if corpus:
@@ -173,6 +211,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 else (args.repeat_count if args.target_activation_expected else 0),
             ],
             workload=args.workload,
+            sequence_obligations=(
+                episode.sequence_obligations() if episode is not None else None
+            ),
         )
         if plan_path.exists():
             raise QualificationError(f"qualification plan already exists: {plan_path}")
@@ -180,7 +221,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         plan_path.write_text(
             json.dumps(plan, indent=2, sort_keys=True) + "\n", encoding="utf-8"
         )
-        if corpus_decision is not None:
+        if episode is not None:
+            _write_new(decision_path, policy)
+        elif corpus_decision is not None:
             _write_new(decision_path, corpus_decision)
         elif args.live_strategy_backend is not None:
             if args.live_strategy_backend not in CONTRACTS:
@@ -253,7 +296,16 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "--safety-limits",
             args.safety_limits,
         ]
-        if corpus_decision is not None or args.live_strategy_backend is not None:
+        if episode is not None:
+            launch.extend(
+                [
+                    "--strategy-policy",
+                    str(decision_path),
+                    "--episode-class",
+                    class_id,
+                ]
+            )
+        elif corpus_decision is not None or args.live_strategy_backend is not None:
             launch.extend(["--strategy-decision", str(decision_path)])
         if args.health_loss:
             launch.append("--health-loss")

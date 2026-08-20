@@ -13,6 +13,8 @@ import sys
 from typing import Any
 
 from scripts.corpus.core_actions import live_profile
+from scripts.corpus.episode_classes import EpisodeClassError, episode_class
+from scripts.runtime.closed_loop_policy import STOP, replay_decision_log
 from scripts.runtime.live_strategy_backend import CORPUS_SCHEMA, validate_live_decision
 from scripts.runtime.run_qualification_batch import (
     QualificationBatchError,
@@ -91,6 +93,23 @@ def _validate_spec(spec: dict[str, Any]) -> dict[tuple[str, str], dict[str, Any]
         raise QualificationBatchError("qualification requires four frozen CPU sets")
     if Path(spec["formal_ledger_path"]).exists():
         raise QualificationBatchError("formal attempt ledger already exists; qualification must not open it")
+    class_id = spec.get("episode_class")
+    if class_id:
+        if spec.get("corpus") or spec.get("live_strategy_backend"):
+            raise QualificationBatchError(
+                "an episode class selects its own actions and must not pin a corpus or backend"
+            )
+        try:
+            episode = episode_class(str(class_id))
+        except EpisodeClassError as exc:
+            raise QualificationBatchError(str(exc)) from exc
+        bounds = spec.get("attempt", {}).get("timing_bounds_ns", {})
+        missing = sorted(set(episode.actions) - set(bounds))
+        if missing:
+            raise QualificationBatchError(
+                "the episode class needs timing bounds for: " + ", ".join(missing)
+            )
+        return cells
     corpus = spec.get("corpus", [])
     if corpus:
         if spec.get("live_strategy_backend") is not None:
@@ -115,11 +134,29 @@ def _validate_spec(spec: dict[str, Any]) -> dict[tuple[str, str], dict[str, Any]
     return cells
 
 
-def _observed_coverage(run_root: Path, study_id: str, prefix: str) -> list[str]:
+def _closed_loop_steps(run_root: Path, study_id: str, attempt_id: str) -> list[dict[str, Any]]:
+    path = run_root / study_id / attempt_id / "raw" / "strategy.decisions.json"
+    if not path.is_file():
+        return []
+    return list(_read_object(path).get("steps", []))
+
+
+def _observed_coverage(
+    run_root: Path, study_id: str, prefix: str, class_id: str | None = None
+) -> list[str]:
     values = []
     decision_root = run_root / study_id / "strategy-decisions"
     for decision_path in sorted(decision_root.glob(prefix + "-*.json")):
         attempt_id = decision_path.stem
+        if class_id is not None:
+            # A closed-loop episode covers every unit it applied, which is
+            # what the next episode's policy sees as feedback.
+            values.extend(
+                str(step["selected_unit"])
+                for step in _closed_loop_steps(run_root, study_id, attempt_id)
+                if step.get("action") != STOP
+            )
+            continue
         lifecycle = run_root / study_id / attempt_id / "raw" / "strategy.lifecycle.jsonl"
         if any(record.get("kind") == "action_requested" for record in _records(lifecycle)):
             decision = _read_object(decision_path)
@@ -128,6 +165,87 @@ def _observed_coverage(run_root: Path, study_id: str, prefix: str) -> list[str]:
             # single-action decision covers a timing boundary only.
             values.append(_selected_unit(decision))
     return sorted(set(values))
+
+
+def _closed_loop_summary(
+    *, run_root: Path, study_id: str, attempt_id: str, result: dict[str, Any]
+) -> dict[str, Any]:
+    """One closed-loop episode: what it chose, and whether that re-derives."""
+
+    attempt_root = run_root / study_id / attempt_id
+    policy = _read_object(run_root / study_id / "strategy-decisions" / f"{attempt_id}.json")
+    decisions_path = attempt_root / "raw" / "strategy.decisions.json"
+    lifecycle = _records(attempt_root / "raw" / "strategy.lifecycle.jsonl")
+    replayed = None
+    reason = None
+    if decisions_path.is_file():
+        try:
+            replayed = replay_decision_log(policy, _read_object(decisions_path))
+        except ValueError as exc:
+            # A log that does not re-derive is the one failure this
+            # qualification exists to catch, so it is named rather than
+            # collapsed into a boolean.
+            reason = str(exc)
+    else:
+        reason = "the episode recorded no decision log"
+
+    steps = _closed_loop_steps(run_root, study_id, attempt_id)
+    applied = [str(step["selected_unit"]) for step in steps if step.get("action") != STOP]
+    kinds = [str(value.get("kind")) for value in lifecycle]
+    expected_kinds = ["closed_loop_started"]
+    for step in steps:
+        expected_kinds.append("closed_loop_decision")
+        if step.get("action") != STOP:
+            expected_kinds.append("closed_loop_applied")
+    expected_kinds.append("closed_loop_completed")
+
+    evaluation_path = attempt_root / "derived" / "evaluation.json"
+    branch = None
+    if evaluation_path.is_file():
+        branch = _read_object(evaluation_path).get("sequence_obligations", {}).get("branch")
+    fallback = _fallback_status(evaluation_path)
+    # Which obligation the episode owed follows from the branch its own trace
+    # selected, not from what the policy meant to do.
+    if branch == "when_absent":
+        fallback_ok = fallback == "PASS"
+    elif branch == "when_observed":
+        fallback_ok = fallback is not None and fallback != "VIOLATION"
+    else:
+        fallback_ok = False
+    physical = result.get("physical_execution", {})
+    passed = all(
+        (
+            result.get("outcome") == "ACCEPTED",
+            result.get("evidence_gate_status") == "ADMISSIBLE",
+            result.get("ulog", {}).get("status") == "PASS",
+            physical.get("status") == "PASS",
+            replayed is not None,
+            kinds == expected_kinds,
+            bool(applied),
+            fallback_ok,
+        )
+    )
+    return {
+        "attempt_id": attempt_id,
+        "outcome": result.get("outcome"),
+        "evidence_gate_status": result.get("evidence_gate_status"),
+        "physical_execution_status": physical.get("status"),
+        "safe_fallback_status": fallback,
+        "sequence_branch": branch,
+        "evaluated": evaluation_path.is_file(),
+        "applied_units": applied,
+        "applied_actions": (replayed or {}).get("applied_actions", []),
+        "stopped_by_choice": (replayed or {}).get("stopped_by_choice"),
+        "decision_steps": len(steps),
+        "decision_log_replays": replayed is not None,
+        "decision_log_reason": reason,
+        "strategy_lifecycle_complete": kinds == expected_kinds,
+        "covered_units_before_episode": list(policy["covered_units_before_episode"]),
+        "decision_digest": _digest(
+            run_root / study_id / "strategy-decisions" / f"{attempt_id}.json"
+        ),
+        "passed": passed,
+    }
 
 
 def _fallback_status(evaluation_path: Path) -> str | None:
@@ -211,6 +329,7 @@ def _attempt_summary(
 def run(args: argparse.Namespace) -> dict[str, Any]:
     spec = _read_object(args.spec)
     cells = _validate_spec(spec)
+    class_id = spec.get("episode_class") or None
     if not Path(spec["attestation"]).is_file():
         raise QualificationBatchError("qualification attestation is missing")
     run_root = args.run_root
@@ -236,7 +355,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     "run_id": attempt_id,
                     "slot": (strategy_index + ordinal + mechanism_index) % 4,
                     "simulation_seed": int(cell["simulation_seed_base"]) + ordinal,
-                    "covered_boundary": _observed_coverage(run_root, study_id, prefix),
+                    "covered_boundary": _observed_coverage(
+                        run_root, study_id, prefix, class_id
+                    ),
                 }
                 if strategy != "official_sequence":
                     attempt["strategy_seed"] = int(cell["strategy_seed_base"]) + ordinal
@@ -275,8 +396,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     "barrier_passed": True,
                 }
             )
+    summarise = _closed_loop_summary if class_id else _attempt_summary
     attempts = {
-        attempt_id: _attempt_summary(
+        attempt_id: summarise(
             run_root=run_root,
             study_id=study_id,
             attempt_id=attempt_id,
@@ -297,20 +419,56 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     "strategy": strategy,
                     "attempt_count": len(unit_attempts),
                     "passed_count": sum(value["passed"] for value in unit_attempts),
-                    "selected_boundaries": [value["selected_boundary"] for value in unit_attempts],
-                    "selected_actions": [value["selected_action"] for value in unit_attempts],
-                    "selected_units": [value["selected_unit"] for value in unit_attempts],
+                    **(
+                        {
+                            "applied_units": [
+                                value["applied_units"] for value in unit_attempts
+                            ],
+                            "sequence_lengths": [
+                                len(value["applied_units"]) for value in unit_attempts
+                            ],
+                            "decision_logs_replay": all(
+                                value["decision_log_replays"] for value in unit_attempts
+                            ),
+                        }
+                        if class_id
+                        else {
+                            "selected_boundaries": [
+                                value["selected_boundary"] for value in unit_attempts
+                            ],
+                            "selected_actions": [
+                                value["selected_action"] for value in unit_attempts
+                            ],
+                            "selected_units": [
+                                value["selected_unit"] for value in unit_attempts
+                            ],
+                        }
+                    ),
                     "status": "PASS" if all(value["passed"] for value in unit_attempts) else "FAIL",
                 }
             )
             if strategy == "state_aware":
-                feedback_ok = all(
-                    set(unit_attempts[index]["covered_units_before_decision"])
-                    == {value["selected_unit"] for value in unit_attempts[:index]}
-                    and unit_attempts[index]["selected_unit"]
-                    not in unit_attempts[index]["covered_units_before_decision"]
-                    for index in range(1, 3)
-                )
+                if class_id:
+                    # A closed-loop episode may apply more than one unit, so
+                    # the feedback carried into each episode is the union of
+                    # what the earlier ones applied.
+                    feedback_ok = all(
+                        set(unit_attempts[index]["covered_units_before_episode"])
+                        == {
+                            unit
+                            for value in unit_attempts[:index]
+                            for unit in value["applied_units"]
+                        }
+                        for index in range(1, 3)
+                    )
+                else:
+                    feedback_ok = all(
+                        set(unit_attempts[index]["covered_units_before_decision"])
+                        == {value["selected_unit"] for value in unit_attempts[:index]}
+                        and unit_attempts[index]["selected_unit"]
+                        not in unit_attempts[index]["covered_units_before_decision"]
+                        for index in range(1, 3)
+                    )
                 feedback_checks.append(
                     {
                         "mechanism": mechanism,
@@ -336,6 +494,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "live_strategy_backend": spec.get("live_strategy_backend"),
         "corpus": list(spec.get("corpus", [])),
         "official_action": spec.get("official_action"),
+        "episode_class": class_id,
         "rounds": rounds,
         "attempts": attempts,
         "units": units,

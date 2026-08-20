@@ -165,6 +165,15 @@ def launch(args: argparse.Namespace) -> dict[str, object]:
         command.extend(
             ["--strategy-decision-path", str(Path("/runs") / relative_decision)]
         )
+    if args.strategy_policy is not None:
+        policy = args.strategy_policy.resolve()
+        try:
+            relative_policy = policy.relative_to(run_root)
+        except ValueError as exc:
+            raise ContainerLaunchError("strategy policy is outside the mounted run root") from exc
+        command.extend(["--strategy-policy-path", str(Path("/runs") / relative_policy)])
+    if args.episode_class:
+        command.extend(["--episode-class", args.episode_class])
     if args.health_loss:
         command.append("--health-loss")
     if args.duplicate_registration:
@@ -260,6 +269,8 @@ def main() -> int:
     parser.add_argument("--motion-entry-progress-m", type=float, default=0.75)
     parser.add_argument("--motion-completion-progress-m", type=float, default=2.5)
     parser.add_argument("--strategy-decision", type=Path)
+    parser.add_argument("--strategy-policy", type=Path)
+    parser.add_argument("--episode-class", default="")
     parser.add_argument("--simulation-seed", type=int, required=True)
     parser.add_argument("--readiness-timeout-s", type=float, default=45.0)
     parser.add_argument("--attempt-timeout-s", type=float, default=60.0)

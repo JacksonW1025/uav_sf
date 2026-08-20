@@ -16,6 +16,9 @@ from typing import Any
 
 from scripts.runtime.isolation import allocate_isolation
 from scripts.corpus.core_actions import live_profile
+from scripts.corpus.episode_classes import EpisodeClassError, episode_class
+from scripts.runtime.closed_loop_executor import request_path
+from scripts.runtime.closed_loop_policy import validate_policy
 from scripts.runtime.live_strategy_backend import CORPUS_SCHEMA, validate_live_decision
 from scripts.runtime.physical_readiness import physical_takeoff_observed
 from scripts.runtime.preflight import self_check
@@ -308,7 +311,45 @@ def _mission_started(path: Path, mechanism: str) -> bool:
     return armed and airborne and target_active
 
 
+def resolve_episode_class(args: argparse.Namespace):
+    """The class this launch is configured for, or None for a single action.
+
+    A class launch admits a sequence, so the flight is configured from the
+    class rather than from one selected action.  The policy is re-derived here
+    for the same reason a decision is: it must be the one the host froze, not
+    one the container was handed.
+    """
+
+    if getattr(args, "episode_class", None) in (None, ""):
+        return None
+    if args.strategy_decision_path is not None:
+        raise RuntimeFailure("an episode class does not take a single-action decision")
+    if args.strategy_policy_path is None:
+        raise RuntimeFailure("an episode class needs its frozen policy")
+    try:
+        episode = episode_class(args.episode_class)
+        policy = json.loads(args.strategy_policy_path.read_text(encoding="utf-8"))
+        validate_policy(policy)
+        episode.obligations(args.mechanism)
+    except (EpisodeClassError, json.JSONDecodeError, ValueError) as exc:
+        raise RuntimeFailure(f"closed-loop policy is not admissible: {exc}") from exc
+    if policy["class_id"] != args.episode_class:
+        raise RuntimeFailure("the policy was frozen for a different episode class")
+    if policy["mechanism"] != args.mechanism:
+        raise RuntimeFailure("the policy was frozen for a different mechanism")
+    # One launch installs one fault mode, and every action the policy may
+    # select has to be reachable under it.
+    if episode.fault_mode != args.fault_mode:
+        raise RuntimeFailure("the episode class differs from the runtime fault mode")
+    if args.workload_profile != episode.workload_profile:
+        raise RuntimeFailure("the episode class differs from the workload profile")
+    if getattr(args, "scheduled_action", ""):
+        raise RuntimeFailure("an episode class selects its own actions in flight")
+    return episode
+
+
 def run(args: argparse.Namespace) -> dict[str, Any]:
+    episode = resolve_episode_class(args)
     strategy_decision = None
     if args.strategy_decision_path is not None:
         try:
@@ -378,6 +419,21 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     telemetry = raw / "telemetry.sidecar.jsonl"
     decision = raw / "safety.decision.json"
     action_request = raw / "strategy-action.request.json"
+    request_dir = raw / "strategy-action-requests"
+    # Each action in a class gets its own request path, because each is
+    # consumed by a different node.  A single shared path was enough while an
+    # episode applied one action; with two, the second would overwrite the
+    # first or the wrong consumer would act on it.
+    producer_request = (
+        request_path(request_dir, "terminate_owning_producer")
+        if episode is not None
+        else action_request
+    )
+    reclaim_request = (
+        request_path(request_dir, "restart_producer_after_loss")
+        if episode is not None
+        else action_request
+    )
     environment = dict(os.environ)
     environment.update(
         {
@@ -571,8 +627,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     "-p",
                     f"motion_completion_progress_m:={args.motion_completion_progress_m}",
                     *(
-                        ["-p", f"action_request_path:={action_request}"]
-                        if strategy_decision
+                        ["-p", f"action_request_path:={producer_request}"]
+                        if strategy_decision or episode is not None
                         else []
                     ),
                     *(
@@ -617,8 +673,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     "-p",
                     f"motion_completion_progress_m:={args.motion_completion_progress_m}",
                     *(
-                        ["-p", f"action_request_path:={action_request}"]
-                        if strategy_decision
+                        ["-p", f"action_request_path:={producer_request}"]
+                        if strategy_decision or episode is not None
                         else []
                     ),
                     *(
@@ -660,8 +716,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     "-p",
                     f"motion_distance_m:={args.motion_distance_m}",
                     *(
-                        ["-p", f"action_request_path:={action_request}"]
-                        if strategy_decision
+                        ["-p", f"action_request_path:={producer_request}"]
+                        if strategy_decision or episode is not None
                         else []
                     ),
                 ],
@@ -742,7 +798,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 )
         else:
             raise RuntimeFailure(f"attempt mechanism is not implemented: {args.mechanism}")
-        if args.scheduled_action == "restart_producer_after_loss" and workload is not None:
+        if (
+            args.scheduled_action == "restart_producer_after_loss"
+            or (episode is not None and "restart_producer_after_loss" in episode.actions)
+        ) and workload is not None:
             reclaim_command = [
                 *workload.command,
                 "-p",
@@ -796,6 +855,33 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 action=strategy_decision["action"],
                 selected_boundary=strategy_decision["selected_boundary"],
             )
+        elif episode is not None:
+            start(
+                "closed_loop_executor",
+                [
+                    "python3",
+                    "-m",
+                    "scripts.runtime.closed_loop_executor",
+                    "--run-id",
+                    args.run_id,
+                    "--policy",
+                    str(args.strategy_policy_path),
+                    "--lifecycle",
+                    str(raw / "workload.lifecycle.jsonl"),
+                    "--runner-lifecycle",
+                    str(raw / "runner.lifecycle.jsonl"),
+                    "--telemetry",
+                    str(telemetry),
+                    "--request-dir",
+                    str(request_dir),
+                    "--decisions",
+                    str(raw / "strategy.decisions.json"),
+                    "--output",
+                    str(raw / "strategy.lifecycle.jsonl"),
+                    "--episode-timeout-s",
+                    str(args.attempt_timeout_s),
+                ],
+            )
         elif args.strategy_decision_path is not None:
             start(
                 "strategy_action_executor",
@@ -831,9 +917,12 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 capacity_started = True
                 start("external_mode_capacity_8", capacity_command(7))
             if (
-                args.scheduled_action == "restart_producer_after_loss"
+                (
+                    args.scheduled_action == "restart_producer_after_loss"
+                    or (episode is not None and "restart_producer_after_loss" in episode.actions)
+                )
                 and reclaim_process is None
-                and action_request.is_file()
+                and reclaim_request.is_file()
             ):
                 # The lost producer cannot restart itself.  This is checked
                 # before the producer's exit is noticed, because that notice was
@@ -1041,6 +1130,8 @@ def main() -> int:
     parser.add_argument("--motion-entry-progress-m", type=float, default=0.75)
     parser.add_argument("--motion-completion-progress-m", type=float, default=2.5)
     parser.add_argument("--strategy-decision-path", type=Path)
+    parser.add_argument("--strategy-policy-path", type=Path)
+    parser.add_argument("--episode-class")
     parser.add_argument("--simulation-seed", type=int, required=True)
     parser.add_argument("--readiness-timeout-s", type=float, default=45.0)
     parser.add_argument("--attempt-timeout-s", type=float, default=60.0)

@@ -70,6 +70,15 @@ FAULT_CLASSES = ("none", "setpoint_stall", "health_loss", "process_exit", "other
 # source establishes it.  It is named rather than left out, so a gate that
 # needs it has to say so instead of quietly ignoring it.
 UNOBSERVABLE_LINEAGE = "unobservable"
+# Kept equal to the corpus's observable marker vocabulary by
+# `validate_vocabularies`, so an action cannot anchor on something the
+# projection does not track.
+OBSERVABLE_MARKERS = (
+    "route_active",
+    "motion_entered",
+    "successor_installed",
+    "fallback_installed",
+)
 
 
 def _fault_class(reason: str) -> str:
@@ -393,6 +402,82 @@ def derive_online_trajectory(
     return steps
 
 
+# Live markers an action may anchor its timing on, and the projected field
+# whose first truth establishes each.  Keeping this next to the fold means a
+# marker cannot be observable for scheduling but absent from the projection.
+MARKER_FIELDS = {
+    "route_active": "tested_route_active",
+    "motion_entered": "motion_entered",
+    "successor_installed": "successor_installed",
+    "fallback_installed": "fallback_installed",
+}
+
+
+class OnlineProjection:
+    """The fold an executor runs while the aircraft is flying.
+
+    `derive_online_trajectory` re-reads its whole input, which is right for a
+    replay and wrong in flight: the telemetry sidecar reaches thousands of
+    records, and re-folding it on every poll would spend real CPU on the cores
+    the attempt is pinned to.  Competing for those cores is what the clock
+    uncertainty bound measures, so the live fold is incremental and keeps only
+    the current state and the first time each marker held.
+    """
+
+    def __init__(self, mechanism: str, *, external_nav_state: int | None = None) -> None:
+        self._external = _external_family(mechanism)
+        self._external_nav_state = external_nav_state
+        if external_nav_state is None and mechanism == "legacy_offboard":
+            self._external_nav_state = OFFBOARD_NAV_STATE
+        self._state = OnlineState()
+        self._marker_times: dict[str, int] = {}
+        self._observed = 0
+
+    @property
+    def state(self) -> OnlineState:
+        return self._state
+
+    @property
+    def records_observed(self) -> int:
+        return self._observed
+
+    def marker_time_ns(self, marker: str) -> int | None:
+        """When the marker first held, or None if it has not yet."""
+
+        if marker not in MARKER_FIELDS:
+            raise OnlineStateError(f"unsupported live marker: {marker}")
+        return self._marker_times.get(marker)
+
+    def extend(self, records: Iterable[Mapping[str, Any]]) -> OnlineState:
+        """Fold newly arrived records and return the state that follows them."""
+
+        for record in records:
+            moment = record.get("received_monotonic_ns")
+            if not isinstance(moment, int) or isinstance(moment, bool):
+                raise OnlineStateError(
+                    f"an in-flight {record.get('kind')} record has no arrival time"
+                )
+            kind = str(record.get("kind"))
+            if kind in ("registration_reply", "registration_handoff_loaded"):
+                mode_id = record.get("mode_id")
+                if isinstance(mode_id, int) and not isinstance(mode_id, bool) and mode_id >= 0:
+                    self._external_nav_state = mode_id
+            if kind in ("vehicle_status", "vehicle_land_detected"):
+                self._state = _fold_telemetry(
+                    self._state,
+                    record,
+                    external=self._external,
+                    external_nav_state=self._external_nav_state,
+                )
+            else:
+                self._state = _fold_lifecycle(self._state, record, external=self._external)
+            for marker, field in MARKER_FIELDS.items():
+                if marker not in self._marker_times and getattr(self._state, field):
+                    self._marker_times[marker] = int(moment)
+            self._observed += 1
+        return self._state
+
+
 def state_at(steps: Sequence[OnlineStep], monotonic_ns: int) -> OnlineState:
     """The online state as of a moment, or the initial state before any record."""
 
@@ -409,6 +494,8 @@ def validate_vocabularies() -> None:
 
     if set(FAULT_CLASSES) != {"none", "setpoint_stall", "health_loss", "process_exit", "other"}:
         raise OnlineStateError("online fault classes drifted from the offline model")
+    if set(MARKER_FIELDS) != set(OBSERVABLE_MARKERS):
+        raise OnlineStateError("live markers drifted from the projected fields")
     for family in AUTHORITY_FAMILIES:
         if family in ("unknown", "internal_navigator", "internal_safe"):
             continue

@@ -20,7 +20,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Callable, Mapping
 
-from scripts.state.online_state import OnlineState
+from scripts.state.online_state import OBSERVABLE_MARKERS, OnlineState
 from scripts.state.semantic_state import EXTERNAL_FAMILIES, SemanticState, route_family
 
 
@@ -610,6 +610,13 @@ CORE_ACTIONS: tuple[CoreAction, ...] = (
 def validate_declarations() -> None:
     """Refuse a declaration that cannot be executed or read back."""
 
+    # An action may only anchor on something the in-flight projection tracks,
+    # so the two vocabularies are asserted equal rather than kept in step by
+    # hand.
+    if set(OBSERVABLE_LIVE_MARKERS) != set(OBSERVABLE_MARKERS):
+        raise CoreActionError(
+            "observable live markers differ from the in-flight projection"
+        )
     identifiers: set[str] = set()
     for action in CORE_ACTIONS:
         if action.action_id in identifiers:

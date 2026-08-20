@@ -30,7 +30,7 @@ repository validation passes. A step that is partly done says which part.
 v8 plan stage:      Stage 3, close the selection loop
 Stage 1:            complete, exit checks met
 Corpus freeze:      signed, seven actions, unchanged by this step
-Current step:       Step F; F-state, F-obligations, F-decide complete
+Current step:       Step F; all host-side parts complete, live batch next
 Formal campaigns:   none authorized, none running
 ```
 
@@ -489,18 +489,64 @@ length is chosen rather than fixed by the class. The state-aware policy prefers
 an uncovered unit and stops once nothing uncovered is left.
 Covered by [tests/test_closed_loop_policy.py](../tests/test_closed_loop_policy.py).
 
-#### F-executor — run the loop in flight — NOT STARTED
+#### F-executor — run the loop in flight — COMPLETE
 
-The executor still waits for one action's markers and applies it. It needs to
-fold the in-flight sidecars into the online state, call the policy, apply the
-selected unit at its own anchor, and go back to observing.
+[closed_loop_executor.py](../scripts/runtime/closed_loop_executor.py) folds the
+in-flight sidecars into the online state, asks the policy what to apply next,
+applies it at that action's own anchor, and goes back to observing. Four things
+it does not do, each for a reason the study depends on: it never widens its own
+options, never invents a decision moment, never treats running out of time as a
+choice, and never spends CPU it does not have to.
 
-#### F-wiring — one launch that admits both sequences — NOT STARTED
+Two of those needed work rather than a comment.
 
-`run_sitl` takes a single `--scheduled-action` and the workload applies the
-fault mode it was launched with. A class launch has to admit every action the
-policy may select, and the plan has to be generated from the class rather than
-from one action.
+**The fold is incremental.** `derive_online_trajectory` re-reads its whole
+input, which is right for a replay and wrong in flight: the telemetry sidecar
+reaches thousands of records and re-folding it on every poll would spend real
+CPU on the cores the attempt is pinned to. Competing for those cores is exactly
+what the clock uncertainty bound measures, so the live fold keeps only the
+current state and the first time each marker held, and telemetry is read on its
+own slower cadence. `OnlineProjection` and a tail reader that holds a partial
+line back replaced the whole-file re-read.
+
+**A decision point is opened by an anchor, not by a clock.** A step is decided
+when some unapplied action has both become admissible and had its own anchor
+observed, or when the episode reaches a terminal state having applied
+something. Deciding on a fixed clock would make the choice depend on the poll
+rate rather than on what the flight did, and offering an action whose anchor has
+not been seen would let the policy pick a unit the executor could not then
+place. Running out of time remains a refusal, never a recorded choice to stop.
+
+Each action is requested on its own path. One shared path was enough while an
+episode applied one action; with two, the second would overwrite the first or
+the wrong consumer would act on it.
+
+The integration test drives the loop with sidecars appended in stages and then
+replays the log it produced against its policy, which is the whole contract in
+one check: the flight chose, and the choice re-derives from what it recorded.
+Covered by [tests/test_closed_loop_executor.py](../tests/test_closed_loop_executor.py).
+
+#### F-wiring — one launch that admits both sequences — COMPLETE
+
+`run_sitl` takes `--episode-class` and `--strategy-policy-path`, re-derives the
+policy for the same reason it re-derives a decision, and refuses a launch whose
+fault mode, mechanism or workload profile differs from the class. A class
+launch starts the closed-loop executor instead of the single-action one, gives
+the producer and the reclaim their own request paths, and triggers the reclaim
+from its own request rather than from the producer's.
+
+`qualification_attempt` configures the launch and the plan from the class:
+obligations, workload phases and fault mode come from the class, and the plan
+is the 1.4 form carrying the baseline plus the branch. `run_container` forwards
+the policy and the class, and the qualification driver reads a closed-loop
+episode's decision log, requires that it re-derives, and takes each attempt's
+fallback obligation from the branch its own trace selected rather than from
+what the policy meant to do. Its coverage feedback is the union of the units
+earlier episodes applied, because one episode can now apply more than one.
+
+Every single-action path is untouched: with no class named, all of this is
+skipped and the 255 earlier tests pass unchanged.
+Covered by [tests/test_episode_class_launch.py](../tests/test_episode_class_launch.py).
 
 ## Invariants
 
@@ -523,20 +569,26 @@ from one action.
 
 ## Next concrete action
 
-F-executor, then F-wiring. Three of the five parts of Step F are done and all
-of them are host-side and verified: the live state the filter runs on and its
+F-live, the non-formal qualification. Every host-side part of Step F is
+complete and verified by 268 tests: the live state the filter runs on and its
 measured cost, obligations that judge a sequence episode without switching off
-the boundaries it tests, and a policy that chooses in flight and is re-derived
-from what it recorded.
+the boundaries it tests, a policy that chooses in flight and re-derives from
+what it recorded, the executor that runs the loop, and the launch that admits
+the whole class.
 
-What remains touches the flight. The executor must fold the sidecars into the
-online state, call the policy, apply the selected unit at that action's own
-anchor, and go back to observing. Then `run_sitl` and the workload must accept
-an episode class rather than a single action, so one launch admits both
-sequences and the plan is generated from the class.
+What is left can only be learned by flying it. Every earlier step in this stage
+found defects live that no host-side test could reach, and there is no reason
+to expect this one to differ.
 
-A rebuilt image is needed before the qualification, because the decision
-surface changed.
+Before the batch: build and attest a new image, because the decision surface
+changed. Confirm no unpinned process competes for the pinned CPU sets — a
+desktop session once cost about two cores and had all 18 attempts rejected for
+clock uncertainty. Afterwards, confirm the central real-time factor is near 1.0.
+
+The clock fit still flakes at roughly one attempt in 36 on a quiet machine
+while the qualification gate requires every attempt to pass it, so this batch
+may fail for a reason unrelated to what it tests. That needs a decision before
+a fixed-budget campaign; this batch will meet it first.
 
 The corpus it consumes is [signed](../experiments/stage2_signed_corpus_v1/SIGNED_CORPUS.md)
 and unchanged: seven actions, six timed and one applied at launch, all
