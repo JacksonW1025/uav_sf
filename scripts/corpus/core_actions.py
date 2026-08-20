@@ -76,6 +76,12 @@ class LiveActionProfile:
     activation_rejection_expected: bool = False
     target_activation_expected: bool = True
     application: str = "runtime"
+    # A rejection episode never activates the tested route, so it never moves.
+    # Its workload, injection phase and physical obligations differ from the
+    # moving profile the other actions share.
+    workload_profile: str = "straight_line"
+    injection_phase: str = "straight_translation"
+    motion_required: bool = True
     # Each action's five timing bins span its own feasible window.  The count
     # stays fixed so systematic enumeration remains well defined; only the
     # seconds differ, because a reclaim has to land inside a ten second window
@@ -146,6 +152,9 @@ class CoreAction:
                         self.live_profile.target_activation_expected
                     ),
                     "application": self.live_profile.application,
+                    "workload_profile": self.live_profile.workload_profile,
+                    "injection_phase": self.live_profile.injection_phase,
+                    "motion_required": self.live_profile.motion_required,
                     "timing_anchor": self.live_profile.timing_anchor,
                     "timing_offsets_ns": list(self.live_profile.timing_offsets_ns),
                 }
@@ -398,6 +407,9 @@ CORE_ACTIONS: tuple[CoreAction, ...] = (
             ),
             timing_offsets_ns=(),
             application="launch",
+            workload_profile="hover",
+            injection_phase="stable_hover",
+            motion_required=False,
         ),
         notes=(
             "legacy offboard has no health-reply protocol, so this is not "

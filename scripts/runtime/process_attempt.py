@@ -99,9 +99,11 @@ def _physical_execution_contract(raw: Path, plan: dict[str, Any]) -> dict[str, A
     completions = [item for item in lifecycle if item.get("kind") == "motion_phase_completed"]
     faults = [item for item in lifecycle if item.get("kind") == "fault_detected"]
     takeoff_events = [item for item in lifecycle if item.get("kind") == "physical_takeoff_ready"]
+    # A rejection episode records an activation request rather than a
+    # transition request, because the transition is what it is refused.
     target_requests = [
         item for item in lifecycle
-        if item.get("kind") == "transition_requested"
+        if item.get("kind") in ("transition_requested", "activation_requested")
         and item.get("target_route") == plan["transition"]["target_route"]
     ]
     entry_progress = max((float(item.get("along_track_progress_m", 0.0)) for item in entries), default=0.0)

@@ -130,11 +130,20 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 # In effect from the start, because it must precede the request
                 # whose outcome it changes.
                 args.health_loss = True
+            args.workload_profile = profile.workload_profile
             if isinstance(args.workload, dict):
-                args.workload = {
+                workload = {
                     **args.workload,
                     "phases": list(profile.workload_phases),
+                    "injection_phase": profile.injection_phase,
                 }
+                if not profile.motion_required:
+                    workload["physical_validity"] = {
+                        **workload["physical_validity"],
+                        "minimum_motion_entry_progress_m": 0.0,
+                        "minimum_nominal_completion_progress_m": 0.0,
+                    }
+                args.workload = workload
         plan = create_plan(
             attestation=attestation,
             run_id=args.run_id,
