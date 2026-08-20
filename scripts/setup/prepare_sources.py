@@ -35,6 +35,37 @@ def _run(*args: str, cwd: Path | None = None, capture: bool = False) -> str:
     return result.stdout.strip() if capture else ""
 
 
+# Locks a killed git leaves behind.  Nothing else creates them inside a source
+# tree this script owns, so after a timeout they are always orphans of the
+# process this script just killed.
+GIT_ORPHAN_LOCKS = ("shallow.lock", "index.lock", "config.lock", "HEAD.lock")
+
+
+def _clear_orphan_git_locks(cwd: Path | None) -> list[str]:
+    """Remove the locks a timed-out git left, so a retry is not doomed.
+
+    A timeout means this script killed the git process, so any lock in that
+    tree belongs to the process it just killed.  Without this the second and
+    third attempts fail immediately on "File exists" and the retry budget is
+    spent without a single further request being made.
+
+    Only trees this script created are touched, and only these exact names.
+    """
+
+    if cwd is None:
+        return []
+    git_directory = cwd / ".git"
+    if not git_directory.is_dir():
+        return []
+    removed = []
+    for name in GIT_ORPHAN_LOCKS:
+        lock = git_directory / name
+        if lock.exists():
+            lock.unlink()
+            removed.append(name)
+    return removed
+
+
 def _run_network(*args: str, cwd: Path | None = None) -> None:
     last_error: subprocess.SubprocessError | None = None
     environment = dict(os.environ)
@@ -45,7 +76,13 @@ def _run_network(*args: str, cwd: Path | None = None) -> None:
             "GIT_HTTP_LOW_SPEED_TIME": "30",
         }
     )
-    timeout_s = 900 if "submodule" in args else 120
+    # A depth-one fetch of one commit from a repository the size of PX4 moves
+    # hundreds of megabytes and was measured to need well over two minutes on a
+    # healthy link, so the previous two-minute bound was killing a fetch that
+    # was making progress.  The low-speed guard above is what catches a link
+    # that has actually stalled; this bound only catches one that never will
+    # finish.
+    timeout_s = 900
     for attempt in range(1, 4):
         try:
             subprocess.run(
@@ -59,6 +96,8 @@ def _run_network(*args: str, cwd: Path | None = None) -> None:
             return
         except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
             last_error = exc
+            if isinstance(exc, subprocess.TimeoutExpired):
+                _clear_orphan_git_locks(cwd)
             if attempt < 3:
                 time.sleep(attempt)
     assert last_error is not None
