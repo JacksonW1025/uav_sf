@@ -27,10 +27,10 @@ repository validation passes. A step that is partly done says which part.
 ## Position
 
 ```text
-v8 plan stage:      Stage 2, construct the core action and workload corpus
+v8 plan stage:      Stage 3, close the selection loop
 Stage 1:            complete, exit checks met
-Corpus freeze:      signed, seven actions, all predicates consistent
-Current step:       Stage 2 closed; Step F, the Stage 3 closed loop
+Corpus freeze:      signed, seven actions, unchanged by this step
+Current step:       Step F; F-state complete, F-loop next
 Formal campaigns:   none authorized, none running
 ```
 
@@ -141,6 +141,16 @@ Acceptance: each ported or new action has a non-formal qualification recording
 that its precondition gates execution, its applied schedule is recorded, and its
 cleanup holds; the precondition replay from Step A still reports every action
 consistent and none unvalidated.
+
+Why this stays open with all four parts complete: the first clause is met for
+every ported and new action, and nothing is unvalidated any more. The second is
+not. Step E left two instances inconsistent, both in one reclaim episode and
+both naming one fact — the producer-loss fault reaches the trace later than
+either the executor or the failsafe knew about it. Step F measured that latency
+from the other side and found the same thing, so the residue is a property of
+when the fault becomes recordable, not an unfinished port. Closing this step
+means either widening the two predicates, which would hide it, or recording the
+divergence as the accepted reading. That decision has not been taken.
 
 #### C-anchor — give each action its own timing anchor — COMPLETE
 
@@ -293,7 +303,7 @@ See [the blocked-signing record](../experiments/stage2_signed_corpus_v1/SIGNED_C
 
 Every other signing condition is met.
 
-### Step F — Stage 3 closed loop — NOT STARTED
+### Step F — Stage 3 closed loop — IN PROGRESS
 
 Goal: move selection in-flight. The executor observes, filters admissible
 actions against derived live state, applies one, re-observes, and selects again,
@@ -301,6 +311,83 @@ so an episode can carry a state-dependent sequence rather than one action.
 
 Baselines — systematic enumeration and state-conditioned feedback-free
 generation — remain deferred by standing decision 3.
+
+#### F-state — derive the live state the filter runs on — COMPLETE
+
+Planning the loop exposed a blocker of the same shape as C-anchor. The corpus
+states each action as a precondition over the semantic state, which is folded
+from the closed trace: a ULog, sidecar and clock-bridge artifact that only
+exists after the flight. An executor choosing its next action mid-flight has
+two lifecycle sidecars and a telemetry sidecar and nothing else, and bridged
+that gap with a four-marker table that is not the corpus's own predicate and
+had never been compared to one. Filtering on it and calling it the derived live
+state would have made the closed loop test something other than what was
+signed.
+
+[online_state.py](../scripts/state/online_state.py) now folds the in-flight
+sidecars into the state an executor can actually derive. It is a proxy, not
+evidence: nothing derived there enters the trace, the Gate or an Oracle. It
+never claims the command lineage, which is reconstructed from ULog subject
+identity and is reported as an explicit unobservable. It does read the declared
+navigation mode, which the route model refuses as evidence of route identity,
+and that is why its divergence is measured rather than assumed to be zero.
+
+Each of the six runtime actions declares an `online_gate` beside its offline
+precondition. A launch configuration declares none, because it is in effect
+before the episode observes anything and gating it would invent a decision
+moment it does not have. Every gate drops at least the lineage conjunct, so
+every gate is a weakening, and
+[online_state_check.py](../scripts/corpus/online_state_check.py) measures the
+interval where a gate held while its precondition did not.
+
+Result over 320 accepted attempts, none skipped — the five retained formal
+studies plus the five Step B to Step E qualification batches, which hold the
+only instances of the four actions added after Step A. No gate would have
+blocked a firing its precondition admitted: of 102 observed firings, 101 were
+permitted. Every gate is weaker than its precondition somewhere, with one
+named cause — in flight, held authority means the vehicle is flying under a
+route telemetry reports, while offline it means commands demonstrably reached
+the actuators. The gates track the preconditions to within tens of milliseconds
+in the moving profile the main comparison uses; the multi-second tails are in
+episodes that never activate the tested route and in mode executor cells
+outside that comparison.
+
+Two defects were found by measuring, neither reachable by a host-side test.
+Telemetry reports a navigation state while the vehicle is still on the ground,
+so the two gates that ask only for held authority were true before takeoff and
+now also require the airborne observation. And a handover the producer asked
+for was being read as a fallback, which made a normal completion look like a
+producer loss for the rest of the episode — precisely the state the reclaim is
+allowed to act in. A fallback is now a safe route taking over that nothing
+requested, which dropped the reclaim's windows from 193 attempts to 37 and its
+median from 2.023 s to zero.
+
+One measurement was corrected. Counting any refused firing as a gate defect
+flagged a reclaim whose offline precondition was false at that moment too, by
+5.1 ms. A gate that refuses what the corpus also refuses is agreeing with it,
+so the two are now counted separately and each firing record keeps both states.
+That instance is the producer-loss latency the signed corpus already carries.
+
+The signed corpus is unchanged: regenerating the action records and setting
+aside the one added field reproduces the signed set exactly.
+See [the record](../experiments/step_f_online_state_v1/ONLINE_STATE_AGREEMENT.md).
+
+#### F-loop — select in flight — NOT STARTED
+
+The executor still applies one action decided before the flight. Making it
+observe, filter, apply, re-observe and select again needs a decision surface
+that stays re-derivable: the container cannot re-derive a decision that depends
+on what the flight observed, so a new schema version has to record each step's
+input state and candidate set and re-derive the choice from those. Two further
+questions are open and unanswered, and both need a decision before code:
+
+* the launch configuration fixes the fault mode, the workload phases and the
+  plan obligations from the single selected action, so an episode that may
+  carry several actions needs an episode class whose obligations hold for every
+  sequence it admits; and
+* the natural feedback pair — terminate the producer, then reclaim — already
+  shares one fault mode, so it is the cheapest first sequence to make
+  selectable.
 
 ## Invariants
 
@@ -311,21 +398,36 @@ generation — remain deferred by standing decision 3.
   reproducible; new behaviour goes into a new schema version.
 - A derived state phase describes what the system did. It is never evidence
   that the tester performed an action.
+- The online gate orders the flight and is never the precondition of record.
+  The offline replay over the closed trace stays the authority on whether an
+  action was legal; a loop that judged itself by its own gate would be marking
+  its own work.
 - Timing stays five discrete bins; the corpus stays near seven actions.
 - Closed studies, their thresholds and their reports are never edited.
 
 ## Next concrete action
 
-Stage 2 is closed. Step F is the Stage 3 closed loop: move selection in-flight
-so the executor observes, filters admissible actions against derived live state,
-applies one, re-observes and selects again, letting an episode carry a
-state-dependent sequence rather than one action.
+F-loop. The live state the filter runs on now exists and its cost is measured,
+so the remaining work is the loop itself. Decide the two open questions in the
+F-loop entry above before writing code: the episode class whose plan
+obligations hold for every sequence it admits, and which sequence is made
+selectable first. Terminating the producer and then reclaiming is the cheapest
+candidate, because both already share one launch fault mode and the reclaim's
+legality depends on the outcome of the termination, which is the distinction
+between feedback-guided and feedback-free generation.
 
-The corpus it consumes is [signed](../experiments/stage2_signed_corpus_v1/SIGNED_CORPUS.md):
-seven actions, six timed and one applied at launch, all consistent across 230
-attempts.
+The corpus it consumes is [signed](../experiments/stage2_signed_corpus_v1/SIGNED_CORPUS.md)
+and unchanged: seven actions, six timed and one applied at launch, all
+consistent across 230 attempts.
 
 Baselines remain deferred by standing decision 3.
 
-Before any live batch, confirm no unpinned process competes for the pinned CPU
-sets, and afterwards confirm the central real-time factor is near 1.0.
+A live batch is not yet needed; F-state required none. Before the first one,
+two things are still open. Confirm no unpinned process competes for the pinned
+CPU sets, and afterwards confirm the central real-time factor is near 1.0 — a
+desktop session once cost about two cores and had all 18 attempts rejected for
+clock uncertainty. And the clock fit still flakes at roughly one attempt in 36
+on a quiet machine while the qualification gate requires every attempt to pass
+it, so that gate will occasionally fail for a reason unrelated to what it
+tests. That needs a decision before a fixed-budget campaign, and the batch that
+qualifies F-loop will meet it first.

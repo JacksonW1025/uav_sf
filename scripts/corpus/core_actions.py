@@ -20,6 +20,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Callable, Mapping
 
+from scripts.state.online_state import OnlineState
 from scripts.state.semantic_state import EXTERNAL_FAMILIES, SemanticState, route_family
 
 
@@ -46,6 +47,12 @@ OBSERVABLE_LIVE_MARKERS = (
 )
 
 Precondition = Callable[[SemanticState], bool]
+# The in-flight half of a precondition.  The executor cannot fold a closed
+# trace while the aircraft is flying, so it evaluates this weakening of the
+# offline precondition over the online projection instead.  A weakening can
+# hold where the precondition does not; `scripts/corpus/online_state_check.py`
+# measures where and for how long rather than assuming it never does.
+OnlineGate = Callable[[OnlineState], bool]
 Marker = Callable[[Mapping[str, Any], SemanticState, SemanticState], bool]
 
 
@@ -116,6 +123,8 @@ class CoreAction:
     cleanup_text: str
     target_boundaries: tuple[str, ...]
     live_markers: tuple[str, ...]
+    online_gate: OnlineGate | None = None
+    online_gate_text: str = ""
     backend: str | None = None
     live_profile: LiveActionProfile | None = None
     notes: str = ""
@@ -132,6 +141,7 @@ class CoreAction:
             "cleanup": self.cleanup_text,
             "target_boundaries": list(self.target_boundaries),
             "live_markers": list(self.live_markers),
+            "online_gate": self.online_gate_text or None,
             "backend": self.backend,
             "live_profile": (
                 {
@@ -226,6 +236,11 @@ CORE_ACTIONS: tuple[CoreAction, ...] = (
         cleanup_text="release to the preregistered successor and land",
         target_boundaries=("command_stale",),
         live_markers=("route_active", "motion_entered"),
+        online_gate=lambda state: state.external_authority and not state.fault_observed,
+        online_gate_text=(
+            "an external route is observed holding authority and no fault has "
+            "been observed yet; the command lineage is not observable in flight"
+        ),
         backend="owned_setpoint_stall_v1",
         live_profile=LiveActionProfile(
             fault_mode="setpoint_stall",
@@ -265,6 +280,11 @@ CORE_ACTIONS: tuple[CoreAction, ...] = (
         cleanup_text="a complete internal safe route must install without operator action",
         target_boundaries=("fallback_installed",),
         live_markers=("route_active", "motion_entered"),
+        online_gate=lambda state: state.external_authority and not state.fault_observed,
+        online_gate_text=(
+            "an external route is observed holding authority and no fault has "
+            "been observed yet; the command lineage is not observable in flight"
+        ),
         backend="owned_process_exit_fallback_v1",
         live_profile=LiveActionProfile(
             fault_mode="process_exit",
@@ -297,6 +317,11 @@ CORE_ACTIONS: tuple[CoreAction, ...] = (
         marker_text="an adjacent_request event",
         target_boundaries=("successor_installed",),
         live_markers=("route_active", "motion_entered"),
+        online_gate=lambda state: state.holds_authority and state.airborne,
+        online_gate_text=(
+            "the vehicle is airborne and some route is observed holding "
+            "authority; the command lineage is not observable in flight"
+        ),
         backend="owned_adjacent_land_v1",
         live_profile=LiveActionProfile(
             fault_mode="normal",
@@ -355,6 +380,13 @@ CORE_ACTIONS: tuple[CoreAction, ...] = (
         cleanup_text="the final entry must release to a landing successor",
         target_boundaries=("target_installed", "source_revoked"),
         live_markers=("successor_installed",),
+        online_gate=lambda state: state.internal_safe_authority
+        and state.completion_observed,
+        online_gate_text=(
+            "a completion has been observed and an internal safe route is "
+            "observed holding authority; the command lineage is not observable "
+            "in flight"
+        ),
         backend="owned_route_re_entry_v1",
         live_profile=LiveActionProfile(
             fault_mode="normal",
@@ -452,6 +484,11 @@ CORE_ACTIONS: tuple[CoreAction, ...] = (
         cleanup_text="stop every additional component and keep the primary session consistent",
         target_boundaries=("registration_rejected",),
         live_markers=("route_active",),
+        online_gate=lambda state: state.holds_authority and state.airborne,
+        online_gate_text=(
+            "the vehicle is airborne and some route is observed holding "
+            "authority; the command lineage is not observable in flight"
+        ),
         backend="owned_registration_capacity_v1",
         live_profile=LiveActionProfile(
             fault_mode="normal",
@@ -512,6 +549,18 @@ CORE_ACTIONS: tuple[CoreAction, ...] = (
         cleanup_text="either the reclaim installs completely or the safe route is retained",
         target_boundaries=("target_installed",),
         live_markers=("fallback_installed",),
+        # The offline precondition asks for a classified producer loss.  In
+        # flight the loss is not classifiable in time: a lost producer stops
+        # writing, and the runner learns it by polling, about eleven seconds
+        # after telemetry already shows the safe route.  The gate therefore
+        # asks for the effect the loss produced, which telemetry does show.
+        online_gate=lambda state: state.fallback_installed
+        and state.internal_authority,
+        online_gate_text=(
+            "a safe route is observed to have taken over from the tested route "
+            "and an internal route holds authority; the loss that caused it is "
+            "not classifiable in flight"
+        ),
         backend="owned_producer_restart_v1",
         live_profile=LiveActionProfile(
             fault_mode="process_exit",
@@ -586,6 +635,25 @@ def validate_declarations() -> None:
                 f"{action.action_id}: precondition holds in the empty initial state"
             )
         launch = action.live_profile is not None and action.live_profile.application == "launch"
+        # A runtime action is chosen in flight, so it needs a gate the flight
+        # can evaluate, and that gate must be a real restriction for the same
+        # reason the precondition must be.  A launch configuration is in effect
+        # before the episode observes anything, so gating it would invent a
+        # decision moment it does not have, which is the mistake that judging
+        # every precondition at its decision time already made.
+        if action.backend is not None and not launch:
+            if action.online_gate is None or not action.online_gate_text.strip():
+                raise CoreActionError(
+                    f"{action.action_id}: a runtime action needs an online gate and its text"
+                )
+            if action.online_gate(OnlineState()):
+                raise CoreActionError(
+                    f"{action.action_id}: online gate holds in the empty initial state"
+                )
+        elif action.online_gate is not None:
+            raise CoreActionError(
+                f"{action.action_id}: only a wired runtime action may declare an online gate"
+            )
         if launch:
             # A launch configuration is in effect before the flight observes
             # anything, so it waits on nothing.

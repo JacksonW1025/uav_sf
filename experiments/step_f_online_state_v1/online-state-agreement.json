@@ -1,0 +1,310 @@
+{
+  "actions": [
+    {
+      "action_id": "stop_owned_setpoint_stream",
+      "attempts_checked": 320,
+      "attempts_with_online_only_window": 153,
+      "example_blocked_firings": [],
+      "example_online_only_windows": [
+        {
+          "attempt_id": "det-offboard-attitude-land-001",
+          "offline_true_from_ns": 1315700496206460,
+          "online_only_ns": 736202847,
+          "online_true_from_ns": 1315699877015827
+        },
+        {
+          "attempt_id": "fault-offboard-attitude-stall-007",
+          "offline_true_from_ns": 1317799304486562,
+          "online_only_ns": 602992796,
+          "online_true_from_ns": 1317798701493766
+        },
+        {
+          "attempt_id": "det-offboard-attitude-land-002",
+          "offline_true_from_ns": 1316088136244251,
+          "online_only_ns": 599166581,
+          "online_true_from_ns": 1316087655260196
+        },
+        {
+          "attempt_id": "det-offboard-attitude-land-003",
+          "offline_true_from_ns": 1316382279899086,
+          "online_only_ns": 580575137,
+          "online_true_from_ns": 1316381768473256
+        },
+        {
+          "attempt_id": "fault-offboard-attitude-stall-006",
+          "offline_true_from_ns": 1317535449385319,
+          "online_only_ns": 451505202,
+          "online_true_from_ns": 1317534997880117
+        }
+      ],
+      "firings_blocked_where_the_precondition_also_failed": 0,
+      "firings_observed": 55,
+      "firings_the_gate_would_have_blocked": 0,
+      "median_online_only_ns": 0,
+      "online_gate": "an external route is observed holding authority and no fault has been observed yet; the command lineage is not observable in flight",
+      "precondition": "an external route holds complete authority and no fault has been observed yet in this episode",
+      "status": "weaker_than_precondition",
+      "widest_online_only_ns": 736202847
+    },
+    {
+      "action_id": "terminate_owning_producer",
+      "attempts_checked": 320,
+      "attempts_with_online_only_window": 153,
+      "example_blocked_firings": [],
+      "example_online_only_windows": [
+        {
+          "attempt_id": "det-offboard-attitude-land-001",
+          "offline_true_from_ns": 1315700496206460,
+          "online_only_ns": 736202847,
+          "online_true_from_ns": 1315699877015827
+        },
+        {
+          "attempt_id": "fault-offboard-attitude-stall-007",
+          "offline_true_from_ns": 1317799304486562,
+          "online_only_ns": 602992796,
+          "online_true_from_ns": 1317798701493766
+        },
+        {
+          "attempt_id": "det-offboard-attitude-land-002",
+          "offline_true_from_ns": 1316088136244251,
+          "online_only_ns": 599166581,
+          "online_true_from_ns": 1316087655260196
+        },
+        {
+          "attempt_id": "det-offboard-attitude-land-003",
+          "offline_true_from_ns": 1316382279899086,
+          "online_only_ns": 580575137,
+          "online_true_from_ns": 1316381768473256
+        },
+        {
+          "attempt_id": "fault-offboard-attitude-stall-006",
+          "offline_true_from_ns": 1317535449385319,
+          "online_only_ns": 451505202,
+          "online_true_from_ns": 1317534997880117
+        }
+      ],
+      "firings_blocked_where_the_precondition_also_failed": 0,
+      "firings_observed": 22,
+      "firings_the_gate_would_have_blocked": 0,
+      "median_online_only_ns": 0,
+      "online_gate": "an external route is observed holding authority and no fault has been observed yet; the command lineage is not observable in flight",
+      "precondition": "an external route holds complete authority and no fault has been observed yet in this episode",
+      "status": "weaker_than_precondition",
+      "widest_online_only_ns": 736202847
+    },
+    {
+      "action_id": "adjacent_land_request",
+      "attempts_checked": 320,
+      "attempts_with_online_only_window": 320,
+      "example_blocked_firings": [],
+      "example_online_only_windows": [
+        {
+          "attempt_id": "fault-dynamic-health-loss-004",
+          "offline_true_from_ns": 1316977868284575,
+          "online_only_ns": 5080836474,
+          "online_true_from_ns": 1316984381236428
+        },
+        {
+          "attempt_id": "fault-dynamic-health-loss-010",
+          "offline_true_from_ns": 1318278187390921,
+          "online_only_ns": 4946481589,
+          "online_true_from_ns": 1318284089060170
+        },
+        {
+          "attempt_id": "step-e-q-dynamic-random-001",
+          "offline_true_from_ns": 1930467556108558,
+          "online_only_ns": 4554067537,
+          "online_true_from_ns": 1930473542028895
+        },
+        {
+          "attempt_id": "step-df-q-dynamic-random-002",
+          "offline_true_from_ns": 1927148026802825,
+          "online_only_ns": 4476119898,
+          "online_true_from_ns": 1927153934618684
+        },
+        {
+          "attempt_id": "step-e-q-dynamic-state-003",
+          "offline_true_from_ns": 1930576409351110,
+          "online_only_ns": 4418201018,
+          "online_true_from_ns": 1930582298570833
+        }
+      ],
+      "firings_blocked_where_the_precondition_also_failed": 0,
+      "firings_observed": 3,
+      "firings_the_gate_would_have_blocked": 0,
+      "median_online_only_ns": 48009015,
+      "online_gate": "the vehicle is airborne and some route is observed holding authority; the command lineage is not observable in flight",
+      "precondition": "some route currently holds complete authority",
+      "status": "weaker_than_precondition",
+      "widest_online_only_ns": 5080836474
+    },
+    {
+      "action_id": "re_enter_route_after_successor",
+      "attempts_checked": 320,
+      "attempts_with_online_only_window": 187,
+      "example_blocked_firings": [],
+      "example_online_only_windows": [
+        {
+          "attempt_id": "timing-executor-near-008",
+          "offline_true_from_ns": null,
+          "online_only_ns": 6069275951,
+          "online_true_from_ns": 1318091429985454
+        },
+        {
+          "attempt_id": "timing-executor-near-005",
+          "offline_true_from_ns": null,
+          "online_only_ns": 6051822710,
+          "online_true_from_ns": 1317383964031000
+        },
+        {
+          "attempt_id": "timing-executor-near-002",
+          "offline_true_from_ns": null,
+          "online_only_ns": 6040128082,
+          "online_true_from_ns": 1316233051980896
+        },
+        {
+          "attempt_id": "timing-executor-near-003",
+          "offline_true_from_ns": null,
+          "online_only_ns": 6010492608,
+          "online_true_from_ns": 1316651986424550
+        },
+        {
+          "attempt_id": "timing-offboard-reentry-hold-008",
+          "offline_true_from_ns": 1318085675447384,
+          "online_only_ns": 495963718,
+          "online_true_from_ns": 1318085543602238
+        }
+      ],
+      "firings_blocked_where_the_precondition_also_failed": 0,
+      "firings_observed": 20,
+      "firings_the_gate_would_have_blocked": 0,
+      "median_online_only_ns": 7516693,
+      "online_gate": "a completion has been observed and an internal safe route is observed holding authority; the command lineage is not observable in flight",
+      "precondition": "a completion has been observed and an internal safe route now holds complete authority",
+      "status": "weaker_than_precondition",
+      "widest_online_only_ns": 6069275951
+    },
+    {
+      "action_id": "exhaust_registration_capacity",
+      "attempts_checked": 320,
+      "attempts_with_online_only_window": 320,
+      "example_blocked_firings": [],
+      "example_online_only_windows": [
+        {
+          "attempt_id": "fault-dynamic-health-loss-004",
+          "offline_true_from_ns": 1316977868284575,
+          "online_only_ns": 5080836474,
+          "online_true_from_ns": 1316984381236428
+        },
+        {
+          "attempt_id": "fault-dynamic-health-loss-010",
+          "offline_true_from_ns": 1318278187390921,
+          "online_only_ns": 4946481589,
+          "online_true_from_ns": 1318284089060170
+        },
+        {
+          "attempt_id": "step-e-q-dynamic-random-001",
+          "offline_true_from_ns": 1930467556108558,
+          "online_only_ns": 4554067537,
+          "online_true_from_ns": 1930473542028895
+        },
+        {
+          "attempt_id": "step-df-q-dynamic-random-002",
+          "offline_true_from_ns": 1927148026802825,
+          "online_only_ns": 4476119898,
+          "online_true_from_ns": 1927153934618684
+        },
+        {
+          "attempt_id": "step-e-q-dynamic-state-003",
+          "offline_true_from_ns": 1930576409351110,
+          "online_only_ns": 4418201018,
+          "online_true_from_ns": 1930582298570833
+        }
+      ],
+      "firings_blocked_where_the_precondition_also_failed": 0,
+      "firings_observed": 0,
+      "firings_the_gate_would_have_blocked": 0,
+      "median_online_only_ns": 48009015,
+      "online_gate": "the vehicle is airborne and some route is observed holding authority; the command lineage is not observable in flight",
+      "precondition": "the episode is running and some route holds complete authority",
+      "status": "weaker_than_precondition",
+      "widest_online_only_ns": 5080836474
+    },
+    {
+      "action_id": "restart_producer_after_loss",
+      "attempts_checked": 320,
+      "attempts_with_online_only_window": 37,
+      "example_blocked_firings": [
+        {
+          "attempt_id": "step-cr-q-offboard-random-001",
+          "online_state": "authority=internal_safe|activation=active|registration=none|fault=none|completion=yes|successor=installed|fallback=none|motion=completed|terminal=no",
+          "precondition_at_firing": false,
+          "semantic_state": "family=internal_safe|epoch=e3_plus|owner=internal|phase=executing|lineage=complete|freshness=fresh|successor=installed|fallback=none|fault=none|motion=unobserved"
+        }
+      ],
+      "example_online_only_windows": [
+        {
+          "attempt_id": "step-cr-q-dynamic-random-003",
+          "offline_true_from_ns": null,
+          "online_only_ns": 12232194601,
+          "online_true_from_ns": 1850025269768804
+        },
+        {
+          "attempt_id": "step-c-q-dynamic-random-001",
+          "offline_true_from_ns": 1845258425864893,
+          "online_only_ns": 12141271580,
+          "online_true_from_ns": 1845258495218649
+        },
+        {
+          "attempt_id": "step-ca-q-dynamic-state-001",
+          "offline_true_from_ns": 1873005588463288,
+          "online_only_ns": 11350959487,
+          "online_true_from_ns": 1873005661186393
+        },
+        {
+          "attempt_id": "step-df-q-dynamic-state-001",
+          "offline_true_from_ns": null,
+          "online_only_ns": 11174676882,
+          "online_true_from_ns": 1927094664543667
+        },
+        {
+          "attempt_id": "step-cr-q-dynamic-state-001",
+          "offline_true_from_ns": null,
+          "online_only_ns": 11122536502,
+          "online_true_from_ns": 1849892201880884
+        }
+      ],
+      "firings_blocked_where_the_precondition_also_failed": 1,
+      "firings_observed": 2,
+      "firings_the_gate_would_have_blocked": 0,
+      "median_online_only_ns": 0,
+      "online_gate": "a safe route is observed to have taken over from the tested route and an internal route holds authority; the loss that caused it is not classifiable in flight",
+      "precondition": "a producer loss has been observed and an internal route now holds complete authority",
+      "status": "weaker_than_precondition",
+      "widest_online_only_ns": 12232194601
+    }
+  ],
+  "adequate_actions": 0,
+  "attempts_checked": 320,
+  "attempts_skipped": 0,
+  "blocking_actions": 0,
+  "check_id": "step-f-online-state-agreement-v1",
+  "schema_version": "1.0",
+  "status_counts": {
+    "weaker_than_precondition": 6
+  },
+  "studies": [
+    "main-strategy-comparison-thor-v1",
+    "motivation-stage-a2-thor-remediation-v1",
+    "motivation-stage-a2-thor-v1",
+    "motivation-thor-remediation-v1",
+    "motivation-thor-v1",
+    "step-b-corpus-selection-qualification-v1",
+    "step-c-adjacent-qualification-v1",
+    "step-c-reentry-qualification-v1",
+    "step-c-restart-qualification-v1",
+    "step-d-full-corpus-qualification-v1",
+    "step-e-signed-corpus-qualification-v1"
+  ],
+  "weaker_actions": 6
+}
