@@ -46,11 +46,70 @@ class ClosedLoopError(RuntimeError):
     """The closed loop cannot proceed from admissible observed state."""
 
 
-# How often the loop re-reads each source.  The lifecycle sidecars are small
-# and carry the events a decision turns on; telemetry is orders of magnitude
-# larger and only moves the authority family and the land detector.
-LIFECYCLE_POLL_S = 0.02
-TELEMETRY_POLL_S = 0.5
+# Every source is re-read on the same cadence.  Reading is incremental, so a
+# telemetry poll costs one short read and a handful of parses no matter how
+# large the sidecar has grown; the expense the slower cadence used to avoid was
+# re-reading the whole file, which no longer happens.
+POLL_S = 0.02
+
+
+class OrderedIntake:
+    """Fold records in arrival order across sources, not per read batch.
+
+    The sidecars are written by separate processes and read independently, so
+    a batch read from one can contain records older than a batch already read
+    from another.  Sorting within a batch is not enough: it puts a lifecycle
+    event ahead of telemetry that preceded it, and the fold then sees a state
+    transition that never happened in that order.
+
+    Flown once, this produced a fallback marker timestamped two hundred
+    milliseconds *before* the route activation it was supposed to follow.  The
+    reclaim's whole timing window was measured from it, so every one of its
+    five bins collapsed onto "immediately".
+
+    Telemetry is continuous, so its latest arrival time is a watermark: any
+    record at or before it can be folded, because no source can still deliver
+    something earlier.  Anything later waits.  Before telemetry has produced
+    anything there is nothing to be out of order with, so records fold
+    straight through.
+    """
+
+    def __init__(self) -> None:
+        self._pending: list[dict[str, Any]] = []
+        self._watermark: int | None = None
+
+    @property
+    def pending(self) -> int:
+        return len(self._pending)
+
+    def add(self, records: list[dict[str, Any]], *, continuous: bool = False) -> None:
+        for record in records:
+            moment = record.get("received_monotonic_ns")
+            if not isinstance(moment, int) or isinstance(moment, bool):
+                raise ClosedLoopError(
+                    f"an in-flight {record.get('kind')} record has no arrival time"
+                )
+            self._pending.append(record)
+            if continuous and (self._watermark is None or moment > self._watermark):
+                self._watermark = moment
+
+    def drain(self) -> list[dict[str, Any]]:
+        if self._watermark is None:
+            ready, self._pending = self._pending, []
+        else:
+            watermark = self._watermark
+            ready = [
+                record
+                for record in self._pending
+                if int(record["received_monotonic_ns"]) <= watermark
+            ]
+            self._pending = [
+                record
+                for record in self._pending
+                if int(record["received_monotonic_ns"]) > watermark
+            ]
+        ready.sort(key=lambda record: int(record["received_monotonic_ns"]))
+        return ready
 
 
 class TailReader:
@@ -197,7 +256,17 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     projection = OnlineProjection(str(policy["mechanism"]))
     lifecycle = [TailReader(path) for path in (args.lifecycle, args.runner_lifecycle)]
     telemetry = TailReader(args.telemetry)
-    telemetry_read_at = 0.0
+    intake = OrderedIntake()
+
+    def observe() -> None:
+        """Read every source once and fold everything the watermark allows."""
+
+        for reader in lifecycle:
+            intake.add(reader.read())
+        intake.add(telemetry.read(), continuous=True)
+        ready = intake.drain()
+        if ready:
+            projection.extend(ready)
 
     applied: list[str] = []
     covered = set(policy["covered_units_before_episode"])
@@ -208,19 +277,11 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         due = False
         anchor_marker: str | None = None
         while time.monotonic() < deadline:
-            records: list[dict[str, Any]] = []
-            for reader in lifecycle:
-                records.extend(reader.read())
-            if time.monotonic() - telemetry_read_at >= TELEMETRY_POLL_S:
-                records.extend(telemetry.read())
-                telemetry_read_at = time.monotonic()
-            if records:
-                records.sort(key=lambda value: int(value["received_monotonic_ns"]))
-                projection.extend(records)
+            observe()
             due, anchor_marker = decision_is_due(projection, policy, applied)
             if due:
                 break
-            time.sleep(LIFECYCLE_POLL_S)
+            time.sleep(POLL_S)
         if not due:
             raise ClosedLoopError(
                 "no decision point was reached before the episode timeout; "
@@ -256,13 +317,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         while time.monotonic_ns() < due_ns:
             if time.monotonic() >= deadline:
                 raise ClosedLoopError("the episode timed out before its scheduled action")
-            records = []
-            for reader in lifecycle:
-                records.extend(reader.read())
-            if records:
-                records.sort(key=lambda value: int(value["received_monotonic_ns"]))
-                projection.extend(records)
-            time.sleep(LIFECYCLE_POLL_S)
+            observe()
+            time.sleep(POLL_S)
 
         target = request_path(args.request_dir, str(step["action"]))
         if target.exists():

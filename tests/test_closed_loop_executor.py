@@ -13,6 +13,7 @@ import unittest
 from scripts.corpus.core_actions import core_action
 from scripts.runtime.closed_loop_executor import (
     ClosedLoopError,
+    OrderedIntake,
     TailReader,
     decision_is_due,
     request_path,
@@ -128,6 +129,46 @@ class TailReaderTests(unittest.TestCase):
             path.write_text("{not json}\n", encoding="utf-8")
             with self.assertRaises(ClosedLoopError):
                 TailReader(path).read()
+
+
+class OrderedIntakeTests(unittest.TestCase):
+    def test_a_late_read_of_an_earlier_record_still_folds_in_order(self):
+        # The defect this exists to stop: a lifecycle event read at 20 ms sits
+        # ahead of telemetry from before it that is only read at 500 ms, and
+        # the fold sees a transition that never happened in that order.
+        intake = OrderedIntake()
+        intake.add([record("fault_detected", 50_000_000, reason="source_process_exit")])
+        intake.add([record("vehicle_status", 60_000_000, nav_state=14)], continuous=True)
+        first = intake.drain()
+        self.assertEqual([value["kind"] for value in first], ["fault_detected", "vehicle_status"])
+        intake.add([record("vehicle_status", 55_000_000, nav_state=4)], continuous=True)
+        self.assertEqual([value["kind"] for value in intake.drain()], ["vehicle_status"])
+
+    def test_a_record_beyond_the_watermark_waits(self):
+        intake = OrderedIntake()
+        intake.add([record("vehicle_status", 10_000_000, nav_state=4)], continuous=True)
+        intake.add([record("completion", 99_000_000)])
+        self.assertEqual([value["kind"] for value in intake.drain()], ["vehicle_status"])
+        self.assertEqual(intake.pending, 1)
+        intake.add([record("vehicle_status", 100_000_000, nav_state=14)], continuous=True)
+        self.assertEqual(
+            [value["kind"] for value in intake.drain()], ["completion", "vehicle_status"]
+        )
+
+    def test_before_any_telemetry_records_fold_straight_through(self):
+        # Nothing can be out of order with a source that has produced nothing.
+        intake = OrderedIntake()
+        intake.add(
+            [record("takeoff_requested", 5_000_000), record("requester_started", 1_000_000)]
+        )
+        self.assertEqual(
+            [value["kind"] for value in intake.drain()],
+            ["requester_started", "takeoff_requested"],
+        )
+
+    def test_a_record_without_an_arrival_time_is_refused(self):
+        with self.assertRaises(ClosedLoopError):
+            OrderedIntake().add([{"kind": "completion"}])
 
 
 class DecisionPointTests(unittest.TestCase):
