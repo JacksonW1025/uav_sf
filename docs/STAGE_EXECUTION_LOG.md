@@ -30,7 +30,7 @@ repository validation passes. A step that is partly done says which part.
 v8 plan stage:      Stage 3, close the selection loop
 Stage 1:            complete, exit checks met
 Corpus freeze:      signed, seven actions, unchanged by this step
-Current step:       Step F; all host-side parts complete, live batch next
+Current step:       Step F; host side complete, batch flown 15/18
 Formal campaigns:   none authorized, none running
 ```
 
@@ -548,7 +548,7 @@ Every single-action path is untouched: with no class named, all of this is
 skipped and the 255 earlier tests pass unchanged.
 Covered by [tests/test_episode_class_launch.py](../tests/test_episode_class_launch.py).
 
-#### F-live — the non-formal qualification — IN PROGRESS
+#### F-live — the non-formal qualification — FLOWN, GATE NOT PASSED
 
 A single smoke flight was flown before any batch, because every earlier step in
 this stage found defects live that no host-side test could reach. It found
@@ -598,6 +598,40 @@ the retained reclaim evidence should be read, and because Step E's remaining
 inconsistency — the producer-loss fault reaching the trace later than either the
 executor or the failsafe knew — is the same fixture seen from the other side.
 
+**The batch then flew: 15 of 18, so the gate did not pass.** Nothing failed for
+a reason unrelated to what it tests. All eighteen were admissible and physically
+valid and the clock fit held in every one, so the flake this stage has been
+carrying did not decide anything here. The three failures were
+`FORMAL_SAFETY_STOP`, the independent supervisor stopping the aircraft twice for
+unexpected ground contact and once for exceeding the vertical speed bound.
+
+What the batch establishes: every decision log re-derived against its frozen
+policy without a divergence, in all six units. The bounded-random policy
+produced both two-action and one-action episodes in the same cell, so the
+sequence length is chosen rather than fixed. Both obligation branches occur in
+real evidence — twelve `when_absent` and five `when_observed` — each attempt
+judged against the obligations its own trace selected, with neither obligation
+switched off to make the other possible. Every timing bin was reached.
+
+**The finding is a mechanism difference at the reclaim.** Offboard installed
+the reclaimed route completely in 5 of 6 attempts, about 3.7 s after the
+producer restarted. Dynamic did so in **0 of 9**: its reclaim producer is a new
+process that must register the external mode again and wait for PX4 to assign a
+mode identifier, which took about 11 s, against a 13 to 16 s window spent under
+a descending return-to-launch. The three safety stops are the end of that — the
+reclaim arriving near the ground under a descending failsafe.
+
+No retained evidence could show this, for the reason above: the single-action
+fixture reclaimed under a loiter, and the ten-second window Step C recorded was
+measured there.
+
+Three readings are open and none is taken: the difference is the result and
+belongs in the mechanism comparison; or the dynamic timing bins need
+re-measuring against a descending failsafe; or the reclaim is offboard-only in
+practice, which would change a signed availability. They are distinguishable by
+measurement.
+See [the record](../experiments/step_f_closed_loop_qualification_v1/QUALIFICATION.md).
+
 ## Invariants
 
 - Non-formal qualification never enters a formal ledger or denominator.
@@ -621,6 +655,18 @@ executor or the failsafe knew — is the same fixture seen from the other side.
   measuring something else.
 
 ## Next concrete action
+
+Decide how to read the dynamic reclaim, using the three options in the F-live
+entry. That decision is a research judgement about the mechanism comparison, not
+an engineering fix, and it gates whether this batch is re-flown, the bins are
+re-measured, or the corpus availability changes.
+
+Whichever is chosen, the ten-second reclaim window recorded in Step C was
+measured under a loiter and does not describe a real failsafe. Re-measuring it
+against a descending failsafe is needed before any fixed-budget campaign that
+includes the reclaim.
+
+The earlier plan for this section, now done:
 
 F-live, the non-formal qualification. Every host-side part of Step F is
 complete and verified by 268 tests: the live state the filter runs on and its

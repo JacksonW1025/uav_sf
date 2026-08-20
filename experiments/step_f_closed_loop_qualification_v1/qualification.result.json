@@ -1,0 +1,737 @@
+{
+  "attempts": {
+    "step-f-q-dynamic-official-001": {
+      "applied_actions": [
+        "terminate_owning_producer",
+        "restart_producer_after_loss"
+      ],
+      "applied_units": [
+        "terminate_owning_producer:boundary",
+        "restart_producer_after_loss:boundary"
+      ],
+      "attempt_id": "step-f-q-dynamic-official-001",
+      "covered_units_before_episode": [],
+      "decision_digest": "sha256:ecdfb73b0970b0e749cd9dd820e25d63c5ea12056db1629c8fd87417a03472d5",
+      "decision_log_reason": null,
+      "decision_log_replays": true,
+      "decision_steps": 2,
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "FORMAL_SAFETY_STOP",
+      "passed": false,
+      "physical_execution_status": "PASS",
+      "safe_fallback_status": "PASS",
+      "sequence_branch": "when_absent",
+      "stopped_by_choice": false,
+      "strategy_lifecycle_complete": true
+    },
+    "step-f-q-dynamic-official-002": {
+      "applied_actions": [
+        "terminate_owning_producer",
+        "restart_producer_after_loss"
+      ],
+      "applied_units": [
+        "terminate_owning_producer:boundary",
+        "restart_producer_after_loss:boundary"
+      ],
+      "attempt_id": "step-f-q-dynamic-official-002",
+      "covered_units_before_episode": [
+        "restart_producer_after_loss:boundary",
+        "terminate_owning_producer:boundary"
+      ],
+      "decision_digest": "sha256:4c13c8490b75f5c489f22eb7e393ccee8745d3f685ce73b6f5ea09d1a9eca36d",
+      "decision_log_reason": null,
+      "decision_log_replays": true,
+      "decision_steps": 2,
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "safe_fallback_status": "PASS",
+      "sequence_branch": "when_absent",
+      "stopped_by_choice": false,
+      "strategy_lifecycle_complete": true
+    },
+    "step-f-q-dynamic-official-003": {
+      "applied_actions": [
+        "terminate_owning_producer",
+        "restart_producer_after_loss"
+      ],
+      "applied_units": [
+        "terminate_owning_producer:boundary",
+        "restart_producer_after_loss:boundary"
+      ],
+      "attempt_id": "step-f-q-dynamic-official-003",
+      "covered_units_before_episode": [
+        "restart_producer_after_loss:boundary",
+        "terminate_owning_producer:boundary"
+      ],
+      "decision_digest": "sha256:4c13c8490b75f5c489f22eb7e393ccee8745d3f685ce73b6f5ea09d1a9eca36d",
+      "decision_log_reason": null,
+      "decision_log_replays": true,
+      "decision_steps": 2,
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "safe_fallback_status": "PASS",
+      "sequence_branch": "when_absent",
+      "stopped_by_choice": false,
+      "strategy_lifecycle_complete": true
+    },
+    "step-f-q-dynamic-random-001": {
+      "applied_actions": [
+        "terminate_owning_producer",
+        "restart_producer_after_loss"
+      ],
+      "applied_units": [
+        "terminate_owning_producer:late",
+        "restart_producer_after_loss:pre_boundary"
+      ],
+      "attempt_id": "step-f-q-dynamic-random-001",
+      "covered_units_before_episode": [],
+      "decision_digest": "sha256:1722819e451381f471fccc38da83070be45bc272f5b3bc6978b84b90b5bad2f7",
+      "decision_log_reason": null,
+      "decision_log_replays": true,
+      "decision_steps": 2,
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "FORMAL_SAFETY_STOP",
+      "passed": false,
+      "physical_execution_status": "PASS",
+      "safe_fallback_status": "PASS",
+      "sequence_branch": "when_absent",
+      "stopped_by_choice": false,
+      "strategy_lifecycle_complete": true
+    },
+    "step-f-q-dynamic-random-002": {
+      "applied_actions": [
+        "terminate_owning_producer",
+        "restart_producer_after_loss"
+      ],
+      "applied_units": [
+        "terminate_owning_producer:late",
+        "restart_producer_after_loss:pre_boundary"
+      ],
+      "attempt_id": "step-f-q-dynamic-random-002",
+      "covered_units_before_episode": [
+        "restart_producer_after_loss:pre_boundary",
+        "terminate_owning_producer:late"
+      ],
+      "decision_digest": "sha256:f0ebbbda3762d0139f9e9df1ade47f40d481eb21954908c94d9057f2e51e4a76",
+      "decision_log_reason": null,
+      "decision_log_replays": true,
+      "decision_steps": 2,
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "safe_fallback_status": "PASS",
+      "sequence_branch": "when_absent",
+      "stopped_by_choice": false,
+      "strategy_lifecycle_complete": true
+    },
+    "step-f-q-dynamic-random-003": {
+      "applied_actions": [
+        "terminate_owning_producer"
+      ],
+      "applied_units": [
+        "terminate_owning_producer:boundary"
+      ],
+      "attempt_id": "step-f-q-dynamic-random-003",
+      "covered_units_before_episode": [
+        "restart_producer_after_loss:pre_boundary",
+        "terminate_owning_producer:late"
+      ],
+      "decision_digest": "sha256:85e452c490589527872eb7e73d5178e87c8f1059dbb3bd9e8e671220941ed59a",
+      "decision_log_reason": null,
+      "decision_log_replays": true,
+      "decision_steps": 2,
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "safe_fallback_status": "PASS",
+      "sequence_branch": "when_absent",
+      "stopped_by_choice": true,
+      "strategy_lifecycle_complete": true
+    },
+    "step-f-q-dynamic-state-001": {
+      "applied_actions": [
+        "terminate_owning_producer",
+        "restart_producer_after_loss"
+      ],
+      "applied_units": [
+        "terminate_owning_producer:boundary",
+        "restart_producer_after_loss:boundary"
+      ],
+      "attempt_id": "step-f-q-dynamic-state-001",
+      "covered_units_before_episode": [],
+      "decision_digest": "sha256:29caf067c3626233b636c43a6b9e2345c36793ffdc25e8717adf51760a54fc03",
+      "decision_log_reason": null,
+      "decision_log_replays": true,
+      "decision_steps": 2,
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "safe_fallback_status": "PASS",
+      "sequence_branch": "when_absent",
+      "stopped_by_choice": false,
+      "strategy_lifecycle_complete": true
+    },
+    "step-f-q-dynamic-state-002": {
+      "applied_actions": [
+        "terminate_owning_producer",
+        "restart_producer_after_loss"
+      ],
+      "applied_units": [
+        "terminate_owning_producer:pre_boundary",
+        "restart_producer_after_loss:post_boundary"
+      ],
+      "attempt_id": "step-f-q-dynamic-state-002",
+      "covered_units_before_episode": [
+        "restart_producer_after_loss:boundary",
+        "terminate_owning_producer:boundary"
+      ],
+      "decision_digest": "sha256:6442dc99002c7e0c652434d40818dd4febb3fb991084f0f93ef6db7105758ef5",
+      "decision_log_reason": null,
+      "decision_log_replays": true,
+      "decision_steps": 2,
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "safe_fallback_status": "PASS",
+      "sequence_branch": "when_absent",
+      "stopped_by_choice": false,
+      "strategy_lifecycle_complete": true
+    },
+    "step-f-q-dynamic-state-003": {
+      "applied_actions": [
+        "terminate_owning_producer",
+        "restart_producer_after_loss"
+      ],
+      "applied_units": [
+        "terminate_owning_producer:post_boundary",
+        "restart_producer_after_loss:pre_boundary"
+      ],
+      "attempt_id": "step-f-q-dynamic-state-003",
+      "covered_units_before_episode": [
+        "restart_producer_after_loss:boundary",
+        "restart_producer_after_loss:post_boundary",
+        "terminate_owning_producer:boundary",
+        "terminate_owning_producer:pre_boundary"
+      ],
+      "decision_digest": "sha256:0e08aaba0f6eb0f6a29652fd5a5e7c9f140405f31f0d14678a6c2dfcf8b1db6b",
+      "decision_log_reason": null,
+      "decision_log_replays": true,
+      "decision_steps": 2,
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "safe_fallback_status": "PASS",
+      "sequence_branch": "when_absent",
+      "stopped_by_choice": false,
+      "strategy_lifecycle_complete": true
+    },
+    "step-f-q-offboard-official-001": {
+      "applied_actions": [
+        "terminate_owning_producer",
+        "restart_producer_after_loss"
+      ],
+      "applied_units": [
+        "terminate_owning_producer:boundary",
+        "restart_producer_after_loss:boundary"
+      ],
+      "attempt_id": "step-f-q-offboard-official-001",
+      "covered_units_before_episode": [],
+      "decision_digest": "sha256:4852d3b9d151deb58a861c74250e338186aa280d3a44e452ace3e117c360b60c",
+      "decision_log_reason": null,
+      "decision_log_replays": true,
+      "decision_steps": 2,
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "safe_fallback_status": "NOT_APPLICABLE",
+      "sequence_branch": "when_observed",
+      "stopped_by_choice": false,
+      "strategy_lifecycle_complete": true
+    },
+    "step-f-q-offboard-official-002": {
+      "applied_actions": [
+        "terminate_owning_producer",
+        "restart_producer_after_loss"
+      ],
+      "applied_units": [
+        "terminate_owning_producer:boundary",
+        "restart_producer_after_loss:boundary"
+      ],
+      "attempt_id": "step-f-q-offboard-official-002",
+      "covered_units_before_episode": [
+        "restart_producer_after_loss:boundary",
+        "terminate_owning_producer:boundary"
+      ],
+      "decision_digest": "sha256:a58f12bbeadccd650319e480cae9da7ae170ebcdde5bd13a446237815a325e35",
+      "decision_log_reason": null,
+      "decision_log_replays": true,
+      "decision_steps": 2,
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "safe_fallback_status": "NOT_APPLICABLE",
+      "sequence_branch": "when_observed",
+      "stopped_by_choice": false,
+      "strategy_lifecycle_complete": true
+    },
+    "step-f-q-offboard-official-003": {
+      "applied_actions": [
+        "terminate_owning_producer",
+        "restart_producer_after_loss"
+      ],
+      "applied_units": [
+        "terminate_owning_producer:boundary",
+        "restart_producer_after_loss:boundary"
+      ],
+      "attempt_id": "step-f-q-offboard-official-003",
+      "covered_units_before_episode": [
+        "restart_producer_after_loss:boundary",
+        "terminate_owning_producer:boundary"
+      ],
+      "decision_digest": "sha256:a58f12bbeadccd650319e480cae9da7ae170ebcdde5bd13a446237815a325e35",
+      "decision_log_reason": null,
+      "decision_log_replays": true,
+      "decision_steps": 2,
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "FORMAL_SAFETY_STOP",
+      "passed": false,
+      "physical_execution_status": "PASS",
+      "safe_fallback_status": "PASS",
+      "sequence_branch": "when_absent",
+      "stopped_by_choice": false,
+      "strategy_lifecycle_complete": true
+    },
+    "step-f-q-offboard-random-001": {
+      "applied_actions": [
+        "terminate_owning_producer",
+        "restart_producer_after_loss"
+      ],
+      "applied_units": [
+        "terminate_owning_producer:pre_boundary",
+        "restart_producer_after_loss:early"
+      ],
+      "attempt_id": "step-f-q-offboard-random-001",
+      "covered_units_before_episode": [],
+      "decision_digest": "sha256:b70396aae36b1a69ddb29c4ff218ea9a0b649662dede784eba04c82531faff99",
+      "decision_log_reason": null,
+      "decision_log_replays": true,
+      "decision_steps": 2,
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "safe_fallback_status": "NOT_APPLICABLE",
+      "sequence_branch": "when_observed",
+      "stopped_by_choice": false,
+      "strategy_lifecycle_complete": true
+    },
+    "step-f-q-offboard-random-002": {
+      "applied_actions": [
+        "terminate_owning_producer"
+      ],
+      "applied_units": [
+        "terminate_owning_producer:boundary"
+      ],
+      "attempt_id": "step-f-q-offboard-random-002",
+      "covered_units_before_episode": [
+        "restart_producer_after_loss:early",
+        "terminate_owning_producer:pre_boundary"
+      ],
+      "decision_digest": "sha256:3b0c02b832c38134d16e0ff74bcbe1984f811f2bc7e0d2f99208efdcdf4c40c1",
+      "decision_log_reason": null,
+      "decision_log_replays": true,
+      "decision_steps": 2,
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "safe_fallback_status": "PASS",
+      "sequence_branch": "when_absent",
+      "stopped_by_choice": true,
+      "strategy_lifecycle_complete": true
+    },
+    "step-f-q-offboard-random-003": {
+      "applied_actions": [
+        "terminate_owning_producer",
+        "restart_producer_after_loss"
+      ],
+      "applied_units": [
+        "terminate_owning_producer:post_boundary",
+        "restart_producer_after_loss:late"
+      ],
+      "attempt_id": "step-f-q-offboard-random-003",
+      "covered_units_before_episode": [
+        "restart_producer_after_loss:early",
+        "terminate_owning_producer:boundary",
+        "terminate_owning_producer:pre_boundary"
+      ],
+      "decision_digest": "sha256:cc0b4a4201ca51d6103f2077ca1dcad5058930eaadef8677a87aa80466d6f786",
+      "decision_log_reason": null,
+      "decision_log_replays": true,
+      "decision_steps": 2,
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "safe_fallback_status": "NOT_APPLICABLE",
+      "sequence_branch": "when_observed",
+      "stopped_by_choice": false,
+      "strategy_lifecycle_complete": true
+    },
+    "step-f-q-offboard-state-001": {
+      "applied_actions": [
+        "terminate_owning_producer",
+        "restart_producer_after_loss"
+      ],
+      "applied_units": [
+        "terminate_owning_producer:boundary",
+        "restart_producer_after_loss:boundary"
+      ],
+      "attempt_id": "step-f-q-offboard-state-001",
+      "covered_units_before_episode": [],
+      "decision_digest": "sha256:03f0060db8ccece8c8083b67346e4f96624dc19d01bce1b3972ee2564e8ab921",
+      "decision_log_reason": null,
+      "decision_log_replays": true,
+      "decision_steps": 2,
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "safe_fallback_status": "NOT_APPLICABLE",
+      "sequence_branch": "when_observed",
+      "stopped_by_choice": false,
+      "strategy_lifecycle_complete": true
+    },
+    "step-f-q-offboard-state-002": {
+      "applied_actions": [
+        "terminate_owning_producer",
+        "restart_producer_after_loss"
+      ],
+      "applied_units": [
+        "terminate_owning_producer:post_boundary",
+        "restart_producer_after_loss:post_boundary"
+      ],
+      "attempt_id": "step-f-q-offboard-state-002",
+      "covered_units_before_episode": [
+        "restart_producer_after_loss:boundary",
+        "terminate_owning_producer:boundary"
+      ],
+      "decision_digest": "sha256:792185aeca5aff01c7acc91c064fae669d9da7c8b69361a877b70f4ae0344012",
+      "decision_log_reason": null,
+      "decision_log_replays": true,
+      "decision_steps": 2,
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "safe_fallback_status": "NOT_APPLICABLE",
+      "sequence_branch": "when_observed",
+      "stopped_by_choice": false,
+      "strategy_lifecycle_complete": true
+    },
+    "step-f-q-offboard-state-003": {
+      "applied_actions": [
+        "terminate_owning_producer",
+        "restart_producer_after_loss"
+      ],
+      "applied_units": [
+        "terminate_owning_producer:pre_boundary",
+        "restart_producer_after_loss:pre_boundary"
+      ],
+      "attempt_id": "step-f-q-offboard-state-003",
+      "covered_units_before_episode": [
+        "restart_producer_after_loss:boundary",
+        "restart_producer_after_loss:post_boundary",
+        "terminate_owning_producer:boundary",
+        "terminate_owning_producer:post_boundary"
+      ],
+      "decision_digest": "sha256:7b9fb8e53f2537e5833bf69757efb61a4ac12ddd52b1fee286f6354594ef36c5",
+      "decision_log_reason": null,
+      "decision_log_replays": true,
+      "decision_steps": 2,
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
+      "safe_fallback_status": "NOT_APPLICABLE",
+      "sequence_branch": "when_observed",
+      "stopped_by_choice": false,
+      "strategy_lifecycle_complete": true
+    }
+  },
+  "completed_at": "2026-08-20T21:13:40.428530+00:00",
+  "corpus": [],
+  "episode_class": "process_exit_reclaim",
+  "formal_campaign_started": false,
+  "live_strategy_backend": null,
+  "official_action": null,
+  "qualification_only": true,
+  "rounds": [
+    {
+      "attempt_ids": [
+        "step-f-q-offboard-official-001",
+        "step-f-q-offboard-random-001",
+        "step-f-q-offboard-state-001"
+      ],
+      "barrier_passed": true,
+      "mechanism": "legacy_offboard",
+      "ordinal": 1
+    },
+    {
+      "attempt_ids": [
+        "step-f-q-offboard-official-002",
+        "step-f-q-offboard-random-002",
+        "step-f-q-offboard-state-002"
+      ],
+      "barrier_passed": true,
+      "mechanism": "legacy_offboard",
+      "ordinal": 2
+    },
+    {
+      "attempt_ids": [
+        "step-f-q-offboard-official-003",
+        "step-f-q-offboard-random-003",
+        "step-f-q-offboard-state-003"
+      ],
+      "barrier_passed": true,
+      "mechanism": "legacy_offboard",
+      "ordinal": 3
+    },
+    {
+      "attempt_ids": [
+        "step-f-q-dynamic-official-001",
+        "step-f-q-dynamic-random-001",
+        "step-f-q-dynamic-state-001"
+      ],
+      "barrier_passed": true,
+      "mechanism": "dynamic_external_mode",
+      "ordinal": 1
+    },
+    {
+      "attempt_ids": [
+        "step-f-q-dynamic-official-002",
+        "step-f-q-dynamic-random-002",
+        "step-f-q-dynamic-state-002"
+      ],
+      "barrier_passed": true,
+      "mechanism": "dynamic_external_mode",
+      "ordinal": 2
+    },
+    {
+      "attempt_ids": [
+        "step-f-q-dynamic-official-003",
+        "step-f-q-dynamic-random-003",
+        "step-f-q-dynamic-state-003"
+      ],
+      "barrier_passed": true,
+      "mechanism": "dynamic_external_mode",
+      "ordinal": 3
+    }
+  ],
+  "schema_version": "1.0",
+  "spec_digest": "sha256:6434045c404c74bd30abc6dfbd90c4211e971563230a0e262cfc362de6ea92d3",
+  "started_at": "2026-08-20T21:08:15.508720+00:00",
+  "state_aware_feedback_checks": [
+    {
+      "mechanism": "legacy_offboard",
+      "subsequent_decisions_used_live_feedback": true
+    },
+    {
+      "mechanism": "dynamic_external_mode",
+      "subsequent_decisions_used_live_feedback": true
+    }
+  ],
+  "status": "FAIL",
+  "study_id": "step-f-closed-loop-qualification-v1",
+  "units": [
+    {
+      "applied_units": [
+        [
+          "terminate_owning_producer:boundary",
+          "restart_producer_after_loss:boundary"
+        ],
+        [
+          "terminate_owning_producer:boundary",
+          "restart_producer_after_loss:boundary"
+        ],
+        [
+          "terminate_owning_producer:boundary",
+          "restart_producer_after_loss:boundary"
+        ]
+      ],
+      "attempt_count": 3,
+      "decision_logs_replay": true,
+      "mechanism": "legacy_offboard",
+      "passed_count": 2,
+      "sequence_lengths": [
+        2,
+        2,
+        2
+      ],
+      "status": "FAIL",
+      "strategy": "official_sequence"
+    },
+    {
+      "applied_units": [
+        [
+          "terminate_owning_producer:pre_boundary",
+          "restart_producer_after_loss:early"
+        ],
+        [
+          "terminate_owning_producer:boundary"
+        ],
+        [
+          "terminate_owning_producer:post_boundary",
+          "restart_producer_after_loss:late"
+        ]
+      ],
+      "attempt_count": 3,
+      "decision_logs_replay": true,
+      "mechanism": "legacy_offboard",
+      "passed_count": 3,
+      "sequence_lengths": [
+        2,
+        1,
+        2
+      ],
+      "status": "PASS",
+      "strategy": "bounded_random_timing"
+    },
+    {
+      "applied_units": [
+        [
+          "terminate_owning_producer:boundary",
+          "restart_producer_after_loss:boundary"
+        ],
+        [
+          "terminate_owning_producer:post_boundary",
+          "restart_producer_after_loss:post_boundary"
+        ],
+        [
+          "terminate_owning_producer:pre_boundary",
+          "restart_producer_after_loss:pre_boundary"
+        ]
+      ],
+      "attempt_count": 3,
+      "decision_logs_replay": true,
+      "mechanism": "legacy_offboard",
+      "passed_count": 3,
+      "sequence_lengths": [
+        2,
+        2,
+        2
+      ],
+      "status": "PASS",
+      "strategy": "state_aware"
+    },
+    {
+      "applied_units": [
+        [
+          "terminate_owning_producer:boundary",
+          "restart_producer_after_loss:boundary"
+        ],
+        [
+          "terminate_owning_producer:boundary",
+          "restart_producer_after_loss:boundary"
+        ],
+        [
+          "terminate_owning_producer:boundary",
+          "restart_producer_after_loss:boundary"
+        ]
+      ],
+      "attempt_count": 3,
+      "decision_logs_replay": true,
+      "mechanism": "dynamic_external_mode",
+      "passed_count": 2,
+      "sequence_lengths": [
+        2,
+        2,
+        2
+      ],
+      "status": "FAIL",
+      "strategy": "official_sequence"
+    },
+    {
+      "applied_units": [
+        [
+          "terminate_owning_producer:late",
+          "restart_producer_after_loss:pre_boundary"
+        ],
+        [
+          "terminate_owning_producer:late",
+          "restart_producer_after_loss:pre_boundary"
+        ],
+        [
+          "terminate_owning_producer:boundary"
+        ]
+      ],
+      "attempt_count": 3,
+      "decision_logs_replay": true,
+      "mechanism": "dynamic_external_mode",
+      "passed_count": 2,
+      "sequence_lengths": [
+        2,
+        2,
+        1
+      ],
+      "status": "FAIL",
+      "strategy": "bounded_random_timing"
+    },
+    {
+      "applied_units": [
+        [
+          "terminate_owning_producer:boundary",
+          "restart_producer_after_loss:boundary"
+        ],
+        [
+          "terminate_owning_producer:pre_boundary",
+          "restart_producer_after_loss:post_boundary"
+        ],
+        [
+          "terminate_owning_producer:post_boundary",
+          "restart_producer_after_loss:pre_boundary"
+        ]
+      ],
+      "attempt_count": 3,
+      "decision_logs_replay": true,
+      "mechanism": "dynamic_external_mode",
+      "passed_count": 3,
+      "sequence_lengths": [
+        2,
+        2,
+        2
+      ],
+      "status": "PASS",
+      "strategy": "state_aware"
+    }
+  ]
+}
