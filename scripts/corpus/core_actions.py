@@ -425,16 +425,39 @@ CORE_ACTIONS: tuple[CoreAction, ...] = (
         cleanup_text="stop every additional component and keep the primary session consistent",
         target_boundaries=("registration_rejected",),
         live_markers=("route_active",),
+        backend="owned_registration_capacity_v1",
+        live_profile=LiveActionProfile(
+            fault_mode="normal",
+            completion_expected=True,
+            fault_expected=False,
+            fallback_expected=False,
+            registration_rejection_expected=True,
+            workload_phases=(
+                "public_takeoff",
+                "stable_hover",
+                "route_activation",
+                "straight_translation",
+                "registration_capacity",
+                "successor_land",
+            ),
+            timing_anchor="route_active",
+            timing_offsets_ns=(
+                1_000_000_000,
+                1_500_000_000,
+                2_000_000_000,
+                2_500_000_000,
+                3_000_000_000,
+            ),
+        ),
         notes=(
             "legacy offboard has no registration protocol, so this is not "
-            "portable. Timed during the tested route it was flown twice and "
-            "failed both times the same way: the capacity boundary is reached, "
-            "with two of eight components refused, but registering them spans "
-            "the whole active period and the moving profile never reaches its "
-            "completion progress. The Stage A1 cell exhausted the slots while "
-            "hovering, before the tested activation, where no motion contract "
-            "applies. Making it selectable needs a pre-activation anchor and a "
-            "live marker for the established source route, not a wiring change"
+            "portable. Starting all eight components on the policy's request "
+            "was flown twice and failed both times the same way: the boundary "
+            "was reached, with two refused, but registering them spanned the "
+            "whole active period and the moving profile never reached its "
+            "completion progress. The seven legal slots are now filled during "
+            "setup and the policy times only the eighth, which is the one that "
+            "must be refused and the one the action is actually about"
         ),
     ),
     CoreAction(

@@ -130,18 +130,21 @@ class CorpusDecisionTests(unittest.TestCase):
                     set(CORPUS), {item.action_id for item in wired_actions(mechanism)}
                 )
 
-    def test_capacity_exhaustion_stays_unwired_with_its_measured_reason(self) -> None:
-        # Flown twice, timed during the tested route: the capacity boundary is
-        # reached, but registering the components spans the active period and
-        # the moving profile never completes.
-        capacity = core_action("exhaust_registration_capacity")
-        self.assertIsNone(capacity.backend)
-        self.assertEqual(capacity.availability["legacy_offboard"], "not_applicable")
-        for mechanism in ("legacy_offboard", "dynamic_external_mode"):
-            self.assertNotIn(
-                "exhaust_registration_capacity",
-                {item.action_id for item in wired_actions(mechanism)},
-            )
+    def test_capacity_times_only_the_registration_that_must_be_refused(self) -> None:
+        # Starting all eight on request consumed the whole active period and
+        # broke the moving profile. The legal slots are filled during setup and
+        # only the refused registration is timed.
+        profile = live_profile("exhaust_registration_capacity")
+        self.assertTrue(profile.registration_rejection_expected)
+        self.assertEqual(profile.timing_anchor, "route_active")
+        self.assertIn(
+            "exhaust_registration_capacity",
+            {item.action_id for item in wired_actions("dynamic_external_mode")},
+        )
+        self.assertNotIn(
+            "exhaust_registration_capacity",
+            {item.action_id for item in wired_actions("legacy_offboard")},
+        )
 
     def test_the_adjacent_request_straddles_the_scheduled_completion(self) -> None:
         profile = live_profile("adjacent_land_request")
