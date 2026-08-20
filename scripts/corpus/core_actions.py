@@ -20,7 +20,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Callable, Mapping
 
-from scripts.state.semantic_state import EXTERNAL_FAMILIES, SemanticState
+from scripts.state.semantic_state import EXTERNAL_FAMILIES, SemanticState, route_family
 
 
 class CoreActionError(ValueError):
@@ -487,8 +487,13 @@ CORE_ACTIONS: tuple[CoreAction, ...] = (
             "a producer loss has been observed and an internal safe route now holds "
             "complete authority"
         ),
-        marker=lambda event, previous, state: False,
-        marker_text="no retained evidence; the action does not exist yet",
+        marker=lambda event, previous, state: str(event.get("kind")) == "transition_requested"
+        and route_family(event.get("target_route")) in EXTERNAL_FAMILIES
+        and previous.fault_class == "process_exit",
+        marker_text=(
+            "a transition_requested returning to an external route after a "
+            "producer loss"
+        ),
         cleanup_text="either the reclaim installs completely or the safe route is retained",
         target_boundaries=("target_installed",),
         live_markers=("fallback_installed",),

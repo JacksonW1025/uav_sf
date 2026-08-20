@@ -81,6 +81,7 @@ def check_attempt(
     # shares its predecessor's activation identity is a duplicate observation
     # rather than a second action.
     last_authority: dict[str, str | None] = {}
+    satisfied_once: set[str] = set()
     previous_state = SemanticState()
     for event, step in zip(events, trajectory.steps):
         if int(step.sequence) != int(event["sequence"]):
@@ -91,11 +92,19 @@ def check_attempt(
             if not action.marker(event, previous_state, step.state):
                 continue
             authority = previous_state.activation_id
+            satisfied = bool(action.precondition(previous_state))
+            # Two observers can record one action, and a supervisory observer
+            # can record it late.  A firing that shares its predecessor's
+            # authority is the first case.  A firing whose precondition is
+            # false after the action already fired legally is the second: a
+            # genuine repeat would satisfy the precondition again.
             repeated = (
                 action.action_id in last_authority
                 and last_authority[action.action_id] == authority
-            )
+            ) or (not satisfied and action.action_id in satisfied_once)
             last_authority[action.action_id] = authority
+            if satisfied:
+                satisfied_once.add(action.action_id)
             instances.append(
                 {
                     "study_id": study_id,
@@ -105,7 +114,7 @@ def check_attempt(
                     "sequence": int(event["sequence"]),
                     "kind": str(event["kind"]),
                     "role": "duplicate_observation" if repeated else "action",
-                    "precondition_satisfied": bool(action.precondition(previous_state)),
+                    "precondition_satisfied": satisfied,
                     "state_before": previous_state.key(),
                     "state_after": step.state.key(),
                 }
@@ -114,7 +123,29 @@ def check_attempt(
     return instances
 
 
-def run(root: Path, output_root: Path, *, selected: list[str] | None = None) -> dict[str, Any]:
+def qualification_attempts(root: Path, study_id: str) -> list[str]:
+    """Attempts of a non-formal study, which has run evidence but no ledger."""
+
+    study = root / "runs" / study_id
+    if not study.is_dir():
+        raise PreconditionCheckError(f"qualification study is missing: {study}")
+    attempts = sorted(
+        path.name
+        for path in study.iterdir()
+        if path.is_dir() and (path / "derived" / "closed.trace.jsonl").is_file()
+    )
+    if not attempts:
+        raise PreconditionCheckError(f"qualification study has no closed trace: {study}")
+    return attempts
+
+
+def run(
+    root: Path,
+    output_root: Path,
+    *,
+    selected: list[str] | None = None,
+    qualification_studies: list[str] | None = None,
+) -> dict[str, Any]:
     root = root.resolve()
     output_root = output_root.resolve()
     if output_root.exists() and any(output_root.iterdir()):
@@ -142,6 +173,12 @@ def run(root: Path, output_root: Path, *, selected: list[str] | None = None) -> 
                     str(event.get("cell_id", "")),
                 )
             )
+    for study_id in qualification_studies or []:
+        # A qualification opens no ledger, so its attempts come from the
+        # retained run evidence directly.  They carry no denominator either.
+        for attempt_id in qualification_attempts(root, study_id):
+            attempts += 1
+            instances.extend(check_attempt(root, study_id, attempt_id, "qualification"))
 
     per_action: list[dict[str, Any]] = []
     for action in CORE_ACTIONS:
@@ -245,9 +282,15 @@ def main() -> int:
     parser.add_argument("--root", type=Path, default=Path("."))
     parser.add_argument("--output-root", type=Path, required=True)
     parser.add_argument("--study", action="append", default=None)
+    parser.add_argument("--qualification-study", action="append", default=None)
     args = parser.parse_args()
     try:
-        summary = run(args.root, args.output_root, selected=args.study)
+        summary = run(
+            args.root,
+            args.output_root,
+            selected=args.study,
+            qualification_studies=args.qualification_study,
+        )
     except (
         PreconditionCheckError,
         CoreActionError,

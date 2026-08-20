@@ -30,7 +30,7 @@ repository validation passes. A step that is partly done says which part.
 v8 plan stage:      Stage 2, construct the core action and workload corpus
 Stage 1:            complete, exit checks met
 Corpus freeze:      proposed and conditional, deliberately not signed
-Current step:       Step E, sign the corpus freeze
+Current step:       Step E, blocked on the precondition-evaluation decision
 Formal campaigns:   none authorized, none running
 ```
 
@@ -250,10 +250,31 @@ The full seven-action qualification then passed 18 of 18 across both mechanisms,
 with both launch-configuration attempts accepted and physically valid.
 See [the record](../experiments/step_d_full_corpus_qualification_v1/QUALIFICATION.md).
 
-### Step E — sign the corpus freeze — NOT STARTED
+### Step E — sign the corpus freeze — BLOCKED ON A MODELLING DECISION
 
-Goal: satisfy the five signing conditions in the conditional freeze and record
-the signed corpus with each action's qualification attached.
+The replay a signed corpus must carry was re-run over the whole current evidence
+base: 303 attempts, 213 formal and 90 from this stage's qualifications. The
+qualification evidence was brought in because the four actions added after Step A
+have no instances in the formal corpus.
+
+Nothing is unvalidated any more — the reclaim's marker was still the placeholder
+from before it existed, and now recognises a return to an external route after a
+producer loss. Five of seven predicates are consistent across every instance.
+
+Two are not, both in the same reclaim episode and both from one cause: a
+precondition is evaluated here against the state at the moment an effect appears
+in the trace, while the live executor evaluates it against the state at the
+moment it decides. Those differ by the revocation latency, which is negligible
+everywhere else. The producer loss is recorded after the failsafe already
+revoked the external route, and the reclaim request while the vehicle sits in
+the internal navigator rather than a named safe route.
+
+The choice is between evaluating against the decision moment, widening two
+predicates to the recorded moment, or signing with the divergence noted. It is a
+modelling decision, not a defect.
+See [the blocked-signing record](../experiments/stage2_signed_corpus_v1/SIGNING_BLOCKED.md).
+
+Every other signing condition is met.
 
 ### Step F — Stage 3 closed loop — NOT STARTED
 
@@ -278,16 +299,17 @@ generation — remain deferred by standing decision 3.
 
 ## Next concrete action
 
-Sign the corpus freeze. All five conditions in
-[the conditional freeze](../experiments/stage2_core_corpus_freeze_v1/CONDITIONAL_FREEZE.md)
-are now met: the decision interface selects an action and a timing, the
-availability gaps are closed, the reclaim is implemented, every action has a
-non-formal qualification, and no action remains unvalidated.
+Take the precondition-evaluation decision in
+[the blocked-signing record](../experiments/stage2_signed_corpus_v1/SIGNING_BLOCKED.md),
+then sign the corpus freeze and close Stage 2.
 
-Signing means recording the corpus with each action's qualification attached,
-which closes Stage 2. Re-run the Step A precondition replay first, so the signed
-record carries a current consistency check rather than one taken before four
-actions were added.
+The three options are: evaluate a precondition against the executor's decision
+time, which the strategy lifecycle already records; widen the producer
+termination and reclaim predicates to the recorded moment; or sign with the
+reclaim episode noted as a known divergence.
+
+All seven actions are implemented, selectable and qualified. The full-corpus
+qualification passed 18 of 18.
 
 Before any live batch, confirm no unpinned process competes for the pinned CPU
 sets, and afterwards confirm the central real-time factor is near 1.0.

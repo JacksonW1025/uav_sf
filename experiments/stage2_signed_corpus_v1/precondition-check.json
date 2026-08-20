@@ -1,0 +1,370 @@
+{
+  "actions": [
+    {
+      "action_id": "stop_owned_setpoint_stream",
+      "attempts_with_instance": 119,
+      "availability": {
+        "dynamic_external_mode": "implemented",
+        "legacy_offboard": "implemented"
+      },
+      "cells": [
+        {
+          "cell_id": "main-dynamic-official",
+          "instances": 3,
+          "study_id": "main-strategy-comparison-thor-v1"
+        },
+        {
+          "cell_id": "main-dynamic-random",
+          "instances": 3,
+          "study_id": "main-strategy-comparison-thor-v1"
+        },
+        {
+          "cell_id": "main-dynamic-state",
+          "instances": 3,
+          "study_id": "main-strategy-comparison-thor-v1"
+        },
+        {
+          "cell_id": "main-offboard-official",
+          "instances": 3,
+          "study_id": "main-strategy-comparison-thor-v1"
+        },
+        {
+          "cell_id": "main-offboard-random",
+          "instances": 3,
+          "study_id": "main-strategy-comparison-thor-v1"
+        },
+        {
+          "cell_id": "main-offboard-state",
+          "instances": 3,
+          "study_id": "main-strategy-comparison-thor-v1"
+        },
+        {
+          "cell_id": "a2-stall-dynamic-remediation",
+          "instances": 8,
+          "study_id": "motivation-stage-a2-thor-remediation-v1"
+        },
+        {
+          "cell_id": "a2-stall-offboard-remediation",
+          "instances": 8,
+          "study_id": "motivation-stage-a2-thor-remediation-v1"
+        },
+        {
+          "cell_id": "a2-stall-dynamic",
+          "instances": 8,
+          "study_id": "motivation-stage-a2-thor-v1"
+        },
+        {
+          "cell_id": "a2-stall-offboard",
+          "instances": 6,
+          "study_id": "motivation-stage-a2-thor-v1"
+        },
+        {
+          "cell_id": "fault-offboard-attitude-stall",
+          "instances": 8,
+          "study_id": "motivation-thor-v1"
+        },
+        {
+          "cell_id": "fault-offboard-body-rate-stall",
+          "instances": 8,
+          "study_id": "motivation-thor-v1"
+        },
+        {
+          "cell_id": "fault-offboard-trajectory-stall",
+          "instances": 8,
+          "study_id": "motivation-thor-v1"
+        },
+        {
+          "cell_id": "qualification",
+          "instances": 13,
+          "study_id": "step-b-corpus-selection-qualification-v1"
+        },
+        {
+          "cell_id": "qualification",
+          "instances": 9,
+          "study_id": "step-c-adjacent-qualification-v1"
+        },
+        {
+          "cell_id": "qualification",
+          "instances": 9,
+          "study_id": "step-c-reentry-qualification-v1"
+        },
+        {
+          "cell_id": "qualification",
+          "instances": 8,
+          "study_id": "step-c-restart-qualification-v1"
+        },
+        {
+          "cell_id": "qualification",
+          "instances": 8,
+          "study_id": "step-d-full-corpus-qualification-v1"
+        }
+      ],
+      "duplicate_observations": 0,
+      "example_violations": [],
+      "instances": 119,
+      "inventory_action_id": "owned_setpoint_stall_healthy",
+      "lifecycle_phase": "execution",
+      "marker": "a fault_detected event whose reason names a stalled stream",
+      "precondition": "an external route holds complete authority and no fault has been observed yet in this episode",
+      "precondition_satisfied": 119,
+      "precondition_violations": 0,
+      "status": "consistent"
+    },
+    {
+      "action_id": "terminate_owning_producer",
+      "attempts_with_instance": 37,
+      "availability": {
+        "dynamic_external_mode": "implemented",
+        "legacy_offboard": "implemented"
+      },
+      "cells": [
+        {
+          "cell_id": "fault-dynamic-process-exit",
+          "instances": 8,
+          "study_id": "motivation-thor-v1"
+        },
+        {
+          "cell_id": "fault-offboard-process-exit",
+          "instances": 8,
+          "study_id": "motivation-thor-v1"
+        },
+        {
+          "cell_id": "qualification",
+          "instances": 5,
+          "study_id": "step-b-corpus-selection-qualification-v1"
+        },
+        {
+          "cell_id": "qualification",
+          "instances": 5,
+          "study_id": "step-c-adjacent-qualification-v1"
+        },
+        {
+          "cell_id": "qualification",
+          "instances": 4,
+          "study_id": "step-c-reentry-qualification-v1"
+        },
+        {
+          "cell_id": "qualification",
+          "instances": 5,
+          "study_id": "step-c-restart-qualification-v1"
+        },
+        {
+          "cell_id": "qualification",
+          "instances": 2,
+          "study_id": "step-d-full-corpus-qualification-v1"
+        }
+      ],
+      "duplicate_observations": 17,
+      "example_violations": [
+        {
+          "attempt_id": "step-cr-q-offboard-random-001",
+          "sequence": 10474,
+          "state_before": "family=internal_safe|epoch=e3_plus|owner=internal|phase=executing|lineage=complete|freshness=fresh|successor=installed|fallback=none|fault=none|motion=unobserved"
+        }
+      ],
+      "instances": 37,
+      "inventory_action_id": "owned_process_exit_fallback",
+      "lifecycle_phase": "fallback",
+      "marker": "a fault_detected event whose reason names a producer exit",
+      "precondition": "an external route holds complete authority and no fault has been observed yet in this episode",
+      "precondition_satisfied": 36,
+      "precondition_violations": 1,
+      "status": "inconsistent"
+    },
+    {
+      "action_id": "adjacent_land_request",
+      "attempts_with_instance": 33,
+      "availability": {
+        "dynamic_external_mode": "implemented",
+        "legacy_offboard": "implemented"
+      },
+      "cells": [
+        {
+          "cell_id": "timing-executor-before-remediation",
+          "instances": 10,
+          "study_id": "motivation-thor-remediation-v1"
+        },
+        {
+          "cell_id": "timing-executor-after",
+          "instances": 10,
+          "study_id": "motivation-thor-v1"
+        },
+        {
+          "cell_id": "timing-executor-near",
+          "instances": 10,
+          "study_id": "motivation-thor-v1"
+        },
+        {
+          "cell_id": "qualification",
+          "instances": 2,
+          "study_id": "step-c-adjacent-qualification-v1"
+        },
+        {
+          "cell_id": "qualification",
+          "instances": 1,
+          "study_id": "step-d-full-corpus-qualification-v1"
+        }
+      ],
+      "duplicate_observations": 0,
+      "example_violations": [],
+      "instances": 33,
+      "inventory_action_id": "adjacent_land_request_near_completion",
+      "lifecycle_phase": "replacement",
+      "marker": "an adjacent_request event",
+      "precondition": "some route currently holds complete authority",
+      "precondition_satisfied": 33,
+      "precondition_violations": 0,
+      "status": "consistent"
+    },
+    {
+      "action_id": "re_enter_route_after_successor",
+      "attempts_with_instance": 37,
+      "availability": {
+        "dynamic_external_mode": "implemented",
+        "legacy_offboard": "implemented"
+      },
+      "cells": [
+        {
+          "cell_id": "timing-offboard-reentry-rtl-remediation",
+          "instances": 10,
+          "study_id": "motivation-thor-remediation-v1"
+        },
+        {
+          "cell_id": "timing-offboard-reentry-hold",
+          "instances": 10,
+          "study_id": "motivation-thor-v1"
+        },
+        {
+          "cell_id": "qualification",
+          "instances": 2,
+          "study_id": "step-c-adjacent-qualification-v1"
+        },
+        {
+          "cell_id": "qualification",
+          "instances": 5,
+          "study_id": "step-c-reentry-qualification-v1"
+        },
+        {
+          "cell_id": "qualification",
+          "instances": 5,
+          "study_id": "step-c-restart-qualification-v1"
+        },
+        {
+          "cell_id": "qualification",
+          "instances": 5,
+          "study_id": "step-d-full-corpus-qualification-v1"
+        }
+      ],
+      "duplicate_observations": 0,
+      "example_violations": [],
+      "instances": 37,
+      "inventory_action_id": "route_re_entry_through_hold",
+      "lifecycle_phase": "re_entry",
+      "marker": "a transition_requested event the producer recorded as a repeat cycle",
+      "precondition": "a completion has been observed and an internal safe route now holds complete authority",
+      "precondition_satisfied": 37,
+      "precondition_violations": 0,
+      "status": "consistent"
+    },
+    {
+      "action_id": "withhold_health_reply",
+      "attempts_with_instance": 10,
+      "availability": {
+        "dynamic_external_mode": "implemented",
+        "legacy_offboard": "not_applicable"
+      },
+      "cells": [
+        {
+          "cell_id": "fault-dynamic-health-loss",
+          "instances": 8,
+          "study_id": "motivation-thor-v1"
+        },
+        {
+          "cell_id": "qualification",
+          "instances": 2,
+          "study_id": "step-d-full-corpus-qualification-v1"
+        }
+      ],
+      "duplicate_observations": 0,
+      "example_violations": [],
+      "instances": 10,
+      "inventory_action_id": "activation_rejection_after_health_loss",
+      "lifecycle_phase": "activation",
+      "marker": "a fault_detected event whose reason names a rejection",
+      "precondition": "activation of the external route has been requested and no external route holds authority yet",
+      "precondition_satisfied": 10,
+      "precondition_violations": 0,
+      "status": "consistent"
+    },
+    {
+      "action_id": "exhaust_registration_capacity",
+      "attempts_with_instance": 8,
+      "availability": {
+        "dynamic_external_mode": "implemented",
+        "legacy_offboard": "not_applicable"
+      },
+      "cells": [
+        {
+          "cell_id": "fault-dynamic-registration-capacity",
+          "instances": 8,
+          "study_id": "motivation-thor-v1"
+        }
+      ],
+      "duplicate_observations": 8,
+      "example_violations": [],
+      "instances": 8,
+      "inventory_action_id": "registration_capacity_rejection",
+      "lifecycle_phase": "registration",
+      "marker": "a registration event whose result code reports a rejection",
+      "precondition": "the episode is running and some route holds complete authority",
+      "precondition_satisfied": 8,
+      "precondition_violations": 0,
+      "status": "consistent"
+    },
+    {
+      "action_id": "restart_producer_after_loss",
+      "attempts_with_instance": 1,
+      "availability": {
+        "dynamic_external_mode": "implemented",
+        "legacy_offboard": "implemented"
+      },
+      "cells": [
+        {
+          "cell_id": "qualification",
+          "instances": 1,
+          "study_id": "step-c-restart-qualification-v1"
+        }
+      ],
+      "duplicate_observations": 0,
+      "example_violations": [
+        {
+          "attempt_id": "step-cr-q-offboard-random-001",
+          "sequence": 12674,
+          "state_before": "family=internal_navigator|epoch=e2|owner=internal|phase=executing|lineage=complete|freshness=fresh|successor=installed|fallback=triggered|fault=process_exit|motion=unobserved"
+        }
+      ],
+      "instances": 1,
+      "inventory_action_id": "producer_restart_after_exit",
+      "lifecycle_phase": "fallback",
+      "marker": "a transition_requested returning to an external route after a producer loss",
+      "precondition": "a producer loss has been observed and an internal safe route now holds complete authority",
+      "precondition_satisfied": 0,
+      "precondition_violations": 1,
+      "status": "inconsistent"
+    }
+  ],
+  "attempts_checked": 303,
+  "check_id": "stage2-core-action-precondition-check-v1",
+  "consistent_actions": 5,
+  "immutability": {
+    "created_formal_denominator": false,
+    "modified_frozen_evidence": false
+  },
+  "inconsistent_actions": [
+    "restart_producer_after_loss",
+    "terminate_owning_producer"
+  ],
+  "schema_version": "1.0",
+  "total_instances": 270,
+  "unvalidated_actions": []
+}
