@@ -243,6 +243,33 @@ def _adjacent_bucket(decision: dict[str, Any] | None) -> str:
     }.get(boundary, "near")
 
 
+SAFE_NAV_STATES = {4: "internal_hold", 5: "internal_rtl", 18: "internal_land"}
+
+
+def observed_producer_loss(path: Path, mechanism: str) -> tuple[int, str] | None:
+    """When telemetry first shows a safe route taking over the tested one.
+
+    The producer's exit was previously learned by polling its process, which
+    was measured about eleven seconds behind the vehicle's own navigation
+    state.  The fault then reached the trace long after the failsafe and the
+    executor already knew, so the evidence disagreed with what was known.
+    """
+
+    records = _read_jsonl_snapshot(path)
+    statuses = [item for item in records if item.get("kind") == "vehicle_status"]
+    active = 14 if mechanism == "legacy_offboard" else None
+    tested_seen = False
+    for item in statuses:
+        nav = int(item.get("nav_state", -1))
+        if not tested_seen:
+            if (active is not None and nav == active) or (active is None and 23 <= nav <= 30):
+                tested_seen = True
+            continue
+        if nav in SAFE_NAV_STATES:
+            return int(item["received_monotonic_ns"]), SAFE_NAV_STATES[nav]
+    return None
+
+
 def _latest_safe_route(path: Path) -> str | None:
     records = _read_jsonl_snapshot(path)
     statuses = [item for item in records if item.get("kind") == "vehicle_status"]
@@ -816,6 +843,19 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 lifecycle.append(
                     "producer_restarted", producer_session=reclaim_session
                 )
+            if (
+                args.fault_mode == "process_exit"
+                and not expected_fault_observed
+                and telemetry.is_file()
+            ):
+                observed = observed_producer_loss(telemetry, args.mechanism)
+                if observed is not None:
+                    # Record the loss where the vehicle shows it, not where the
+                    # runner happens to notice the process is gone.
+                    expected_fault_observed = True
+                    observed_fallback_route = observed[1]
+                    lifecycle.append("fault_detected", reason="source_process_exit")
+                    lifecycle.append("fallback_triggered", route=observed[1])
             if decision.exists():
                 lifecycle.append("fault_detected", reason="active_safety_stop")
                 outcome = "FORMAL_SAFETY_STOP"
