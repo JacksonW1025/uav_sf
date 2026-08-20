@@ -180,6 +180,18 @@ class CorpusDecisionTests(unittest.TestCase):
                 )
         self.assertEqual(_adjacent_bucket(None), "near")
 
+    def test_the_launch_configuration_declares_a_workload_without_motion(self) -> None:
+        profile = live_profile("withhold_health_reply")
+        self.assertEqual(profile.application, "launch")
+        self.assertEqual(profile.workload_profile, "hover")
+        self.assertEqual(profile.injection_phase, "stable_hover")
+        # A refused activation never leaves the hover, so it has no progress to
+        # demand and its plan must not pretend otherwise.
+        self.assertFalse(profile.motion_required)
+        self.assertNotIn(
+            "straight_translation", profile.workload_phases
+        )
+
     def test_the_reclaim_anchors_on_a_telemetry_visible_fallback(self) -> None:
         profile = live_profile("restart_producer_after_loss")
         self.assertEqual(profile.timing_anchor, "fallback_installed")

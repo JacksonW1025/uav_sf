@@ -138,6 +138,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     "injection_phase": profile.injection_phase,
                 }
                 if not profile.motion_required:
+                    workload["motion_required"] = False
                     workload["physical_validity"] = {
                         **workload["physical_validity"],
                         "minimum_motion_entry_progress_m": 0.0,

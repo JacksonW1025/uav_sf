@@ -206,8 +206,15 @@ def validate_plan(plan: dict[str, Any], *, allow_template: bool = False) -> None
             "injection_phase", "physical_analysis_plan_digest", "observer_profile",
             "observer_config_digest", "physical_validity",
         }
-        if set(workload) != fields:
+        # A workload may declare that it never moves. Absent, the strict
+        # moving obligations apply, so every plan written before this stays
+        # valid and unchanged.
+        optional = {"motion_required"}
+        if not fields <= set(workload) or not set(workload) <= fields | optional:
             raise PlanError("workload fields differ from schema 1.3")
+        motion_required = bool(workload.get("motion_required", True))
+        if not isinstance(workload.get("motion_required", True), bool):
+            raise PlanError("workload motion_required must be boolean")
         if workload["setpoint_semantics"] not in {"position_only", "position_plus_velocity"}:
             raise PlanError("unsupported setpoint semantics")
         phases = workload["phases"]
@@ -225,10 +232,25 @@ def validate_plan(plan: dict[str, Any], *, allow_template: bool = False) -> None
             "minimum_takeoff_height_m", "takeoff_dwell_s",
             "minimum_motion_entry_progress_m", "minimum_nominal_completion_progress_m",
         }
+        # A moving workload must demand progress.  An episode that declares no
+        # motion — a refused activation never leaves the hover — has none to
+        # demand, and requiring a positive threshold there would make an honest
+        # plan unrepresentable rather than catch a defective one.
+        moving = motion_required
         if set(physical) != physical_fields or any(
             not isinstance(value, (int, float)) or value < 0 for value in physical.values()
-        ) or physical["minimum_takeoff_height_m"] <= 0 or physical["minimum_motion_entry_progress_m"] <= 0 or physical["minimum_nominal_completion_progress_m"] <= 0:
+        ) or physical["minimum_takeoff_height_m"] <= 0:
             raise PlanError("physical validity contract is incomplete")
+        if moving and (
+            physical["minimum_motion_entry_progress_m"] <= 0
+            or physical["minimum_nominal_completion_progress_m"] <= 0
+        ):
+            raise PlanError("a moving workload must require motion progress")
+        if not moving and (
+            physical["minimum_motion_entry_progress_m"] != 0
+            or physical["minimum_nominal_completion_progress_m"] != 0
+        ):
+            raise PlanError("a workload without motion must not require progress")
 
     identity = _mapping(plan["source_identity"], "source_identity")
     if set(identity) != {"repository_commit", "dependency_lock_digest"}:
