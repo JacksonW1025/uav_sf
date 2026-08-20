@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.model.runtime_route import EVENT_KINDS, ROUTES
+from scripts.evaluator.sequence_obligations import BRANCH_FIELDS, SEQUENCE_CONDITIONS
 
 
 STRATEGIES = {"official_sequence", "bounded_random_timing", "state_aware"}
@@ -41,6 +42,52 @@ def _mapping(value: object, name: str) -> dict[str, Any]:
     return value
 
 
+def _validate_sequence_obligations(
+    plan: dict[str, Any], transition: dict[str, Any]
+) -> None:
+    """Refuse a conditional obligation that is not a real alternative.
+
+    The transition carries the obligations that hold when the condition does
+    not, so the branch must differ from it in at least one field.  A branch
+    identical to the transition would declare a choice the evaluation cannot
+    make, and one naming a field the transition does not is not a branch of
+    this plan at all.
+    """
+
+    block = _mapping(plan["sequence_obligations"], "sequence_obligations")
+    if set(block) != {"condition", "when_observed"}:
+        raise PlanError("sequence_obligations fields differ from the current schema")
+    if block["condition"] not in SEQUENCE_CONDITIONS:
+        raise PlanError("sequence_obligations names an unsupported condition")
+    branch = _mapping(block["when_observed"], "when_observed")
+    if not branch or not set(branch) <= set(BRANCH_FIELDS):
+        raise PlanError("a sequence obligation branch may only restate branch obligations")
+    if all(branch[field] == transition[field] for field in branch):
+        raise PlanError("a sequence obligation branch must differ from the transition")
+    # The branch must itself be a legal set of obligations, so the plan is
+    # valid whichever way the condition goes.
+    merged = {**transition, **branch}
+    for field in ("completion_expected", "fault_expected", "fallback_expected"):
+        if not isinstance(merged[field], bool):
+            raise PlanError(f"{field} must be boolean in every obligation branch")
+    count = merged["target_activation_count"]
+    if (
+        not isinstance(count, list)
+        or len(count) != 2
+        or not all(isinstance(value, int) and value >= 0 for value in count)
+        or count[0] > count[1]
+    ):
+        raise PlanError("target_activation_count must be an ordered non-negative pair in every branch")
+    if merged["target_activation_expected"] and count[0] < 1:
+        raise PlanError("an expected target activation requires a positive count in every branch")
+    if merged["completion_expected"] and not merged["target_activation_expected"]:
+        raise PlanError("completion requires target activation in every branch")
+    if merged["fallback_expected"] and not merged["fault_expected"]:
+        raise PlanError("fallback installation requires an expected fault in every branch")
+    if merged["expected_successor"] not in ROUTES:
+        raise PlanError("unsupported expected_successor in a sequence obligation branch")
+
+
 def validate_plan(plan: dict[str, Any], *, allow_template: bool = False) -> None:
     required = {
         "schema_version",
@@ -55,12 +102,16 @@ def validate_plan(plan: dict[str, Any], *, allow_template: bool = False) -> None
         "cleanup",
     }
     version = plan.get("schema_version")
-    if version == "1.3":
+    if version in {"1.3", "1.4"}:
         required.add("workload")
+    if version == "1.4":
+        # An episode that can carry more than one sequence declares the
+        # obligations of each and the condition that selects between them.
+        required.add("sequence_obligations")
     if set(plan) != required:
         raise PlanError("plan fields differ from the current schema")
-    if version not in {"1.2", "1.3"}:
-        raise PlanError("plan schema_version must be 1.2 or 1.3")
+    if version not in {"1.2", "1.3", "1.4"}:
+        raise PlanError("plan schema_version must be 1.2, 1.3 or 1.4")
     for field in ("plan_id", "run_id"):
         value = plan[field]
         if not isinstance(value, str) or not value.strip():
@@ -154,6 +205,9 @@ def validate_plan(plan: dict[str, Any], *, allow_template: bool = False) -> None
     if transition["fallback_expected"] and not transition["fault_expected"]:
         raise PlanError("fallback installation requires an expected fault")
 
+    if version == "1.4":
+        _validate_sequence_obligations(plan, transition)
+
     thresholds = _mapping(plan["thresholds"], "thresholds")
     if set(thresholds) != THRESHOLDS or any(
         not isinstance(value, int) or value <= 0 for value in thresholds.values()
@@ -196,6 +250,16 @@ def validate_plan(plan: dict[str, Any], *, allow_template: bool = False) -> None
         mandatory.add("fallback_triggered")
     if "adjacent_after_activation_ns" in bounds:
         mandatory.add("adjacent_request")
+    if version == "1.4":
+        # The evidence a branch needs must be collected whichever way the
+        # condition goes, so the mandatory set is the union over both branches.
+        branch = plan["sequence_obligations"]["when_observed"]
+        if branch.get("completion_expected", transition["completion_expected"]):
+            mandatory.add("completion")
+        if branch.get("fault_expected", transition["fault_expected"]):
+            mandatory.add("fault_detected")
+        if branch.get("fallback_expected", transition["fallback_expected"]):
+            mandatory.add("fallback_triggered")
     if not mandatory <= set(kinds):
         raise PlanError("required_event_kinds omits a mandatory route contract event")
 

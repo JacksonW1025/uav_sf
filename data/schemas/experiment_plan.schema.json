@@ -1,37 +1,344 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "route": {
+      "enum": [
+        "px4_internal",
+        "legacy_offboard",
+        "dynamic_external_mode",
+        "mode_executor",
+        "internal_hold",
+        "internal_rtl",
+        "internal_land",
+        "internal_recovery"
+      ]
+    },
+    "safe_route": {
+      "enum": [
+        "internal_hold",
+        "internal_rtl",
+        "internal_land",
+        "internal_recovery"
+      ]
+    }
+  },
   "$id": "https://jacksonw1025.github.io/uav_sf/experiment_plan.schema.json",
-  "title": "Family A experiment plan",
-  "type": "object",
-  "required": [
-    "schema_version",
-    "plan_id",
-    "run_id",
-    "strategy",
-    "transition",
-    "thresholds",
-    "required_event_kinds",
-    "source_identity",
-    "execution_environment",
-    "cleanup"
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "else": {
+        "not": {
+          "required": [
+            "workload"
+          ]
+        }
+      },
+      "if": {
+        "properties": {
+          "schema_version": {
+            "const": "1.3"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "workload"
+        ]
+      }
+    }
   ],
   "properties": {
-    "schema_version": {"enum": ["1.2", "1.3"]},
-    "plan_id": {"type": "string", "minLength": 1},
-    "run_id": {"type": "string", "minLength": 1},
-    "strategy": {
-      "type": "object",
-      "required": ["name", "seed", "simulation_seed", "timing_bounds_ns"],
+    "cleanup": {
+      "additionalProperties": false,
       "properties": {
-        "name": {"enum": ["official_sequence", "bounded_random_timing", "state_aware"]},
-        "seed": {"type": ["integer", "null"]},
-        "simulation_seed": {"type": "integer", "minimum": 1},
-        "timing_bounds_ns": {"type": "object"}
+        "require_disarmed": {
+          "type": "boolean"
+        },
+        "require_landed": {
+          "type": "boolean"
+        },
+        "safe_terminal_routes": {
+          "items": {
+            "$ref": "#/$defs/safe_route"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        }
       },
-      "additionalProperties": false
+      "required": [
+        "require_landed",
+        "require_disarmed",
+        "safe_terminal_routes"
+      ],
+      "type": "object"
+    },
+    "execution_environment": {
+      "additionalProperties": false,
+      "properties": {
+        "architecture": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "collector_host_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "environment_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "environment_manifest_digest": {
+          "anyOf": [
+            {
+              "pattern": "^sha256:[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "const": "REPLACE-BEFORE-EXECUTION"
+            }
+          ]
+        },
+        "execution_host_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "operating_system": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "px4_binary_digest": {
+          "anyOf": [
+            {
+              "pattern": "^sha256:[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "const": "REPLACE-BEFORE-EXECUTION"
+            }
+          ]
+        },
+        "target_kind": {
+          "enum": [
+            "sitl",
+            "hitl",
+            "flight_hardware",
+            "REPLACE-BEFORE-EXECUTION"
+          ]
+        }
+      },
+      "required": [
+        "environment_id",
+        "execution_host_id",
+        "collector_host_id",
+        "target_kind",
+        "architecture",
+        "operating_system",
+        "px4_binary_digest",
+        "environment_manifest_digest"
+      ],
+      "type": "object"
+    },
+    "plan_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "required_event_kinds": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "run_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_version": {
+      "enum": [
+        "1.2",
+        "1.3",
+        "1.4"
+      ]
+    },
+    "sequence_obligations": {
+      "additionalProperties": false,
+      "description": "Obligations for an episode that can carry more than one sequence. The transition carries the obligations that hold when the condition does not; this block carries the ones that replace them when it does. The condition is decided by trace evidence alone.",
+      "properties": {
+        "condition": {
+          "enum": [
+            "external_route_reclaimed_after_fault"
+          ]
+        },
+        "when_observed": {
+          "additionalProperties": false,
+          "minProperties": 1,
+          "properties": {
+            "completion_expected": {
+              "type": "boolean"
+            },
+            "expected_successor": {
+              "$ref": "#/$defs/route"
+            },
+            "fallback_expected": {
+              "type": "boolean"
+            },
+            "fault_expected": {
+              "type": "boolean"
+            },
+            "target_activation_count": {
+              "items": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "maxItems": 2,
+              "minItems": 2,
+              "type": "array"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "required": [
+        "condition",
+        "when_observed"
+      ],
+      "type": "object"
+    },
+    "source_identity": {
+      "additionalProperties": false,
+      "properties": {
+        "dependency_lock_digest": {
+          "anyOf": [
+            {
+              "pattern": "^sha256:[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "const": "REPLACE-BEFORE-EXECUTION"
+            }
+          ]
+        },
+        "repository_commit": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{40}$",
+              "type": "string"
+            },
+            {
+              "const": "REPLACE-BEFORE-EXECUTION"
+            }
+          ]
+        }
+      },
+      "required": [
+        "repository_commit",
+        "dependency_lock_digest"
+      ],
+      "type": "object"
+    },
+    "strategy": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "enum": [
+            "official_sequence",
+            "bounded_random_timing",
+            "state_aware"
+          ]
+        },
+        "seed": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "simulation_seed": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "timing_bounds_ns": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "name",
+        "seed",
+        "simulation_seed",
+        "timing_bounds_ns"
+      ],
+      "type": "object"
+    },
+    "thresholds": {
+      "additionalProperties": {
+        "exclusiveMinimum": 0,
+        "type": "integer"
+      },
+      "required": [
+        "revocation_deadline_ns",
+        "installation_deadline_ns",
+        "maximum_effect_gap_ns",
+        "maximum_command_age_ns",
+        "successor_deadline_ns",
+        "fallback_deadline_ns"
+      ],
+      "type": "object"
     },
     "transition": {
-      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "activation_rejection_expected": {
+          "type": "boolean"
+        },
+        "completion_expected": {
+          "type": "boolean"
+        },
+        "expected_executor_owner": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "expected_fallback": {
+          "$ref": "#/$defs/safe_route"
+        },
+        "expected_lifecycle_owner": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "expected_successor": {
+          "$ref": "#/$defs/route"
+        },
+        "fallback_expected": {
+          "type": "boolean"
+        },
+        "fault_expected": {
+          "type": "boolean"
+        },
+        "registration_rejection_expected": {
+          "type": "boolean"
+        },
+        "source_route": {
+          "$ref": "#/$defs/route"
+        },
+        "target_activation_count": {
+          "items": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        },
+        "target_activation_expected": {
+          "type": "boolean"
+        },
+        "target_route": {
+          "$ref": "#/$defs/route"
+        }
+      },
       "required": [
         "source_route",
         "target_route",
@@ -47,175 +354,104 @@
         "fault_expected",
         "fallback_expected"
       ],
-      "properties": {
-        "source_route": {"$ref": "#/$defs/route"},
-        "target_route": {"$ref": "#/$defs/route"},
-        "expected_successor": {"$ref": "#/$defs/route"},
-        "expected_fallback": {"$ref": "#/$defs/safe_route"},
-        "expected_lifecycle_owner": {"type": "string", "minLength": 1},
-        "expected_executor_owner": {"type": "string", "minLength": 1},
-        "target_activation_expected": {"type": "boolean"},
-        "target_activation_count": {
-          "type": "array",
-          "minItems": 2,
-          "maxItems": 2,
-          "items": {"type": "integer", "minimum": 0}
-        },
-        "registration_rejection_expected": {"type": "boolean"},
-        "activation_rejection_expected": {"type": "boolean"},
-        "completion_expected": {"type": "boolean"},
-        "fault_expected": {"type": "boolean"},
-        "fallback_expected": {"type": "boolean"}
-      },
-      "additionalProperties": false
-    },
-    "thresholds": {
-      "type": "object",
-      "required": [
-        "revocation_deadline_ns",
-        "installation_deadline_ns",
-        "maximum_effect_gap_ns",
-        "maximum_command_age_ns",
-        "successor_deadline_ns",
-        "fallback_deadline_ns"
-      ],
-      "additionalProperties": {"type": "integer", "exclusiveMinimum": 0}
-    },
-    "required_event_kinds": {
-      "type": "array",
-      "items": {"type": "string"},
-      "uniqueItems": true
-    },
-    "source_identity": {
-      "type": "object",
-      "required": ["repository_commit", "dependency_lock_digest"],
-      "properties": {
-        "repository_commit": {
-          "anyOf": [
-            {"type": "string", "pattern": "^[0-9a-f]{40}$"},
-            {"const": "REPLACE-BEFORE-EXECUTION"}
-          ]
-        },
-        "dependency_lock_digest": {
-          "anyOf": [
-            {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
-            {"const": "REPLACE-BEFORE-EXECUTION"}
-          ]
-        }
-      },
-      "additionalProperties": false
-    },
-    "execution_environment": {
-      "type": "object",
-      "required": [
-        "environment_id",
-        "execution_host_id",
-        "collector_host_id",
-        "target_kind",
-        "architecture",
-        "operating_system",
-        "px4_binary_digest",
-        "environment_manifest_digest"
-      ],
-      "properties": {
-        "environment_id": {"type": "string", "minLength": 1},
-        "execution_host_id": {"type": "string", "minLength": 1},
-        "collector_host_id": {"type": "string", "minLength": 1},
-        "target_kind": {
-          "enum": [
-            "sitl",
-            "hitl",
-            "flight_hardware",
-            "REPLACE-BEFORE-EXECUTION"
-          ]
-        },
-        "architecture": {"type": "string", "minLength": 1},
-        "operating_system": {"type": "string", "minLength": 1},
-        "px4_binary_digest": {
-          "anyOf": [
-            {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
-            {"const": "REPLACE-BEFORE-EXECUTION"}
-          ]
-        },
-        "environment_manifest_digest": {
-          "anyOf": [
-            {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
-            {"const": "REPLACE-BEFORE-EXECUTION"}
-          ]
-        }
-      },
-      "additionalProperties": false
-    },
-    "cleanup": {
-      "type": "object",
-      "required": ["require_landed", "require_disarmed", "safe_terminal_routes"],
-      "properties": {
-        "require_landed": {"type": "boolean"},
-        "require_disarmed": {"type": "boolean"},
-        "safe_terminal_routes": {
-          "type": "array",
-          "minItems": 1,
-          "items": {"$ref": "#/$defs/safe_route"},
-          "uniqueItems": true
-        }
-      },
-      "additionalProperties": false
+      "type": "object"
     },
     "workload": {
-      "type": "object",
-      "required": [
-        "profile_id", "profile_digest", "setpoint_semantics", "phases",
-        "injection_phase", "physical_analysis_plan_digest", "observer_profile",
-        "observer_config_digest", "physical_validity"
-      ],
+      "additionalProperties": false,
       "properties": {
-        "profile_id": {"type": "string", "minLength": 1},
-        "profile_digest": {"$ref": "#/$defs/digest"},
-        "setpoint_semantics": {"enum": ["position_only", "position_plus_velocity"]},
-        "phases": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
-        "injection_phase": {"type": "string", "minLength": 1},
-        "physical_analysis_plan_digest": {"$ref": "#/$defs/digest"},
-        "observer_profile": {"enum": ["baseline", "transition"]},
-        "observer_config_digest": {"$ref": "#/$defs/digest"},
-        "physical_validity": {
-          "type": "object",
-          "required": ["minimum_takeoff_height_m", "takeoff_dwell_s", "minimum_motion_entry_progress_m", "minimum_nominal_completion_progress_m"],
-          "properties": {
-            "minimum_takeoff_height_m": {"type": "number", "exclusiveMinimum": 0},
-            "takeoff_dwell_s": {"type": "number", "minimum": 0},
-            "minimum_motion_entry_progress_m": {"type": "number", "exclusiveMinimum": 0},
-            "minimum_nominal_completion_progress_m": {"type": "number", "exclusiveMinimum": 0}
+        "injection_phase": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "observer_config_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "observer_profile": {
+          "enum": [
+            "baseline",
+            "transition"
+          ]
+        },
+        "phases": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
           },
-          "additionalProperties": false
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "physical_analysis_plan_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "physical_validity": {
+          "additionalProperties": false,
+          "properties": {
+            "minimum_motion_entry_progress_m": {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            "minimum_nominal_completion_progress_m": {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            "minimum_takeoff_height_m": {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            "takeoff_dwell_s": {
+              "minimum": 0,
+              "type": "number"
+            }
+          },
+          "required": [
+            "minimum_takeoff_height_m",
+            "takeoff_dwell_s",
+            "minimum_motion_entry_progress_m",
+            "minimum_nominal_completion_progress_m"
+          ],
+          "type": "object"
+        },
+        "profile_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "profile_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "setpoint_semantics": {
+          "enum": [
+            "position_only",
+            "position_plus_velocity"
+          ]
         }
       },
-      "additionalProperties": false
+      "required": [
+        "profile_id",
+        "profile_digest",
+        "setpoint_semantics",
+        "phases",
+        "injection_phase",
+        "physical_analysis_plan_digest",
+        "observer_profile",
+        "observer_config_digest",
+        "physical_validity"
+      ],
+      "type": "object"
     }
   },
-  "allOf": [
-    {
-      "if": {"properties": {"schema_version": {"const": "1.3"}}},
-      "then": {"required": ["workload"]},
-      "else": {"not": {"required": ["workload"]}}
-    }
+  "required": [
+    "schema_version",
+    "plan_id",
+    "run_id",
+    "strategy",
+    "transition",
+    "thresholds",
+    "required_event_kinds",
+    "source_identity",
+    "execution_environment",
+    "cleanup"
   ],
-  "$defs": {
-    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
-    "route": {
-      "enum": [
-        "px4_internal",
-        "legacy_offboard",
-        "dynamic_external_mode",
-        "mode_executor",
-        "internal_hold",
-        "internal_rtl",
-        "internal_land",
-        "internal_recovery"
-      ]
-    },
-    "safe_route": {
-      "enum": ["internal_hold", "internal_rtl", "internal_land", "internal_recovery"]
-    }
-  },
-  "additionalProperties": false
+  "title": "Family A experiment plan",
+  "type": "object"
 }

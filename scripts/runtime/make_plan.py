@@ -64,6 +64,7 @@ def create_plan(
     timing_bounds_ns: dict[str, list[int]] | None = None,
     target_activation_count: list[int] | None = None,
     workload: dict[str, Any] | None = None,
+    sequence_obligations: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     try:
         candidate = attestation["attestation_payload"]["container"]["candidate"]
@@ -88,8 +89,27 @@ def create_plan(
         required.append("fallback_triggered")
     if timing_bounds_ns and "adjacent_after_activation_ns" in timing_bounds_ns:
         required.append("adjacent_request")
+    if sequence_obligations is not None:
+        if workload is None:
+            raise PlanCreationError(
+                "an episode carrying a sequence needs a declared workload"
+            )
+        # Evidence a branch needs must be collected whichever way the condition
+        # goes, so the required kinds are the union over both branches.
+        branch = sequence_obligations.get("when_observed", {})
+        for field, kind in (
+            ("completion_expected", "completion"),
+            ("fault_expected", "fault_detected"),
+            ("fallback_expected", "fallback_triggered"),
+        ):
+            if branch.get(field) and kind not in required:
+                required.append(kind)
     plan = {
-        "schema_version": "1.3" if workload is not None else "1.2",
+        "schema_version": (
+            "1.4"
+            if sequence_obligations is not None
+            else ("1.3" if workload is not None else "1.2")
+        ),
         "plan_id": plan_id,
         "run_id": run_id,
         "strategy": {
@@ -129,6 +149,8 @@ def create_plan(
     }
     if workload is not None:
         plan["workload"] = workload
+    if sequence_obligations is not None:
+        plan["sequence_obligations"] = sequence_obligations
     validate_plan(plan)
     return plan
 

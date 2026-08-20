@@ -30,7 +30,7 @@ repository validation passes. A step that is partly done says which part.
 v8 plan stage:      Stage 3, close the selection loop
 Stage 1:            complete, exit checks met
 Corpus freeze:      signed, seven actions, unchanged by this step
-Current step:       Step F; F-state complete, F-loop next
+Current step:       Step F; F-state and F-obligations complete, F-loop next
 Formal campaigns:   none authorized, none running
 ```
 
@@ -372,6 +372,67 @@ The signed corpus is unchanged: regenerating the action records and setting
 aside the one added field reproduces the signed set exactly.
 See [the record](../experiments/step_f_online_state_v1/ONLINE_STATE_AGREEMENT.md).
 
+#### F-obligations — obligations for an episode that carries a sequence — COMPLETE
+
+Decision taken before code, as Step D's two actions were. An episode that may
+carry several actions cannot preregister one fixed set of obligations, and the
+plan field semantics decide what is possible: `fault_expected` is **two-sided**,
+so a False plan that observes a fault is a violation, while
+`completion_expected` and `fallback_expected` are one-sided and simply stop
+being checked. `target_activation_count` is already an interval.
+
+Two consequences. Whether an episode has a fault must be fixed before flight,
+which sorts the seven actions into four classes by (fault expected, fault
+mode); the process_exit class is exactly `terminate_owning_producer` and
+`restart_producer_after_loss`, the pair standing decision 1 names. And an
+envelope plan that sets both one-sided obligations to False would switch off
+`fallback_installed` and `target_installed` — the contract boundaries those two
+actions each aim at, which is the dependent variable of the study.
+
+So the plan declares both sets and the condition that selects between them.
+Schema 1.4 adds a `sequence_obligations` block: the transition carries the
+obligations that hold when the condition does not, the block carries the ones
+that replace them when it does, and
+[sequence_obligations.py](../scripts/evaluator/sequence_obligations.py) picks
+the branch once, before the Gate, so the Gate and all four Oracles judge one
+resolved set. Three rules keep it honest — the condition and both branches are
+preregistered, the condition is decided by trace evidence alone and never reads
+the executor's own record of what it did, and the evaluation reports which
+branch was applied. Schema 1.2 and 1.3 plans resolve to themselves, so every
+retained study evaluates exactly as before.
+
+The Gate needed one further decision. A plan preregisters the union of both
+branches' required event kinds, so a reader can see what either sequence would
+owe, but demanding the union would make every episode inadmissible for lacking
+the other sequence's events. The resolution narrows the required kinds to the
+branch that ran. Resolving before the Gate is safe: the condition reads trace
+events only, and evidence too thin to establish it makes it false, which
+selects the branch that demands more.
+
+**A defect was found in the existing reclaim plan and is not fixed here.** The
+one retained attempt whose plan declares `target_activation_count` `[2, 2]`,
+`step-cr-q-offboard-random-001`, evaluates to VIOLATION on
+`route_conformance.reentry_identity`. The clause counts repeated public
+requests *from the declared source route*, and a reclaim's request comes from
+the internal navigator the failsafe left the vehicle in, not from the source
+the plan names. The count and the clause measure different things, so the
+reclaim is being given an obligation it does not owe — the same shape as the
+self-contradictory fallback obligation C-restart already removed. Repeated-entry
+identity is the re-entry action's contract boundary; the reclaim's is
+`target_installed`, which the installation clause judges and which passes.
+
+It is recorded rather than fixed because both available fixes are out of scope
+for this step: correcting `activation_count` would edit the signed corpus, and
+widening the clause would change Oracle behaviour for every study. The
+conditional branch therefore leaves `target_activation_count` alone, and the
+qualification attempt keeps its VIOLATION, which is accepted evidence rather
+than a failed attempt.
+
+Covered by [tests/test_sequence_obligations.py](../tests/test_sequence_obligations.py),
+including a check that the two branches are not interchangeable: a reclaim
+judged by the terminate-only obligations must not pass, or the conditional plan
+would be decoration.
+
 #### F-loop — select in flight — NOT STARTED
 
 The executor still applies one action decided before the flight. Making it
@@ -402,19 +463,27 @@ questions are open and unanswered, and both need a decision before code:
   The offline replay over the closed trace stays the authority on whether an
   action was legal; a loop that judged itself by its own gate would be marking
   its own work.
+- A conditional obligation is decided by trace evidence alone. A tester that
+  could assert the condition would be choosing which obligations to be judged
+  against, which is the dual of the rule above.
 - Timing stays five discrete bins; the corpus stays near seven actions.
 - Closed studies, their thresholds and their reports are never edited.
 
 ## Next concrete action
 
-F-loop. The live state the filter runs on now exists and its cost is measured,
-so the remaining work is the loop itself. Decide the two open questions in the
-F-loop entry above before writing code: the episode class whose plan
-obligations hold for every sequence it admits, and which sequence is made
-selectable first. Terminating the producer and then reclaiming is the cheapest
-candidate, because both already share one launch fault mode and the reclaim's
-legality depends on the outcome of the termination, which is the distinction
-between feedback-guided and feedback-free generation.
+F-loop. Both prerequisites are now in place: the live state the filter runs on
+exists and its cost is measured, and an episode that carries a sequence can be
+judged without switching off the boundaries it tests. Both open questions are
+decided — the episode class is the process_exit class, and the first selectable
+sequence is terminating the producer and then reclaiming.
+
+What remains is the loop itself: a decision surface that stays re-derivable
+when the choice depends on what the flight observed. The container cannot
+re-derive a decision it did not have the inputs for, so a new schema version
+has to record each step's input state and candidate set and re-derive the
+choice from those. Then the executor's observe, filter, apply, re-observe and
+select again cycle, and the workload wiring that lets one launch admit both
+sequences.
 
 The corpus it consumes is [signed](../experiments/stage2_signed_corpus_v1/SIGNED_CORPUS.md)
 and unchanged: seven actions, six timed and one applied at launch, all

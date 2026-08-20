@@ -11,6 +11,10 @@ from typing import Any
 
 from scripts.evaluator.plan import PlanError, load_plan
 from scripts.evaluator.result_model import enrich_evaluation, write_evaluation
+from scripts.evaluator.sequence_obligations import (
+    SequenceObligationError,
+    resolve_obligations,
+)
 from scripts.model.runtime_route import RouteModelError, read_trace
 from scripts.oracles.evidence_gate import evaluate_evidence
 from scripts.oracles.freshness_lineage import evaluate_freshness_lineage
@@ -20,12 +24,20 @@ from scripts.oracles.successor_progression import evaluate_successor_progression
 
 
 def evaluate(events: list[dict[str, Any]], plan: dict[str, Any]) -> dict[str, Any]:
-    gate = evaluate_evidence(events, plan)
+    # An episode that can carry more than one sequence preregisters the
+    # obligations of each and the trace-decided condition that selects between
+    # them.  The branch is chosen once, here, so the Gate and every Oracle are
+    # run against one resolved set of obligations rather than deciding for
+    # themselves.  Resolving before the Gate is safe: the condition is decided
+    # from trace events alone, and evidence too thin to establish it makes it
+    # false, which selects the branch that demands more.
+    resolved, resolution = resolve_obligations(events, plan)
+    gate = evaluate_evidence(events, resolved)
     oracle_results = [
-        evaluate_route_conformance(events, plan),
-        evaluate_freshness_lineage(events, plan),
-        evaluate_successor_progression(events, plan),
-        evaluate_registration_contract(events, plan),
+        evaluate_route_conformance(events, resolved),
+        evaluate_freshness_lineage(events, resolved),
+        evaluate_successor_progression(events, resolved),
+        evaluate_registration_contract(events, resolved),
     ]
     statuses = [
         clause["status"]
@@ -50,6 +62,8 @@ def evaluate(events: list[dict[str, Any]], plan: dict[str, Any]) -> dict[str, An
         "evidence_gate": gate,
         "oracles": oracle_results,
     }
+    if resolution is not None:
+        compatible["sequence_obligations"] = resolution
     return enrich_evaluation(compatible)
 
 
