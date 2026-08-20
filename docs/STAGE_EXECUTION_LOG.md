@@ -548,6 +548,56 @@ Every single-action path is untouched: with no class named, all of this is
 skipped and the 255 earlier tests pass unchanged.
 Covered by [tests/test_episode_class_launch.py](../tests/test_episode_class_launch.py).
 
+#### F-live — the non-formal qualification — IN PROGRESS
+
+A single smoke flight was flown before any batch, because every earlier step in
+this stage found defects live that no host-side test could reach. It found
+three, and one of them is a finding about the retained corpus rather than about
+this step.
+
+**Cross-source fold order.** The loop read the lifecycle sidecars every 20 ms
+and telemetry every 500 ms, sorting within each batch. That is not enough. The
+lifecycle `fault_detected` folded first and advanced the state to "fault
+observed"; the same telemetry batch then delivered a Loiter reading from before
+the activation, and against that already-advanced state it looked like a safe
+route taking over unasked. The fallback marker took that older record's
+timestamp — two hundred milliseconds *before* the route activation it is
+supposed to follow. The reclaim's whole window is measured from that marker, so
+all five of its bins collapsed onto "immediately": applied 178 ms after the real
+fallback instead of the 1.5 s selected. Records now pass through an intake that
+folds across sources in arrival order, with telemetry's latest arrival as the
+watermark. Re-flown: 1.5026 s against 1.500 s planned. An offline replay merges
+every source at once and sorts, so it could never have reproduced this.
+
+**The successor was declared as a branch obligation.** The producer is launched
+to release to one route; the branch named another, so the plan demanded a
+release the workload was never configured to make. The successor is a property
+of the class.
+
+**The retained single-action reclaim never ran the sequence it names.** This is
+the finding. Reading `step-cr-q-offboard-random-001`'s timeline: the producer
+completed at 8.045 s, released to its successor at 8.124 s, and only exited at
+9.645 s, with the reclaim starting 133 ms later and the runner recording a
+`fallback_triggered` for a route that had already been the successor for two
+seconds. The producer died holding nothing. Its executor cannot tell a
+requested handover from a fallback — Hold is Loiter, so a normal release looks
+like a safe route taking over — so it anchored the reclaim after the completion.
+That fixture measures re-entry after a completed episode, not reclaim after a
+loss.
+
+The closed loop terminates the producer while it owns the route, and everything
+the action exists to test follows: the command age climbs from 217 ms to
+1049 ms while PX4 consumes the dead producer's last setpoint, the failsafe takes
+over, and the reclaim follows. The freshness violation reporting that window is
+the `command_stale` boundary being observed, and is accepted evidence rather
+than a defect. The retained reclaim shows zero stale commands because nothing
+was ever stale in it.
+
+This does not edit any closed report. It is recorded here because it changes how
+the retained reclaim evidence should be read, and because Step E's remaining
+inconsistency — the producer-loss fault reaching the trace later than either the
+executor or the failsafe knew — is the same fixture seen from the other side.
+
 ## Invariants
 
 - Non-formal qualification never enters a formal ledger or denominator.
@@ -566,6 +616,9 @@ Covered by [tests/test_episode_class_launch.py](../tests/test_episode_class_laun
   against, which is the dual of the rule above.
 - Timing stays five discrete bins; the corpus stays near seven actions.
 - Closed studies, their thresholds and their reports are never edited.
+- A fixture that runs is not the same as a fixture that runs what it is named
+  after. The single-action reclaim passed every gate for four steps while
+  measuring something else.
 
 ## Next concrete action
 
