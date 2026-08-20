@@ -117,7 +117,12 @@ EPISODE_CLASSES: tuple[EpisodeClass, ...] = (
         actions=("terminate_owning_producer", "restart_producer_after_loss"),
         mechanisms=("legacy_offboard", "dynamic_external_mode"),
         baseline_obligations={
-            "expected_successor": "internal_land",
+            # The producer this class launches is configured to release to
+            # Hold, and that is the only successor either sequence can request.
+            # The sequence that stops at the termination never completes, so
+            # this obligation is not checked there; the reclaim does complete,
+            # and owes exactly this.
+            "expected_successor": "internal_hold",
             "target_activation_expected": True,
             # Left at one entry deliberately. A reclaim does enter the tested
             # route twice, but the clause that reads this count judges repeated
@@ -135,7 +140,6 @@ EPISODE_CLASSES: tuple[EpisodeClass, ...] = (
         },
         sequence_condition="external_route_reclaimed_after_fault",
         branch_obligations={
-            "expected_successor": "internal_hold",
             "completion_expected": True,
             # The reclaim preempts the safe route by design, so requiring a
             # completely installed fallback would be self-contradictory.

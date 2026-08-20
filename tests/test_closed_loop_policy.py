@@ -123,6 +123,17 @@ class EpisodeClassTests(unittest.TestCase):
         self.assertFalse(baseline["completion_expected"])
         self.assertTrue(branch["completion_expected"])
 
+    def test_the_successor_is_a_class_property_not_a_branch_one(self):
+        # The producer is launched to release to one successor, so both
+        # sequences owe the same one. Declaring a different successor in the
+        # branch would demand a release the workload was never configured to
+        # make, which is what the first closed-loop flight reported.
+        episode = episode_class(CLASS_ID)
+        self.assertEqual(
+            episode.obligations("legacy_offboard")["expected_successor"], "internal_hold"
+        )
+        self.assertNotIn("expected_successor", episode.sequence_obligations()["when_observed"])
+
 
 class PolicyTests(unittest.TestCase):
     def test_a_frozen_policy_validates(self):

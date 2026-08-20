@@ -119,6 +119,16 @@ class ClassPlanTests(unittest.TestCase):
             "internal_rtl",
         )
 
+    def test_the_successor_matches_what_the_workload_will_request(self):
+        # Flown once with the branch naming a different successor: the reclaim
+        # released to the route the workload was configured for and the plan
+        # reported it as never installed.
+        plan = class_plan()
+        self.assertEqual(plan["transition"]["expected_successor"], "internal_hold")
+        self.assertNotIn(
+            "expected_successor", plan["sequence_obligations"]["when_observed"]
+        )
+
     def test_the_baseline_and_the_branch_disagree_where_they_must(self):
         plan = class_plan()
         branch = plan["sequence_obligations"]["when_observed"]
