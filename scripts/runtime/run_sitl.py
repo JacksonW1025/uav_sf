@@ -1021,6 +1021,17 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     and item.name.startswith("external_mode_capacity_")
                     and item.process.returncode != 0
                 )
+                # A closed loop that ran to the end of its episode exits, and
+                # that exit carries information: it wrote its decision log.
+                # The single-action executor slept forever instead, which hid
+                # a failed executor just as effectively as a finished one.  A
+                # nonzero exit stays unexpected, so a loop that could not reach
+                # a decision point still fails the attempt.
+                expected_closed_loop_exit = (
+                    episode is not None
+                    and item.name == "closed_loop_executor"
+                    and item.process.returncode == 0
+                )
                 if expected_external_exit:
                     if not expected_fault_observed:
                         lifecycle.append("fault_detected", reason="external_component_exit")
@@ -1034,6 +1045,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 elif expected_health_fixture_exit:
                     pass
                 elif expected_duplicate_rejection:
+                    pass
+                elif expected_closed_loop_exit:
                     pass
                 else:
                     unexpected_exits.append(item)
