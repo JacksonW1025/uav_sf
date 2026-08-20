@@ -10,6 +10,7 @@ import time
 import types
 import unittest
 
+from scripts.corpus.core_actions import core_action
 from scripts.runtime.closed_loop_executor import (
     ClosedLoopError,
     TailReader,
@@ -140,6 +141,20 @@ class DecisionPointTests(unittest.TestCase):
         due, anchor = decision_is_due(projection, policy(), [])
         self.assertFalse(due)
         self.assertIsNone(anchor)
+
+    def test_the_gate_alone_does_not_open_a_step(self):
+        # External authority without a fault satisfies the termination's gate,
+        # but the action also declares that motion has been entered, because it
+        # is aimed at the straight translation.
+        without_motion = [
+            value
+            for value in route_active_records()
+            if value["kind"] != "motion_phase_entered"
+        ]
+        projection = self._projection(without_motion)
+        gate = core_action("terminate_owning_producer").online_gate
+        self.assertTrue(gate(projection.state))
+        self.assertEqual(decision_is_due(projection, policy(), []), (False, None))
 
     def test_the_first_step_opens_on_the_termination_anchor(self):
         projection = self._projection(route_active_records())

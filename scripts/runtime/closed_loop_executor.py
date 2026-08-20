@@ -139,11 +139,18 @@ def decision_is_due(
 ) -> tuple[bool, str | None]:
     """Whether a decision point has arrived, and which anchor opened it.
 
-    A step is decided when some unapplied action in the class has both become
-    admissible and had its own anchor observed.  Waiting for the anchor as well
-    as the gate matters: an action whose anchor has not been seen has no moment
-    to be scheduled from, so offering it would let the policy pick a unit the
-    executor could not then place.
+    A step is decided when some unapplied action in the class has become
+    admissible and has had every live marker it declares observed, its timing
+    anchor among them.
+
+    Both conditions are needed and they are not the same.  The gate is the
+    in-flight weakening of the action's precondition, which says the state is
+    one the action is legal in.  The live markers say the flight has seen the
+    things the action's placement depends on.  A termination's gate asks for
+    external authority without a fault, but the action also declares that
+    motion has been entered, because it is aimed at the straight translation.
+    Deciding on the gate alone would let a slow motion entry put the action
+    before the phase it is supposed to land in.
     """
 
     state = projection.state
@@ -156,6 +163,11 @@ def decision_is_due(
         profile = action.live_profile
         anchor = profile.timing_anchor if profile is not None else None
         if anchor is None:
+            continue
+        if any(
+            projection.marker_time_ns(marker) is None
+            for marker in action.live_markers
+        ):
             continue
         if projection.marker_time_ns(anchor) is not None:
             return True, anchor
