@@ -30,7 +30,7 @@ repository validation passes. A step that is partly done says which part.
 v8 plan stage:      Stage 2, construct the core action and workload corpus
 Stage 1:            complete, exit checks met
 Corpus freeze:      proposed and conditional, deliberately not signed
-Current step:       Step D, wire the registration and health actions
+Current step:       Step E, sign the corpus freeze
 Formal campaigns:   none authorized, none running
 ```
 
@@ -223,27 +223,32 @@ their completions differently — and reverted before it was flown. They do not:
 the offboard producer sets its motion start on the first tick after activation.
 See [the record](../experiments/step_c_adjacent_qualification_v1/QUALIFICATION.md).
 
-### Step D — wire the registration and health actions — IN PROGRESS
+### Step D — wire the registration and health actions — COMPLETE
 
-Both are dynamic-only by nature of the system under test.
+Both are dynamic-only by nature of the system under test, and both needed a
+decision before code.
 
-**Registration capacity: reached, but incompatible with the moving profile.** It
-was wired and flown in two batches, and both attempts that selected it failed
-identically. The boundary is genuinely reached — two of eight components refused
-while the tested route executed — but registering them spans about 4.3 s, from
-motion entry to the scheduled completion, and the vehicle covered 0.751 m of the
-2.5 m the profile requires. The physical-validity contract correctly refused
-them, and it was not relaxed to admit them. The Stage A1 cell exhausted the
-slots while hovering, before the tested activation, where no motion contract
-applies. Making it selectable needs a pre-activation anchor and a live marker
-for an established source route.
-See [the finding](../experiments/step_d_capacity_qualification_v1/FINDING.md).
+**Registration capacity** times only the registration that must be refused. The
+first design started all eight components on the policy's request, which spanned
+the whole active period and broke the moving profile twice. The seven legal slots
+are now filled during setup.
 
-**Health withhold: not a runtime action.** The withhold must be in effect before
-the activation is requested, so it is a launch configuration rather than a timed
-stimulus: there is nothing to request and no timing to choose. Representing it
-honestly needs the corpus to distinguish launch configurations from runtime
-actions, which the decision surface does not model yet.
+**The health withhold is a launch configuration**, not a runtime action: it must
+be in effect before the activation it refuses is requested, so it has no moment
+to choose and nothing to request. A live profile now declares how an action
+reaches the aircraft; a launch configuration carries no bins, waits on no
+marker, and is applied and recorded by the runner.
+
+Flying it exposed four contract assumptions that had encoded "every episode
+moves" — the injection phase, the progress thresholds, the tested request kind,
+and the fault-after-motion ordering. Each reported a violation for something the
+episode never claimed to do. All four now represent a workload without motion,
+with the strict obligations still applying by default, so every earlier plan
+stays valid.
+
+The full seven-action qualification then passed 18 of 18 across both mechanisms,
+with both launch-configuration attempts accepted and physically valid.
+See [the record](../experiments/step_d_full_corpus_qualification_v1/QUALIFICATION.md).
 
 ### Step E — sign the corpus freeze — NOT STARTED
 
@@ -273,21 +278,16 @@ generation — remain deferred by standing decision 3.
 
 ## Next concrete action
 
-Two modelling decisions stand between here and a signable corpus, and both are
-about representation rather than wiring.
+Sign the corpus freeze. All five conditions in
+[the conditional freeze](../experiments/stage2_core_corpus_freeze_v1/CONDITIONAL_FREEZE.md)
+are now met: the decision interface selects an action and a timing, the
+availability gaps are closed, the reclaim is implemented, every action has a
+non-formal qualification, and no action remains unvalidated.
 
-1. Give the registration capacity action a pre-activation anchor, which needs a
-   live marker for an established source route — the hover phase where the
-   Stage A1 variant lives.
-2. Decide how the corpus represents a launch configuration such as the health
-   withhold, which has no request and no timing. Either the decision surface
-   grows that distinction, or the action leaves the core corpus with its reason
-   recorded.
-
-Five actions are qualified and selectable today: the owned stall, the producer
-termination, route re-entry, the producer reclaim, and the adjacent Land
-request. That set is qualified by
-[the adjacent-request batch](../experiments/step_c_adjacent_qualification_v1/QUALIFICATION.md).
+Signing means recording the corpus with each action's qualification attached,
+which closes Stage 2. Re-run the Step A precondition replay first, so the signed
+record carries a current consistency check rather than one taken before four
+actions were added.
 
 Before any live batch, confirm no unpinned process competes for the pinned CPU
 sets, and afterwards confirm the central real-time factor is near 1.0.

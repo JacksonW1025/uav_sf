@@ -85,9 +85,9 @@
       "decision_digest": "sha256:d8b84f5a325d67aea1c1965333e726ba519b51c8e5f6fe6b5ffb9ac30edfc9ef",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
-      "outcome": "INCONCLUSIVE",
-      "passed": false,
-      "physical_execution_status": "FAIL",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
       "planned_offset_ns": 0,
       "safe_fallback_required": false,
       "safe_fallback_status": "NOT_APPLICABLE",
@@ -103,14 +103,14 @@
         "re_enter_route_after_successor:pre_boundary"
       ],
       "decision_digest": "sha256:c356d92bd44a53dbd6d1a761b0a2d5d4e75548fe56089c9bdd9590ce7681cb1a",
-      "evaluated": false,
-      "evidence_gate_status": null,
-      "outcome": "OBSERVABILITY_REJECTED",
-      "passed": false,
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
       "physical_execution_status": "PASS",
       "planned_offset_ns": 8250000000,
       "safe_fallback_required": false,
-      "safe_fallback_status": null,
+      "safe_fallback_status": "NOT_APPLICABLE",
       "selected_action": "adjacent_land_request",
       "selected_boundary": "post_boundary",
       "selected_unit": "adjacent_land_request:post_boundary",
@@ -164,9 +164,9 @@
       "decision_digest": "sha256:a9dc4f76a93767e6b75f84a98321849958963eb1d2f705730c4d643b3018e9ee",
       "evaluated": true,
       "evidence_gate_status": "ADMISSIBLE",
-      "outcome": "INCONCLUSIVE",
-      "passed": false,
-      "physical_execution_status": "FAIL",
+      "outcome": "ACCEPTED",
+      "passed": true,
+      "physical_execution_status": "PASS",
       "planned_offset_ns": 0,
       "safe_fallback_required": false,
       "safe_fallback_status": "NOT_APPLICABLE",
@@ -338,21 +338,21 @@
         "terminate_owning_producer:boundary"
       ],
       "decision_digest": "sha256:83821d3803bd5928859ebd0e6e2b2ef5ef1a3ea2738ff1672c704ef9b3d2bc9d",
-      "evaluated": false,
-      "evidence_gate_status": null,
-      "outcome": "OBSERVABILITY_REJECTED",
-      "passed": false,
+      "evaluated": true,
+      "evidence_gate_status": "ADMISSIBLE",
+      "outcome": "ACCEPTED",
+      "passed": true,
       "physical_execution_status": "PASS",
       "planned_offset_ns": 5000000000,
       "safe_fallback_required": false,
-      "safe_fallback_status": null,
+      "safe_fallback_status": "NOT_APPLICABLE",
       "selected_action": "re_enter_route_after_successor",
       "selected_boundary": "boundary",
       "selected_unit": "re_enter_route_after_successor:boundary",
       "strategy_lifecycle_complete": true
     }
   },
-  "completed_at": "2026-08-20T10:50:09.014260+00:00",
+  "completed_at": "2026-08-20T10:58:12.931933+00:00",
   "corpus": [
     "stop_owned_setpoint_stream",
     "terminate_owning_producer",
@@ -429,8 +429,8 @@
     }
   ],
   "schema_version": "1.0",
-  "spec_digest": "sha256:c38253232e9a93ac12e6af6e43fe3b178605e36d747bab92ca3f084fa2c5610d",
-  "started_at": "2026-08-20T10:44:11.101199+00:00",
+  "spec_digest": "sha256:3fb1f40648d46149a6a24955d1d3d5f2933c3a9732de26e4844af6b61b85f929",
+  "started_at": "2026-08-20T10:52:10.609301+00:00",
   "state_aware_feedback_checks": [
     {
       "mechanism": "legacy_offboard",
@@ -441,7 +441,7 @@
       "subsequent_decisions_used_live_feedback": true
     }
   ],
-  "status": "FAIL",
+  "status": "PASS",
   "study_id": "step-d-full-corpus-qualification-v1",
   "units": [
     {
@@ -491,7 +491,7 @@
     {
       "attempt_count": 3,
       "mechanism": "legacy_offboard",
-      "passed_count": 2,
+      "passed_count": 3,
       "selected_actions": [
         "terminate_owning_producer",
         "stop_owned_setpoint_stream",
@@ -507,7 +507,7 @@
         "stop_owned_setpoint_stream:boundary",
         "re_enter_route_after_successor:boundary"
       ],
-      "status": "FAIL",
+      "status": "PASS",
       "strategy": "state_aware"
     },
     {
@@ -535,7 +535,7 @@
     {
       "attempt_count": 3,
       "mechanism": "dynamic_external_mode",
-      "passed_count": 1,
+      "passed_count": 3,
       "selected_actions": [
         "re_enter_route_after_successor",
         "withhold_health_reply",
@@ -551,13 +551,13 @@
         "withhold_health_reply:launch",
         "adjacent_land_request:post_boundary"
       ],
-      "status": "FAIL",
+      "status": "PASS",
       "strategy": "bounded_random_timing"
     },
     {
       "attempt_count": 3,
       "mechanism": "dynamic_external_mode",
-      "passed_count": 2,
+      "passed_count": 3,
       "selected_actions": [
         "terminate_owning_producer",
         "re_enter_route_after_successor",
@@ -573,7 +573,7 @@
         "re_enter_route_after_successor:boundary",
         "withhold_health_reply:launch"
       ],
-      "status": "FAIL",
+      "status": "PASS",
       "strategy": "state_aware"
     }
   ]
