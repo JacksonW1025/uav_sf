@@ -303,8 +303,12 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             expected_fault_mode = strategy_decision["action"]
         if expected_fault_mode != args.fault_mode:
             raise RuntimeFailure("live strategy action differs from the runtime fault mode")
-        if args.workload_profile != "straight_line":
-            raise RuntimeFailure("the live strategy backend requires the moving workload")
+        # Every timed action is placed relative to the moving profile, so it
+        # requires one.  A launch configuration has no moment to place and may
+        # legitimately run a workload that never moves.
+        requires_motion = strategy_decision.get("timing_anchor") is not None
+        if requires_motion and args.workload_profile != "straight_line":
+            raise RuntimeFailure("a timed live action requires the moving workload")
         if args.mechanism not in {"legacy_offboard", "dynamic_external_mode"}:
             raise RuntimeFailure("the live strategy backend does not support this mechanism")
     preflight = self_check()
