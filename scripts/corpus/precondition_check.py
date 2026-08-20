@@ -114,6 +114,15 @@ def check_attempt(
         )
 
     decided = timed_decision_times(root, study_id, attempt_id)
+    # A reclaim needs a producer loss to be legal, so the loss inside a reclaim
+    # episode is that action's setup rather than an independent firing. It has
+    # no decision of its own, and judging it as one measures the fixture rather
+    # than the generator.
+    setup_of_selected = (
+        {"terminate_owning_producer"}
+        if "restart_producer_after_loss" in decided
+        else set()
+    )
     decision_states: dict[str, SemanticState] = {}
     if decided:
         for event, step in zip(events, trajectory.steps):
@@ -135,6 +144,8 @@ def check_attempt(
                 f"{attempt_id}: step and event sequence differ at {event['sequence']}"
             )
         for action in CORE_ACTIONS:
+            if action.action_id in setup_of_selected:
+                continue
             if not action.marker(event, previous_state, step.state):
                 continue
             authority = previous_state.activation_id

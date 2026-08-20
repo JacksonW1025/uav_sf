@@ -29,8 +29,8 @@ repository validation passes. A step that is partly done says which part.
 ```text
 v8 plan stage:      Stage 2, construct the core action and workload corpus
 Stage 1:            complete, exit checks met
-Corpus freeze:      proposed and conditional, deliberately not signed
-Current step:       Step E, blocked on the precondition-evaluation decision
+Corpus freeze:      signed, seven actions, all predicates consistent
+Current step:       Stage 2 closed; Step F, the Stage 3 closed loop
 Formal campaigns:   none authorized, none running
 ```
 
@@ -250,7 +250,7 @@ The full seven-action qualification then passed 18 of 18 across both mechanisms,
 with both launch-configuration attempts accepted and physically valid.
 See [the record](../experiments/step_d_full_corpus_qualification_v1/QUALIFICATION.md).
 
-### Step E — sign the corpus freeze — BLOCKED ON A MODELLING DECISION
+### Step E — sign the corpus freeze — COMPLETE
 
 The replay a signed corpus must carry was re-run over the whole current evidence
 base: 303 attempts, 213 formal and 90 from this stage's qualifications. The
@@ -289,7 +289,7 @@ moment where the authority it needs is already in place; the producer
 termination has no decision moment in that attempt and is judged at the runner's
 late record. Widening either predicate further would hide that rather than
 resolve it.
-See [the blocked-signing record](../experiments/stage2_signed_corpus_v1/SIGNING_BLOCKED.md).
+See [the blocked-signing record](../experiments/stage2_signed_corpus_v1/SIGNED_CORPUS.md).
 
 Every other signing condition is met.
 
@@ -316,19 +316,16 @@ generation — remain deferred by standing decision 3.
 
 ## Next concrete action
 
-Take the precondition-evaluation decision in
-[the blocked-signing record](../experiments/stage2_signed_corpus_v1/SIGNING_BLOCKED.md),
-then sign the corpus freeze and close Stage 2.
+Stage 2 is closed. Step F is the Stage 3 closed loop: move selection in-flight
+so the executor observes, filters admissible actions against derived live state,
+applies one, re-observes and selects again, letting an episode carry a
+state-dependent sequence rather than one action.
 
-The split rule is implemented. The remaining choice is narrower: either record a
-producer loss when it is observed rather than when it is noticed, so the trace
-and the decision agree — the same class of fix that made the reclaim reachable,
-and one that would also remove the seventeen duplicate observations the producer
-termination still carries — or sign with this episode noted, since both
-instances are explained and neither is a defect in a flight or a predicate.
+The corpus it consumes is [signed](../experiments/stage2_signed_corpus_v1/SIGNED_CORPUS.md):
+seven actions, six timed and one applied at launch, all consistent across 230
+attempts.
 
-All seven actions are implemented, selectable and qualified. The full-corpus
-qualification passed 18 of 18.
+Baselines remain deferred by standing decision 3.
 
 Before any live batch, confirm no unpinned process competes for the pinned CPU
 sets, and afterwards confirm the central real-time factor is near 1.0.

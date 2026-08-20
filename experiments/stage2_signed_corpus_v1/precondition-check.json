@@ -2,7 +2,7 @@
   "actions": [
     {
       "action_id": "stop_owned_setpoint_stream",
-      "attempts_with_instance": 119,
+      "attempts_with_instance": 80,
       "availability": {
         "dynamic_external_mode": "implemented",
         "legacy_offboard": "implemented"
@@ -75,44 +75,24 @@
         },
         {
           "cell_id": "qualification",
-          "instances": 13,
-          "study_id": "step-b-corpus-selection-qualification-v1"
-        },
-        {
-          "cell_id": "qualification",
-          "instances": 9,
-          "study_id": "step-c-adjacent-qualification-v1"
-        },
-        {
-          "cell_id": "qualification",
-          "instances": 9,
-          "study_id": "step-c-reentry-qualification-v1"
-        },
-        {
-          "cell_id": "qualification",
           "instances": 8,
-          "study_id": "step-c-restart-qualification-v1"
-        },
-        {
-          "cell_id": "qualification",
-          "instances": 8,
-          "study_id": "step-d-full-corpus-qualification-v1"
+          "study_id": "step-e-signed-corpus-qualification-v1"
         }
       ],
       "duplicate_observations": 0,
       "example_violations": [],
-      "instances": 119,
+      "instances": 80,
       "inventory_action_id": "owned_setpoint_stall_healthy",
       "lifecycle_phase": "execution",
       "marker": "a fault_detected event whose reason names a stalled stream",
       "precondition": "an external route holds complete authority and no fault has been observed yet in this episode",
-      "precondition_satisfied": 119,
+      "precondition_satisfied": 80,
       "precondition_violations": 0,
       "status": "consistent"
     },
     {
       "action_id": "terminate_owning_producer",
-      "attempts_with_instance": 37,
+      "attempts_with_instance": 18,
       "availability": {
         "dynamic_external_mode": "implemented",
         "legacy_offboard": "implemented"
@@ -130,50 +110,24 @@
         },
         {
           "cell_id": "qualification",
-          "instances": 5,
-          "study_id": "step-b-corpus-selection-qualification-v1"
-        },
-        {
-          "cell_id": "qualification",
-          "instances": 5,
-          "study_id": "step-c-adjacent-qualification-v1"
-        },
-        {
-          "cell_id": "qualification",
-          "instances": 4,
-          "study_id": "step-c-reentry-qualification-v1"
-        },
-        {
-          "cell_id": "qualification",
-          "instances": 5,
-          "study_id": "step-c-restart-qualification-v1"
-        },
-        {
-          "cell_id": "qualification",
           "instances": 2,
-          "study_id": "step-d-full-corpus-qualification-v1"
+          "study_id": "step-e-signed-corpus-qualification-v1"
         }
       ],
-      "duplicate_observations": 17,
-      "example_violations": [
-        {
-          "attempt_id": "step-cr-q-offboard-random-001",
-          "sequence": 10474,
-          "state_before": "family=internal_safe|epoch=e3_plus|owner=internal|phase=executing|lineage=complete|freshness=fresh|successor=installed|fallback=none|fault=none|motion=unobserved"
-        }
-      ],
-      "instances": 37,
+      "duplicate_observations": 9,
+      "example_violations": [],
+      "instances": 18,
       "inventory_action_id": "owned_process_exit_fallback",
       "lifecycle_phase": "fallback",
       "marker": "a fault_detected event whose reason names a producer exit",
       "precondition": "an external route holds complete authority and no fault has been observed yet in this episode",
-      "precondition_satisfied": 36,
-      "precondition_violations": 1,
-      "status": "inconsistent"
+      "precondition_satisfied": 18,
+      "precondition_violations": 0,
+      "status": "consistent"
     },
     {
       "action_id": "adjacent_land_request",
-      "attempts_with_instance": 33,
+      "attempts_with_instance": 30,
       "availability": {
         "dynamic_external_mode": "implemented",
         "legacy_offboard": "implemented"
@@ -193,32 +147,22 @@
           "cell_id": "timing-executor-near",
           "instances": 10,
           "study_id": "motivation-thor-v1"
-        },
-        {
-          "cell_id": "qualification",
-          "instances": 2,
-          "study_id": "step-c-adjacent-qualification-v1"
-        },
-        {
-          "cell_id": "qualification",
-          "instances": 1,
-          "study_id": "step-d-full-corpus-qualification-v1"
         }
       ],
       "duplicate_observations": 0,
       "example_violations": [],
-      "instances": 33,
+      "instances": 30,
       "inventory_action_id": "adjacent_land_request_near_completion",
       "lifecycle_phase": "replacement",
       "marker": "an adjacent_request event",
       "precondition": "some route currently holds complete authority",
-      "precondition_satisfied": 33,
+      "precondition_satisfied": 30,
       "precondition_violations": 0,
       "status": "consistent"
     },
     {
       "action_id": "re_enter_route_after_successor",
-      "attempts_with_instance": 37,
+      "attempts_with_instance": 23,
       "availability": {
         "dynamic_external_mode": "implemented",
         "legacy_offboard": "implemented"
@@ -236,39 +180,24 @@
         },
         {
           "cell_id": "qualification",
-          "instances": 2,
-          "study_id": "step-c-adjacent-qualification-v1"
-        },
-        {
-          "cell_id": "qualification",
-          "instances": 5,
-          "study_id": "step-c-reentry-qualification-v1"
-        },
-        {
-          "cell_id": "qualification",
-          "instances": 5,
-          "study_id": "step-c-restart-qualification-v1"
-        },
-        {
-          "cell_id": "qualification",
-          "instances": 5,
-          "study_id": "step-d-full-corpus-qualification-v1"
+          "instances": 3,
+          "study_id": "step-e-signed-corpus-qualification-v1"
         }
       ],
       "duplicate_observations": 0,
       "example_violations": [],
-      "instances": 37,
+      "instances": 23,
       "inventory_action_id": "route_re_entry_through_hold",
       "lifecycle_phase": "re_entry",
       "marker": "a transition_requested event the producer recorded as a repeat cycle",
       "precondition": "a completion has been observed and an internal safe route now holds complete authority",
-      "precondition_satisfied": 37,
+      "precondition_satisfied": 23,
       "precondition_violations": 0,
       "status": "consistent"
     },
     {
       "action_id": "withhold_health_reply",
-      "attempts_with_instance": 10,
+      "attempts_with_instance": 11,
       "availability": {
         "dynamic_external_mode": "implemented",
         "legacy_offboard": "not_applicable"
@@ -281,18 +210,18 @@
         },
         {
           "cell_id": "qualification",
-          "instances": 2,
-          "study_id": "step-d-full-corpus-qualification-v1"
+          "instances": 3,
+          "study_id": "step-e-signed-corpus-qualification-v1"
         }
       ],
       "duplicate_observations": 0,
       "example_violations": [],
-      "instances": 10,
+      "instances": 11,
       "inventory_action_id": "activation_rejection_after_health_loss",
       "lifecycle_phase": "activation",
       "marker": "a fault_detected event whose reason names a rejection",
       "precondition": "activation of the external route has been requested and no external route holds authority yet",
-      "precondition_satisfied": 10,
+      "precondition_satisfied": 11,
       "precondition_violations": 0,
       "status": "consistent"
     },
@@ -332,39 +261,30 @@
         {
           "cell_id": "qualification",
           "instances": 1,
-          "study_id": "step-c-restart-qualification-v1"
+          "study_id": "step-e-signed-corpus-qualification-v1"
         }
       ],
       "duplicate_observations": 0,
-      "example_violations": [
-        {
-          "attempt_id": "step-cr-q-offboard-random-001",
-          "sequence": 12674,
-          "state_before": "family=internal_safe|epoch=e3_plus|owner=internal|phase=executing|lineage=complete|freshness=fresh|successor=installed|fallback=none|fault=none|motion=unobserved"
-        }
-      ],
+      "example_violations": [],
       "instances": 1,
       "inventory_action_id": "producer_restart_after_exit",
       "lifecycle_phase": "fallback",
       "marker": "a transition_requested returning to an external route after a producer loss",
       "precondition": "a producer loss has been observed and an internal route now holds complete authority",
-      "precondition_satisfied": 0,
-      "precondition_violations": 1,
-      "status": "inconsistent"
+      "precondition_satisfied": 1,
+      "precondition_violations": 0,
+      "status": "consistent"
     }
   ],
-  "attempts_checked": 303,
+  "attempts_checked": 230,
   "check_id": "stage2-core-action-precondition-check-v1",
-  "consistent_actions": 5,
+  "consistent_actions": 7,
   "immutability": {
     "created_formal_denominator": false,
     "modified_frozen_evidence": false
   },
-  "inconsistent_actions": [
-    "restart_producer_after_loss",
-    "terminate_owning_producer"
-  ],
+  "inconsistent_actions": [],
   "schema_version": "1.0",
-  "total_instances": 270,
+  "total_instances": 188,
   "unvalidated_actions": []
 }
