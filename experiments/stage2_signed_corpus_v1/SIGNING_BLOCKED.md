@@ -71,6 +71,28 @@ The first is the most faithful and the most work. The second is cheap and
 loses the precision that made the predicates worth checking. The third signs a
 record with a known inconsistency in it.
 
+## The first option was tried, and it does not work as stated
+
+Evaluating each precondition at the executor's recorded request time was
+implemented and replayed. It did not resolve either inconsistency, and it
+introduced two more: the health withhold went from consistent to two
+violations.
+
+The reason is that a launch configuration has no decision moment in the sense
+the rule assumes. Its record is written during container setup, before the
+episode has done anything, so its precondition — an activation requested and no
+external route holding authority — is false at that instant for a reason that
+has nothing to do with legality.
+
+That splits the original question in two. A timed action has a decision moment
+and could be judged there. A launch configuration's precondition describes the
+state its effect is legal in, not the state it was configured in, so it must be
+judged at its effect. A rule that serves both has to say which kind it is
+looking at, which the corpus now knows and this replay does not yet use.
+
+The change was reverted rather than kept, because a replay that reports four
+inconsistencies instead of two is not closer to the truth.
+
 Signing waits on that choice. Every other signing condition is met: the decision
 interface selects an action and a timing, the availability gaps are closed, the
 reclaim is implemented, and every action has a passing non-formal qualification.

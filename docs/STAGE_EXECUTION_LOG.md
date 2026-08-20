@@ -272,6 +272,14 @@ the internal navigator rather than a named safe route.
 The choice is between evaluating against the decision moment, widening two
 predicates to the recorded moment, or signing with the divergence noted. It is a
 modelling decision, not a defect.
+
+The first was chosen and tried. It does not work as stated: it resolved neither
+inconsistency and introduced two more, because a launch configuration has no
+decision moment in that sense — its record is written during setup, before the
+episode has done anything. The change was reverted. The question splits: a timed
+action has a decision moment and could be judged there, while a launch
+configuration must be judged at its effect, and a rule serving both must say
+which kind it is looking at.
 See [the blocked-signing record](../experiments/stage2_signed_corpus_v1/SIGNING_BLOCKED.md).
 
 Every other signing condition is met.
@@ -303,10 +311,11 @@ Take the precondition-evaluation decision in
 [the blocked-signing record](../experiments/stage2_signed_corpus_v1/SIGNING_BLOCKED.md),
 then sign the corpus freeze and close Stage 2.
 
-The three options are: evaluate a precondition against the executor's decision
-time, which the strategy lifecycle already records; widen the producer
-termination and reclaim predicates to the recorded moment; or sign with the
-reclaim episode noted as a known divergence.
+The remaining options are: judge a timed action at its decision time while
+judging a launch configuration at its effect, which the corpus already knows how
+to tell apart; widen the producer termination and reclaim predicates to the
+recorded moment; or sign with the reclaim episode noted as a known divergence.
+Judging everything at the decision time was tried and reverted.
 
 All seven actions are implemented, selectable and qualified. The full-corpus
 qualification passed 18 of 18.
