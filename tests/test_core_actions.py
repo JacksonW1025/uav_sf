@@ -146,7 +146,9 @@ class CoreActionTests(unittest.TestCase):
         from scripts.corpus.core_actions import OBSERVABLE_LIVE_MARKERS
 
         for item in CORE_ACTIONS:
-            if item.live_profile is None:
+            if item.live_profile is None or item.live_profile.application == "launch":
+                # A launch configuration is in effect before anything is
+                # observed, so it waits on no marker and has no anchor.
                 continue
             with self.subTest(action=item.action_id):
                 self.assertIn(item.live_profile.timing_anchor, item.live_markers)
@@ -160,6 +162,34 @@ class CoreActionTests(unittest.TestCase):
         broken = data_replace(
             wired,
             live_profile=data_replace(wired.live_profile, timing_anchor="successor_installed"),
+        )
+        original = module.CORE_ACTIONS
+        try:
+            module.CORE_ACTIONS = (broken,)
+            with self.assertRaises(CoreActionError):
+                validate_declarations()
+        finally:
+            module.CORE_ACTIONS = original
+
+    def test_a_launch_configuration_has_no_timing_and_waits_on_nothing(self) -> None:
+        from dataclasses import replace as data_replace
+        import scripts.corpus.core_actions as module
+
+        withhold = action("withhold_health_reply")
+        self.assertEqual(withhold.live_profile.application, "launch")
+        self.assertEqual(withhold.live_profile.timing_offsets_ns, ())
+        self.assertEqual(withhold.live_markers, ())
+        # It selects the rejection path, so it expects no activation.
+        self.assertFalse(withhold.live_profile.target_activation_expected)
+        self.assertTrue(withhold.live_profile.activation_rejection_expected)
+
+        # Giving it timing bins would invent a choice the generator does not
+        # have, and is refused.
+        broken = data_replace(
+            withhold,
+            live_profile=data_replace(
+                withhold.live_profile, timing_offsets_ns=(0, 1, 2, 3, 4)
+            ),
         )
         original = module.CORE_ACTIONS
         try:

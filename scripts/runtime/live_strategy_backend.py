@@ -58,6 +58,11 @@ CONTRACTS = {
             boundary_prefix="exit_offset",
         ),
         LiveActionContract(
+            backend="owned_health_withhold_v1",
+            action="health_withhold",
+            boundary_prefix="withhold",
+        ),
+        LiveActionContract(
             backend="owned_registration_capacity_v1",
             action="registration_capacity",
             boundary_prefix="capacity_offset",
@@ -206,6 +211,26 @@ def enabled_corpus_candidates(
         lower, upper = bounds
         if not all(isinstance(value, int) for value in bounds) or lower < 0 or upper < lower:
             raise LiveStrategyError(f"{action_id} timing bounds are invalid")
+        launch = (
+            action.live_profile is not None
+            and action.live_profile.application == "launch"
+        )
+        if launch:
+            # One unit, because there is no moment to choose.  Its bounds still
+            # gate whether the corpus offers it at all.
+            candidates.append(
+                {
+                    "action": action_id,
+                    "backend": action.backend,
+                    "boundary": "launch",
+                    "offset_ns": 0,
+                    "unit": f"{action_id}:launch",
+                    "required_state": [],
+                    "timing_anchor": None,
+                    "enabled": action_id in wired and lower == 0,
+                }
+            )
+            continue
         offsets = (
             action.live_profile.timing_offsets_ns
             if action.live_profile is not None
@@ -299,16 +324,20 @@ def create_corpus_decision(
         action = bounded_random_action(
             {item["action"] for item in enabled}, seed=seed
         )
-        bounds = timing_bounds_ns[action]
-        offset = int(
-            bounded_random_timing(
-                [action], {action: bounds}, seed=_derived_seed(seed, action)
-            )[0]["delay_ns"]
-        )
-        selected = min(
-            (item for item in enabled if item["action"] == action),
-            key=lambda item: (abs(item["offset_ns"] - offset), item["offset_ns"]),
-        )
+        units = [item for item in enabled if item["action"] == action]
+        if len(units) == 1:
+            selected = units[0]
+        else:
+            bounds = timing_bounds_ns[action]
+            offset = int(
+                bounded_random_timing(
+                    [action], {action: bounds}, seed=_derived_seed(seed, action)
+                )[0]["delay_ns"]
+            )
+            selected = min(
+                units,
+                key=lambda item: (abs(item["offset_ns"] - offset), item["offset_ns"]),
+            )
     else:
         if seed is None:
             raise LiveStrategyError("state-aware selection requires a seed")
@@ -325,7 +354,14 @@ def create_corpus_decision(
                         sorted((marker, True) for marker in item["required_state"])
                     ),
                     covers=(item["unit"],),
-                    deadline_distance_ns=item["offset_ns"] - official_offset_ns,
+                    # A launch configuration has no moment, so it has no
+                    # distance to the official one; scoring it by that distance
+                    # would rank it last for a property it does not have.
+                    deadline_distance_ns=(
+                        0
+                        if item["timing_anchor"] is None
+                        else item["offset_ns"] - official_offset_ns
+                    ),
                 )
                 for item in enabled
             ],
@@ -344,7 +380,7 @@ def create_corpus_decision(
         "action": selected["action"],
         "backend": selected["backend"],
         "required_state": selected["required_state"],
-        "timing_anchor": live_profile(selected["action"]).timing_anchor,
+        "timing_anchor": selected["timing_anchor"],
         "timing_bounds_ns": dict(sorted(timing_bounds_ns.items())),
         "official_action": official_action,
         "official_offset_ns": official_offset_ns,

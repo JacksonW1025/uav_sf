@@ -29,6 +29,12 @@ class CoreActionError(ValueError):
 
 MECHANISMS = ("legacy_offboard", "dynamic_external_mode")
 AVAILABILITY = ("implemented", "port_required", "not_applicable", "new")
+# How an action reaches the aircraft.  A runtime action is requested during the
+# flight and therefore has a moment to choose; a launch configuration is in
+# effect from the start, because it must precede the very request it changes the
+# outcome of.  Forcing a launch configuration into timing bins would invent a
+# choice the generator does not have.
+APPLICATIONS = ("runtime", "launch")
 # Markers the in-flight executor can observe today.  An action wired to a live
 # backend may only require markers from this set, so its precondition is
 # checkable before the action is applied rather than after the fact.
@@ -67,6 +73,9 @@ class LiveActionProfile:
     activation_count: int = 1
     # Whether the plan must preregister an explicit registration rejection.
     registration_rejection_expected: bool = False
+    activation_rejection_expected: bool = False
+    target_activation_expected: bool = True
+    application: str = "runtime"
     # Each action's five timing bins span its own feasible window.  The count
     # stays fixed so systematic enumeration remains well defined; only the
     # seconds differ, because a reclaim has to land inside a ten second window
@@ -130,6 +139,13 @@ class CoreAction:
                     "registration_rejection_expected": (
                         self.live_profile.registration_rejection_expected
                     ),
+                    "activation_rejection_expected": (
+                        self.live_profile.activation_rejection_expected
+                    ),
+                    "target_activation_expected": (
+                        self.live_profile.target_activation_expected
+                    ),
+                    "application": self.live_profile.application,
                     "timing_anchor": self.live_profile.timing_anchor,
                     "timing_offsets_ns": list(self.live_profile.timing_offsets_ns),
                 }
@@ -364,8 +380,33 @@ CORE_ACTIONS: tuple[CoreAction, ...] = (
         marker_text="a fault_detected event whose reason names a rejection",
         cleanup_text="the vehicle must reach an internal safe route and disarm",
         target_boundaries=("activation_rejected",),
-        live_markers=("activation_requested",),
-        notes="legacy offboard has no health-reply protocol, so this is not portable",
+        live_markers=(),
+        backend="owned_health_withhold_v1",
+        live_profile=LiveActionProfile(
+            fault_mode="normal",
+            completion_expected=False,
+            fault_expected=True,
+            fallback_expected=False,
+            activation_rejection_expected=True,
+            target_activation_expected=False,
+            activation_count=0,
+            workload_phases=(
+                "public_takeoff",
+                "stable_hover",
+                "activation_rejected",
+                "successor_land",
+            ),
+            timing_offsets_ns=(),
+            application="launch",
+        ),
+        notes=(
+            "legacy offboard has no health-reply protocol, so this is not "
+            "portable. It is a launch configuration rather than a runtime "
+            "action: the withhold must already be in effect when the activation "
+            "is requested, so there is no moment to choose and no request to "
+            "record. The policy still selects whether an episode tests the "
+            "rejection path"
+        ),
     ),
     CoreAction(
         action_id="exhaust_registration_capacity",
@@ -489,33 +530,59 @@ def validate_declarations() -> None:
             raise CoreActionError(
                 f"{action.action_id}: precondition holds in the empty initial state"
             )
-        if not action.live_markers:
-            raise CoreActionError(f"{action.action_id}: a core action needs a live marker")
-        if action.backend is not None and not set(action.live_markers) <= set(
-            OBSERVABLE_LIVE_MARKERS
-        ):
-            raise CoreActionError(
-                f"{action.action_id}: a wired action may only require observable markers"
-            )
+        launch = action.live_profile is not None and action.live_profile.application == "launch"
+        if launch:
+            # A launch configuration is in effect before the flight observes
+            # anything, so it waits on nothing.
+            if action.live_markers:
+                raise CoreActionError(
+                    f"{action.action_id}: a launch configuration waits on no marker"
+                )
+        else:
+            if not action.live_markers:
+                raise CoreActionError(
+                    f"{action.action_id}: a runtime action needs a live marker"
+                )
+            if action.backend is not None and not set(action.live_markers) <= set(
+                OBSERVABLE_LIVE_MARKERS
+            ):
+                raise CoreActionError(
+                    f"{action.action_id}: a wired action may only require observable markers"
+                )
         if (action.backend is None) != (action.live_profile is None):
             raise CoreActionError(
                 f"{action.action_id}: a wired action needs a live profile and only a wired action may have one"
             )
         if action.live_profile is not None:
+            application = action.live_profile.application
+            if application not in APPLICATIONS:
+                raise CoreActionError(
+                    f"{action.action_id}: unsupported application {application}"
+                )
             offsets = action.live_profile.timing_offsets_ns
-            if len(offsets) != 5 or sorted(offsets) != list(offsets) or offsets[0] < 0:
+            if sorted(offsets) != list(offsets) or (offsets and offsets[0] < 0):
                 raise CoreActionError(
-                    f"{action.action_id}: timing offsets must be five ordered non-negative values"
+                    f"{action.action_id}: timing offsets must be ordered and non-negative"
                 )
-            anchor = action.live_profile.timing_anchor
-            if anchor not in action.live_markers:
-                raise CoreActionError(
-                    f"{action.action_id}: the timing anchor must be one of its live markers"
-                )
-            if anchor not in OBSERVABLE_LIVE_MARKERS:
-                raise CoreActionError(
-                    f"{action.action_id}: the timing anchor must be observable in flight"
-                )
+            if application == "launch":
+                if offsets:
+                    raise CoreActionError(
+                        f"{action.action_id}: a launch configuration has no timing to choose"
+                    )
+            else:
+                if len(offsets) != 5:
+                    raise CoreActionError(
+                        f"{action.action_id}: a runtime action needs five timing bins"
+                    )
+                anchor = action.live_profile.timing_anchor
+                if anchor not in action.live_markers:
+                    raise CoreActionError(
+                        f"{action.action_id}: the timing anchor must be one of its live markers"
+                    )
+                if anchor not in OBSERVABLE_LIVE_MARKERS:
+                    raise CoreActionError(
+                        f"{action.action_id}: the timing anchor must be observable in flight"
+                    )
 
 
 def core_action(action_id: str) -> CoreAction:

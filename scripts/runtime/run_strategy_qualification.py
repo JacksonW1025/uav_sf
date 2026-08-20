@@ -151,12 +151,14 @@ def _attempt_summary(
     validate_live_decision(decision)
     lifecycle_path = attempt_root / "raw" / "strategy.lifecycle.jsonl"
     lifecycle = _records(lifecycle_path)
-    action_records = [value for value in lifecycle if value.get("kind") == "action_requested"]
-    complete_lifecycle = [value.get("kind") for value in lifecycle] == [
-        "strategy_decision",
-        "action_scheduled",
-        "action_requested",
-    ]
+    launch_applied = decision.get("timing_anchor") is None
+    marker = "action_applied_at_launch" if launch_applied else "action_requested"
+    action_records = [value for value in lifecycle if value.get("kind") == marker]
+    complete_lifecycle = [value.get("kind") for value in lifecycle] == (
+        ["strategy_decision", "action_applied_at_launch"]
+        if launch_applied
+        else ["strategy_decision", "action_scheduled", "action_requested"]
+    )
     action_valid = (
         len(action_records) == 1
         and action_records[0].get("action") == decision["action"]

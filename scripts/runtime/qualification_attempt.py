@@ -113,7 +113,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             profile = live_profile(str(corpus_decision["action"]))
             args.fault_mode = profile.fault_mode
             args.repeat_count = profile.repeat_count
-            args.target_activation_count = profile.activation_count
+            args.target_activation_count = profile.activation_count or None
+            if profile.activation_count == 0:
+                args.target_activation_count = 0
             args.scheduled_action = str(corpus_decision["action"])
             args.completion_expected = profile.completion_expected
             args.fault_expected = profile.fault_expected
@@ -122,6 +124,12 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             # The extra components are refused by design, so their nonzero exit
             # must be expected rather than read as an environment failure.
             args.duplicate_registration = profile.registration_rejection_expected
+            args.activation_rejection_expected = profile.activation_rejection_expected
+            args.target_activation_expected = profile.target_activation_expected
+            if profile.application == "launch":
+                # In effect from the start, because it must precede the request
+                # whose outcome it changes.
+                args.health_loss = True
             if isinstance(args.workload, dict):
                 args.workload = {
                     **args.workload,

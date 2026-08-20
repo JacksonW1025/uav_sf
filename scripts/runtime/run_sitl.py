@@ -635,7 +635,20 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     ),
                 ],
             )
-            if args.duplicate_registration and args.scheduled_action != "exhaust_registration_capacity":
+            if args.scheduled_action == "exhaust_registration_capacity":
+                # Fill the seven legal slots now and leave the eighth for the
+                # policy. The action under test is the one registration that
+                # must be refused, so only that one needs to be timed, and one
+                # component starts in about half a second rather than eight
+                # taking four.
+                _wait_for_armed(telemetry, 20.0)
+                for duplicate_index in range(7):
+                    start(
+                        f"external_mode_capacity_{duplicate_index + 1}",
+                        capacity_command(duplicate_index),
+                    )
+                    time.sleep(0.2)
+            elif args.duplicate_registration:
                 # Exercise the public registration-capacity boundary. PX4
                 # exposes eight external nav-state slots (23..30); the
                 # primary component holds one, seven further registrations
@@ -733,7 +746,26 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     f"target_system:={allocation.px4_instance + 1}",
                 ],
             )
-        if args.strategy_decision_path is not None:
+        if strategy_decision is not None and strategy_decision.get("timing_anchor") is None:
+            # A launch configuration is already in effect, so there is nothing
+            # for the executor to wait for and nothing to request.  The runner
+            # records the decision and the fact that it was applied at launch.
+            launch_log = Lifecycle(raw / "strategy.lifecycle.jsonl", args.run_id)
+            launch_log.append(
+                "strategy_decision",
+                strategy=strategy_decision["strategy"],
+                seed=strategy_decision["seed"],
+                candidates=strategy_decision["candidates"],
+                covered_boundaries=strategy_decision.get("covered_units_before_decision"),
+                selected_boundary=strategy_decision["selected_boundary"],
+                selected_unit=strategy_decision.get("selected_unit"),
+            )
+            launch_log.append(
+                "action_applied_at_launch",
+                action=strategy_decision["action"],
+                selected_boundary=strategy_decision["selected_boundary"],
+            )
+        elif args.strategy_decision_path is not None:
             start(
                 "strategy_action_executor",
                 [
@@ -766,11 +798,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 # Exhaust the navigation slots while the tested route holds
                 # authority, which is the variant a policy can time.
                 capacity_started = True
-                for duplicate_index in range(8):
-                    start(
-                        f"external_mode_capacity_{duplicate_index + 1}",
-                        capacity_command(duplicate_index),
-                    )
+                start("external_mode_capacity_8", capacity_command(7))
             if (
                 args.scheduled_action == "restart_producer_after_loss"
                 and reclaim_process is None
