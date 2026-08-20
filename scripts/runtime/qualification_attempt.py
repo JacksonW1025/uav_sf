@@ -118,6 +118,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             args.completion_expected = profile.completion_expected
             args.fault_expected = profile.fault_expected
             args.fallback_expected = profile.fallback_expected
+            args.registration_rejection_expected = profile.registration_rejection_expected
+            # The extra components are refused by design, so their nonzero exit
+            # must be expected rather than read as an environment failure.
+            args.duplicate_registration = profile.registration_rejection_expected
             if isinstance(args.workload, dict):
                 args.workload = {
                     **args.workload,

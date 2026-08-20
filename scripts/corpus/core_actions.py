@@ -65,6 +65,8 @@ class LiveActionProfile:
     # reclaim enters it twice even though each producer session enters once, so
     # this is separate from the repeat count a single producer performs.
     activation_count: int = 1
+    # Whether the plan must preregister an explicit registration rejection.
+    registration_rejection_expected: bool = False
     # Each action's five timing bins span its own feasible window.  The count
     # stays fixed so systematic enumeration remains well defined; only the
     # seconds differ, because a reclaim has to land inside a ten second window
@@ -125,6 +127,9 @@ class CoreAction:
                     "workload_phases": list(self.live_profile.workload_phases),
                     "repeat_count": self.live_profile.repeat_count,
                     "activation_count": self.live_profile.activation_count,
+                    "registration_rejection_expected": (
+                        self.live_profile.registration_rejection_expected
+                    ),
                     "timing_anchor": self.live_profile.timing_anchor,
                     "timing_offsets_ns": list(self.live_profile.timing_offsets_ns),
                 }
@@ -379,7 +384,40 @@ CORE_ACTIONS: tuple[CoreAction, ...] = (
         cleanup_text="stop every additional component and keep the primary session consistent",
         target_boundaries=("registration_rejected",),
         live_markers=("route_active",),
-        notes="legacy offboard has no registration protocol, so this is not portable",
+        backend="owned_registration_capacity_v1",
+        live_profile=LiveActionProfile(
+            fault_mode="normal",
+            completion_expected=True,
+            fault_expected=False,
+            fallback_expected=False,
+            registration_rejection_expected=True,
+            workload_phases=(
+                "public_takeoff",
+                "stable_hover",
+                "route_activation",
+                "straight_translation",
+                "registration_capacity",
+                "successor_land",
+            ),
+            timing_anchor="route_active",
+            # Registering the extra components takes about 1.6 s at the fixture
+            # spacing, so the bins sit early in the active period and leave the
+            # rejection inside it.
+            timing_offsets_ns=(
+                1_000_000_000,
+                1_500_000_000,
+                2_000_000_000,
+                2_500_000_000,
+                3_000_000_000,
+            ),
+        ),
+        notes=(
+            "legacy offboard has no registration protocol, so this is not "
+            "portable. The Stage A1 cell exhausted the slots before the tested "
+            "route activated; as a selected action it exhausts them while that "
+            "route holds authority, which is the reachable variant a policy can "
+            "time"
+        ),
     ),
     CoreAction(
         action_id="restart_producer_after_loss",

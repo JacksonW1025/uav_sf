@@ -130,6 +130,26 @@ class CorpusDecisionTests(unittest.TestCase):
                     set(CORPUS), {item.action_id for item in wired_actions(mechanism)}
                 )
 
+    def test_capacity_exhaustion_is_dynamic_only_and_preregisters_its_rejection(self) -> None:
+        profile = live_profile("exhaust_registration_capacity")
+        self.assertTrue(profile.registration_rejection_expected)
+        self.assertEqual(profile.timing_anchor, "route_active")
+        # Registering the extra components takes about 1.6 s, so the bins sit
+        # early enough for the rejection to land inside the active period.
+        self.assertEqual(
+            [value / 1_000_000_000 for value in profile.timing_offsets_ns],
+            [1.0, 1.5, 2.0, 2.5, 3.0],
+        )
+        wired = {
+            item.action_id for item in wired_actions("dynamic_external_mode")
+        }
+        self.assertIn("exhaust_registration_capacity", wired)
+        # Legacy offboard has no registration protocol at all.
+        self.assertNotIn(
+            "exhaust_registration_capacity",
+            {item.action_id for item in wired_actions("legacy_offboard")},
+        )
+
     def test_the_adjacent_request_straddles_the_scheduled_completion(self) -> None:
         profile = live_profile("adjacent_land_request")
         # Both producers measure the active period from route activation, so

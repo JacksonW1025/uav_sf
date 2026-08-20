@@ -209,6 +209,22 @@ def _semantic_success(
     return not reasons, reasons
 
 
+def capacity_command(index: int) -> list[str]:
+    """One additional external mode component competing for a navigation slot."""
+
+    return [
+        "ros2",
+        "run",
+        "family_a_modes",
+        "external_mode",
+        "--ros-args",
+        "-r",
+        f"__node:=family_a_capacity_{index + 1}",
+        "-p",
+        "active_duration_s:=8.0",
+    ]
+
+
 def _adjacent_bucket(decision: dict[str, Any] | None) -> str:
     """Record the request against the completion boundary it was aimed at.
 
@@ -395,6 +411,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     workload: ManagedProcess | None = None
     reclaim_process: ManagedProcess | None = None
     adjacent_process: ManagedProcess | None = None
+    capacity_started = False
     reclaim_command: list[str] = []
     reclaim_session = f"reclaim-{args.run_id}"
     safety: ManagedProcess | None = None
@@ -618,7 +635,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     ),
                 ],
             )
-            if args.duplicate_registration:
+            if args.duplicate_registration and args.scheduled_action != "exhaust_registration_capacity":
                 # Exercise the public registration-capacity boundary. PX4
                 # exposes eight external nav-state slots (23..30); the
                 # primary component holds one, seven further registrations
@@ -628,17 +645,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 for duplicate_index in range(8):
                     start(
                         f"external_mode_capacity_{duplicate_index + 1}",
-                        [
-                            "ros2",
-                            "run",
-                            "family_a_modes",
-                            "external_mode",
-                            "--ros-args",
-                            "-r",
-                            f"__node:=family_a_capacity_{duplicate_index + 1}",
-                            "-p",
-                            f"active_duration_s:={args.active_s}",
-                        ],
+                        capacity_command(duplicate_index),
                     )
                     time.sleep(0.2)
         elif args.mechanism == "mode_executor":
@@ -751,6 +758,19 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             )
         deadline = time.monotonic() + args.attempt_timeout_s
         while time.monotonic() < deadline:
+            if (
+                args.scheduled_action == "exhaust_registration_capacity"
+                and not capacity_started
+                and action_request.is_file()
+            ):
+                # Exhaust the navigation slots while the tested route holds
+                # authority, which is the variant a policy can time.
+                capacity_started = True
+                for duplicate_index in range(8):
+                    start(
+                        f"external_mode_capacity_{duplicate_index + 1}",
+                        capacity_command(duplicate_index),
+                    )
             if (
                 args.scheduled_action == "restart_producer_after_loss"
                 and reclaim_process is None
