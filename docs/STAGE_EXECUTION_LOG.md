@@ -223,12 +223,27 @@ their completions differently — and reverted before it was flown. They do not:
 the offboard producer sets its motion start on the first tick after activation.
 See [the record](../experiments/step_c_adjacent_qualification_v1/QUALIFICATION.md).
 
-### Step D — wire the registration and health actions — NOT STARTED
+### Step D — wire the registration and health actions — IN PROGRESS
 
-Goal: make `withhold_health_reply` and `exhaust_registration_capacity`
-selectable rather than cell-configured. Both are dynamic-only by nature of the
-system under test. Both need live markers the executor can observe, which do not
-exist yet.
+Both are dynamic-only by nature of the system under test.
+
+**Registration capacity: reached, but incompatible with the moving profile.** It
+was wired and flown in two batches, and both attempts that selected it failed
+identically. The boundary is genuinely reached — two of eight components refused
+while the tested route executed — but registering them spans about 4.3 s, from
+motion entry to the scheduled completion, and the vehicle covered 0.751 m of the
+2.5 m the profile requires. The physical-validity contract correctly refused
+them, and it was not relaxed to admit them. The Stage A1 cell exhausted the
+slots while hovering, before the tested activation, where no motion contract
+applies. Making it selectable needs a pre-activation anchor and a live marker
+for an established source route.
+See [the finding](../experiments/step_d_capacity_qualification_v1/FINDING.md).
+
+**Health withhold: not a runtime action.** The withhold must be in effect before
+the activation is requested, so it is a launch configuration rather than a timed
+stimulus: there is nothing to request and no timing to choose. Representing it
+honestly needs the corpus to distinguish launch configurations from runtime
+actions, which the decision surface does not model yet.
 
 ### Step E — sign the corpus freeze — NOT STARTED
 
@@ -258,17 +273,21 @@ generation — remain deferred by standing decision 3.
 
 ## Next concrete action
 
-Step D is the last signing condition: make `withhold_health_reply` and
-`exhaust_registration_capacity` selectable rather than cell-configured. Both are
-dynamic-only by nature of the system under test, and both need a live marker the
-executor cannot observe yet — registration replies and activation requests are
-recorded by the requester, so the marker source exists but is not mapped.
+Two modelling decisions stand between here and a signable corpus, and both are
+about representation rather than wiring.
+
+1. Give the registration capacity action a pre-activation anchor, which needs a
+   live marker for an established source route — the hover phase where the
+   Stage A1 variant lives.
+2. Decide how the corpus represents a launch configuration such as the health
+   withhold, which has no request and no timing. Either the decision surface
+   grows that distinction, or the action leaves the core corpus with its reason
+   recorded.
 
 Five actions are qualified and selectable today: the owned stall, the producer
 termination, route re-entry, the producer reclaim, and the adjacent Land
-request.
-
-After Step D the corpus freeze can be signed, which closes Stage 2.
+request. That set is qualified by
+[the adjacent-request batch](../experiments/step_c_adjacent_qualification_v1/QUALIFICATION.md).
 
 Before any live batch, confirm no unpinned process competes for the pinned CPU
 sets, and afterwards confirm the central real-time factor is near 1.0.
