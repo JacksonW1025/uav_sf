@@ -340,14 +340,14 @@
         {
           "attempt_id": "step-cr-q-offboard-random-001",
           "sequence": 12674,
-          "state_before": "family=internal_navigator|epoch=e2|owner=internal|phase=executing|lineage=complete|freshness=fresh|successor=installed|fallback=triggered|fault=process_exit|motion=unobserved"
+          "state_before": "family=internal_safe|epoch=e3_plus|owner=internal|phase=executing|lineage=complete|freshness=fresh|successor=installed|fallback=none|fault=none|motion=unobserved"
         }
       ],
       "instances": 1,
       "inventory_action_id": "producer_restart_after_exit",
       "lifecycle_phase": "fallback",
       "marker": "a transition_requested returning to an external route after a producer loss",
-      "precondition": "a producer loss has been observed and an internal safe route now holds complete authority",
+      "precondition": "a producer loss has been observed and an internal route now holds complete authority",
       "precondition_satisfied": 0,
       "precondition_violations": 1,
       "status": "inconsistent"

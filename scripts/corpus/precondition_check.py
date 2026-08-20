@@ -33,6 +33,7 @@ from scripts.analysis.semantic_state_replay import (
 from scripts.corpus.core_actions import (
     CORE_ACTIONS,
     CoreActionError,
+    core_action,
     core_action_records,
     validate_declarations,
 )
@@ -59,6 +60,43 @@ def _write_new(path: Path, text: str) -> None:
     path.write_text(text, encoding="utf-8")
 
 
+def timed_decision_times(root: Path, study_id: str, attempt_id: str) -> dict[str, int]:
+    """When the executor issued each timed action, in the trace's own clock.
+
+    A timed action's precondition is what the generator evaluated before
+    deciding, so it is read at that moment.  A launch configuration has no such
+    moment — its record is written during setup, before the episode has done
+    anything — so its precondition, which describes the state its effect is
+    legal in, is read at that effect instead.
+
+    Host-side sidecars keep their monotonic timestamp through trace closure, so
+    the executor's record is directly comparable to a trace timestamp.
+    """
+
+    path = root / "runs" / study_id / attempt_id / "raw" / "strategy.lifecycle.jsonl"
+    if not path.is_file():
+        return {}
+    times: dict[str, int] = {}
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        record = json.loads(line)
+        if not isinstance(record, dict) or record.get("kind") != "action_requested":
+            continue
+        moment = record.get("requested_monotonic_ns", record.get("received_monotonic_ns"))
+        action_id = str(record.get("action", ""))
+        known = {item.action_id for item in CORE_ACTIONS}
+        if not isinstance(moment, int) or action_id not in known:
+            # A single-action decision records the runtime fault mode rather
+            # than a core action identity, and is judged at its effect.
+            continue
+        profile = core_action(action_id).live_profile
+        if profile is not None and profile.application == "launch":
+            continue
+        times.setdefault(action_id, moment)
+    return times
+
+
 def check_attempt(
     root: Path, study_id: str, attempt_id: str, cell_id: str
 ) -> list[dict[str, Any]]:
@@ -74,6 +112,14 @@ def check_attempt(
         raise PreconditionCheckError(
             f"{attempt_id}: the trajectory does not align with its trace"
         )
+
+    decided = timed_decision_times(root, study_id, attempt_id)
+    decision_states: dict[str, SemanticState] = {}
+    if decided:
+        for event, step in zip(events, trajectory.steps):
+            for action_id, moment in decided.items():
+                if int(event["timestamp_ns"]) <= moment:
+                    decision_states[action_id] = step.state
 
     instances: list[dict[str, Any]] = []
     # One tester action can be recorded by more than one observer.  A genuine
@@ -92,7 +138,8 @@ def check_attempt(
             if not action.marker(event, previous_state, step.state):
                 continue
             authority = previous_state.activation_id
-            satisfied = bool(action.precondition(previous_state))
+            judged = decision_states.get(action.action_id, previous_state)
+            satisfied = bool(action.precondition(judged))
             # Two observers can record one action, and a supervisory observer
             # can record it late.  A firing that shares its predecessor's
             # authority is the first case.  A firing whose precondition is
@@ -115,7 +162,10 @@ def check_attempt(
                     "kind": str(event["kind"]),
                     "role": "duplicate_observation" if repeated else "action",
                     "precondition_satisfied": satisfied,
-                    "state_before": previous_state.key(),
+                    "state_before": judged.key(),
+                    "judged_at": (
+                        "decision" if action.action_id in decision_states else "effect"
+                    ),
                     "state_after": step.state.key(),
                 }
             )

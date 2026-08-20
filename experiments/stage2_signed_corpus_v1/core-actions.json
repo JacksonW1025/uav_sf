@@ -353,7 +353,7 @@
       },
       "marker": "a transition_requested returning to an external route after a producer loss",
       "notes": "the only proposed action whose legality depends on the outcome of an earlier action, which is what separates feedback-guided generation from feedback-free generation. A first attempt found it unreachable because the runner learned of the producer loss by polling the process, about eleven seconds after telemetry already showed the installed safe route, by which time the aircraft had landed. The loss is now observed from telemetry, which leaves the measured ten second window; the tested failsafe configuration is unchanged",
-      "precondition": "a producer loss has been observed and an internal safe route now holds complete authority",
+      "precondition": "a producer loss has been observed and an internal route now holds complete authority",
       "summary": "Restart the producer after a loss and reclaim authority.",
       "target_boundaries": [
         "target_installed"

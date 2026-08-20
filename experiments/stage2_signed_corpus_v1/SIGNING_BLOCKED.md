@@ -1,4 +1,4 @@
-# Corpus signing — blocked on one modelling decision
+# Corpus signing — blocked on when a producer loss reaches the trace
 
 ## What this directory is
 
@@ -92,6 +92,45 @@ looking at, which the corpus now knows and this replay does not yet use.
 
 The change was reverted rather than kept, because a replay that reports four
 inconsistencies instead of two is not closer to the truth.
+
+## The split rule was then implemented, and it isolates the real cause
+
+A timed action is now judged at its decision moment and a launch configuration
+at its effect, which the corpus can tell apart. The health withhold returned to
+consistent, and the reclaim's predicate was corrected in one narrow way: after a
+loss the vehicle may sit under the internal navigator rather than a named safe
+route, and that distinction does not bear on whether reclaiming is legal.
+
+Two instances remain, both in the same reclaim episode, and they now say
+something specific rather than something vague:
+
+- the reclaim is judged at its decision moment, where an internal route does
+  hold complete authority, and fails only on `fault_class == process_exit` —
+  because the executor learned of the loss from telemetry, and the trace records
+  the fault later;
+- the producer termination has no decision moment in that attempt, since the
+  executor recorded only the reclaim it was asked for, so it is judged at the
+  runner's late fault record.
+
+Both are one fact: **in a reclaim episode the producer-loss fault reaches the
+trace later than either the executor or the failsafe knew about it.** That is a
+property of how the loss is recorded, not of the predicates. Widening either
+predicate further would hide it.
+
+## What remains to decide
+
+The remaining choice is narrower than the original one:
+
+1. **Record the loss when it is observed, not when it is noticed.** The workload
+   sidecar or the runner would emit the fault from the same telemetry signal the
+   executor already uses, so the trace and the decision agree. This makes the
+   evidence match what was known.
+2. **Sign with this episode noted**, since both instances are explained and
+   neither is a defect in a flight or a predicate.
+
+The first is the same class of fix that made the reclaim reachable at all, and
+it would also remove the seventeen duplicate observations the producer
+termination still carries.
 
 Signing waits on that choice. Every other signing condition is met: the decision
 interface selects an action and a timing, the availability gaps are closed, the

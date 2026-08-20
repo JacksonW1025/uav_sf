@@ -181,6 +181,21 @@ def _any_authority(state: SemanticState) -> bool:
     )
 
 
+def _internal_authority(state: SemanticState) -> bool:
+    """Any internal route holding complete authority.
+
+    After a producer loss the vehicle may sit under the internal navigator
+    rather than a named safe route.  That distinction does not bear on whether
+    reclaiming is legal.
+    """
+
+    return (
+        state.route_family in ("internal_safe", "internal_navigator")
+        and state.lineage == "complete"
+        and state.phase != "terminal"
+    )
+
+
 def _internal_safe_authority(state: SemanticState) -> bool:
     return (
         state.route_family == "internal_safe"
@@ -482,9 +497,9 @@ CORE_ACTIONS: tuple[CoreAction, ...] = (
             "dynamic_external_mode": "implemented",
         },
         precondition=lambda state: state.fault_class == "process_exit"
-        and _internal_safe_authority(state),
+        and _internal_authority(state),
         precondition_text=(
-            "a producer loss has been observed and an internal safe route now holds "
+            "a producer loss has been observed and an internal route now holds "
             "complete authority"
         ),
         marker=lambda event, previous, state: str(event.get("kind")) == "transition_requested"

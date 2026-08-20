@@ -273,13 +273,22 @@ The choice is between evaluating against the decision moment, widening two
 predicates to the recorded moment, or signing with the divergence noted. It is a
 modelling decision, not a defect.
 
-The first was chosen and tried. It does not work as stated: it resolved neither
-inconsistency and introduced two more, because a launch configuration has no
-decision moment in that sense — its record is written during setup, before the
-episode has done anything. The change was reverted. The question splits: a timed
-action has a decision moment and could be judged there, while a launch
-configuration must be judged at its effect, and a rule serving both must say
-which kind it is looking at.
+The first was chosen and tried. Judging everything at the decision moment
+resolved neither inconsistency and introduced two more, because a launch
+configuration has no such moment — its record is written during setup. The split
+rule was then implemented instead: a timed action is judged at its decision
+moment, a launch configuration at its effect. The health withhold returned to
+consistent, and the reclaim predicate was corrected in one narrow way, since
+after a loss the vehicle may sit under the internal navigator rather than a
+named safe route.
+
+Two instances remain, both in the same reclaim episode, and they now name one
+fact: the producer-loss fault reaches the trace later than either the executor
+or the failsafe knew about it. The reclaim fails only on the fault clause, at a
+moment where the authority it needs is already in place; the producer
+termination has no decision moment in that attempt and is judged at the runner's
+late record. Widening either predicate further would hide that rather than
+resolve it.
 See [the blocked-signing record](../experiments/stage2_signed_corpus_v1/SIGNING_BLOCKED.md).
 
 Every other signing condition is met.
@@ -311,11 +320,12 @@ Take the precondition-evaluation decision in
 [the blocked-signing record](../experiments/stage2_signed_corpus_v1/SIGNING_BLOCKED.md),
 then sign the corpus freeze and close Stage 2.
 
-The remaining options are: judge a timed action at its decision time while
-judging a launch configuration at its effect, which the corpus already knows how
-to tell apart; widen the producer termination and reclaim predicates to the
-recorded moment; or sign with the reclaim episode noted as a known divergence.
-Judging everything at the decision time was tried and reverted.
+The split rule is implemented. The remaining choice is narrower: either record a
+producer loss when it is observed rather than when it is noticed, so the trace
+and the decision agree — the same class of fix that made the reclaim reachable,
+and one that would also remove the seventeen duplicate observations the producer
+termination still carries — or sign with this episode noted, since both
+instances are explained and neither is a defect in a flight or a predicate.
 
 All seven actions are implemented, selectable and qualified. The full-corpus
 qualification passed 18 of 18.
