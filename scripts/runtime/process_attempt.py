@@ -111,7 +111,19 @@ def _physical_execution_contract(raw: Path, plan: dict[str, Any]) -> dict[str, A
     entry_ok = entry_progress >= float(physical["minimum_motion_entry_progress_m"])
     nominal = not bool(plan["transition"]["fault_expected"])
     completion_ok = (not nominal) or completion_progress >= float(physical["minimum_nominal_completion_progress_m"])
-    fault_after_entry = (not faults) or bool(entries and min(int(item["received_monotonic_ns"]) for item in faults) >= min(int(item["received_monotonic_ns"]) for item in entries))
+    # Ordering a fault against motion entry only means something when the
+    # workload moves.  A refused activation never leaves the hover, so the rule
+    # is vacuous there rather than violated.
+    motion_required = bool(workload.get("motion_required", True))
+    fault_after_entry = (
+        (not motion_required)
+        or (not faults)
+        or bool(
+            entries
+            and min(int(item["received_monotonic_ns"]) for item in faults)
+            >= min(int(item["received_monotonic_ns"]) for item in entries)
+        )
+    )
     takeoff_before_transition = bool(
         takeoff_events and target_requests
         and min(int(item["received_monotonic_ns"]) for item in takeoff_events)
