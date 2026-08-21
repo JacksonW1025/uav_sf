@@ -676,6 +676,33 @@ evidence.
 The wider point stands regardless: nothing in the tooling notices a real-time
 factor collapse until the attempt is rejected after the fact, and the two-phase
 barrier only holds back a batch's own analysis.
+
+**The batch was then replicated through the real driver with independent
+seeds**, and held 0.9988 to 0.9994 across all eighteen — same host, same image,
+same three-at-a-time concurrency as the script that could not. 13 of 18, the
+gate again not passed, again only on safety stops.
+
+**The mechanism difference replicated exactly.** Over both batches, 36
+attempts:
+
+| mechanism | attempts | reclaim completely installed | not installed | safety stops |
+| --- | --- | --- | --- | --- |
+| `dynamic_external_mode` | 18 | **0** | 17 | 3 |
+| `legacy_offboard` | 18 | **11** | 7 | 5 |
+
+Dynamic reached four of its five reclaim bins and offboard all five, so this is
+not a property of which timings were drawn. The dynamic reclaim was requested in
+every one of its eighteen episodes and completely installed in none.
+
+The second half of the result is that the offboard reclaim is not reliable
+either. It installs in 11 of 18, and when it does not the aircraft is close
+enough to the ground that the supervisor stops the attempt — offboard has more
+safety stops than dynamic, not fewer. The difference is not that one mechanism
+works and the other does not. It is that one sometimes completes the
+installation inside the failsafe descent and the other never does.
+
+Every decision log re-derived in all twelve units across both batches.
+See [the replication record](../experiments/step_f_closed_loop_replication_v1/REPLICATION.md).
 See [the record](../experiments/step_f_closed_loop_qualification_v1/QUALIFICATION.md).
 
 ## Invariants
@@ -704,10 +731,18 @@ See [the record](../experiments/step_f_closed_loop_qualification_v1/QUALIFICATIO
 
 ## Next concrete action
 
-Decide how to read the dynamic reclaim, using the three options in the F-live
+Decide how to read the reclaim result, using the three options in the F-live
 entry. That decision is a research judgement about the mechanism comparison, not
-an engineering fix, and it gates whether this batch is re-flown, the bins are
-re-measured, or the corpus availability changes.
+an engineering fix, and it gates whether the bins are re-measured or the corpus
+availability changes.
+
+Two of the three readings are now much weaker than when they were written. The
+delay is entirely after the request, so moving the request earlier cannot
+shorten it; and the difference replicated across independent seeds with four of
+five dynamic bins exercised, so it is not a property of the timings drawn. What
+also changed is that the offboard reclaim turned out to be unreliable too — 11
+of 18 — so the reading is no longer "one mechanism can reclaim and the other
+cannot".
 
 Whichever is chosen, the ten-second reclaim window recorded in Step C was
 measured under a loiter and does not describe a real failsafe. Re-measuring it
