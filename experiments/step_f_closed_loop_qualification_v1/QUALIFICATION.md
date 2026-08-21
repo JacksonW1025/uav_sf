@@ -62,6 +62,40 @@ return-to-launch descent for all of it. Registration consumes most of it, and
 the three safety stops are what happens at the end: the reclaim arrives while
 the aircraft is close to the ground under a descending failsafe.
 
+## Where the delay is
+
+Decomposing it from the retained evidence of this batch, without re-flying:
+the reclaim producer does not re-register. It loads the registration handoff
+the first producer left, spends 2.2 to 3.2 s starting and prestreaming, and
+then requests the tested route. The wait is entirely *after* the request.
+
+| | dynamic | offboard |
+| --- | --- | --- |
+| restart to request | 2.2 – 3.2 s | 3.3 – 6.4 s |
+| **request to activation** | **7.6 – 10.8 s** | **0.1 – 0.2 s** |
+| height at request | 3.76 m, airborne | 2.97 m, airborne |
+| height at activation | **-0.02 m, landed** | 3.04 m, airborne |
+
+The navigation state at the moment of the request is what separates them. The
+offboard reclaim requests while the aircraft is in `AUTO_TAKEOFF` and is granted
+`OFFBOARD` 0.14 s later, three metres up: authority is genuinely taken back in
+flight. The dynamic reclaim requests while the aircraft is in `AUTO_LAND` and is
+not granted anything. The failsafe descent runs to completion, the aircraft
+touches down and disarms, and only then does the external mode become active —
+at which point it is on the ground and immediately commands a takeoff, which is
+the unexpected ground contact the supervisor stopped.
+
+So the offboard mechanism takes authority back by setting the navigation state
+directly, which interrupts the failsafe descent. The dynamic mechanism's
+activation goes through mode arbitration, and arbitration does not grant an
+external mode while a failsafe descent is in progress. Both are observations of
+this system's behaviour through its public interfaces; neither is a claim about
+PX4's internals.
+
+That is the point the study exists to make about route-replacing authority
+transitions, and it is a difference in whether the new path is *completely
+installed*, not in whether the transition was requested.
+
 ## Why no retained evidence shows this
 
 The retained single-action reclaim never terminated a producer that held
@@ -85,7 +119,9 @@ none is taken here:
   re-register cannot reclaim inside its own failsafe window, which is a
   property of the mechanism and belongs in the comparison;
 * the timing bins are wrong for the dynamic mechanism and need re-measuring
-  against a descending failsafe rather than a loiter; or
+  against a descending failsafe rather than a loiter — the decomposition above
+  makes this the weakest reading, because the wait is after the request and
+  moving the request earlier does not shorten it; or
 * the reclaim is offboard-only in practice, as the registration actions are
   dynamic-only, which would change a signed availability.
 

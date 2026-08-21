@@ -630,6 +630,41 @@ belongs in the mechanism comparison; or the dynamic timing bins need
 re-measuring against a descending failsafe; or the reclaim is offboard-only in
 practice, which would change a signed availability. They are distinguishable by
 measurement.
+
+**Where the delay is, measured from this batch without re-flying.** The reclaim
+producer does not re-register; it loads the handoff the first producer left and
+spends 2.2 to 3.2 s starting and prestreaming. The whole wait is *after* the
+request: dynamic takes 7.6 to 10.8 s from request to activation, offboard takes
+0.1 to 0.2 s. The navigation state at the request separates them. Offboard
+requests from `AUTO_TAKEOFF` and is granted `OFFBOARD` 0.14 s later at three
+metres, so authority is genuinely taken back in flight. Dynamic requests from
+`AUTO_LAND` at 3.76 m and is granted nothing; the descent runs to completion,
+the aircraft touches down and disarms, and only then does the external mode
+activate, on the ground, immediately commanding a takeoff. That is the
+unexpected ground contact the supervisor stopped. This makes the second reading
+the weakest of the three: moving the request earlier cannot shorten a wait that
+begins after the request.
+
+**A second batch was run and is void, through operator error.** Re-flying the
+three offboard cells alone gave 0 of 9, seven of them observability-rejected on
+clock uncertainty. The cause was analysis run on this host *while the batch was
+flying* — reading multi-megabyte telemetry sidecars and parsing them — which
+competes for the pinned cores. The numbers are unambiguous:
+
+| | central real-time factor | admissible |
+| --- | --- | --- |
+| first batch, host quiet | 0.9989 – 0.9991 | 18 of 18 |
+| second batch, analysis running | **0.5629 – 0.8223** | 0 of 9 |
+
+The median real-time factor was 0.9998 or better in both, so the simulation is
+real-time most of the time; what moves is the central window minimum, which is
+sustained stalling. The worst attempt, 0.5629, matches the 0.563 the desktop
+session produced in Step B almost exactly.
+
+The two-phase barrier protects a batch from its *own* analysis load. It does
+nothing about load arriving from outside the batch, and nothing in the tooling
+notices. Treat the host as unavailable for anything else for the duration of a
+batch, not merely quiet at its start.
 See [the record](../experiments/step_f_closed_loop_qualification_v1/QUALIFICATION.md).
 
 ## Invariants
@@ -653,6 +688,9 @@ See [the record](../experiments/step_f_closed_loop_qualification_v1/QUALIFICATIO
 - A fixture that runs is not the same as a fixture that runs what it is named
   after. The single-action reclaim passed every gate for four steps while
   measuring something else.
+- The host is unavailable for anything else while a batch is flying, not merely
+  quiet when it starts. The two-phase barrier holds a batch's own analysis back
+  and has no view of load arriving from outside it.
 
 ## Next concrete action
 
