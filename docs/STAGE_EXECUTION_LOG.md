@@ -645,26 +645,37 @@ unexpected ground contact the supervisor stopped. This makes the second reading
 the weakest of the three: moving the request earlier cannot shorten a wait that
 begins after the request.
 
-**A second batch was run and is void, through operator error.** Re-flying the
-three offboard cells alone gave 0 of 9, seven of them observability-rejected on
-clock uncertainty. The cause was analysis run on this host *while the batch was
-flying* — reading multi-megabyte telemetry sidecars and parsing them — which
-competes for the pinned cores. The numbers are unambiguous:
+**Two attempts to re-fly the offboard cells alone are void, cause not yet
+identified.** Both gave 0 of 9, almost all observability-rejected on clock
+uncertainty, with the central real-time factor far under bound. A first
+diagnosis blamed analysis run on the host during the batch; the second re-fly
+was performed with the host otherwise idle and reproduced the failure, so that
+diagnosis was wrong and is withdrawn.
 
-| | central real-time factor | admissible |
-| --- | --- | --- |
-| first batch, host quiet | 0.9989 – 0.9991 | 18 of 18 |
-| second batch, analysis running | **0.5629 – 0.8223** | 0 of 9 |
+| run | driver | concurrency | central real-time factor | admissible |
+| --- | --- | --- | --- | --- |
+| full batch | `run_strategy_qualification` | 3 | 0.9989 – 0.9991 | 18 of 18 |
+| offboard re-fly, host busy | ad-hoc script | 3 | 0.5629 – 0.8223 | 0 of 9 |
+| offboard re-fly, host idle | ad-hoc script | 3 | 0.5772 – 0.8585 | 0 of 9 |
+| single attempt, host idle | ad-hoc script | 1 | 0.9991 | 1 of 1 |
 
-The median real-time factor was 0.9998 or better in both, so the simulation is
-real-time most of the time; what moves is the central window minimum, which is
-sustained stalling. The worst attempt, 0.5629, matches the 0.563 the desktop
-session produced in Step B almost exactly.
+The median real-time factor is 0.9998 or better everywhere, so the simulation
+runs real-time most of the time; what moves is the central window minimum,
+which is sustained stalling. The machine is not the explanation: a single
+attempt flown afterwards on the same host and image was accepted with 0.9991
+and 4.3 ms of clock uncertainty. Nor is concurrency by itself, because the full
+batch also ran three at a time and held 0.999.
 
-The two-phase barrier protects a batch from its *own* analysis load. It does
-nothing about load arriving from outside the batch, and nothing in the tooling
-notices. Treat the host as unavailable for anything else for the duration of a
-batch, not merely quiet at its start.
+What is left is a difference between the ad-hoc offboard script and
+`run_strategy_qualification` that has not been found. Their slot assignment,
+CPU-set selection, barrier check and `_parallel` calls read the same. Until it
+is found, a partial re-fly should go through the real driver rather than a
+script written for the occasion, and any result from that script is not
+evidence.
+
+The wider point stands regardless: nothing in the tooling notices a real-time
+factor collapse until the attempt is rejected after the fact, and the two-phase
+barrier only holds back a batch's own analysis.
 See [the record](../experiments/step_f_closed_loop_qualification_v1/QUALIFICATION.md).
 
 ## Invariants
@@ -688,9 +699,8 @@ See [the record](../experiments/step_f_closed_loop_qualification_v1/QUALIFICATIO
 - A fixture that runs is not the same as a fixture that runs what it is named
   after. The single-action reclaim passed every gate for four steps while
   measuring something else.
-- The host is unavailable for anything else while a batch is flying, not merely
-  quiet when it starts. The two-phase barrier holds a batch's own analysis back
-  and has no view of load arriving from outside it.
+- A batch is flown with the real driver. A script written for one occasion is
+  not evidence until it has reproduced the driver's real-time factor.
 
 ## Next concrete action
 
