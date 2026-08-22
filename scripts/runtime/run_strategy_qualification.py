@@ -326,6 +326,55 @@ def _attempt_summary(
     }
 
 
+def closed_loop_machinery(attempts: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    """Whether the loop itself worked, separately from how the flights ended.
+
+    The six-unit gate asks for every attempt to be accepted.  For an episode
+    class whose action necessarily triggers a failsafe descent, and whose second
+    action is necessarily attempted near the ground, a safety stop is one of the
+    class's expected outcomes rather than a failure of the machinery.  Holding
+    the loop to that gate measures the system under test and reports it as a
+    defect in the tester.
+
+    So this reports the other question alongside it, and does not replace it:
+    did the loop observe, choose, apply, record, and leave admissible evidence?
+    That is what a qualification of the loop is for.  Whether the reclaim then
+    installs is a result about the mechanism, and belongs in the comparison.
+    """
+
+    total = len(attempts)
+    checks = {
+        "decision_logs_replay": sum(
+            bool(value.get("decision_log_replays")) for value in attempts.values()
+        ),
+        "lifecycles_complete": sum(
+            bool(value.get("strategy_lifecycle_complete")) for value in attempts.values()
+        ),
+        "actions_applied": sum(
+            bool(value.get("applied_units")) for value in attempts.values()
+        ),
+        "evidence_admissible": sum(
+            value.get("evidence_gate_status") == "ADMISSIBLE"
+            for value in attempts.values()
+        ),
+    }
+    complete = sum(
+        bool(value.get("decision_log_replays"))
+        and bool(value.get("strategy_lifecycle_complete"))
+        and bool(value.get("applied_units"))
+        and value.get("evidence_gate_status") == "ADMISSIBLE"
+        for value in attempts.values()
+    )
+    return {
+        "attempts": total,
+        "checks": dict(sorted(checks.items())),
+        "machinery_complete": complete,
+        # Reported, never used as the batch verdict. The gate above is
+        # unchanged; this says what it does not.
+        "status": "PASS" if total and complete == total else "INCOMPLETE",
+    }
+
+
 def run(args: argparse.Namespace) -> dict[str, Any]:
     spec = _read_object(args.spec)
     cells = _validate_spec(spec)
@@ -495,6 +544,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "corpus": list(spec.get("corpus", [])),
         "official_action": spec.get("official_action"),
         "episode_class": class_id,
+        "closed_loop_machinery": closed_loop_machinery(attempts) if class_id else None,
         "rounds": rounds,
         "attempts": attempts,
         "units": units,

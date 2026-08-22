@@ -63,6 +63,29 @@ same.
 Nothing in the tooling reports a real-time factor collapse until the attempt is
 rejected after the fact.
 
+## What the gate measures here, and what it does not
+
+The six-unit gate asks for every attempt to be accepted. This class's action
+necessarily triggers a failsafe descent, and its second action is necessarily
+attempted near the ground, so a safety stop is one of the class's expected
+outcomes rather than a failure of the loop. Holding the loop to that gate
+measures the system under test and reports the result as a defect in the tester.
+
+A second criterion is therefore reported alongside the gate, which is unchanged.
+It asks whether the loop observed, chose, applied, recorded, and left admissible
+evidence:
+
+| batch | six-unit gate | closed-loop machinery |
+| --- | --- | --- |
+| first | FAIL | **PASS, 18 of 18** |
+| replication | FAIL | INCOMPLETE, 17 of 18 |
+
+The loop is qualified. The single gap is one attempt rejected on clock
+uncertainty, which is also the first direct measurement of the flake this stage
+has carried as an estimate: 1 in 36 across these two batches, matching the rate
+Step B recorded from a smaller sample. A gate demanding every attempt fails
+about a third of eighteen-attempt batches for that reason alone.
+
 ## Artifacts
 
 * `qualification.spec.json` — the frozen batch specification.

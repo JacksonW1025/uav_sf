@@ -372,3 +372,52 @@ class ReplayTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class MachineryCriterionTests(unittest.TestCase):
+    """The loop's own criterion, kept apart from the six-unit gate."""
+
+    def _attempt(self, **overrides):
+        value = {
+            "decision_log_replays": True,
+            "strategy_lifecycle_complete": True,
+            "applied_units": ["terminate_owning_producer:boundary"],
+            "evidence_gate_status": "ADMISSIBLE",
+            "outcome": "ACCEPTED",
+        }
+        value.update(overrides)
+        return value
+
+    def test_a_safety_stop_does_not_fail_the_machinery(self):
+        # The class's action necessarily triggers a failsafe descent and its
+        # second action is necessarily attempted near the ground, so a safety
+        # stop is one of its expected outcomes rather than a broken loop.
+        from scripts.runtime.run_strategy_qualification import closed_loop_machinery
+
+        attempts = {
+            "a": self._attempt(),
+            "b": self._attempt(outcome="FORMAL_SAFETY_STOP"),
+        }
+        result = closed_loop_machinery(attempts)
+        self.assertEqual(result["status"], "PASS")
+        self.assertEqual(result["machinery_complete"], 2)
+
+    def test_a_log_that_does_not_replay_fails_the_machinery(self):
+        from scripts.runtime.run_strategy_qualification import closed_loop_machinery
+
+        attempts = {"a": self._attempt(decision_log_replays=False)}
+        result = closed_loop_machinery(attempts)
+        self.assertEqual(result["status"], "INCOMPLETE")
+        self.assertEqual(result["checks"]["decision_logs_replay"], 0)
+
+    def test_inadmissible_evidence_fails_the_machinery(self):
+        from scripts.runtime.run_strategy_qualification import closed_loop_machinery
+
+        attempts = {"a": self._attempt(evidence_gate_status="INADMISSIBLE")}
+        self.assertEqual(closed_loop_machinery(attempts)["status"], "INCOMPLETE")
+
+    def test_an_episode_that_applied_nothing_fails_the_machinery(self):
+        from scripts.runtime.run_strategy_qualification import closed_loop_machinery
+
+        attempts = {"a": self._attempt(applied_units=[])}
+        self.assertEqual(closed_loop_machinery(attempts)["status"], "INCOMPLETE")

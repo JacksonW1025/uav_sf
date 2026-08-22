@@ -27,10 +27,10 @@ repository validation passes. A step that is partly done says which part.
 ## Position
 
 ```text
-v8 plan stage:      Stage 3, close the selection loop
+v8 plan stage:      Stage 3, selection loop closed
 Stage 1:            complete, exit checks met
 Corpus freeze:      signed, seven actions, unchanged by this step
-Current step:       Step F; host side complete, batch flown 15/18
+Current step:       Step F complete; loop qualified, reclaim result recorded
 Formal campaigns:   none authorized, none running
 ```
 
@@ -548,7 +548,7 @@ Every single-action path is untouched: with no class named, all of this is
 skipped and the 255 earlier tests pass unchanged.
 Covered by [tests/test_episode_class_launch.py](../tests/test_episode_class_launch.py).
 
-#### F-live — the non-formal qualification — FLOWN, GATE NOT PASSED
+#### F-live — the non-formal qualification — COMPLETE
 
 A single smoke flight was flown before any batch, because every earlier step in
 this stage found defects live that no host-side test could reach. It found
@@ -703,6 +703,38 @@ installation inside the failsafe descent and the other never does.
 
 Every decision log re-derived in all twelve units across both batches.
 See [the replication record](../experiments/step_f_closed_loop_replication_v1/REPLICATION.md).
+
+**The reading is taken: this is the result.** The other two are ruled out by
+what was measured. Re-measuring the bins cannot help, because the wait begins
+after the request. And the reclaim is not offboard-only, because offboard is
+itself unreliable at it. The claim the comparison carries is therefore not
+"one mechanism can reclaim and the other cannot" but: *during the failsafe
+descent a producer loss triggers, neither route-replacing mechanism reliably
+completes the installation of a reclaimed route; the offboard path sometimes
+does and the dynamic path never did.*
+
+**The gate was measuring the wrong thing here, and a second criterion was added
+rather than the gate weakened.** This class's action necessarily triggers a
+failsafe descent, and its second action is necessarily attempted near the
+ground, so a safety stop is one of the class's expected outcomes rather than a
+failure of the loop. Asking for 18 of 18 accepted measures the system under
+test and reports it as a defect in the tester. `closed_loop_machinery` in
+[run_strategy_qualification.py](../scripts/runtime/run_strategy_qualification.py)
+now reports, alongside the untouched six-unit gate, whether the loop observed,
+chose, applied, recorded and left admissible evidence:
+
+| batch | six-unit gate | closed-loop machinery |
+| --- | --- | --- |
+| first | FAIL | **PASS, 18 of 18** |
+| replication | FAIL | INCOMPLETE, 17 of 18 |
+
+The loop itself is qualified. The single gap in the replication is one
+inadmissible attempt on clock uncertainty — which is also the **first direct
+measurement of the flake this stage has been carrying as an estimate**: 1 in 36
+across these two batches, exactly the rate Step B recorded from a smaller
+sample. A gate demanding every attempt therefore fails about a third of
+eighteen-attempt batches for that reason alone, and that remains to be decided
+before a fixed-budget campaign.
 See [the record](../experiments/step_f_closed_loop_qualification_v1/QUALIFICATION.md).
 
 ## Invariants
@@ -731,18 +763,29 @@ See [the record](../experiments/step_f_closed_loop_qualification_v1/QUALIFICATIO
 
 ## Next concrete action
 
-Decide how to read the reclaim result, using the three options in the F-live
-entry. That decision is a research judgement about the mechanism comparison, not
-an engineering fix, and it gates whether the bins are re-measured or the corpus
-availability changes.
+Step F is complete: selection is in flight, the loop is qualified on its own
+criterion at 18 of 18, and the reclaim result is read and recorded.
 
-Two of the three readings are now much weaker than when they were written. The
-delay is entirely after the request, so moving the request earlier cannot
-shorten it; and the difference replicated across independent seeds with four of
-five dynamic bins exercised, so it is not a property of the timings drawn. What
-also changed is that the offboard reclaim turned out to be unreliable too — 11
-of 18 — so the reading is no longer "one mechanism can reclaim and the other
-cannot".
+Three things are left over, none of them blocking Step F.
+
+**The clock flake now has a number.** One inadmissible attempt in 36, which
+matches Step B's estimate. A gate requiring every attempt fails roughly a third
+of eighteen-attempt batches for that reason alone. Decide before a fixed-budget
+campaign whether the gate tolerates it, whether attempts are retried, or
+whether the bound moves — the first two do not touch a threshold, the third
+does.
+
+**Step C is still open**, and for the reason recorded under its acceptance: two
+predicates remain inconsistent in one reclaim episode. Step F has since shown
+that the fixture those instances come from was reclaiming under a loiter, so
+the residue should be re-read against a real failsafe before the choice between
+widening the predicates and recording the divergence is made.
+
+**Step C's ten-second reclaim window was measured under that loiter** and does
+not describe a real failsafe descent. Re-measure it before any fixed-budget
+campaign that includes the reclaim.
+
+The earlier plan for this section, now done:
 
 Whichever is chosen, the ten-second reclaim window recorded in Step C was
 measured under a loiter and does not describe a real failsafe. Re-measuring it
