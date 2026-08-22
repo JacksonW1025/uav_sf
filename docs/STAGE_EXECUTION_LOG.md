@@ -768,12 +768,27 @@ criterion at 18 of 18, and the reclaim result is read and recorded.
 
 Three things are left over, none of them blocking Step F.
 
-**The clock flake now has a number.** One inadmissible attempt in 36, which
-matches Step B's estimate. A gate requiring every attempt fails roughly a third
-of eighteen-attempt batches for that reason alone. Decide before a fixed-budget
-campaign whether the gate tolerates it, whether attempts are retried, or
-whether the bound moves — the first two do not touch a threshold, the third
-does.
+**The clock flake is measured and handled.** Over all 596 retained attempts,
+561 produced a clock bridge and 4 were rejected on it: **0.71%**, not the 2.8%
+the two small samples suggested. Uncertainty runs at 1.83 ms median and 5.21 ms
+at the ninetieth percentile against a 20 ms bound, with a maximum among
+successes of 19.22 ms — the tail sits against the bound. Three of the four
+rejections flew at a central real-time factor of 0.999 or better, so this is
+tail behaviour of the fit rather than a load effect. An eighteen-attempt batch
+therefore loses about 12% of the time to it, not a third.
+
+The chosen handling is to **retry that one failure and nothing else**. A
+clock-bridge rejection is a failure to observe the flight: it is decided after
+the aircraft has landed, from a fit over the simulator clock, so it cannot
+depend on what the episode did, and retrying it does not select evidence.
+`run_strategy_qualification` now re-flies such an attempt once under a
+`-retry` identity, records the superseded attempt in `superseded_attempts`
+rather than dropping it, and leaves its evidence on disk.
+
+Nothing else is retried. An Oracle violation, a safety stop and a timeout are
+all things the system under test did. This touches no threshold, so every
+retained study stays valid, and it does not weaken the gate: the gate still
+requires every attempt it keeps to pass.
 
 **Step C is still open**, and for the reason recorded under its acceptance: two
 predicates remain inconsistent in one reclaim episode. Step F has since shown

@@ -421,3 +421,35 @@ class MachineryCriterionTests(unittest.TestCase):
 
         attempts = {"a": self._attempt(applied_units=[])}
         self.assertEqual(closed_loop_machinery(attempts)["status"], "INCOMPLETE")
+
+
+class ClockRetryTests(unittest.TestCase):
+    """Only a failure to observe the flight may be retried."""
+
+    def test_a_clock_rejection_is_retryable(self):
+        from scripts.runtime.run_strategy_qualification import (
+            CLOCK_REJECTION,
+            is_clock_rejection,
+        )
+
+        self.assertTrue(
+            is_clock_rejection(
+                {"outcome": "OBSERVABILITY_REJECTED", "processing_error": CLOCK_REJECTION}
+            )
+        )
+
+    def test_nothing_the_system_did_is_retryable(self):
+        from scripts.runtime.run_strategy_qualification import is_clock_rejection
+
+        # Retrying any of these would select the evidence.
+        for result in (
+            {"outcome": "ACCEPTED"},
+            {"outcome": "FORMAL_SAFETY_STOP"},
+            {"outcome": "TIMEOUT"},
+            {"outcome": "INCONCLUSIVE"},
+            {
+                "outcome": "OBSERVABILITY_REJECTED",
+                "processing_error": "ULog integrity rejected the source window",
+            },
+        ):
+            self.assertFalse(is_clock_rejection(result), result)

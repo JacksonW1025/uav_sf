@@ -10,6 +10,7 @@ import json
 from pathlib import Path
 import shutil
 import sys
+from types import SimpleNamespace
 from typing import Any
 
 from scripts.corpus.core_actions import live_profile
@@ -326,6 +327,26 @@ def _attempt_summary(
     }
 
 
+# The one processing failure a batch may retry.  A clock-bridge rejection is a
+# failure to *observe* the flight, not something the flight did: it is decided
+# after the aircraft has landed, from a fit over the simulator clock, so it
+# cannot depend on the episode's outcome.  Measured over 596 retained attempts
+# it occurs in 4 of 561 with a clock bridge, and 3 of those 4 flew at a central
+# real-time factor of 0.999 or better, so it is not a load effect either.
+#
+# Nothing else is retried.  An Oracle violation, a safety stop and a timeout are
+# all things the system under test did, and retrying them would select the
+# evidence.
+CLOCK_REJECTION = "clock uncertainty exceeds the configured bound"
+
+
+def is_clock_rejection(result: dict[str, Any]) -> bool:
+    return (
+        result.get("outcome") == "OBSERVABILITY_REJECTED"
+        and CLOCK_REJECTION in str(result.get("processing_error") or "")
+    )
+
+
 def closed_loop_machinery(attempts: dict[str, dict[str, Any]]) -> dict[str, Any]:
     """Whether the loop itself worked, separately from how the flights ended.
 
@@ -390,6 +411,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     shutil.copyfile(Path(spec["attestation"]), study_root / "environment.json")
     started_at = _now()
     process_results: dict[str, dict[str, Any]] = {}
+    superseded: list[dict[str, Any]] = []
     rounds = []
     for mechanism_index, mechanism in enumerate(MECHANISMS):
         for ordinal in range(1, 4):
@@ -436,6 +458,44 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 raise QualificationBatchError(
                     "qualification processing barrier failed: " + json.dumps(process_errors, sort_keys=True)
                 )
+            # A clock-bridge rejection is a failure to observe the flight, so
+            # the flight is repeated once.  The superseded attempt keeps its
+            # evidence on disk and is named in the result; it is replaced, not
+            # discarded, and nothing else is ever retried.
+            for value in live_arguments:
+                original = str(value.run_id)
+                result = current_results.get(original)
+                if result is None or not is_clock_rejection(result):
+                    continue
+                if original.endswith("-retry"):
+                    continue
+                retried = SimpleNamespace(**vars(value))
+                retried.run_id = f"{original}-retry"
+                retried.phase = "live"
+                again, retry_errors = _parallel([retried], concurrency=1)
+                if retry_errors or not again:
+                    raise QualificationBatchError(
+                        "clock-rejection retry failed to fly: "
+                        + json.dumps(retry_errors, sort_keys=True)
+                    )
+                if _active_containers(study_id):
+                    raise QualificationBatchError("clock-rejection retry left a container running")
+                retried.phase = "process"
+                processed, retry_errors = _parallel([retried], concurrency=1)
+                if retry_errors or not processed:
+                    raise QualificationBatchError(
+                        "clock-rejection retry failed to process: "
+                        + json.dumps(retry_errors, sort_keys=True)
+                    )
+                superseded.append(
+                    {
+                        "attempt_id": original,
+                        "reason": CLOCK_REJECTION,
+                        "replaced_by": retried.run_id,
+                    }
+                )
+                current_results.pop(original)
+                current_results.update(processed)
             process_results.update(current_results)
             rounds.append(
                 {
@@ -545,6 +605,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "official_action": spec.get("official_action"),
         "episode_class": class_id,
         "closed_loop_machinery": closed_loop_machinery(attempts) if class_id else None,
+        # Named, never dropped: a batch that retried says so and says which
+        # attempts it replaced.
+        "superseded_attempts": superseded,
         "rounds": rounds,
         "attempts": attempts,
         "units": units,
