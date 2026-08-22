@@ -133,7 +133,7 @@ internal RTL, not Land, so the spec now declares the fallback per mechanism. The
 successor a workload requests after a completion and the fallback the system
 installs after a fault are different obligations.
 
-### Step C — close the availability gaps — IN PROGRESS
+### Step C — close the availability gaps — COMPLETE
 
 Goal: make the grammar orthogonal and add the one new action.
 
@@ -142,15 +142,20 @@ that its precondition gates execution, its applied schedule is recorded, and its
 cleanup holds; the precondition replay from Step A still reports every action
 consistent and none unvalidated.
 
-Why this stays open with all four parts complete: the first clause is met for
-every ported and new action, and nothing is unvalidated any more. The second is
-not. Step E left two instances inconsistent, both in one reclaim episode and
-both naming one fact — the producer-loss fault reaches the trace later than
-either the executor or the failsafe knew about it. Step F measured that latency
-from the other side and found the same thing, so the residue is a property of
-when the fault becomes recordable, not an unfinished port. Closing this step
-means either widening the two predicates, which would hide it, or recording the
-divergence as the accepted reading. That decision has not been taken.
+Closed after Step F, and an earlier note here that said otherwise was wrong.
+That note claimed Step E had left two predicates inconsistent; it was reading
+Step E's account of an intermediate state during its own repair. The signed
+artifact is unambiguous — seven of seven consistent, no violations, nothing
+unvalidated — so both acceptance clauses were already met.
+
+What was genuinely thin is now not. When the corpus was signed,
+`restart_producer_after_loss` had exactly one retained instance, and Step F
+showed that instance reclaimed under a loiter rather than a real failsafe. The
+two closed-loop batches supply 36 episodes that terminate the producer while it
+owns the route. Replaying every predicate over the signed set plus both batches
+gives 265 attempts, 204 instances, seven of seven consistent, with the reclaim
+at twelve instances instead of one and the termination at 53 instead of 18.
+See [the re-check](../experiments/step_f_corpus_recheck_v1/RECHECK.md).
 
 #### C-anchor — give each action its own timing anchor — COMPLETE
 
@@ -790,15 +795,24 @@ all things the system under test did. This touches no threshold, so every
 retained study stays valid, and it does not weaken the gate: the gate still
 requires every attempt it keeps to pass.
 
-**Step C is still open**, and for the reason recorded under its acceptance: two
-predicates remain inconsistent in one reclaim episode. Step F has since shown
-that the fixture those instances come from was reclaiming under a loiter, so
-the residue should be re-read against a real failsafe before the choice between
-widening the predicates and recording the divergence is made.
+**Step C is closed.** The note that said otherwise misread Step E's account of
+an intermediate state; the signed artifact was already seven of seven
+consistent. The predicates were then replayed over the signed set plus both
+closed-loop batches — 265 attempts, seven of seven consistent, with the reclaim
+at twelve instances rather than one, all under a real failsafe. That replay
+found one defect, in the checker rather than the corpus:
+`timed_decision_times` recognised only `action_requested`, so every closed-loop
+action was judged at its effect, which is the rule for a launch configuration.
+Fixed, and the twelve reclaims are judged at their decision moment.
 
-**Step C's ten-second reclaim window was measured under that loiter** and does
-not describe a real failsafe descent. Re-measure it before any fixed-budget
-campaign that includes the reclaim.
+**The ten-second reclaim window is re-measured, and needed no new flights.**
+From the 36 closed-loop episodes, fallback to touchdown is a median of 20.66 s
+for offboard and 10.98 s for dynamic. Against the reclaim's own cost — 3.3 to
+6.4 s offboard, 9.9 to 13.1 s dynamic — offboard spends about a quarter of its
+window and dynamic spends essentially all of it. Two independent factors run
+against the dynamic mechanism, not one: its reclaim is slower *and* its window
+is shorter. Step C's ten seconds was close to the dynamic window by coincidence
+and about half the offboard one.
 
 The earlier plan for this section, now done:
 

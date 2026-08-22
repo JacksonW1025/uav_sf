@@ -1,0 +1,373 @@
+{
+  "actions": [
+    {
+      "action_id": "stop_owned_setpoint_stream",
+      "availability": {
+        "dynamic_external_mode": "implemented",
+        "legacy_offboard": "implemented"
+      },
+      "backend": "owned_setpoint_stall_v1",
+      "cleanup": "release to the preregistered successor and land",
+      "inventory_action_id": "owned_setpoint_stall_healthy",
+      "lifecycle_phase": "execution",
+      "live_markers": [
+        "route_active",
+        "motion_entered"
+      ],
+      "live_profile": {
+        "activation_count": 1,
+        "activation_rejection_expected": false,
+        "application": "runtime",
+        "completion_expected": true,
+        "fallback_expected": false,
+        "fault_expected": true,
+        "fault_mode": "setpoint_stall",
+        "injection_phase": "straight_translation",
+        "motion_required": true,
+        "registration_rejection_expected": false,
+        "repeat_count": 1,
+        "target_activation_expected": true,
+        "timing_anchor": "route_active",
+        "timing_offsets_ns": [
+          3500000000,
+          4250000000,
+          5000000000,
+          5750000000,
+          6500000000
+        ],
+        "workload_phases": [
+          "public_takeoff",
+          "stable_hover",
+          "route_activation",
+          "straight_translation",
+          "successor_land"
+        ],
+        "workload_profile": "straight_line"
+      },
+      "marker": "a fault_detected event whose reason names a stalled stream",
+      "notes": "",
+      "online_gate": "an external route is observed holding authority and no fault has been observed yet; the command lineage is not observable in flight",
+      "precondition": "an external route holds complete authority and no fault has been observed yet in this episode",
+      "summary": "Stop the owned setpoint stream while proof-of-life continues.",
+      "target_boundaries": [
+        "command_stale"
+      ]
+    },
+    {
+      "action_id": "terminate_owning_producer",
+      "availability": {
+        "dynamic_external_mode": "implemented",
+        "legacy_offboard": "implemented"
+      },
+      "backend": "owned_process_exit_fallback_v1",
+      "cleanup": "a complete internal safe route must install without operator action",
+      "inventory_action_id": "owned_process_exit_fallback",
+      "lifecycle_phase": "fallback",
+      "live_markers": [
+        "route_active",
+        "motion_entered"
+      ],
+      "live_profile": {
+        "activation_count": 1,
+        "activation_rejection_expected": false,
+        "application": "runtime",
+        "completion_expected": false,
+        "fallback_expected": true,
+        "fault_expected": true,
+        "fault_mode": "process_exit",
+        "injection_phase": "straight_translation",
+        "motion_required": true,
+        "registration_rejection_expected": false,
+        "repeat_count": 1,
+        "target_activation_expected": true,
+        "timing_anchor": "route_active",
+        "timing_offsets_ns": [
+          3500000000,
+          4250000000,
+          5000000000,
+          5750000000,
+          6500000000
+        ],
+        "workload_phases": [
+          "public_takeoff",
+          "stable_hover",
+          "route_activation",
+          "straight_translation",
+          "safe_fallback",
+          "successor_land"
+        ],
+        "workload_profile": "straight_line"
+      },
+      "marker": "a fault_detected event whose reason names a producer exit",
+      "notes": "",
+      "online_gate": "an external route is observed holding authority and no fault has been observed yet; the command lineage is not observable in flight",
+      "precondition": "an external route holds complete authority and no fault has been observed yet in this episode",
+      "summary": "Terminate the producer that owns the installed external route.",
+      "target_boundaries": [
+        "fallback_installed"
+      ]
+    },
+    {
+      "action_id": "adjacent_land_request",
+      "availability": {
+        "dynamic_external_mode": "implemented",
+        "legacy_offboard": "implemented"
+      },
+      "backend": "owned_adjacent_land_v1",
+      "cleanup": "exactly one successor must win and install completely",
+      "inventory_action_id": "adjacent_land_request_near_completion",
+      "lifecycle_phase": "replacement",
+      "live_markers": [
+        "route_active",
+        "motion_entered"
+      ],
+      "live_profile": {
+        "activation_count": 1,
+        "activation_rejection_expected": false,
+        "application": "runtime",
+        "completion_expected": false,
+        "fallback_expected": false,
+        "fault_expected": false,
+        "fault_mode": "normal",
+        "injection_phase": "straight_translation",
+        "motion_required": true,
+        "registration_rejection_expected": false,
+        "repeat_count": 1,
+        "target_activation_expected": true,
+        "timing_anchor": "route_active",
+        "timing_offsets_ns": [
+          7500000000,
+          7750000000,
+          8000000000,
+          8250000000,
+          8500000000
+        ],
+        "workload_phases": [
+          "public_takeoff",
+          "stable_hover",
+          "route_activation",
+          "straight_translation",
+          "adjacent_request",
+          "successor_land"
+        ],
+        "workload_profile": "straight_line"
+      },
+      "marker": "an adjacent_request event",
+      "notes": "the request is a public Land command, so porting it from the mode executor was an anchoring change rather than a new stimulus",
+      "online_gate": "the vehicle is airborne and some route is observed holding authority; the command lineage is not observable in flight",
+      "precondition": "some route currently holds complete authority",
+      "summary": "Issue a public Land request next to the completion boundary.",
+      "target_boundaries": [
+        "successor_installed"
+      ]
+    },
+    {
+      "action_id": "re_enter_route_after_successor",
+      "availability": {
+        "dynamic_external_mode": "implemented",
+        "legacy_offboard": "implemented"
+      },
+      "backend": "owned_route_re_entry_v1",
+      "cleanup": "the final entry must release to a landing successor",
+      "inventory_action_id": "route_re_entry_through_hold",
+      "lifecycle_phase": "re_entry",
+      "live_markers": [
+        "successor_installed"
+      ],
+      "live_profile": {
+        "activation_count": 1,
+        "activation_rejection_expected": false,
+        "application": "runtime",
+        "completion_expected": true,
+        "fallback_expected": false,
+        "fault_expected": false,
+        "fault_mode": "normal",
+        "injection_phase": "straight_translation",
+        "motion_required": true,
+        "registration_rejection_expected": false,
+        "repeat_count": 2,
+        "target_activation_expected": true,
+        "timing_anchor": "successor_installed",
+        "timing_offsets_ns": [
+          3500000000,
+          4250000000,
+          5000000000,
+          5750000000,
+          6500000000
+        ],
+        "workload_phases": [
+          "public_takeoff",
+          "stable_hover",
+          "route_activation",
+          "straight_translation",
+          "successor_hold",
+          "route_re_entry",
+          "successor_land"
+        ],
+        "workload_profile": "straight_line"
+      },
+      "marker": "a transition_requested event the producer recorded as a repeat cycle",
+      "notes": "the intermediate safe route is a parameter: the core corpus selects Hold, while the retained evidence that validates this predicate uses the RTL variant. The derived re_entry phase is deliberately broader than this action, because a fixture can enter a route twice without any tester action; the marker therefore uses the producer's own recorded cycle rather than the system's observed behaviour. The dynamic requester has no re-entry loop yet",
+      "online_gate": "a completion has been observed and an internal safe route is observed holding authority; the command lineage is not observable in flight",
+      "precondition": "a completion has been observed and an internal safe route now holds complete authority",
+      "summary": "Request the tested route again while an internal safe route holds authority.",
+      "target_boundaries": [
+        "target_installed",
+        "source_revoked"
+      ]
+    },
+    {
+      "action_id": "withhold_health_reply",
+      "availability": {
+        "dynamic_external_mode": "implemented",
+        "legacy_offboard": "not_applicable"
+      },
+      "backend": "owned_health_withhold_v1",
+      "cleanup": "the vehicle must reach an internal safe route and disarm",
+      "inventory_action_id": "activation_rejection_after_health_loss",
+      "lifecycle_phase": "activation",
+      "live_markers": [],
+      "live_profile": {
+        "activation_count": 0,
+        "activation_rejection_expected": true,
+        "application": "launch",
+        "completion_expected": false,
+        "fallback_expected": false,
+        "fault_expected": true,
+        "fault_mode": "normal",
+        "injection_phase": "stable_hover",
+        "motion_required": false,
+        "registration_rejection_expected": false,
+        "repeat_count": 1,
+        "target_activation_expected": false,
+        "timing_anchor": "route_active",
+        "timing_offsets_ns": [],
+        "workload_phases": [
+          "public_takeoff",
+          "stable_hover",
+          "activation_rejected",
+          "successor_land"
+        ],
+        "workload_profile": "hover"
+      },
+      "marker": "a fault_detected event whose reason names a rejection",
+      "notes": "legacy offboard has no health-reply protocol, so this is not portable. It is a launch configuration rather than a runtime action: the withhold must already be in effect when the activation is requested, so there is no moment to choose and no request to record. The policy still selects whether an episode tests the rejection path",
+      "online_gate": null,
+      "precondition": "activation of the external route has been requested and no external route holds authority yet",
+      "summary": "Withhold the external mode health reply so activation is refused.",
+      "target_boundaries": [
+        "activation_rejected"
+      ]
+    },
+    {
+      "action_id": "exhaust_registration_capacity",
+      "availability": {
+        "dynamic_external_mode": "implemented",
+        "legacy_offboard": "not_applicable"
+      },
+      "backend": "owned_registration_capacity_v1",
+      "cleanup": "stop every additional component and keep the primary session consistent",
+      "inventory_action_id": "registration_capacity_rejection",
+      "lifecycle_phase": "registration",
+      "live_markers": [
+        "route_active"
+      ],
+      "live_profile": {
+        "activation_count": 1,
+        "activation_rejection_expected": false,
+        "application": "runtime",
+        "completion_expected": true,
+        "fallback_expected": false,
+        "fault_expected": false,
+        "fault_mode": "normal",
+        "injection_phase": "straight_translation",
+        "motion_required": true,
+        "registration_rejection_expected": true,
+        "repeat_count": 1,
+        "target_activation_expected": true,
+        "timing_anchor": "route_active",
+        "timing_offsets_ns": [
+          1000000000,
+          1500000000,
+          2000000000,
+          2500000000,
+          3000000000
+        ],
+        "workload_phases": [
+          "public_takeoff",
+          "stable_hover",
+          "route_activation",
+          "straight_translation",
+          "registration_capacity",
+          "successor_land"
+        ],
+        "workload_profile": "straight_line"
+      },
+      "marker": "a registration event whose result code reports a rejection",
+      "notes": "legacy offboard has no registration protocol, so this is not portable. Starting all eight components on the policy's request was flown twice and failed both times the same way: the boundary was reached, with two refused, but registering them spanned the whole active period and the moving profile never reached its completion progress. The seven legal slots are now filled during setup and the policy times only the eighth, which is the one that must be refused and the one the action is actually about",
+      "online_gate": "the vehicle is airborne and some route is observed holding authority; the command lineage is not observable in flight",
+      "precondition": "the episode is running and some route holds complete authority",
+      "summary": "Register components until a further registration is refused.",
+      "target_boundaries": [
+        "registration_rejected"
+      ]
+    },
+    {
+      "action_id": "restart_producer_after_loss",
+      "availability": {
+        "dynamic_external_mode": "implemented",
+        "legacy_offboard": "implemented"
+      },
+      "backend": "owned_producer_restart_v1",
+      "cleanup": "either the reclaim installs completely or the safe route is retained",
+      "inventory_action_id": "producer_restart_after_exit",
+      "lifecycle_phase": "fallback",
+      "live_markers": [
+        "fallback_installed"
+      ],
+      "live_profile": {
+        "activation_count": 2,
+        "activation_rejection_expected": false,
+        "application": "runtime",
+        "completion_expected": true,
+        "fallback_expected": false,
+        "fault_expected": true,
+        "fault_mode": "process_exit",
+        "injection_phase": "straight_translation",
+        "motion_required": true,
+        "registration_rejection_expected": false,
+        "repeat_count": 1,
+        "target_activation_expected": true,
+        "timing_anchor": "fallback_installed",
+        "timing_offsets_ns": [
+          500000000,
+          1000000000,
+          1500000000,
+          2000000000,
+          2500000000
+        ],
+        "workload_phases": [
+          "public_takeoff",
+          "stable_hover",
+          "route_activation",
+          "straight_translation",
+          "safe_fallback",
+          "route_reclaim",
+          "successor_land"
+        ],
+        "workload_profile": "straight_line"
+      },
+      "marker": "a transition_requested returning to an external route after a producer loss",
+      "notes": "the only proposed action whose legality depends on the outcome of an earlier action, which is what separates feedback-guided generation from feedback-free generation. A first attempt found it unreachable because the runner learned of the producer loss by polling the process, about eleven seconds after telemetry already showed the installed safe route, by which time the aircraft had landed. The loss is now observed from telemetry, which leaves the measured ten second window; the tested failsafe configuration is unchanged",
+      "online_gate": "a safe route is observed to have taken over from the tested route and an internal route holds authority; the loss that caused it is not classifiable in flight",
+      "precondition": "a producer loss has been observed and an internal route now holds complete authority",
+      "summary": "Restart the producer after a loss and reclaim authority.",
+      "target_boundaries": [
+        "target_installed"
+      ]
+    }
+  ],
+  "check_id": "stage2-core-action-precondition-check-v1",
+  "frozen": false,
+  "schema_version": "1.0"
+}

@@ -81,7 +81,15 @@ def timed_decision_times(root: Path, study_id: str, attempt_id: str) -> dict[str
         if not line.strip():
             continue
         record = json.loads(line)
-        if not isinstance(record, dict) or record.get("kind") != "action_requested":
+        # The single-action executor records `action_requested`; the closed
+        # loop records `closed_loop_applied` for the same moment, when it
+        # writes the request.  Reading only the first silently pushed every
+        # closed-loop action back to being judged at its effect, which is the
+        # rule for a launch configuration and not for a timed action.
+        if not isinstance(record, dict) or record.get("kind") not in (
+            "action_requested",
+            "closed_loop_applied",
+        ):
             continue
         moment = record.get("requested_monotonic_ns", record.get("received_monotonic_ns"))
         action_id = str(record.get("action", ""))
